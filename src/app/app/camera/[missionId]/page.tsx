@@ -17,6 +17,7 @@ export default function CameraCapturePage() {
   const [mission, setMission] = useState<any>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [caption, setCaption] = useState('');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,6 +80,7 @@ export default function CameraCapturePage() {
           mission_id: missionId,
           student_id: user.id,
           photo_url: publicUrl,
+          caption: caption.trim() || null,
           status: 'pending',
         });
 
@@ -152,6 +154,18 @@ export default function CameraCapturePage() {
           <div className="mt-3 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <p>{error}</p>
+          </div>
+        )}
+        {/* Input de legenda opcional ao tirar a foto */}
+        {previewUrl && (
+          <div className="w-full mt-3">
+            <input
+              type="text"
+              placeholder="Adicione uma legenda ou recado para a turma (opcional)..."
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              className="w-full h-11 px-4 text-xs rounded-xl bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500"
+            />
           </div>
         )}
       </div>

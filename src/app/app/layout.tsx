@@ -1,5 +1,6 @@
 import React from 'react';
 import { StudentBottomNav } from '@/components/student/bottom-nav';
+import { PwaInstallPrompt } from '@/components/student/pwa-install-prompt';
 
 export default function StudentAppLayout({
   children,
@@ -9,6 +10,7 @@ export default function StudentAppLayout({
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex justify-center">
       <div className="w-full max-w-md min-h-screen flex flex-col pb-20 relative bg-zinc-950 border-x border-zinc-900/60 shadow-2xl">
+        <PwaInstallPrompt />
         {children}
         <StudentBottomNav />
       </div>

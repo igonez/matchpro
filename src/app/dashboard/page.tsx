@@ -225,6 +225,19 @@ export default function DashboardOverviewPage() {
                         Configurar Missões
                       </Button>
                     </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 px-3"
+                      onClick={() => {
+                        const link = `${window.location.origin}/join/${c.id}`;
+                        navigator.clipboard.writeText(link);
+                        alert(`Link copiado para o WhatsApp/Instagram:\n${link}`);
+                      }}
+                      title="Copiar Link de Convite para Alunos"
+                    >
+                      Copiar Link
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

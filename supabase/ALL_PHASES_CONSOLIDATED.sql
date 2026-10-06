@@ -239,7 +239,7 @@ DO $$ BEGIN
     );
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- View Analítica de Alunos em Risco de Desistência
+-- View Analítica de Alunos em Risco de Desistência (CORRIGIDA: submissão vinculada via missions)
 CREATE OR REPLACE VIEW public.at_risk_students_view AS
 SELECT 
     cp.challenge_id,
@@ -255,5 +255,6 @@ SELECT
 FROM public.challenge_participants cp
 JOIN public.challenges c ON c.id = cp.challenge_id
 JOIN public.students s ON s.id = cp.student_id
-LEFT JOIN public.student_submissions sub ON sub.student_id = cp.student_id AND sub.challenge_id = cp.challenge_id
+LEFT JOIN public.missions m ON m.challenge_id = cp.challenge_id
+LEFT JOIN public.student_submissions sub ON sub.student_id = cp.student_id AND sub.mission_id = m.id
 GROUP BY cp.challenge_id, c.title, s.id, s.full_name, s.phone, cp.joined_at;

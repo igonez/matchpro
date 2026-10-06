@@ -19,7 +19,10 @@ import {
   ArrowRight,
   LogOut,
   Shield,
-  Gift
+  Gift,
+  Activity,
+  CheckCircle2,
+  Users
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -111,7 +114,7 @@ export default function StudentHomePage() {
           setAnnouncements(notices || []);
         }
 
-        // 5. Missões e Submissões para calcular progresso das categorias
+        // 5. Missões e Submissões para calcular progresso
         const { data: allMissions } = await supabase
           .from('missions')
           .select('id, category, target_frequency');
@@ -167,7 +170,6 @@ export default function StudentHomePage() {
           if (gs) {
             setGamState(gs);
           } else {
-            // Se ainda não existir registro, inicializa com 1 escudo
             const { data: newGs } = await supabase
               .from('student_gamification_state')
               .insert({
@@ -180,7 +182,7 @@ export default function StudentHomePage() {
             if (newGs) setGamState(newGs);
           }
 
-          // Verificar se já resgatou a mystery box da semana 1
+          // Verificar Mystery Box
           const { data: claim } = await supabase
             .from('student_mystery_box_claims')
             .select('id')
@@ -202,19 +204,32 @@ export default function StudentHomePage() {
     loadHome();
   }, [supabase, router]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
-  };
+  // Cálculo geral de progresso semanal em %
+  const totalWeeklyGoals = 
+    categoryCounts.treinos.total + 
+    categoryCounts.cardios.total + 
+    categoryCounts.refeicoes.total + 
+    categoryCounts.habitos.total;
+
+  const totalWeeklyDone = 
+    categoryCounts.treinos.done + 
+    categoryCounts.cardios.done + 
+    categoryCounts.refeicoes.done + 
+    categoryCounts.habitos.done;
+
+  const weeklyPercentage = totalWeeklyGoals > 0 
+    ? Math.min(100, Math.round((totalWeeklyDone / totalWeeklyGoals) * 100))
+    : 0;
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-5 bg-zinc-950 text-white selection:bg-emerald-500">
-      {/* Header Superior: Marca & Boas-vindas */}
+    <div className="flex flex-col flex-1 p-4 sm:p-5 space-y-5 bg-zinc-950 text-white selection:bg-emerald-500 max-w-md mx-auto w-full pb-24">
+      
+      {/* 1. Header do Atleta: Avatar com Anel Gradiente + Streak */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-3">
           <Link href="/app/profile">
-            <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 cursor-pointer active:scale-95 transition-all">
-              <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-black text-emerald-400 text-base overflow-hidden">
+            <div className="relative h-13 w-13 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-400 p-0.5 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer">
+              <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-black text-emerald-400 text-lg overflow-hidden">
                 {student?.avatar_url ? (
                   <img
                     src={student.avatar_url}
@@ -225,63 +240,105 @@ export default function StudentHomePage() {
                   student?.full_name?.charAt(0) || 'M'
                 )}
               </div>
+              <div className="absolute -bottom-1 -right-1 h-4.5 w-4.5 rounded-full bg-emerald-500 border-2 border-zinc-950 flex items-center justify-center text-[9px] font-black text-black">
+                ✓
+              </div>
             </div>
           </Link>
+
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">MatchPro</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">MatchPro</span>
               <span className="h-1 w-1 rounded-full bg-zinc-600" />
               <span className="text-[10px] font-bold text-zinc-400">Turma Ativa</span>
             </div>
-            <h1 className="text-base font-black text-white leading-tight">
+            <h1 className="text-base sm:text-lg font-black text-white leading-tight">
               Olá, {student?.full_name?.split(' ')[0] || 'Atleta'} 👋
             </h1>
           </div>
         </div>
 
-        {/* Streak / Ofensiva */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-orange-500/10 border border-orange-500/30">
-          <Flame className="h-4 w-4 text-orange-400 fill-orange-400" />
-          <span className="text-xs font-black text-orange-400">STREAK: 1 DIA</span>
-        </div>
-      </div>
-
-      {/* Grid de Métricas Principais (Inspirado no card de pontuação) */}
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">Pontuação</span>
-          <span className="text-2xl font-black text-emerald-400 mt-1 block">
-            {standing?.total_points || 0}
-          </span>
-        </div>
-
-        <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">Posição</span>
-          <span className="text-lg font-black text-white mt-1 block">
-            4º <span className="text-xs text-zinc-400 font-semibold">lugar</span>
-          </span>
-        </div>
-
-        <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">Desafio</span>
-          <span className="text-lg font-black text-white mt-1 block">
-            Dia 2<span className="text-xs text-zinc-400 font-semibold">/30</span>
+        {/* Badge Streak de Alta Energia */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-gradient-to-r from-orange-500/15 to-amber-500/10 border border-orange-500/40 shadow-lg shadow-orange-500/10">
+          <Flame className="h-4 w-4 text-orange-400 fill-orange-400 animate-pulse" />
+          <span className="text-xs font-black text-orange-400">
+            {gamState.current_streak || 1}D STREAK
           </span>
         </div>
       </div>
 
-      {/* 🛡️ FASE 1: BARRA DE RETENÇÃO (FREEZE SHIELD & MYSTERY BOX) */}
+      {/* 2. Hero Card: Radar Geral de Consistência da Semana */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800/80 shadow-2xl relative overflow-hidden space-y-3.5">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+              <Activity className="h-4 w-4" />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block">
+                Consistência Semanal
+              </span>
+              <span className="text-xs font-black text-white">Semana 1 • Dia 2 de 30</span>
+            </div>
+          </div>
+          <span className="text-xl font-black text-emerald-400 font-mono">
+            {weeklyPercentage}%
+          </span>
+        </div>
+
+        {/* Barra de Progresso com Brilho */}
+        <div className="space-y-1">
+          <div className="w-full h-2.5 rounded-full bg-zinc-950 p-0.5 border border-zinc-800 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-700 shadow-[0_0_12px_rgba(16,185,129,0.5)]"
+              style={{ width: `${weeklyPercentage || 25}%` }}
+            />
+          </div>
+          <div className="flex items-center justify-between text-[10px] text-zinc-400 font-semibold px-0.5">
+            <span>{totalWeeklyDone} missões feitas</span>
+            <span>Meta: {totalWeeklyGoals || 20} missões</span>
+          </div>
+        </div>
+
+        {/* Grid de 3 Métricas Rápidas */}
+        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-zinc-850/80">
+          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-850 text-center">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">Pontos</span>
+            <span className="text-lg font-black text-emerald-400 block mt-0.5">
+              {standing?.total_points || 0}
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-850 text-center">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">Posição</span>
+            <span className="text-base font-black text-white block mt-0.5">
+              4º <span className="text-[10px] text-zinc-400 font-normal">lugar</span>
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-850 text-center">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">Desafio</span>
+            <span className="text-base font-black text-white block mt-0.5">
+              Dia 2<span className="text-[10px] text-zinc-400 font-normal">/30</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Barra de Superpoderes (Freeze Shield & Mystery Box) */}
       <div className="grid grid-cols-2 gap-2.5">
         {/* Card 1: Freeze Shield */}
         <button
           onClick={() => setIsFreezeModalOpen(true)}
-          className="p-3 rounded-2xl bg-gradient-to-br from-cyan-950/40 via-zinc-900 to-zinc-950 border border-cyan-500/30 text-left hover:border-cyan-400/60 transition-all group"
+          className="p-3.5 rounded-3xl bg-gradient-to-br from-cyan-950/30 via-zinc-900 to-zinc-950 border border-cyan-500/30 text-left hover:border-cyan-400/60 active:scale-98 transition-all group shadow-lg"
         >
           <div className="flex items-center justify-between">
-            <div className="h-7 w-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
-              <Shield className="h-4 w-4 stroke-[2.2]" />
+            <div className="h-8 w-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
+              <Shield className="h-4.5 w-4.5 stroke-[2.2]" />
             </div>
-            <span className="text-[10px] font-black uppercase text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded-md">
+            <span className="text-[9px] font-black uppercase text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-md">
               {gamState.freeze_shields_available} Disp.
             </span>
           </div>
@@ -296,13 +353,13 @@ export default function StudentHomePage() {
         {/* Card 2: Mystery Box de Domingo */}
         <button
           onClick={() => setIsMysteryBoxOpen(true)}
-          className="p-3 rounded-2xl bg-gradient-to-br from-amber-950/40 via-zinc-900 to-zinc-950 border border-amber-500/30 text-left hover:border-amber-400/60 transition-all group"
+          className="p-3.5 rounded-3xl bg-gradient-to-br from-amber-950/30 via-zinc-900 to-zinc-950 border border-amber-500/30 text-left hover:border-amber-400/60 active:scale-98 transition-all group shadow-lg"
         >
           <div className="flex items-center justify-between">
-            <div className="h-7 w-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
-              <Gift className="h-4 w-4 stroke-[2.2]" />
+            <div className="h-8 w-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+              <Gift className="h-4.5 w-4.5 stroke-[2.2]" />
             </div>
-            <span className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded-md ${
+            <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
               alreadyClaimedBox
                 ? 'bg-zinc-800 text-zinc-400'
                 : 'text-amber-400 bg-amber-500/10'
@@ -319,13 +376,13 @@ export default function StudentHomePage() {
         </button>
       </div>
 
-      {/* 📢 MURAL DE AVISOS DO TREINADOR */}
-      <div className="space-y-2">
+      {/* 4. Mural de Avisos Oficiais do Treinador */}
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-extrabold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
             <Bell className="h-3.5 w-3.5 text-emerald-400" /> Mural da Turma
           </h2>
-          <span className="text-[10px] text-zinc-500 font-semibold">Comunicados Oficiais</span>
+          <span className="text-[10px] text-zinc-400 font-semibold">Comunicados</span>
         </div>
 
         {announcements.length === 0 ? (
@@ -353,7 +410,7 @@ export default function StudentHomePage() {
                     {a.is_pinned && <Pin className="h-3 w-3 text-emerald-400 fill-emerald-400" />}
                     <span className="font-extrabold text-xs text-white">{a.title}</span>
                   </div>
-                  <span className="text-[10px] text-zinc-500">
+                  <span className="text-[10px] text-zinc-400">
                     {new Date(a.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
                   </span>
                 </div>
@@ -364,7 +421,7 @@ export default function StudentHomePage() {
         )}
       </div>
 
-      {/* 📊 CARDS RESUMIDOS POR CATEGORIA (ENCAMINHAMENTO PARA MISSÕES) */}
+      {/* 5. Categorias de Metas (Cards Modernizados) */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-extrabold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
@@ -377,7 +434,7 @@ export default function StudentHomePage() {
 
         {/* 1. Treinos da Semana */}
         <Link href="/app/missions?cat=treino">
-          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-emerald-500/30 transition-all flex items-center justify-between gap-3 group">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-emerald-500/40 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-md">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold">
                 <Dumbbell className="h-5 w-5" />
@@ -396,14 +453,14 @@ export default function StudentHomePage() {
               <span className="text-[11px] font-extrabold text-zinc-400 group-hover:text-white transition-colors">
                 Abrir Treinos
               </span>
-              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-emerald-400 transition-colors" />
+              <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
             </div>
           </div>
         </Link>
 
         {/* 2. Cardios da Semana */}
         <Link href="/app/missions?cat=cardio">
-          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-orange-500/30 transition-all flex items-center justify-between gap-3 group">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-orange-500/40 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-md">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex items-center justify-center font-bold">
                 <Flame className="h-5 w-5" />
@@ -422,14 +479,14 @@ export default function StudentHomePage() {
               <span className="text-[11px] font-extrabold text-zinc-400 group-hover:text-white transition-colors">
                 Ver Cardios
               </span>
-              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-orange-400 transition-colors" />
+              <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-orange-400 transition-colors" />
             </div>
           </div>
         </Link>
 
         {/* 3. Refeições de Hoje */}
         <Link href="/app/missions?cat=refeicao">
-          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-amber-500/30 transition-all flex items-center justify-between gap-3 group">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-amber-500/40 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-md">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold">
                 <Utensils className="h-5 w-5" />
@@ -448,20 +505,25 @@ export default function StudentHomePage() {
               <span className="text-[11px] font-extrabold text-zinc-400 group-hover:text-white transition-colors">
                 Registrar
               </span>
-              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-amber-400 transition-colors" />
+              <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-amber-400 transition-colors" />
             </div>
           </div>
         </Link>
       </div>
 
-      {/* Atalho para o Feed da Turma */}
+      {/* 6. Banner Feed Social da Turma */}
       <Link href="/app/feed" className="block pt-1">
-        <div className="p-4 rounded-3xl bg-gradient-to-r from-teal-950/40 via-zinc-900 to-zinc-950 border border-teal-500/30 flex items-center justify-between gap-3 group">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 block mb-0.5">
-              Comunidade Ativa
-            </span>
-            <p className="text-xs font-black text-white">Veja as fotos e pratos aprovados da turma hoje</p>
+        <div className="p-4 rounded-3xl bg-gradient-to-r from-teal-950/40 via-zinc-900 to-zinc-950 border border-teal-500/30 flex items-center justify-between gap-3 group shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-teal-500/10 text-teal-400 border border-teal-500/20 flex items-center justify-center font-bold shrink-0">
+              <Users className="h-5 w-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 block mb-0.5">
+                Comunidade & Feed
+              </span>
+              <p className="text-xs font-black text-white">Veja as fotos e pratos aprovados da turma hoje</p>
+            </div>
           </div>
           <Button size="sm" variant="outline" className="h-8 px-3 text-xs font-bold rounded-xl border-teal-500/40 text-teal-300 shrink-0">
             Abrir Feed
@@ -494,7 +556,7 @@ export default function StudentHomePage() {
           studentId={student.id}
           challengeId={challenge.id}
           weekNumber={1}
-          isEligible={true} // Aberto para a semana atual
+          isEligible={true}
           alreadyClaimed={alreadyClaimedBox}
           onRewardClaimed={(reward) => {
             setAlreadyClaimedBox(true);
@@ -510,4 +572,3 @@ export default function StudentHomePage() {
     </div>
   );
 }
-

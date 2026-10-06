@@ -5,8 +5,21 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Dumbbell, UserCheck, Sparkles, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { 
+  Dumbbell, 
+  Sparkles, 
+  AlertCircle, 
+  ArrowRight, 
+  ShieldCheck, 
+  UserCheck, 
+  Flame, 
+  Trophy, 
+  CheckCircle2,
+  Lock,
+  Mail,
+  User,
+  Activity
+} from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -116,147 +129,217 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-black">
-      <div className="w-full max-w-md space-y-6">
-        {/* Logo / Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-2 shadow-lg shadow-emerald-500/10">
-            <Dumbbell className="h-7 w-7" />
+    <main className="min-h-screen bg-black text-white flex flex-col justify-between selection:bg-emerald-500 selection:text-black relative overflow-hidden font-sans">
+      
+      {/* Luzes de fundo atmosféricas (Cyber Emerald & Amber Glow) */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/15 rounded-full blur-[128px] pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-orange-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-7xl h-full opacity-20 pointer-events-none bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:24px_24px]" />
+
+      {/* Header Superior Minimalista */}
+      <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between z-20">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20">
+            <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center text-emerald-400">
+              <Dumbbell className="h-5 w-5" />
+            </div>
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-white flex items-center justify-center gap-2">
-            Match<span className="text-emerald-400">Pro</span>
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Gestão gamificada de desafios de saúde e fitness
-          </p>
+          <div>
+            <span className="text-lg font-black tracking-tight text-white block leading-none">
+              Match<span className="text-emerald-400">Pro</span>
+            </span>
+            <span className="text-[9px] uppercase tracking-widest text-zinc-400 font-extrabold">
+              Gamified Health SaaS
+            </span>
+          </div>
         </div>
 
-        <Card className="border-zinc-800 bg-zinc-900/70 shadow-2xl">
-          <CardHeader className="pb-4">
-            <div className="flex rounded-xl bg-zinc-950 p-1 border border-zinc-800 mb-2">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-300">
+          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="font-semibold text-[11px]">Desafios Ativos em Andamento</span>
+        </div>
+      </header>
+
+      {/* Conteúdo Central: Card de Login & Apresentação */}
+      <div className="w-full max-w-6xl mx-auto px-4 py-4 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center z-10 flex-1">
+        
+        {/* Coluna Esquerda: Proposta de Valor / Hero (Invisível no mobile super pequeno, visível a partir de tablet) */}
+        <div className="lg:col-span-6 space-y-6 hidden lg:block pr-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-black uppercase tracking-wider">
+            <Flame className="h-4 w-4 fill-emerald-400 text-emerald-400" />
+            Revolução na Retenção Fitness
+          </div>
+
+          <h1 className="text-4xl xl:text-5xl font-black text-white tracking-tight leading-[1.15]">
+            A arena onde alunos <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">viram atletas</span> e personais escalam turmas.
+          </h1>
+
+          <p className="text-zinc-400 text-sm leading-relaxed max-w-lg">
+            Submissão de fotos em tempo real, guerra de micro-equipes (Squads), cofres blindados de evolução e prêmios semanais para transformar consistência em dopamina pura.
+          </p>
+
+          {/* Destaques Rápidos com Ícones */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="p-3.5 rounded-2xl bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-sm space-y-1">
+              <div className="flex items-center gap-2 text-emerald-400 font-black text-xs">
+                <Trophy className="h-4 w-4" /> Guerra de Squads
+              </div>
+              <p className="text-[11px] text-zinc-400">Micro-times de 3 a 5 alunos que reduzem o abandono em 70%.</p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-sm space-y-1">
+              <div className="flex items-center gap-2 text-orange-400 font-black text-xs">
+                <Flame className="h-4 w-4" /> Mystery Box de Domingo
+              </div>
+              <p className="text-[11px] text-zinc-400">Recompensas variáveis e dopamina para quem bate 100% da semana.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Coluna Direita: Caixa de Autenticação */}
+        <div className="lg:col-span-6 w-full max-w-md mx-auto">
+          <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900/80 border border-zinc-800/80 backdrop-blur-2xl shadow-2xl shadow-black/80 space-y-6 relative overflow-hidden">
+            
+            {/* Linha de brilho superior */}
+            <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50" />
+
+            {/* Alternador de Modo (Entrar vs Cadastrar) */}
+            <div className="flex p-1 rounded-2xl bg-zinc-950 border border-zinc-800/90">
               <button
                 type="button"
                 onClick={() => setMode('signin')}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 py-2 text-xs font-black rounded-xl transition-all ${
                   mode === 'signin'
-                    ? 'bg-zinc-800 text-white shadow'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-black shadow-md shadow-emerald-500/20'
+                    : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                Entrar
+                Entrar na Conta
               </button>
               <button
                 type="button"
                 onClick={() => setMode('signup')}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 py-2 text-xs font-black rounded-xl transition-all ${
                   mode === 'signup'
-                    ? 'bg-zinc-800 text-white shadow'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-black shadow-md shadow-emerald-500/20'
+                    : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                Cadastrar-se
+                Criar Nova Conta
               </button>
             </div>
 
-            <CardTitle className="text-lg text-center font-bold">
-              {mode === 'signin' ? 'Acessar sua conta' : 'Criar nova conta no MatchPro'}
-            </CardTitle>
-            <CardDescription className="text-center text-xs">
-              {mode === 'signin'
-                ? 'Conecte-se para continuar suas missões e desafios'
-                : 'Selecione seu perfil para iniciar a jornada'}
-            </CardDescription>
-          </CardHeader>
+            {/* Cabeçalho do Form */}
+            <div>
+              <h2 className="text-xl font-black text-white">
+                {mode === 'signin' ? 'Bem-vindo de volta 👋' : 'Comece sua jornada 🚀'}
+              </h2>
+              <p className="text-xs text-zinc-400 mt-0.5">
+                {mode === 'signin'
+                  ? 'Digite suas credenciais para entrar no seu painel.'
+                  : 'Selecione abaixo se você é Aluno ou Profissional da saúde.'}
+              </p>
+            </div>
 
-          <CardContent>
-            {/* Escolha do papel (Apenas no cadastro) */}
+            {/* Seleção de Perfil (Apenas no Cadastro) */}
             {mode === 'signup' && (
-              <div className="mb-4 space-y-2">
-                <label className="text-xs font-semibold text-zinc-300">Você é:</label>
+              <div className="space-y-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block">
+                  Tipo de Acesso
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setRole('student')}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-bold transition-all ${
+                    className={`flex items-center gap-2 p-3 rounded-2xl border text-xs font-black transition-all ${
                       role === 'student'
-                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/50'
-                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700'
+                        ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-sm shadow-emerald-500/10'
+                        : 'border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                     }`}
                   >
-                    <UserCheck className="h-5 w-5" />
-                    Aluno / Participante
+                    <UserCheck className="h-4 w-4" />
+                    Aluno Atleta
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setRole('professional')}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-bold transition-all ${
+                    className={`flex items-center gap-2 p-3 rounded-2xl border text-xs font-black transition-all ${
                       role === 'professional'
-                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/50'
-                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700'
+                        ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-sm shadow-emerald-500/10'
+                        : 'border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                     }`}
                   >
-                    <ShieldCheck className="h-5 w-5" />
-                    Profissional / Treinador
+                    <ShieldCheck className="h-4 w-4" />
+                    Treinador / B2B
                   </button>
                 </div>
               </div>
             )}
 
+            {/* Formulário Principal */}
             <form onSubmit={handleEmailAuth} className="space-y-3.5">
               {mode === 'signup' && (
-                <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1">
-                    Nome Completo
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Ex: Ana Silva"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-zinc-300">Nome Completo</label>
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Ex: Ana Clara"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                      className="h-11 bg-zinc-950 border-zinc-800 rounded-xl text-xs pl-9 focus:border-emerald-500"
+                    />
+                    <User className="h-4 w-4 text-zinc-500 absolute left-3 top-3.5 pointer-events-none" />
+                  </div>
                 </div>
               )}
 
               {mode === 'signup' && role === 'professional' && (
-                <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1">
-                    Especialidade Principal
-                  </label>
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-zinc-300">Sua Atuação Profissional</label>
                   <select
-                    className="flex h-11 w-full rounded-xl border border-zinc-700/80 bg-zinc-950 px-4 py-2 text-sm text-zinc-100 focus:outline-none focus:border-emerald-500"
+                    className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-emerald-500"
                     value={specialty}
                     onChange={(e: any) => setSpecialty(e.target.value)}
                   >
-                    <option value="personal_trainer">Personal Trainer</option>
-                    <option value="nutritionist">Nutricionista</option>
-                    <option value="holistic_coach">Coach Holístico / Saúde</option>
-                    <option value="gym_owner">Gestor / Box de Crossfit / Academia</option>
+                    <option value="personal_trainer">Personal Trainer / Preparador Físico</option>
+                    <option value="nutritionist">Nutricionista Esportivo</option>
+                    <option value="holistic_coach">Coach de Saúde & Hábitos</option>
+                    <option value="gym_owner">Gestor de Box / Estúdio / Academia</option>
                   </select>
                 </div>
               )}
 
-              <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1">E-mail</label>
-                <Input
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-zinc-300">E-mail</label>
+                <div className="relative">
+                  <Input
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="h-11 bg-zinc-950 border-zinc-800 rounded-xl text-xs pl-9 focus:border-emerald-500"
+                  />
+                  <Mail className="h-4 w-4 text-zinc-500 absolute left-3 top-3.5 pointer-events-none" />
+                </div>
               </div>
 
-              <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1">Senha</label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-zinc-300">Senha</label>
+                <div className="relative">
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="h-11 bg-zinc-950 border-zinc-800 rounded-xl text-xs pl-9 focus:border-emerald-500"
+                  />
+                  <Lock className="h-4 w-4 text-zinc-500 absolute left-3 top-3.5 pointer-events-none" />
+                </div>
               </div>
 
               {errorMessage && (
@@ -273,27 +356,39 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full mt-2" disabled={loading}>
-                {loading ? 'Processando...' : mode === 'signin' ? 'Acessar Plataforma' : 'Criar Conta'}
-                <ArrowRight className="h-4 w-4 ml-1" />
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full h-11 rounded-xl text-xs font-black bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-black shadow-lg shadow-emerald-500/25 mt-2 transition-all active:scale-95"
+              >
+                {loading ? (
+                  'Processando...'
+                ) : (
+                  <>
+                    {mode === 'signin' ? 'Acessar Minha Conta' : 'Finalizar e Começar'}
+                    <ArrowRight className="h-4 w-4 ml-1.5" />
+                  </>
+                )}
               </Button>
             </form>
 
-            <div className="relative my-4 text-center">
+            {/* Divisor "Ou" */}
+            <div className="relative my-2 text-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-zinc-800" />
               </div>
-              <span className="relative bg-zinc-900 px-3 text-[11px] uppercase tracking-wider text-zinc-500 font-semibold">
-                Ou continue com
+              <span className="relative bg-zinc-900 px-3 text-[10px] uppercase tracking-widest text-zinc-400 font-extrabold">
+                Ou acesse com
               </span>
             </div>
 
+            {/* Botão Google Modernizado */}
             <Button
               type="button"
               variant="outline"
-              className="w-full flex items-center justify-center gap-2"
               onClick={handleGoogleLogin}
               disabled={loading}
+              className="w-full h-11 rounded-xl border-zinc-800 bg-zinc-950/60 hover:bg-zinc-800/80 text-white text-xs font-bold flex items-center justify-center gap-2.5 transition-colors"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">
                 <path
@@ -313,15 +408,22 @@ export default function LoginPage() {
                   d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5.1L1.6 16.3C3.5 20.2 7.4 23 12 23z"
                 />
               </svg>
-              Google
+              Continuar com o Google
             </Button>
-          </CardContent>
 
-          <CardFooter className="justify-center border-t border-zinc-850 pt-4 text-xs text-zinc-500">
-            Ambiente seguro com criptografia de ponta a ponta
-          </CardFooter>
-        </Card>
+            {/* Rodapé de Segurança */}
+            <div className="pt-2 text-center text-[10px] text-zinc-400 font-medium flex items-center justify-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              Autenticação segura via Supabase Auth
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Footer Minimalista */}
+      <footer className="w-full max-w-6xl mx-auto px-6 py-4 text-center text-[11px] text-zinc-400 border-t border-zinc-900/60 z-20">
+        © {new Date().getFullYear()} MatchPro • Todos os direitos reservados.
+      </footer>
     </main>
   );
 }

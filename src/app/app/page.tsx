@@ -5,28 +5,43 @@ import Link from 'next/link';
 import { 
   Flame, 
   Trophy, 
-  Target, 
-  Camera, 
+  Dumbbell, 
+  Utensils, 
+  Droplet, 
   Sparkles, 
-  CheckCircle2, 
-  Clock, 
-  ArrowRight,
-  TrendingUp,
+  ChevronRight, 
+  Bell, 
+  Pin, 
+  Calendar,
   Zap,
-  Users
+  TrendingUp,
+  Target,
+  ArrowRight,
+  LogOut
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 export default function StudentHomePage() {
+  const router = useRouter();
   const supabase = createClient();
 
   const [student, setStudent] = useState<any>(null);
-  const [missions, setMissions] = useState<any[]>([]);
-  const [submissions, setSubmissions] = useState<Record<string, any>>({});
+  const [challenge, setChallenge] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
+  
+  // Contadores por Categoria
+  const [categoryCounts, setCategoryCounts] = useState({
+    treinos: { done: 0, total: 0 },
+    cardios: { done: 0, total: 0 },
+    refeicoes: { done: 0, total: 0 },
+    habitos: { done: 0, total: 0 },
+  });
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +49,10 @@ export default function StudentHomePage() {
       setLoading(true);
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (!user) {
+          router.push('/login');
+          return;
+        }
 
         // 1. Dados do aluno
         const { data: studentData } = await supabase
@@ -43,9 +61,20 @@ export default function StudentHomePage() {
           .eq('id', user.id)
           .single();
 
-        setStudent(studentData);
+        setStudent(studentData || { full_name: user.email?.split('@')[0] });
 
-        // 2. Pontuação no Leaderboard
+        // 2. Desafio Ativo
+        const { data: challengeData } = await supabase
+          .from('challenges')
+          .select('*, challenge_weeks(*)')
+          .eq('is_active', true)
+          .order('start_date', { ascending: false })
+          .limit(1)
+          .single();
+
+        setChallenge(challengeData);
+
+        // 3. Posição e Pontos do Aluno
         const { data: standingData } = await supabase
           .from('leaderboard_standings')
           .select('total_points')
@@ -55,201 +84,280 @@ export default function StudentHomePage() {
 
         setStanding(standingData);
 
-        // 3. Missões
-        const { data: missionsData } = await supabase
-          .from('missions')
-          .select('*')
-          .limit(3);
+        // 4. Avisos da Turma
+        if (challengeData) {
+          const { data: notices } = await supabase
+            .from('challenge_announcements')
+            .select('*')
+            .eq('challenge_id', challengeData.id)
+            .order('is_pinned', { ascending: false })
+            .order('created_at', { ascending: false })
+            .limit(3);
 
-        setMissions(missionsData || []);
-
-        // 4. Submissões de hoje
-        const { data: submissionsData } = await supabase
-          .from('student_submissions')
-          .select('*')
-          .eq('student_id', user.id);
-
-        if (submissionsData) {
-          const map: Record<string, any> = {};
-          submissionsData.forEach((s: any) => {
-            map[s.mission_id] = s;
-          });
-          setSubmissions(map);
+          setAnnouncements(notices || []);
         }
+
+        // 5. Missões e Submissões para calcular progresso das categorias
+        const { data: allMissions } = await supabase
+          .from('missions')
+          .select('id, category, target_frequency');
+
+        const { data: userSubmissions } = await supabase
+          .from('student_submissions')
+          .select('mission_id, status')
+          .eq('student_id', user.id)
+          .eq('status', 'approved');
+
+        const approvedMissionIds = new Set(userSubmissions?.map((s: any) => s.mission_id) || []);
+
+        let tDone = 0, tTot = 0;
+        let cDone = 0, cTot = 0;
+        let rDone = 0, rTot = 0;
+        let hDone = 0, hTot = 0;
+
+        allMissions?.forEach((m: any) => {
+          const freq = m.target_frequency || 1;
+          const isDone = approvedMissionIds.has(m.id);
+
+          if (m.category === 'treino') {
+            tTot += freq;
+            if (isDone) tDone += freq;
+          } else if (m.category === 'cardio') {
+            cTot += freq;
+            if (isDone) cDone += freq;
+          } else if (m.category === 'refeicao') {
+            rTot += freq;
+            if (isDone) rDone += freq;
+          } else {
+            hTot += freq;
+            if (isDone) hDone += freq;
+          }
+        });
+
+        setCategoryCounts({
+          treinos: { done: tDone, total: tTot || 6 },
+          cardios: { done: cDone, total: cTot || 7 },
+          refeicoes: { done: rDone, total: rTot || 4 },
+          habitos: { done: hDone, total: hTot || 3 },
+        });
+
       } catch (err) {
-        console.error('Erro na home:', err);
+        console.error('Erro na tela de início:', err);
       } finally {
         setLoading(false);
       }
     }
 
     loadHome();
-  }, [supabase]);
+  }, [supabase, router]);
 
-  const completedCount = missions.filter(m => submissions[m.id]?.status === 'approved').length;
-  const progressPercent = missions.length > 0 ? Math.round((completedCount / missions.length) * 100) : 0;
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-5">
-      {/* Top Profile / Streak Header */}
+    <div className="flex flex-col flex-1 p-4 space-y-5 bg-zinc-950 text-white selection:bg-emerald-500">
+      {/* Header Superior: Marca & Boas-vindas */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20">
-            <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-black text-emerald-400 text-lg">
-              {student?.full_name?.charAt(0) || 'A'}
+          <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20">
+            <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-black text-emerald-400 text-base">
+              {student?.full_name?.charAt(0) || 'M'}
             </div>
           </div>
           <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">MatchPro</span>
+              <span className="h-1 w-1 rounded-full bg-zinc-600" />
+              <span className="text-[10px] font-bold text-zinc-400">Turma Ativa</span>
+            </div>
             <h1 className="text-base font-black text-white leading-tight">
-              {student?.full_name?.split(' ')[0] || 'Atleta'}
+              Olá, {student?.full_name?.split(' ')[0] || 'Atleta'} 👋
             </h1>
-            <p className="text-[11px] text-zinc-400 flex items-center gap-1 font-semibold">
-              <Zap className="h-3 w-3 text-amber-400 fill-amber-400" />
-              Nível 1 • Foco Diário
-            </p>
           </div>
         </div>
 
         {/* Streak / Ofensiva */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-gradient-to-r from-orange-500/15 to-amber-500/15 border border-orange-500/30 shadow-md shadow-orange-950/20">
-          <Flame className="h-5 w-5 text-orange-400 fill-orange-400 animate-pulse" />
-          <div className="text-left">
-            <span className="block text-[10px] text-zinc-400 font-bold leading-none uppercase tracking-wider">Streak</span>
-            <span className="text-xs font-black text-orange-400">3 Dias 🔥</span>
-          </div>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-orange-500/10 border border-orange-500/30">
+          <Flame className="h-4 w-4 text-orange-400 fill-orange-400" />
+          <span className="text-xs font-black text-orange-400">STREAK: 1 DIA</span>
         </div>
       </div>
 
-      {/* Card de Progresso do Dia */}
-      <div className="p-5 rounded-3xl bg-gradient-to-br from-emerald-950/50 via-zinc-900 to-zinc-950 border border-emerald-500/30 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" /> Meta do Dia
-            </span>
-            <span className="text-xs font-black text-white">{completedCount}/{missions.length} Concluídas</span>
-          </div>
-
-          <h2 className="text-xl font-black text-white leading-snug">
-            {progressPercent === 100 ? 'Todas as missões cumpridas hoje! 🎉' : 'Mantenha o ritmo para pontuar!'}
-          </h2>
-
-          {/* Barra de Progresso */}
-          <div className="w-full bg-zinc-950 h-2.5 rounded-full overflow-hidden border border-zinc-850 p-0.5">
-            <div
-              className="bg-gradient-to-r from-emerald-500 to-teal-300 h-full rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between pt-1">
-            <div className="flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-amber-400" />
-              <span className="text-xs font-bold text-zinc-300">
-                Pontos: <span className="text-emerald-400 font-black">{standing?.total_points || 0} pts</span>
-              </span>
-            </div>
-            <Link href="/app/missions">
-              <Button size="sm" className="h-8 text-xs font-bold px-3 rounded-xl shadow-lg shadow-emerald-500/20">
-                Ver Missões <ArrowRight className="h-3.5 w-3.5 ml-1" />
-              </Button>
-            </Link>
-          </div>
+      {/* Grid de Métricas Principais (Inspirado no card de pontuação) */}
+      <div className="grid grid-cols-3 gap-2.5">
+        <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">Pontuação</span>
+          <span className="text-2xl font-black text-emerald-400 mt-1 block">
+            {standing?.total_points || 0}
+          </span>
         </div>
-        <Flame className="absolute -right-3 -bottom-5 h-28 w-28 text-emerald-500/10 pointer-events-none rotate-12" />
+
+        <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">Posição</span>
+          <span className="text-lg font-black text-white mt-1 block">
+            4º <span className="text-xs text-zinc-400 font-semibold">lugar</span>
+          </span>
+        </div>
+
+        <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">Desafio</span>
+          <span className="text-lg font-black text-white mt-1 block">
+            Dia 2<span className="text-xs text-zinc-400 font-semibold">/30</span>
+          </span>
+        </div>
       </div>
 
-      {/* Atalhos Rápidos */}
-      <div className="grid grid-cols-2 gap-3">
-        <Link href="/app/missions">
-          <Card className="border-zinc-850 bg-zinc-900/60 hover:border-emerald-500/30 transition-all p-3.5 cursor-pointer">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
-                <Target className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="font-extrabold text-xs text-white">Missões</p>
-                <p className="text-[10px] text-zinc-400">Ver tarefas de hoje</p>
-              </div>
-            </div>
-          </Card>
-        </Link>
-
-        <Link href="/app/feed">
-          <Card className="border-zinc-850 bg-zinc-900/60 hover:border-emerald-500/30 transition-all p-3.5 cursor-pointer">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center font-bold">
-                <Users className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="font-extrabold text-xs text-white">Feed Social</p>
-                <p className="text-[10px] text-zinc-400">Fotos da turma</p>
-              </div>
-            </div>
-          </Card>
-        </Link>
-      </div>
-
-      {/* Próximas Missões Pendentes */}
-      <div className="space-y-3 pt-1">
+      {/* 📢 MURAL DE AVISOS DO TREINADOR */}
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-            Missões Rápidas
+          <h2 className="text-xs font-extrabold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+            <Bell className="h-3.5 w-3.5 text-emerald-400" /> Mural da Turma
           </h2>
-          <Link href="/app/missions" className="text-[11px] text-emerald-400 font-bold hover:underline">
-            Ver todas
-          </Link>
+          <span className="text-[10px] text-zinc-500 font-semibold">Comunicados Oficiais</span>
         </div>
 
-        {missions.length === 0 ? (
-          <div className="text-center py-6 text-zinc-500 text-xs">
-            Nenhuma missão cadastrada ainda.
+        {announcements.length === 0 ? (
+          <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-850 flex items-center gap-3">
+            <div className="h-8 w-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <p className="text-xs text-zinc-300">
+              Nenhum aviso novo hoje. Mantenha o foco nos treinos e refeições! 🔥
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
-            {missions.map((mission) => {
-              const sub = submissions[mission.id];
-              const isApproved = sub?.status === 'approved';
-              const isPending = sub?.status === 'pending';
-
-              return (
-                <div
-                  key={mission.id}
-                  className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-850 flex items-center justify-between gap-3"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="h-8 w-8 rounded-xl bg-zinc-800 text-emerald-400 flex items-center justify-center font-extrabold text-xs shrink-0">
-                      +{mission.points_rewarded}
-                    </div>
-                    <div className="truncate">
-                      <p className="font-bold text-xs text-white truncate">{mission.title}</p>
-                      <p className="text-[10px] text-zinc-400">Exige registro de foto</p>
-                    </div>
+            {announcements.map((a) => (
+              <div
+                key={a.id}
+                className={`p-3.5 rounded-2xl border transition-all ${
+                  a.is_pinned
+                    ? 'bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-900 border-emerald-500/30 shadow-md shadow-emerald-950/20'
+                    : 'bg-zinc-900/50 border-zinc-850'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-1.5">
+                    {a.is_pinned && <Pin className="h-3 w-3 text-emerald-400 fill-emerald-400" />}
+                    <span className="font-extrabold text-xs text-white">{a.title}</span>
                   </div>
-
-                  <div>
-                    {isApproved ? (
-                      <span className="text-[10px] font-black text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                        <CheckCircle2 className="h-3.5 w-3.5" /> Feito
-                      </span>
-                    ) : isPending ? (
-                      <span className="text-[10px] font-bold text-amber-400 flex items-center gap-1 bg-amber-500/10 px-2.5 py-1 rounded-full">
-                        <Clock className="h-3.5 w-3.5 animate-spin" /> Em Análise
-                      </span>
-                    ) : (
-                      <Link href={`/app/camera/${mission.id}`}>
-                        <Button size="sm" className="h-8 px-2.5 text-xs font-bold rounded-xl shadow-md">
-                          <Camera className="h-3.5 w-3.5 mr-1" /> Registrar
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
+                  <span className="text-[10px] text-zinc-500">
+                    {new Date(a.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                  </span>
                 </div>
-              );
-            })}
+                <p className="text-xs text-zinc-300 leading-relaxed">{a.content}</p>
+              </div>
+            ))}
           </div>
         )}
       </div>
+
+      {/* 📊 CARDS RESUMIDOS POR CATEGORIA (ENCAMINHAMENTO PARA MISSÕES) */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-extrabold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+            <Target className="h-3.5 w-3.5 text-emerald-400" /> Resumo das Suas Metas
+          </h2>
+          <Link href="/app/missions" className="text-[11px] text-emerald-400 font-extrabold flex items-center gap-0.5 hover:underline">
+            Ver todas <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+
+        {/* 1. Treinos da Semana */}
+        <Link href="/app/missions?cat=treino">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-emerald-500/30 transition-all flex items-center justify-between gap-3 group">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold">
+                <Dumbbell className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-black text-white group-hover:text-emerald-300 transition-colors">
+                  Treinos da Semana
+                </p>
+                <p className="text-[11px] text-zinc-400 mt-0.5">
+                  <strong className="text-emerald-400 font-bold">{categoryCounts.treinos.done}</strong> de {categoryCounts.treinos.total} concluídos
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-extrabold text-zinc-400 group-hover:text-white transition-colors">
+                Abrir Treinos
+              </span>
+              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-emerald-400 transition-colors" />
+            </div>
+          </div>
+        </Link>
+
+        {/* 2. Cardios da Semana */}
+        <Link href="/app/missions?cat=cardio">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-orange-500/30 transition-all flex items-center justify-between gap-3 group">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex items-center justify-center font-bold">
+                <Flame className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-black text-white group-hover:text-orange-300 transition-colors">
+                  Cardios da Semana
+                </p>
+                <p className="text-[11px] text-zinc-400 mt-0.5">
+                  <strong className="text-orange-400 font-bold">{categoryCounts.cardios.done}</strong> de {categoryCounts.cardios.total} feitos
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-extrabold text-zinc-400 group-hover:text-white transition-colors">
+                Ver Cardios
+              </span>
+              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-orange-400 transition-colors" />
+            </div>
+          </div>
+        </Link>
+
+        {/* 3. Refeições de Hoje */}
+        <Link href="/app/missions?cat=refeicao">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-amber-500/30 transition-all flex items-center justify-between gap-3 group">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold">
+                <Utensils className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-black text-white group-hover:text-amber-300 transition-colors">
+                  Refeições de Hoje
+                </p>
+                <p className="text-[11px] text-zinc-400 mt-0.5">
+                  <strong className="text-amber-400 font-bold">{categoryCounts.refeicoes.done}</strong> de {categoryCounts.refeicoes.total} registradas
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-extrabold text-zinc-400 group-hover:text-white transition-colors">
+                Registrar
+              </span>
+              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-amber-400 transition-colors" />
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Atalho para o Feed da Turma */}
+      <Link href="/app/feed" className="block pt-1">
+        <div className="p-4 rounded-3xl bg-gradient-to-r from-teal-950/40 via-zinc-900 to-zinc-950 border border-teal-500/30 flex items-center justify-between gap-3 group">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 block mb-0.5">
+              Comunidade Ativa
+            </span>
+            <p className="text-xs font-black text-white">Veja as fotos e pratos aprovados da turma hoje</p>
+          </div>
+          <Button size="sm" variant="outline" className="h-8 px-3 text-xs font-bold rounded-xl border-teal-500/40 text-teal-300 shrink-0">
+            Abrir Feed
+          </Button>
+        </div>
+      </Link>
     </div>
   );
 }

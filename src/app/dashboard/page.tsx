@@ -94,6 +94,34 @@ export default function DashboardOverviewPage() {
               Auditar Fotos ({stats.pendingSubmissions})
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              if (challenges.length === 0) {
+                alert('Crie um desafio antes de publicar avisos!');
+                return;
+              }
+              const title = prompt('Título do Aviso para a Turma:');
+              if (!title) return;
+              const content = prompt('Mensagem / Comunicado:');
+              if (!content) return;
+
+              const { error } = await supabase.from('challenge_announcements').insert({
+                challenge_id: challenges[0].id,
+                title,
+                content,
+                is_pinned: true,
+              });
+
+              if (error) {
+                alert('Erro ao publicar aviso: ' + error.message);
+              } else {
+                alert('Aviso publicado no Mural dos Alunos com sucesso! 📢');
+              }
+            }}
+          >
+            📢 Publicar Aviso
+          </Button>
           <Link href="/dashboard/challenges/new">
             <Button variant="outline">
               <Plus className="h-4 w-4 mr-1" />

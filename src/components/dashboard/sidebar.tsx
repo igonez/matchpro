@@ -12,7 +12,8 @@ import {
   Dumbbell, 
   Layers,
   BookOpen,
-  Gift
+  Gift,
+  Users
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -57,6 +58,12 @@ export function DashboardSidebar() {
       href: '/dashboard/mystery-box',
       icon: Gift,
       active: pathname === '/dashboard/mystery-box',
+    },
+    {
+      name: 'Squads (Equipes)',
+      href: '/dashboard/squads',
+      icon: Users,
+      active: pathname === '/dashboard/squads',
     },
     {
       name: 'Criar Desafio',

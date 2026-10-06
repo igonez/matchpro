@@ -10,7 +10,8 @@ import {
   Flame, 
   LogOut, 
   Dumbbell, 
-  Layers
+  Layers,
+  BookOpen
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -39,10 +40,16 @@ export function DashboardSidebar() {
       active: pathname === '/dashboard/audit',
     },
     {
-      name: 'Missões & Pontos',
+      name: 'Missões & Semanas',
       href: '/dashboard/missions',
       icon: Layers,
       active: pathname === '/dashboard/missions',
+    },
+    {
+      name: 'Materiais de Apoio',
+      href: '/dashboard/materials',
+      icon: BookOpen,
+      active: pathname === '/dashboard/materials',
     },
     {
       name: 'Criar Desafio',

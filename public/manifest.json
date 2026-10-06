@@ -1,6 +1,6 @@
 {
-  "name": "MatchPro Fitness Challenge",
-  "short_name": "MatchPro",
+  "name": "ArenaPro Fitness Challenge",
+  "short_name": "ArenaPro",
   "description": "Desafios fitness e missões diárias gamificadas",
   "start_url": "/app",
   "display": "standalone",

@@ -52,7 +52,7 @@ export default function HomePage() {
             </div>
             <div>
               <span className="font-black text-2xl tracking-tight text-white block leading-none">
-                Match<span className="text-emerald-400">Pro</span>
+                Arena<span className="text-emerald-400">Pro</span>
               </span>
               <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 block mt-0.5">
                 Enterprise Fitness Platform
@@ -100,7 +100,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-lg sm:text-xl text-zinc-300 max-w-3xl leading-relaxed mb-10">
-            O MatchPro é a infraestrutura definitiva para Personais Trainers, Nutricionistas e Academias criarem 
+            O ArenaPro é a infraestrutura definitiva para Personais Trainers, Nutricionistas e Academias criarem 
             desafios de alto engajamento. Check-in com câmera antifraude nativa, esquadrões cooperativos, rankings em tempo real e proteção de ofensiva.
           </p>
 
@@ -146,7 +146,7 @@ export default function HomePage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs uppercase font-extrabold tracking-widest text-emerald-400 mb-3">Engenharia de Engajamento</h2>
             <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Por que métodos tradicionais falham e o MatchPro escala?
+              Por que métodos tradicionais falham e o ArenaPro escala?
             </h3>
             <p className="text-zinc-400 text-base sm:text-lg">
               Grupos de WhatsApp e planilhas são caóticos e perdem o ritmo em 10 dias. Criamos um sistema automatizado baseado em princípios validados da psicologia comportamental.
@@ -361,7 +361,7 @@ export default function HomePage() {
               <div className="text-cyan-400 font-black text-2xl mb-4">03</div>
               <h4 className="font-bold text-white text-lg mb-2">Check-in Antifraude</h4>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Os alunos usam a câmera nativa do MatchPro e acumulam XP, subindo no ranking individual e de esquadrão.
+                Os alunos usam a câmera nativa do ArenaPro e acumulam XP, subindo no ranking individual e de esquadrão.
               </p>
             </div>
 
@@ -382,7 +382,7 @@ export default function HomePage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs uppercase font-extrabold tracking-widest text-emerald-400 mb-3">Feito Sob Medida</h2>
             <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Quem usa o MatchPro para multiplicar faturamento?
+              Quem usa o ArenaPro para multiplicar faturamento?
             </h3>
           </div>
 
@@ -426,7 +426,7 @@ export default function HomePage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs uppercase font-extrabold tracking-widest text-emerald-400 mb-3">Casos Reais</h2>
             <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              O que dizem os profissionais que já faturam com o MatchPro
+              O que dizem os profissionais que já faturam com o ArenaPro
             </h3>
           </div>
 
@@ -439,7 +439,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <p className="text-sm text-zinc-300 leading-relaxed italic mb-6">
-                  &ldquo;Antes eu perdia 3 horas por noite checando fotos de alunos no WhatsApp. Com o MatchPro audito tudo em 15 minutos e os alunos ficam enlouquecidos pelo ranking.&rdquo;
+                  &ldquo;Antes eu perdia 3 horas por noite checando fotos de alunos no WhatsApp. Com o ArenaPro audito tudo em 15 minutos e os alunos ficam enlouquecidos pelo ranking.&rdquo;
                 </p>
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-zinc-800">
@@ -544,7 +544,7 @@ export default function HomePage() {
                 <Dumbbell className="h-5 w-5" />
               </div>
               <span className="font-extrabold text-xl tracking-tight text-white">
-                Match<span className="text-emerald-400">Pro</span>
+                Arena<span className="text-emerald-400">Pro</span>
               </span>
             </div>
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mb-6">
@@ -592,7 +592,7 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 gap-4">
           <div>
-            &copy; {new Date().getFullYear()} MatchPro Technologies Ltd. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} ArenaPro Technologies Ltd. Todos os direitos reservados.
           </div>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5"><Lock className="h-3.5 w-3.5 text-emerald-400" /> Criptografia de Ponta a Ponta</span>

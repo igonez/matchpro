@@ -193,7 +193,7 @@ export default function JoinChallengePage() {
               <Flame className="h-4 w-4" />
             </div>
             <span className="font-extrabold text-base tracking-tight">
-              Match<span className="text-emerald-400">Pro</span>
+              Arena<span className="text-emerald-400">Pro</span>
             </span>
           </Link>
 
@@ -328,7 +328,7 @@ export default function JoinChallengePage() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-900 py-6 text-center text-xs text-zinc-500">
-        MatchPro — Plataforma Gamificada de Desafios
+        ArenaPro — Plataforma Gamificada de Desafios
       </footer>
     </div>
   );

@@ -51,7 +51,7 @@ export function PwaInstallPrompt() {
           <Smartphone className="h-5 w-5" />
         </div>
         <div>
-          <p className="font-extrabold text-xs text-white">Instalar o MatchPro no Celular</p>
+          <p className="font-extrabold text-xs text-white">Instalar o ArenaPro no Celular</p>
           <p className="text-[10px] text-zinc-300">Acesse com 1 toque direto na tela de início</p>
         </div>
       </div>

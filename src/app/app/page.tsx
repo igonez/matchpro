@@ -248,7 +248,7 @@ export default function StudentHomePage() {
 
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">MatchPro</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">ArenaPro</span>
               <span className="h-1 w-1 rounded-full bg-zinc-600" />
               <span className="text-[10px] font-bold text-zinc-400">Turma Ativa</span>
             </div>

@@ -90,7 +90,7 @@ export function DashboardSidebar() {
           </div>
           <div>
             <span className="font-extrabold text-lg text-white">
-              Match<span className="text-emerald-400">Pro</span>
+              Arena<span className="text-emerald-400">Pro</span>
             </span>
             <span className="block text-[10px] font-semibold text-emerald-400/80 tracking-wider uppercase">
               Área do Profissional

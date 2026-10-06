@@ -5,13 +5,13 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MatchPro — Gamified Fitness Challenges',
+  title: 'ArenaPro — Gamified Fitness Challenges',
   description: 'Plataforma SaaS B2B2C de gestão gamificada de desafios de fitness, nutrição e saúde com auditoria e ranking em tempo real.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'MatchPro',
+    title: 'ArenaPro',
   },
 };
 

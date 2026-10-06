@@ -63,14 +63,14 @@ export default function LoginPage() {
           if (role === 'professional') {
             const { error: profError } = await supabase.from('professionals').insert({
               id: authData.user.id,
-              full_name: fullName || 'Profissional MatchPro',
+              full_name: fullName || 'Profissional ArenaPro',
               specialty: specialty,
             });
             if (profError) console.error('Erro ao salvar profissional:', profError);
           } else {
             const { error: studentError } = await supabase.from('students').insert({
               id: authData.user.id,
-              full_name: fullName || 'Aluno MatchPro',
+              full_name: fullName || 'Aluno ArenaPro',
             });
             if (studentError) console.error('Erro ao salvar aluno:', studentError);
           }
@@ -422,7 +422,7 @@ export default function LoginPage() {
 
       {/* Footer Minimalista */}
       <footer className="w-full max-w-6xl mx-auto px-6 py-4 text-center text-[11px] text-zinc-400 border-t border-zinc-900/60 z-20">
-        © {new Date().getFullYear()} MatchPro • Todos os direitos reservados.
+        © {new Date().getFullYear()} ArenaPro • Todos os direitos reservados.
       </footer>
     </main>
   );

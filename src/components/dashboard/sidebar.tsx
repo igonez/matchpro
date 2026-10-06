@@ -13,7 +13,8 @@ import {
   Layers,
   BookOpen,
   Gift,
-  Users
+  Users,
+  Building2
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -64,6 +65,12 @@ export function DashboardSidebar() {
       href: '/dashboard/squads',
       icon: Users,
       active: pathname === '/dashboard/squads',
+    },
+    {
+      name: 'Parceiros & Cupons',
+      href: '/dashboard/sponsors',
+      icon: Building2,
+      active: pathname === '/dashboard/sponsors',
     },
     {
       name: 'Criar Desafio',

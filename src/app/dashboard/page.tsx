@@ -11,7 +11,9 @@ import {
   Plus, 
   CheckCircle2, 
   ShieldAlert,
-  Calendar
+  Calendar,
+  MessageCircle,
+  AlertTriangle
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,6 +31,7 @@ export default function DashboardOverviewPage() {
     activeChallenges: 0,
   });
   const [challenges, setChallenges] = useState<any[]>([]);
+  const [atRiskStudents, setAtRiskStudents] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchDashboardData() {
@@ -67,6 +70,17 @@ export default function DashboardOverviewPage() {
           pendingSubmissions: pendingCount || 0,
           activeChallenges: safeChallenges.filter((c: any) => c.is_active).length,
         });
+
+        // 5. Radar de Alunos em Risco (Inativos)
+        const { data: atRiskData } = await supabase
+          .from('at_risk_students_view')
+          .select('*')
+          .gte('days_inactive', 2)
+          .order('days_inactive', { ascending: false })
+          .limit(5);
+
+        setAtRiskStudents(atRiskData || []);
+
       } catch (err) {
         console.error('Erro ao buscar dados do dashboard:', err);
       } finally {
@@ -198,6 +212,97 @@ export default function DashboardOverviewPage() {
             <p className="text-xs text-zinc-500 mt-1">{stats.activeChallenges} em andamento</p>
           </CardContent>
         </Card>
+      </div>
+
+      {/* ⚠️ RADAR DE RETENÇÃO: ALUNOS EM RISCO DE DESISTÊNCIA (INATIVOS A MAIS DE 48H) */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-rose-400" />
+              Radar Anti-Desistência (Alunos Inativos +48h)
+            </h2>
+            <p className="text-xs text-zinc-400">
+              Resgate esses alunos antes que eles abandonem o desafio. O botão abre uma mensagem carinhosa pronta no WhatsApp!
+            </p>
+          </div>
+          <Badge className="bg-rose-500/10 text-rose-400 border-rose-500/20 font-black">
+            {atRiskStudents.length} Alertas
+          </Badge>
+        </div>
+
+        {atRiskStudents.length === 0 ? (
+          <Card className="border-zinc-800 bg-emerald-950/15 border-emerald-500/20 p-4 rounded-2xl flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+                ✓
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white">Turma 100% Ativa e Engajada!</p>
+                <p className="text-[11px] text-emerald-400/80">Nenhum aluno está inativo há mais de 48 horas no momento.</p>
+              </div>
+            </div>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {atRiskStudents.map((item) => {
+              const studentFirstName = item.student_name?.split(' ')[0] || 'Atleta';
+              const cleanPhone = item.student_phone?.replace(/\D/g, '') || '';
+              const message = encodeURIComponent(
+                `Fala ${studentFirstName}! Notei que você tá sumido(a) do desafio nesses últimos dias. Tá tudo bem por aí? Seu Squad e eu estamos torcendo por você, vamos voltar com tudo hoje! 🔥💪`
+              );
+              const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}?text=${message}` : null;
+
+              return (
+                <Card
+                  key={item.student_id}
+                  className="border-rose-500/30 bg-gradient-to-br from-rose-950/20 via-zinc-900 to-zinc-950 p-4 rounded-2xl flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-black uppercase text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
+                        {item.days_inactive} dias sem foto
+                      </span>
+                      <span className="text-[10px] text-zinc-500 font-semibold">{item.challenge_title}</span>
+                    </div>
+
+                    <h4 className="text-sm font-black text-white">{item.student_name}</h4>
+                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                      Última submissão: {new Date(item.last_activity_at).toLocaleDateString('pt-BR')}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-zinc-800/80">
+                    {waLink ? (
+                      <a
+                        href={waLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full h-9 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        Resgatar no WhatsApp (1-Clique)
+                      </a>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          navigator.clipboard.writeText(decodeURIComponent(message));
+                          alert(`Mensagem de resgate copiada para a área de transferência:\n\n${decodeURIComponent(message)}`);
+                        }}
+                        className="w-full h-9 text-xs font-bold border-zinc-700 text-zinc-300 hover:text-white"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5 mr-1 text-emerald-400" />
+                        Copiar Mensagem de Resgate
+                      </Button>
+                    )}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Lista de Desafios Recentes */}

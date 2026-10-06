@@ -34,7 +34,45 @@ export default function StudentProfilePage() {
   const [userPhotos, setUserPhotos] = useState<any[]>([]);
   const [vaultData, setVaultData] = useState<any>(null);
   const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0] || !student?.id) return;
+    const file = e.target.files[0];
+    setUploadingAvatar(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `avatar_${student.id}_${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('submissions')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('submissions')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('students')
+        .update({ avatar_url: publicUrl })
+        .eq('id', student.id);
+
+      if (updateError) throw updateError;
+
+      setStudent((prev: any) => ({ ...prev, avatar_url: publicUrl }));
+      alert('Foto de perfil atualizada com sucesso! ✨');
+    } catch (err: any) {
+      console.error('Erro ao atualizar foto de perfil:', err);
+      alert('Não foi possível enviar a foto de perfil: ' + (err.message || 'Tente novamente.'));
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   useEffect(() => {
     async function loadProfile() {
@@ -127,13 +165,37 @@ export default function StudentProfilePage() {
 
       {/* Card Principal do Usuário */}
       <Card className="border-zinc-850 bg-gradient-to-b from-zinc-900 to-zinc-950 p-5 rounded-3xl shadow-xl text-center">
-        <div className="relative mx-auto w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 shadow-xl shadow-emerald-500/20 mb-3">
-          <div className="w-full h-full bg-zinc-950 rounded-full flex items-center justify-center font-black text-2xl text-emerald-400">
-            {student?.full_name?.charAt(0) || 'A'}
+        {/* Avatar com upload de foto */}
+        <div className="relative mx-auto w-24 h-24 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 shadow-xl shadow-emerald-500/20 mb-3 group">
+          <div className="w-full h-full bg-zinc-950 rounded-full flex items-center justify-center font-black text-2xl text-emerald-400 overflow-hidden relative">
+            {student?.avatar_url ? (
+              <img
+                src={student.avatar_url}
+                alt={student.full_name || 'Avatar'}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              student?.full_name?.charAt(0) || 'A'
+            )}
+
+            {uploadingAvatar && (
+              <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                <div className="h-5 w-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
           </div>
-          <div className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-emerald-500 border-2 border-zinc-950 flex items-center justify-center text-black">
-            <ShieldCheck className="h-3.5 w-3.5" />
-          </div>
+
+          {/* Botão de Câmera / Upload */}
+          <label className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-emerald-500 hover:bg-emerald-400 border-2 border-zinc-950 flex items-center justify-center text-black cursor-pointer shadow-md transition-all active:scale-95" title="Alterar foto de perfil">
+            <Camera className="h-4 w-4" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              disabled={uploadingAvatar}
+              className="hidden"
+            />
+          </label>
         </div>
 
         <h2 className="text-lg font-black text-white">{student?.full_name || 'Atleta MatchPro'}</h2>

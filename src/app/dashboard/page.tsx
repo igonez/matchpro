@@ -352,16 +352,21 @@ export default function DashboardOverviewPage() {
                     <span>Missões configuradas:</span>
                     <span className="font-bold text-zinc-200">{c.missions?.length || 0}</span>
                   </div>
-                  <div className="mt-4 flex gap-2">
+                  <div className="mt-4 flex gap-1.5">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full text-xs">
-                        Configurar Missões
+                        Missões
+                      </Button>
+                    </Link>
+                    <Link href={`/dashboard/challenges/${c.id}/edit`}>
+                      <Button variant="outline" size="sm" className="text-xs text-zinc-300 hover:text-white px-2.5">
+                        Editar
                       </Button>
                     </Link>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 px-3"
+                      className="text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 px-2.5"
                       onClick={() => {
                         const link = `${window.location.origin}/join/${c.id}`;
                         navigator.clipboard.writeText(link);

@@ -12,21 +12,28 @@ import {
   Camera, 
   ShieldCheck, 
   Award,
-  ChevronRight
+  ChevronRight,
+  Lock,
+  Unlock,
+  Sparkles
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
+import { TransformationVaultModal } from '@/components/student/transformation-vault-modal';
 
 export default function StudentProfilePage() {
   const router = useRouter();
   const supabase = createClient();
 
   const [student, setStudent] = useState<any>(null);
+  const [challenge, setChallenge] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
   const [submissionsCount, setSubmissionsCount] = useState(0);
   const [userPhotos, setUserPhotos] = useState<any[]>([]);
+  const [vaultData, setVaultData] = useState<any>(null);
+  const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,6 +74,27 @@ export default function StudentProfilePage() {
 
         setSubmissionsCount(count || 0);
         setUserPhotos(submissionsData || []);
+
+        // 4. Desafio Ativo & Cofre Antes/Depois
+        const { data: ch } = await supabase
+          .from('challenges')
+          .select('id, title')
+          .eq('is_active', true)
+          .limit(1)
+          .maybeSingle();
+
+        setChallenge(ch);
+
+        if (ch) {
+          const { data: vault } = await supabase
+            .from('student_transformation_vault')
+            .select('*')
+            .eq('student_id', user.id)
+            .eq('challenge_id', ch.id)
+            .maybeSingle();
+
+          setVaultData(vault);
+        }
       } catch (err) {
         console.error('Erro ao carregar perfil:', err);
       } finally {
@@ -136,6 +164,43 @@ export default function StudentProfilePage() {
         </div>
       </Card>
 
+      {/* 🔒 FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
+      <div
+        onClick={() => setIsVaultModalOpen(true)}
+        className="p-4 rounded-3xl bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-950 border border-emerald-500/30 flex items-center justify-between gap-3 cursor-pointer hover:border-emerald-500/60 transition-all group shadow-lg"
+      >
+        <div className="flex items-center gap-3">
+          <div className="h-11 w-11 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+            {vaultData?.is_completed ? (
+              <Unlock className="h-6 w-6 stroke-[2.2]" />
+            ) : (
+              <Lock className="h-6 w-6 stroke-[2.2]" />
+            )}
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">
+                {vaultData?.is_completed ? 'Desbloqueado' : 'Privado & Seguro'}
+              </span>
+              <span className="h-1 w-1 rounded-full bg-zinc-600" />
+              <span className="text-[10px] text-zinc-400 font-semibold">Dia 1 ao 30</span>
+            </div>
+            <h4 className="text-xs font-black text-white group-hover:text-emerald-300 transition-colors">
+              Cofre Antes & Depois {vaultData?.is_completed && '✨'}
+            </h4>
+            <p className="text-[11px] text-zinc-400 mt-0.5">
+              {vaultData?.is_completed
+                ? 'Arraste o slider e veja sua evolução completa!'
+                : vaultData?.before_photo_url
+                ? 'Foto do Dia 1 trancada. Envie a foto final no Dia 30.'
+                : 'Envie sua foto do Dia 1 para trancar no cofre.'}
+            </p>
+          </div>
+        </div>
+
+        <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-emerald-400 transition-colors shrink-0" />
+      </div>
+
       {/* Histórico de Fotos do Aluno */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
@@ -173,6 +238,28 @@ export default function StudentProfilePage() {
           </div>
         )}
       </div>
+
+      {/* MODAL COFRE ANTES & DEPOIS */}
+      {student && challenge && (
+        <TransformationVaultModal
+          isOpen={isVaultModalOpen}
+          onClose={() => setIsVaultModalOpen(false)}
+          studentId={student.id}
+          challengeId={challenge.id}
+          studentName={student.full_name || 'Atleta'}
+          vaultData={vaultData}
+          onVaultUpdated={async () => {
+            const { data: v } = await supabase
+              .from('student_transformation_vault')
+              .select('*')
+              .eq('student_id', student.id)
+              .eq('challenge_id', challenge.id)
+              .maybeSingle();
+            setVaultData(v);
+          }}
+        />
+      )}
     </div>
   );
 }
+

@@ -1,0 +1,172 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Trophy, Calendar, DollarSign, ArrowLeft, CheckCircle2, CreditCard } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+
+export default function NewChallengePage() {
+  const router = useRouter();
+  const supabase = createClient();
+
+  const [title, setTitle] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [price, setPrice] = useState('49.90');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado.');
+
+      // Criar Desafio no Supabase
+      const { data: challenge, error: challengeError } = await supabase
+        .from('challenges')
+        .insert({
+          professional_id: user.id,
+          title,
+          start_date: startDate,
+          end_date: endDate,
+          price: parseFloat(price) || 0,
+          is_active: true,
+        })
+        .select()
+        .single();
+
+      if (challengeError) throw challengeError;
+
+      // Redirecionar para adicionar as missões desse desafio
+      router.push(`/dashboard/missions?challengeId=${challenge.id}`);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao criar desafio.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-center gap-3">
+        <Link href="/dashboard">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-black text-white">Criar Novo Desafio Fitness</h1>
+          <p className="text-xs text-zinc-400">Configure as datas, taxa de inscrição e regras gerais.</p>
+        </div>
+      </div>
+
+      <Card className="border-zinc-800 bg-zinc-900/40">
+        <CardHeader>
+          <CardTitle className="text-lg">Dados do Desafio</CardTitle>
+          <CardDescription className="text-xs">
+            Preencha os dados do programa de gamificação que seus alunos irão participar.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">
+                Título do Desafio
+              </label>
+              <Input
+                type="text"
+                placeholder="Ex: Desafio Seca 30 Dias - Turma Outubro"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-semibold text-zinc-300 block mb-1">
+                  Data de Início
+                </label>
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-zinc-300 block mb-1">
+                  Data de Encerramento
+                </label>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">
+                Valor da Inscrição (R$)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-3 text-zinc-500 font-bold text-sm">R$</span>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  className="pl-10"
+                  placeholder="0.00"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  required
+                />
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-1">
+                Digite 0.00 para desafio gratuito entre seus alunos.
+              </p>
+            </div>
+
+            {/* Checkout Placeholder / Informação Stripe & Pagar.me */}
+            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 flex items-start gap-3">
+              <div className="h-8 w-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center shrink-0">
+                <CreditCard className="h-4 w-4" />
+              </div>
+              <div className="text-xs">
+                <p className="font-bold text-zinc-200">Gateway de Pagamento Integrado</p>
+                <p className="text-zinc-400 mt-0.5">
+                  Ao publicar, os links de checkout automatizados (Stripe Connect / Pagar.me) ficam disponíveis para repasse direto na sua conta bancária.
+                </p>
+              </div>
+            </div>
+
+            {error && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
+                {error}
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 pt-2">
+              <Link href="/dashboard">
+                <Button type="button" variant="ghost">Cancelar</Button>
+              </Link>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Salvando...' : 'Criar e Definir Missões'}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

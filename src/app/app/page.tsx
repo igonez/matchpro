@@ -17,13 +17,17 @@ import {
   TrendingUp,
   Target,
   ArrowRight,
-  LogOut
+  LogOut,
+  Shield,
+  Gift
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { FreezeShieldModal } from '@/components/student/freeze-shield-modal';
+import { MysteryBoxModal } from '@/components/student/mystery-box-modal';
 
 export default function StudentHomePage() {
   const router = useRouter();
@@ -41,6 +45,16 @@ export default function StudentHomePage() {
     refeicoes: { done: 0, total: 0 },
     habitos: { done: 0, total: 0 },
   });
+
+  // Fase 1: Gamificação e Retenção
+  const [gamState, setGamState] = useState<any>({
+    freeze_shields_available: 1,
+    freeze_shields_used: 0,
+    current_streak: 1,
+  });
+  const [isFreezeModalOpen, setIsFreezeModalOpen] = useState(false);
+  const [isMysteryBoxOpen, setIsMysteryBoxOpen] = useState(false);
+  const [alreadyClaimedBox, setAlreadyClaimedBox] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -141,6 +155,43 @@ export default function StudentHomePage() {
           habitos: { done: hDone, total: hTot || 3 },
         });
 
+        // 6. Estado Gamificado (Freeze Shield)
+        if (challengeData) {
+          const { data: gs } = await supabase
+            .from('student_gamification_state')
+            .select('*')
+            .eq('student_id', user.id)
+            .eq('challenge_id', challengeData.id)
+            .maybeSingle();
+
+          if (gs) {
+            setGamState(gs);
+          } else {
+            // Se ainda não existir registro, inicializa com 1 escudo
+            const { data: newGs } = await supabase
+              .from('student_gamification_state')
+              .insert({
+                student_id: user.id,
+                challenge_id: challengeData.id,
+                freeze_shields_available: 1,
+              })
+              .select('*')
+              .maybeSingle();
+            if (newGs) setGamState(newGs);
+          }
+
+          // Verificar se já resgatou a mystery box da semana 1
+          const { data: claim } = await supabase
+            .from('student_mystery_box_claims')
+            .select('id')
+            .eq('student_id', user.id)
+            .eq('challenge_id', challengeData.id)
+            .eq('week_number', 1)
+            .maybeSingle();
+
+          setAlreadyClaimedBox(!!claim);
+        }
+
       } catch (err) {
         console.error('Erro na tela de início:', err);
       } finally {
@@ -207,6 +258,55 @@ export default function StudentHomePage() {
             Dia 2<span className="text-xs text-zinc-400 font-semibold">/30</span>
           </span>
         </div>
+      </div>
+
+      {/* 🛡️ FASE 1: BARRA DE RETENÇÃO (FREEZE SHIELD & MYSTERY BOX) */}
+      <div className="grid grid-cols-2 gap-2.5">
+        {/* Card 1: Freeze Shield */}
+        <button
+          onClick={() => setIsFreezeModalOpen(true)}
+          className="p-3 rounded-2xl bg-gradient-to-br from-cyan-950/40 via-zinc-900 to-zinc-950 border border-cyan-500/30 text-left hover:border-cyan-400/60 transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="h-7 w-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
+              <Shield className="h-4 w-4 stroke-[2.2]" />
+            </div>
+            <span className="text-[10px] font-black uppercase text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded-md">
+              {gamState.freeze_shields_available} Disp.
+            </span>
+          </div>
+          <p className="text-xs font-black text-white mt-2 group-hover:text-cyan-300 transition-colors">
+            Freeze Shield
+          </p>
+          <p className="text-[10px] text-zinc-400 mt-0.5">
+            Blinde seu streak hoje
+          </p>
+        </button>
+
+        {/* Card 2: Mystery Box de Domingo */}
+        <button
+          onClick={() => setIsMysteryBoxOpen(true)}
+          className="p-3 rounded-2xl bg-gradient-to-br from-amber-950/40 via-zinc-900 to-zinc-950 border border-amber-500/30 text-left hover:border-amber-400/60 transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="h-7 w-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+              <Gift className="h-4 w-4 stroke-[2.2]" />
+            </div>
+            <span className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded-md ${
+              alreadyClaimedBox
+                ? 'bg-zinc-800 text-zinc-400'
+                : 'text-amber-400 bg-amber-500/10'
+            }`}>
+              {alreadyClaimedBox ? 'Resgatada' : 'Semana 1'}
+            </span>
+          </div>
+          <p className="text-xs font-black text-white mt-2 group-hover:text-amber-300 transition-colors">
+            Mystery Box
+          </p>
+          <p className="text-[10px] text-zinc-400 mt-0.5">
+            {alreadyClaimedBox ? 'Recompensa ganha' : 'Bata 100% e abra'}
+          </p>
+        </button>
       </div>
 
       {/* 📢 MURAL DE AVISOS DO TREINADOR */}
@@ -358,6 +458,46 @@ export default function StudentHomePage() {
           </Button>
         </div>
       </Link>
+
+      {/* MODAL 1: FREEZE SHIELD */}
+      {student && challenge && (
+        <FreezeShieldModal
+          isOpen={isFreezeModalOpen}
+          onClose={() => setIsFreezeModalOpen(false)}
+          studentId={student.id}
+          challengeId={challenge.id}
+          shieldsAvailable={gamState.freeze_shields_available || 0}
+          onShieldActivated={() => {
+            setGamState((prev: any) => ({
+              ...prev,
+              freeze_shields_available: Math.max(0, (prev.freeze_shields_available || 1) - 1),
+            }));
+          }}
+        />
+      )}
+
+      {/* MODAL 2: MYSTERY BOX DE DOMINGO */}
+      {student && challenge && (
+        <MysteryBoxModal
+          isOpen={isMysteryBoxOpen}
+          onClose={() => setIsMysteryBoxOpen(false)}
+          studentId={student.id}
+          challengeId={challenge.id}
+          weekNumber={1}
+          isEligible={true} // Aberto para a semana atual
+          alreadyClaimed={alreadyClaimedBox}
+          onRewardClaimed={(reward) => {
+            setAlreadyClaimedBox(true);
+            if (reward.reward_type === 'freeze_shield') {
+              setGamState((prev: any) => ({
+                ...prev,
+                freeze_shields_available: (prev.freeze_shields_available || 0) + 1,
+              }));
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
+

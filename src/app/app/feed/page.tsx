@@ -221,9 +221,17 @@ export default function StudentSocialFeedPage() {
                 {/* Header do Post */}
                 <div className="p-3.5 flex items-center justify-between border-b border-zinc-850/60">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md">
-                      <div className="h-full w-full bg-zinc-950 rounded-full flex items-center justify-center font-bold text-xs text-white">
-                        {post.students?.full_name?.charAt(0) || 'A'}
+                    <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md shrink-0">
+                      <div className="h-full w-full bg-zinc-950 rounded-full flex items-center justify-center font-bold text-xs text-white overflow-hidden">
+                        {post.students?.avatar_url ? (
+                          <img
+                            src={post.students.avatar_url}
+                            alt={post.students.full_name || 'Aluno'}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          post.students?.full_name?.charAt(0) || 'A'
+                        )}
                       </div>
                     </div>
                     <div>
@@ -341,8 +349,16 @@ export default function StudentSocialFeedPage() {
               ) : (
                 commentsList.map((c) => (
                   <div key={c.id} className="flex items-start gap-2.5 text-xs">
-                    <div className="h-7 w-7 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
-                      {c.students?.full_name?.charAt(0) || 'U'}
+                    <div className="h-7 w-7 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden">
+                      {c.students?.avatar_url ? (
+                        <img
+                          src={c.students.avatar_url}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        c.students?.full_name?.charAt(0) || 'U'
+                      )}
                     </div>
                     <div>
                       <p className="font-bold text-zinc-200">

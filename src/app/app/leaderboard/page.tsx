@@ -216,7 +216,23 @@ export default function LeaderboardPage() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {getPodiumBadge(index)}
+                      <div className="relative">
+                        {getPodiumBadge(index)}
+                      </div>
+
+                      {/* Avatar do Aluno */}
+                      <div className="h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-750 overflow-hidden flex items-center justify-center font-bold text-xs text-emerald-400 shrink-0">
+                        {item.students?.avatar_url ? (
+                          <img
+                            src={item.students.avatar_url}
+                            alt={item.students.full_name || 'Aluno'}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          item.students?.full_name?.charAt(0) || 'A'
+                        )}
+                      </div>
+
                       <div>
                         <p className={`font-black text-sm ${isFirst ? 'text-amber-300' : 'text-white'}`}>
                           {item.students?.full_name || 'Aluno Anônimo'}

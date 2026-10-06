@@ -212,11 +212,21 @@ export default function StudentHomePage() {
       {/* Header Superior: Marca & Boas-vindas */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20">
-            <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-black text-emerald-400 text-base">
-              {student?.full_name?.charAt(0) || 'M'}
+          <Link href="/app/profile">
+            <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 cursor-pointer active:scale-95 transition-all">
+              <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-black text-emerald-400 text-base overflow-hidden">
+                {student?.avatar_url ? (
+                  <img
+                    src={student.avatar_url}
+                    alt={student.full_name || 'Avatar'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  student?.full_name?.charAt(0) || 'M'
+                )}
+              </div>
             </div>
-          </div>
+          </Link>
           <div>
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">MatchPro</span>

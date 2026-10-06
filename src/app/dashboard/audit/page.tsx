@@ -2,41 +2,45 @@
 
 import React, { useEffect, useState } from 'react';
 import { 
-  Check, 
+  ShieldAlert, 
+  Trash2, 
   X, 
+  Check, 
+  Flag, 
+  Eye, 
   Clock, 
   User, 
-  Award, 
   Sparkles, 
   RefreshCw, 
   CheckCircle2, 
-  AlertCircle,
-  Maximize2
+  AlertTriangle,
+  ArrowRight,
+  Filter
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import confetti from 'canvas-confetti';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 
-export default function AuditSwipePage() {
+export default function FiscalizacaoPage() {
   const supabase = createClient();
 
   const [submissions, setSubmissions] = useState<any[]>([]);
+  const [reports, setReports] = useState<any[]>([]);
+  const [filter, setFilter] = useState<'all' | 'reported' | 'approved' | 'rejected'>('all');
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<{ text: string; type: 'success' | 'danger' } | null>(null);
 
-  // Carregar submissões com status 'pending'
-  const fetchSubmissions = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      // 1. Buscar todas as submissões recentes
+      const { data: subsData } = await supabase
         .from('student_submissions')
         .select(`
           id,
           photo_url,
+          caption,
           status,
           submitted_at,
           student_id,
@@ -47,212 +51,276 @@ export default function AuditSwipePage() {
           missions (
             id,
             title,
-            points_rewarded,
-            challenge_id
+            points_rewarded
+          ),
+          submission_reports (
+            id,
+            reason,
+            created_at,
+            reporter_student_id
           )
         `)
-        .eq('status', 'pending')
-        .order('submitted_at', { ascending: true });
+        .order('submitted_at', { ascending: false })
+        .limit(60);
 
-      if (error) throw error;
-      setSubmissions(data || []);
+      setSubmissions(subsData || []);
     } catch (err) {
-      console.error('Erro ao carregar auditoria:', err);
+      console.error('Erro ao buscar fiscalização:', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSubmissions();
+    fetchData();
   }, []);
 
-  // Aprovar foto -> Dispara o trigger PostgreSQL para somar os pontos
-  const handleApprove = async () => {
-    if (submissions.length === 0) return;
-    const current = submissions[0];
-    setProcessingId(current.id);
+  // INVALIDAR / DEDUZIR PONTOS DA FOTO (Rejeitar)
+  const handleInvalidatePhoto = async (sub: any) => {
+    const confirmAction = confirm(
+      `Deseja invalidar esta foto de "${sub.students?.full_name}"?\nIsso vai remover automaticamente ${sub.missions?.points_rewarded || 10} pontos do Leaderboard dele!`
+    );
+    if (!confirmAction) return;
 
-    try {
-      const { error } = await supabase
-        .from('student_submissions')
-        .update({ status: 'approved' })
-        .eq('id', current.id);
-
-      if (error) throw error;
-
-      // Efeito de confete ao aprovar
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.7 },
-        colors: ['#10b981', '#34d399', '#6ee7b7'],
-      });
-
-      setFeedback({ text: `Aprovado! +${current.missions?.points_rewarded} pontos creditados`, type: 'success' });
-      setSubmissions((prev) => prev.slice(1));
-    } catch (err: any) {
-      console.error('Erro ao aprovar:', err);
-      alert('Erro ao aprovar submissão: ' + err.message);
-    } finally {
-      setProcessingId(null);
-      setTimeout(() => setFeedback(null), 2500);
-    }
-  };
-
-  // Rejeitar foto
-  const handleReject = async () => {
-    if (submissions.length === 0) return;
-    const current = submissions[0];
-    setProcessingId(current.id);
-
+    setProcessingId(sub.id);
     try {
       const { error } = await supabase
         .from('student_submissions')
         .update({ status: 'rejected' })
-        .eq('id', current.id);
+        .eq('id', sub.id);
 
       if (error) throw error;
 
-      setFeedback({ text: 'Missão Rejeitada!', type: 'danger' });
-      setSubmissions((prev) => prev.slice(1));
+      // Atualiza localmente
+      setSubmissions((prev) =>
+        prev.map((item) => (item.id === sub.id ? { ...item, status: 'rejected' } : item))
+      );
+      alert(`Foto desclassificada! -${sub.missions?.points_rewarded || 10} pontos deduzidos do aluno.`);
     } catch (err: any) {
-      console.error('Erro ao rejeitar:', err);
-      alert('Erro ao rejeitar submissão: ' + err.message);
+      alert('Erro ao invalidar foto: ' + err.message);
     } finally {
       setProcessingId(null);
-      setTimeout(() => setFeedback(null), 2500);
     }
   };
 
-  const current = submissions[0];
+  // REABILITAR FOTO (Voltar para Aprovada)
+  const handleReactivatePhoto = async (sub: any) => {
+    setProcessingId(sub.id);
+    try {
+      const { error } = await supabase
+        .from('student_submissions')
+        .update({ status: 'approved' })
+        .eq('id', sub.id);
+
+      if (error) throw error;
+
+      setSubmissions((prev) =>
+        prev.map((item) => (item.id === sub.id ? { ...item, status: 'approved' } : item))
+      );
+    } catch (err: any) {
+      alert('Erro ao reabilitar foto: ' + err.message);
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  // Filtragem
+  const filteredSubmissions = submissions.filter((s) => {
+    const hasReport = s.submission_reports && s.submission_reports.length > 0;
+    if (filter === 'reported') return hasReport && s.status !== 'rejected';
+    if (filter === 'rejected') return s.status === 'rejected';
+    if (filter === 'approved') return s.status === 'approved';
+    return true;
+  });
+
+  const reportedCount = submissions.filter(
+    (s) => s.submission_reports && s.submission_reports.length > 0 && s.status !== 'rejected'
+  ).length;
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight">Auditoria Express (Swipe)</h1>
+          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+            Fiscalização & Auditoria Amostral <ShieldAlert className="h-6 w-6 text-emerald-400" />
+          </h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Avalie as fotos enviadas. A aprovação credita pontos automaticamente via Trigger no banco.
+            As fotos são auto-aprovadas instantaneamente. Invalide apenas fotos falsas para deduzir pontos automaticamente.
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={fetchSubmissions} disabled={loading}>
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          Atualizar
-        </Button>
+
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" onClick={fetchData} disabled={loading}>
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Atualizar
+          </Button>
+        </div>
       </div>
 
-      {/* Alerta de Feedback instantâneo */}
-      {feedback && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`p-3 rounded-xl text-center text-xs font-bold border ${
-            feedback.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
-          }`}
-        >
-          {feedback.text}
-        </motion.div>
-      )}
-
-      {loading ? (
-        <div className="h-96 flex flex-col items-center justify-center gap-3 border border-zinc-800 rounded-3xl bg-zinc-900/30">
-          <div className="h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-zinc-400">Carregando submissões pendentes...</p>
-        </div>
-      ) : submissions.length === 0 ? (
-        <Card className="border-dashed border-zinc-800 p-12 text-center bg-zinc-900/20">
-          <CheckCircle2 className="h-14 w-14 text-emerald-400 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-white">Tudo em dia!</h3>
-          <p className="text-xs text-zinc-400 max-w-sm mx-auto mt-1 mb-6">
-            Não há fotos de missões pendentes para avaliação no momento. Seus alunos estão mandando bem!
-          </p>
-          <Button variant="outline" size="sm" onClick={fetchSubmissions}>
-            Verificar Novamente
-          </Button>
-        </Card>
-      ) : (
-        <div className="relative">
-          {/* Fila restante */}
-          <div className="text-center text-xs font-semibold text-zinc-500 mb-2">
-            Restam <span className="text-emerald-400 font-bold">{submissions.length}</span> fotos na fila
+      {/* Banner de Denúncias da Comunidade se houver */}
+      {reportedCount > 0 && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <Flag className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="font-black text-sm text-amber-300">
+                {reportedCount} foto(s) sinalizada(s) pelos próprios colegas da turma!
+              </p>
+              <p className="text-xs text-zinc-300">
+                Alunos da turma denunciaram fotos suspeitas. Dê uma olhada para manter a integridade do desafio.
+              </p>
+            </div>
           </div>
 
-          {/* Tinder Card Container */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current.id}
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              transition={{ duration: 0.2 }}
-              className="relative rounded-3xl border border-zinc-800 overflow-hidden bg-zinc-900 shadow-2xl"
-            >
-              {/* Foto da Submissão */}
-              <div className="relative aspect-[4/5] sm:aspect-square w-full bg-black flex items-center justify-center overflow-hidden">
-                {current.photo_url ? (
+          <Button
+            size="sm"
+            onClick={() => setFilter('reported')}
+            className="h-9 px-3 text-xs font-black bg-amber-500 hover:bg-amber-400 text-black shrink-0"
+          >
+            Ver Denúncias
+          </Button>
+        </div>
+      )}
+
+      {/* Filtros em Abas */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setFilter('all')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            filter === 'all'
+              ? 'bg-zinc-800 text-white'
+              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+          }`}
+        >
+          Todas Recentes ({submissions.length})
+        </button>
+
+        <button
+          onClick={() => setFilter('reported')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            filter === 'reported'
+              ? 'bg-amber-500 text-black'
+              : 'bg-zinc-900 border border-zinc-800 text-amber-400 hover:text-amber-300'
+          }`}
+        >
+          <Flag className="h-3 w-3" /> Sinalizadas pela Turma ({reportedCount})
+        </button>
+
+        <button
+          onClick={() => setFilter('rejected')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            filter === 'rejected'
+              ? 'bg-rose-600 text-white'
+              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+          }`}
+        >
+          Desclassificadas ({submissions.filter((s) => s.status === 'rejected').length})
+        </button>
+      </div>
+
+      {/* Grade de Fotos (Galeria Amostral Rápida) */}
+      {loading ? (
+        <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
+          <div className="h-7 w-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          Carregando registros...
+        </div>
+      ) : filteredSubmissions.length === 0 ? (
+        <Card className="border-dashed border-zinc-800 p-12 text-center bg-zinc-900/20">
+          <CheckCircle2 className="h-12 w-12 text-emerald-400 mx-auto mb-3" />
+          <h3 className="font-bold text-white text-base">Tudo limpo e em conformidade!</h3>
+          <p className="text-xs text-zinc-400 max-w-sm mx-auto mt-1">
+            Nenhuma foto necessita de intervenção neste filtro. A turma está pontuando normalmente.
+          </p>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filteredSubmissions.map((sub) => {
+            const hasReport = sub.submission_reports && sub.submission_reports.length > 0;
+            const isRejected = sub.status === 'rejected';
+
+            return (
+              <Card
+                key={sub.id}
+                className={`border overflow-hidden rounded-2xl bg-zinc-900/60 transition-all ${
+                  hasReport && !isRejected
+                    ? 'border-amber-500/50 ring-1 ring-amber-500/30'
+                    : isRejected
+                    ? 'border-rose-500/40 opacity-60'
+                    : 'border-zinc-800 hover:border-zinc-700'
+                }`}
+              >
+                {/* Imagem do Aluno */}
+                <div className="relative aspect-square w-full bg-black overflow-hidden group">
                   <img
-                    src={current.photo_url}
-                    alt="Foto da missão"
-                    className="w-full h-full object-cover"
+                    src={sub.photo_url}
+                    alt="Comprovante"
+                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
                   />
-                ) : (
-                  <div className="text-zinc-600 text-xs">Imagem indisponível</div>
-                )}
 
-                {/* Badge de Pontos Flutuante */}
-                <div className="absolute top-4 right-4">
-                  <Badge variant="success" className="text-xs font-extrabold px-3 py-1 shadow-lg backdrop-blur bg-emerald-950/80 border-emerald-500/40">
-                    +{current.missions?.points_rewarded || 10} Pontos
-                  </Badge>
-                </div>
+                  {/* Badge de Denúncia */}
+                  {hasReport && !isRejected && (
+                    <div className="absolute top-2 left-2 bg-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md flex items-center gap-1 shadow-md">
+                      <Flag className="h-3 w-3 fill-current" /> Denunciada ({sub.submission_reports.length})
+                    </div>
+                  )}
 
-                {/* Gradiente escuro no rodapé da imagem */}
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent p-5 flex flex-col justify-end">
-                  <div className="flex items-center gap-2 mb-1">
-                    <User className="h-4 w-4 text-emerald-400" />
-                    <span className="font-black text-white text-base">
-                      {current.students?.full_name || 'Aluno'}
-                    </span>
+                  {/* Badge de Status */}
+                  <div className="absolute top-2 right-2">
+                    <Badge
+                      variant={isRejected ? 'destructive' : 'success'}
+                      className="text-[10px] font-black"
+                    >
+                      {isRejected ? 'Desclassificada (-pts)' : `+${sub.missions?.points_rewarded || 10} pts`}
+                    </Badge>
                   </div>
-                  <p className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
-                    Missão: <span className="text-emerald-300">{current.missions?.title || 'Meta do Dia'}</span>
-                  </p>
-                  <p className="text-[10px] text-zinc-400 mt-1 flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    Enviado em {new Date(current.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                  </p>
+
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 backdrop-blur-md p-2 rounded-xl text-[11px] text-zinc-300">
+                    <p className="font-extrabold text-white truncate">{sub.missions?.title}</p>
+                    {sub.caption && <p className="text-[10px] text-zinc-400 italic line-clamp-1">"{sub.caption}"</p>}
+                  </div>
                 </div>
-              </div>
 
-              {/* Botões de Ação estilo Tinder / Swipe */}
-              <div className="p-5 bg-zinc-950 flex items-center justify-around gap-4 border-t border-zinc-850">
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  onClick={handleReject}
-                  disabled={processingId === current.id}
-                  className="flex-1 rounded-2xl h-14 font-extrabold text-sm shadow-xl shadow-rose-950/30 flex items-center justify-center gap-2"
-                >
-                  <X className="h-6 w-6 stroke-[3]" />
-                  Rejeitar
-                </Button>
+                {/* Footer do Card com Ação */}
+                <div className="p-3 bg-zinc-950 flex items-center justify-between gap-2 border-t border-zinc-850">
+                  <div className="truncate">
+                    <p className="font-bold text-xs text-white truncate">{sub.students?.full_name || 'Aluno'}</p>
+                    <p className="text-[10px] text-zinc-500 flex items-center gap-1">
+                      <Clock className="h-2.5 w-2.5" />
+                      {new Date(sub.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
 
-                <Button
-                  variant="success"
-                  size="lg"
-                  onClick={handleApprove}
-                  disabled={processingId === current.id}
-                  className="flex-1 rounded-2xl h-14 font-extrabold text-sm shadow-xl shadow-emerald-950/30 flex items-center justify-center gap-2"
-                >
-                  <Check className="h-6 w-6 stroke-[3]" />
-                  Aprovar (+{current.missions?.points_rewarded})
-                </Button>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                  <div>
+                    {isRejected ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleReactivatePhoto(sub)}
+                        disabled={processingId === sub.id}
+                        className="h-8 px-2 text-[10px] text-emerald-400 border-emerald-500/30"
+                      >
+                        Reativar
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleInvalidatePhoto(sub)}
+                        disabled={processingId === sub.id}
+                        className="h-8 px-2.5 text-xs font-bold rounded-xl"
+                        title="Desclassificar foto e deduzir pontos"
+                      >
+                        <X className="h-3.5 w-3.5 mr-1" /> Invalidar
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

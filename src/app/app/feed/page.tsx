@@ -10,7 +10,8 @@ import {
   Send, 
   Flame, 
   User,
-  X
+  X,
+  Flag
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -272,6 +273,32 @@ export default function StudentSocialFeedPage() {
                     >
                       <MessageCircle className="h-5 w-5" />
                       <span>Comentar</span>
+                    </button>
+
+                    <button
+                      onClick={async () => {
+                        if (!currentUser) return;
+                        const confirmReport = confirm('Deseja sinalizar esta foto para o treinador averiguar por suspeita de fraude?');
+                        if (!confirmReport) return;
+
+                        const { error } = await supabase.from('submission_reports').insert({
+                          submission_id: post.id,
+                          reporter_student_id: currentUser.id,
+                          reason: 'Denúncia de foto suspeita/não condizente',
+                        });
+
+                        if (error && error.message.includes('unique')) {
+                          alert('Você já sinalizou esta foto anteriormente.');
+                        } else if (error) {
+                          alert('Erro ao enviar sinalização: ' + error.message);
+                        } else {
+                          alert('Foto enviada para averiguação prioritária do treinador! 🛡️');
+                        }
+                      }}
+                      className="ml-auto text-zinc-600 hover:text-amber-400 p-1 transition-colors"
+                      title="Sinalizar foto suspeita para o treinador"
+                    >
+                      <Flag className="h-4 w-4" />
                     </button>
                   </div>
 

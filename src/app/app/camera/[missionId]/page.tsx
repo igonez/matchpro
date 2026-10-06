@@ -73,7 +73,7 @@ export default function CameraCapturePage() {
         .from('submissions')
         .getPublicUrl(fileName);
 
-      // 3. Salvar registro na tabela student_submissions com status 'pending'
+      // 3. Salvar registro na tabela student_submissions com status 'approved' (Auto-Aprovação Imediata)
       const { error: dbError } = await supabase
         .from('student_submissions')
         .insert({
@@ -81,7 +81,7 @@ export default function CameraCapturePage() {
           student_id: user.id,
           photo_url: publicUrl,
           caption: caption.trim() || null,
-          status: 'pending',
+          status: 'approved',
         });
 
       if (dbError) throw dbError;

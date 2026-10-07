@@ -17,6 +17,7 @@ export function StudentBottomNav() {
   const [showVerticalMenu, setShowVerticalMenu] = useState(false);
   const [pendingMissions, setPendingMissions] = useState<any[]>([]);
   const [studentInfo, setStudentInfo] = useState<any>(null);
+  const [isProfessional, setIsProfessional] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -27,7 +28,7 @@ export function StudentBottomNav() {
         .limit(10);
       setPendingMissions(mData || []);
 
-      // 2. Carregar dados do aluno logado
+      // 2. Carregar dados do aluno e checar se é profissional
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: sData } = await supabase
@@ -36,6 +37,15 @@ export function StudentBottomNav() {
           .eq('id', user.id)
           .maybeSingle();
         setStudentInfo(sData || { full_name: user.email?.split('@')[0] });
+
+        const { data: prof } = await supabase
+          .from('professionals')
+          .select('id')
+          .eq('id', user.id)
+          .maybeSingle();
+        if (prof) {
+          setIsProfessional(true);
+        }
       }
     }
     loadData();
@@ -248,6 +258,16 @@ export function StudentBottomNav() {
 
             {/* Rodapé do Menu Vertical */}
             <div className="pt-6 border-t border-white/[0.08] space-y-3">
+              {isProfessional && (
+                <Link
+                  href="/dashboard"
+                  onClick={() => setShowVerticalMenu(false)}
+                  className="w-full py-2.5 px-3 rounded-xl bg-white text-black font-mono font-bold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
+                >
+                  <span>← VOLTAR AO PAINEL DO COACH</span>
+                </Link>
+              )}
+
               <button
                 onClick={handleSignOut}
                 className="w-full py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors text-center"

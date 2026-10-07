@@ -3,22 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { 
-  Home, 
-  Target, 
-  Users, 
-  Camera, 
-  Trophy, 
-  BookOpen, 
-  User, 
-  X, 
-  Dumbbell, 
-  Flame, 
-  Utensils, 
-  Droplet,
-  ChevronRight,
-  Sparkles
-} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export function StudentBottomNav() {
@@ -29,7 +13,6 @@ export function StudentBottomNav() {
   const [showQuickSheet, setShowQuickSheet] = useState(false);
   const [pendingMissions, setPendingMissions] = useState<any[]>([]);
 
-  // Carregar missões pendentes para o seletor rápido
   useEffect(() => {
     async function loadQuickOptions() {
       const { data } = await supabase
@@ -47,158 +30,121 @@ export function StudentBottomNav() {
     router.push(`/app/camera/${missionId}`);
   };
 
-  const tabsLeft = [
-    { name: 'Início', href: '/app', icon: Home, active: pathname === '/app' },
-    { name: 'Missões', href: '/app/missions', icon: Target, active: pathname === '/app/missions' },
-    { name: 'Feed', href: '/app/feed', icon: Users, active: pathname === '/app/feed' },
-  ];
-
-  const tabsRight = [
-    { name: 'Ranking', href: '/app/leaderboard', icon: Trophy, active: pathname === '/app/leaderboard' },
-    { name: 'Apoio', href: '/app/materials', icon: BookOpen, active: pathname === '/app/materials' },
-    { name: 'Perfil', href: '/app/profile', icon: User, active: pathname === '/app/profile' },
+  const navTabs = [
+    { name: 'Início', href: '/app', active: pathname === '/app' },
+    { name: 'Missões', href: '/app/missions', active: pathname === '/app/missions' },
+    { name: 'Feed', href: '/app/feed', active: pathname === '/app/feed' },
+    { name: 'Placar', href: '/app/leaderboard', active: pathname === '/app/leaderboard' },
+    { name: 'Perfil', href: '/app/profile', active: pathname === '/app/profile' },
   ];
 
   return (
     <>
-      {/* Floating Island Pill Navigation */}
-      <nav className="fixed bottom-4 inset-x-0 mx-auto max-w-[420px] w-[94%] z-50 transition-all">
-        <div className="liquid-glass-pill px-2.5 py-1.5 flex items-center justify-between shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
+      {/* Floating Monochromatic Island Bar */}
+      <nav className="fixed bottom-4 inset-x-0 mx-auto max-w-[390px] w-[92%] z-50 transition-all">
+        <div className="mono-glass-pill px-3 py-2 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
           
-          {/* Lado Esquerdo (3 abas) */}
+          {/* Abas Esquerda */}
           <div className="flex items-center justify-around flex-1">
-            {tabsLeft.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <Link
-                  key={tab.name}
-                  href={tab.href}
-                  className={`flex flex-col items-center justify-center flex-1 py-1 transition-all group ${
-                    tab.active ? 'text-emerald-400 font-extrabold' : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  <div className={`p-1.5 rounded-xl transition-all ${
-                    tab.active ? 'bg-emerald-500/20 text-emerald-400 shadow-inner' : 'group-hover:bg-white/5'
-                  }`}>
-                    <Icon className={`h-4.5 w-4.5 ${tab.active ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
-                  </div>
-                  <span className={`text-[9px] mt-0.5 tracking-tight ${tab.active ? 'font-bold' : 'font-medium'}`}>
-                    {tab.name}
-                  </span>
-                </Link>
-              );
-            })}
+            {navTabs.slice(0, 2).map((tab) => (
+              <Link
+                key={tab.name}
+                href={tab.href}
+                className={`py-1.5 px-3 text-xs font-mono tracking-wider transition-all rounded-xl ${
+                  tab.active
+                    ? 'text-white font-black bg-white/10 shadow-inner'
+                    : 'text-zinc-500 hover:text-zinc-300'
+                }`}
+              >
+                {tab.name}
+              </Link>
+            ))}
           </div>
 
-          {/* Botão Central de Câmera em Destaque */}
-          <div className="px-1.5 -my-2">
+          {/* Botão Central de Check-in em Cromo Puro */}
+          <div className="px-1 -my-3">
             <button
               onClick={() => setShowQuickSheet(true)}
-              className="flex flex-col items-center justify-center group focus:outline-none relative"
+              className="flex flex-col items-center justify-center group focus:outline-none"
             >
-              <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-400 p-0.5 shadow-xl shadow-emerald-500/35 group-active:scale-95 group-hover:scale-105 transition-all">
-                <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center text-emerald-400 group-hover:bg-zinc-900 transition-colors">
-                  <Camera className="h-5.5 w-5.5 stroke-[2.2]" />
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-b from-white via-zinc-300 to-zinc-800 p-px shadow-[0_0_20px_rgba(255,255,255,0.25)] group-hover:scale-105 active:scale-95 transition-all">
+                <div className="h-full w-full bg-black rounded-[15px] flex items-center justify-center text-white">
+                  {/* SVG Minimalista de Lente / Foco */}
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="3" strokeWidth="2" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  </svg>
                 </div>
               </div>
-              <span className="text-[9px] mt-1 font-black text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                Check-in
+              <span className="text-[9px] font-mono font-bold tracking-widest text-zinc-400 group-hover:text-white mt-0.5">
+                CHECK-IN
               </span>
             </button>
           </div>
 
-          {/* Lado Direito (3 abas) */}
+          {/* Abas Direita */}
           <div className="flex items-center justify-around flex-1">
-            {tabsRight.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <Link
-                  key={tab.name}
-                  href={tab.href}
-                  className={`flex flex-col items-center justify-center flex-1 py-1 transition-all group ${
-                    tab.active ? 'text-emerald-400 font-extrabold' : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  <div className={`p-1.5 rounded-xl transition-all ${
-                    tab.active ? 'bg-emerald-500/20 text-emerald-400 shadow-inner' : 'group-hover:bg-white/5'
-                  }`}>
-                    <Icon className={`h-4.5 w-4.5 ${tab.active ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
-                  </div>
-                  <span className={`text-[9px] mt-0.5 tracking-tight ${tab.active ? 'font-bold' : 'font-medium'}`}>
-                    {tab.name}
-                  </span>
-                </Link>
-              );
-            })}
+            {navTabs.slice(2, 5).map((tab) => (
+              <Link
+                key={tab.name}
+                href={tab.href}
+                className={`py-1.5 px-2.5 text-xs font-mono tracking-wider transition-all rounded-xl ${
+                  tab.active
+                    ? 'text-white font-black bg-white/10 shadow-inner'
+                    : 'text-zinc-500 hover:text-zinc-300'
+                }`}
+              >
+                {tab.name}
+              </Link>
+            ))}
           </div>
 
         </div>
       </nav>
 
-      {/* Folha Deslizante Rápida de Ação ao Tocar em Registrar (Bottom Sheet) */}
+      {/* Sheet Rápido de Check-in em Vidro Monocromático Escuro */}
       {showQuickSheet && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
-          <div className="liquid-glass rounded-t-[32px] p-5 space-y-4 max-h-[80vh] flex flex-col shadow-2xl border-t border-white/20">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
+          <div className="mono-glass-card rounded-t-[32px] p-6 space-y-4 max-h-[80vh] flex flex-col border-t border-white/20">
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div>
-                <h3 className="font-black text-base text-white flex items-center gap-1.5">
-                  Registrar Check-in 📸
+                <h3 className="font-black text-sm text-white font-mono uppercase tracking-wider">
+                  SELECIONE A TAREFA
                 </h3>
-                <p className="text-[11px] text-zinc-400">Tire uma foto ao vivo com geolocalização e horário</p>
+                <p className="text-[11px] text-zinc-400">Captura ao vivo com geolocalização e carimbo de hora</p>
               </div>
               <button
                 onClick={() => setShowQuickSheet(false)}
-                className="p-1.5 rounded-full bg-white/5 text-zinc-400 hover:text-white transition-colors"
+                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs"
               >
-                <X className="h-4 w-4" />
+                ✕
               </button>
             </div>
 
             <div className="space-y-2 overflow-y-auto flex-1 py-1">
               {pendingMissions.length === 0 ? (
-                <div className="text-center py-6 text-zinc-500 text-xs">
+                <div className="text-center py-6 text-zinc-500 text-xs font-mono">
                   Nenhuma missão configurada no momento.
                 </div>
               ) : (
-                pendingMissions.map((m) => {
-                  let Icon = Dumbbell;
-                  let colorClass = 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20';
-                  if (m.category === 'cardio') {
-                    Icon = Flame;
-                    colorClass = 'text-orange-400 bg-orange-500/10 border-orange-500/20';
-                  } else if (m.category === 'refeicao') {
-                    Icon = Utensils;
-                    colorClass = 'text-amber-400 bg-amber-500/10 border-amber-500/20';
-                  } else if (m.category === 'habito') {
-                    Icon = Droplet;
-                    colorClass = 'text-sky-400 bg-sky-500/10 border-sky-500/20';
-                  }
+                pendingMissions.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => handleQuickRegister(m.id)}
+                    className="w-full p-4 rounded-2xl bg-black/60 border border-white/[0.08] hover:border-white/30 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.98]"
+                  >
+                    <div>
+                      <p className="font-bold text-xs text-white">{m.title}</p>
+                      <p className="text-[10px] font-mono text-zinc-500 uppercase mt-0.5">
+                        +{m.points_rewarded} PTS • {m.category}
+                      </p>
+                    </div>
 
-                  return (
-                    <button
-                      key={m.id}
-                      onClick={() => handleQuickRegister(m.id)}
-                      className="w-full p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-emerald-500/40 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.98] backdrop-blur-md"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`h-10 w-10 rounded-xl flex items-center justify-center font-bold border ${colorClass}`}>
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-xs text-white">{m.title}</p>
-                          <p className="text-[10px] text-zinc-400">+{m.points_rewarded} pontos no ranking</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                          Câmera
-                        </span>
-                        <ChevronRight className="h-4 w-4 text-zinc-600" />
-                      </div>
-                    </button>
-                  );
-                })
+                    <span className="text-[10px] font-mono font-bold text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+                      FOTOGRAFAR →
+                    </span>
+                  </button>
+                ))
               )}
             </div>
           </div>

@@ -3,23 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Trophy, 
-  CheckSquare, 
-  Flame, 
-  LogOut, 
-  Dumbbell, 
-  Layers, 
-  BookOpen, 
-  Gift, 
-  Users, 
-  Building2, 
-  Bell,
-  Sparkles
-} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/components/ui/button';
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -32,119 +16,66 @@ export function DashboardSidebar() {
   };
 
   const navItems = [
-    {
-      name: 'Visão Geral',
-      href: '/dashboard',
-      icon: LayoutDashboard,
-      active: pathname === '/dashboard',
-    },
-    {
-      name: 'Auditoria Swipe',
-      href: '/dashboard/audit',
-      icon: CheckSquare,
-      active: pathname === '/dashboard/audit',
-    },
-    {
-      name: 'Missões & Regras',
-      href: '/dashboard/missions',
-      icon: Layers,
-      active: pathname === '/dashboard/missions',
-    },
-    {
-      name: 'Materiais de Apoio',
-      href: '/dashboard/materials',
-      icon: BookOpen,
-      active: pathname === '/dashboard/materials',
-    },
-    {
-      name: 'Mural de Avisos',
-      href: '/dashboard/announcements',
-      icon: Bell,
-      active: pathname === '/dashboard/announcements',
-    },
-    {
-      name: 'Mystery Box (Prêmios)',
-      href: '/dashboard/mystery-box',
-      icon: Gift,
-      active: pathname === '/dashboard/mystery-box',
-    },
-    {
-      name: 'Squads (Equipes)',
-      href: '/dashboard/squads',
-      icon: Users,
-      active: pathname === '/dashboard/squads',
-    },
-    {
-      name: 'Parceiros & Cupons',
-      href: '/dashboard/sponsors',
-      icon: Building2,
-      active: pathname === '/dashboard/sponsors',
-    },
-    {
-      name: 'Criar Novo Desafio',
-      href: '/dashboard/challenges/new',
-      icon: Trophy,
-      active: pathname === '/dashboard/challenges/new',
-    },
+    { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
+    { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
+    { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
+    { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },
+    { name: 'Mural de Avisos', href: '/dashboard/announcements', active: pathname === '/dashboard/announcements' },
+    { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', active: pathname === '/dashboard/mystery-box' },
+    { name: 'Squads (Equipes)', href: '/dashboard/squads', active: pathname === '/dashboard/squads' },
+    { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors' },
+    { name: 'Criar Desafio', href: '/dashboard/challenges/new', active: pathname === '/dashboard/challenges/new' },
   ];
 
   return (
-    <aside className="w-64 border-r border-white/[0.06] bg-zinc-950/80 backdrop-blur-2xl flex flex-col justify-between p-4 min-h-screen relative z-30">
+    <aside className="w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex flex-col justify-between p-5 min-h-screen relative z-30">
       <div className="space-y-6">
-        {/* Brand */}
-        <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2 group">
-          <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-400 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-            <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center">
-              <Dumbbell className="h-5 w-5 text-emerald-400" />
+        {/* Brand Monocromático */}
+        <Link href="/dashboard" className="flex items-center gap-3 px-1 py-1 group">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform">
+            <div className="h-full w-full bg-black rounded-[11px] flex items-center justify-center">
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
+              </svg>
             </div>
           </div>
           <div>
-            <span className="font-black text-xl tracking-tight text-white block leading-none">
-              Arena<span className="text-emerald-400">Pro</span>
+            <span className="font-black text-lg tracking-tight text-white block leading-none">
+              ArenaPro
             </span>
-            <span className="text-[9px] uppercase font-bold tracking-widest text-emerald-400/90 block mt-1">
-              Cockpit do Coach
+            <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500 block mt-1">
+              COACH_TERMINAL
             </span>
           </div>
         </Link>
 
-        {/* Navigation */}
+        {/* Navigation Monocromática com Destaque de Vidro */}
         <nav className="space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-semibold tracking-wide transition-all group ${
-                  item.active
-                    ? 'liquid-glass-emerald border-emerald-500/30 text-emerald-300 font-bold shadow-lg shadow-emerald-950/30'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
-                }`}
-              >
-                <div className={`p-1 rounded-lg transition-colors ${
-                  item.active ? 'text-emerald-400' : 'text-zinc-400 group-hover:text-zinc-200'
-                }`}>
-                  <Icon className="h-4 w-4" />
-                </div>
-                <span>{item.name}</span>
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono tracking-wide transition-all ${
+                item.active
+                  ? 'bg-white/10 text-white font-bold border border-white/20 shadow-sm'
+                  : 'text-zinc-500 hover:text-white hover:bg-white/[0.04]'
+              }`}
+            >
+              <span>{item.name}</span>
+              {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
+            </Link>
+          ))}
         </nav>
       </div>
 
       {/* Footer / Logout */}
       <div className="pt-4 border-t border-white/[0.06]">
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
           onClick={handleSignOut}
-          className="w-full justify-start text-xs font-semibold text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl"
+          className="w-full text-left px-3 py-2 text-xs font-mono text-zinc-500 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
         >
-          <LogOut className="h-4 w-4 mr-2" />
-          Desconectar da Plataforma
-        </Button>
+          [ DESCONECTAR ]
+        </button>
       </div>
     </aside>
   );

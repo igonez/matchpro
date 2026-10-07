@@ -2,25 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { 
-  Users, 
-  DollarSign, 
-  Clock, 
-  ArrowUpRight, 
-  Trophy, 
-  Plus, 
-  CheckCircle2, 
-  ShieldAlert,
-  Calendar,
-  MessageCircle,
-  AlertTriangle,
-  Sparkles,
-  Share2
-} from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function DashboardOverviewPage() {
   const supabase = createClient();
@@ -94,33 +78,32 @@ export default function DashboardOverviewPage() {
   }, [supabase]);
 
   return (
-    <div className="space-y-8">
-      {/* Top Banner / Boas-vindas */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-8 relative">
+      {/* Background 3D Animado */}
+      <Monochrome3DBackground />
+
+      {/* Top Banner Monocromático */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-              Cockpit do Coach
+            <span className="text-[10px] font-mono uppercase tracking-wider text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
+              TERMINAL_OVERVIEW
             </span>
-            <span className="text-xs text-zinc-500 font-mono">ArenaPro v2.5</span>
+            <span className="text-xs text-zinc-500 font-mono">LIVE_DATABASE</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">Visão Geral da sua Operação</h1>
+          <h1 className="text-3xl font-black text-white tracking-tight">Operação dos Desafios</h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
-            Gerencie desafios ativos, audite check-ins por swipe e resgate alunos antes da desistência.
+            Métricas em tempo real, fila de auditoria e radar de retenção ativa.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <Link href="/dashboard/audit">
-            <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black px-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
-              <Clock className="h-4 w-4 mr-1.5" />
+            <button className="mono-button-primary px-4 py-2 text-xs flex items-center gap-1.5">
               Auditar Fotos ({stats.pendingSubmissions})
-            </Button>
+            </button>
           </Link>
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-white/10 bg-zinc-900/40 hover:bg-zinc-800 text-zinc-200 rounded-xl"
+          <button
             onClick={async () => {
               if (challenges.length === 0) {
                 alert('Crie um desafio antes de publicar avisos!');
@@ -144,107 +127,97 @@ export default function DashboardOverviewPage() {
                 alert('Aviso publicado no Mural dos Alunos com sucesso! 📢');
               }
             }}
+            className="mono-button-secondary px-4 py-2 text-xs"
           >
-            📢 Publicar Aviso
-          </Button>
+            Publicar Aviso
+          </button>
           <Link href="/dashboard/challenges/new">
-            <Button size="sm" variant="outline" className="border-white/10 bg-zinc-900/40 hover:bg-zinc-800 text-zinc-200 rounded-xl">
-              <Plus className="h-4 w-4 mr-1" />
-              Novo Desafio
-            </Button>
+            <button className="mono-button-secondary px-4 py-2 text-xs">
+              + Novo Desafio
+            </button>
           </Link>
         </div>
       </div>
 
-      {/* Grid de Métricas Principais (Liquid Glass Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Grid de Métricas Principais com 3D Spotlight */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         {/* Card 1: Alunos Ativos */}
-        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+        <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
-              Alunos Ativos
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+              ALUNOS_INSCRITOS
             </span>
-            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
-              <Users className="h-4.5 w-4.5" />
-            </div>
+            <span className="h-2 w-2 rounded-full bg-white" />
           </div>
-          <div className="text-3xl font-black text-white">{stats.activeStudents}</div>
-          <p className="text-[11px] text-zinc-400 mt-1">Inscritos nos desafios em curso</p>
-        </div>
+          <div className="text-3xl font-black text-white font-mono">{stats.activeStudents}</div>
+          <p className="text-[11px] font-mono text-zinc-500 mt-1">Inscritos nas turmas ativas</p>
+        </SpotlightCard3D>
 
         {/* Card 2: Faturamento */}
-        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+        <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
-              Faturamento Bruto
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+              FATURAMENTO_TOTAL
             </span>
-            <div className="h-9 w-9 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20 flex items-center justify-center">
-              <DollarSign className="h-4.5 w-4.5" />
-            </div>
+            <span className="text-[10px] font-mono text-zinc-400">BRL</span>
           </div>
-          <div className="text-3xl font-black text-emerald-400 font-mono">
+          <div className="text-3xl font-black text-white font-mono">
             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
           </div>
-          <p className="text-[11px] text-zinc-400 mt-1">Valor consolidado das turmas</p>
-        </div>
+          <p className="text-[11px] font-mono text-zinc-500 mt-1">Valor consolidado das inscrições</p>
+        </SpotlightCard3D>
 
-        {/* Card 3: Missões Aguardando Auditoria */}
-        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+        {/* Card 3: Auditoria Pendente */}
+        <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
-              Fila de Auditoria
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+              FILA_DE_SWIPE
             </span>
-            <div className="h-9 w-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
-              <Clock className="h-4.5 w-4.5" />
-            </div>
+            <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-full">
+              PENDENTE
+            </span>
           </div>
-          <div className="text-3xl font-black text-amber-400 font-mono">{stats.pendingSubmissions}</div>
-          <p className="text-[11px] text-zinc-400 mt-1">Check-ins pendentes de swipe</p>
-        </div>
+          <div className="text-3xl font-black text-white font-mono">{stats.pendingSubmissions}</div>
+          <p className="text-[11px] font-mono text-zinc-500 mt-1">Check-ins aguardando revisão</p>
+        </SpotlightCard3D>
 
         {/* Card 4: Desafios Criados */}
-        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+        <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
-              Desafios Criados
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+              DESAFIOS_TOTAIS
             </span>
-            <div className="h-9 w-9 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center">
-              <Trophy className="h-4.5 w-4.5" />
-            </div>
+            <span className="text-[10px] font-mono text-zinc-400">ATIVOS: {stats.activeChallenges}</span>
           </div>
-          <div className="text-3xl font-black text-white">{challenges.length}</div>
-          <p className="text-[11px] text-zinc-400 mt-1">{stats.activeChallenges} em andamento</p>
-        </div>
+          <div className="text-3xl font-black text-white font-mono">{challenges.length}</div>
+          <p className="text-[11px] font-mono text-zinc-500 mt-1">Turmas configuradas na plataforma</p>
+        </SpotlightCard3D>
       </div>
 
-      {/* ⚠️ RADAR DE RETENÇÃO: ALUNOS EM RISCO DE DESISTÊNCIA (INATIVOS A MAIS DE 48H) */}
-      <div className="space-y-3">
+      {/* RADAR ANTI-DESISTÊNCIA (ALUNOS INATIVOS +48H) */}
+      <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-rose-400" />
-              Radar Anti-Desistência (Alunos Inativos +48h)
+            <h2 className="text-base font-black text-white font-mono tracking-tight flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-white animate-ping" />
+              RADAR_ANTI_DESISTENCIA (INATIVOS +48H)
             </h2>
             <p className="text-xs text-zinc-400">
-              Resgate esses alunos antes que abandonem. O botão abre uma mensagem carinhosa pronta no WhatsApp!
+              Alunos que precisam de resgate via WhatsApp antes de abandonarem a rotina.
             </p>
           </div>
-          <Badge className="bg-rose-500/15 text-rose-400 border-rose-500/30 font-black text-xs px-2.5 py-0.5">
-            {atRiskStudents.length} Alertas
-          </Badge>
+          <span className="text-xs font-mono font-bold text-white border border-white/20 px-2.5 py-0.5 rounded-full">
+            {atRiskStudents.length} ALERTAS
+          </span>
         </div>
 
         {atRiskStudents.length === 0 ? (
-          <div className="liquid-glass p-4 rounded-3xl flex items-center justify-between border-emerald-500/30">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-black">
-                ✓
-              </div>
-              <div>
-                <p className="text-xs font-bold text-white">Turma 100% Ativa e Engajada!</p>
-                <p className="text-[11px] text-emerald-400/80">Nenhum aluno está inativo há mais de 48 horas no momento.</p>
-              </div>
+          <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between">
+            <div>
+              <p className="text-xs font-bold text-white font-mono">100% DE RETENÇÃO NA TURMA</p>
+              <p className="text-[11px] text-zinc-400">Nenhum aluno está inativo há mais de 48 horas.</p>
             </div>
+            <span className="text-xs font-mono text-white">NORMAL</span>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -259,19 +232,19 @@ export default function DashboardOverviewPage() {
               return (
                 <div
                   key={item.student_id}
-                  className="liquid-glass rounded-3xl p-4.5 flex flex-col justify-between border-rose-500/30 hover:border-rose-500/50 transition-all"
+                  className="mono-glass-card p-4 rounded-2xl flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-black uppercase text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
-                        {item.days_inactive} dias sem foto
+                      <span className="text-[10px] font-mono text-zinc-400 border border-white/10 px-2 py-0.5 rounded-full">
+                        {item.days_inactive} DIAS SEM FOTO
                       </span>
-                      <span className="text-[10px] text-zinc-400 font-semibold">{item.challenge_title}</span>
+                      <span className="text-[10px] font-mono text-zinc-500">{item.challenge_title}</span>
                     </div>
 
                     <h4 className="text-sm font-black text-white">{item.student_name}</h4>
-                    <p className="text-[11px] text-zinc-400 mt-0.5">
-                      Última submissão: {new Date(item.last_activity_at).toLocaleDateString('pt-BR')}
+                    <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
+                      Última foto: {new Date(item.last_activity_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
 
@@ -281,24 +254,20 @@ export default function DashboardOverviewPage() {
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full h-9 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all active:scale-95"
+                        className="mono-button-primary w-full h-8 text-xs flex items-center justify-center font-mono"
                       >
-                        <MessageCircle className="h-4 w-4" />
-                        Resgatar no WhatsApp (1-Clique)
+                        RESGATAR NO WHATSAPP →
                       </a>
                     ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
+                      <button
                         onClick={() => {
                           navigator.clipboard.writeText(decodeURIComponent(message));
-                          alert(`Mensagem de resgate copiada para a área de transferência:\n\n${decodeURIComponent(message)}`);
+                          alert(`Mensagem copiada para a área de transferência:\n\n${decodeURIComponent(message)}`);
                         }}
-                        className="w-full h-9 text-xs font-bold border-white/10 text-zinc-300 hover:text-white rounded-xl"
+                        className="mono-button-secondary w-full h-8 text-xs font-mono"
                       >
-                        <MessageCircle className="h-3.5 w-3.5 mr-1 text-emerald-400" />
-                        Copiar Mensagem de Resgate
-                      </Button>
+                        COPIAR TEXTO DE RESGATE
+                      </button>
                     )}
                   </div>
                 </div>
@@ -308,81 +277,77 @@ export default function DashboardOverviewPage() {
         )}
       </div>
 
-      {/* Lista de Desafios Recentes */}
-      <div className="space-y-4">
+      {/* Lista de Desafios Recentes Monocromática */}
+      <div className="space-y-4 relative z-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-base sm:text-lg font-black text-white">Desafios em Andamento</h2>
-          <Link href="/dashboard/missions" className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-bold">
-            Ver todas as missões <ArrowUpRight className="h-3.5 w-3.5" />
+          <h2 className="text-base font-black text-white font-mono tracking-tight">
+            TURMAS_EM_ANDAMENTO
+          </h2>
+          <Link href="/dashboard/missions" className="text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+            Gerenciar Missões →
           </Link>
         </div>
 
         {challenges.length === 0 && !loading ? (
-          <div className="liquid-glass rounded-3xl p-8 text-center border-dashed">
-            <Trophy className="h-10 w-10 mx-auto text-zinc-500 mb-3" />
-            <p className="font-bold text-white text-sm">Nenhum desafio criado ainda</p>
+          <div className="mono-glass-card p-8 rounded-3xl text-center border-dashed">
+            <p className="font-bold text-white text-sm font-mono">NENHUM DESAFIO CRIADO AINDA</p>
             <p className="text-xs text-zinc-400 mt-1 mb-4">
-              Crie seu primeiro desafio fitness para cadastrar missões e convidar seus alunos.
+              Crie seu primeiro desafio para cadastrar missões e convidar alunos.
             </p>
             <Link href="/dashboard/challenges/new">
-              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold rounded-xl">
-                Criar Primeiro Desafio
-              </Button>
+              <button className="mono-button-primary px-5 py-2 text-xs">
+                Criar Desafio
+              </button>
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {challenges.map((c) => (
-              <div key={c.id} className="liquid-glass rounded-3xl p-5 hover:border-emerald-500/40 transition-all flex flex-col justify-between">
+              <div key={c.id} className="mono-glass-card p-5 rounded-3xl flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <Badge variant={c.is_active ? 'success' : 'secondary'} className="rounded-lg text-[10px] font-bold">
-                      {c.is_active ? 'Ativo' : 'Encerrado'}
-                    </Badge>
-                    <span className="text-xs font-black text-emerald-400 font-mono">
+                    <span className="text-[10px] font-mono border border-white/20 px-2 py-0.5 rounded-full text-white">
+                      {c.is_active ? 'ATIVO' : 'ENCERRADO'}
+                    </span>
+                    <span className="text-xs font-mono font-black text-white">
                       R$ {Number(c.price).toFixed(2)}
                     </span>
                   </div>
                   <h3 className="text-base font-black text-white line-clamp-1">
                     {c.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 flex items-center gap-1.5 mt-1">
-                    <Calendar className="h-3 w-3" />
+                  <p className="text-xs font-mono text-zinc-500 mt-1">
                     {new Date(c.start_date).toLocaleDateString('pt-BR')} até{' '}
                     {new Date(c.end_date).toLocaleDateString('pt-BR')}
                   </p>
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-white/[0.06]">
-                  <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
-                    <span>Missões configuradas:</span>
+                  <div className="flex items-center justify-between text-xs font-mono text-zinc-400 mb-3">
+                    <span>Missões ativas:</span>
                     <span className="font-bold text-white">{c.missions?.length || 0}</span>
                   </div>
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-2">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`} className="flex-1">
-                      <Button variant="outline" size="sm" className="w-full text-xs font-bold rounded-xl border-white/10 hover:bg-white/5">
+                      <button className="mono-button-secondary w-full py-1.5 text-xs font-mono">
                         Missões
-                      </Button>
+                      </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <Button variant="outline" size="sm" className="text-xs font-bold text-zinc-300 hover:text-white px-2.5 rounded-xl border-white/10 hover:bg-white/5">
+                      <button className="mono-button-secondary px-3 py-1.5 text-xs font-mono">
                         Editar
-                      </Button>
+                      </button>
                     </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 px-2.5 rounded-xl"
+                    <button
                       onClick={() => {
                         const link = `${window.location.origin}/join/${c.id}`;
                         navigator.clipboard.writeText(link);
-                        alert(`Link copiado para o WhatsApp/Instagram:\n${link}`);
+                        alert(`Link copiado:\n${link}`);
                       }}
-                      title="Copiar Link de Convite para Alunos"
+                      className="mono-button-primary px-3 py-1.5 text-xs font-mono"
                     >
-                      <Share2 className="h-3.5 w-3.5 mr-1" />
                       Link
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </div>

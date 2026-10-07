@@ -45,13 +45,17 @@ export async function updateSession(request: NextRequest) {
   // Se o usuário acessar a raiz '/'
   if (url.pathname === '/') {
     if (user) {
+      const isMetaProfessional = user.user_metadata?.role === 'professional';
+
       const { data: professional } = await supabase
         .from('professionals')
         .select('id')
         .eq('id', user.id)
         .maybeSingle();
 
-      url.pathname = professional ? '/dashboard' : '/app';
+      const isProfessional = isMetaProfessional || !!professional;
+
+      url.pathname = isProfessional ? '/dashboard' : '/app';
       return NextResponse.redirect(url);
     }
     return supabaseResponse;
@@ -65,14 +69,16 @@ export async function updateSession(request: NextRequest) {
 
   // Verificação de Role quando usuário está logado
   if (user) {
-    // Checar se é profissional usando maybeSingle para não lançar erro PGRST116
+    // Checar se é profissional pela tabela professionals OU pelos metadados do auth
+    const isMetaProfessional = user.user_metadata?.role === 'professional';
+
     const { data: professional } = await supabase
       .from('professionals')
       .select('id')
       .eq('id', user.id)
       .maybeSingle();
 
-    const isProfessional = !!professional;
+    const isProfessional = isMetaProfessional || !!professional;
 
     // Se aluno tentar acessar /dashboard, redireciona para /app
     if (!isProfessional && url.pathname.startsWith('/dashboard')) {

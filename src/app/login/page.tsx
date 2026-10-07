@@ -119,8 +119,11 @@ export default function LoginPage() {
             .maybeSingle();
 
           if (role === 'professional') {
+            await supabase.auth.updateUser({
+              data: { role: 'professional' }
+            });
+
             if (!prof) {
-              // Se não existir perfil profissional, cria para o usuário acessar o dashboard
               await supabase.from('professionals').insert({
                 id: authData.user.id,
                 full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
@@ -129,8 +132,11 @@ export default function LoginPage() {
             }
             router.push('/dashboard');
           } else {
+            await supabase.auth.updateUser({
+              data: { role: 'student' }
+            });
+
             if (!student) {
-              // Se não existir perfil de aluno, cria para o atleta acessar
               await supabase.from('students').insert({
                 id: authData.user.id,
                 full_name: authData.user.user_metadata?.full_name || email.split('@')[0],

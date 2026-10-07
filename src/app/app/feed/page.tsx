@@ -1,23 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { 
-  Heart, 
-  MessageCircle, 
-  Share2, 
-  Clock, 
-  Sparkles, 
-  Send, 
-  Flame, 
-  User,
-  X,
-  Flag
-} from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
+import { Input } from '@/components/ui/input';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function StudentSocialFeedPage() {
   const supabase = createClient();
@@ -32,14 +19,12 @@ export default function StudentSocialFeedPage() {
   const [commentsList, setCommentsList] = useState<any[]>([]);
   const [submittingComment, setSubmittingComment] = useState(false);
 
-  // Carregar Feed
   const fetchFeed = async () => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       setCurrentUser(user);
 
-      // Buscar fotos aprovadas no desafio com likes e dados do aluno
       const { data: submissionsData } = await supabase
         .from('student_submissions')
         .select(`
@@ -78,11 +63,9 @@ export default function StudentSocialFeedPage() {
     fetchFeed();
   }, []);
 
-  // Curtir / Descurtir
   const handleToggleLike = async (postId: string, userLiked: boolean) => {
     if (!currentUser) return;
 
-    // Atualização otimista na tela
     setPosts((prev) =>
       prev.map((p) => {
         if (p.id === postId) {
@@ -123,7 +106,6 @@ export default function StudentSocialFeedPage() {
     }
   };
 
-  // Abrir modal de comentários
   const handleOpenComments = async (post: any) => {
     setActiveCommentPost(post);
     setCommentText('');
@@ -148,7 +130,6 @@ export default function StudentSocialFeedPage() {
     }
   };
 
-  // Enviar novo comentário
   const handleSendComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentText.trim() || !activeCommentPost || !currentUser) return;
@@ -185,46 +166,46 @@ export default function StudentSocialFeedPage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between pt-1">
+    <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative">
+      {/* Background 3D Animado */}
+      <Monochrome3DBackground />
+
+      {/* Header Monocromático */}
+      <div className="flex items-center justify-between pt-1 relative z-10">
         <div>
-          <h1 className="text-xl font-black text-white flex items-center gap-2">
-            Feed da Turma <Flame className="h-5 w-5 text-orange-400" />
-          </h1>
-          <p className="text-[11px] text-zinc-400">Fotos de refeições e treinos aprovadas pelo treinador</p>
+          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
+            LIVE_FEED_STREAM
+          </span>
+          <h1 className="text-xl font-black text-white">Comunidade & Feed</h1>
+          <p className="text-[11px] text-zinc-400">Check-ins autenticados em tempo real com GPS e horário</p>
         </div>
       </div>
 
       {loading ? (
-        <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
-          <div className="h-6 w-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-          Carregando publicações da turma...
+        <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
+          <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          CARREGANDO STREAM...
         </div>
       ) : posts.length === 0 ? (
-        <Card className="border-dashed border-zinc-850 p-10 text-center bg-zinc-900/30">
-          <Flame className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-          <p className="font-semibold text-xs text-zinc-300">Nenhuma foto postada no feed ainda</p>
-          <p className="text-[11px] text-zinc-500 mt-1">
-            As primeiras fotos aprovadas na auditoria aparecerão aqui para a turma interagir!
-          </p>
-        </Card>
+        <div className="mono-glass-card p-10 text-center text-xs font-mono text-zinc-500 relative z-10">
+          Nenhuma publicação aprovada no momento. Os primeiros check-ins validados aparecerão aqui.
+        </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 relative z-10">
           {posts.map((post) => {
             const likes = post.submission_likes || [];
             const userLiked = likes.some((l: any) => l.student_id === currentUser?.id);
 
             return (
-              <Card
+              <div
                 key={post.id}
-                className="border-zinc-850 bg-zinc-900/70 overflow-hidden rounded-3xl shadow-xl"
+                className="mono-glass-card rounded-3xl overflow-hidden"
               >
                 {/* Header do Post */}
-                <div className="p-3.5 flex items-center justify-between border-b border-zinc-850/60">
+                <div className="p-3.5 flex items-center justify-between border-b border-white/[0.06]">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md shrink-0">
-                      <div className="h-full w-full bg-zinc-950 rounded-full flex items-center justify-center font-bold text-xs text-white overflow-hidden">
+                    <div className="h-9 w-9 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shrink-0">
+                      <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
                         {post.students?.avatar_url ? (
                           <img
                             src={post.students.avatar_url}
@@ -237,16 +218,15 @@ export default function StudentSocialFeedPage() {
                       </div>
                     </div>
                     <div>
-                      <p className="font-extrabold text-xs text-white">
+                      <p className="font-bold text-xs text-white">
                         {post.students?.full_name || 'Atleta'}
                       </p>
-                      <div className="flex items-center gap-2 text-[10px] text-zinc-400">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3 text-emerald-400" />
+                      <div className="flex items-center gap-2 text-[10px] font-mono text-zinc-400">
+                        <span>
                           {new Date(post.client_captured_at || post.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         {post.location_name && (
-                          <span className="text-zinc-500 flex items-center gap-0.5 truncate max-w-[130px]">
+                          <span className="text-zinc-500 truncate max-w-[130px]">
                             • {post.location_name}
                           </span>
                         )}
@@ -254,54 +234,61 @@ export default function StudentSocialFeedPage() {
                     </div>
                   </div>
 
-                  <Badge variant="success" className="text-[10px] font-black px-2.5 py-0.5">
-                    +{post.missions?.points_rewarded || 10} pts
-                  </Badge>
+                  <span className="text-[10px] font-mono font-bold text-white bg-white/10 border border-white/20 px-2 py-0.5 rounded-md">
+                    +{post.missions?.points_rewarded || 10} PTS
+                  </span>
                 </div>
 
-                {/* Imagem do Post */}
+                {/* Imagem do Post com Tag Flutuante */}
                 <div className="relative aspect-square w-full bg-black overflow-hidden">
                   <img
                     src={post.photo_url}
                     alt="Foto da missão"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-2.5 left-2.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-xl text-[10px] font-bold text-zinc-200 border border-white/10">
-                    🎯 {post.missions?.title || 'Missão do Dia'}
+                  <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold text-white border border-white/15">
+                    {post.missions?.title || 'Check-in Realizado'}
                   </div>
                 </div>
 
-                {/* Ações Sociais (Like e Comentários) */}
+                {/* Ações Sociais */}
                 <div className="p-3.5 space-y-2">
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleToggleLike(post.id, userLiked)}
-                      className={`flex items-center gap-1.5 text-xs font-bold transition-all active:scale-125 ${
-                        userLiked ? 'text-rose-500' : 'text-zinc-400 hover:text-white'
+                      className={`flex items-center gap-1.5 text-xs font-mono font-bold transition-all ${
+                        userLiked ? 'text-white' : 'text-zinc-400 hover:text-white'
                       }`}
                     >
-                      <Heart className={`h-5 w-5 ${userLiked ? 'fill-rose-500' : ''}`} />
+                      <svg
+                        className={`w-4 h-4 ${userLiked ? 'fill-white text-white' : 'text-zinc-400'}`}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
                       <span>{likes.length}</span>
                     </button>
 
                     <button
                       onClick={() => handleOpenComments(post)}
-                      className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-white transition-all"
+                      className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-all"
                     >
-                      <MessageCircle className="h-5 w-5" />
-                      <span>Comentar</span>
+                      <span>Comentários</span>
                     </button>
 
                     <button
                       onClick={async () => {
                         if (!currentUser) return;
-                        const confirmReport = confirm('Deseja sinalizar esta foto para o treinador averiguar por suspeita de fraude?');
+                        const confirmReport = confirm('Deseja sinalizar esta foto para auditoria por suspeita de fraude?');
                         if (!confirmReport) return;
 
                         const { error } = await supabase.from('submission_reports').insert({
                           submission_id: post.id,
                           reporter_student_id: currentUser.id,
-                          reason: 'Denúncia de foto suspeita/não condizente',
+                          reason: 'Denúncia de foto suspeita',
                         });
 
                         if (error && error.message.includes('unique')) {
@@ -309,56 +296,56 @@ export default function StudentSocialFeedPage() {
                         } else if (error) {
                           alert('Erro ao enviar sinalização: ' + error.message);
                         } else {
-                          alert('Foto enviada para averiguação prioritária do treinador! 🛡️');
+                          alert('Foto enviada para averiguação da comissão técnica.');
                         }
                       }}
-                      className="ml-auto text-zinc-600 hover:text-amber-400 p-1 transition-colors"
-                      title="Sinalizar foto suspeita para o treinador"
+                      className="ml-auto text-[10px] font-mono text-zinc-600 hover:text-white"
+                      title="Sinalizar foto suspeita"
                     >
-                      <Flag className="h-4 w-4" />
+                      [ DENUNCIAR ]
                     </button>
                   </div>
 
-                  {/* Legenda opcional */}
                   {post.caption && (
-                    <p className="text-xs text-zinc-300">
-                      <span className="font-extrabold text-white mr-1.5">
+                    <p className="text-xs text-zinc-300 font-sans">
+                      <span className="font-bold text-white mr-1.5">
                         {post.students?.full_name?.split(' ')[0]}:
                       </span>
                       {post.caption}
                     </p>
                   )}
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>
       )}
 
-      {/* Modal / Bottom Sheet de Comentários */}
+      {/* Sheet de Comentários Monocromático */}
       {activeCommentPost && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col justify-end max-w-md mx-auto">
-          <div className="bg-zinc-950 border-t border-zinc-800 rounded-t-3xl max-h-[75vh] flex flex-col p-4">
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-850">
-              <h3 className="font-extrabold text-sm text-white">Comentários da Foto</h3>
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
+          <div className="mono-glass-card rounded-t-[32px] max-h-[75vh] flex flex-col p-5 border-t border-white/20">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+              <span className="font-bold text-xs text-white font-mono uppercase tracking-wider">
+                COMENTÁRIOS DA FOTO
+              </span>
               <button
                 onClick={() => setActiveCommentPost(null)}
-                className="p-1 text-zinc-400 hover:text-white"
+                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs"
               >
-                <X className="h-5 w-5" />
+                ✕
               </button>
             </div>
 
-            {/* Lista de Comentários */}
-            <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-[150px]">
+            <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-[160px]">
               {commentsList.length === 0 ? (
-                <p className="text-center text-xs text-zinc-500 py-6">
-                  Seja o primeiro a incentivar seu colega de turma! 👏
+                <p className="text-center text-xs font-mono text-zinc-500 py-8">
+                  Nenhum comentário ainda. Deixe seu apoio ao colega.
                 </p>
               ) : (
                 commentsList.map((c) => (
                   <div key={c.id} className="flex items-start gap-2.5 text-xs">
-                    <div className="h-7 w-7 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden">
+                    <div className="h-6 w-6 rounded-full bg-zinc-800 text-white font-mono font-bold flex items-center justify-center text-[9px] shrink-0 mt-0.5 overflow-hidden">
                       {c.students?.avatar_url ? (
                         <img
                           src={c.students.avatar_url}
@@ -370,7 +357,7 @@ export default function StudentSocialFeedPage() {
                       )}
                     </div>
                     <div>
-                      <p className="font-bold text-zinc-200">
+                      <p className="font-bold text-white">
                         {c.students?.full_name || 'Colega'}:
                       </p>
                       <p className="text-zinc-300 mt-0.5">{c.content}</p>
@@ -380,18 +367,21 @@ export default function StudentSocialFeedPage() {
               )}
             </div>
 
-            {/* Input de Envio */}
-            <form onSubmit={handleSendComment} className="pt-2 flex items-center gap-2 border-t border-zinc-850">
+            <form onSubmit={handleSendComment} className="pt-3 flex items-center gap-2 border-t border-white/[0.08]">
               <Input
                 type="text"
-                placeholder="Escreva um elogio ou incentivo..."
+                placeholder="Escreva um comentário..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="h-10 text-xs rounded-xl"
+                className="h-10 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
               />
-              <Button type="submit" size="icon" className="h-10 w-10 shrink-0 rounded-xl" disabled={submittingComment}>
-                <Send className="h-4 w-4" />
-              </Button>
+              <button
+                type="submit"
+                disabled={submittingComment}
+                className="mono-button-primary px-4 h-10 text-xs font-mono"
+              >
+                ENVIAR
+              </button>
             </form>
           </div>
         </div>

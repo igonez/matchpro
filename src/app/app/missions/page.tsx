@@ -2,25 +2,9 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { 
-  Target, 
-  Camera, 
-  CheckCircle2, 
-  Clock, 
-  Calendar, 
-  Dumbbell, 
-  Flame, 
-  Utensils, 
-  Droplet, 
-  Gift, 
-  Sparkles,
-  Lock,
-  Hourglass
-} from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function StudentMissionsWeeklyPage() {
   const supabase = createClient();
@@ -32,7 +16,7 @@ export default function StudentMissionsWeeklyPage() {
   const [todaySubmissions, setTodaySubmissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Relógio em tempo real para contagem até 23:59:59 (meia-noite)
+  // Relógio em tempo real até 23:59:59 (meia-noite)
   const [timeUntilMidnight, setTimeUntilMidnight] = useState<string>('');
 
   useEffect(() => {
@@ -67,7 +51,6 @@ export default function StudentMissionsWeeklyPage() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Pegar semanas ordenadas
         const { data: weeksData } = await supabase
           .from('challenge_weeks')
           .select('*')
@@ -78,7 +61,6 @@ export default function StudentMissionsWeeklyPage() {
           setSelectedWeekId(weeksData[0].id);
         }
 
-        // Submissões totais do aluno
         const { data: allSubmissionsData } = await supabase
           .from('student_submissions')
           .select('*, missions(category, requires_cooldown, cooldown_hours)')
@@ -140,7 +122,7 @@ export default function StudentMissionsWeeklyPage() {
     loadWeeklyMissions();
   }, [selectedWeekId, supabase]);
 
-  // Contagem estrita do dia de hoje: Limite de 1 Treino e 1 Cardio por dia
+  // Limite biológico: 1 Treino e 1 Cardio por dia
   const todayWorkoutCount = useMemo(() => {
     return todaySubmissions.filter((s: any) => s.missions?.category === 'treino').length;
   }, [todaySubmissions]);
@@ -160,26 +142,26 @@ export default function StudentMissionsWeeklyPage() {
     switch (cat) {
       case 'treino':
         return (
-          <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <Dumbbell className="h-3 w-3" /> Treino (1/dia)
+          <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-md border border-white/15">
+            TREINO (1/DIA)
           </span>
         );
       case 'cardio':
         return (
-          <span className="text-[10px] font-bold text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <Flame className="h-3 w-3" /> Cardio (1/dia)
+          <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-md border border-white/15">
+            CARDIO (1/DIA)
           </span>
         );
       case 'refeicao':
         return (
-          <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <Utensils className="h-3 w-3" /> Refeição
+          <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+            REFEIÇÃO
           </span>
         );
       case 'habito':
         return (
-          <span className="text-[10px] font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <Droplet className="h-3 w-3" /> Hábito
+          <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+            HÁBITO
           </span>
         );
       default:
@@ -188,118 +170,116 @@ export default function StudentMissionsWeeklyPage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between pt-1">
+    <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative">
+      {/* Background 3D Animado */}
+      <Monochrome3DBackground />
+
+      {/* Header Monocromático */}
+      <div className="flex items-center justify-between pt-1 relative z-10">
         <div>
+          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
+            MISSIONS_GRID
+          </span>
           <h1 className="text-xl font-black text-white">Missões por Semana</h1>
-          <p className="text-[11px] text-zinc-400">Limite de 1 treino e 1 cardio por dia para garantir disciplina real</p>
+          <p className="text-[11px] text-zinc-400">Limite de 1 treino e 1 cardio por dia para disciplina real</p>
         </div>
       </div>
 
       {/* Banner de Travas Diárias Ativas */}
       {(isWorkoutDailyLocked || isCardioDailyLocked) && (
-        <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-orange-500/15 text-orange-400 flex items-center justify-center font-bold">
-              <Hourglass className="h-4 w-4 animate-pulse" />
-            </div>
-            <div>
-              <p className="font-extrabold text-white text-[11px]">
-                {isWorkoutDailyLocked && isCardioDailyLocked
-                  ? 'Meta diária de Treino & Cardio atingida!'
-                  : isWorkoutDailyLocked
-                  ? 'Treino de hoje concluído!'
-                  : 'Cardio de hoje concluído!'}
-              </p>
-              <p className="text-[10px] text-zinc-400">
-                Próximas sessões desbloqueiam em: <strong className="text-orange-400 font-mono">{timeUntilMidnight}</strong>
-              </p>
-            </div>
+        <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between text-xs relative z-10">
+          <div className="space-y-1">
+            <p className="font-bold text-white text-xs font-mono">
+              {isWorkoutDailyLocked && isCardioDailyLocked
+                ? 'LIMITE DIÁRIO ATINGIDO: TREINO & CARDIO'
+                : isWorkoutDailyLocked
+                ? 'TREINO DE HOJE CONCLUÍDO'
+                : 'CARDIO DE HOJE CONCLUÍDO'}
+            </p>
+            <p className="text-[10px] font-mono text-zinc-400">
+              Desbloqueio em: <span className="text-white font-bold">{timeUntilMidnight}</span>
+            </p>
           </div>
-          <Lock className="h-4 w-4 text-zinc-500" />
+          <span className="text-[10px] font-mono text-zinc-500 border border-white/10 px-2 py-1 rounded-lg">
+            COOLDOWN
+          </span>
         </div>
       )}
 
-      {/* Carrossel de Semanas (Weeks Tabs) */}
+      {/* Seletor de Semanas em Pílulas Monocromáticas */}
       {weeks.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none relative z-10">
           {weeks.map((week) => {
             const isSelected = week.id === selectedWeekId;
             return (
               <button
                 key={week.id}
                 onClick={() => setSelectedWeekId(week.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl border text-xs font-black whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-2xl border text-xs font-mono font-bold whitespace-nowrap transition-all ${
                   isSelected
-                    ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300 shadow-md shadow-emerald-950/40'
-                    : 'border-zinc-850 bg-zinc-900/60 text-zinc-400 hover:text-zinc-200'
+                    ? 'border-white/40 bg-white/15 text-white shadow-lg'
+                    : 'border-white/[0.08] bg-black/60 text-zinc-500 hover:text-white'
                 }`}
               >
-                <Calendar className="h-3.5 w-3.5 text-emerald-400" />
-                <span>Semana {week.week_number}</span>
+                Semana {week.week_number}
               </button>
             );
           })}
         </div>
       )}
 
-      {/* Card da Meta de Bônus da Semana (+20 XP) */}
+      {/* Card da Meta de Bônus da Semana */}
       {selectedWeek && (
-        <div className="p-4 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-zinc-900 to-zinc-950 border border-emerald-500/30 shadow-xl relative overflow-hidden">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-              <Gift className="h-4 w-4" /> Bônus da {selectedWeek.title}
+        <SpotlightCard3D className="p-4 space-y-2 relative z-10">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+              BONUS_SEMANAL (+{selectedWeek.bonus_points || 20} PTS)
             </span>
-            <span className="text-xs font-black text-white">
+            <span className="text-xs font-mono text-white font-bold">
               {completedMissionsCount}/{missions.length} Feitas
             </span>
           </div>
 
-          <p className="text-xs text-zinc-300 font-medium">
+          <p className="text-xs text-zinc-300">
             {isWeekComplete
-              ? `Parabéns! Você bateu 100% da semana e garantiu o bônus de +${selectedWeek.bonus_points || 20} pts! 🎉`
-              : `Complete todas as missões desta semana para destravar +${selectedWeek.bonus_points || 20} pontos de bônus no ranking!`}
+              ? `Semana 100% batida! Bônus de +${selectedWeek.bonus_points || 20} pontos computado.`
+              : `Complete todas as missões para destravar +${selectedWeek.bonus_points || 20} pontos extras.`}
           </p>
 
-          {/* Barra de Progresso da Semana */}
-          <div className="w-full bg-zinc-950 h-2 rounded-full overflow-hidden mt-3 border border-zinc-800">
+          <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-white/10 mt-2">
             <div
-              className="bg-gradient-to-r from-emerald-500 to-teal-300 h-full rounded-full transition-all duration-500"
+              className="bg-white h-full rounded-full transition-all duration-500"
               style={{
                 width: `${missions.length > 0 ? (completedMissionsCount / missions.length) * 100 : 0}%`,
               }}
             />
           </div>
-        </div>
+        </SpotlightCard3D>
       )}
 
-      {/* Lista das Missões da Semana com Cadeado Sequencial */}
+      {/* Lista das Missões */}
       {loading ? (
-        <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
-          <div className="h-6 w-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-          Carregando tarefas...
+        <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
+          <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          CARREGANDO MISSÕES...
         </div>
       ) : missions.length === 0 ? (
-        <Card className="border-dashed border-zinc-850 p-8 text-center bg-zinc-900/30">
-          <p className="font-semibold text-xs text-zinc-300">Nenhuma missão cadastrada nesta semana</p>
-          <p className="text-[11px] text-zinc-500 mt-1">Aguarde o treinador liberar os treinos e cardios desta fase.</p>
-        </Card>
+        <div className="mono-glass-card p-8 rounded-3xl text-center text-xs font-mono text-zinc-500 relative z-10">
+          Nenhuma missão cadastrada nesta semana.
+        </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 relative z-10">
           {missions.map((mission, index) => {
             const sub = submissions[mission.id];
             const isApproved = sub?.status === 'approved';
             const isPending = sub?.status === 'pending';
 
-            // Verificação de Bloqueio Diário (1 Treino e 1 Cardio por dia)
             const isDailyLocked = 
               !isApproved && !isPending && (
                 (mission.category === 'treino' && isWorkoutDailyLocked) ||
                 (mission.category === 'cardio' && isCardioDailyLocked)
               );
 
-            // Verificação de Sequenciamento (Cadeado se o treino anterior ainda não foi feito)
             const isPreviousUnfinished = 
               !isApproved && !isPending && (mission.category === 'treino' || mission.category === 'cardio') &&
               index > 0 &&
@@ -309,52 +289,51 @@ export default function StudentMissionsWeeklyPage() {
             const isLocked = isDailyLocked || isPreviousUnfinished;
 
             return (
-              <Card
+              <div
                 key={mission.id}
-                className={`border-zinc-850 bg-zinc-900/60 p-4 transition-all ${
-                  isApproved ? 'border-emerald-500/25 bg-emerald-950/15' : isLocked ? 'opacity-65' : ''
+                className={`mono-glass-card p-4 rounded-2xl transition-all ${
+                  isApproved ? 'border-white/30 bg-white/[0.04]' : isLocked ? 'opacity-50' : ''
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-sm text-white">{mission.title}</span>
+                      <span className="font-bold text-xs text-white">{mission.title}</span>
                       {mission.is_bonus && (
-                        <Badge className="bg-teal-500/20 text-teal-400 border-teal-500/40 text-[9px]">
-                          Bônus
-                        </Badge>
+                        <span className="text-[9px] font-mono text-white border border-white/20 px-1.5 py-0.2 rounded">
+                          BÔNUS
+                        </span>
                       )}
                     </div>
 
                     <div className="flex items-center gap-2">
                       {getCategoryBadge(mission.category)}
-                      <Badge variant="success" className="text-[10px] px-2 py-0.5 font-black">
-                        +{mission.points_rewarded} pts
-                      </Badge>
+                      <span className="text-[10px] font-mono text-zinc-400">
+                        +{mission.points_rewarded} PTS
+                      </span>
                     </div>
                   </div>
 
                   <div className="shrink-0">
                     {isApproved && (
-                      <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-black">
-                        <CheckCircle2 className="h-4 w-4" /> Concluído
-                      </div>
+                      <span className="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-[10px] font-mono font-bold block">
+                        CONCLUÍDO ✓
+                      </span>
                     )}
 
                     {isPending && (
-                      <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-black">
-                        <Clock className="h-4 w-4 animate-spin" /> Em Análise
-                      </div>
+                      <span className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/15 text-zinc-300 text-[10px] font-mono block">
+                        EM AUDITORIA...
+                      </span>
                     )}
 
                     {!sub && isLocked && (
                       <div className="flex flex-col items-end gap-1">
-                        <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700 text-zinc-400 text-xs font-bold">
-                          <Lock className="h-3.5 w-3.5 text-zinc-400" />
-                          <span>Bloqueado</span>
-                        </div>
+                        <span className="px-2.5 py-1 rounded-xl bg-black border border-white/10 text-zinc-500 text-[10px] font-mono">
+                          BLOQUEADO
+                        </span>
                         {isDailyLocked && (
-                          <span className="text-[9px] text-orange-400 font-mono font-bold">
+                          <span className="text-[9px] font-mono text-zinc-400">
                             {timeUntilMidnight}
                           </span>
                         )}
@@ -363,14 +342,14 @@ export default function StudentMissionsWeeklyPage() {
 
                     {!sub && !isLocked && (
                       <Link href={`/app/camera/${mission.id}`}>
-                        <Button size="sm" className="h-9 px-3.5 text-xs font-extrabold rounded-xl shadow-lg shadow-emerald-500/20">
-                          <Camera className="h-4 w-4 mr-1.5" /> Registrar Foto
-                        </Button>
+                        <button className="mono-button-primary px-3.5 py-1.5 text-[11px] font-mono">
+                          REGISTRAR →
+                        </button>
                       </Link>
                     )}
                   </div>
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>

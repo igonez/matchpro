@@ -3,21 +3,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  Camera, 
-  ArrowLeft, 
-  Check, 
-  RefreshCw, 
-  Upload, 
-  AlertCircle, 
-  ShieldCheck,
-  MapPin,
-  Clock,
-  MessageSquare
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
+import { Input } from '@/components/ui/input';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function CameraCapturePage() {
   const router = useRouter();
@@ -38,7 +27,6 @@ export default function CameraCapturePage() {
   const [location, setLocation] = useState<{ latitude: number; longitude: number; text: string } | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(false);
 
-  // Buscar detalhes da missão
   useEffect(() => {
     async function getMission() {
       if (!missionId) return;
@@ -52,10 +40,9 @@ export default function CameraCapturePage() {
     getMission();
   }, [missionId, supabase]);
 
-  // Capturar GPS no momento em que a foto é tirada
   const captureGeolocation = () => {
     if (!navigator.geolocation) {
-      setLocation({ latitude: 0, longitude: 0, text: 'GPS não suportado' });
+      setLocation({ latitude: 0, longitude: 0, text: 'GPS_INDISPONIVEL' });
       return;
     }
 
@@ -67,16 +54,16 @@ export default function CameraCapturePage() {
         setLocation({
           latitude: lat,
           longitude: lng,
-          text: `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`,
+          text: `${lat.toFixed(5)}, ${lng.toFixed(5)}`,
         });
         setLoadingLocation(false);
       },
       (err) => {
-        console.warn('Erro ao obter GPS:', err);
+        console.warn('GPS indisponível:', err);
         setLocation({
           latitude: 0,
           longitude: 0,
-          text: 'Localização não autorizada',
+          text: 'LOCAL_NAO_AUTORIZADO',
         });
         setLoadingLocation(false);
       },
@@ -84,7 +71,6 @@ export default function CameraCapturePage() {
     );
   };
 
-  // Handler para quando a foto for tirada
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -96,7 +82,6 @@ export default function CameraCapturePage() {
     }
   };
 
-  // Enviar a foto para o Supabase Storage e salvar submissão com geolocalização e comentário
   const handleUploadSubmission = async () => {
     if (!selectedFile || !missionId) return;
     setUploading(true);
@@ -106,7 +91,6 @@ export default function CameraCapturePage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado.');
 
-      // 1. Upload do arquivo para o bucket 'submissions'
       const fileExt = selectedFile.name.split('.').pop() || 'jpg';
       const fileName = `${user.id}/${missionId}-${Date.now()}.${fileExt}`;
 
@@ -119,12 +103,10 @@ export default function CameraCapturePage() {
 
       if (storageError) throw storageError;
 
-      // 2. Obter URL pública
       const { data: { publicUrl } } = supabase.storage
         .from('submissions')
         .getPublicUrl(fileName);
 
-      // 3. Salvar registro na tabela student_submissions com status 'approved'
       const { error: dbError } = await supabase
         .from('student_submissions')
         .insert({
@@ -141,79 +123,103 @@ export default function CameraCapturePage() {
 
       if (dbError) throw dbError;
 
-      // 4. Retornar ao feed com status atualizado
       router.push('/app');
     } catch (err: any) {
       console.error('Erro no upload:', err);
-      setError(err.message || 'Falha ao enviar a foto da missão.');
+      setError(err.message || 'Falha ao processar o check-in.');
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between p-4 bg-black text-white">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between">
-        <Link href="/app">
-          <Button variant="ghost" size="icon" className="rounded-full bg-zinc-900/60 backdrop-blur">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+    <div className="min-h-screen flex flex-col justify-between p-4 bg-black text-white relative max-w-md mx-auto w-full selection:bg-white selection:text-black">
+      {/* Background 3D Animado */}
+      <Monochrome3DBackground />
+
+      {/* Top Bar Monocromático */}
+      <div className="flex items-center justify-between z-10 pt-1">
+        <Link href="/app" className="p-2 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white transition-colors">
+          ← Voltar
         </Link>
         <div className="text-center">
-          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Câmera Oficial ArenaPro</p>
-          <p className="text-xs font-black text-white line-clamp-1">{mission?.title || 'Missão Diária'}</p>
+          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
+            OPTICAL_SENSOR_HUD
+          </span>
+          <p className="text-xs font-black text-white line-clamp-1">{mission?.title || 'Check-in de Missão'}</p>
         </div>
-        <div className="w-10" />
+        <div className="w-12 text-right">
+          <span className="text-[10px] font-mono text-zinc-400 font-bold">
+            +{mission?.points_rewarded || 10}P
+          </span>
+        </div>
       </div>
 
-      {/* Área da Câmera / Preview */}
-      <div className="flex-1 flex flex-col items-center justify-center my-4">
+      {/* Área do Visor Técnico (HUD da Câmera) */}
+      <div className="flex-1 flex flex-col items-center justify-center my-4 z-10">
         {previewUrl ? (
-          <div className="relative w-full aspect-[3/4] max-h-[60vh] rounded-3xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-2xl">
+          <div className="relative w-full aspect-[3/4] max-h-[60vh] rounded-3xl overflow-hidden border border-white/20 bg-black shadow-2xl">
             <img
               src={previewUrl}
               alt="Foto Capturada"
               className="w-full h-full object-cover"
             />
 
-            {/* Badges de Metadados Antifraude Impressos na Foto */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-              <div className="bg-emerald-500/90 text-black text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-lg">
-                <ShieldCheck className="h-3.5 w-3.5" /> Antifraude Ativo
+            {/* Linhas de Mira do HUD */}
+            <div className="absolute inset-0 pointer-events-none p-4 flex flex-col justify-between">
+              <div className="flex justify-between">
+                <div className="w-6 h-6 border-t-2 border-l-2 border-white/60" />
+                <div className="w-6 h-6 border-t-2 border-r-2 border-white/60" />
               </div>
 
-              {captureTime && (
-                <div className="bg-black/70 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 border border-white/10">
-                  <Clock className="h-3 w-3 text-emerald-400" />
-                  {captureTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              {/* Crosshair Central */}
+              <div className="self-center flex items-center justify-center">
+                <div className="w-8 h-8 border border-white/40 rounded-full flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
                 </div>
-              )}
+              </div>
 
-              {location && (
-                <div className="bg-black/70 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 border border-white/10">
-                  <MapPin className="h-3 w-3 text-cyan-400" />
-                  {location.text}
-                </div>
-              )}
+              <div className="flex justify-between">
+                <div className="w-6 h-6 border-b-2 border-l-2 border-white/60" />
+                <div className="w-6 h-6 border-b-2 border-r-2 border-white/60" />
+              </div>
+            </div>
+
+            {/* Metadados Antifraude Gravados */}
+            <div className="absolute bottom-3 inset-x-3 p-3 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/10 font-mono text-[10px] space-y-1">
+              <div className="flex justify-between text-zinc-400">
+                <span>TIMESTAMP:</span>
+                <span className="text-white font-bold">
+                  {captureTime?.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                </span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>COORDINATES:</span>
+                <span className="text-white font-bold">{location?.text || 'CALCULANDO...'}</span>
+              </div>
             </div>
           </div>
         ) : (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="w-full aspect-[3/4] max-h-[60vh] rounded-3xl border-2 border-dashed border-zinc-800 hover:border-emerald-500/50 bg-zinc-950/60 flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-colors"
+            className="w-full aspect-[3/4] max-h-[60vh] rounded-3xl border border-dashed border-white/20 hover:border-white/50 bg-black/70 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-colors relative group"
           >
-            <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
-              <Camera className="h-8 w-8" />
+            {/* Mirante Vetorial SVG */}
+            <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="3" strokeWidth="2" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              </svg>
             </div>
-            <h3 className="font-extrabold text-base text-white">Toque para abrir a câmera</h3>
+            <h3 className="font-bold text-sm text-white font-mono uppercase tracking-wider">
+              ACIONAR SENSOR ÓPTICO
+            </h3>
             <p className="text-xs text-zinc-400 max-w-xs mt-1">
-              A captura deve ser feita na hora com geolocalização e carimbo de horário antifraude.
+              Toque para abrir a câmera ao vivo com validação instantânea de GPS e carimbo horário.
             </p>
           </div>
         )}
 
-        {/* Input Oculto de Câmera com capture="environment" */}
         <input
           ref={fileInputRef}
           type="file"
@@ -224,34 +230,25 @@ export default function CameraCapturePage() {
         />
 
         {error && (
-          <div className="flex items-center gap-2 mt-3 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <span>{error}</span>
+          <div className="mt-3 p-3 rounded-xl border border-white/20 bg-black text-xs font-mono text-zinc-300">
+            {error}
           </div>
         )}
       </div>
 
-      {/* Barra de Ações Inferior com Campo de Comentário */}
-      <div className="space-y-3 pb-2">
+      {/* Ações Inferiores */}
+      <div className="space-y-3 pb-2 z-10">
         {previewUrl ? (
           <div className="space-y-3">
-            {/* Campo de Legenda / Comentário para o Feed */}
-            <div className="relative">
-              <div className="absolute left-3.5 top-3 text-zinc-500">
-                <MessageSquare className="h-4 w-4" />
-              </div>
-              <Input
-                placeholder="Adicione um comentário ou legenda para o Feed..."
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-                className="pl-10 h-11 rounded-2xl bg-zinc-900 border-zinc-800 text-xs text-white placeholder:text-zinc-500"
-              />
-            </div>
+            <Input
+              placeholder="Adicione uma nota sobre a execução..."
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              className="h-11 rounded-2xl bg-black border-white/15 text-xs text-white placeholder:text-zinc-600 focus:border-white/40"
+            />
 
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="lg"
+              <button
                 onClick={() => {
                   setSelectedFile(null);
                   setPreviewUrl(null);
@@ -260,37 +257,27 @@ export default function CameraCapturePage() {
                   fileInputRef.current?.click();
                 }}
                 disabled={uploading}
-                className="flex-1 rounded-2xl border-zinc-800 bg-zinc-900/60 text-xs font-bold"
+                className="mono-button-secondary flex-1 h-11 text-xs font-mono"
               >
-                <RefreshCw className="h-4 w-4 mr-1.5" /> Tirar Outra
-              </Button>
+                RECAPTURAR
+              </button>
 
-              <Button
-                size="lg"
+              <button
                 onClick={handleUploadSubmission}
                 disabled={uploading}
-                className="flex-1 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-extrabold shadow-lg shadow-emerald-500/25"
+                className="mono-button-primary flex-1 h-11 text-xs font-mono font-bold"
               >
-                {uploading ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-1.5 animate-spin" /> Enviando...
-                  </>
-                ) : (
-                  <>
-                    <Check className="h-4 w-4 mr-1.5" /> Enviar e Pontuar
-                  </>
-                )}
-              </Button>
+                {uploading ? 'ENVIANDO...' : 'CONFIRMAR CHECK-IN →'}
+              </button>
             </div>
           </div>
         ) : (
-          <Button
-            size="lg"
+          <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-full rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold shadow-lg shadow-emerald-500/25 h-12"
+            className="mono-button-primary w-full h-12 text-xs font-mono font-bold"
           >
-            <Camera className="h-5 w-5 mr-2" /> Abrir Câmera do Dispositivo
-          </Button>
+            ABRIR CÂMERA DO APARELHO →
+          </button>
         )}
       </div>
     </div>

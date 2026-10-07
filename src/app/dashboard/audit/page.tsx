@@ -1,32 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { 
-  ShieldAlert, 
-  Trash2, 
-  X, 
-  Check, 
-  Flag, 
-  Eye, 
-  Clock, 
-  User, 
-  Sparkles, 
-  RefreshCw, 
-  CheckCircle2, 
-  AlertTriangle,
-  ArrowRight,
-  Filter
-} from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function FiscalizacaoPage() {
   const supabase = createClient();
 
   const [submissions, setSubmissions] = useState<any[]>([]);
-  const [reports, setReports] = useState<any[]>([]);
   const [filter, setFilter] = useState<'all' | 'reported' | 'approved' | 'rejected'>('all');
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -34,7 +16,6 @@ export default function FiscalizacaoPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // 1. Buscar todas as submissões recentes
       const { data: subsData } = await supabase
         .from('student_submissions')
         .select(`
@@ -42,6 +23,8 @@ export default function FiscalizacaoPage() {
           photo_url,
           caption,
           status,
+          location_name,
+          client_captured_at,
           submitted_at,
           student_id,
           students (
@@ -75,10 +58,9 @@ export default function FiscalizacaoPage() {
     fetchData();
   }, []);
 
-  // INVALIDAR / DEDUZIR PONTOS DA FOTO (Rejeitar)
   const handleInvalidatePhoto = async (sub: any) => {
     const confirmAction = confirm(
-      `Deseja invalidar esta foto de "${sub.students?.full_name}"?\nIsso vai remover automaticamente ${sub.missions?.points_rewarded || 10} pontos do Leaderboard dele!`
+      `Invalidar esta submissão de "${sub.students?.full_name}"?\nIsso deduzirá ${sub.missions?.points_rewarded || 10} pontos do ranking do aluno.`
     );
     if (!confirmAction) return;
 
@@ -91,11 +73,9 @@ export default function FiscalizacaoPage() {
 
       if (error) throw error;
 
-      // Atualiza localmente
       setSubmissions((prev) =>
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'rejected' } : item))
       );
-      alert(`Foto desclassificada! -${sub.missions?.points_rewarded || 10} pontos deduzidos do aluno.`);
     } catch (err: any) {
       alert('Erro ao invalidar foto: ' + err.message);
     } finally {
@@ -103,7 +83,6 @@ export default function FiscalizacaoPage() {
     }
   };
 
-  // REABILITAR FOTO (Voltar para Aprovada)
   const handleReactivatePhoto = async (sub: any) => {
     setProcessingId(sub.id);
     try {
@@ -124,7 +103,6 @@ export default function FiscalizacaoPage() {
     }
   };
 
-  // Filtragem
   const filteredSubmissions = submissions.filter((s) => {
     const hasReport = s.submission_reports && s.submission_reports.length > 0;
     if (filter === 'reported') return hasReport && s.status !== 'rejected';
@@ -138,187 +116,162 @@ export default function FiscalizacaoPage() {
   ).length;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 relative">
+      {/* Background 3D Animado */}
+      <Monochrome3DBackground />
+
+      {/* Header Monocromático */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
-            Fiscalização & Auditoria Amostral <ShieldAlert className="h-6 w-6 text-emerald-400" />
-          </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            As fotos são auto-aprovadas instantaneamente. Invalide apenas fotos falsas para deduzir pontos automaticamente.
+          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-1">
+            AUDIT_KERNEL_INTERFACE
+          </span>
+          <h1 className="text-3xl font-black text-white tracking-tight">Auditoria & Fiscalização de Fotos</h1>
+          <p className="text-xs text-zinc-400 mt-0.5">
+            Check-ins auditáveis com GPS e horário militar. Invalide apenas fotos em desacordo para dedução de pontos.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={fetchData} disabled={loading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
+          <button
+            onClick={fetchData}
+            disabled={loading}
+            className="mono-button-secondary px-4 py-2 text-xs font-mono"
+          >
+            {loading ? 'ATUALIZANDO...' : 'ATUALIZAR FILA'}
+          </button>
         </div>
       </div>
 
-      {/* Banner de Denúncias da Comunidade se houver */}
+      {/* Alerta de Denúncias da Turma */}
       {reportedCount > 0 && (
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-              <Flag className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-black text-sm text-amber-300">
-                {reportedCount} foto(s) sinalizada(s) pelos próprios colegas da turma!
-              </p>
-              <p className="text-xs text-zinc-300">
-                Alunos da turma denunciaram fotos suspeitas. Dê uma olhada para manter a integridade do desafio.
-              </p>
-            </div>
+        <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between gap-3 relative z-10 border-white/20">
+          <div>
+            <p className="font-bold text-xs text-white font-mono uppercase">
+              {reportedCount} FOTO(S) SINALIZADA(S) PELA TURMA
+            </p>
+            <p className="text-xs text-zinc-400">
+              Colegas reportaram inconsistências nesta submissão. Avalie prioritariamente.
+            </p>
           </div>
-
-          <Button
-            size="sm"
+          <button
             onClick={() => setFilter('reported')}
-            className="h-9 px-3 text-xs font-black bg-amber-500 hover:bg-amber-400 text-black shrink-0"
+            className="mono-button-primary px-3 py-1.5 text-xs font-mono shrink-0"
           >
-            Ver Denúncias
-          </Button>
+            FILTRAR DENÚNCIAS
+          </button>
         </div>
       )}
 
-      {/* Filtros em Abas */}
-      <div className="flex items-center gap-2">
+      {/* Filtros em Abas Monocromáticas */}
+      <div className="flex items-center gap-2 relative z-10">
         <button
           onClick={() => setFilter('all')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
             filter === 'all'
-              ? 'bg-zinc-800 text-white'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+              ? 'bg-zinc-800 text-white font-bold border border-white/20'
+              : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
           }`}
         >
-          Todas Recentes ({submissions.length})
+          TODAS ({submissions.length})
         </button>
-
         <button
-          onClick={() => setFilter('reported')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-            filter === 'reported'
-              ? 'bg-amber-500 text-black'
-              : 'bg-zinc-900 border border-zinc-800 text-amber-400 hover:text-amber-300'
+          onClick={() => setFilter('approved')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
+            filter === 'approved'
+              ? 'bg-zinc-800 text-white font-bold border border-white/20'
+              : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
           }`}
         >
-          <Flag className="h-3 w-3" /> Sinalizadas pela Turma ({reportedCount})
+          APROVADAS
         </button>
-
         <button
           onClick={() => setFilter('rejected')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
             filter === 'rejected'
-              ? 'bg-rose-600 text-white'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+              ? 'bg-zinc-800 text-white font-bold border border-white/20'
+              : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
           }`}
         >
-          Desclassificadas ({submissions.filter((s) => s.status === 'rejected').length})
+          INVALIDADAS
         </button>
       </div>
 
-      {/* Grade de Fotos (Galeria Amostral Rápida) */}
+      {/* Grid de Submissões */}
       {loading ? (
-        <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
-          <div className="h-7 w-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-          Carregando registros...
+        <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
+          <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          CARREGANDO SUBMISSÕES...
         </div>
       ) : filteredSubmissions.length === 0 ? (
-        <Card className="border-dashed border-zinc-800 p-12 text-center bg-zinc-900/20">
-          <CheckCircle2 className="h-12 w-12 text-emerald-400 mx-auto mb-3" />
-          <h3 className="font-bold text-white text-base">Tudo limpo e em conformidade!</h3>
-          <p className="text-xs text-zinc-400 max-w-sm mx-auto mt-1">
-            Nenhuma foto necessita de intervenção neste filtro. A turma está pontuando normalmente.
-          </p>
-        </Card>
+        <div className="mono-glass-card p-12 text-center text-xs font-mono text-zinc-500 relative z-10">
+          Nenhuma submissão encontrada neste filtro.
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
           {filteredSubmissions.map((sub) => {
-            const hasReport = sub.submission_reports && sub.submission_reports.length > 0;
             const isRejected = sub.status === 'rejected';
+            const isProcessing = processingId === sub.id;
 
             return (
-              <Card
-                key={sub.id}
-                className={`border overflow-hidden rounded-2xl bg-zinc-900/60 transition-all ${
-                  hasReport && !isRejected
-                    ? 'border-amber-500/50 ring-1 ring-amber-500/30'
-                    : isRejected
-                    ? 'border-rose-500/40 opacity-60'
-                    : 'border-zinc-800 hover:border-zinc-700'
-                }`}
-              >
-                {/* Imagem do Aluno */}
-                <div className="relative aspect-square w-full bg-black overflow-hidden group">
-                  <img
-                    src={sub.photo_url}
-                    alt="Comprovante"
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                  />
-
-                  {/* Badge de Denúncia */}
-                  {hasReport && !isRejected && (
-                    <div className="absolute top-2 left-2 bg-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md flex items-center gap-1 shadow-md">
-                      <Flag className="h-3 w-3 fill-current" /> Denunciada ({sub.submission_reports.length})
+              <SpotlightCard3D key={sub.id} className="p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="h-7 w-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-xs font-mono font-bold text-white overflow-hidden">
+                        {sub.students?.avatar_url ? (
+                          <img src={sub.students.avatar_url} alt="aluno" className="w-full h-full object-cover" />
+                        ) : (
+                          sub.students?.full_name?.charAt(0) || 'A'
+                        )}
+                      </div>
+                      <span className="text-xs font-bold text-white truncate max-w-[140px]">
+                        {sub.students?.full_name}
+                      </span>
                     </div>
-                  )}
 
-                  {/* Badge de Status */}
-                  <div className="absolute top-2 right-2">
-                    <Badge
-                      variant={isRejected ? 'destructive' : 'success'}
-                      className="text-[10px] font-black"
-                    >
-                      {isRejected ? 'Desclassificada (-pts)' : `+${sub.missions?.points_rewarded || 10} pts`}
-                    </Badge>
+                    <span className="text-[10px] font-mono text-zinc-400">
+                      +{sub.missions?.points_rewarded || 10} PTS
+                    </span>
                   </div>
 
-                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 backdrop-blur-md p-2 rounded-xl text-[11px] text-zinc-300">
-                    <p className="font-extrabold text-white truncate">{sub.missions?.title}</p>
-                    {sub.caption && <p className="text-[10px] text-zinc-400 italic line-clamp-1">"{sub.caption}"</p>}
-                  </div>
-                </div>
-
-                {/* Footer do Card com Ação */}
-                <div className="p-3 bg-zinc-950 flex items-center justify-between gap-2 border-t border-zinc-850">
-                  <div className="truncate">
-                    <p className="font-bold text-xs text-white truncate">{sub.students?.full_name || 'Aluno'}</p>
-                    <p className="text-[10px] text-zinc-500 flex items-center gap-1">
-                      <Clock className="h-2.5 w-2.5" />
-                      {new Date(sub.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-
-                  <div>
-                    {isRejected ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleReactivatePhoto(sub)}
-                        disabled={processingId === sub.id}
-                        className="h-8 px-2 text-[10px] text-emerald-400 border-emerald-500/30"
-                      >
-                        Reativar
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleInvalidatePhoto(sub)}
-                        disabled={processingId === sub.id}
-                        className="h-8 px-2.5 text-xs font-bold rounded-xl"
-                        title="Desclassificar foto e deduzir pontos"
-                      >
-                        <X className="h-3.5 w-3.5 mr-1" /> Invalidar
-                      </Button>
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3">
+                    <img src={sub.photo_url} alt="Submissão" className="w-full h-full object-cover" />
+                    {isRejected && (
+                      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center font-mono font-bold text-xs text-zinc-400">
+                        [ FOTO INVALIDADA ]
+                      </div>
                     )}
                   </div>
+
+                  <div className="space-y-1 font-mono text-[10px] text-zinc-400">
+                    <p className="text-white font-bold text-xs font-sans">{sub.missions?.title}</p>
+                    <p>HORÁRIO: {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR')}</p>
+                    {sub.location_name && <p className="truncate">GPS: {sub.location_name}</p>}
+                    {sub.caption && <p className="text-zinc-300 font-sans italic mt-1">"{sub.caption}"</p>}
+                  </div>
                 </div>
-              </Card>
+
+                <div className="pt-4 mt-4 border-t border-white/[0.06] flex gap-2">
+                  {isRejected ? (
+                    <button
+                      onClick={() => handleReactivatePhoto(sub)}
+                      disabled={isProcessing}
+                      className="mono-button-primary w-full py-1.5 text-xs font-mono"
+                    >
+                      {isProcessing ? 'PROCESSANDO...' : 'REABILITAR FOTO'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleInvalidatePhoto(sub)}
+                      disabled={isProcessing}
+                      className="mono-button-secondary w-full py-1.5 text-xs font-mono text-zinc-400 hover:text-white"
+                    >
+                      {isProcessing ? 'PROCESSANDO...' : 'INVALIDAR FOTO (DEDUZIR PONTOS)'}
+                    </button>
+                  )}
+                </div>
+              </SpotlightCard3D>
             );
           })}
         </div>

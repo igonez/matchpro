@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Trophy, Medal, Crown, Flame, ArrowUpRight, Sparkles, RefreshCw, Users, Shield } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function LeaderboardPage() {
   const supabase = createClient();
@@ -16,10 +14,8 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [activeChallenge, setActiveChallenge] = useState<any>(null);
 
-  // 1. Carregar Leaderboard e Desafio
   const fetchLeaderboard = async () => {
     try {
-      // Pega o desafio ativo mais recente
       const { data: challenges } = await supabase
         .from('challenges')
         .select('*')
@@ -31,7 +27,7 @@ export default function LeaderboardPage() {
         const currentChallenge = challenges[0];
         setActiveChallenge(currentChallenge);
 
-        // A. Pega os standings individuais
+        // A. Standings individuais
         const { data: standingsData } = await supabase
           .from('leaderboard_standings')
           .select(`
@@ -49,7 +45,7 @@ export default function LeaderboardPage() {
 
         setStandings(standingsData || []);
 
-        // B. Pega os standings de Squads (Micro-equipes)
+        // B. Standings de Squads
         const { data: squadsData } = await supabase
           .from('squad_standings')
           .select('*')
@@ -68,7 +64,6 @@ export default function LeaderboardPage() {
   useEffect(() => {
     fetchLeaderboard();
 
-    // 2. Realtime Subscription via WebSockets no Supabase
     const channel = supabase
       .channel('realtime_leaderboard')
       .on(
@@ -78,9 +73,7 @@ export default function LeaderboardPage() {
           schema: 'public',
           table: 'leaderboard_standings',
         },
-        (payload: any) => {
-          console.log('Realtime Leaderboard update recebido:', payload);
-          // Recarrega standings instantaneamente quando houver alteração
+        () => {
           fetchLeaderboard();
         }
       )
@@ -91,226 +84,176 @@ export default function LeaderboardPage() {
     };
   }, [supabase]);
 
-  // Cores e Ícones do Pódio
-  const getPodiumBadge = (rank: number) => {
-    if (rank === 0) {
-      return (
-        <div className="h-8 w-8 rounded-full bg-amber-400/20 text-amber-400 border border-amber-400/40 flex items-center justify-center font-black text-sm">
-          <Crown className="h-4 w-4" />
-        </div>
-      );
-    }
-    if (rank === 1) {
-      return (
-        <div className="h-8 w-8 rounded-full bg-slate-300/20 text-slate-300 border border-slate-300/40 flex items-center justify-center font-black text-sm">
-          2
-        </div>
-      );
-    }
-    if (rank === 2) {
-      return (
-        <div className="h-8 w-8 rounded-full bg-amber-700/20 text-amber-600 border border-amber-700/40 flex items-center justify-center font-black text-sm">
-          3
-        </div>
-      );
-    }
-    return (
-      <div className="h-8 w-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center font-bold text-xs">
-        {rank + 1}
-      </div>
-    );
-  };
-
   return (
-    <div className="flex flex-col flex-1">
-      {/* Top Header */}
-      <header className="p-4 border-b border-zinc-900 bg-zinc-950/80 backdrop-blur sticky top-0 z-40 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
-            <Trophy className="h-5 w-5" />
-          </div>
-          <div>
-            <h1 className="text-base font-black text-white leading-tight">Ranking da Turma</h1>
-            <p className="text-[11px] text-zinc-400">Atualizado ao vivo via Realtime</p>
-          </div>
+    <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative">
+      {/* Background 3D Animado */}
+      <Monochrome3DBackground />
+
+      {/* Header Monocromático */}
+      <div className="flex items-center justify-between pt-1 relative z-10">
+        <div>
+          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
+            GLOBAL_RANKING_STREAM
+          </span>
+          <h1 className="text-xl font-black text-white">Classificação da Turma</h1>
+          <p className="text-[11px] text-zinc-400">Pontuação computada por integridade de check-ins</p>
         </div>
 
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-bold">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
-          Ao Vivo
-        </div>
-      </header>
-
-      {/* Info do Desafio Atual */}
-      <div className="p-4">
-        <div className="rounded-2xl bg-gradient-to-br from-amber-950/30 via-zinc-900 to-zinc-950 border border-amber-500/20 p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest">
-              Desafio Ativo
-            </span>
-            <Badge variant="outline" className="text-[10px] text-zinc-300">
-              {standings.length} Competidores
-            </Badge>
-          </div>
-          <h2 className="text-base font-black text-white mt-1">
-            {activeChallenge?.title || 'Desafio Fitness Oficial'}
-          </h2>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Acompanhe a disputa individual ou a média de consistência das equipes.
-          </p>
-        </div>
-
-        {/* ⚔️ SELETOR DE ABAS: INDIVIDUAL VS SQUADS */}
-        <div className="grid grid-cols-2 gap-2 mt-3 p-1 rounded-2xl bg-zinc-900/80 border border-zinc-800">
-          <button
-            onClick={() => setActiveTab('individual')}
-            className={`py-2 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-              activeTab === 'individual'
-                ? 'bg-amber-500 text-black shadow-md shadow-amber-500/20'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Trophy className="h-3.5 w-3.5" /> Individual
-          </button>
-          <button
-            onClick={() => setActiveTab('squads')}
-            className={`py-2 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-              activeTab === 'squads'
-                ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Users className="h-3.5 w-3.5" /> Squads ({squadStandings.length})
-          </button>
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-mono text-white">
+          <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
+          REALTIME
         </div>
       </div>
 
-      {/* Lista de Classificação */}
-      <div className="p-4 pt-0 space-y-2 flex-1">
+      {/* Seletor Monocromático: Individual vs Squads */}
+      <div className="grid grid-cols-2 p-1 rounded-2xl bg-black border border-white/[0.08] relative z-10">
+        <button
+          onClick={() => setActiveTab('individual')}
+          className={`py-2 text-xs font-mono font-bold rounded-xl transition-all ${
+            activeTab === 'individual'
+              ? 'bg-zinc-800 text-white shadow-md'
+              : 'text-zinc-500 hover:text-white'
+          }`}
+        >
+          INDIVIDUAL ({standings.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('squads')}
+          className={`py-2 text-xs font-mono font-bold rounded-xl transition-all ${
+            activeTab === 'squads'
+              ? 'bg-zinc-800 text-white shadow-md'
+              : 'text-zinc-500 hover:text-white'
+          }`}
+        >
+          SQUADS ({squadStandings.length})
+        </button>
+      </div>
+
+      {/* PÓDIO 3D DOS TOP 3 (Quando em modo individual e com competidores) */}
+      {activeTab === 'individual' && standings.length >= 3 && (
+        <div className="grid grid-cols-3 gap-2 pt-2 items-end relative z-10">
+          {/* 2º Lugar */}
+          <div className="mono-glass-card p-3 rounded-2xl text-center space-y-1.5">
+            <span className="text-[10px] font-mono text-zinc-400 block font-bold">02 // PRATA</span>
+            <div className="h-11 w-11 mx-auto rounded-full bg-zinc-800 border border-white/30 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+              {standings[1]?.students?.avatar_url ? (
+                <img src={standings[1].students.avatar_url} alt="2º" className="w-full h-full object-cover" />
+              ) : (
+                standings[1]?.students?.full_name?.charAt(0) || '2'
+              )}
+            </div>
+            <p className="text-xs font-bold text-white truncate">{standings[1]?.students?.full_name?.split(' ')[0]}</p>
+            <p className="text-[10px] font-mono text-zinc-400 font-bold">{standings[1]?.total_points} PTS</p>
+          </div>
+
+          {/* 1º Lugar (Destaque Maior com Cromo) */}
+          <SpotlightCard3D className="p-4 rounded-3xl text-center space-y-2 -translate-y-2 border-white/30 shadow-[0_0_25px_rgba(255,255,255,0.15)]">
+            <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20 inline-block font-bold">
+              01 // LÍDER
+            </span>
+            <div className="h-14 w-14 mx-auto rounded-full bg-gradient-to-b from-white to-zinc-800 p-px shadow-lg">
+              <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-mono font-black text-white text-sm overflow-hidden">
+                {standings[0]?.students?.avatar_url ? (
+                  <img src={standings[0].students.avatar_url} alt="1º" className="w-full h-full object-cover" />
+                ) : (
+                  standings[0]?.students?.full_name?.charAt(0) || '1'
+                )}
+              </div>
+            </div>
+            <p className="text-xs font-black text-white truncate">{standings[0]?.students?.full_name?.split(' ')[0]}</p>
+            <p className="text-xs font-mono font-black text-white">{standings[0]?.total_points} PTS</p>
+          </SpotlightCard3D>
+
+          {/* 3º Lugar */}
+          <div className="mono-glass-card p-3 rounded-2xl text-center space-y-1.5">
+            <span className="text-[10px] font-mono text-zinc-400 block font-bold">03 // BRONZE</span>
+            <div className="h-11 w-11 mx-auto rounded-full bg-zinc-900 border border-white/15 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+              {standings[2]?.students?.avatar_url ? (
+                <img src={standings[2].students.avatar_url} alt="3º" className="w-full h-full object-cover" />
+              ) : (
+                standings[2]?.students?.full_name?.charAt(0) || '3'
+              )}
+            </div>
+            <p className="text-xs font-bold text-white truncate">{standings[2]?.students?.full_name?.split(' ')[0]}</p>
+            <p className="text-[10px] font-mono text-zinc-400 font-bold">{standings[2]?.total_points} PTS</p>
+          </div>
+        </div>
+      )}
+
+      {/* Lista Restante de Classificação */}
+      <div className="space-y-2 relative z-10 pt-1">
         {loading ? (
-          <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
-            <div className="h-6 w-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
-            Carregando pontuações...
+          <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            SINCRONIZANDO PLACAR...
           </div>
         ) : activeTab === 'individual' ? (
-          /* RANKING INDIVIDUAL */
           standings.length === 0 ? (
-            <Card className="border-dashed border-zinc-800 p-8 text-center bg-zinc-900/30">
-              <Trophy className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-              <p className="font-semibold text-xs text-zinc-300">Nenhum ponto computado ainda</p>
-              <p className="text-[11px] text-zinc-500 mt-1">
-                As primeiras missões aprovadas aparecerão aqui no ranking!
-              </p>
-            </Card>
+            <div className="mono-glass-card p-8 rounded-3xl text-center text-xs font-mono text-zinc-500">
+              Nenhuma pontuação computada ainda.
+            </div>
           ) : (
-            <div className="space-y-2">
-              {standings.map((item, index) => {
-                const isFirst = index === 0;
-                return (
-                  <div
-                    key={item.id}
-                    className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
-                      isFirst
-                        ? 'bg-amber-500/10 border-amber-500/30 shadow-lg shadow-amber-950/20'
-                        : 'bg-zinc-900/40 border-zinc-850 hover:border-zinc-800'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        {getPodiumBadge(index)}
-                      </div>
-
-                      {/* Avatar do Aluno */}
-                      <div className="h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-750 overflow-hidden flex items-center justify-center font-bold text-xs text-emerald-400 shrink-0">
-                        {item.students?.avatar_url ? (
-                          <img
-                            src={item.students.avatar_url}
-                            alt={item.students.full_name || 'Aluno'}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          item.students?.full_name?.charAt(0) || 'A'
-                        )}
-                      </div>
-
-                      <div>
-                        <p className={`font-black text-sm ${isFirst ? 'text-amber-300' : 'text-white'}`}>
-                          {item.students?.full_name || 'Aluno Anônimo'}
-                        </p>
-                        <p className="text-[10px] text-zinc-500 flex items-center gap-1">
-                          {isFirst ? 'Líder do Desafio 🔥' : `Posição #${index + 1}`}
-                        </p>
-                      </div>
+            standings.slice(standings.length >= 3 ? 3 : 0).map((item, idx) => {
+              const actualRank = (standings.length >= 3 ? 3 : 0) + idx + 1;
+              return (
+                <div
+                  key={item.id}
+                  className="mono-glass-card p-3.5 rounded-2xl flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-xs text-zinc-500 w-5 text-center">
+                      #{String(actualRank).padStart(2, '0')}
+                    </span>
+                    <div className="h-8 w-8 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+                      {item.students?.avatar_url ? (
+                        <img src={item.students.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        item.students?.full_name?.charAt(0) || 'A'
+                      )}
                     </div>
-
-                    <div className="text-right">
-                      <div className="font-black text-base text-emerald-400">
-                        {item.total_points}
-                        <span className="text-[11px] font-semibold text-zinc-500 ml-1">pts</span>
-                      </div>
+                    <div>
+                      <p className="text-xs font-bold text-white">{item.students?.full_name || 'Atleta'}</p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+
+                  <span className="font-mono text-xs font-bold text-white">
+                    {item.total_points} PTS
+                  </span>
+                </div>
+              );
+            })
           )
         ) : (
-          /* RANKING DE SQUADS / MICRO-EQUIPES */
+          /* TAB DE SQUADS */
           squadStandings.length === 0 ? (
-            <Card className="border-dashed border-zinc-800 p-8 text-center bg-zinc-900/30">
-              <Users className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-              <p className="font-semibold text-xs text-zinc-300">Nenhum Squad formado ainda</p>
-              <p className="text-[11px] text-zinc-500 mt-1">
-                O treinador dividirá a turma em micro-equipes para a guerra de tribos!
-              </p>
-            </Card>
-          ) : (
-            <div className="space-y-2.5">
-              {squadStandings.map((squad, index) => {
-                const isLeader = index === 0;
-                return (
-                  <div
-                    key={squad.squad_id}
-                    className={`p-3.5 rounded-2xl border transition-all ${
-                      isLeader
-                        ? 'bg-emerald-950/30 border-emerald-500/40 shadow-lg shadow-emerald-950/30'
-                        : 'bg-zinc-900/40 border-zinc-850'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`h-8 w-8 rounded-xl flex items-center justify-center font-black text-xs ${
-                          isLeader
-                            ? 'bg-emerald-500 text-black shadow-md'
-                            : 'bg-zinc-800 text-zinc-300'
-                        }`}>
-                          #{index + 1}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-black text-sm text-white">{squad.squad_name}</h3>
-                            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
-                              {squad.total_members} atletas
-                            </span>
-                          </div>
-                          {squad.motto && (
-                            <p className="text-[10px] text-zinc-400 italic mt-0.5">"{squad.motto}"</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <span className="text-[9px] font-bold uppercase text-zinc-400 block">Média do Time</span>
-                        <div className="font-black text-base text-emerald-400">
-                          {squad.squad_average_points || 0}
-                          <span className="text-[10px] font-semibold text-zinc-500 ml-1">pts/membro</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="mono-glass-card p-8 rounded-3xl text-center text-xs font-mono text-zinc-500">
+              Nenhum esquadrão configurado no desafio ativo.
             </div>
+          ) : (
+            squadStandings.map((squad, index) => (
+              <div
+                key={squad.squad_id}
+                className="mono-glass-card p-4 rounded-2xl flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs text-zinc-500 w-5 text-center font-bold">
+                    #{String(index + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <h4 className="text-xs font-bold text-white">{squad.squad_name}</h4>
+                    <p className="text-[10px] font-mono text-zinc-500">
+                      {squad.member_count} membros • Média: {Math.round(squad.squad_average_points)} pts
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-xs font-mono font-black text-white">
+                    {squad.squad_total_points} PTS
+                  </span>
+                </div>
+              </div>
+            ))
           )
         )}
       </div>

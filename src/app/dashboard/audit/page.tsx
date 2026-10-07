@@ -1,9 +1,9 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { Sparkles, Brain, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function FiscalizacaoPage() {
   const supabase = createClient();
@@ -12,6 +12,9 @@ export default function FiscalizacaoPage() {
   const [filter, setFilter] = useState<'all' | 'reported' | 'approved' | 'rejected'>('all');
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [analyzingId, setAnalyzingId] = useState<string | null>(null);
+  const [aiAnalysisMap, setAiAnalysisMap] = useState<Record<string, any>>({});
+  const [expandedAnalysis, setExpandedAnalysis] = useState<Record<string, boolean>>({});
 
   const fetchData = async () => {
     setLoading(true);
@@ -34,6 +37,7 @@ export default function FiscalizacaoPage() {
           missions (
             id,
             title,
+            category,
             points_rewarded
           ),
           submission_reports (
@@ -100,6 +104,37 @@ export default function FiscalizacaoPage() {
       alert('Erro ao reabilitar foto: ' + err.message);
     } finally {
       setProcessingId(null);
+    }
+  };
+
+  const handleAnalyzeWithAI = async (sub: any) => {
+    if (aiAnalysisMap[sub.id]) {
+      // Alterna visibilidade se já analisado
+      setExpandedAnalysis((prev) => ({ ...prev, [sub.id]: !prev[sub.id] }));
+      return;
+    }
+
+    setAnalyzingId(sub.id);
+    try {
+      const res = await fetch('/api/ai/analyze-submission', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photoUrl: sub.photo_url,
+          category: sub.missions?.category || 'refeicao',
+          caption: sub.caption || '',
+        }),
+      });
+
+      const data = await res.json();
+      if (data.analysis) {
+        setAiAnalysisMap((prev) => ({ ...prev, [sub.id]: data.analysis }));
+        setExpandedAnalysis((prev) => ({ ...prev, [sub.id]: true }));
+      }
+    } catch (err) {
+      console.error('Erro na análise IA:', err);
+    } finally {
+      setAnalyzingId(null);
     }
   };
 
@@ -258,6 +293,85 @@ export default function FiscalizacaoPage() {
                     <p>HORÁRIO: {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR')}</p>
                     {sub.location_name && <p className="truncate">GPS: {sub.location_name}</p>}
                     {sub.caption && <p className="text-zinc-300 font-sans italic mt-1">"{sub.caption}"</p>}
+                  </div>
+
+                  {/* Botão de Disparo IA Gemini */}
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() => handleAnalyzeWithAI(sub)}
+                      disabled={analyzingId === sub.id}
+                      className="w-full py-1.5 px-2.5 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white font-mono text-[10px] flex items-center justify-between transition-colors"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
+                        <span>{analyzingId === sub.id ? 'ANALISANDO COM GEMINI...' : aiAnalysisMap[sub.id] ? 'PARECER TÉCNICO IA' : 'ANALISAR COM IA'}</span>
+                      </div>
+                      {aiAnalysisMap[sub.id] ? (
+                        expandedAnalysis[sub.id] ? <ChevronUp className="w-3 h-3 text-zinc-400" /> : <ChevronDown className="w-3 h-3 text-zinc-400" />
+                      ) : (
+                        <span className="text-[9px] text-zinc-500">MULTIMODAL</span>
+                      )}
+                    </button>
+
+                    {/* Card de Análise da IA Expandido */}
+                    {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
+                      <div className="mt-2 p-2.5 rounded-xl bg-black/80 border border-white/10 font-mono text-[10px] space-y-2 animate-in fade-in duration-200">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
+                          <div className="flex items-center gap-1.5 text-white font-bold">
+                            <Brain className="w-3 h-3 text-white" />
+                            <span>PARECER MULTIMODAL</span>
+                          </div>
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                            aiAnalysisMap[sub.id].complianceScore >= 80
+                              ? 'bg-white/10 text-white'
+                              : 'bg-zinc-800 text-zinc-400'
+                          }`}>
+                            CONFORMIDADE: {aiAnalysisMap[sub.id].complianceScore}%
+                          </span>
+                        </div>
+
+                        <p className="text-zinc-300 font-sans text-[11px] leading-tight">
+                          {aiAnalysisMap[sub.id].summary}
+                        </p>
+
+                        {/* Pílulas de Macronutrientes (Nutrição / Refeição) */}
+                        {aiAnalysisMap[sub.id].estimatedMacros && (
+                          <div className="grid grid-cols-4 gap-1 pt-1">
+                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[8px] text-zinc-500 block">KCAL</span>
+                              <span className="text-white font-bold text-[9px]">
+                                {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
+                              </span>
+                            </div>
+                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[8px] text-zinc-500 block">PROT</span>
+                              <span className="text-white font-bold text-[9px]">
+                                {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
+                              </span>
+                            </div>
+                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[8px] text-zinc-500 block">CARB</span>
+                              <span className="text-white font-bold text-[9px]">
+                                {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
+                              </span>
+                            </div>
+                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[8px] text-zinc-500 block">GORD</span>
+                              <span className="text-white font-bold text-[9px]">
+                                {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {aiAnalysisMap[sub.id].feedback && (
+                          <p className="text-zinc-400 font-sans italic text-[10px] pt-1 border-t border-white/[0.04]">
+                            "{aiAnalysisMap[sub.id].feedback}"
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
 

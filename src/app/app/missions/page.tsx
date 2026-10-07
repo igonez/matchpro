@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { useWorkoutSession } from '@/lib/workout-session-context';
 
 export default function StudentMissionsWeeklyPage() {
   const supabase = createClient();
+  const { activeSession, startSession } = useWorkoutSession();
 
   const [weeks, setWeeks] = useState<any[]>([]);
   const [selectedWeekId, setSelectedWeekId] = useState<string>('');
@@ -341,11 +343,26 @@ export default function StudentMissionsWeeklyPage() {
                     )}
 
                     {!sub && !isLocked && (
-                      <Link href={`/app/camera/${mission.id}`}>
-                        <button className="mono-button-primary px-3.5 py-1.5 text-[11px] font-mono">
-                          REGISTRAR →
-                        </button>
-                      </Link>
+                      mission.category === 'treino' || mission.category === 'cardio' ? (
+                        activeSession?.missionId === mission.id ? (
+                          <span className="px-3 py-1.5 rounded-xl bg-white text-black font-bold text-[10px] font-mono animate-pulse block">
+                            TREINANDO...
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => startSession(mission.id, mission.title, mission.category)}
+                            className="mono-button-primary px-3.5 py-1.5 text-[11px] font-mono"
+                          >
+                            {mission.category === 'treino' ? 'INICIAR TREINO ▶' : 'INICIAR CARDIO ▶'}
+                          </button>
+                        )
+                      ) : (
+                        <Link href={`/app/camera/${mission.id}`}>
+                          <button className="mono-button-primary px-3.5 py-1.5 text-[11px] font-mono">
+                            REGISTRAR →
+                          </button>
+                        </Link>
+                      )
                     )}
                   </div>
                 </div>

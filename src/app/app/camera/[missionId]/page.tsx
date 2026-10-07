@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
@@ -9,9 +9,21 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
 export default function CameraCapturePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black text-white p-4 font-mono text-xs flex items-center justify-center">CARREGANDO SENSOR...</div>}>
+      <CameraCaptureContent />
+    </Suspense>
+  );
+}
+
+function CameraCaptureContent() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const missionId = params?.missionId as string;
+  const durationParam = searchParams.get('duration');
+  const startedAtParam = searchParams.get('startedAt');
+  const durationSeconds = durationParam ? parseInt(durationParam, 10) : null;
   const supabase = createClient();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,19 +119,28 @@ export default function CameraCapturePage() {
         .from('submissions')
         .getPublicUrl(fileName);
 
+      const payload: any = {
+        mission_id: missionId,
+        student_id: user.id,
+        photo_url: publicUrl,
+        caption: caption.trim() || null,
+        latitude: location?.latitude || null,
+        longitude: location?.longitude || null,
+        location_name: location?.text || null,
+        client_captured_at: captureTime ? captureTime.toISOString() : new Date().toISOString(),
+        status: 'approved',
+      };
+
+      if (durationSeconds) {
+        payload.duration_seconds = durationSeconds;
+      }
+      if (startedAtParam) {
+        payload.started_at = startedAtParam;
+      }
+
       const { error: dbError } = await supabase
         .from('student_submissions')
-        .insert({
-          mission_id: missionId,
-          student_id: user.id,
-          photo_url: publicUrl,
-          caption: caption.trim() || null,
-          latitude: location?.latitude || null,
-          longitude: location?.longitude || null,
-          location_name: location?.text || null,
-          client_captured_at: captureTime ? captureTime.toISOString() : new Date().toISOString(),
-          status: 'approved',
-        });
+        .insert(payload);
 
       if (dbError) throw dbError;
 
@@ -187,6 +208,14 @@ export default function CameraCapturePage() {
 
             {/* Metadados Antifraude Gravados */}
             <div className="absolute bottom-3 inset-x-3 p-3 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/10 font-mono text-[10px] space-y-1">
+              {durationSeconds && (
+                <div className="flex justify-between text-zinc-400 pb-1 mb-1 border-b border-white/10">
+                  <span>TEMPO DE SESSÃO:</span>
+                  <span className="text-white font-black">
+                    {Math.floor(durationSeconds / 60)} MIN {durationSeconds % 60} SEG
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between text-zinc-400">
                 <span>TIMESTAMP:</span>
                 <span className="text-white font-bold">

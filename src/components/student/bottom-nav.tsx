@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useWorkoutSession } from '@/lib/workout-session-context';
 
 export function StudentBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { startSession } = useWorkoutSession();
 
   const [showQuickSheet, setShowQuickSheet] = useState(false);
   const [showVerticalMenu, setShowVerticalMenu] = useState(false);
@@ -39,9 +41,13 @@ export function StudentBottomNav() {
     loadData();
   }, [supabase]);
 
-  const handleQuickRegister = (missionId: string) => {
+  const handleQuickRegister = (mission: any) => {
     setShowQuickSheet(false);
-    router.push(`/app/camera/${missionId}`);
+    if (mission.category === 'treino' || mission.category === 'cardio') {
+      startSession(mission.id, mission.title, mission.category);
+    } else {
+      router.push(`/app/camera/${mission.id}`);
+    }
   };
 
   const handleSignOut = async () => {
@@ -285,7 +291,7 @@ export function StudentBottomNav() {
                 pendingMissions.map((m) => (
                   <button
                     key={m.id}
-                    onClick={() => handleQuickRegister(m.id)}
+                    onClick={() => handleQuickRegister(m)}
                     className="w-full p-4 rounded-2xl bg-black/60 border border-white/[0.08] hover:border-white/30 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.98]"
                   >
                     <div>
@@ -296,7 +302,7 @@ export function StudentBottomNav() {
                     </div>
 
                     <span className="text-[10px] font-mono font-bold text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
-                      FOTOGRAFAR →
+                      {m.category === 'treino' || m.category === 'cardio' ? 'INICIAR ▶' : 'FOTOGRAFAR →'}
                     </span>
                   </button>
                 ))

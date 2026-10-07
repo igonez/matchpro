@@ -1,18 +1,37 @@
 {
-  "name": "ArenaPro Fitness Challenge",
+  "name": "ArenaPro — Desafios Gamificados",
   "short_name": "ArenaPro",
-  "description": "Desafios fitness e missões diárias gamificadas",
+  "description": "Plataforma de desafios fitness gamificados, missões diárias com GPS e cronômetro militar",
   "start_url": "/app",
+  "scope": "/",
+  "id": "/app",
   "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#10b981",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "portrait",
   "icons": [
     {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/icon.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ]
 }

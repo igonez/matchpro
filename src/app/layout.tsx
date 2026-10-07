@@ -10,8 +10,18 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: 'ArenaPro — Gamified Fitness Challenges',
-  description: 'Plataforma SaaS B2B2C de gestão gamificada de desafios de fitness, nutrição e saúde com auditoria e ranking em tempo real.',
+  description: 'Plataforma SaaS de gestão gamificada de desafios de fitness, nutrição e saúde com auditoria e ranking em tempo real.',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -20,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#09090b',
+  themeColor: '#000000',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -34,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark">
-      <body className={`${plusJakartaSans.className} min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-500 selection:text-black`}>
+      <body className={`${plusJakartaSans.className} min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black`}>
         {children}
       </body>
     </html>

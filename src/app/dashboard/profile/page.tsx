@@ -57,14 +57,18 @@ export default function ProfessionalProfilePage() {
           .maybeSingle();
 
         if (prof) {
-          setFullName(prof.full_name || '');
-          setSpecialty(prof.specialty || 'personal_trainer');
-          setPhone(prof.phone || '');
-          setInstagram(prof.instagram || '');
-          setBio(prof.bio || '');
-          setAvatarUrl(prof.avatar_url || null);
+          setFullName(prof.full_name || user.user_metadata?.full_name || '');
+          setSpecialty(prof.specialty || user.user_metadata?.specialty || 'personal_trainer');
+          setPhone(prof.phone || user.user_metadata?.phone || '');
+          setInstagram(prof.instagram || user.user_metadata?.instagram || '');
+          setBio(prof.bio || user.user_metadata?.bio || '');
+          setAvatarUrl(prof.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null);
         } else {
           setFullName(user.user_metadata?.full_name || user.email?.split('@')[0] || '');
+          setPhone(user.user_metadata?.phone || '');
+          setInstagram(user.user_metadata?.instagram || '');
+          setBio(user.user_metadata?.bio || '');
+          setAvatarUrl(user.user_metadata?.avatar_url || user.user_metadata?.picture || null);
         }
       } catch (err: any) {
         console.error('Erro ao carregar perfil:', err);
@@ -99,18 +103,28 @@ export default function ProfessionalProfilePage() {
 
       setAvatarUrl(publicUrl);
 
-      // Salva imediatamente a foto no banco
-      const { error: updateError } = await supabase
-        .from('professionals')
-        .update({ avatar_url: publicUrl })
-        .eq('id', professionalId);
+      // Atualiza no user_metadata do auth para persistência imediata e segura
+      await supabase.auth.updateUser({
+        data: {
+          avatar_url: publicUrl,
+          picture: publicUrl,
+        },
+      });
 
-      if (updateError) throw updateError;
+      // Tenta salvar na tabela professionals (se a coluna existir)
+      try {
+        await supabase
+          .from('professionals')
+          .update({ avatar_url: publicUrl } as any)
+          .eq('id', professionalId);
+      } catch (colErr) {
+        console.warn('Coluna avatar_url ainda não migrada na tabela professionals, salvo no auth metadata.');
+      }
 
-      setNotification({ type: 'success', text: 'Foto de perfil atualizada com sucesso!' });
+      setNotification({ type: 'success', text: 'Foto de perfil salva com sucesso!' });
     } catch (err: any) {
       console.error('Erro ao subir foto de perfil:', err);
-      setNotification({ type: 'error', text: 'Não foi possível carregar a imagem.' });
+      setNotification({ type: 'error', text: err.message || 'Não foi possível carregar a imagem.' });
     } finally {
       setUploadingAvatar(false);
     }
@@ -122,19 +136,44 @@ export default function ProfessionalProfilePage() {
     setNotification(null);
 
     try {
-      const { error } = await supabase
+      // 1. Sempre grava com segurança nos metadados do Auth
+      await supabase.auth.updateUser({
+        data: {
+          full_name: fullName.trim(),
+          phone: phone.trim() || null,
+          specialty,
+          instagram: instagram.trim() || null,
+          bio: bio.trim() || null,
+          avatar_url: avatarUrl,
+        },
+      });
+
+      // 2. Tenta gravar os campos na tabela professionals com fallback
+      const payload: any = {
+        id: professionalId,
+        full_name: fullName.trim(),
+        specialty,
+      };
+
+      // Tenta gravar com todos os campos extras
+      const { error: fullUpdateError } = await supabase
         .from('professionals')
         .upsert({
-          id: professionalId,
-          full_name: fullName.trim(),
-          specialty,
+          ...payload,
           phone: phone.trim() || null,
           instagram: instagram.trim() || null,
           bio: bio.trim() || null,
           avatar_url: avatarUrl,
         });
 
-      if (error) throw error;
+      // Se der erro de coluna ausente na tabela do banco, salva o payload base
+      if (fullUpdateError) {
+        if (fullUpdateError.code === 'PGRST204' || fullUpdateError.message?.includes('schema cache')) {
+          await supabase.from('professionals').upsert(payload);
+        } else {
+          throw fullUpdateError;
+        }
+      }
 
       setNotification({ type: 'success', text: 'Informações do perfil salvas com sucesso!' });
     } catch (err: any) {

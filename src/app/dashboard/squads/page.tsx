@@ -157,24 +157,24 @@ export default function SquadsManagerPage() {
             Guerra de Tribos & Retenção
           </Badge>
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Users className="h-8 w-8 text-white" />
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+          <Users className="h-7 w-7 sm:h-8 sm:w-8 text-white shrink-0" />
           Squads & Micro-equipes
         </h1>
-        <p className="text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
           Divida a turma em equipes de 3 a 5 alunos. Ao invés de desistirem por estarem longe do 1º lugar individual, eles continuam treinando para manter o ritmo coletivo do seu Squad.
         </p>
       </div>
 
       {/* Seletor de Desafio */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
         <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono">
           Desafio Selecionado:
         </label>
         <select
           value={selectedChallengeId}
           onChange={(e) => setSelectedChallengeId(e.target.value)}
-          className="h-10 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30 font-mono"
+          className="h-10 w-full sm:w-auto rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30 font-mono"
         >
           {challenges.map((c) => (
             <option key={c.id} value={c.id}>

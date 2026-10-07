@@ -126,17 +126,17 @@ export default function FiscalizacaoPage() {
           <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-1">
             AUDIT_KERNEL_INTERFACE
           </span>
-          <h1 className="text-3xl font-black text-white tracking-tight">Auditoria & Fiscalização de Fotos</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Auditoria & Fiscalização de Fotos</h1>
           <p className="text-xs text-zinc-400 mt-0.5">
             Check-ins auditáveis com GPS e horário militar. Invalide apenas fotos em desacordo para dedução de pontos.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
             onClick={fetchData}
             disabled={loading}
-            className="mono-button-secondary px-4 py-2 text-xs font-mono"
+            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-mono justify-center flex"
           >
             {loading ? 'ATUALIZANDO...' : 'ATUALIZAR FILA'}
           </button>
@@ -164,10 +164,10 @@ export default function FiscalizacaoPage() {
       )}
 
       {/* Filtros em Abas Monocromáticas */}
-      <div className="flex items-center gap-2 relative z-10">
+      <div className="flex items-center gap-2 relative z-10 overflow-x-auto no-scrollbar pb-1">
         <button
           onClick={() => setFilter('all')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono shrink-0 transition-all ${
             filter === 'all'
               ? 'bg-zinc-800 text-white font-bold border border-white/20'
               : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
@@ -177,7 +177,7 @@ export default function FiscalizacaoPage() {
         </button>
         <button
           onClick={() => setFilter('approved')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono shrink-0 transition-all ${
             filter === 'approved'
               ? 'bg-zinc-800 text-white font-bold border border-white/20'
               : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
@@ -187,7 +187,7 @@ export default function FiscalizacaoPage() {
         </button>
         <button
           onClick={() => setFilter('rejected')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono shrink-0 transition-all ${
             filter === 'rejected'
               ? 'bg-zinc-800 text-white font-bold border border-white/20'
               : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'

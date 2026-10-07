@@ -137,30 +137,30 @@ export default function NewChallengePage() {
               </p>
             </div>
 
-            {/* Checkout Placeholder / Informação Stripe & Pagar.me */}
-            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 flex items-start gap-3">
-              <div className="h-8 w-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center shrink-0">
+            {/* Checkout Placeholder / Informação Gateway */}
+            <div className="p-4 rounded-xl border border-white/10 bg-zinc-950/60 flex items-start gap-3">
+              <div className="h-8 w-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center shrink-0">
                 <CreditCard className="h-4 w-4" />
               </div>
               <div className="text-xs">
-                <p className="font-bold text-zinc-200">Gateway de Pagamento Integrado</p>
+                <p className="font-bold text-white font-mono">Gateway de Pagamento Integrado</p>
                 <p className="text-zinc-400 mt-0.5">
-                  Ao publicar, os links de checkout automatizados (Stripe Connect / Pagar.me) ficam disponíveis para repasse direto na sua conta bancária.
+                  Ao publicar, os links de checkout automatizados ficam disponíveis para repasse direto na sua conta bancária.
                 </p>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
+              <div className="p-3 rounded-xl bg-zinc-900 border border-white/20 text-zinc-300 text-xs font-mono">
                 {error}
               </div>
             )}
 
-            <div className="flex justify-end gap-3 pt-2">
-              <Link href="/dashboard">
-                <Button type="button" variant="ghost">Cancelar</Button>
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
+              <Link href="/dashboard" className="w-full sm:w-auto">
+                <Button type="button" variant="ghost" className="w-full sm:w-auto">Cancelar</Button>
               </Link>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading} className="w-full sm:w-auto font-mono">
                 {loading ? 'Salvando...' : 'Criar e Definir Missões'}
               </Button>
             </div>

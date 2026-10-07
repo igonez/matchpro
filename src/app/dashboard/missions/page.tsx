@@ -317,7 +317,7 @@ function MissionsManagerContent() {
       {/* Header com Seletor de Desafio e Botão de Gerar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
             Gestão Estruturada de Missões
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
@@ -325,12 +325,12 @@ function MissionsManagerContent() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+              className="h-10 flex-1 sm:flex-initial rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -344,7 +344,7 @@ function MissionsManagerContent() {
             size="sm"
             onClick={handleGenerateSmartTemplate}
             disabled={generatingTemplate || !selectedChallengeId}
-            className="rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
           >
             <Sparkles className="h-4 w-4 mr-1.5" />
             {generatingTemplate ? 'Gerando...' : 'Gerar 4 Semanas Completas'}

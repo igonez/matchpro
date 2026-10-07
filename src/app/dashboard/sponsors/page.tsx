@@ -163,7 +163,7 @@ export default function SponsorsManagerPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
             Parceiros & Patrocinadores
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
@@ -172,12 +172,12 @@ export default function SponsorsManagerPage() {
         </div>
 
         {challenges.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-xs font-semibold text-zinc-400 font-mono">Turma:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
+              className="h-10 flex-1 sm:flex-initial rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>

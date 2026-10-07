@@ -150,15 +150,15 @@ export default function DashboardOverviewPage() {
             </span>
             <span className="text-xs text-zinc-500 font-mono">LIVE_DATABASE</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">Operação dos Desafios</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Operação dos Desafios</h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
             Métricas em tempo real, fila de auditoria e radar de retenção ativa.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Link href="/dashboard/audit">
-            <button className="mono-button-primary px-4 py-2 text-xs flex items-center gap-1.5 font-mono">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
+          <Link href="/dashboard/audit" className="w-full sm:w-auto">
+            <button className="mono-button-primary w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-mono">
               Auditar Fotos ({stats.pendingSubmissions})
             </button>
           </Link>
@@ -166,13 +166,13 @@ export default function DashboardOverviewPage() {
           {/* Botão que abre o modal customizado (Zero prompt nativo) */}
           <button
             onClick={() => setIsNoticeModalOpen(true)}
-            className="mono-button-secondary px-4 py-2 text-xs font-mono"
+            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-mono"
           >
             Publicar Aviso
           </button>
 
-          <Link href="/dashboard/challenges/new">
-            <button className="mono-button-secondary px-4 py-2 text-xs font-mono">
+          <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
+            <button className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-mono">
               + Novo Desafio
             </button>
           </Link>

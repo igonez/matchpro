@@ -28,7 +28,7 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <aside className="w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex flex-col justify-between p-5 min-h-screen relative z-30">
+    <aside className="hidden md:flex w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex-col justify-between p-5 min-h-screen relative z-30 shrink-0">
       <div className="space-y-6">
         {/* Brand Monocromático */}
         <Link href="/dashboard" className="flex items-center gap-3 px-1 py-1 group">

@@ -172,11 +172,11 @@ export default function MysteryBoxConfigPage() {
             Recompensas & Gamificação
           </Badge>
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Gift className="h-8 w-8 text-white" />
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+          <Gift className="h-7 w-7 sm:h-8 sm:w-8 text-white shrink-0" />
           Mystery Box Semanal
         </h1>
-        <p className="text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
           Configure, edite ou exclua as recompensas que seus alunos podem sortear aos domingos ao completarem 100% das missões.
         </p>
       </div>

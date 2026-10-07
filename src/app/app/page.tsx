@@ -114,10 +114,15 @@ export default function StudentHomePage() {
           setAnnouncements(notices || []);
         }
 
-        // 5. Missões e Submissões para calcular progresso
-        const { data: allMissions } = await supabase
-          .from('missions')
-          .select('id, category, target_frequency');
+        // 5. Missões e Submissões para calcular progresso do desafio ativo
+        const { data: allMissions } = challengeData?.id 
+          ? await supabase
+              .from('missions')
+              .select('id, category, target_frequency')
+              .eq('challenge_id', challengeData.id)
+          : await supabase
+              .from('missions')
+              .select('id, category, target_frequency');
 
         const { data: userSubmissions } = await supabase
           .from('student_submissions')

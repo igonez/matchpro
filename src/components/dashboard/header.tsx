@@ -149,9 +149,8 @@ export function DashboardHeader() {
             <div className="pt-4 border-t border-white/[0.08] space-y-2">
               <Link
                 href="/app"
-                target="_blank"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono text-zinc-400 hover:text-white bg-white/[0.03] border border-white/5"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all"
               >
                 <span>Visão do Aluno</span>
                 <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />

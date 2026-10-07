@@ -50,9 +50,9 @@ export default function StudentHomePage() {
           .from('students')
           .select('*')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
 
-        setStudent(studentData || { full_name: user.email?.split('@')[0] });
+        setStudent(studentData || { full_name: user.email?.split('@')[0] || 'Atleta' });
 
         const { data: challengeData } = await supabase
           .from('challenges')
@@ -60,7 +60,7 @@ export default function StudentHomePage() {
           .eq('is_active', true)
           .order('start_date', { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
 
         setChallenge(challengeData);
 
@@ -69,9 +69,9 @@ export default function StudentHomePage() {
           .select('total_points')
           .eq('student_id', user.id)
           .limit(1)
-          .single();
+          .maybeSingle();
 
-        setStanding(standingData);
+        setStanding(standingData || { total_points: 0 });
 
         if (challengeData) {
           const { data: notices } = await supabase

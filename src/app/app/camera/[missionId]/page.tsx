@@ -138,9 +138,26 @@ function CameraCaptureContent() {
         payload.started_at = startedAtParam;
       }
 
-      const { error: dbError } = await supabase
+      let { error: dbError } = await supabase
         .from('student_submissions')
         .insert(payload);
+
+      // Fallback de resiliência caso a coluna duration_seconds ainda não tenha sido criada no Supabase SQL
+      if (dbError && dbError.message && dbError.message.includes('duration_seconds')) {
+        console.warn('Coluna duration_seconds não encontrada no banco. Salvando tempo na nota...', dbError);
+        const fallbackPayload = { ...payload };
+        delete fallbackPayload.duration_seconds;
+        if (durationSeconds) {
+          const formattedDuration = `${Math.floor(durationSeconds / 60)}min ${durationSeconds % 60}s`;
+          fallbackPayload.caption = fallbackPayload.caption 
+            ? `[TEMPO: ${formattedDuration}] ${fallbackPayload.caption}`
+            : `[TEMPO: ${formattedDuration}]`;
+        }
+        const retry = await supabase
+          .from('student_submissions')
+          .insert(fallbackPayload);
+        dbError = retry.error;
+      }
 
       if (dbError) throw dbError;
 

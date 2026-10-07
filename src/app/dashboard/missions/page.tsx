@@ -216,20 +216,37 @@ function MissionsManagerContent() {
 
     setGeneratingTemplate(true);
     try {
-      // 1. Criar as 4 semanas
+      // 1. Criar as 4 semanas (ou buscar se já existirem)
       for (let i = 1; i <= 4; i++) {
-        const { data: weekData, error: weekErr } = await supabase
-          .from('challenge_weeks')
-          .insert({
-            challenge_id: selectedChallengeId,
-            week_number: i,
-            title: `Semana ${i} • Sprint ${i}`,
-            bonus_points: 20, // +20 XP de Bônus de 100%
-          })
-          .select()
-          .single();
+        let weekId: string | null = null;
 
-        if (weekErr) throw weekErr;
+        // Tentar buscar se a semana já existe
+        const { data: existingWeek } = await supabase
+          .from('challenge_weeks')
+          .select('id')
+          .eq('challenge_id', selectedChallengeId)
+          .eq('week_number', i)
+          .maybeSingle();
+
+        if (existingWeek) {
+          weekId = existingWeek.id;
+        } else {
+          const { data: weekData, error: weekErr } = await supabase
+            .from('challenge_weeks')
+            .insert({
+              challenge_id: selectedChallengeId,
+              week_number: i,
+              title: `Semana ${i} • Sprint ${i}`,
+              bonus_points: 20, // +20 XP de Bônus de 100%
+            })
+            .select()
+            .single();
+
+          if (weekErr) throw weekErr;
+          weekId = weekData.id;
+        }
+
+        if (!weekId) continue;
 
         // 2. Gerar as missões segmentadas para cada semana
         const templateMissions: any[] = [];
@@ -238,7 +255,7 @@ function MissionsManagerContent() {
         for (let t = 1; t <= 6; t++) {
           templateMissions.push({
             challenge_id: selectedChallengeId,
-            week_id: weekData.id,
+            week_id: weekId,
             title: `Treino #${t} da Semana`,
             category: 'treino',
             points_rewarded: 15,
@@ -253,7 +270,7 @@ function MissionsManagerContent() {
         for (let c = 1; c <= 7; c++) {
           templateMissions.push({
             challenge_id: selectedChallengeId,
-            week_id: weekData.id,
+            week_id: weekId,
             title: `Cardio #${c} (Mín. 30min)`,
             category: 'cardio',
             points_rewarded: 10,
@@ -269,7 +286,7 @@ function MissionsManagerContent() {
         mealNames.forEach((meal, idx) => {
           templateMissions.push({
             challenge_id: selectedChallengeId,
-            week_id: weekData.id,
+            week_id: weekId,
             title: meal,
             category: 'refeicao',
             points_rewarded: 10,
@@ -282,7 +299,7 @@ function MissionsManagerContent() {
         // 1 Missão Bônus por semana
         templateMissions.push({
           challenge_id: selectedChallengeId,
-          week_id: weekData.id,
+          week_id: weekId,
           title: `Desafio Bônus: 3L Água + Alongamento`,
           category: 'habito',
           points_rewarded: 25,
@@ -291,14 +308,30 @@ function MissionsManagerContent() {
           is_bonus: true,
         });
 
-        const { error: missErr } = await supabase.from('missions').insert(templateMissions);
+        let { error: missErr } = await supabase.from('missions').insert(templateMissions);
+
+        // Fallback de resiliência caso colunas novas de missions (ex: requires_cooldown) não estejam no cache do Supabase
+        if (missErr && (missErr.message.includes('column') || missErr.message.includes('schema cache'))) {
+          console.warn('Erro de coluna no schema cache das missões. Tentando insert básico...', missErr);
+          const basicMissions = templateMissions.map((m) => ({
+            challenge_id: m.challenge_id,
+            week_id: m.week_id,
+            title: m.title,
+            category: m.category,
+            points_rewarded: m.points_rewarded,
+          }));
+          const retry = await supabase.from('missions').insert(basicMissions);
+          missErr = retry.error;
+        }
+
         if (missErr) throw missErr;
       }
 
       alert('Estrutura de 4 semanas gerada com sucesso com todos os parâmetros configurados!');
       fetchWeeks(selectedChallengeId);
     } catch (err: any) {
-      alert('Erro ao gerar template inteligente: ' + err.message);
+      console.error('Erro detalhado ao gerar template inteligente:', err);
+      alert('Erro ao gerar template inteligente: ' + (err.message || JSON.stringify(err)));
     } finally {
       setGeneratingTemplate(false);
     }

@@ -246,11 +246,15 @@ export default function FiscalizacaoPage() {
 
                   <div className="space-y-1 font-mono text-[10px] text-zinc-400">
                     <p className="text-white font-bold text-xs font-sans">{sub.missions?.title}</p>
-                    {sub.duration_seconds && (
+                    {sub.duration_seconds ? (
                       <p className="text-white font-bold bg-white/10 px-2 py-0.5 rounded-md w-fit">
                         DURAÇÃO DO TREINO: {Math.floor(sub.duration_seconds / 60)} MIN {sub.duration_seconds % 60} SEG
                       </p>
-                    )}
+                    ) : sub.caption && sub.caption.includes('[TEMPO:') ? (
+                      <p className="text-white font-bold bg-white/10 px-2 py-0.5 rounded-md w-fit">
+                        DURAÇÃO DO TREINO: {sub.caption.match(/\[TEMPO:\s*([^\]]+)\]/)?.[1] || 'REGISTRADO'}
+                      </p>
+                    ) : null}
                     <p>HORÁRIO: {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR')}</p>
                     {sub.location_name && <p className="truncate">GPS: {sub.location_name}</p>}
                     {sub.caption && <p className="text-zinc-300 font-sans italic mt-1">"{sub.caption}"</p>}

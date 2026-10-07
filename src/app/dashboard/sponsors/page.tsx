@@ -173,11 +173,11 @@ export default function SponsorsManagerPage() {
 
         {challenges.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-zinc-400">Turma:</span>
+            <span className="text-xs font-semibold text-zinc-400 font-mono">Turma:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+              className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -191,20 +191,20 @@ export default function SponsorsManagerPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Formulário de Cadastro / Edição */}
-        <Card className="border-zinc-800 bg-zinc-900/40 h-fit">
+        <Card className="border-white/10 bg-zinc-900/50 h-fit">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base flex items-center gap-2 text-white font-bold">
-                {isEditing ? <Edit3 className="h-4 w-4 text-amber-400" /> : <Plus className="h-4 w-4 text-emerald-400" />}
+              <CardTitle className="text-base flex items-center gap-2 text-white font-bold tracking-tight">
+                {isEditing ? <Edit3 className="h-4 w-4 text-white" /> : <Plus className="h-4 w-4 text-white" />}
                 {isEditing ? 'Editar Parceiro' : 'Novo Patrocinador'}
               </CardTitle>
               {isEditing && (
-                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400">
+                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400 hover:text-white">
                   <X className="h-3.5 w-3.5 mr-1" /> Cancelar
                 </Button>
               )}
             </div>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-xs text-zinc-400">
               {isEditing ? 'Atualize os dados e cupom do parceiro.' : 'Adicione uma loja de suplementos ou restaurante saudável.'}
             </CardDescription>
           </CardHeader>
@@ -227,7 +227,7 @@ export default function SponsorsManagerPage() {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                 >
                   <option value="nutrition">Suplementação & Nutrição</option>
                   <option value="apparel">Roupas & Moda Fitness</option>
@@ -239,7 +239,7 @@ export default function SponsorsManagerPage() {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-zinc-300 font-semibold block mb-1">Cupom de Desconto</label>
+                  <label className="text-zinc-300 font-semibold block mb-1 font-mono">Cupom de Desconto</label>
                   <Input
                     type="text"
                     placeholder="Ex: SHAPE15"
@@ -248,7 +248,7 @@ export default function SponsorsManagerPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-300 font-semibold block mb-1">Regra da Oferta</label>
+                  <label className="text-zinc-300 font-semibold block mb-1 font-mono">Regra da Oferta</label>
                   <Input
                     type="text"
                     placeholder="Ex: 15% OFF"
@@ -272,7 +272,7 @@ export default function SponsorsManagerPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-10 font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20 mt-2"
+                className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 mt-2 font-mono"
               >
                 {submitting ? 'Salvando...' : isEditing ? 'Atualizar Patrocinador' : 'Publicar Patrocinador'}
               </Button>
@@ -282,11 +282,11 @@ export default function SponsorsManagerPage() {
 
         {/* Lista de Patrocinadores com Edição e Exclusão */}
         <div className="lg:col-span-2 space-y-4">
-          <Card className="border-zinc-800 bg-zinc-900/40">
+          <Card className="border-white/10 bg-zinc-900/50">
             <CardHeader className="pb-3 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base text-white">Patrocinadores da Turma ({sponsors.length})</CardTitle>
-                <CardDescription className="text-xs">
+                <CardTitle className="text-base text-white tracking-tight">Patrocinadores da Turma ({sponsors.length})</CardTitle>
+                <CardDescription className="text-xs text-zinc-400">
                   Cupons e benefícios exclusivos liberados para os alunos deste desafio.
                 </CardDescription>
               </div>
@@ -296,18 +296,18 @@ export default function SponsorsManagerPage() {
               {sponsors.length === 0 && !loading ? (
                 <div className="text-center py-12 text-zinc-500 text-xs">
                   <Building2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  Nenhum patrocinador cadastrado ainda. Use o formulário ao lado para cadastrar marcas parceiras!
+                  Nenhum patrocinador cadastrado ainda. Use o formulário ao lado para cadastrar marcas parceiras.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                   {sponsors.map((sp) => (
                     <Card
                       key={sp.id}
-                      className="border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 transition-all p-4 flex flex-col justify-between"
+                      className="border-white/10 bg-zinc-950/60 hover:border-white/25 transition-all p-4 flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 text-[10px]">
+                          <Badge variant="outline" className="border-white/20 text-white text-[10px] font-mono">
                             {sp.category}
                           </Badge>
                           <div className="flex items-center gap-1">
@@ -324,7 +324,7 @@ export default function SponsorsManagerPage() {
                               variant="ghost"
                               size="icon"
                               onClick={() => handleDeleteSponsor(sp.id, sp.name)}
-                              className="h-7 w-7 text-zinc-500 hover:text-rose-400"
+                              className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/10 rounded"
                               title="Excluir parceiro"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -333,10 +333,10 @@ export default function SponsorsManagerPage() {
                         </div>
 
                         <h4 className="font-bold text-sm text-white">{sp.name}</h4>
-                        <div className="mt-2.5 p-2 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center justify-between">
-                          <span className="text-xs font-black text-emerald-400">{sp.discount_description}</span>
+                        <div className="mt-2.5 p-2 rounded-xl bg-zinc-900/80 border border-white/10 flex items-center justify-between">
+                          <span className="text-xs font-black text-white font-mono">{sp.discount_description}</span>
                           {sp.discount_code && (
-                            <span className="text-[11px] font-mono bg-zinc-800 px-2 py-0.5 rounded text-amber-300 font-bold">
+                            <span className="text-[11px] font-mono bg-white/10 border border-white/20 px-2 py-0.5 rounded text-white font-bold">
                               {sp.discount_code}
                             </span>
                           )}
@@ -344,12 +344,12 @@ export default function SponsorsManagerPage() {
                       </div>
 
                       {sp.whatsapp_or_link && (
-                        <div className="mt-3 pt-2.5 border-t border-zinc-900 flex justify-end">
+                        <div className="mt-3 pt-2.5 border-t border-white/10 flex justify-end">
                           <a
                             href={sp.whatsapp_or_link.startsWith('http') ? sp.whatsapp_or_link : `https://${sp.whatsapp_or_link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-zinc-400 hover:text-emerald-400 flex items-center gap-1 font-semibold"
+                            className="text-xs text-zinc-400 hover:text-white flex items-center gap-1 font-semibold font-mono"
                           >
                             Visitar Parceiro <ExternalLink className="h-3 w-3" />
                           </a>

@@ -137,16 +137,16 @@ export default function EditChallengePage({
           variant="ghost"
           size="sm"
           onClick={handleDelete}
-          className="text-xs text-rose-500 hover:text-rose-400 hover:bg-rose-500/10"
+          className="text-xs text-zinc-500 hover:text-white hover:bg-white/10"
         >
           <Trash2 className="h-4 w-4 mr-1.5" /> Excluir
         </Button>
       </div>
 
-      <Card className="border-zinc-800 bg-zinc-900/40">
+      <Card className="border-white/10 bg-zinc-900/50">
         <CardHeader>
-          <CardTitle className="text-lg">Configurações Gerais</CardTitle>
-          <CardDescription className="text-xs">
+          <CardTitle className="text-lg text-white font-black tracking-tight">Configurações Gerais</CardTitle>
+          <CardDescription className="text-xs text-zinc-400">
             Altere as informações do desafio visíveis para os alunos.
           </CardDescription>
         </CardHeader>
@@ -191,7 +191,7 @@ export default function EditChallengePage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-zinc-300 block mb-1">
+                <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">
                   Preço de Inscrição (R$)
                 </label>
                 <Input
@@ -209,30 +209,30 @@ export default function EditChallengePage({
                 <select
                   value={isActive ? 'active' : 'inactive'}
                   onChange={(e) => setIsActive(e.target.value === 'active')}
-                  className="w-full h-9 rounded-md bg-zinc-950 border border-zinc-800 text-white text-xs px-3 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-9 rounded-md bg-zinc-950 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
                 >
-                  <option value="active">🟢 Em Andamento (Ativo)</option>
-                  <option value="inactive">🔴 Encerrado</option>
+                  <option value="active">Em Andamento (Ativo)</option>
+                  <option value="inactive">Encerrado</option>
                 </select>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/20 text-white font-mono text-xs">
                 {error}
               </div>
             )}
 
             <div className="flex gap-3 pt-3">
               <Link href="/dashboard" className="flex-1">
-                <Button variant="outline" type="button" className="w-full text-xs">
+                <Button variant="outline" type="button" className="w-full text-xs border-white/10 text-zinc-400 hover:text-white">
                   Cancelar
                 </Button>
               </Link>
               <Button
                 type="submit"
                 disabled={saving}
-                className="flex-1 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20"
+                className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
               >
                 {saving ? 'Salvando...' : 'Salvar Alterações'}
               </Button>

@@ -344,7 +344,7 @@ function MissionsManagerContent() {
             size="sm"
             onClick={handleGenerateSmartTemplate}
             disabled={generatingTemplate || !selectedChallengeId}
-            className="rounded-xl h-10 px-4 text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-500 text-black shadow-lg shadow-emerald-500/20"
+            className="rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
           >
             <Sparkles className="h-4 w-4 mr-1.5" />
             {generatingTemplate ? 'Gerando...' : 'Gerar 4 Semanas Completas'}
@@ -353,22 +353,22 @@ function MissionsManagerContent() {
       </div>
 
       {/* Carrossel de Semanas */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-zinc-900">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-white/10">
         {weeks.map((week) => {
           const isSelected = week.id === selectedWeekId;
           return (
             <button
               key={week.id}
               onClick={() => setSelectedWeekId(week.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-extrabold whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-mono font-bold whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-md shadow-emerald-950/40'
-                  : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                  ? 'border-white bg-white/10 text-white shadow-md shadow-black'
+                  : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20 hover:text-white'
               }`}
             >
-              <Calendar className="h-4 w-4 text-emerald-400" />
+              <Calendar className="h-4 w-4 text-zinc-400" />
               <span>{week.title}</span>
-              <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.5 rounded font-bold">
+              <span className="bg-white/10 text-zinc-300 text-[10px] px-1.5 py-0.5 rounded font-bold font-mono">
                 +20 XP 100%
               </span>
             </button>
@@ -393,7 +393,7 @@ function MissionsManagerContent() {
               .single();
             if (data) setWeeks([...weeks, data]);
           }}
-          className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed"
+          className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed border-white/15 hover:text-white"
         >
           <Plus className="h-4 w-4 mr-1" /> Nova Semana
         </Button>
@@ -405,84 +405,84 @@ function MissionsManagerContent() {
           onClick={() => setActiveTab('treinos')}
           className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
             activeTab === 'treinos'
-              ? 'border-emerald-500 bg-emerald-500/10 text-white font-black'
-              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+              ? 'border-white bg-white/10 text-white font-bold'
+              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
           }`}
         >
           <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
               <Dumbbell className="h-4 w-4" />
             </div>
             <span>Lista 1: Treinos</span>
           </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{treinosList.length}</Badge>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{treinosList.length}</Badge>
         </button>
 
         <button
           onClick={() => setActiveTab('cardios')}
           className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
             activeTab === 'cardios'
-              ? 'border-orange-500 bg-orange-500/10 text-white font-black'
-              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+              ? 'border-white bg-white/10 text-white font-bold'
+              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
           }`}
         >
           <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center">
+            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
               <Flame className="h-4 w-4" />
             </div>
             <span>Lista 2: Cardios</span>
           </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{cardiosList.length}</Badge>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{cardiosList.length}</Badge>
         </button>
 
         <button
           onClick={() => setActiveTab('refeicoes')}
           className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
             activeTab === 'refeicoes'
-              ? 'border-amber-500 bg-amber-500/10 text-white font-black'
-              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+              ? 'border-white bg-white/10 text-white font-bold'
+              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
           }`}
         >
           <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
               <Utensils className="h-4 w-4" />
             </div>
             <span>Lista 3: Refeições</span>
           </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{refeicoestList.length}</Badge>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{refeicoestList.length}</Badge>
         </button>
 
         <button
           onClick={() => setActiveTab('bonus')}
           className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
             activeTab === 'bonus'
-              ? 'border-teal-500 bg-teal-500/10 text-white font-black'
-              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+              ? 'border-white bg-white/10 text-white font-bold'
+              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
           }`}
         >
           <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center">
+            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
               <Sparkles className="h-4 w-4" />
             </div>
             <span>Lista 4: Extras / Bônus</span>
           </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{bonusList.length}</Badge>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{bonusList.length}</Badge>
         </button>
       </div>
 
       {/* Conteúdo da Lista Selecionada */}
-      <Card className="border-zinc-800 bg-zinc-900/40">
+      <Card className="border-white/10 bg-zinc-900/50">
         <CardHeader className="pb-3 flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-base text-white flex items-center gap-2">
-              {activeTab === 'treinos' && '🏋️‍♂️ Treinos da Semana'}
-              {activeTab === 'cardios' && '🏃‍♂️ Cardios da Semana'}
-              {activeTab === 'refeicoes' && '🥗 Refeições Diárias'}
-              {activeTab === 'bonus' && '⭐ Missões Extras & Hábitos Bônus'}
+            <CardTitle className="text-base text-white flex items-center gap-2 tracking-tight">
+              {activeTab === 'treinos' && 'Treinos da Semana'}
+              {activeTab === 'cardios' && 'Cardios da Semana'}
+              {activeTab === 'refeicoes' && 'Refeições Diárias'}
+              {activeTab === 'bonus' && 'Missões Extras & Hábitos Bônus'}
             </CardTitle>
             <CardDescription className="text-xs">
-              {activeTab === 'treinos' && 'Configuração de treinos com trava de no máximo 2/dia e contagem regressiva.'}
-              {activeTab === 'cardios' && 'Sessões aeróbicas com bloqueio temporal e fotos de esteira/relógio.'}
+              {activeTab === 'treinos' && 'Configuração de treinos com trava sequencial e contagem regressiva.'}
+              {activeTab === 'cardios' && 'Sessões aeróbicas com bloqueio temporal e fotos de comprovação.'}
               {activeTab === 'refeicoes' && 'Validação por fotos no prato (Café, Almoço, Lanche, Jantar).'}
               {activeTab === 'bonus' && 'Pontuação complementar para quem quer se destacar no leaderboard.'}
             </CardDescription>
@@ -493,7 +493,7 @@ function MissionsManagerContent() {
             onClick={() => handleOpenCreateModal(
               activeTab === 'treinos' ? 'treino' : activeTab === 'cardios' ? 'cardio' : activeTab === 'refeicoes' ? 'refeicao' : 'habito'
             )}
-            className="rounded-xl text-xs font-bold"
+            className="rounded-xl text-xs font-bold bg-white hover:bg-zinc-200 text-black shadow-md"
           >
             <Plus className="h-4 w-4 mr-1" />
             Adicionar {activeTab === 'treinos' ? 'Treino' : activeTab === 'cardios' ? 'Cardio' : activeTab === 'refeicoes' ? 'Refeição' : 'Bônus'}
@@ -521,25 +521,25 @@ function MissionsManagerContent() {
                 {currentList.map((m, index) => (
                   <div key={m.id} className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-zinc-800/80 border border-zinc-700 text-zinc-300 font-black text-xs flex items-center justify-center shrink-0">
+                      <div className="h-8 w-8 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-xs flex items-center justify-center shrink-0">
                         #{index + 1}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <p className="font-bold text-sm text-white">{m.title}</p>
                           {m.is_bonus && (
-                            <Badge className="bg-teal-500/20 text-teal-400 border-teal-500/40 text-[9px]">
+                            <Badge className="bg-white/10 text-white border-white/20 text-[9px] font-mono">
                               Bônus Extra
                             </Badge>
                           )}
                           {m.requires_cooldown && (
-                            <Badge variant="outline" className="border-orange-500/30 text-orange-400 text-[9px] flex items-center gap-1">
+                            <Badge variant="outline" className="border-white/20 text-zinc-300 text-[9px] flex items-center gap-1 font-mono">
                               <Clock className="h-2.5 w-2.5" /> {m.cooldown_hours || 4}h Timer
                             </Badge>
                           )}
                         </div>
                         <p className="text-[11px] text-zinc-400 mt-0.5">
-                          Vale <strong className="text-emerald-400 font-bold">+{m.points_rewarded} XP</strong> • Câmera obrigatória
+                          Vale <strong className="text-white font-mono">+{m.points_rewarded} XP</strong> • Câmera obrigatória
                         </p>
                       </div>
                     </div>
@@ -557,7 +557,7 @@ function MissionsManagerContent() {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDeleteMission(m.id, m.title)}
-                        className="h-8 w-8 text-zinc-500 hover:text-rose-400"
+                        className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10"
                         title="Excluir Missão"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -573,8 +573,8 @@ function MissionsManagerContent() {
 
       {/* Modal Customizável de Edição / Criação */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="max-w-md w-full border-zinc-800 bg-zinc-950 p-6 shadow-2xl relative">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <Card className="max-w-md w-full border-white/15 bg-zinc-950 p-6 shadow-2xl relative text-white">
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 text-zinc-400 hover:text-white"
@@ -583,10 +583,10 @@ function MissionsManagerContent() {
             </button>
 
             <CardHeader className="p-0 pb-4">
-              <CardTitle className="text-lg font-black text-white">
+              <CardTitle className="text-lg font-black text-white tracking-tight">
                 {editingMission ? 'Editar Missão' : 'Nova Missão Customizada'}
               </CardTitle>
-              <CardDescription className="text-xs">
+              <CardDescription className="text-xs text-zinc-400">
                 Ajuste os parâmetros de pontuação, categoria e bloqueio da missão.
               </CardDescription>
             </CardHeader>
@@ -608,7 +608,7 @@ function MissionsManagerContent() {
                   <select
                     value={formCategory}
                     onChange={(e: any) => setFormCategory(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs px-3 focus:outline-none focus:border-emerald-500"
+                    className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
                   >
                     <option value="treino">Treino</option>
                     <option value="cardio">Cardio</option>
@@ -618,7 +618,7 @@ function MissionsManagerContent() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300 block mb-1">Pontos (XP)</label>
+                  <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">Pontos (XP)</label>
                   <Input
                     type="number"
                     min={1}
@@ -630,27 +630,27 @@ function MissionsManagerContent() {
               </div>
 
               {/* Opção de Contagem Regressiva e Travas */}
-              <div className="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2.5">
+              <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2.5">
                 <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
                   <input
                     type="checkbox"
                     checked={formRequiresCooldown}
                     onChange={(e) => setFormRequiresCooldown(e.target.checked)}
-                    className="rounded bg-zinc-950 border-zinc-700 text-emerald-500 focus:ring-emerald-500"
+                    className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
                   />
                   <span>Ativar Contagem Regressiva para a próxima missão</span>
                 </label>
 
                 {formRequiresCooldown && (
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[11px] text-zinc-400">Tempo de bloqueio (Horas):</span>
+                    <span className="text-[11px] text-zinc-400 font-mono">Tempo de bloqueio (Horas):</span>
                     <Input
                       type="number"
                       min={1}
                       max={24}
                       value={formCooldownHours}
                       onChange={(e) => setFormCooldownHours(e.target.value)}
-                      className="w-20 h-8 text-xs"
+                      className="w-20 h-8 text-xs font-mono"
                     />
                   </div>
                 )}
@@ -660,7 +660,7 @@ function MissionsManagerContent() {
                     type="checkbox"
                     checked={formIsBonus}
                     onChange={(e) => setFormIsBonus(e.target.checked)}
-                    className="rounded bg-zinc-950 border-zinc-700 text-teal-500 focus:ring-teal-500"
+                    className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
                   />
                   <span>Marcar como Missão Extra / Bônus</span>
                 </label>
@@ -671,14 +671,14 @@ function MissionsManagerContent() {
                   type="button"
                   variant="outline"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 text-xs"
+                  className="flex-1 text-xs border-white/10 text-zinc-400 hover:text-white"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
                   disabled={submittingMission}
-                  className="flex-1 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black"
+                  className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black"
                 >
                   {submittingMission ? 'Salvando...' : 'Salvar Missão'}
                 </Button>

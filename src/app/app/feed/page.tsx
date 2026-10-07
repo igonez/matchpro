@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
+import { X } from 'lucide-react';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 
@@ -331,9 +332,9 @@ export default function StudentSocialFeedPage() {
               </span>
               <button
                 onClick={() => setActiveCommentPost(null)}
-                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs"
+                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
               >
-                ✕
+                <X className="h-3.5 w-3.5" />
               </button>
             </div>
 

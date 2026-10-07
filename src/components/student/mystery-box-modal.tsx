@@ -131,87 +131,88 @@ export function MysteryBoxModal({
   const getRarityBadge = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40">Lendário ★★★</span>;
+        return <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-white text-black font-mono">Nível Lendário</span>;
       case 'epic':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-purple-500/20 text-purple-300 border border-purple-500/40">Épico ★★</span>;
+        return <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-white/20 text-white border border-white/30 font-mono">Nível Épico</span>;
       case 'rare':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40">Raro ★</span>;
+        return <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-white/10 text-zinc-300 border border-white/20 font-mono">Nível Raro</span>;
       default:
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Comum</span>;
+        return <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-zinc-900 text-zinc-400 border border-white/10 font-mono">Nível Comum</span>;
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-sm rounded-3xl bg-zinc-900 border border-amber-500/30 p-6 text-white shadow-2xl shadow-amber-950/50 relative overflow-hidden text-center">
-        {/* Glow de fundo dourado / púrpura */}
-        <div className="absolute -top-24 -left-24 w-52 h-52 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-52 h-52 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="w-full max-w-sm rounded-3xl bg-zinc-950/95 border border-white/15 p-6 text-white shadow-2xl shadow-black relative overflow-hidden text-center">
+        {/* Glow de fundo monocromatico */}
+        <div className="absolute -top-24 -left-24 w-52 h-52 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-52 h-52 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* ESTADO 1: RECOMPENSA REVELADA */}
         {revealedReward ? (
           <div className="py-4 space-y-4 animate-in zoom-in-95 duration-300">
-            <div className="h-20 w-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500 to-yellow-300 p-0.5 shadow-2xl shadow-amber-500/40">
-              <div className="h-full w-full bg-zinc-950 rounded-[22px] flex items-center justify-center text-amber-400">
-                <Trophy className="h-10 w-10 animate-bounce" />
+            <div className="h-20 w-20 mx-auto rounded-3xl bg-white/10 border border-white/20 p-0.5 shadow-2xl shadow-white/5">
+              <div className="h-full w-full bg-zinc-900 rounded-[22px] flex items-center justify-center text-white">
+                <Trophy className="h-10 w-10 animate-bounce stroke-[1.8]" />
               </div>
             </div>
 
             <div>
               {getRarityBadge(revealedReward.rarity || 'rare')}
-              <h3 className="text-xl font-black text-white mt-2">{revealedReward.title}</h3>
-              <p className="text-xs text-zinc-300 mt-1 max-w-xs mx-auto leading-relaxed">
+              <h3 className="text-xl font-black text-white mt-2 tracking-tight">{revealedReward.title}</h3>
+              <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">
                 {revealedReward.description}
               </p>
             </div>
 
-            <div className="p-3 rounded-2xl bg-zinc-950 border border-zinc-800 text-xs text-emerald-400 font-bold flex items-center justify-center gap-2">
-              <Check className="h-4 w-4" /> Recompensa creditada na sua conta!
+            <div className="p-3 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-300 font-bold flex items-center justify-center gap-2">
+              <Check className="h-4 w-4 text-white" /> Recompensa creditada na sua conta
             </div>
 
             <Button
               onClick={onClose}
-              className="w-full h-11 rounded-xl text-xs font-black bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 text-black shadow-lg shadow-amber-500/20"
+              className="w-full h-11 rounded-xl text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
             >
-              Sensacional! Fechar
+              Confirmar e Concluir
             </Button>
           </div>
         ) : (
           /* ESTADO 2: ANIMAÇÃO DA CAIXA OU TELA INICIAL */
           <div className="space-y-5">
             <div className="space-y-1">
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 flex items-center justify-center gap-1">
-                <Sparkles className="h-3 w-3" /> Recompensa de Domingo
+              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center justify-center gap-1 font-mono">
+                <Sparkles className="h-3 w-3" /> Recompensa Semanal
               </span>
-              <h3 className="text-xl font-black text-white">Mystery Box da Semana</h3>
-              <p className="text-xs text-zinc-400">Semana {weekNumber} do Desafio</p>
+              <h3 className="text-xl font-black text-white tracking-tight">Mystery Box</h3>
+              <p className="text-xs text-zinc-500 font-mono">Semana {weekNumber} do Desafio</p>
             </div>
 
             {/* Ícone Central da Caixa */}
             <div className="py-4">
               <div
-                className={`h-28 w-28 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-300 p-1 shadow-2xl shadow-amber-500/30 flex items-center justify-center transition-all ${
-                  opening ? 'animate-spin scale-110' : 'hover:scale-105 cursor-pointer'
+                className={`h-28 w-28 mx-auto rounded-3xl bg-zinc-900 border border-white/20 p-1 shadow-2xl shadow-black flex items-center justify-center transition-all ${
+                  opening ? 'animate-spin scale-110 border-white' : 'hover:scale-105 hover:border-white/40 cursor-pointer'
                 }`}
                 onClick={handleOpenBox}
               >
-                <div className="h-full w-full bg-zinc-950 rounded-[20px] flex items-center justify-center text-amber-400">
+                <div className="h-full w-full bg-zinc-950 rounded-[20px] flex items-center justify-center text-white">
                   <Gift className={`h-14 w-14 stroke-[1.8] ${opening ? 'animate-pulse' : ''}`} />
                 </div>
               </div>
             </div>
 
             {alreadyClaimed ? (
-              <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-400">
-                Você já resgatou a sua Mystery Box desta semana! Mantenha o ritmo para a próxima semana. 🎯
+              <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400">
+                Você já resgatou a sua Mystery Box desta semana. Mantenha o ritmo para a próxima semana.
               </div>
             ) : !isEligible ? (
-              <div className="p-3.5 rounded-2xl bg-zinc-950 border border-amber-500/20 text-xs text-amber-300/90 leading-relaxed text-left">
-                🔒 <strong>Caixa Bloqueada:</strong> Conclua 100% das metas da semana para abrir no domingo e ganhar prêmios reais do personal ou bônus no ranking!
+              <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400 leading-relaxed text-left">
+                <strong className="text-white block mb-0.5">Caixa Bloqueada</strong>
+                Conclua 100% das metas da semana para liberar o resgate da caixa e acumular vantagens no ranking.
               </div>
             ) : (
               <p className="text-xs text-zinc-300">
-                Parabéns! Você bateu a meta semanal de 100% de consistência. Abra sua caixa misteriosa agora!
+                Parabéns. Você atingiu 100% de consistência. Desbloqueie sua caixa misteriosa agora.
               </p>
             )}
 
@@ -219,16 +220,16 @@ export function MysteryBoxModal({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 rounded-xl h-11 text-xs font-bold border-zinc-800 text-zinc-400 hover:text-white"
+                className="flex-1 rounded-xl h-11 text-xs font-bold border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
               >
                 Voltar
               </Button>
               <Button
                 onClick={handleOpenBox}
                 disabled={!isEligible || alreadyClaimed || opening}
-                className="flex-1 rounded-xl h-11 text-xs font-black bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 text-black shadow-lg shadow-amber-500/25"
+                className="flex-1 rounded-xl h-11 text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 disabled:opacity-40"
               >
-                {opening ? 'Abrindo...' : 'Abrir Caixa 🎁'}
+                {opening ? 'Abrindo...' : 'Abrir Caixa'}
               </Button>
             </div>
           </div>

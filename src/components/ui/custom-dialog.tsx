@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { X } from 'lucide-react';
 
 interface CustomDialogProps {
   isOpen: boolean;
@@ -49,9 +50,9 @@ export function CustomDialog({
 
           <button
             onClick={onClose}
-            className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors shrink-0"
+            className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
           >
-            ✕
+            <X className="h-3.5 w-3.5" />
           </button>
         </div>
 

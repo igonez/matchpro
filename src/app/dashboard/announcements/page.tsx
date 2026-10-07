@@ -161,11 +161,11 @@ export default function AnnouncementsManagerPage() {
 
         {challenges.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-zinc-400">Turma:</span>
+            <span className="text-xs font-semibold text-zinc-400 font-mono">Turma:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+              className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -179,20 +179,20 @@ export default function AnnouncementsManagerPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Formulário de Criação / Edição */}
-        <Card className="border-zinc-800 bg-zinc-900/40 h-fit">
+        <Card className="border-white/10 bg-zinc-900/50 h-fit">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base flex items-center gap-2 text-white font-bold">
-                {isEditing ? <Edit3 className="h-4 w-4 text-amber-400" /> : <Plus className="h-4 w-4 text-emerald-400" />}
+              <CardTitle className="text-base flex items-center gap-2 text-white font-bold tracking-tight">
+                {isEditing ? <Edit3 className="h-4 w-4 text-white" /> : <Plus className="h-4 w-4 text-white" />}
                 {isEditing ? 'Editar Comunicado' : 'Novo Comunicado'}
               </CardTitle>
               {isEditing && (
-                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400">
+                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400 hover:text-white">
                   <X className="h-3.5 w-3.5 mr-1" /> Cancelar
                 </Button>
               )}
             </div>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-xs text-zinc-400">
               {isEditing ? 'Atualize o texto do aviso selecionado.' : 'Envie um lembrete de pesagem, live ou motivação da semana.'}
             </CardDescription>
           </CardHeader>
@@ -203,7 +203,7 @@ export default function AnnouncementsManagerPage() {
                 <label className="text-zinc-300 font-semibold block mb-1">Título do Aviso</label>
                 <Input
                   type="text"
-                  placeholder="Ex: Live de Dúvidas hoje às 20h!"
+                  placeholder="Ex: Live de Dúvidas hoje às 20h"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
@@ -217,27 +217,27 @@ export default function AnnouncementsManagerPage() {
                   placeholder="Escreva a mensagem para os alunos..."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 text-white p-3 text-xs focus:outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl bg-zinc-950 border border-white/10 text-white p-3 text-xs focus:outline-none focus:border-white/30"
                   required
                 />
               </div>
 
-              <label className="flex items-center gap-2 cursor-pointer font-bold text-zinc-300 py-1">
+              <label className="flex items-center gap-2 cursor-pointer font-bold text-zinc-300 py-1 font-mono">
                 <input
                   type="checkbox"
                   checked={isPinned}
                   onChange={(e) => setIsPinned(e.target.checked)}
-                  className="rounded bg-zinc-950 border-zinc-700 text-emerald-500 focus:ring-emerald-500"
+                  className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
                 />
                 <span className="flex items-center gap-1.5">
-                  <Pin className="h-3.5 w-3.5 text-emerald-400" /> Fixar no topo do app do aluno
+                  <Pin className="h-3.5 w-3.5 text-white" /> Fixar no topo do app do aluno
                 </span>
               </label>
 
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-10 font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20 mt-2"
+                className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 mt-2 font-mono"
               >
                 {submitting ? 'Salvando...' : isEditing ? 'Atualizar Comunicado' : 'Publicar no Mural'}
               </Button>
@@ -247,11 +247,11 @@ export default function AnnouncementsManagerPage() {
 
         {/* Lista de Comunicados Cadastrados */}
         <div className="lg:col-span-2 space-y-4">
-          <Card className="border-zinc-800 bg-zinc-900/40">
+          <Card className="border-white/10 bg-zinc-900/50">
             <CardHeader className="pb-3 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base text-white">Avisos Ativos no App ({announcements.length})</CardTitle>
-                <CardDescription className="text-xs">
+                <CardTitle className="text-base text-white tracking-tight">Avisos Ativos no App ({announcements.length})</CardTitle>
+                <CardDescription className="text-xs text-zinc-400">
                   Estes comunicados são exibidos em tempo real para os alunos da turma.
                 </CardDescription>
               </div>
@@ -261,7 +261,7 @@ export default function AnnouncementsManagerPage() {
               {announcements.length === 0 && !loading ? (
                 <div className="text-center py-12 text-zinc-500 text-xs">
                   <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  Nenhum comunicado publicado ainda. Use o formulário ao lado para falar com sua turma!
+                  Nenhum comunicado publicado ainda. Use o formulário ao lado para falar com sua turma.
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -270,14 +270,14 @@ export default function AnnouncementsManagerPage() {
                       key={a.id}
                       className={`p-4 rounded-2xl border transition-all ${
                         a.is_pinned
-                          ? 'bg-gradient-to-r from-emerald-950/30 via-zinc-900 to-zinc-900 border-emerald-500/40 shadow-md'
-                          : 'bg-zinc-950/60 border-zinc-800'
+                          ? 'bg-zinc-900/90 border-white/20 shadow-md'
+                          : 'bg-zinc-950/60 border-white/10'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2">
                           {a.is_pinned && (
-                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/40 text-[9px] flex items-center gap-1">
+                            <Badge className="bg-white/10 text-white border-white/20 text-[9px] flex items-center gap-1 font-mono uppercase">
                               <Pin className="h-2.5 w-2.5" /> Fixado
                             </Badge>
                           )}
@@ -298,7 +298,7 @@ export default function AnnouncementsManagerPage() {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDeleteAnnouncement(a.id, a.title)}
-                            className="h-7 w-7 text-zinc-500 hover:text-rose-400"
+                            className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/10 rounded"
                             title="Excluir aviso"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -308,7 +308,7 @@ export default function AnnouncementsManagerPage() {
 
                       <p className="text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap">{a.content}</p>
 
-                      <div className="mt-3 pt-2 border-t border-zinc-850/80 text-[10px] text-zinc-500">
+                      <div className="mt-3 pt-2 border-t border-white/10 text-[10px] text-zinc-500 font-mono">
                         Publicado em {new Date(a.created_at).toLocaleDateString('pt-BR')} às{' '}
                         {new Date(a.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                       </div>

@@ -118,7 +118,7 @@ export default function DashboardOverviewPage() {
       setIsNoticeModalOpen(false);
       setNoticeTitle('');
       setNoticeContent('');
-      showToast('Aviso publicado no Mural dos Alunos com sucesso! 📢');
+      showToast('Aviso publicado no Mural dos Alunos com sucesso.');
     } catch (err: any) {
       showToast('Erro ao publicar aviso: ' + err.message);
     } finally {
@@ -158,7 +158,7 @@ export default function DashboardOverviewPage() {
 
         <div className="flex flex-wrap items-center gap-2.5">
           <Link href="/dashboard/audit">
-            <button className="mono-button-primary px-4 py-2 text-xs flex items-center gap-1.5">
+            <button className="mono-button-primary px-4 py-2 text-xs flex items-center gap-1.5 font-mono">
               Auditar Fotos ({stats.pendingSubmissions})
             </button>
           </Link>
@@ -168,7 +168,7 @@ export default function DashboardOverviewPage() {
             onClick={() => setIsNoticeModalOpen(true)}
             className="mono-button-secondary px-4 py-2 text-xs font-mono"
           >
-            📢 Publicar Aviso
+            Publicar Aviso
           </button>
 
           <Link href="/dashboard/challenges/new">
@@ -265,7 +265,7 @@ export default function DashboardOverviewPage() {
               const studentFirstName = item.student_name?.split(' ')[0] || 'Atleta';
               const cleanPhone = item.student_phone?.replace(/\D/g, '') || '';
               const message = encodeURIComponent(
-                `Fala ${studentFirstName}! Notei que você tá sumido(a) do desafio nesses últimos dias. Tá tudo bem por aí? Seu Squad e eu estamos torcendo por você, vamos voltar com tudo hoje! 🔥💪`
+                `Fala ${studentFirstName}! Notei que você está ausente do desafio nesses últimos dias. Está tudo bem por aí? Sua equipe e eu estamos aguardando você, vamos voltar com tudo hoje!`
               );
               const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}?text=${message}` : null;
 

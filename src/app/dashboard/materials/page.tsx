@@ -173,11 +173,11 @@ export default function DashboardMaterialsPage() {
 
         {challenges.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-zinc-400">Turma:</span>
+            <span className="text-xs font-semibold text-zinc-400 font-mono">Turma:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+              className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -191,20 +191,20 @@ export default function DashboardMaterialsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Formulário: Adicionar ou Editar */}
-        <Card className="border-zinc-800 bg-zinc-900/40 h-fit">
+        <Card className="border-white/10 bg-zinc-900/50 h-fit">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base flex items-center gap-2 text-white font-bold">
-                {isEditing ? <Edit3 className="h-4 w-4 text-amber-400" /> : <Plus className="h-4 w-4 text-emerald-400" />}
+              <CardTitle className="text-base flex items-center gap-2 text-white font-bold tracking-tight">
+                {isEditing ? <Edit3 className="h-4 w-4 text-white" /> : <Plus className="h-4 w-4 text-white" />}
                 {isEditing ? 'Editar Material' : 'Novo Material'}
               </CardTitle>
               {isEditing && (
-                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400">
+                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400 hover:text-white">
                   <X className="h-3.5 w-3.5 mr-1" /> Cancelar
                 </Button>
               )}
             </div>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-xs text-zinc-400">
               {isEditing ? 'Atualize as informações do arquivo ou link.' : 'Adicione apostilas, cardápios ou orientações em vídeo.'}
             </CardDescription>
           </CardHeader>
@@ -230,7 +230,7 @@ export default function DashboardMaterialsPage() {
                 <select
                   value={type}
                   onChange={(e: any) => setType(e.target.value)}
-                  className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs px-3 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
                 >
                   <option value="pdf">Documento PDF</option>
                   <option value="cardapio">Cardápio Nutricional</option>
@@ -248,12 +248,12 @@ export default function DashboardMaterialsPage() {
                   placeholder="Instruções para o aluno..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs p-3 focus:outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl bg-zinc-950 border border-white/10 text-white text-xs p-3 focus:outline-none focus:border-white/30"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-zinc-300 block mb-1">
+                <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">
                   Link do Arquivo ou Vídeo (URL)
                 </label>
                 <Input
@@ -265,7 +265,7 @@ export default function DashboardMaterialsPage() {
                 />
               </div>
 
-              <Button type="submit" className="w-full text-xs font-bold" disabled={submitting}>
+              <Button type="submit" className="w-full text-xs font-bold bg-white hover:bg-zinc-200 text-black shadow-md font-mono" disabled={submitting}>
                 {submitting ? 'Salvando...' : isEditing ? 'Atualizar Material' : 'Publicar Material'}
               </Button>
             </form>
@@ -274,11 +274,11 @@ export default function DashboardMaterialsPage() {
 
         {/* Lista de Materiais Cadastrados com Edição e Exclusão */}
         <div className="lg:col-span-2 space-y-4">
-          <Card className="border-zinc-800 bg-zinc-900/40">
+          <Card className="border-white/10 bg-zinc-900/50">
             <CardHeader className="pb-3 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base text-white">Materiais Disponíveis na Turma</CardTitle>
-                <CardDescription className="text-xs">
+                <CardTitle className="text-base text-white tracking-tight">Materiais Disponíveis na Turma</CardTitle>
+                <CardDescription className="text-xs text-zinc-400">
                   {materials.length} conteúdos liberados para os alunos deste desafio.
                 </CardDescription>
               </div>
@@ -288,17 +288,17 @@ export default function DashboardMaterialsPage() {
               {materials.length === 0 ? (
                 <div className="text-center py-12 text-zinc-500 text-xs">
                   <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  Nenhum material cadastrado ainda. Use o formulário ao lado para liberar conteúdos!
+                  Nenhum material cadastrado ainda. Use o formulário ao lado para liberar conteúdos.
                 </div>
               ) : (
-                <div className="divide-y divide-zinc-800/80">
+                <div className="divide-y divide-white/10">
                   {materials.map((m) => (
                     <div
                       key={m.id}
                       className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-xl bg-zinc-800 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                        <div className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center font-bold text-xs shrink-0">
                           {m.type === 'video' ? <Video className="h-4 w-4" /> : m.type === 'cardapio' ? <Utensils className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
                         </div>
                         <div>
@@ -312,7 +312,7 @@ export default function DashboardMaterialsPage() {
                           href={m.file_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-semibold px-2 py-1"
+                          className="text-xs text-zinc-300 hover:text-white flex items-center gap-1 font-semibold px-2 py-1 font-mono"
                         >
                           Acessar <ExternalLink className="h-3 w-3" />
                         </a>
@@ -329,7 +329,7 @@ export default function DashboardMaterialsPage() {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDeleteMaterial(m.id, m.title)}
-                          className="h-8 w-8 text-zinc-500 hover:text-rose-400"
+                          className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10 rounded"
                           title="Excluir material"
                         >
                           <Trash2 className="h-4 w-4" />

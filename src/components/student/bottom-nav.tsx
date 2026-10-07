@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export function StudentBottomNav() {
@@ -158,14 +159,14 @@ export function StudentBottomNav() {
             {/* Botão para Acionar o Menu Vertical */}
             <button
               onClick={() => setShowVerticalMenu(true)}
-              className={`py-1.5 px-3 text-[11px] font-mono tracking-wider transition-all rounded-full flex items-center gap-1 ${
+              className={`py-1.5 px-3 text-[11px] font-mono tracking-wider transition-all rounded-full flex items-center gap-1.5 ${
                 showVerticalMenu
                   ? 'text-white font-black bg-white/15'
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
               <span>Menu</span>
-              <span className="text-[9px]">☰</span>
+              <Menu className="h-3 w-3 stroke-[2.2]" />
             </button>
           </div>
 
@@ -202,9 +203,9 @@ export function StudentBottomNav() {
 
                 <button
                   onClick={() => setShowVerticalMenu(false)}
-                  className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs"
+                  className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
                 >
-                  ✕
+                  <X className="h-4 w-4" />
                 </button>
               </div>
 
@@ -269,9 +270,9 @@ export function StudentBottomNav() {
               </div>
               <button
                 onClick={() => setShowQuickSheet(false)}
-                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-xs"
+                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
               >
-                ✕
+                <X className="h-3.5 w-3.5" />
               </button>
             </div>
 

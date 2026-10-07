@@ -65,7 +65,7 @@ export default function StudentProfilePage() {
       if (updateError) throw updateError;
 
       setStudent((prev: any) => ({ ...prev, avatar_url: publicUrl }));
-      alert('Foto de perfil atualizada com sucesso! ✨');
+      alert('Foto de perfil atualizada com sucesso.');
     } catch (err: any) {
       console.error('Erro ao atualizar foto de perfil:', err);
       alert('Não foi possível enviar a foto de perfil: ' + (err.message || 'Tente novamente.'));
@@ -152,22 +152,22 @@ export default function StudentProfilePage() {
     <div className="flex flex-col flex-1 p-4 space-y-5">
       {/* Header do Perfil */}
       <div className="flex items-center justify-between pt-1">
-        <h1 className="text-xl font-black text-white">Meu Perfil</h1>
+        <h1 className="text-xl font-black text-white tracking-tight">Meu Perfil</h1>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleSignOut}
-          className="text-xs text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10"
+          className="text-xs text-zinc-400 hover:text-white hover:bg-white/10"
         >
           <LogOut className="h-4 w-4 mr-1.5" /> Sair
         </Button>
       </div>
 
       {/* Card Principal do Usuário */}
-      <Card className="border-zinc-850 bg-gradient-to-b from-zinc-900 to-zinc-950 p-5 rounded-3xl shadow-xl text-center">
+      <Card className="border border-white/10 bg-zinc-900/60 p-5 rounded-3xl shadow-xl text-center">
         {/* Avatar com upload de foto */}
-        <div className="relative mx-auto w-24 h-24 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 shadow-xl shadow-emerald-500/20 mb-3 group">
-          <div className="w-full h-full bg-zinc-950 rounded-full flex items-center justify-center font-black text-2xl text-emerald-400 overflow-hidden relative">
+        <div className="relative mx-auto w-24 h-24 rounded-full border border-white/20 p-1 bg-white/5 shadow-xl shadow-black mb-3 group">
+          <div className="w-full h-full bg-zinc-950 rounded-full flex items-center justify-center font-black text-2xl text-white overflow-hidden relative">
             {student?.avatar_url ? (
               <img
                 src={student.avatar_url}
@@ -180,13 +180,13 @@ export default function StudentProfilePage() {
 
             {uploadingAvatar && (
               <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                <div className="h-5 w-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
 
           {/* Botão de Câmera / Upload */}
-          <label className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-emerald-500 hover:bg-emerald-400 border-2 border-zinc-950 flex items-center justify-center text-black cursor-pointer shadow-md transition-all active:scale-95" title="Alterar foto de perfil">
+          <label className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-white hover:bg-zinc-200 border-2 border-zinc-950 flex items-center justify-center text-black cursor-pointer shadow-md transition-all active:scale-95" title="Alterar foto de perfil">
             <Camera className="h-4 w-4" />
             <input
               type="file"
@@ -198,79 +198,79 @@ export default function StudentProfilePage() {
           </label>
         </div>
 
-        <h2 className="text-lg font-black text-white">{student?.full_name || 'Atleta ArenaPro'}</h2>
-        <p className="text-xs text-zinc-400 mt-0.5">Aluno Oficial do Desafio</p>
+        <h2 className="text-lg font-black text-white tracking-tight">{student?.full_name || 'Atleta ArenaPro'}</h2>
+        <p className="text-xs text-zinc-400 mt-0.5 font-mono">Aluno Oficial do Desafio</p>
 
         {/* Estatísticas Rápidas em Grid */}
-        <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-zinc-850/80">
-          <div className="p-2.5 rounded-2xl bg-zinc-950/60 border border-zinc-850">
-            <span className="text-xs text-zinc-400 block font-semibold">Pontos</span>
-            <span className="text-base font-black text-emerald-400 mt-0.5 block">
+        <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-white/10">
+          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
+            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Pontos</span>
+            <span className="text-base font-black text-white mt-0.5 block font-mono">
               {standing?.total_points || 0}
             </span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-zinc-950/60 border border-zinc-850">
-            <span className="text-xs text-zinc-400 block font-semibold">Streak</span>
-            <span className="text-base font-black text-orange-400 mt-0.5 block">
-              3 Dias 🔥
+          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
+            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Streak</span>
+            <span className="text-base font-black text-white mt-0.5 block font-mono">
+              3 Dias
             </span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-zinc-950/60 border border-zinc-850">
-            <span className="text-xs text-zinc-400 block font-semibold">Fotos</span>
-            <span className="text-base font-black text-white mt-0.5 block">
+          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
+            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Fotos</span>
+            <span className="text-base font-black text-white mt-0.5 block font-mono">
               {submissionsCount}
             </span>
           </div>
         </div>
       </Card>
 
-      {/* 🔒 FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
+      {/* FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
       <div
         onClick={() => setIsVaultModalOpen(true)}
-        className="p-4 rounded-3xl bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-950 border border-emerald-500/30 flex items-center justify-between gap-3 cursor-pointer hover:border-emerald-500/60 transition-all group shadow-lg"
+        className="p-4 rounded-3xl bg-zinc-900/60 border border-white/15 flex items-center justify-between gap-3 cursor-pointer hover:border-white/30 transition-all group shadow-lg"
       >
         <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+          <div className="h-11 w-11 rounded-2xl bg-white/5 text-white border border-white/10 flex items-center justify-center shrink-0">
             {vaultData?.is_completed ? (
-              <Unlock className="h-6 w-6 stroke-[2.2]" />
+              <Unlock className="h-6 w-6 stroke-[2]" />
             ) : (
-              <Lock className="h-6 w-6 stroke-[2.2]" />
+              <Lock className="h-6 w-6 stroke-[2]" />
             )}
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">
+              <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
                 {vaultData?.is_completed ? 'Desbloqueado' : 'Privado & Seguro'}
               </span>
               <span className="h-1 w-1 rounded-full bg-zinc-600" />
-              <span className="text-[10px] text-zinc-400 font-semibold">Dia 1 ao 30</span>
+              <span className="text-[10px] text-zinc-400 font-semibold font-mono">Dia 1 ao 30</span>
             </div>
-            <h4 className="text-xs font-black text-white group-hover:text-emerald-300 transition-colors">
-              Cofre Antes & Depois {vaultData?.is_completed && '✨'}
+            <h4 className="text-xs font-black text-white group-hover:text-zinc-200 transition-colors">
+              Cofre Antes & Depois
             </h4>
             <p className="text-[11px] text-zinc-400 mt-0.5">
               {vaultData?.is_completed
-                ? 'Arraste o slider e veja sua evolução completa!'
+                ? 'Arraste o slider e veja sua evolução comparativa.'
                 : vaultData?.before_photo_url
-                ? 'Foto do Dia 1 trancada. Envie a foto final no Dia 30.'
-                : 'Envie sua foto do Dia 1 para trancar no cofre.'}
+                ? 'Foto do Dia 1 armazenada. Envie a foto final no Dia 30.'
+                : 'Envie sua foto do Dia 1 para guardar no cofre privado.'}
             </p>
           </div>
         </div>
 
-        <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-emerald-400 transition-colors shrink-0" />
+        <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-white transition-colors shrink-0" />
       </div>
 
       {/* Histórico de Fotos do Aluno */}
       <div className="space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
           Minha Galeria de Missões ({userPhotos.length})
         </h3>
 
         {userPhotos.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500 text-xs border border-dashed border-zinc-850 rounded-2xl">
+          <div className="text-center py-8 text-zinc-500 text-xs border border-dashed border-white/10 rounded-2xl">
             Nenhuma foto enviada ainda.
           </div>
         ) : (
@@ -278,7 +278,7 @@ export default function StudentProfilePage() {
             {userPhotos.map((item) => (
               <div
                 key={item.id}
-                className="relative aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 group"
+                className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 group"
               >
                 <img
                   src={item.photo_url}
@@ -289,10 +289,10 @@ export default function StudentProfilePage() {
                   <span className="text-[10px] font-bold text-white line-clamp-1">
                     {item.missions?.title}
                   </span>
-                  <span className={`text-[9px] font-black uppercase mt-1 ${
-                    item.status === 'approved' ? 'text-emerald-400' : item.status === 'rejected' ? 'text-rose-400' : 'text-amber-400'
+                  <span className={`text-[9px] font-black uppercase mt-1 font-mono ${
+                    item.status === 'approved' ? 'text-white' : item.status === 'rejected' ? 'text-zinc-500' : 'text-zinc-300'
                   }`}>
-                    {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Análise'}
+                    {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Em Análise'}
                   </span>
                 </div>
               </div>

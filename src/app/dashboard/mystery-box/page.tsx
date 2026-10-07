@@ -153,13 +153,13 @@ export default function MysteryBoxConfigPage() {
   const getRarityBadge = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
-        return <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40">Lendário ★★★</Badge>;
+        return <Badge className="bg-white text-black font-mono text-[10px] font-black uppercase">Nível Lendário</Badge>;
       case 'epic':
-        return <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/40">Épico ★★</Badge>;
+        return <Badge className="bg-white/20 text-white border border-white/30 font-mono text-[10px] font-black uppercase">Nível Épico</Badge>;
       case 'rare':
-        return <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/40">Raro ★</Badge>;
+        return <Badge className="bg-white/10 text-zinc-300 border border-white/20 font-mono text-[10px] font-black uppercase">Nível Raro</Badge>;
       default:
-        return <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/40">Comum</Badge>;
+        return <Badge className="bg-zinc-900 text-zinc-400 border border-white/10 font-mono text-[10px] font-black uppercase">Nível Comum</Badge>;
     }
   };
 
@@ -168,12 +168,12 @@ export default function MysteryBoxConfigPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 font-black tracking-wider uppercase text-[10px]">
-            Efeito Dopamina & Recompensas
+          <Badge className="bg-white/10 text-white border-white/20 font-mono font-black tracking-wider uppercase text-[10px]">
+            Recompensas & Gamificação
           </Badge>
         </div>
         <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Gift className="h-8 w-8 text-amber-400" />
+          <Gift className="h-8 w-8 text-white" />
           Mystery Box Semanal
         </h1>
         <p className="text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
@@ -184,15 +184,15 @@ export default function MysteryBoxConfigPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Formulário de Criação / Edição */}
         <div className="lg:col-span-1">
-          <Card className="border-zinc-800 bg-zinc-900/40 sticky top-24">
+          <Card className="border-white/10 bg-zinc-900/50 sticky top-24">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold text-white flex items-center gap-2">
-                  {isEditing ? <Edit3 className="h-4 w-4 text-amber-400" /> : <Plus className="h-4 w-4 text-amber-400" />}
+                <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
+                  {isEditing ? <Edit3 className="h-4 w-4 text-white" /> : <Plus className="h-4 w-4 text-white" />}
                   {isEditing ? 'Editar Recompensa' : 'Nova Recompensa'}
                 </CardTitle>
                 {isEditing && (
-                  <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400">
+                  <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400 hover:text-white">
                     <X className="h-3.5 w-3.5 mr-1" /> Cancelar
                   </Button>
                 )}
@@ -208,7 +208,7 @@ export default function MysteryBoxConfigPage() {
                   <select
                     value={selectedChallengeId}
                     onChange={(e) => setSelectedChallengeId(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-amber-400"
+                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                   >
                     <option value="">Global (Todos os Desafios)</option>
                     {challenges.map((c) => (
@@ -227,7 +227,7 @@ export default function MysteryBoxConfigPage() {
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
                     required
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-amber-400"
+                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                   />
                 </div>
 
@@ -238,7 +238,7 @@ export default function MysteryBoxConfigPage() {
                     placeholder="Ex: Sessão de 30min online para calibrar seu treino e dieta"
                     value={newDescription}
                     onChange={(e) => setNewDescription(e.target.value)}
-                    className="w-full rounded-xl bg-zinc-950 border border-zinc-800 text-white p-3 focus:outline-none focus:border-amber-400"
+                    className="w-full rounded-xl bg-zinc-950 border border-white/10 text-white p-3 focus:outline-none focus:border-white/30"
                   />
                 </div>
 
@@ -248,7 +248,7 @@ export default function MysteryBoxConfigPage() {
                     <select
                       value={newType}
                       onChange={(e) => setNewType(e.target.value)}
-                      className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-amber-400"
+                      className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                     >
                       <option value="points">Pontos no Ranking</option>
                       <option value="freeze_shield">Freeze Shield (+1)</option>
@@ -259,13 +259,13 @@ export default function MysteryBoxConfigPage() {
                   </div>
 
                   <div>
-                    <label className="text-zinc-400 font-bold block mb-1">Valor / Código</label>
+                    <label className="text-zinc-400 font-bold block mb-1 font-mono">Valor / Código</label>
                     <input
                       type="text"
                       placeholder="Ex: 50 ou CUPOM10"
                       value={newValue}
                       onChange={(e) => setNewValue(e.target.value)}
-                      className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-amber-400"
+                      className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30 font-mono"
                     />
                   </div>
                 </div>
@@ -276,7 +276,7 @@ export default function MysteryBoxConfigPage() {
                     <select
                       value={newRarity}
                       onChange={(e) => setNewRarity(e.target.value)}
-                      className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-amber-400"
+                      className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                     >
                       <option value="common">Comum</option>
                       <option value="rare">Raro</option>
@@ -286,14 +286,14 @@ export default function MysteryBoxConfigPage() {
                   </div>
 
                   <div>
-                    <label className="text-zinc-400 font-bold block mb-1">Peso da Chance (1-100)</label>
+                    <label className="text-zinc-400 font-bold block mb-1 font-mono">Chance (1-100)</label>
                     <input
                       type="number"
                       min={1}
                       max={100}
                       value={newWeight}
                       onChange={(e) => setNewWeight(Number(e.target.value))}
-                      className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-amber-400"
+                      className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30 font-mono"
                     />
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export default function MysteryBoxConfigPage() {
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="w-full h-10 font-bold bg-amber-500 hover:bg-amber-400 text-black shadow-lg shadow-amber-500/20 mt-2"
+                  className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 mt-2"
                 >
                   {submitting ? 'Salvando...' : isEditing ? 'Atualizar Recompensa' : 'Cadastrar na Roleta'}
                 </Button>
@@ -313,15 +313,15 @@ export default function MysteryBoxConfigPage() {
         {/* Lista de Recompensas */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-amber-400" />
+            <h2 className="text-lg font-bold text-white flex items-center gap-2 tracking-tight">
+              <Sparkles className="h-5 w-5 text-white" />
               Recompensas Ativas ({rewards.length})
             </h2>
-            <span className="text-xs text-zinc-500">Sorteio automatizado pelo algoritmo</span>
+            <span className="text-xs text-zinc-500 font-mono">Sorteio automatizado pelo algoritmo</span>
           </div>
 
           {rewards.length === 0 && !loading ? (
-            <Card className="border-dashed border-zinc-800 p-8 text-center bg-zinc-900/20">
+            <Card className="border-dashed border-white/10 p-8 text-center bg-zinc-900/20">
               <Gift className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
               <p className="font-semibold text-zinc-300">Nenhuma recompensa configurada</p>
               <p className="text-xs text-zinc-500 mt-1">
@@ -333,12 +333,12 @@ export default function MysteryBoxConfigPage() {
               {rewards.map((r) => (
                 <Card
                   key={r.id}
-                  className="border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-all flex flex-col justify-between"
+                  className="border-white/10 bg-zinc-900/50 hover:border-white/25 transition-all flex flex-col justify-between"
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between mb-2">
                       {getRarityBadge(r.rarity)}
-                      <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                      <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider font-mono">
                         Chance: {r.probability_weight}%
                       </span>
                     </div>
@@ -347,14 +347,14 @@ export default function MysteryBoxConfigPage() {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleEditClick(r)}
-                          className="text-zinc-500 hover:text-white transition-colors p-1"
+                          className="text-zinc-400 hover:text-white transition-colors p-1"
                           title="Editar recompensa"
                         >
                           <Edit3 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteReward(r.id, r.title)}
-                          className="text-zinc-500 hover:text-red-400 transition-colors p-1"
+                          className="text-zinc-500 hover:text-white hover:bg-white/10 rounded transition-colors p-1"
                           title="Excluir recompensa"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -365,11 +365,11 @@ export default function MysteryBoxConfigPage() {
                       {r.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-0 border-t border-zinc-850 py-3">
+                  <CardContent className="pt-0 border-t border-white/10 py-3">
                     <div className="flex items-center justify-between text-xs text-zinc-400">
-                      <span>Tipo: <strong className="text-zinc-200 capitalize">{r.reward_type}</strong></span>
+                      <span>Tipo: <strong className="text-white capitalize">{r.reward_type}</strong></span>
                       {r.reward_value && (
-                        <span className="text-amber-400 font-mono font-bold">
+                        <span className="text-white font-mono font-bold">
                           {r.reward_value}
                         </span>
                       )}

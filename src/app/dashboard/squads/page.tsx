@@ -153,28 +153,28 @@ export default function SquadsManagerPage() {
       {/* Top Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-black tracking-wider uppercase text-[10px]">
-            Guerra de Tribos & Retenção 70%+
+          <Badge className="bg-white/10 text-white border-white/20 font-black tracking-wider uppercase text-[10px] font-mono">
+            Guerra de Tribos & Retenção
           </Badge>
         </div>
         <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Users className="h-8 w-8 text-emerald-400" />
+          <Users className="h-8 w-8 text-white" />
           Squads & Micro-equipes
         </h1>
         <p className="text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
-          Divida a turma em equipes de 3 a 5 alunos. Ao invés de desistirem por estarem longe do 1º lugar individual, eles continuam treinando para não decepcionar seus colegas de Squad!
+          Divida a turma em equipes de 3 a 5 alunos. Ao invés de desistirem por estarem longe do 1º lugar individual, eles continuam treinando para manter o ritmo coletivo do seu Squad.
         </p>
       </div>
 
       {/* Seletor de Desafio */}
       <div className="flex items-center gap-3">
-        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
+        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono">
           Desafio Selecionado:
         </label>
         <select
           value={selectedChallengeId}
           onChange={(e) => setSelectedChallengeId(e.target.value)}
-          className="h-10 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs px-3 focus:outline-none focus:border-emerald-500"
+          className="h-10 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30 font-mono"
         >
           {challenges.map((c) => (
             <option key={c.id} value={c.id}>
@@ -188,10 +188,10 @@ export default function SquadsManagerPage() {
         {/* Formulário de Criação e Alocação */}
         <div className="lg:col-span-1 space-y-6">
           {/* Card 1: Criar Squad */}
-          <Card className="border-zinc-800 bg-zinc-900/40">
+          <Card className="border-white/10 bg-zinc-900/50">
             <CardHeader>
-              <CardTitle className="text-base font-bold text-white flex items-center gap-2">
-                <Plus className="h-4 w-4 text-emerald-400" /> Criar Novo Squad
+              <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
+                <Plus className="h-4 w-4 text-white" /> Criar Novo Squad
               </CardTitle>
               <CardDescription className="text-xs text-zinc-400">
                 Dê um nome marcante para o time da turma.
@@ -207,7 +207,7 @@ export default function SquadsManagerPage() {
                     placeholder="Ex: Squad Espartanos / Team Foco Total"
                     value={squadName}
                     onChange={(e) => setSquadName(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-emerald-400"
+                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                   />
                 </div>
 
@@ -215,17 +215,17 @@ export default function SquadsManagerPage() {
                   <label className="text-zinc-400 font-bold block mb-1">Lema / Grito de Guerra</label>
                   <input
                     type="text"
-                    placeholder="Ex: Ninguém fica para trás!"
+                    placeholder="Ex: Ninguém fica para trás"
                     value={squadMotto}
                     onChange={(e) => setSquadMotto(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-emerald-400"
+                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                   />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={creating}
-                  className="w-full h-10 font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20"
+                  className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 font-mono"
                 >
                   {creating ? 'Criando Equipe...' : 'Criar Squad'}
                 </Button>
@@ -235,10 +235,10 @@ export default function SquadsManagerPage() {
 
           {/* Card 2: Alocar Aluno ao Squad */}
           {squads.length > 0 && (
-            <Card className="border-zinc-800 bg-zinc-900/40">
+            <Card className="border-white/10 bg-zinc-900/50">
               <CardHeader>
-                <CardTitle className="text-base font-bold text-white flex items-center gap-2">
-                  <UserPlus className="h-4 w-4 text-cyan-400" /> Alocar Aluno no Squad
+                <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
+                  <UserPlus className="h-4 w-4 text-white" /> Alocar Aluno no Squad
                 </CardTitle>
                 <CardDescription className="text-xs text-zinc-400">
                   Distribua os alunos entre as equipes formadas.
@@ -250,7 +250,7 @@ export default function SquadsManagerPage() {
                   <select
                     value={assignStudentId}
                     onChange={(e) => setAssignStudentId(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-cyan-400"
+                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                   >
                     <option value="">Escolha um aluno cadastrado...</option>
                     {participants.map((p) => (
@@ -266,7 +266,7 @@ export default function SquadsManagerPage() {
                   <select
                     value={assignSquadId}
                     onChange={(e) => setAssignSquadId(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-cyan-400"
+                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
                   >
                     <option value="">Escolha o Squad destino...</option>
                     {squads.map((s) => (
@@ -281,7 +281,7 @@ export default function SquadsManagerPage() {
                   type="button"
                   onClick={handleAssignStudent}
                   disabled={!assignStudentId || !assignSquadId}
-                  className="w-full h-10 font-bold bg-cyan-500 hover:bg-cyan-400 text-black shadow-lg shadow-cyan-500/20"
+                  className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 font-mono"
                 >
                   Confirmar Alocação
                 </Button>
@@ -293,15 +293,15 @@ export default function SquadsManagerPage() {
         {/* Lista de Squads Formados */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Shield className="h-5 w-5 text-emerald-400" />
+            <h2 className="text-lg font-bold text-white flex items-center gap-2 tracking-tight">
+              <Shield className="h-5 w-5 text-white" />
               Equipes Cadastradas ({squads.length})
             </h2>
-            <span className="text-xs text-zinc-500">Média de pontos calculada dinamicamente</span>
+            <span className="text-xs text-zinc-500 font-mono">Média de pontos calculada dinamicamente</span>
           </div>
 
           {squads.length === 0 && !loading ? (
-            <Card className="border-dashed border-zinc-800 p-8 text-center bg-zinc-900/20">
+            <Card className="border-dashed border-white/10 p-8 text-center bg-zinc-900/20">
               <Users className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
               <p className="font-semibold text-zinc-300">Nenhum Squad criado neste desafio</p>
               <p className="text-xs text-zinc-500 mt-1">
@@ -313,16 +313,16 @@ export default function SquadsManagerPage() {
               {squads.map((squad) => (
                 <Card
                   key={squad.id}
-                  className="border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-all flex flex-col justify-between"
+                  className="border-white/10 bg-zinc-900/50 hover:border-white/25 transition-all flex flex-col justify-between"
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between mb-1">
-                      <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 font-black">
+                      <Badge className="bg-white/10 text-white border-white/20 font-black font-mono text-[10px]">
                         {squad.squad_members?.length || 0} Membros
                       </Badge>
                       <button
                         onClick={() => handleDeleteSquad(squad.id)}
-                        className="text-zinc-600 hover:text-red-400 transition-colors p-1"
+                        className="text-zinc-500 hover:text-white hover:bg-white/10 rounded transition-colors p-1"
                         title="Excluir Squad"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -340,8 +340,8 @@ export default function SquadsManagerPage() {
                     )}
                   </CardHeader>
 
-                  <CardContent className="pt-0 border-t border-zinc-850 py-3">
-                    <span className="text-[10px] font-bold uppercase text-zinc-500 block mb-1.5">
+                  <CardContent className="pt-0 border-t border-white/10 py-3">
+                    <span className="text-[10px] font-bold uppercase text-zinc-500 block mb-1.5 font-mono">
                       Integrantes do Time:
                     </span>
                     {squad.squad_members?.length === 0 ? (
@@ -351,7 +351,7 @@ export default function SquadsManagerPage() {
                         {squad.squad_members?.map((m: any) => (
                           <span
                             key={m.id}
-                            className="px-2 py-0.5 rounded-lg bg-zinc-950 text-zinc-300 border border-zinc-800 text-[11px] font-medium"
+                            className="px-2 py-0.5 rounded-lg bg-zinc-950 text-zinc-300 border border-white/10 text-[11px] font-medium"
                           >
                             {m.students?.full_name || 'Aluno'}
                           </span>

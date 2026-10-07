@@ -11,13 +11,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer active:scale-[0.98]';
     
     const variants = {
-      default: 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-md shadow-emerald-950/20 focus-visible:ring-emerald-500',
-      destructive: 'bg-rose-600 text-white hover:bg-rose-500 shadow-md shadow-rose-950/20 focus-visible:ring-rose-500',
-      success: 'bg-emerald-500 text-white hover:bg-emerald-400 shadow-md shadow-emerald-900/30 focus-visible:ring-emerald-400',
+      default: 'bg-white text-black hover:bg-zinc-200 shadow-sm focus-visible:ring-white',
+      destructive: 'bg-zinc-900 border border-zinc-700 text-white hover:bg-zinc-800 focus-visible:ring-zinc-400',
+      success: 'bg-white text-black hover:bg-zinc-200 shadow-sm focus-visible:ring-white',
       outline: 'border border-zinc-700 bg-zinc-900/50 text-zinc-100 hover:bg-zinc-800 hover:text-white focus-visible:ring-zinc-400',
       secondary: 'bg-zinc-800 text-zinc-100 hover:bg-zinc-700 focus-visible:ring-zinc-500',
       ghost: 'text-zinc-300 hover:bg-zinc-800/60 hover:text-white',
-      link: 'text-emerald-400 underline-offset-4 hover:underline p-0 h-auto',
+      link: 'text-white underline-offset-4 hover:underline p-0 h-auto',
     };
 
     const sizes = {

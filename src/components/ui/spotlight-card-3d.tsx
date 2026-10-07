@@ -26,11 +26,11 @@ export function SpotlightCard3D({
 
     setCoords({ x, y });
 
-    // 3D Tilt calculation
+    // 3D Tilt calculation - SUPER sutil e elegante ao toque
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -7; // max 7 deg tilt
-    const rotateY = ((x - centerX) / centerX) * 7;
+    const rotateX = ((y - centerY) / centerY) * -1.5; // max 1.5 deg tilt (super sutil)
+    const rotateY = ((x - centerX) / centerX) * 1.5;
 
     setTilt({ rotateX, rotateY });
   };
@@ -52,13 +52,13 @@ export function SpotlightCard3D({
       onMouseLeave={handleMouseLeave}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateZ(10px)`
-          : 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)',
-        transition: isHovered ? 'transform 0.08s ease-out' : 'transform 0.5s ease-out',
+          ? `perspective(1200px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateZ(2px)`
+          : 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)',
+        transition: isHovered ? 'transform 0.12s ease-out' : 'transform 0.6s ease-out',
         transformStyle: 'preserve-3d',
       }}
       className={`relative rounded-3xl overflow-hidden border border-white/[0.08] bg-zinc-950/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-shadow duration-300 ${
-        isHovered ? 'shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_40px_rgba(255,255,255,0.06)]' : ''
+        isHovered ? 'shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_20px_rgba(255,255,255,0.03)]' : ''
       } ${className}`}
     >
       {/* Spotlight Radial Follower */}

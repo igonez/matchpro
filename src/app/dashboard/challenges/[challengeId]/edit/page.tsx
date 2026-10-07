@@ -112,7 +112,7 @@ export default function EditChallengePage({
   if (loading) {
     return (
       <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
-        <div className="h-6 w-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
         Carregando dados do desafio...
       </div>
     );

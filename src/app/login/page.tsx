@@ -164,11 +164,11 @@ export default function LoginPage() {
         </Link>
       </div>
 
-      {/* 2. Card Central com 3D Spotlight e Estrela Cromada */}
+      {/* 2. Card Central com 3D Spotlight Sutil */}
       <div className="max-w-md w-full mx-auto my-auto py-8 z-10 relative">
-        {/* Estrela Cromada 3D Flutuando Acima do Card */}
-        <div className="absolute -top-12 -right-6 hidden sm:block">
-          <Chrome3DStar size={85} />
+        {/* Estrela Cromada Sutil */}
+        <div className="absolute -top-8 -right-4 hidden sm:block opacity-40 hover:opacity-80 transition-opacity">
+          <Chrome3DStar size={54} />
         </div>
 
         <SpotlightCard3D className="p-7 sm:p-8">

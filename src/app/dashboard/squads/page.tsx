@@ -29,7 +29,7 @@ export default function SquadsManagerPage() {
   // Form states para novo squad
   const [squadName, setSquadName] = useState('');
   const [squadMotto, setSquadMotto] = useState('');
-  const [squadColor, setSquadColor] = useState('emerald');
+  const [squadColor, setSquadColor] = useState('zinc');
   const [creating, setCreating] = useState(false);
 
   // Vincular aluno a squad

@@ -37,8 +37,23 @@ export async function updateSession(request: NextRequest) {
 
   const url = request.nextUrl.clone();
 
-  // Rotas públicas que não necessitam de auth
-  if (url.pathname.startsWith('/login') || url.pathname.startsWith('/auth') || url.pathname === '/') {
+  // Rotas de login e auth não redirecionam
+  if (url.pathname.startsWith('/login') || url.pathname.startsWith('/auth')) {
+    return supabaseResponse;
+  }
+
+  // Se o usuário acessar a raiz '/'
+  if (url.pathname === '/') {
+    if (user) {
+      const { data: professional } = await supabase
+        .from('professionals')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      url.pathname = professional ? '/dashboard' : '/app';
+      return NextResponse.redirect(url);
+    }
     return supabaseResponse;
   }
 

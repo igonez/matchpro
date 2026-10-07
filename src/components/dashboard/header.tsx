@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
@@ -26,6 +26,26 @@ export function DashboardHeader() {
   const router = useRouter();
   const supabase = createClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [coachProfile, setCoachProfile] = useState<{ fullName: string; avatarUrl: string | null } | null>(null);
+
+  useEffect(() => {
+    async function loadCoach() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: prof } = await supabase
+          .from('professionals')
+          .select('full_name, avatar_url')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        setCoachProfile({
+          fullName: prof?.full_name || user.user_metadata?.full_name || 'Coach',
+          avatarUrl: prof?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+        });
+      }
+    }
+    loadCoach();
+  }, [supabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -52,23 +72,49 @@ export function DashboardHeader() {
           {/* Botão Hambúrguer Mobile */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+            className="md:hidden h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-colors shrink-0"
             aria-label="Abrir menu de navegação"
           >
             <Menu className="h-5 w-5" />
           </button>
 
-          {/* Logo / Brand Mobile */}
-          <div className="md:hidden flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-white font-mono font-bold text-xs">
-              M
+          {/* Imagem / Avatar do Coach ao lado do Menu */}
+          <Link
+            href="/dashboard/profile"
+            className="flex items-center gap-2 group p-1 rounded-xl hover:bg-white/5 transition-colors"
+            title="Acessar Meu Perfil"
+          >
+            <div className="h-9 w-9 rounded-xl bg-zinc-900 border border-white/20 overflow-hidden flex items-center justify-center shrink-0 group-hover:border-white/40 transition-colors shadow-sm">
+              {coachProfile?.avatarUrl ? (
+                <img
+                  src={coachProfile.avatarUrl}
+                  alt={coachProfile.fullName}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <User className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
+              )}
             </div>
+
+            {/* Nome do Coach Visível no Desktop */}
+            <div className="hidden lg:flex flex-col text-left">
+              <span className="text-xs font-mono font-bold text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
+                {coachProfile?.fullName || 'Meu Perfil'}
+              </span>
+              <span className="text-[9px] font-mono text-zinc-500 uppercase">
+                Editar Perfil
+              </span>
+            </div>
+          </Link>
+
+          {/* Logo / Brand Mobile */}
+          <div className="md:hidden flex items-center gap-2 ml-1">
             <span className="font-bold text-sm tracking-tight text-white font-mono">
               ArenaPro
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2 ml-2">
             <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold font-mono">Painel de Controle</span>
           </div>
         </div>

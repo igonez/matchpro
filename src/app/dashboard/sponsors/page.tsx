@@ -5,15 +5,18 @@ import {
   Building2, 
   Plus, 
   Trash2, 
+  Edit3,
   ExternalLink, 
   Tag, 
   Percent, 
   ShoppingBag,
-  DollarSign
+  DollarSign,
+  X
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
 
 export default function SponsorsManagerPage() {
@@ -24,13 +27,15 @@ export default function SponsorsManagerPage() {
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('');
   const [sponsors, setSponsors] = useState<any[]>([]);
 
-  // Form states
+  // Form states (Criação e Edição)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingSponsorId, setEditingSponsorId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [category, setCategory] = useState('nutrition');
   const [discountCode, setDiscountCode] = useState('');
   const [discountDescription, setDiscountDescription] = useState('');
   const [whatsappOrLink, setWhatsappOrLink] = useState('');
-  const [creating, setCreating] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -68,250 +73,294 @@ export default function SponsorsManagerPage() {
     loadData();
   }, [selectedChallengeId]);
 
-  const handleCreateSponsor = async (e: React.FormEvent) => {
+  const handleEditClick = (sp: any) => {
+    setIsEditing(true);
+    setEditingSponsorId(sp.id);
+    setName(sp.name);
+    setCategory(sp.category);
+    setDiscountCode(sp.discount_code || '');
+    setDiscountDescription(sp.discount_description);
+    setWhatsappOrLink(sp.whatsapp_or_link || '');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingSponsorId(null);
+    setName('');
+    setDiscountCode('');
+    setDiscountDescription('');
+    setWhatsappOrLink('');
+  };
+
+  const handleSaveSponsor = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !discountDescription.trim() || !selectedChallengeId) return;
 
-    setCreating(true);
+    setSubmitting(true);
     try {
-      const { data, error } = await supabase
-        .from('challenge_sponsors')
-        .insert({
-          challenge_id: selectedChallengeId,
-          name,
-          category,
-          discount_code: discountCode || null,
-          discount_description: discountDescription,
-          whatsapp_or_link: whatsappOrLink || null,
-        })
-        .select()
-        .single();
+      const payload = {
+        challenge_id: selectedChallengeId,
+        name: name.trim(),
+        category,
+        discount_code: discountCode.trim() || null,
+        discount_description: discountDescription.trim(),
+        whatsapp_or_link: whatsappOrLink.trim() || null,
+      };
 
-      if (error) throw error;
+      if (isEditing && editingSponsorId) {
+        // Update
+        const { error } = await supabase
+          .from('challenge_sponsors')
+          .update(payload)
+          .eq('id', editingSponsorId);
 
-      if (data) {
+        if (error) throw error;
+        setSponsors((prev) => prev.map((s) => (s.id === editingSponsorId ? { ...s, ...payload } : s)));
+        handleCancelEdit();
+      } else {
+        // Insert
+        const { data, error } = await supabase
+          .from('challenge_sponsors')
+          .insert(payload)
+          .select()
+          .single();
+
+        if (error) throw error;
         setSponsors([data, ...sponsors]);
-        setName('');
-        setDiscountCode('');
-        setDiscountDescription('');
-        setWhatsappOrLink('');
+        handleCancelEdit();
       }
     } catch (err) {
-      console.error('Erro ao cadastrar parceiro:', err);
-      alert('Não foi possível cadastrar o parceiro.');
+      console.error('Erro ao salvar parceiro:', err);
+      alert('Erro ao salvar parceiro');
     } finally {
-      setCreating(false);
+      setSubmitting(false);
     }
   };
 
-  const handleDeleteSponsor = async (id: string) => {
-    if (!confirm('Deseja excluir este parceiro?')) return;
+  const handleDeleteSponsor = async (id: string, spName: string) => {
+    if (!confirm(`Deseja remover o patrocinador "${spName}" deste desafio?`)) return;
+
     try {
-      await supabase.from('challenge_sponsors').delete().eq('id', id);
+      const { error } = await supabase
+        .from('challenge_sponsors')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
       setSponsors(sponsors.filter((s) => s.id !== id));
+      if (editingSponsorId === id) {
+        handleCancelEdit();
+      }
     } catch (err) {
-      console.error('Erro ao excluir parceiro:', err);
+      console.error('Erro ao deletar parceiro:', err);
+      alert('Erro ao excluir parceiro');
     }
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 font-black tracking-wider uppercase text-[10px]">
-            Monetização B2B & Ecossistema Local
-          </Badge>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+            Parceiros & Patrocinadores
+          </h1>
+          <p className="text-xs text-zinc-400 mt-1">
+            Cadastre, edite e remova marcas locais que oferecem cupons e prêmios para os alunos da turma.
+          </p>
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Building2 className="h-8 w-8 text-teal-400" />
-          Vitrine de Parceiros & Patrocinadores
-        </h1>
-        <p className="text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
-          Cadastre restaurantes fit, lojas de suplementos ou farmácias da sua região. Ofereça cupons exclusivos para seus alunos e cobre mensalidade de parceiros comerciais para exibi-los no seu app!
-        </p>
+
+        {challenges.length > 0 && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-zinc-400">Turma:</span>
+            <select
+              value={selectedChallengeId}
+              onChange={(e) => setSelectedChallengeId(e.target.value)}
+              className="h-10 rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+            >
+              {challenges.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
-      {/* Seletor de Desafio */}
-      <div className="flex items-center gap-3">
-        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
-          Desafio Selecionado:
-        </label>
-        <select
-          value={selectedChallengeId}
-          onChange={(e) => setSelectedChallengeId(e.target.value)}
-          className="h-10 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs px-3 focus:outline-none focus:border-teal-500"
-        >
-          {challenges.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.title}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Formulário de Criação */}
-        <div className="lg:col-span-1">
-          <Card className="border-zinc-800 bg-zinc-900/40 sticky top-24">
-            <CardHeader>
-              <CardTitle className="text-base font-bold text-white flex items-center gap-2">
-                <Plus className="h-4 w-4 text-teal-400" /> Cadastrar Novo Parceiro
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Formulário de Cadastro / Edição */}
+        <Card className="border-zinc-800 bg-zinc-900/40 h-fit">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2 text-white font-bold">
+                {isEditing ? <Edit3 className="h-4 w-4 text-amber-400" /> : <Plus className="h-4 w-4 text-emerald-400" />}
+                {isEditing ? 'Editar Parceiro' : 'Novo Patrocinador'}
               </CardTitle>
-              <CardDescription className="text-xs text-zinc-400">
-                Insira os dados do comércio e cupom de desconto.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleCreateSponsor} className="space-y-4 text-xs">
+              {isEditing && (
+                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs text-zinc-400">
+                  <X className="h-3.5 w-3.5 mr-1" /> Cancelar
+                </Button>
+              )}
+            </div>
+            <CardDescription className="text-xs">
+              {isEditing ? 'Atualize os dados e cupom do parceiro.' : 'Adicione uma loja de suplementos ou restaurante saudável.'}
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <form onSubmit={handleSaveSponsor} className="space-y-3.5 text-xs">
+              <div>
+                <label className="text-zinc-300 font-semibold block mb-1">Nome da Empresa / Loja</label>
+                <Input
+                  type="text"
+                  placeholder="Ex: Strong Nutrition & Suplementos"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-zinc-300 font-semibold block mb-1">Nicho / Categoria</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-emerald-500"
+                >
+                  <option value="nutrition">Suplementação & Nutrição</option>
+                  <option value="apparel">Roupas & Moda Fitness</option>
+                  <option value="restaurant">Restaurante / Marmitas Fit</option>
+                  <option value="services">Fisioterapia / Estética</option>
+                  <option value="other">Outro Nicho</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Nome do Estabelecimento *</label>
-                  <input
+                  <label className="text-zinc-300 font-semibold block mb-1">Cupom de Desconto</label>
+                  <Input
                     type="text"
-                    required
-                    placeholder="Ex: Marmitaria Fit Vital / Loja Monster Suplementos"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-teal-400"
+                    placeholder="Ex: SHAPE15"
+                    value={discountCode}
+                    onChange={(e) => setDiscountCode(e.target.value)}
                   />
                 </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-zinc-400 font-bold block mb-1">Categoria</label>
-                    <select
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-teal-400"
-                    >
-                      <option value="nutrition">Alimentação / Marmita Fit</option>
-                      <option value="supplements">Suplementos & Vitaminas</option>
-                      <option value="apparel">Roupas / Moda Fitness</option>
-                      <option value="clinic">Clínica / Fisioterapia</option>
-                      <option value="other">Outros</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-zinc-400 font-bold block mb-1">Cupom (Código)</label>
-                    <input
-                      type="text"
-                      placeholder="Ex: TIMEPERSONAL15"
-                      value={discountCode}
-                      onChange={(e) => setDiscountCode(e.target.value)}
-                      className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-teal-400 font-mono"
-                    />
-                  </div>
-                </div>
-
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Benefício / Desconto *</label>
-                  <textarea
-                    rows={2}
-                    required
-                    placeholder="Ex: 15% OFF em todo o cardápio + frete grátis na primeira semana"
+                  <label className="text-zinc-300 font-semibold block mb-1">Regra da Oferta</label>
+                  <Input
+                    type="text"
+                    placeholder="Ex: 15% OFF"
                     value={discountDescription}
                     onChange={(e) => setDiscountDescription(e.target.value)}
-                    className="w-full rounded-xl bg-zinc-950 border border-zinc-800 text-white p-3 focus:outline-none focus:border-teal-400"
+                    required
                   />
                 </div>
+              </div>
 
-                <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Link de Pedido / WhatsApp (Opcional)</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: https://wa.me/5511999999999 ou https://site.com"
-                    value={whatsappOrLink}
-                    onChange={(e) => setWhatsappOrLink(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-zinc-800 text-white px-3 focus:outline-none focus:border-teal-400"
-                  />
+              <div>
+                <label className="text-zinc-300 font-semibold block mb-1">WhatsApp ou Link da Loja</label>
+                <Input
+                  type="text"
+                  placeholder="https://instagram.com/... ou WhatsApp"
+                  value={whatsappOrLink}
+                  onChange={(e) => setWhatsappOrLink(e.target.value)}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="w-full h-10 font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20 mt-2"
+              >
+                {submitting ? 'Salvando...' : isEditing ? 'Atualizar Patrocinador' : 'Publicar Patrocinador'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Lista de Patrocinadores com Edição e Exclusão */}
+        <div className="lg:col-span-2 space-y-4">
+          <Card className="border-zinc-800 bg-zinc-900/40">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base text-white">Patrocinadores da Turma ({sponsors.length})</CardTitle>
+                <CardDescription className="text-xs">
+                  Cupons e benefícios exclusivos liberados para os alunos deste desafio.
+                </CardDescription>
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              {sponsors.length === 0 && !loading ? (
+                <div className="text-center py-12 text-zinc-500 text-xs">
+                  <Building2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  Nenhum patrocinador cadastrado ainda. Use o formulário ao lado para cadastrar marcas parceiras!
                 </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {sponsors.map((sp) => (
+                    <Card
+                      key={sp.id}
+                      className="border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 transition-all p-4 flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 text-[10px]">
+                            {sp.category}
+                          </Badge>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEditClick(sp)}
+                              className="h-7 w-7 text-zinc-400 hover:text-white"
+                              title="Editar parceiro"
+                            >
+                              <Edit3 className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDeleteSponsor(sp.id, sp.name)}
+                              className="h-7 w-7 text-zinc-500 hover:text-rose-400"
+                              title="Excluir parceiro"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        </div>
 
-                <Button
-                  type="submit"
-                  disabled={creating}
-                  className="w-full h-10 font-bold bg-teal-500 hover:bg-teal-400 text-black shadow-lg shadow-teal-500/20"
-                >
-                  {creating ? 'Salvando...' : 'Cadastrar Parceiro'}
-                </Button>
-              </form>
+                        <h4 className="font-bold text-sm text-white">{sp.name}</h4>
+                        <div className="mt-2.5 p-2 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center justify-between">
+                          <span className="text-xs font-black text-emerald-400">{sp.discount_description}</span>
+                          {sp.discount_code && (
+                            <span className="text-[11px] font-mono bg-zinc-800 px-2 py-0.5 rounded text-amber-300 font-bold">
+                              {sp.discount_code}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {sp.whatsapp_or_link && (
+                        <div className="mt-3 pt-2.5 border-t border-zinc-900 flex justify-end">
+                          <a
+                            href={sp.whatsapp_or_link.startsWith('http') ? sp.whatsapp_or_link : `https://${sp.whatsapp_or_link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-zinc-400 hover:text-emerald-400 flex items-center gap-1 font-semibold"
+                          >
+                            Visitar Parceiro <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </div>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
-        </div>
-
-        {/* Lista de Parceiros */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <ShoppingBag className="h-5 w-5 text-teal-400" />
-              Parceiros Ativos ({sponsors.length})
-            </h2>
-            <span className="text-xs text-zinc-500">Aparecem na aba de materiais do aluno</span>
-          </div>
-
-          {sponsors.length === 0 && !loading ? (
-            <Card className="border-dashed border-zinc-800 p-8 text-center bg-zinc-900/20">
-              <Building2 className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-              <p className="font-semibold text-zinc-300">Nenhum parceiro cadastrado ainda</p>
-              <p className="text-xs text-zinc-500 mt-1">
-                Adicione o primeiro restaurante fit ou loja parceira para valorizar ainda mais o seu desafio.
-              </p>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {sponsors.map((sp) => (
-                <Card
-                  key={sp.id}
-                  className="border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-all flex flex-col justify-between"
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <Badge className="bg-teal-500/10 text-teal-300 border-teal-500/20 capitalize font-bold">
-                        {sp.category === 'nutrition' ? 'Alimentação' : sp.category === 'supplements' ? 'Suplementação' : sp.category}
-                      </Badge>
-                      <button
-                        onClick={() => handleDeleteSponsor(sp.id)}
-                        className="text-zinc-600 hover:text-red-400 transition-colors p-1"
-                        title="Excluir parceiro"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-
-                    <CardTitle className="text-base font-black text-white">
-                      {sp.name}
-                    </CardTitle>
-
-                    <CardDescription className="text-xs text-zinc-300 mt-1">
-                      {sp.discount_description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="pt-0 border-t border-zinc-850 py-3 flex items-center justify-between">
-                    {sp.discount_code ? (
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-950 border border-teal-500/30 text-teal-400 text-xs font-mono font-bold">
-                        <Tag className="h-3 w-3" />
-                        {sp.discount_code}
-                      </div>
-                    ) : (
-                      <span className="text-xs text-zinc-500">Sem código</span>
-                    )}
-
-                    {sp.whatsapp_or_link && (
-                      <a
-                        href={sp.whatsapp_or_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-teal-400 hover:underline flex items-center gap-1 font-bold"
-                      >
-                        Ver Link <ExternalLink className="h-3 w-3" />
-                      </a>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

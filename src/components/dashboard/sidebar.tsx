@@ -14,7 +14,8 @@ import {
   BookOpen,
   Gift,
   Users,
-  Building2
+  Building2,
+  Bell
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -53,6 +54,12 @@ export function DashboardSidebar() {
       href: '/dashboard/materials',
       icon: BookOpen,
       active: pathname === '/dashboard/materials',
+    },
+    {
+      name: 'Mural de Avisos',
+      href: '/dashboard/announcements',
+      icon: Bell,
+      active: pathname === '/dashboard/announcements',
     },
     {
       name: 'Mystery Box (Prêmios)',

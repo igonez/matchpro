@@ -46,6 +46,8 @@ export default function StudentSocialFeedPage() {
           id,
           photo_url,
           caption,
+          location_name,
+          client_captured_at,
           submitted_at,
           student_id,
           students (
@@ -238,10 +240,17 @@ export default function StudentSocialFeedPage() {
                       <p className="font-extrabold text-xs text-white">
                         {post.students?.full_name || 'Atleta'}
                       </p>
-                      <p className="text-[10px] text-zinc-400 flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {new Date(post.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
+                      <div className="flex items-center gap-2 text-[10px] text-zinc-400">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3 text-emerald-400" />
+                          {new Date(post.client_captured_at || post.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        {post.location_name && (
+                          <span className="text-zinc-500 flex items-center gap-0.5 truncate max-w-[130px]">
+                            • {post.location_name}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 

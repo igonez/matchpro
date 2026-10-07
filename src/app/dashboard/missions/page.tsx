@@ -3,21 +3,22 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { 
-  Calendar, 
   Plus, 
   Trash2, 
-  Layers, 
-  Award, 
-  Sparkles, 
+  Edit3,
   Dumbbell, 
   Flame, 
   Utensils, 
-  Droplet, 
-  Gift, 
+  Sparkles, 
+  Lock, 
+  Clock, 
+  CheckCircle2, 
+  X, 
+  Calendar, 
+  Layers, 
+  HelpCircle,
   Copy,
-  ChevronRight,
-  Clock,
-  ArrowRight
+  AlertCircle
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 
-function PlannerContent() {
+function MissionsManagerContent() {
   const searchParams = useSearchParams();
   const challengeIdParam = searchParams.get('challengeId');
   const supabase = createClient();
@@ -37,17 +38,22 @@ function PlannerContent() {
   const [missions, setMissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Estados de Nova Semana
-  const [newWeekTitle, setNewWeekTitle] = useState('');
-  const [newWeekBonus, setNewWeekBonus] = useState('50');
-  const [creatingWeek, setCreatingWeek] = useState(false);
+  // Active Category Tab: treinos | cardios | refeicoes | bonus
+  const [activeTab, setActiveTab] = useState<'treinos' | 'cardios' | 'refeicoes' | 'bonus'>('treinos');
 
-  // Estados de Nova Missão na Semana
-  const [missionTitle, setMissionTitle] = useState('');
-  const [category, setCategory] = useState<'treino' | 'cardio' | 'refeicao' | 'habito' | 'outro'>('treino');
-  const [points, setPoints] = useState('10');
-  const [frequency, setFrequency] = useState('1');
-  const [creatingMission, setCreatingMission] = useState(false);
+  // Modal para Criar / Editar Missão
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMission, setEditingMission] = useState<any | null>(null);
+  const [formTitle, setFormTitle] = useState('');
+  const [formCategory, setFormCategory] = useState<'treino' | 'cardio' | 'refeicao' | 'habito' | 'outro'>('treino');
+  const [formPoints, setFormPoints] = useState('10');
+  const [formRequiresCooldown, setFormRequiresCooldown] = useState(false);
+  const [formCooldownHours, setFormCooldownHours] = useState('4');
+  const [formIsBonus, setFormIsBonus] = useState(false);
+  const [submittingMission, setSubmittingMission] = useState(false);
+
+  // Estado para geração de 4 semanas
+  const [generatingTemplate, setGeneratingTemplate] = useState(false);
 
   // 1. Carregar lista de desafios
   useEffect(() => {
@@ -98,7 +104,8 @@ function PlannerContent() {
       .from('missions')
       .select('*')
       .eq('week_id', weekId)
-      .order('points_rewarded', { ascending: false });
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true });
 
     setMissions(data || []);
   };
@@ -109,151 +116,217 @@ function PlannerContent() {
     }
   }, [selectedWeekId]);
 
-  // Criar Nova Semana
-  const handleCreateWeek = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedChallengeId) return;
-
-    setCreatingWeek(true);
-    const nextWeekNumber = weeks.length + 1;
-
-    try {
-      const { data, error } = await supabase
-        .from('challenge_weeks')
-        .insert({
-          challenge_id: selectedChallengeId,
-          week_number: nextWeekNumber,
-          title: newWeekTitle || `Semana ${nextWeekNumber}`,
-          bonus_points: parseInt(newWeekBonus, 10) || 0,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setWeeks((prev) => [...prev, data]);
-      setSelectedWeekId(data.id);
-      setNewWeekTitle('');
-    } catch (err: any) {
-      alert('Erro ao criar semana: ' + err.message);
-    } finally {
-      setCreatingWeek(false);
-    }
+  // Abrir Modal para Criar Missão
+  const handleOpenCreateModal = (catDefault: 'treino' | 'cardio' | 'refeicao' | 'habito') => {
+    setEditingMission(null);
+    setFormTitle('');
+    setFormCategory(catDefault);
+    setFormPoints('10');
+    setFormRequiresCooldown(catDefault === 'treino' || catDefault === 'cardio');
+    setFormCooldownHours('4');
+    setFormIsBonus(activeTab === 'bonus');
+    setIsModalOpen(true);
   };
 
-  // Gerar automaticamente as 4 Semanas de um desafio de 30 dias
-  const handleAutoGenerate4Weeks = async () => {
-    if (!selectedChallengeId) return;
-    setCreatingWeek(true);
+  // Abrir Modal para Editar Missão
+  const handleOpenEditModal = (mission: any) => {
+    setEditingMission(mission);
+    setFormTitle(mission.title);
+    setFormCategory(mission.category || 'treino');
+    setFormPoints(mission.points_rewarded?.toString() || '10');
+    setFormRequiresCooldown(mission.requires_cooldown ?? false);
+    setFormCooldownHours(mission.cooldown_hours?.toString() || '4');
+    setFormIsBonus(mission.is_bonus ?? false);
+    setIsModalOpen(true);
+  };
 
+  // Salvar (Insert ou Update)
+  const handleSaveMission = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedChallengeId || !selectedWeekId || !formTitle.trim()) return;
+
+    setSubmittingMission(true);
     try {
-      const weeksToInsert = [
-        { challenge_id: selectedChallengeId, week_number: 1, title: 'Semana 1: Adaptação & Hábitos', bonus_points: 50 },
-        { challenge_id: selectedChallengeId, week_number: 2, title: 'Semana 2: Intensidade Máxima', bonus_points: 50 },
-        { challenge_id: selectedChallengeId, week_number: 3, title: 'Semana 3: Foco & Disciplina', bonus_points: 75 },
-        { challenge_id: selectedChallengeId, week_number: 4, title: 'Semana 4: Sprint Final', bonus_points: 100 },
-      ];
+      const payload: any = {
+        challenge_id: selectedChallengeId,
+        week_id: selectedWeekId,
+        title: formTitle.trim(),
+        category: formCategory,
+        points_rewarded: parseInt(formPoints, 10) || 10,
+        requires_cooldown: formRequiresCooldown,
+        cooldown_hours: parseInt(formCooldownHours, 10) || 4,
+        is_bonus: formIsBonus,
+      };
 
-      const { data, error } = await supabase
-        .from('challenge_weeks')
-        .insert(weeksToInsert)
-        .select();
+      if (editingMission) {
+        // Atualizar
+        const { error } = await supabase
+          .from('missions')
+          .update(payload)
+          .eq('id', editingMission.id);
 
-      if (error) throw error;
+        if (error) throw error;
+        setMissions((prev) => prev.map((m) => (m.id === editingMission.id ? { ...m, ...payload } : m)));
+      } else {
+        // Inserir
+        payload.order_index = missions.length + 1;
+        const { data, error } = await supabase
+          .from('missions')
+          .insert(payload)
+          .select()
+          .single();
 
-      setWeeks(data || []);
-      if (data && data.length > 0) {
-        setSelectedWeekId(data[0].id);
+        if (error) throw error;
+        setMissions((prev) => [...prev, data]);
       }
+
+      setIsModalOpen(false);
     } catch (err: any) {
-      alert('Erro ao gerar semanas: ' + err.message);
+      alert('Erro ao salvar missão: ' + err.message);
     } finally {
-      setCreatingWeek(false);
+      setSubmittingMission(false);
     }
   };
 
-  // Criar Missão dentro da Semana Selecionada
-  const handleCreateMission = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedChallengeId || !selectedWeekId) return;
+  // Excluir Missão com Confirmação
+  const handleDeleteMission = async (id: string, title: string) => {
+    if (!confirm(`Deseja excluir a missão "${title}"? Esta ação removerá a pontuação relacionada.`)) return;
 
-    setCreatingMission(true);
     try {
-      const { data, error } = await supabase
-        .from('missions')
-        .insert({
-          challenge_id: selectedChallengeId,
-          week_id: selectedWeekId,
-          title: missionTitle,
-          category,
-          points_rewarded: parseInt(points, 10) || 10,
-          target_frequency: parseInt(frequency, 10) || 1,
-        })
-        .select()
-        .single();
-
+      const { error } = await supabase.from('missions').delete().eq('id', id);
       if (error) throw error;
-
-      setMissions((prev) => [data, ...prev]);
-      setMissionTitle('');
+      setMissions((prev) => prev.filter((m) => m.id !== id));
     } catch (err: any) {
-      alert('Erro ao cadastrar missão: ' + err.message);
-    } finally {
-      setCreatingMission(false);
+      alert('Erro ao excluir missão: ' + err.message);
     }
   };
 
-  // Ícones e cores por categoria
-  const getCategoryBadge = (cat: string) => {
-    switch (cat) {
-      case 'treino':
-        return (
-          <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 flex items-center gap-1">
-            <Dumbbell className="h-3 w-3" /> Treino
-          </Badge>
-        );
-      case 'cardio':
-        return (
-          <Badge className="bg-orange-500/15 text-orange-300 border-orange-500/30 flex items-center gap-1">
-            <Flame className="h-3 w-3" /> Cardio
-          </Badge>
-        );
-      case 'refeicao':
-        return (
-          <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30 flex items-center gap-1">
-            <Utensils className="h-3 w-3" /> Refeição
-          </Badge>
-        );
-      case 'habito':
-        return (
-          <Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30 flex items-center gap-1">
-            <Droplet className="h-3 w-3" /> Hábito/Água
-          </Badge>
-        );
-      default:
-        return <Badge variant="outline">Outro</Badge>;
+  // Gerador Inteligente de 4 Semanas (6 Treinos, 7 Cardios, 4 Refeições Diárias)
+  const handleGenerateSmartTemplate = async () => {
+    if (!selectedChallengeId) return;
+    const confirmGen = confirm(
+      'Deseja gerar a estrutura completa de 4 Semanas?\n\n' +
+      '• 4 Semanas de desafio com bônus de 100% (+20 XP ao fechar a semana)\n' +
+      '• 6 Treinos da semana por sprint\n' +
+      '• 7 Cardios da semana por sprint\n' +
+      '• 4 Refeições diárias (Café, Almoço, Lanche, Jantar)\n' +
+      '• Bloqueio sequencial e anti-abuso configurados.'
+    );
+    if (!confirmGen) return;
+
+    setGeneratingTemplate(true);
+    try {
+      // 1. Criar as 4 semanas
+      for (let i = 1; i <= 4; i++) {
+        const { data: weekData, error: weekErr } = await supabase
+          .from('challenge_weeks')
+          .insert({
+            challenge_id: selectedChallengeId,
+            week_number: i,
+            title: `Semana ${i} • Sprint ${i}`,
+            bonus_points: 20, // +20 XP de Bônus de 100%
+          })
+          .select()
+          .single();
+
+        if (weekErr) throw weekErr;
+
+        // 2. Gerar as missões segmentadas para cada semana
+        const templateMissions: any[] = [];
+
+        // 6 Treinos da semana
+        for (let t = 1; t <= 6; t++) {
+          templateMissions.push({
+            challenge_id: selectedChallengeId,
+            week_id: weekData.id,
+            title: `Treino #${t} da Semana`,
+            category: 'treino',
+            points_rewarded: 15,
+            requires_cooldown: true,
+            cooldown_hours: 4,
+            order_index: t,
+            is_bonus: false,
+          });
+        }
+
+        // 7 Cardios da semana
+        for (let c = 1; c <= 7; c++) {
+          templateMissions.push({
+            challenge_id: selectedChallengeId,
+            week_id: weekData.id,
+            title: `Cardio #${c} (Mín. 30min)`,
+            category: 'cardio',
+            points_rewarded: 10,
+            requires_cooldown: true,
+            cooldown_hours: 4,
+            order_index: c,
+            is_bonus: false,
+          });
+        }
+
+        // 4 Refeições diárias
+        const mealNames = ['Café da Manhã Limpo', 'Almoço Balanceado', 'Lanche da Tarde', 'Jantar & Ceia'];
+        mealNames.forEach((meal, idx) => {
+          templateMissions.push({
+            challenge_id: selectedChallengeId,
+            week_id: weekData.id,
+            title: meal,
+            category: 'refeicao',
+            points_rewarded: 10,
+            requires_cooldown: false,
+            order_index: idx + 1,
+            is_bonus: false,
+          });
+        });
+
+        // 1 Missão Bônus por semana
+        templateMissions.push({
+          challenge_id: selectedChallengeId,
+          week_id: weekData.id,
+          title: `Desafio Bônus: 3L Água + Alongamento`,
+          category: 'habito',
+          points_rewarded: 25,
+          requires_cooldown: false,
+          order_index: 99,
+          is_bonus: true,
+        });
+
+        const { error: missErr } = await supabase.from('missions').insert(templateMissions);
+        if (missErr) throw missErr;
+      }
+
+      alert('Estrutura de 4 semanas gerada com sucesso com todos os parâmetros configurados!');
+      fetchWeeks(selectedChallengeId);
+    } catch (err: any) {
+      alert('Erro ao gerar template inteligente: ' + err.message);
+    } finally {
+      setGeneratingTemplate(false);
     }
   };
+
+  // Filtrar missões pela aba ativa
+  const treinosList = missions.filter((m) => m.category === 'treino' && !m.is_bonus);
+  const cardiosList = missions.filter((m) => m.category === 'cardio' && !m.is_bonus);
+  const refeicoestList = missions.filter((m) => m.category === 'refeicao' && !m.is_bonus);
+  const bonusList = missions.filter((m) => m.is_bonus || m.category === 'habito' || m.category === 'outro');
 
   const selectedWeek = weeks.find((w) => w.id === selectedWeekId);
 
   return (
     <div className="space-y-6">
-      {/* Top Header */}
+      {/* Header com Seletor de Desafio e Botão de Gerar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight">
-            Planejador Semanal de Desafio
+          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+            Gestão Estruturada de Missões
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Organize o desafio em sprints semanais (Treinos, Cardios, Refeições) com bônus de consistência.
+            Segmentação por listas individuais: Treinos, Cardios, Refeições e Bônus com travas configuráveis.
           </p>
         </div>
 
-        {/* Seletor de Desafio */}
-        {challenges.length > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-zinc-400">Desafio:</span>
+        <div className="flex items-center gap-3 flex-wrap">
+          {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
@@ -265,237 +338,363 @@ function PlannerContent() {
                 </option>
               ))}
             </select>
-          </div>
-        )}
+          )}
+
+          <Button
+            size="sm"
+            onClick={handleGenerateSmartTemplate}
+            disabled={generatingTemplate || !selectedChallengeId}
+            className="rounded-xl h-10 px-4 text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-500 text-black shadow-lg shadow-emerald-500/20"
+          >
+            <Sparkles className="h-4 w-4 mr-1.5" />
+            {generatingTemplate ? 'Gerando...' : 'Gerar 4 Semanas Completas'}
+          </Button>
+        </div>
       </div>
 
-      {/* Abas das Semanas (Weeks Carousel / Tabs) */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      {/* Carrossel de Semanas */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-zinc-900">
         {weeks.map((week) => {
           const isSelected = week.id === selectedWeekId;
           return (
             <button
               key={week.id}
               onClick={() => setSelectedWeekId(week.id)}
-              className={`flex items-center gap-2.5 px-4 py-2.5 rounded-2xl border text-xs font-extrabold whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-extrabold whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-lg shadow-emerald-950/30'
-                  : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                  ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-md shadow-emerald-950/40'
+                  : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
               }`}
             >
               <Calendar className="h-4 w-4 text-emerald-400" />
               <span>{week.title}</span>
-              {week.bonus_points > 0 && (
-                <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.5 rounded-md font-bold">
-                  +{week.bonus_points} bônus
-                </span>
-              )}
+              <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.5 rounded font-bold">
+                +20 XP 100%
+              </span>
             </button>
           );
         })}
 
-        {/* Botão de Adicionar Semana ou Gerar 4 Semanas */}
-        {weeks.length === 0 ? (
-          <Button
-            size="sm"
-            onClick={handleAutoGenerate4Weeks}
-            disabled={creatingWeek}
-            className="rounded-2xl h-10 px-4 text-xs font-extrabold shadow-lg shadow-emerald-500/20"
-          >
-            <Sparkles className="h-4 w-4 mr-1.5" />
-            Gerar Estrutura de 4 Semanas (30 Dias)
-          </Button>
-        ) : (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const num = weeks.length + 1;
-              setNewWeekTitle(`Semana ${num}`);
-              const fakeEvent = { preventDefault: () => {} } as any;
-              handleCreateWeek(fakeEvent);
-            }}
-            disabled={creatingWeek}
-            className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed"
-          >
-            <Plus className="h-4 w-4 mr-1" /> Nova Semana
-          </Button>
-        )}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={async () => {
+            if (!selectedChallengeId) return;
+            const nextNum = weeks.length + 1;
+            const { data } = await supabase
+              .from('challenge_weeks')
+              .insert({
+                challenge_id: selectedChallengeId,
+                week_number: nextNum,
+                title: `Semana ${nextNum}`,
+                bonus_points: 20,
+              })
+              .select()
+              .single();
+            if (data) setWeeks([...weeks, data]);
+          }}
+          className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed"
+        >
+          <Plus className="h-4 w-4 mr-1" /> Nova Semana
+        </Button>
       </div>
 
-      {/* Conteúdo da Semana Ativa */}
-      {selectedWeek && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Formulário: Adicionar Missão na Semana */}
-          <Card className="border-zinc-800 bg-zinc-900/40 h-fit">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Plus className="h-4 w-4 text-emerald-400" />
-                Nova Missão na {selectedWeek.title}
+      {/* Segmentação em 4 Listas Claras (Abas) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button
+          onClick={() => setActiveTab('treinos')}
+          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
+            activeTab === 'treinos'
+              ? 'border-emerald-500 bg-emerald-500/10 text-white font-black'
+              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 text-xs">
+            <div className="h-7 w-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <Dumbbell className="h-4 w-4" />
+            </div>
+            <span>Lista 1: Treinos</span>
+          </div>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{treinosList.length}</Badge>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('cardios')}
+          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
+            activeTab === 'cardios'
+              ? 'border-orange-500 bg-orange-500/10 text-white font-black'
+              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 text-xs">
+            <div className="h-7 w-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center">
+              <Flame className="h-4 w-4" />
+            </div>
+            <span>Lista 2: Cardios</span>
+          </div>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{cardiosList.length}</Badge>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('refeicoes')}
+          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
+            activeTab === 'refeicoes'
+              ? 'border-amber-500 bg-amber-500/10 text-white font-black'
+              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 text-xs">
+            <div className="h-7 w-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+              <Utensils className="h-4 w-4" />
+            </div>
+            <span>Lista 3: Refeições</span>
+          </div>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{refeicoestList.length}</Badge>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('bonus')}
+          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
+            activeTab === 'bonus'
+              ? 'border-teal-500 bg-teal-500/10 text-white font-black'
+              : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 text-xs">
+            <div className="h-7 w-7 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <span>Lista 4: Extras / Bônus</span>
+          </div>
+          <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{bonusList.length}</Badge>
+        </button>
+      </div>
+
+      {/* Conteúdo da Lista Selecionada */}
+      <Card className="border-zinc-800 bg-zinc-900/40">
+        <CardHeader className="pb-3 flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-base text-white flex items-center gap-2">
+              {activeTab === 'treinos' && '🏋️‍♂️ Treinos da Semana'}
+              {activeTab === 'cardios' && '🏃‍♂️ Cardios da Semana'}
+              {activeTab === 'refeicoes' && '🥗 Refeições Diárias'}
+              {activeTab === 'bonus' && '⭐ Missões Extras & Hábitos Bônus'}
+            </CardTitle>
+            <CardDescription className="text-xs">
+              {activeTab === 'treinos' && 'Configuração de treinos com trava de no máximo 2/dia e contagem regressiva.'}
+              {activeTab === 'cardios' && 'Sessões aeróbicas com bloqueio temporal e fotos de esteira/relógio.'}
+              {activeTab === 'refeicoes' && 'Validação por fotos no prato (Café, Almoço, Lanche, Jantar).'}
+              {activeTab === 'bonus' && 'Pontuação complementar para quem quer se destacar no leaderboard.'}
+            </CardDescription>
+          </div>
+
+          <Button
+            size="sm"
+            onClick={() => handleOpenCreateModal(
+              activeTab === 'treinos' ? 'treino' : activeTab === 'cardios' ? 'cardio' : activeTab === 'refeicoes' ? 'refeicao' : 'habito'
+            )}
+            className="rounded-xl text-xs font-bold"
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Adicionar {activeTab === 'treinos' ? 'Treino' : activeTab === 'cardios' ? 'Cardio' : activeTab === 'refeicoes' ? 'Refeição' : 'Bônus'}
+          </Button>
+        </CardHeader>
+
+        <CardContent>
+          {(() => {
+            const currentList = 
+              activeTab === 'treinos' ? treinosList : 
+              activeTab === 'cardios' ? cardiosList : 
+              activeTab === 'refeicoes' ? refeicoestList : bonusList;
+
+            if (currentList.length === 0) {
+              return (
+                <div className="py-12 text-center text-zinc-500 text-xs">
+                  <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-40" />
+                  Nenhuma missão cadastrada nesta lista ainda. Clique no botão acima ou gere o template de 4 semanas.
+                </div>
+              );
+            }
+
+            return (
+              <div className="divide-y divide-zinc-800/80">
+                {currentList.map((m, index) => (
+                  <div key={m.id} className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-xl bg-zinc-800/80 border border-zinc-700 text-zinc-300 font-black text-xs flex items-center justify-center shrink-0">
+                        #{index + 1}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold text-sm text-white">{m.title}</p>
+                          {m.is_bonus && (
+                            <Badge className="bg-teal-500/20 text-teal-400 border-teal-500/40 text-[9px]">
+                              Bônus Extra
+                            </Badge>
+                          )}
+                          {m.requires_cooldown && (
+                            <Badge variant="outline" className="border-orange-500/30 text-orange-400 text-[9px] flex items-center gap-1">
+                              <Clock className="h-2.5 w-2.5" /> {m.cooldown_hours || 4}h Timer
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-zinc-400 mt-0.5">
+                          Vale <strong className="text-emerald-400 font-bold">+{m.points_rewarded} XP</strong> • Câmera obrigatória
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleOpenEditModal(m)}
+                        className="h-8 px-2.5 text-xs text-zinc-400 hover:text-white"
+                      >
+                        <Edit3 className="h-3.5 w-3.5 mr-1" /> Editar
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteMission(m.id, m.title)}
+                        className="h-8 w-8 text-zinc-500 hover:text-rose-400"
+                        title="Excluir Missão"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+        </CardContent>
+      </Card>
+
+      {/* Modal Customizável de Edição / Criação */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-md w-full border-zinc-800 bg-zinc-950 p-6 shadow-2xl relative">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <CardHeader className="p-0 pb-4">
+              <CardTitle className="text-lg font-black text-white">
+                {editingMission ? 'Editar Missão' : 'Nova Missão Customizada'}
               </CardTitle>
               <CardDescription className="text-xs">
-                Configure as metas específicas desta fase do desafio.
+                Ajuste os parâmetros de pontuação, categoria e bloqueio da missão.
               </CardDescription>
             </CardHeader>
 
-            <CardContent>
-              <form onSubmit={handleCreateMission} className="space-y-4">
+            <form onSubmit={handleSaveMission} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-zinc-300 block mb-1">Título da Missão</label>
+                <Input
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  placeholder="Ex: Treino de Pernas & Glúteos"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300 block mb-1">
-                    Categoria da Missão
-                  </label>
+                  <label className="text-xs font-semibold text-zinc-300 block mb-1">Categoria</label>
                   <select
-                    value={category}
-                    onChange={(e: any) => setCategory(e.target.value)}
-                    className="w-full h-10 rounded-xl border border-zinc-800 bg-zinc-950 px-3 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+                    value={formCategory}
+                    onChange={(e: any) => setFormCategory(e.target.value)}
+                    className="w-full h-9 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs px-3 focus:outline-none focus:border-emerald-500"
                   >
-                    <option value="treino">🏋️ Treino de Força / Musculação</option>
-                    <option value="cardio">🏃 Cardio / Corrida / Bike</option>
-                    <option value="refeicao">🥗 Refeição Limpa (Almoço, Jantar, etc.)</option>
-                    <option value="habito">💧 Hábito Diário (Água, Sono, Suplemento)</option>
-                    <option value="outro">⭐ Outro Desafio Específico</option>
+                    <option value="treino">Treino</option>
+                    <option value="cardio">Cardio</option>
+                    <option value="refeicao">Refeição</option>
+                    <option value="habito">Hábito / Água</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300 block mb-1">
-                    Título da Missão
-                  </label>
+                  <label className="text-xs font-semibold text-zinc-300 block mb-1">Pontos (XP)</label>
                   <Input
-                    type="text"
-                    placeholder="Ex: Treino 1 (Superiores + Abdômen)"
-                    value={missionTitle}
-                    onChange={(e) => setMissionTitle(e.target.value)}
+                    type="number"
+                    min={1}
+                    value={formPoints}
+                    onChange={(e) => setFormPoints(e.target.value)}
                     required
                   />
                 </div>
+              </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-semibold text-zinc-300 block mb-1">
-                      Pontos por Foto
-                    </label>
+              {/* Opção de Contagem Regressiva e Travas */}
+              <div className="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2.5">
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
+                  <input
+                    type="checkbox"
+                    checked={formRequiresCooldown}
+                    onChange={(e) => setFormRequiresCooldown(e.target.checked)}
+                    className="rounded bg-zinc-950 border-zinc-700 text-emerald-500 focus:ring-emerald-500"
+                  />
+                  <span>Ativar Contagem Regressiva para a próxima missão</span>
+                </label>
+
+                {formRequiresCooldown && (
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="text-[11px] text-zinc-400">Tempo de bloqueio (Horas):</span>
                     <Input
                       type="number"
-                      min="1"
-                      value={points}
-                      onChange={(e) => setPoints(e.target.value)}
-                      required
+                      min={1}
+                      max={24}
+                      value={formCooldownHours}
+                      onChange={(e) => setFormCooldownHours(e.target.value)}
+                      className="w-20 h-8 text-xs"
                     />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-zinc-300 block mb-1">
-                      Meta na Semana
-                    </label>
-                    <Input
-                      type="number"
-                      min="1"
-                      placeholder="Qtd vezes"
-                      value={frequency}
-                      onChange={(e) => setFrequency(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Banner de Bônus da Semana */}
-                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs">
-                  <div className="flex items-center gap-2 font-bold text-emerald-400 mb-0.5">
-                    <Gift className="h-4 w-4" /> Bônus de Fechamento da Semana
-                  </div>
-                  <p className="text-[11px] text-zinc-300">
-                    Ao cumprir todas as missões desta semana, o aluno recebe automaticamente{' '}
-                    <strong className="text-emerald-300">+{selectedWeek.bonus_points} pontos</strong> de bônus!
-                  </p>
-                </div>
-
-                <Button type="submit" className="w-full" disabled={creatingMission}>
-                  {creatingMission ? 'Adicionando...' : 'Adicionar à Semana'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* Lista de Missões da Semana */}
-          <div className="lg:col-span-2 space-y-4">
-            <Card className="border-zinc-800 bg-zinc-900/40">
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    Metas Planejadas: {selectedWeek.title}
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    {missions.length} tarefas cadastradas para esta fase.
-                  </CardDescription>
-                </div>
-
-                <Badge variant="outline" className="border-emerald-500/40 text-emerald-400 font-extrabold text-xs">
-                  Bônus: +{selectedWeek.bonus_points} pts
-                </Badge>
-              </CardHeader>
-
-              <CardContent>
-                {missions.length === 0 ? (
-                  <div className="text-center py-12 text-zinc-500 text-xs">
-                    <Layers className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    Nenhuma missão cadastrada nesta semana ainda. Adicione ao lado treinos, cardios ou refeições!
-                  </div>
-                ) : (
-                  <div className="divide-y divide-zinc-800/80">
-                    {missions.map((mission) => (
-                      <div
-                        key={mission.id}
-                        className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-700 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
-                            +{mission.points_rewarded}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2 mb-0.5">
-                              <p className="font-bold text-sm text-zinc-100">{mission.title}</p>
-                              {getCategoryBadge(mission.category)}
-                            </div>
-                            <p className="text-[11px] text-zinc-500">
-                              Meta: {mission.target_frequency || 1}x nesta semana • Comprovação por foto
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-[10px] text-zinc-400">
-                            {mission.points_rewarded} pts
-                          </Badge>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={async () => {
-                              await supabase.from('missions').delete().eq('id', mission.id);
-                              setMissions((prev) => prev.filter((m) => m.id !== mission.id));
-                            }}
-                            className="h-8 w-8 text-zinc-500 hover:text-rose-400"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1">
+                  <input
+                    type="checkbox"
+                    checked={formIsBonus}
+                    onChange={(e) => setFormIsBonus(e.target.checked)}
+                    className="rounded bg-zinc-950 border-zinc-700 text-teal-500 focus:ring-teal-500"
+                  />
+                  <span>Marcar como Missão Extra / Bônus</span>
+                </label>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 text-xs"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={submittingMission}
+                  className="flex-1 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black"
+                >
+                  {submittingMission ? 'Salvando...' : 'Salvar Missão'}
+                </Button>
+              </div>
+            </form>
+          </Card>
         </div>
       )}
     </div>
   );
 }
 
-export default function PlannerPage() {
+export default function MissionsManagerPage() {
   return (
-    <Suspense fallback={<div className="text-zinc-400 p-8">Carregando planejador...</div>}>
-      <PlannerContent />
+    <Suspense fallback={<div className="p-8 text-zinc-500 text-xs">Carregando planejador de missões...</div>}>
+      <MissionsManagerContent />
     </Suspense>
   );
 }

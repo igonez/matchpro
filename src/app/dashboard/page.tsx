@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import { Input } from '@/components/ui/input';
 
 export default function DashboardOverviewPage() {
   const supabase = createClient();
@@ -18,6 +20,21 @@ export default function DashboardOverviewPage() {
   });
   const [challenges, setChallenges] = useState<any[]>([]);
   const [atRiskStudents, setAtRiskStudents] = useState<any[]>([]);
+
+  // Modal Customizado de Publicar Aviso (Substitui o prompt() nativo)
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+  const [noticeTitle, setNoticeTitle] = useState('');
+  const [noticeContent, setNoticeContent] = useState('');
+  const [noticeIsPinned, setNoticeIsPinned] = useState(true);
+  const [submittingNotice, setSubmittingNotice] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3000);
+  };
 
   useEffect(() => {
     async function fetchDashboardData() {
@@ -77,10 +94,52 @@ export default function DashboardOverviewPage() {
     fetchDashboardData();
   }, [supabase]);
 
+  const handlePublishAnnouncement = async () => {
+    if (challenges.length === 0) {
+      showToast('Crie um desafio antes de publicar avisos.');
+      return;
+    }
+    if (!noticeTitle.trim() || !noticeContent.trim()) {
+      showToast('Preencha o título e o conteúdo do comunicado.');
+      return;
+    }
+
+    setSubmittingNotice(true);
+    try {
+      const { error } = await supabase.from('challenge_announcements').insert({
+        challenge_id: challenges[0].id,
+        title: noticeTitle.trim(),
+        content: noticeContent.trim(),
+        is_pinned: noticeIsPinned,
+      });
+
+      if (error) throw error;
+
+      setIsNoticeModalOpen(false);
+      setNoticeTitle('');
+      setNoticeContent('');
+      showToast('Aviso publicado no Mural dos Alunos com sucesso! 📢');
+    } catch (err: any) {
+      showToast('Erro ao publicar aviso: ' + err.message);
+    } finally {
+      setSubmittingNotice(false);
+    }
+  };
+
   return (
     <div className="space-y-8 relative">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
+
+      {/* Toast Flutuante Customizado */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
 
       {/* Top Banner Monocromático */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
@@ -103,36 +162,17 @@ export default function DashboardOverviewPage() {
               Auditar Fotos ({stats.pendingSubmissions})
             </button>
           </Link>
+
+          {/* Botão que abre o modal customizado (Zero prompt nativo) */}
           <button
-            onClick={async () => {
-              if (challenges.length === 0) {
-                alert('Crie um desafio antes de publicar avisos!');
-                return;
-              }
-              const title = prompt('Título do Aviso para a Turma:');
-              if (!title) return;
-              const content = prompt('Mensagem / Comunicado:');
-              if (!content) return;
-
-              const { error } = await supabase.from('challenge_announcements').insert({
-                challenge_id: challenges[0].id,
-                title,
-                content,
-                is_pinned: true,
-              });
-
-              if (error) {
-                alert('Erro ao publicar aviso: ' + error.message);
-              } else {
-                alert('Aviso publicado no Mural dos Alunos com sucesso! 📢');
-              }
-            }}
-            className="mono-button-secondary px-4 py-2 text-xs"
+            onClick={() => setIsNoticeModalOpen(true)}
+            className="mono-button-secondary px-4 py-2 text-xs font-mono"
           >
-            Publicar Aviso
+            📢 Publicar Aviso
           </button>
+
           <Link href="/dashboard/challenges/new">
-            <button className="mono-button-secondary px-4 py-2 text-xs">
+            <button className="mono-button-secondary px-4 py-2 text-xs font-mono">
               + Novo Desafio
             </button>
           </Link>
@@ -262,7 +302,7 @@ export default function DashboardOverviewPage() {
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText(decodeURIComponent(message));
-                          alert(`Mensagem copiada para a área de transferência:\n\n${decodeURIComponent(message)}`);
+                          showToast('Mensagem de resgate copiada com sucesso!');
                         }}
                         className="mono-button-secondary w-full h-8 text-xs font-mono"
                       >
@@ -342,7 +382,7 @@ export default function DashboardOverviewPage() {
                       onClick={() => {
                         const link = `${window.location.origin}/join/${c.id}`;
                         navigator.clipboard.writeText(link);
-                        alert(`Link copiado:\n${link}`);
+                        showToast('Link do convite copiado!');
                       }}
                       className="mono-button-primary px-3 py-1.5 text-xs font-mono"
                     >
@@ -355,6 +395,57 @@ export default function DashboardOverviewPage() {
           </div>
         )}
       </div>
+
+      {/* MODAL CUSTOMIZADO DE PUBLICAR AVISO (Substituição definitiva do prompt nativo) */}
+      <CustomDialog
+        isOpen={isNoticeModalOpen}
+        onClose={() => setIsNoticeModalOpen(false)}
+        title="Publicar Comunicado no Mural"
+        description="Esta mensagem será exibida com destaque imediato no aplicativo de todos os seus alunos."
+        confirmLabel="Publicar Aviso"
+        cancelLabel="Cancelar"
+        onConfirm={handlePublishAnnouncement}
+        isLoading={submittingNotice}
+      >
+        <div className="space-y-3.5">
+          <div>
+            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+              Título do Aviso
+            </label>
+            <Input
+              placeholder="Ex: Treino Extra de Sábado às 08h"
+              value={noticeTitle}
+              onChange={(e) => setNoticeTitle(e.target.value)}
+              className="bg-black/80 border-white/15 text-white rounded-xl text-xs h-10 focus:border-white/40"
+            />
+          </div>
+
+          <div>
+            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+              Mensagem / Comunicado
+            </label>
+            <textarea
+              placeholder="Digite o comunicado oficial para a turma..."
+              value={noticeContent}
+              onChange={(e) => setNoticeContent(e.target.value)}
+              rows={4}
+              className="w-full bg-black/80 border border-white/15 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-white/40 font-sans"
+            />
+          </div>
+
+          <label className="flex items-center gap-2 cursor-pointer pt-1">
+            <input
+              type="checkbox"
+              checked={noticeIsPinned}
+              onChange={(e) => setNoticeIsPinned(e.target.checked)}
+              className="rounded bg-black border-white/20 text-white focus:ring-0"
+            />
+            <span className="text-xs font-mono text-zinc-400">
+              Fixar este aviso no topo do mural dos alunos
+            </span>
+          </label>
+        </div>
+      </CustomDialog>
     </div>
   );
 }

@@ -14,6 +14,10 @@ export interface Database {
           id: string
           full_name: string
           specialty: 'personal_trainer' | 'nutritionist' | 'holistic_coach' | 'gym_owner' | null
+          phone: string | null
+          bio: string | null
+          instagram: string | null
+          avatar_url: string | null
           stripe_account_id: string | null
           created_at: string
         }
@@ -21,6 +25,10 @@ export interface Database {
           id: string
           full_name: string
           specialty?: 'personal_trainer' | 'nutritionist' | 'holistic_coach' | 'gym_owner' | null
+          phone?: string | null
+          bio?: string | null
+          instagram?: string | null
+          avatar_url?: string | null
           stripe_account_id?: string | null
           created_at?: string
         }
@@ -28,6 +36,10 @@ export interface Database {
           id?: string
           full_name?: string
           specialty?: 'personal_trainer' | 'nutritionist' | 'holistic_coach' | 'gym_owner' | null
+          phone?: string | null
+          bio?: string | null
+          instagram?: string | null
+          avatar_url?: string | null
           stripe_account_id?: string | null
           created_at?: string
         }
@@ -66,16 +78,19 @@ export interface Database {
           id: string
           full_name: string
           avatar_url: string | null
+          phone: string | null
         }
         Insert: {
           id: string
           full_name: string
           avatar_url?: string | null
+          phone?: string | null
         }
         Update: {
           id?: string
           full_name?: string
           avatar_url?: string | null
+          phone?: string | null
         }
       }
       challenge_participants: {

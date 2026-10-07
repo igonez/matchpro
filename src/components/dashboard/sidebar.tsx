@@ -25,6 +25,7 @@ export function DashboardSidebar() {
     { name: 'Squads (Equipes)', href: '/dashboard/squads', active: pathname === '/dashboard/squads' },
     { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors' },
     { name: 'Criar Desafio', href: '/dashboard/challenges/new', active: pathname === '/dashboard/challenges/new' },
+    { name: 'Meu Perfil', href: '/dashboard/profile', active: pathname === '/dashboard/profile' },
   ];
 
   return (

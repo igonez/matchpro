@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [specialty, setSpecialty] = useState<'personal_trainer' | 'nutritionist' | 'holistic_coach' | 'gym_owner'>('personal_trainer');
   
   const [loading, setLoading] = useState(false);
@@ -66,6 +67,7 @@ export default function LoginPage() {
           options: {
             data: {
               full_name: fullName,
+              phone: phone,
               role: role,
             },
           },
@@ -78,12 +80,14 @@ export default function LoginPage() {
             await supabase.from('professionals').insert({
               id: authData.user.id,
               full_name: fullName || 'Profissional ArenaPro',
+              phone: phone || null,
               specialty: specialty,
             });
           } else {
             await supabase.from('students').insert({
               id: authData.user.id,
               full_name: fullName || 'Aluno ArenaPro',
+              phone: phone || null,
             });
           }
 
@@ -264,19 +268,35 @@ export default function LoginPage() {
           {/* Formulário */}
           <form onSubmit={handleEmailAuth} className="space-y-3.5">
             {mode === 'signup' && (
-              <div>
-                <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
-                  Nome Completo
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Ex: Lucas Ferreira"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
-                />
-              </div>
+              <>
+                <div>
+                  <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                    Nome Completo
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Ex: Lucas Ferreira"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                    Número de Telefone / WhatsApp *
+                  </label>
+                  <Input
+                    type="tel"
+                    placeholder="(11) 99999-9999"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                  />
+                </div>
+              </>
             )}
 
             {mode === 'signup' && role === 'professional' && (

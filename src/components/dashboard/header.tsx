@@ -16,7 +16,8 @@ import {
   ShoppingBag, 
   PlusCircle, 
   LogOut,
-  ExternalLink
+  ExternalLink,
+  User
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -41,6 +42,7 @@ export function DashboardHeader() {
     { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads' },
     { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', icon: ShoppingBag, active: pathname === '/dashboard/sponsors' },
     { name: 'Criar Desafio', href: '/dashboard/challenges/new', icon: PlusCircle, active: pathname === '/dashboard/challenges/new' },
+    { name: 'Meu Perfil', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
   ];
 
   return (

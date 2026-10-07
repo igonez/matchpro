@@ -50,20 +50,14 @@ export async function updateSession(request: NextRequest) {
 
   // Verificação de Role quando usuário está logado
   if (user) {
-    // Checar se é profissional
+    // Checar se é profissional usando maybeSingle para não lançar erro PGRST116
     const { data: professional } = await supabase
       .from('professionals')
       .select('id')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     const isProfessional = !!professional;
-
-    // Se profissional tentar acessar /app, redireciona para /dashboard
-    if (isProfessional && url.pathname.startsWith('/app')) {
-      url.pathname = '/dashboard';
-      return NextResponse.redirect(url);
-    }
 
     // Se aluno tentar acessar /dashboard, redireciona para /app
     if (!isProfessional && url.pathname.startsWith('/dashboard')) {

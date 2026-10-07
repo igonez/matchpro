@@ -24,6 +24,34 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  const handleOAuthSignIn = async (provider: 'google' | 'apple') => {
+    setLoading(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const redirectUrl = `${window.location.origin}/auth/callback?role=${role}`;
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || `Erro ao iniciar autenticação com ${provider}.`);
+      setLoading(false);
+    }
+  };
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -73,15 +101,37 @@ export default function LoginPage() {
         if (authError) throw authError;
 
         if (authData.user) {
+          // Checar se perfil existe para a permissão selecionada
           const { data: prof } = await supabase
             .from('professionals')
             .select('id')
             .eq('id', authData.user.id)
             .maybeSingle();
 
-          if (prof) {
+          const { data: student } = await supabase
+            .from('students')
+            .select('id')
+            .eq('id', authData.user.id)
+            .maybeSingle();
+
+          if (role === 'professional') {
+            if (!prof) {
+              // Se não existir perfil profissional, cria para o usuário acessar o dashboard
+              await supabase.from('professionals').insert({
+                id: authData.user.id,
+                full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
+                specialty: 'personal_trainer',
+              });
+            }
             router.push('/dashboard');
           } else {
+            if (!student) {
+              // Se não existir perfil de aluno, cria para o atleta acessar
+              await supabase.from('students').insert({
+                id: authData.user.id,
+                full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
+              });
+            }
             router.push('/app');
           }
         }
@@ -171,6 +221,41 @@ export default function LoginPage() {
               {successMessage}
             </div>
           )}
+
+          {/* Opções de Login Social OAuth */}
+          <div className="space-y-2.5 mb-5">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => handleOAuthSignIn('google')}
+              className="w-full h-11 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm"
+            >
+              <svg className="w-4 h-4 fill-current text-white" viewBox="0 0 24 24">
+                <path d="M12.24 10.285V13.4h6.887C18.2 16.14 15.645 18 12.24 18c-3.326 0-6.03-2.705-6.03-6.03s2.704-6.03 6.03-6.03c1.49 0 2.85.55 3.9 1.45l2.42-2.42C17.06 3.51 14.77 2.67 12.24 2.67 7.09 2.67 2.92 6.84 2.92 12s4.17 9.33 9.32 9.33c5.38 0 8.95-3.78 8.95-9.11 0-.64-.06-1.12-.17-1.6L12.24 10.285z" />
+              </svg>
+              <span>Continuar com Google</span>
+            </button>
+
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => handleOAuthSignIn('apple')}
+              className="w-full h-11 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm"
+            >
+              <svg className="w-4 h-4 fill-current text-white" viewBox="0 0 24 24">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.65 1.38-.56.64-1.05 1.71-.92 2.74 1.05.08 2.05-.53 2.65-1.25z" />
+              </svg>
+              <span>Continuar com Apple</span>
+            </button>
+          </div>
+
+          {/* Divisor Visual Monocromático */}
+          <div className="relative flex items-center justify-center my-5">
+            <div className="border-t border-white/10 w-full" />
+            <span className="bg-[#09090b] px-3 text-[10px] font-mono uppercase text-zinc-500 absolute">
+              ou com e-mail
+            </span>
+          </div>
 
           {/* Formulário */}
           <form onSubmit={handleEmailAuth} className="space-y-3.5">

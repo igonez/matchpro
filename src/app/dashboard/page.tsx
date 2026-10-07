@@ -13,7 +13,9 @@ import {
   ShieldAlert,
   Calendar,
   MessageCircle,
-  AlertTriangle
+  AlertTriangle,
+  Sparkles,
+  Share2
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -96,20 +98,29 @@ export default function DashboardOverviewPage() {
       {/* Top Banner / Boas-vindas */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight">Visão Geral do Profissional</h1>
-          <p className="text-sm text-zinc-400 mt-1">
-            Gerencie seus desafios ativos, acompanhe o engajamento e audite as fotos da sua turma.
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              Cockpit do Coach
+            </span>
+            <span className="text-xs text-zinc-500 font-mono">ArenaPro v2.5</span>
+          </div>
+          <h1 className="text-3xl font-black text-white tracking-tight">Visão Geral da sua Operação</h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+            Gerencie desafios ativos, audite check-ins por swipe e resgate alunos antes da desistência.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link href="/dashboard/audit">
-            <Button variant="default" className="shadow-lg shadow-emerald-500/10">
-              <Clock className="h-4 w-4 mr-2" />
+            <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black px-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
+              <Clock className="h-4 w-4 mr-1.5" />
               Auditar Fotos ({stats.pendingSubmissions})
             </Button>
           </Link>
           <Button
+            size="sm"
             variant="outline"
+            className="border-white/10 bg-zinc-900/40 hover:bg-zinc-800 text-zinc-200 rounded-xl"
             onClick={async () => {
               if (challenges.length === 0) {
                 alert('Crie um desafio antes de publicar avisos!');
@@ -137,7 +148,7 @@ export default function DashboardOverviewPage() {
             📢 Publicar Aviso
           </Button>
           <Link href="/dashboard/challenges/new">
-            <Button variant="outline">
+            <Button size="sm" variant="outline" className="border-white/10 bg-zinc-900/40 hover:bg-zinc-800 text-zinc-200 rounded-xl">
               <Plus className="h-4 w-4 mr-1" />
               Novo Desafio
             </Button>
@@ -145,96 +156,88 @@ export default function DashboardOverviewPage() {
         </div>
       </div>
 
-      {/* Grid de Métricas Principais */}
+      {/* Grid de Métricas Principais (Liquid Glass Cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Alunos Ativos */}
-        <Card className="border-zinc-800 bg-zinc-900/40">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+          <div className="flex items-center justify-between pb-3">
+            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
               Alunos Ativos
-            </CardTitle>
-            <div className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-              <Users className="h-4 w-4" />
+            </span>
+            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+              <Users className="h-4.5 w-4.5" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-white">{stats.activeStudents}</div>
-            <p className="text-xs text-zinc-500 mt-1">Inscritos nos desafios ativos</p>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-3xl font-black text-white">{stats.activeStudents}</div>
+          <p className="text-[11px] text-zinc-400 mt-1">Inscritos nos desafios em curso</p>
+        </div>
 
         {/* Card 2: Faturamento */}
-        <Card className="border-zinc-800 bg-zinc-900/40">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Faturamento Estimado
-            </CardTitle>
-            <div className="h-8 w-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
-              <DollarSign className="h-4 w-4" />
+        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+          <div className="flex items-center justify-between pb-3">
+            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
+              Faturamento Bruto
+            </span>
+            <div className="h-9 w-9 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20 flex items-center justify-center">
+              <DollarSign className="h-4.5 w-4.5" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-white">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
-            </div>
-            <p className="text-xs text-zinc-500 mt-1">Valor somado dos desafios</p>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-3xl font-black text-emerald-400 font-mono">
+            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
+          </div>
+          <p className="text-[11px] text-zinc-400 mt-1">Valor consolidado das turmas</p>
+        </div>
 
         {/* Card 3: Missões Aguardando Auditoria */}
-        <Card className="border-zinc-800 bg-zinc-900/40">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Aguardando Aprovação
-            </CardTitle>
-            <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
-              <Clock className="h-4 w-4" />
+        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+          <div className="flex items-center justify-between pb-3">
+            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
+              Fila de Auditoria
+            </span>
+            <div className="h-9 w-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+              <Clock className="h-4.5 w-4.5" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-amber-400">{stats.pendingSubmissions}</div>
-            <p className="text-xs text-zinc-500 mt-1">Fotos pendentes na fila Tinder</p>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-3xl font-black text-amber-400 font-mono">{stats.pendingSubmissions}</div>
+          <p className="text-[11px] text-zinc-400 mt-1">Check-ins pendentes de swipe</p>
+        </div>
 
         {/* Card 4: Desafios Criados */}
-        <Card className="border-zinc-800 bg-zinc-900/40">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+        <div className="liquid-glass rounded-3xl p-5 relative overflow-hidden group">
+          <div className="flex items-center justify-between pb-3">
+            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400">
               Desafios Criados
-            </CardTitle>
-            <div className="h-8 w-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
-              <Trophy className="h-4 w-4" />
+            </span>
+            <div className="h-9 w-9 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center">
+              <Trophy className="h-4.5 w-4.5" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-white">{challenges.length}</div>
-            <p className="text-xs text-zinc-500 mt-1">{stats.activeChallenges} em andamento</p>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-3xl font-black text-white">{challenges.length}</div>
+          <p className="text-[11px] text-zinc-400 mt-1">{stats.activeChallenges} em andamento</p>
+        </div>
       </div>
 
       {/* ⚠️ RADAR DE RETENÇÃO: ALUNOS EM RISCO DE DESISTÊNCIA (INATIVOS A MAIS DE 48H) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-rose-400" />
               Radar Anti-Desistência (Alunos Inativos +48h)
             </h2>
             <p className="text-xs text-zinc-400">
-              Resgate esses alunos antes que eles abandonem o desafio. O botão abre uma mensagem carinhosa pronta no WhatsApp!
+              Resgate esses alunos antes que abandonem. O botão abre uma mensagem carinhosa pronta no WhatsApp!
             </p>
           </div>
-          <Badge className="bg-rose-500/10 text-rose-400 border-rose-500/20 font-black">
+          <Badge className="bg-rose-500/15 text-rose-400 border-rose-500/30 font-black text-xs px-2.5 py-0.5">
             {atRiskStudents.length} Alertas
           </Badge>
         </div>
 
         {atRiskStudents.length === 0 ? (
-          <Card className="border-zinc-800 bg-emerald-950/15 border-emerald-500/20 p-4 rounded-2xl flex items-center justify-between">
+          <div className="liquid-glass p-4 rounded-3xl flex items-center justify-between border-emerald-500/30">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+              <div className="h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-black">
                 ✓
               </div>
               <div>
@@ -242,7 +245,7 @@ export default function DashboardOverviewPage() {
                 <p className="text-[11px] text-emerald-400/80">Nenhum aluno está inativo há mais de 48 horas no momento.</p>
               </div>
             </div>
-          </Card>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {atRiskStudents.map((item) => {
@@ -254,16 +257,16 @@ export default function DashboardOverviewPage() {
               const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}?text=${message}` : null;
 
               return (
-                <Card
+                <div
                   key={item.student_id}
-                  className="border-rose-500/30 bg-gradient-to-br from-rose-950/20 via-zinc-900 to-zinc-950 p-4 rounded-2xl flex flex-col justify-between"
+                  className="liquid-glass rounded-3xl p-4.5 flex flex-col justify-between border-rose-500/30 hover:border-rose-500/50 transition-all"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-black uppercase text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
                         {item.days_inactive} dias sem foto
                       </span>
-                      <span className="text-[10px] text-zinc-500 font-semibold">{item.challenge_title}</span>
+                      <span className="text-[10px] text-zinc-400 font-semibold">{item.challenge_title}</span>
                     </div>
 
                     <h4 className="text-sm font-black text-white">{item.student_name}</h4>
@@ -272,13 +275,13 @@ export default function DashboardOverviewPage() {
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-zinc-800/80">
+                  <div className="mt-4 pt-3 border-t border-white/[0.06]">
                     {waLink ? (
                       <a
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full h-9 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all"
+                        className="w-full h-9 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all active:scale-95"
                       >
                         <MessageCircle className="h-4 w-4" />
                         Resgatar no WhatsApp (1-Clique)
@@ -291,14 +294,14 @@ export default function DashboardOverviewPage() {
                           navigator.clipboard.writeText(decodeURIComponent(message));
                           alert(`Mensagem de resgate copiada para a área de transferência:\n\n${decodeURIComponent(message)}`);
                         }}
-                        className="w-full h-9 text-xs font-bold border-zinc-700 text-zinc-300 hover:text-white"
+                        className="w-full h-9 text-xs font-bold border-white/10 text-zinc-300 hover:text-white rounded-xl"
                       >
                         <MessageCircle className="h-3.5 w-3.5 mr-1 text-emerald-400" />
                         Copiar Mensagem de Resgate
                       </Button>
                     )}
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
@@ -308,65 +311,68 @@ export default function DashboardOverviewPage() {
       {/* Lista de Desafios Recentes */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">Desafios em Andamento</h2>
-          <Link href="/dashboard/missions" className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-semibold">
-            Ver todas as missões <ArrowUpRight className="h-3 w-3" />
+          <h2 className="text-base sm:text-lg font-black text-white">Desafios em Andamento</h2>
+          <Link href="/dashboard/missions" className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-bold">
+            Ver todas as missões <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 
         {challenges.length === 0 && !loading ? (
-          <Card className="border-dashed border-zinc-800 p-8 text-center bg-zinc-900/20">
-            <Trophy className="h-10 w-10 mx-auto text-zinc-600 mb-3" />
-            <p className="font-semibold text-zinc-300">Nenhum desafio criado ainda</p>
-            <p className="text-xs text-zinc-500 mt-1 mb-4">
-              Crie seu primeiro desafio fitness para cadastrar missões e convidar alunos.
+          <div className="liquid-glass rounded-3xl p-8 text-center border-dashed">
+            <Trophy className="h-10 w-10 mx-auto text-zinc-500 mb-3" />
+            <p className="font-bold text-white text-sm">Nenhum desafio criado ainda</p>
+            <p className="text-xs text-zinc-400 mt-1 mb-4">
+              Crie seu primeiro desafio fitness para cadastrar missões e convidar seus alunos.
             </p>
             <Link href="/dashboard/challenges/new">
-              <Button size="sm">Criar Meu Primeiro Desafio</Button>
+              <Button size="sm" className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold rounded-xl">
+                Criar Primeiro Desafio
+              </Button>
             </Link>
-          </Card>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {challenges.map((c) => (
-              <Card key={c.id} className="border-zinc-800 hover:border-zinc-700 transition-all bg-zinc-900/40">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <Badge variant={c.is_active ? 'success' : 'secondary'}>
+              <div key={c.id} className="liquid-glass rounded-3xl p-5 hover:border-emerald-500/40 transition-all flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge variant={c.is_active ? 'success' : 'secondary'} className="rounded-lg text-[10px] font-bold">
                       {c.is_active ? 'Ativo' : 'Encerrado'}
                     </Badge>
-                    <span className="text-xs font-bold text-emerald-400">
+                    <span className="text-xs font-black text-emerald-400 font-mono">
                       R$ {Number(c.price).toFixed(2)}
                     </span>
                   </div>
-                  <CardTitle className="text-base font-bold text-white line-clamp-1">
+                  <h3 className="text-base font-black text-white line-clamp-1">
                     {c.title}
-                  </CardTitle>
-                  <CardDescription className="text-xs flex items-center gap-1.5 mt-1">
+                  </h3>
+                  <p className="text-xs text-zinc-400 flex items-center gap-1.5 mt-1">
                     <Calendar className="h-3 w-3" />
                     {new Date(c.start_date).toLocaleDateString('pt-BR')} até{' '}
                     {new Date(c.end_date).toLocaleDateString('pt-BR')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between text-xs text-zinc-400 border-t border-zinc-800/80 pt-3">
+                  </p>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-white/[0.06]">
+                  <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
                     <span>Missões configuradas:</span>
-                    <span className="font-bold text-zinc-200">{c.missions?.length || 0}</span>
+                    <span className="font-bold text-white">{c.missions?.length || 0}</span>
                   </div>
-                  <div className="mt-4 flex gap-1.5">
+                  <div className="flex gap-1.5">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`} className="flex-1">
-                      <Button variant="outline" size="sm" className="w-full text-xs">
+                      <Button variant="outline" size="sm" className="w-full text-xs font-bold rounded-xl border-white/10 hover:bg-white/5">
                         Missões
                       </Button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <Button variant="outline" size="sm" className="text-xs text-zinc-300 hover:text-white px-2.5">
+                      <Button variant="outline" size="sm" className="text-xs font-bold text-zinc-300 hover:text-white px-2.5 rounded-xl border-white/10 hover:bg-white/5">
                         Editar
                       </Button>
                     </Link>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 px-2.5"
+                      className="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 px-2.5 rounded-xl"
                       onClick={() => {
                         const link = `${window.location.origin}/join/${c.id}`;
                         navigator.clipboard.writeText(link);
@@ -374,11 +380,12 @@ export default function DashboardOverviewPage() {
                       }}
                       title="Copiar Link de Convite para Alunos"
                     >
-                      Copiar Link
+                      <Share2 className="h-3.5 w-3.5 mr-1" />
+                      Link
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         )}

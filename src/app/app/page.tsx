@@ -227,7 +227,7 @@ export default function StudentHomePage() {
     : 0;
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-5 space-y-5 bg-zinc-950 text-white selection:bg-emerald-500 max-w-md mx-auto w-full pb-24">
+    <div className="flex flex-col flex-1 p-4 sm:p-5 space-y-5 bg-zinc-950 text-white selection:bg-emerald-500 max-w-md mx-auto w-full pb-28">
       
       {/* 1. Header do Atleta: Avatar com Anel Gradiente + Streak */}
       <div className="flex items-center justify-between pt-1">
@@ -255,7 +255,7 @@ export default function StudentHomePage() {
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">ArenaPro</span>
               <span className="h-1 w-1 rounded-full bg-zinc-600" />
-              <span className="text-[10px] font-bold text-zinc-400">Turma Ativa</span>
+              <span className="text-[10px] font-bold text-zinc-400">Turma Oficial</span>
             </div>
             <h1 className="text-base sm:text-lg font-black text-white leading-tight">
               Olá, {student?.full_name?.split(' ')[0] || 'Atleta'} 👋
@@ -272,13 +272,13 @@ export default function StudentHomePage() {
         </div>
       </div>
 
-      {/* 2. Hero Card: Radar Geral de Consistência da Semana */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800/80 shadow-2xl relative overflow-hidden space-y-3.5">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* 2. Hero Card: Radar Geral de Consistência da Semana (Liquid Glass) */}
+      <div className="liquid-glass rounded-3xl p-4 sm:p-5 shadow-2xl relative overflow-hidden space-y-3.5">
+        <div className="absolute top-0 right-0 w-44 h-44 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+            <div className="h-7 w-7 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
               <Activity className="h-4 w-4" />
             </div>
             <div>
@@ -293,11 +293,11 @@ export default function StudentHomePage() {
           </span>
         </div>
 
-        {/* Barra de Progresso com Brilho */}
+        {/* Barra de Progresso com Brilho Neon */}
         <div className="space-y-1">
-          <div className="w-full h-2.5 rounded-full bg-zinc-950 p-0.5 border border-zinc-800 overflow-hidden">
+          <div className="w-full h-2.5 rounded-full bg-zinc-950 p-0.5 border border-white/10 overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-700 shadow-[0_0_12px_rgba(16,185,129,0.5)]"
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-700 shadow-[0_0_12px_rgba(16,185,129,0.6)]"
               style={{ width: `${weeklyPercentage || 25}%` }}
             />
           </div>
@@ -308,22 +308,22 @@ export default function StudentHomePage() {
         </div>
 
         {/* Grid de 3 Métricas Rápidas */}
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-zinc-850/80">
-          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-850 text-center">
+        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.08]">
+          <div className="p-2.5 rounded-2xl bg-zinc-950/60 border border-white/5 text-center">
             <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">Pontos</span>
             <span className="text-lg font-black text-emerald-400 block mt-0.5">
               {standing?.total_points || 0}
             </span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-850 text-center">
+          <div className="p-2.5 rounded-2xl bg-zinc-950/60 border border-white/5 text-center">
             <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">Posição</span>
             <span className="text-base font-black text-white block mt-0.5">
               4º <span className="text-[10px] text-zinc-400 font-normal">lugar</span>
             </span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-850 text-center">
+          <div className="p-2.5 rounded-2xl bg-zinc-950/60 border border-white/5 text-center">
             <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">Desafio</span>
             <span className="text-base font-black text-white block mt-0.5">
               Dia 2<span className="text-[10px] text-zinc-400 font-normal">/30</span>
@@ -337,13 +337,13 @@ export default function StudentHomePage() {
         {/* Card 1: Freeze Shield */}
         <button
           onClick={() => setIsFreezeModalOpen(true)}
-          className="p-3.5 rounded-3xl bg-gradient-to-br from-cyan-950/30 via-zinc-900 to-zinc-950 border border-cyan-500/30 text-left hover:border-cyan-400/60 active:scale-98 transition-all group shadow-lg"
+          className="liquid-glass-cyan p-3.5 rounded-3xl text-left hover:scale-[1.02] active:scale-98 transition-all group shadow-xl"
         >
           <div className="flex items-center justify-between">
-            <div className="h-8 w-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
+            <div className="h-8 w-8 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
               <Shield className="h-4.5 w-4.5 stroke-[2.2]" />
             </div>
-            <span className="text-[9px] font-black uppercase text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-md">
+            <span className="text-[9px] font-black uppercase text-cyan-400 bg-cyan-500/15 px-2 py-0.5 rounded-md border border-cyan-500/20">
               {gamState.freeze_shields_available} Disp.
             </span>
           </div>
@@ -358,16 +358,16 @@ export default function StudentHomePage() {
         {/* Card 2: Mystery Box de Domingo */}
         <button
           onClick={() => setIsMysteryBoxOpen(true)}
-          className="p-3.5 rounded-3xl bg-gradient-to-br from-amber-950/30 via-zinc-900 to-zinc-950 border border-amber-500/30 text-left hover:border-amber-400/60 active:scale-98 transition-all group shadow-lg"
+          className="liquid-glass-amber p-3.5 rounded-3xl text-left hover:scale-[1.02] active:scale-98 transition-all group shadow-xl"
         >
           <div className="flex items-center justify-between">
-            <div className="h-8 w-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+            <div className="h-8 w-8 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center border border-amber-500/30">
               <Gift className="h-4.5 w-4.5 stroke-[2.2]" />
             </div>
             <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
               alreadyClaimedBox
                 ? 'bg-zinc-800 text-zinc-400'
-                : 'text-amber-400 bg-amber-500/10'
+                : 'text-amber-400 bg-amber-500/15 border border-amber-500/20'
             }`}>
               {alreadyClaimedBox ? 'Resgatada' : 'Semana 1'}
             </span>
@@ -391,7 +391,7 @@ export default function StudentHomePage() {
         </div>
 
         {announcements.length === 0 ? (
-          <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-850 flex items-center gap-3">
+          <div className="liquid-glass p-3.5 rounded-2xl flex items-center gap-3">
             <div className="h-8 w-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
               <Sparkles className="h-4 w-4" />
             </div>
@@ -406,8 +406,8 @@ export default function StudentHomePage() {
                 key={a.id}
                 className={`p-3.5 rounded-2xl border transition-all ${
                   a.is_pinned
-                    ? 'bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-900 border-emerald-500/30 shadow-md shadow-emerald-950/20'
-                    : 'bg-zinc-900/50 border-zinc-850'
+                    ? 'liquid-glass-emerald border-emerald-500/40 shadow-lg'
+                    : 'liquid-glass'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
@@ -426,7 +426,7 @@ export default function StudentHomePage() {
         )}
       </div>
 
-      {/* 5. Categorias de Metas (Cards Modernizados) */}
+      {/* 5. Categorias de Metas (Cards Liquid Glass) */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-extrabold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
@@ -439,7 +439,7 @@ export default function StudentHomePage() {
 
         {/* 1. Treinos da Semana */}
         <Link href="/app/missions?cat=treino">
-          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-emerald-500/40 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-md">
+          <div className="liquid-glass p-3.5 rounded-2xl hover:border-emerald-500/50 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-lg">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold">
                 <Dumbbell className="h-5 w-5" />
@@ -465,7 +465,7 @@ export default function StudentHomePage() {
 
         {/* 2. Cardios da Semana */}
         <Link href="/app/missions?cat=cardio">
-          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-orange-500/40 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-md">
+          <div className="liquid-glass p-3.5 rounded-2xl hover:border-orange-500/50 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-lg">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex items-center justify-center font-bold">
                 <Flame className="h-5 w-5" />
@@ -491,7 +491,7 @@ export default function StudentHomePage() {
 
         {/* 3. Refeições de Hoje */}
         <Link href="/app/missions?cat=refeicao">
-          <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-amber-500/40 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-md">
+          <div className="liquid-glass p-3.5 rounded-2xl hover:border-amber-500/50 active:scale-98 transition-all flex items-center justify-between gap-3 group shadow-lg">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold">
                 <Utensils className="h-5 w-5" />
@@ -518,7 +518,7 @@ export default function StudentHomePage() {
 
       {/* 6. Banner Feed Social da Turma */}
       <Link href="/app/feed" className="block pt-1">
-        <div className="p-4 rounded-3xl bg-gradient-to-r from-teal-950/40 via-zinc-900 to-zinc-950 border border-teal-500/30 flex items-center justify-between gap-3 group shadow-xl">
+        <div className="liquid-glass-emerald p-4 rounded-3xl flex items-center justify-between gap-3 group shadow-xl">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-2xl bg-teal-500/10 text-teal-400 border border-teal-500/20 flex items-center justify-center font-bold shrink-0">
               <Users className="h-5 w-5" />
@@ -530,8 +530,8 @@ export default function StudentHomePage() {
               <p className="text-xs font-black text-white">Veja as fotos e pratos aprovados da turma hoje</p>
             </div>
           </div>
-          <Button size="sm" variant="outline" className="h-8 px-3 text-xs font-bold rounded-xl border-teal-500/40 text-teal-300 shrink-0">
-            Abrir Feed
+          <Button size="sm" variant="outline" className="h-8 px-3 text-xs font-bold rounded-xl border-emerald-500/40 text-emerald-300 shrink-0 bg-transparent">
+            Feed
           </Button>
         </div>
       </Link>

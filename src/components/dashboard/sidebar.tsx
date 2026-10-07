@@ -10,12 +10,13 @@ import {
   Flame, 
   LogOut, 
   Dumbbell, 
-  Layers,
-  BookOpen,
-  Gift,
-  Users,
-  Building2,
-  Bell
+  Layers, 
+  BookOpen, 
+  Gift, 
+  Users, 
+  Building2, 
+  Bell,
+  Sparkles
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -38,13 +39,13 @@ export function DashboardSidebar() {
       active: pathname === '/dashboard',
     },
     {
-      name: 'Auditoria (Swipe)',
+      name: 'Auditoria Swipe',
       href: '/dashboard/audit',
       icon: CheckSquare,
       active: pathname === '/dashboard/audit',
     },
     {
-      name: 'Missões & Semanas',
+      name: 'Missões & Regras',
       href: '/dashboard/missions',
       icon: Layers,
       active: pathname === '/dashboard/missions',
@@ -80,7 +81,7 @@ export function DashboardSidebar() {
       active: pathname === '/dashboard/sponsors',
     },
     {
-      name: 'Criar Desafio',
+      name: 'Criar Novo Desafio',
       href: '/dashboard/challenges/new',
       icon: Trophy,
       active: pathname === '/dashboard/challenges/new',
@@ -88,19 +89,21 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <aside className="w-64 border-r border-zinc-800/80 bg-zinc-950 flex flex-col justify-between p-4 min-h-screen">
+    <aside className="w-64 border-r border-white/[0.06] bg-zinc-950/80 backdrop-blur-2xl flex flex-col justify-between p-4 min-h-screen relative z-30">
       <div className="space-y-6">
         {/* Brand */}
-        <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2">
-          <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/10">
-            <Dumbbell className="h-5 w-5" />
+        <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2 group">
+          <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-400 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+            <div className="h-full w-full bg-zinc-950 rounded-[14px] flex items-center justify-center">
+              <Dumbbell className="h-5 w-5 text-emerald-400" />
+            </div>
           </div>
           <div>
-            <span className="font-extrabold text-lg text-white">
+            <span className="font-black text-xl tracking-tight text-white block leading-none">
               Arena<span className="text-emerald-400">Pro</span>
             </span>
-            <span className="block text-[10px] font-semibold text-emerald-400/80 tracking-wider uppercase">
-              Área do Profissional
+            <span className="text-[9px] uppercase font-bold tracking-widest text-emerald-400/90 block mt-1">
+              Cockpit do Coach
             </span>
           </div>
         </Link>
@@ -113,14 +116,18 @@ export function DashboardSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-semibold tracking-wide transition-all group ${
                   item.active
-                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20'
-                    : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                    ? 'liquid-glass-emerald border-emerald-500/30 text-emerald-300 font-bold shadow-lg shadow-emerald-950/30'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                 }`}
               >
-                <Icon className={`h-4 w-4 ${item.active ? 'text-emerald-400' : 'text-zinc-400'}`} />
-                {item.name}
+                <div className={`p-1 rounded-lg transition-colors ${
+                  item.active ? 'text-emerald-400' : 'text-zinc-400 group-hover:text-zinc-200'
+                }`}>
+                  <Icon className="h-4 w-4" />
+                </div>
+                <span>{item.name}</span>
               </Link>
             );
           })}
@@ -128,15 +135,15 @@ export function DashboardSidebar() {
       </div>
 
       {/* Footer / Logout */}
-      <div className="pt-4 border-t border-zinc-900">
+      <div className="pt-4 border-t border-white/[0.06]">
         <Button
           variant="ghost"
           size="sm"
           onClick={handleSignOut}
-          className="w-full justify-start text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10"
+          className="w-full justify-start text-xs font-semibold text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl"
         >
           <LogOut className="h-4 w-4 mr-2" />
-          Desconectar
+          Desconectar da Plataforma
         </Button>
       </div>
     </aside>

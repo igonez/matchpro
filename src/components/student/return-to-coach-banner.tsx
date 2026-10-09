@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export function ReturnToCoachBanner() {
+  const router = useRouter();
   const [isProfessional, setIsProfessional] = useState(false);
   const supabase = createClient();
 
@@ -13,19 +15,32 @@ export function ReturnToCoachBanner() {
     async function checkRole() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        const isMetaProf = user.user_metadata?.role === 'professional';
         const { data: prof } = await supabase
           .from('professionals')
           .select('id')
           .eq('id', user.id)
           .maybeSingle();
 
-        if (prof) {
+        const isProf = isMetaProf || !!prof;
+
+        if (isProf) {
+          const isPreview = typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search).get('preview') === 'true'
+            : false;
+
+          // Se for profissional e não houver flag de preview explícita, redireciona para o cockpit
+          if (!isPreview) {
+            router.replace('/dashboard');
+            return;
+          }
+
           setIsProfessional(true);
         }
       }
     }
     checkRole();
-  }, [supabase]);
+  }, [supabase, router]);
 
   if (!isProfessional) return null;
 

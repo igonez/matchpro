@@ -85,6 +85,13 @@ export async function updateSession(request: NextRequest) {
       url.pathname = '/app';
       return NextResponse.redirect(url);
     }
+
+    // Se profissional tentar acessar /app sem modo de preview explícito, redireciona para o cockpit /dashboard
+    const isPreview = url.searchParams.get('preview') === 'true';
+    if (isProfessional && url.pathname.startsWith('/app') && !isPreview) {
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;

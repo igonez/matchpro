@@ -57,7 +57,7 @@ export default function JoinChallengePage() {
             .select('id')
             .eq('challenge_id', challengeId)
             .eq('student_id', currentUser.id)
-            .single();
+            .maybeSingle();
 
           if (participant) {
             setAlreadyJoined(true);
@@ -89,7 +89,7 @@ export default function JoinChallengePage() {
         .from('students')
         .select('id')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (!studentRecord) {
         await supabase.from('students').insert({
@@ -98,24 +98,31 @@ export default function JoinChallengePage() {
         });
       }
 
+      const isFree = Number(challenge?.price || 0) === 0;
+
       const { error: joinError } = await supabase
         .from('challenge_participants')
         .insert({
           challenge_id: challengeId,
           student_id: user.id,
+          payment_status: isFree ? 'paid' : 'pending',
         });
 
       if (joinError && !joinError.message.includes('unique')) {
         throw joinError;
       }
 
-      await supabase
-        .from('leaderboard_standings')
-        .insert({
-          challenge_id: challengeId,
-          student_id: user.id,
-          total_points: 0,
-        });
+      try {
+        await supabase
+          .from('leaderboard_standings')
+          .insert({
+            challenge_id: challengeId,
+            student_id: user.id,
+            total_points: 0,
+          });
+      } catch (leadErr) {
+        console.warn('Leaderboard já inicializado:', leadErr);
+      }
 
       setAlreadyJoined(true);
       router.push('/app');

@@ -17,6 +17,8 @@ import {
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
 export default function MysteryBoxConfigPage() {
@@ -37,6 +39,16 @@ export default function MysteryBoxConfigPage() {
   const [newRarity, setNewRarity] = useState('rare');
   const [newWeight, setNewWeight] = useState(25);
   const [submitting, setSubmitting] = useState(false);
+
+  // Modais Customizados & Feedback
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -109,7 +121,10 @@ export default function MysteryBoxConfigPage() {
 
   const handleSaveReward = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle.trim()) return;
+    if (!newTitle.trim()) {
+      showToast('Preencha o título do prêmio.');
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -132,6 +147,7 @@ export default function MysteryBoxConfigPage() {
         if (error) throw error;
         setRewards(rewards.map((r) => (r.id === editingRewardId ? { ...r, ...payload } : r)));
         handleCancelEdit();
+        showToast('Recompensa atualizada com sucesso!');
       } else {
         const { data, error } = await supabase
           .from('mystery_box_rewards')
@@ -143,27 +159,34 @@ export default function MysteryBoxConfigPage() {
         if (data) {
           setRewards([data, ...rewards]);
           handleCancelEdit();
+          showToast('Recompensa adicionada na roleta com sucesso!');
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Erro ao salvar recompensa:', err);
-      alert('Não foi possível salvar a recompensa.');
+      showToast('Não foi possível salvar a recompensa: ' + (err.message || 'Erro no banco.'));
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDeleteReward = async (id: string, title: string) => {
-    if (!confirm(`Deseja realmente remover a recompensa "${title}" da roleta?`)) return;
+  const handleConfirmDeleteReward = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      const { error } = await supabase.from('mystery_box_rewards').delete().eq('id', id);
+      const { error } = await supabase.from('mystery_box_rewards').delete().eq('id', deleteTarget.id);
       if (error) throw error;
-      setRewards(rewards.filter((r) => r.id !== id));
-      if (editingRewardId === id) {
+      setRewards(rewards.filter((r) => r.id !== deleteTarget.id));
+      if (editingRewardId === deleteTarget.id) {
         handleCancelEdit();
       }
-    } catch (err) {
+      showToast(`Recompensa "${deleteTarget.title}" removida.`);
+      setDeleteTarget(null);
+    } catch (err: any) {
       console.error('Erro ao excluir recompensa:', err);
+      showToast('Erro ao excluir recompensa: ' + (err.message || 'Erro no banco.'));
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -197,6 +220,20 @@ export default function MysteryBoxConfigPage() {
           Configure, edite ou exclua as recompensas que seus alunos podem sortear aos domingos ao completarem 100% das missões.
         </p>
       </div>
+
+      {challenges.length === 0 && !loading && (
+        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
+          <p className="text-sm font-bold text-white font-mono">NENHUMA TURMA ATIVA ENCONTRADA</p>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
+            Você precisa criar uma turma antes de poder configurar prêmios e a roleta da Mystery Box.
+          </p>
+          <Link href="/dashboard/challenges/new">
+            <Button size="sm" className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 mt-2">
+              + Criar Primeiro Desafio
+            </Button>
+          </Link>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Formulário de Criação / Edição */}
@@ -370,7 +407,7 @@ export default function MysteryBoxConfigPage() {
                           <Edit3 className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => handleDeleteReward(r.id, r.title)}
+                          onClick={() => setDeleteTarget({ id: r.id, title: r.title })}
                           className="text-zinc-500 hover:text-white hover:bg-white/10 rounded transition-colors p-1"
                           title="Excluir recompensa"
                         >
@@ -398,6 +435,28 @@ export default function MysteryBoxConfigPage() {
           )}
         </div>
       </div>
+
+      {/* Toast Flutuante */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Customizado de Exclusão de Recompensa */}
+      <CustomDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Excluir Recompensa da Roleta"
+        description={`Deseja realmente remover a recompensa "${deleteTarget?.title}" da Mystery Box semanal?`}
+        confirmLabel={deleting ? 'Removendo...' : 'Sim, Excluir Recompensa'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteReward}
+        isLoading={deleting}
+      />
     </div>
   );
 }

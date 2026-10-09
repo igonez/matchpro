@@ -25,6 +25,7 @@ export default function DashboardOverviewPage() {
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
   const [noticeTitle, setNoticeTitle] = useState('');
   const [noticeContent, setNoticeContent] = useState('');
+  const [noticeChallengeId, setNoticeChallengeId] = useState('');
   const [noticeIsPinned, setNoticeIsPinned] = useState(true);
   const [submittingNotice, setSubmittingNotice] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -157,8 +158,11 @@ export default function DashboardOverviewPage() {
 
     setSubmittingNotice(true);
     try {
+      const targetChallengeId = noticeChallengeId || (challenges.length > 0 ? challenges[0].id : null);
+      if (!targetChallengeId) throw new Error('Nenhum desafio selecionado.');
+
       const { error } = await supabase.from('challenge_announcements').insert({
-        challenge_id: challenges[0].id,
+        challenge_id: targetChallengeId,
         title: noticeTitle.trim(),
         content: noticeContent.trim(),
         is_pinned: noticeIsPinned,
@@ -473,6 +477,25 @@ export default function DashboardOverviewPage() {
         isLoading={submittingNotice}
       >
         <div className="space-y-3.5">
+          {challenges.length > 1 && (
+            <div>
+              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                Turma / Desafio Destino
+              </label>
+              <select
+                value={noticeChallengeId || (challenges[0]?.id || '')}
+                onChange={(e) => setNoticeChallengeId(e.target.value)}
+                className="w-full h-10 rounded-xl bg-black/80 border border-white/15 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/40"
+              >
+                {challenges.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div>
             <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
               Título do Aviso

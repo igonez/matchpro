@@ -17,6 +17,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
 export default function DashboardMaterialsPage() {
@@ -35,6 +37,16 @@ export default function DashboardMaterialsPage() {
   const [type, setType] = useState<'pdf' | 'video' | 'cardapio' | 'link'>('pdf');
   const [fileUrl, setFileUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Modais Customizados & Feedback
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   // 1. Carregar desafios exclusivos do treinador logado (Isolamento Multi-Tenant)
   useEffect(() => {
@@ -99,7 +111,14 @@ export default function DashboardMaterialsPage() {
   // Cadastrar ou Atualizar material
   const handleSaveMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedChallengeId) return;
+    if (!selectedChallengeId) {
+      showToast('Selecione uma turma antes de salvar materiais.');
+      return;
+    }
+    if (!title.trim() || !fileUrl.trim()) {
+      showToast('Preencha o título e o link do material.');
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -123,6 +142,7 @@ export default function DashboardMaterialsPage() {
           prev.map((m) => (m.id === editingMaterialId ? { ...m, ...payload } : m))
         );
         handleCancelEdit();
+        showToast('Material atualizado com sucesso!');
       } else {
         // Insert
         const { data, error } = await supabase
@@ -136,32 +156,37 @@ export default function DashboardMaterialsPage() {
         setTitle('');
         setDescription('');
         setFileUrl('');
+        showToast('Material publicado com sucesso!');
       }
     } catch (err: any) {
-      alert('Erro ao salvar material: ' + err.message);
+      showToast('Erro ao salvar material: ' + err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Excluir material com confirmação
-  const handleDeleteMaterial = async (id: string, matTitle: string) => {
-    if (!confirm(`Tem certeza de que deseja excluir o material "${matTitle}"?`)) return;
+  const handleConfirmDeleteMaterial = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
 
     try {
       const { error } = await supabase
         .from('challenge_materials')
         .delete()
-        .eq('id', id);
+        .eq('id', deleteTarget.id);
 
       if (error) throw error;
 
-      setMaterials((prev) => prev.filter((m) => m.id !== id));
-      if (editingMaterialId === id) {
+      setMaterials((prev) => prev.filter((m) => m.id !== deleteTarget.id));
+      if (editingMaterialId === deleteTarget.id) {
         handleCancelEdit();
       }
+      showToast(`Material "${deleteTarget.title}" excluído.`);
+      setDeleteTarget(null);
     } catch (err: any) {
-      alert('Erro ao excluir material: ' + err.message);
+      showToast('Erro ao excluir material: ' + err.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -195,6 +220,20 @@ export default function DashboardMaterialsPage() {
           </div>
         )}
       </div>
+
+      {challenges.length === 0 && !loading && (
+        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
+          <p className="text-sm font-bold text-white font-mono">NENHUMA TURMA ATIVA ENCONTRADA</p>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
+            Você precisa criar uma turma antes de poder anexar PDFs, cardápios e vídeos de apoio.
+          </p>
+          <Link href="/dashboard/challenges/new">
+            <Button size="sm" className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 mt-2">
+              + Criar Primeiro Desafio
+            </Button>
+          </Link>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Formulário: Adicionar ou Editar */}
@@ -335,7 +374,7 @@ export default function DashboardMaterialsPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleDeleteMaterial(m.id, m.title)}
+                          onClick={() => setDeleteTarget({ id: m.id, title: m.title })}
                           className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10 rounded"
                           title="Excluir material"
                         >
@@ -350,6 +389,28 @@ export default function DashboardMaterialsPage() {
           </Card>
         </div>
       </div>
+
+      {/* Toast Flutuante */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Customizado de Exclusão de Material */}
+      <CustomDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Excluir Material de Apoio"
+        description={`Tem certeza de que deseja remover o material "${deleteTarget?.title}"? Os alunos não terão mais acesso a este arquivo ou vídeo.`}
+        confirmLabel={deleting ? 'Removendo...' : 'Sim, Excluir Material'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteMaterial}
+        isLoading={deleting}
+      />
     </div>
   );
 }

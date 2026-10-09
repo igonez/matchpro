@@ -198,8 +198,9 @@ function MissionsManagerContent() {
       }
 
       setIsModalOpen(false);
+      showToast('Missão salva com sucesso!');
     } catch (err: any) {
-      alert('Erro ao salvar missão: ' + err.message);
+      showToast('Erro ao salvar missão: ' + err.message);
     } finally {
       setSubmittingMission(false);
     }
@@ -464,19 +465,31 @@ function MissionsManagerContent() {
           variant="outline"
           size="sm"
           onClick={async () => {
-            if (!selectedChallengeId) return;
-            const nextNum = weeks.length + 1;
-            const { data } = await supabase
-              .from('challenge_weeks')
-              .insert({
-                challenge_id: selectedChallengeId,
-                week_number: nextNum,
-                title: `Semana ${nextNum}`,
-                bonus_points: 20,
-              })
-              .select()
-              .single();
-            if (data) setWeeks([...weeks, data]);
+            if (!selectedChallengeId) {
+              showToast('Selecione ou crie um desafio primeiro.');
+              return;
+            }
+            try {
+              const nextNum = weeks.length + 1;
+              const { data, error } = await supabase
+                .from('challenge_weeks')
+                .insert({
+                  challenge_id: selectedChallengeId,
+                  week_number: nextNum,
+                  title: `Semana ${nextNum}`,
+                  bonus_points: 20,
+                })
+                .select()
+                .single();
+              if (error) throw error;
+              if (data) {
+                setWeeks([...weeks, data]);
+                setSelectedWeekId(data.id);
+                showToast(`Semana ${nextNum} criada com sucesso!`);
+              }
+            } catch (err: any) {
+              showToast('Erro ao criar nova semana: ' + err.message);
+            }
           }}
           className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed border-white/15 hover:text-white"
         >

@@ -15,6 +15,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
 export default function AnnouncementsManagerPage() {
@@ -32,6 +34,16 @@ export default function AnnouncementsManagerPage() {
   const [content, setContent] = useState('');
   const [isPinned, setIsPinned] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // Modais Customizados & Feedback
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -97,7 +109,14 @@ export default function AnnouncementsManagerPage() {
 
   const handleSaveAnnouncement = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedChallengeId || !title.trim() || !content.trim()) return;
+    if (!selectedChallengeId) {
+      showToast('Selecione uma turma antes de publicar um comunicado.');
+      return;
+    }
+    if (!title.trim() || !content.trim()) {
+      showToast('Preencha o título e a mensagem do comunicado.');
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -117,6 +136,7 @@ export default function AnnouncementsManagerPage() {
         if (error) throw error;
         setAnnouncements(announcements.map((a) => (a.id === editingId ? { ...a, ...payload } : a)));
         handleCancelEdit();
+        showToast('Comunicado atualizado com sucesso!');
       } else {
         const { data, error } = await supabase
           .from('challenge_announcements')
@@ -127,30 +147,36 @@ export default function AnnouncementsManagerPage() {
         if (error) throw error;
         setAnnouncements([data, ...announcements]);
         handleCancelEdit();
+        showToast('Comunicado publicado no mural com sucesso!');
       }
     } catch (err: any) {
-      alert('Erro ao salvar comunicado: ' + err.message);
+      showToast('Erro ao salvar comunicado: ' + err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDeleteAnnouncement = async (id: string, annTitle: string) => {
-    if (!confirm(`Deseja remover o comunicado "${annTitle}"?`)) return;
+  const handleConfirmDeleteAnnouncement = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
 
     try {
       const { error } = await supabase
         .from('challenge_announcements')
         .delete()
-        .eq('id', id);
+        .eq('id', deleteTarget.id);
 
       if (error) throw error;
-      setAnnouncements(announcements.filter((a) => a.id !== id));
-      if (editingId === id) {
+      setAnnouncements(announcements.filter((a) => a.id !== deleteTarget.id));
+      if (editingId === deleteTarget.id) {
         handleCancelEdit();
       }
+      showToast(`Aviso "${deleteTarget.title}" excluído.`);
+      setDeleteTarget(null);
     } catch (err: any) {
-      alert('Erro ao excluir aviso: ' + err.message);
+      showToast('Erro ao excluir aviso: ' + err.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -184,6 +210,20 @@ export default function AnnouncementsManagerPage() {
           </div>
         )}
       </div>
+
+      {challenges.length === 0 && !loading && (
+        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
+          <p className="text-sm font-bold text-white font-mono">NENHUMA TURMA ATIVA ENCONTRADA</p>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
+            Você precisa criar uma turma antes de poder publicar comunicados no mural de alunos.
+          </p>
+          <Link href="/dashboard/challenges/new">
+            <Button size="sm" className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 mt-2">
+              + Criar Primeiro Desafio
+            </Button>
+          </Link>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Formulário de Criação / Edição */}
@@ -305,7 +345,7 @@ export default function AnnouncementsManagerPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleDeleteAnnouncement(a.id, a.title)}
+                            onClick={() => setDeleteTarget({ id: a.id, title: a.title })}
                             className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/10 rounded"
                             title="Excluir aviso"
                           >
@@ -328,6 +368,28 @@ export default function AnnouncementsManagerPage() {
           </Card>
         </div>
       </div>
+
+      {/* Toast Flutuante */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Customizado de Exclusão de Aviso */}
+      <CustomDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Remover Comunicado do Mural"
+        description={`Tem certeza de que deseja excluir o aviso "${deleteTarget?.title}"? Ele deixará de ser exibido imediatamente no feed de todos os alunos.`}
+        confirmLabel={deleting ? 'Removendo...' : 'Sim, Excluir Aviso'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteAnnouncement}
+        isLoading={deleting}
+      />
     </div>
   );
 }

@@ -15,6 +15,8 @@ import {
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
 export default function SquadsManagerPage() {
@@ -35,6 +37,16 @@ export default function SquadsManagerPage() {
   // Vincular aluno a squad
   const [assignStudentId, setAssignStudentId] = useState('');
   const [assignSquadId, setAssignSquadId] = useState('');
+
+  // Modais Customizados & Feedback
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -91,7 +103,14 @@ export default function SquadsManagerPage() {
 
   const handleCreateSquad = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!squadName.trim() || !selectedChallengeId) return;
+    if (!selectedChallengeId) {
+      showToast('Selecione uma turma antes de criar um Squad.');
+      return;
+    }
+    if (!squadName.trim()) {
+      showToast('Digite o nome da equipe.');
+      return;
+    }
 
     setCreating(true);
     try {
@@ -99,8 +118,8 @@ export default function SquadsManagerPage() {
         .from('challenge_squads')
         .insert({
           challenge_id: selectedChallengeId,
-          name: squadName,
-          motto: squadMotto,
+          name: squadName.trim(),
+          motto: squadMotto.trim() || null,
           color_theme: squadColor,
         })
         .select()
@@ -112,17 +131,21 @@ export default function SquadsManagerPage() {
         setSquads([{ ...data, squad_members: [] }, ...squads]);
         setSquadName('');
         setSquadMotto('');
+        showToast('Squad criado com sucesso!');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Erro ao criar Squad:', err);
-      alert('Não foi possível criar a equipe.');
+      showToast('Não foi possível criar a equipe: ' + (err.message || 'Erro no banco.'));
     } finally {
       setCreating(false);
     }
   };
 
   const handleAssignStudent = async () => {
-    if (!assignStudentId || !assignSquadId || !selectedChallengeId) return;
+    if (!assignStudentId || !assignSquadId || !selectedChallengeId) {
+      showToast('Selecione o aluno e o Squad de destino.');
+      return;
+    }
     try {
       const { error } = await supabase
         .from('squad_members')
@@ -137,21 +160,28 @@ export default function SquadsManagerPage() {
 
       if (error) throw error;
 
-      alert('Aluno alocado no Squad com sucesso!');
+      showToast('Aluno alocado no Squad com sucesso!');
       loadData();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Erro ao alocar aluno:', err);
-      alert('Não foi possível alocar o aluno no Squad.');
+      showToast('Não foi possível alocar o aluno: ' + (err.message || 'Erro no banco.'));
     }
   };
 
-  const handleDeleteSquad = async (id: string) => {
-    if (!confirm('Deseja excluir este Squad? Os alunos ficarão sem equipe.')) return;
+  const handleConfirmDeleteSquad = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      await supabase.from('challenge_squads').delete().eq('id', id);
-      setSquads(squads.filter((s) => s.id !== id));
-    } catch (err) {
+      const { error } = await supabase.from('challenge_squads').delete().eq('id', deleteTarget.id);
+      if (error) throw error;
+      setSquads(squads.filter((s) => s.id !== deleteTarget.id));
+      showToast(`Squad "${deleteTarget.name}" excluído.`);
+      setDeleteTarget(null);
+    } catch (err: any) {
       console.error('Erro ao excluir Squad:', err);
+      showToast('Erro ao excluir Squad: ' + (err.message || 'Falha no banco.'));
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -190,6 +220,20 @@ export default function SquadsManagerPage() {
           ))}
         </select>
       </div>
+
+      {challenges.length === 0 && !loading && (
+        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
+          <p className="text-sm font-bold text-white font-mono">NENHUMA TURMA ATIVA ENCONTRADA</p>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
+            Você precisa criar uma turma antes de poder formar Squads e dividir seus alunos em equipes.
+          </p>
+          <Link href="/dashboard/challenges/new">
+            <Button size="sm" className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 mt-2">
+              + Criar Primeiro Desafio
+            </Button>
+          </Link>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Formulário de Criação e Alocação */}
@@ -328,7 +372,7 @@ export default function SquadsManagerPage() {
                         {squad.squad_members?.length || 0} Membros
                       </Badge>
                       <button
-                        onClick={() => handleDeleteSquad(squad.id)}
+                        onClick={() => setDeleteTarget({ id: squad.id, name: squad.name })}
                         className="text-zinc-500 hover:text-white hover:bg-white/10 rounded transition-colors p-1"
                         title="Excluir Squad"
                       >
@@ -372,6 +416,28 @@ export default function SquadsManagerPage() {
           )}
         </div>
       </div>
+
+      {/* Toast Flutuante */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Customizado de Exclusão de Squad */}
+      <CustomDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Excluir Squad da Turma"
+        description={`Tem certeza de que deseja excluir o squad "${deleteTarget?.name}"? Os alunos ficarão sem equipe até serem redistribuídos.`}
+        confirmLabel={deleting ? 'Removendo...' : 'Sim, Excluir Squad'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteSquad}
+        isLoading={deleting}
+      />
     </div>
   );
 }

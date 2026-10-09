@@ -310,9 +310,9 @@ function MissionsManagerContent() {
 
         let { error: missErr } = await supabase.from('missions').insert(templateMissions);
 
-        // Fallback de resiliência caso colunas novas de missions (ex: requires_cooldown) não estejam no cache do Supabase
+        // Fallback de resiliência caso colunas novas de missions não estejam no cache do Supabase
         if (missErr && (missErr.message.includes('column') || missErr.message.includes('schema cache'))) {
-          console.warn('Erro de coluna no schema cache das missões. Tentando insert básico...', missErr);
+          console.warn('Tentando insert básico de missões...', missErr);
           const basicMissions = templateMissions.map((m) => ({
             challenge_id: m.challenge_id,
             week_id: m.week_id,
@@ -327,8 +327,30 @@ function MissionsManagerContent() {
         if (missErr) throw missErr;
       }
 
-      alert('Estrutura de 4 semanas gerada com sucesso com todos os parâmetros configurados!');
-      fetchWeeks(selectedChallengeId);
+      // 3. Recarregar as semanas do desafio e carregar imediatamente as missões da Semana 1
+      const { data: updatedWeeks } = await supabase
+        .from('challenge_weeks')
+        .select('*')
+        .eq('challenge_id', selectedChallengeId)
+        .order('week_number', { ascending: true });
+
+      if (updatedWeeks && updatedWeeks.length > 0) {
+        setWeeks(updatedWeeks);
+        const targetWeekId = updatedWeeks[0].id;
+        setSelectedWeekId(targetWeekId);
+
+        // Forçar busca e hidratação imediata das missões da Semana 1 nas 4 listas
+        const { data: weekMissions } = await supabase
+          .from('missions')
+          .select('*')
+          .eq('week_id', targetWeekId)
+          .order('order_index', { ascending: true })
+          .order('created_at', { ascending: true });
+
+        setMissions(weekMissions || []);
+      }
+
+      alert('Estrutura de 4 semanas gerada com sucesso! As 4 listas (Treinos, Cardios, Refeições, Bônus) foram preenchidas.');
     } catch (err: any) {
       console.error('Erro detalhado ao gerar template inteligente:', err);
       alert('Erro ao gerar template inteligente: ' + (err.message || JSON.stringify(err)));
@@ -567,7 +589,7 @@ function MissionsManagerContent() {
                           )}
                           {m.requires_cooldown && (
                             <Badge variant="outline" className="border-white/20 text-zinc-300 text-[9px] flex items-center gap-1 font-mono">
-                              <Clock className="h-2.5 w-2.5" /> {m.cooldown_hours || 4}h Timer
+                              <Calendar className="h-2.5 w-2.5" /> 1 por dia (Virada 00:00)
                             </Badge>
                           )}
                         </div>
@@ -662,7 +684,7 @@ function MissionsManagerContent() {
                 </div>
               </div>
 
-              {/* Opção de Contagem Regressiva e Travas */}
+              {/* Opção de Trava Diária (Current Day) */}
               <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2.5">
                 <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
                   <input
@@ -671,22 +693,11 @@ function MissionsManagerContent() {
                     onChange={(e) => setFormRequiresCooldown(e.target.checked)}
                     className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
                   />
-                  <span>Ativar Contagem Regressiva para a próxima missão</span>
+                  <span>Trava Diária: Liberar apenas 1 por dia (libera na virada das 00:00)</span>
                 </label>
-
-                {formRequiresCooldown && (
-                  <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[11px] text-zinc-400 font-mono">Tempo de bloqueio (Horas):</span>
-                    <Input
-                      type="number"
-                      min={1}
-                      max={24}
-                      value={formCooldownHours}
-                      onChange={(e) => setFormCooldownHours(e.target.value)}
-                      className="w-20 h-8 text-xs font-mono"
-                    />
-                  </div>
-                )}
+                <p className="text-[11px] text-zinc-400 pl-6">
+                  Garante a disciplina biológica do aluno evitando múltiplos envios no mesmo dia.
+                </p>
 
                 <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1">
                   <input

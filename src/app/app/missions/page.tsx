@@ -187,23 +187,23 @@ export default function StudentMissionsWeeklyPage() {
         </div>
       </div>
 
-      {/* Banner de Travas Diárias Ativas */}
+      {/* Banner de Regra Diária (Current Day) */}
       {(isWorkoutDailyLocked || isCardioDailyLocked) && (
-        <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between text-xs relative z-10">
+        <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between text-xs relative z-10 border border-white/15">
           <div className="space-y-1">
             <p className="font-bold text-white text-xs font-mono">
               {isWorkoutDailyLocked && isCardioDailyLocked
-                ? 'LIMITE DIÁRIO ATINGIDO: TREINO & CARDIO'
+                ? 'LIMITE DO DIA ATINGIDO (TREINO & CARDIO)'
                 : isWorkoutDailyLocked
-                ? 'TREINO DE HOJE CONCLUÍDO'
-                : 'CARDIO DE HOJE CONCLUÍDO'}
+                ? 'TREINO DO DIA CONCLUÍDO'
+                : 'CARDIO DO DIA CONCLUÍDO'}
             </p>
-            <p className="text-[10px] font-mono text-zinc-400">
-              Desbloqueio em: <span className="text-white font-bold">{timeUntilMidnight}</span>
+            <p className="text-[11px] font-mono text-zinc-400">
+              Missão de hoje entregue. A próxima será liberada na <span className="text-white font-bold">virada do dia</span>.
             </p>
           </div>
-          <span className="text-[10px] font-mono text-zinc-500 border border-white/10 px-2 py-1 rounded-lg">
-            COOLDOWN
+          <span className="text-[10px] font-mono text-zinc-300 bg-white/10 border border-white/20 px-2.5 py-1 rounded-lg shrink-0 font-bold">
+            1 POR DIA
           </span>
         </div>
       )}
@@ -331,12 +331,16 @@ export default function StudentMissionsWeeklyPage() {
 
                     {!sub && isLocked && (
                       <div className="flex flex-col items-end gap-1">
-                        <span className="px-2.5 py-1 rounded-xl bg-black border border-white/10 text-zinc-500 text-[10px] font-mono">
+                        <span className="px-2.5 py-1 rounded-xl bg-black border border-white/10 text-zinc-500 text-[10px] font-mono font-bold">
                           BLOQUEADO
                         </span>
-                        {isDailyLocked && (
-                          <span className="text-[9px] font-mono text-zinc-400">
-                            {timeUntilMidnight}
+                        {isDailyLocked ? (
+                          <span className="text-[9px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                            LIBERA AMANHÃ
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-mono text-zinc-500">
+                            FAÇA O ANTERIOR
                           </span>
                         )}
                       </div>

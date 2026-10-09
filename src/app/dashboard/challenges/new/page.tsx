@@ -51,6 +51,19 @@ export default function NewChallengePage() {
 
       if (challengeError) throw challengeError;
 
+      // Auto-provisionar as 4 semanas padrão do desafio para evitar tela de missões órfã
+      try {
+        const defaultWeeks = [
+          { challenge_id: challenge.id, week_number: 1, title: 'Semana 1 • Sprint 1 (Ativação)', bonus_points: 20 },
+          { challenge_id: challenge.id, week_number: 2, title: 'Semana 2 • Sprint 2 (Intensidade)', bonus_points: 20 },
+          { challenge_id: challenge.id, week_number: 3, title: 'Semana 3 • Sprint 3 (Consistência)', bonus_points: 20 },
+          { challenge_id: challenge.id, week_number: 4, title: 'Semana 4 • Sprint 4 (Sprint Final)', bonus_points: 20 },
+        ];
+        await supabase.from('challenge_weeks').insert(defaultWeeks);
+      } catch (weekErr) {
+        console.warn('Erro não bloqueante ao criar semanas padrão:', weekErr);
+      }
+
       showToast('Desafio criado com sucesso! Abrindo gerenciador de missões...');
       // Redirecionar para adicionar as missões desse desafio
       setTimeout(() => {

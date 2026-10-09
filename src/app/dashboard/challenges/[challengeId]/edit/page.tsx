@@ -46,23 +46,32 @@ export default function EditChallengePage({
     async function loadChallenge() {
       setLoading(true);
       try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setError('Você precisa estar logado para editar este desafio.');
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('challenges')
           .select('*')
           .eq('id', challengeId)
+          .eq('professional_id', user.id)
           .single();
 
-        if (error) throw error;
-        if (data) {
-          setTitle(data.title || '');
-          setStartDate(data.start_date || '');
-          setEndDate(data.end_date || '');
-          setPrice(data.price?.toString() || '0');
-          setIsActive(data.is_active ?? true);
+        if (error || !data) {
+          throw new Error('Desafio não encontrado ou você não tem permissão para editá-lo.');
         }
+
+        setTitle(data.title || '');
+        setStartDate(data.start_date || '');
+        setEndDate(data.end_date || '');
+        setPrice(data.price?.toString() || '0');
+        setIsActive(data.is_active ?? true);
       } catch (err: any) {
         console.error('Erro ao buscar desafio:', err);
-        setError('Não foi possível carregar os dados do desafio.');
+        setError(err.message || 'Não foi possível carregar os dados do desafio.');
       } finally {
         setLoading(false);
       }
@@ -79,6 +88,9 @@ export default function EditChallengePage({
     setError(null);
 
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado.');
+
       const { error: updateError } = await supabase
         .from('challenges')
         .update({
@@ -88,7 +100,8 @@ export default function EditChallengePage({
           price: parseFloat(price) || 0,
           is_active: isActive,
         })
-        .eq('id', challengeId);
+        .eq('id', challengeId)
+        .eq('professional_id', user.id);
 
       if (updateError) throw updateError;
 
@@ -110,10 +123,14 @@ export default function EditChallengePage({
 
     setDeleting(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado.');
+
       const { error: delError } = await supabase
         .from('challenges')
         .delete()
-        .eq('id', challengeId);
+        .eq('id', challengeId)
+        .eq('professional_id', user.id);
 
       if (delError) throw delError;
 

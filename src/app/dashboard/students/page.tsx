@@ -16,7 +16,9 @@ import {
   Sparkles,
   ArrowUpRight,
   TrendingUp,
-  CreditCard
+  CreditCard,
+  Trash2,
+  ExternalLink
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
@@ -68,23 +70,31 @@ export default function DashboardFinanceAndStudentsPage() {
   const [manualPaymentStatus, setManualPaymentStatus] = useState<'paid' | 'complimentary' | 'pending'>('paid');
   const [submittingManual, setSubmittingManual] = useState(false);
 
+  // Modal de Exclusão de Matrícula
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deletingParticipant, setDeletingParticipant] = useState(false);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // 1. Carregar Desafios e Participantes
+  // 1. Carregar Desafios e Participantes com Isolamento Multi-Tenant
   useEffect(() => {
     async function loadData() {
       setLoading(true);
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (!user) {
+          setLoading(false);
+          return;
+        }
 
-        // Buscar desafios do treinador
+        // Buscar desafios EXCLUSIVOS do treinador logado
         const { data: challengesData } = await supabase
           .from('challenges')
           .select('id, title, price, start_date, end_date, is_active')
+          .eq('professional_id', user.id)
           .order('start_date', { ascending: false });
 
         const safeChallenges = challengesData || [];
@@ -93,7 +103,15 @@ export default function DashboardFinanceAndStudentsPage() {
           setManualChallengeId(safeChallenges[0].id);
         }
 
-        // Buscar participantes das turmas
+        if (safeChallenges.length === 0) {
+          setParticipants([]);
+          setLoading(false);
+          return;
+        }
+
+        const coachChallengeIds = safeChallenges.map((c: any) => c.id);
+
+        // Buscar participantes apenas das turmas pertencentes ao treinador
         const { data: participantsData, error: partError } = await supabase
           .from('challenge_participants')
           .select(`
@@ -101,6 +119,7 @@ export default function DashboardFinanceAndStudentsPage() {
             challenge_id,
             student_id,
             joined_at,
+            payment_status,
             students (
               id,
               full_name,
@@ -108,6 +127,7 @@ export default function DashboardFinanceAndStudentsPage() {
               avatar_url
             )
           `)
+          .in('challenge_id', coachChallengeIds)
           .order('joined_at', { ascending: false });
 
         if (partError) throw partError;
@@ -117,7 +137,7 @@ export default function DashboardFinanceAndStudentsPage() {
           challenge_id: p.challenge_id,
           student_id: p.student_id,
           joined_at: p.joined_at,
-          payment_status: 'paid', // Default para alunos matriculados
+          payment_status: (p.payment_status as any) || 'paid',
           student: {
             id: p.students?.id || p.student_id,
             full_name: p.students?.full_name || 'Atleta Anônimo',
@@ -170,6 +190,64 @@ export default function DashboardFinanceAndStudentsPage() {
     return (Number(c?.price) || 0) * count;
   }, [participants, challenges, selectedChallengeId]);
 
+  // Alternar Status de Pagamento (Pendente ⇄ Pago)
+  const handleTogglePaymentStatus = async (participantId: string, currentStatus?: string) => {
+    const nextStatus = currentStatus === 'paid' ? 'pending' : 'paid';
+    try {
+      const { error } = await supabase
+        .from('challenge_participants')
+        .update({ payment_status: nextStatus })
+        .eq('id', participantId);
+
+      if (error) throw error;
+
+      setParticipants((prev) =>
+        prev.map((p) => (p.id === participantId ? { ...p, payment_status: nextStatus } : p))
+      );
+      showToast(nextStatus === 'paid' ? 'Pagamento marcado como PAGO!' : 'Status alterado para PENDENTE.');
+    } catch (err: any) {
+      showToast('Erro ao atualizar status: ' + err.message);
+    }
+  };
+
+  // Remover / Desmatricular Aluno da Turma
+  const handleConfirmDeleteParticipant = async () => {
+    if (!deleteTarget) return;
+    setDeletingParticipant(true);
+    try {
+      const { error } = await supabase
+        .from('challenge_participants')
+        .delete()
+        .eq('id', deleteTarget.id);
+
+      if (error) throw error;
+
+      setParticipants((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+      showToast(`Matrícula de "${deleteTarget.name}" cancelada com sucesso.`);
+      setDeleteTarget(null);
+    } catch (err: any) {
+      showToast('Erro ao remover matrícula: ' + err.message);
+    } finally {
+      setDeletingParticipant(false);
+    }
+  };
+
+  // Copiar Link de Convite
+  const handleCopyInviteLink = () => {
+    const targetChallenge = selectedChallengeId !== 'all' 
+      ? challenges.find((c) => c.id === selectedChallengeId)
+      : challenges[0];
+
+    if (!targetChallenge) {
+      showToast('Crie um desafio para obter o link de convite.');
+      return;
+    }
+
+    const inviteUrl = `${window.location.origin}/join/${targetChallenge.id}`;
+    navigator.clipboard.writeText(inviteUrl);
+    showToast(`Link copiado: ${targetChallenge.title}`);
+  };
+
   // Ação: Matricular Aluno Manualmente (Balcão / Pix Direto)
   const handleAddStudentManually = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,12 +272,13 @@ export default function DashboardFinanceAndStudentsPage() {
         console.warn('Inserção de estudante:', studentErr);
       }
 
-      // 2. Inserir na tabela challenge_participants
+      // 2. Inserir na tabela challenge_participants com o payment_status selecionado
       const { data: partData, error: partErr } = await supabase
         .from('challenge_participants')
         .insert({
           challenge_id: manualChallengeId,
           student_id: pseudoId,
+          payment_status: manualPaymentStatus,
         })
         .select()
         .single();
@@ -272,6 +351,16 @@ export default function DashboardFinanceAndStudentsPage() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleCopyInviteLink}
+            className="rounded-xl h-10 px-3.5 text-xs font-mono text-zinc-300 border-white/10 hover:border-white/20 hover:text-white bg-white/5"
+            title="Copiar link de convite da turma atual"
+          >
+            <Copy className="h-4 w-4 mr-1.5" /> Link de Convite
+          </Button>
+
           <Button
             size="sm"
             onClick={() => setIsManualAddModalOpen(true)}
@@ -427,14 +516,16 @@ export default function DashboardFinanceAndStudentsPage() {
                   <th className="py-3 px-4">Turma</th>
                   <th className="py-3 px-4">Entrada</th>
                   <th className="py-3 px-4">Status Pgto</th>
-                  <th className="py-3 px-4 text-right">Contato</th>
+                  <th className="py-3 px-4 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.04] text-zinc-300">
-                {filteredParticipants.map((p, idx) => {
+                {filteredParticipants.map((p) => {
                   const challengeObj = challenges.find((c) => c.id === p.challenge_id);
                   const cleanPhone = p.student.phone?.replace(/\D/g, '') || '';
                   const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}` : null;
+                  const isPaid = p.payment_status === 'paid';
+                  const isPending = p.payment_status === 'pending';
 
                   return (
                     <tr key={p.id} className="hover:bg-white/[0.02] transition-colors">
@@ -447,7 +538,7 @@ export default function DashboardFinanceAndStudentsPage() {
                             <span className="font-bold text-white block">
                               {p.student.full_name}
                             </span>
-                            <span className="text-[10px] text-zinc-500">
+                            <span className="text-[10px] text-zinc-500 font-mono">
                               ID: {p.student_id.slice(0, 8)}...
                             </span>
                           </div>
@@ -458,32 +549,67 @@ export default function DashboardFinanceAndStudentsPage() {
                         {challengeObj?.title || 'Turma Ativa'}
                       </td>
 
-                      <td className="py-3 px-4 text-zinc-400">
+                      <td className="py-3 px-4 text-zinc-400 font-mono text-xs">
                         {new Date(p.joined_at).toLocaleDateString('pt-BR')}
                       </td>
 
                       <td className="py-3 px-4">
-                        <Badge
-                          variant="outline"
-                          className="border-white/20 text-white bg-white/5 text-[10px] font-mono"
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePaymentStatus(p.id, p.payment_status)}
+                          title="Clique para alternar o status de pagamento"
+                          className="transition-transform active:scale-95"
                         >
-                          ● CONFIRMADO
-                        </Badge>
+                          {isPaid && (
+                            <Badge
+                              variant="outline"
+                              className="border-white/20 text-white bg-white/10 hover:bg-white/20 text-[10px] font-mono cursor-pointer"
+                            >
+                              ● PAGO
+                            </Badge>
+                          )}
+                          {isPending && (
+                            <Badge
+                              variant="outline"
+                              className="border-zinc-700 text-zinc-400 bg-zinc-900/80 hover:border-white/40 hover:text-white text-[10px] font-mono cursor-pointer"
+                            >
+                              ○ PENDENTE
+                            </Badge>
+                          )}
+                          {!isPaid && !isPending && (
+                            <Badge
+                              variant="outline"
+                              className="border-white/20 text-zinc-300 bg-white/5 text-[10px] font-mono cursor-pointer"
+                            >
+                              ✦ CORTESIA
+                            </Badge>
+                          )}
+                        </button>
                       </td>
 
                       <td className="py-3 px-4 text-right">
-                        {waLink ? (
-                          <a
-                            href={waLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 text-[11px]"
+                        <div className="flex items-center justify-end gap-1.5">
+                          {waLink && (
+                            <a
+                              href={waLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 text-[11px]"
+                              title="Chamar no WhatsApp"
+                            >
+                              <Phone className="h-3 w-3" />
+                            </a>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
+                            className="p-1 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-colors"
+                            title="Remover matrícula da turma"
                           >
-                            <Phone className="h-3 w-3" /> WhatsApp
-                          </a>
-                        ) : (
-                          <span className="text-zinc-600 text-[10px]">Sem número</span>
-                        )}
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -568,6 +694,18 @@ export default function DashboardFinanceAndStudentsPage() {
           </div>
         </form>
       </CustomDialog>
+
+      {/* Modal Customizado: Confirmar Exclusão de Matrícula */}
+      <CustomDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Cancelar Matrícula do Aluno"
+        description={`Tem certeza que deseja desmatricular "${deleteTarget?.name}" desta turma? O histórico de submissões e pontos deixará de constar na turma.`}
+        confirmLabel={deletingParticipant ? 'Removendo...' : 'Sim, Cancelar Matrícula'}
+        cancelLabel="Voltar"
+        onConfirm={handleConfirmDeleteParticipant}
+        isLoading={deletingParticipant}
+      />
     </div>
   );
 }

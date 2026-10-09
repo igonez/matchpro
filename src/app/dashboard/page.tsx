@@ -63,28 +63,49 @@ export default function DashboardOverviewPage() {
       setLoading(true);
       try {
         const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setLoading(false);
+          return;
+        }
 
-        // 1. Desafios do profissional
+        // 1. Desafios EXCLUSIVOS do profissional autenticado (Isolamento Multi-Tenant)
         const { data: challengesData } = await supabase
           .from('challenges')
           .select('*, missions(*)')
+          .eq('professional_id', user.id)
           .order('start_date', { ascending: false });
 
         const safeChallenges = challengesData || [];
         setChallenges(safeChallenges);
 
-        // 2. Participantes para métricas reais e faturamento
+        if (safeChallenges.length === 0) {
+          setStats({
+            activeStudents: 0,
+            totalRevenue: 0,
+            pendingSubmissions: 0,
+            activeChallenges: 0,
+          });
+          setAtRiskStudents([]);
+          setLoading(false);
+          return;
+        }
+
+        const coachChallengeIds = safeChallenges.map((c: any) => c.id);
+
+        // 2. Participantes exclusivos das turmas do treinador
         const { data: participantsData } = await supabase
           .from('challenge_participants')
-          .select('id, challenge_id');
+          .select('id, challenge_id')
+          .in('challenge_id', coachChallengeIds);
 
         const participantsList = participantsData || [];
 
-        // 3. Contar submissões pendentes de auditoria
+        // 3. Submissões pendentes de auditoria exclusivas das turmas do treinador
         const { count: pendingCount } = await supabase
           .from('student_submissions')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'pending');
+          .select('id, missions!inner(challenge_id)', { count: 'exact', head: true })
+          .eq('status', 'pending')
+          .in('missions.challenge_id', coachChallengeIds);
 
         // 4. Calcular faturamento consolidado real (participantes x valor de cada turma)
         const priceMap = new Map<string, number>();
@@ -103,10 +124,11 @@ export default function DashboardOverviewPage() {
           activeChallenges: safeChallenges.filter((c: any) => c.is_active).length,
         });
 
-        // 5. Radar de Alunos em Risco (Inativos)
+        // 5. Radar de Alunos em Risco (Inativos) nas turmas do treinador
         const { data: atRiskData } = await supabase
           .from('at_risk_students_view')
           .select('*')
+          .in('challenge_id', coachChallengeIds)
           .gte('days_inactive', 2)
           .order('days_inactive', { ascending: false })
           .limit(5);

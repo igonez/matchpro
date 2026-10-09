@@ -36,9 +36,17 @@ export default function AnnouncementsManagerPage() {
   const loadData = async () => {
     setLoading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      // Buscar apenas turmas do treinador logado (Isolamento Multi-Tenant)
       const { data: challengesData } = await supabase
         .from('challenges')
         .select('id, title')
+        .eq('professional_id', user.id)
         .order('created_at', { ascending: false });
 
       const safeCh = challengesData || [];

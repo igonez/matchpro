@@ -36,12 +36,19 @@ export default function DashboardMaterialsPage() {
   const [fileUrl, setFileUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // 1. Carregar desafios
+  // 1. Carregar desafios exclusivos do treinador logado (Isolamento Multi-Tenant)
   useEffect(() => {
     async function loadChallenges() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       const { data } = await supabase
         .from('challenges')
         .select('id, title')
+        .eq('professional_id', user.id)
         .order('start_date', { ascending: false });
 
       if (data && data.length > 0) {

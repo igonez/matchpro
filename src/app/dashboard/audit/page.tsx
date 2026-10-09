@@ -3,11 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { Sparkles, Brain, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import { Sparkles, Brain, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 
 export default function FiscalizacaoPage() {
   const supabase = createClient();
 
+  const [challenges, setChallenges] = useState<any[]>([]);
+  const [selectedChallengeId, setSelectedChallengeId] = useState<string>('all');
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [filter, setFilter] = useState<'all' | 'reported' | 'approved' | 'rejected'>('all');
   const [loading, setLoading] = useState(true);
@@ -16,9 +19,46 @@ export default function FiscalizacaoPage() {
   const [aiAnalysisMap, setAiAnalysisMap] = useState<Record<string, any>>({});
   const [expandedAnalysis, setExpandedAnalysis] = useState<Record<string, boolean>>({});
 
+  // Modal Customizado de Invalidação
+  const [invalidateTarget, setInvalidateTarget] = useState<any | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      // 1. Buscar apenas turmas do treinador autenticado (Isolamento Multi-Tenant)
+      const { data: coachChallenges } = await supabase
+        .from('challenges')
+        .select('id, title')
+        .eq('professional_id', user.id)
+        .order('created_at', { ascending: false });
+
+      const safeChallenges = coachChallenges || [];
+      setChallenges(safeChallenges);
+
+      if (safeChallenges.length === 0) {
+        setSubmissions([]);
+        setLoading(false);
+        return;
+      }
+
+      // Determinar quais turmas auditar
+      const targetChallengeIds = selectedChallengeId === 'all'
+        ? safeChallenges.map((c: any) => c.id)
+        : [selectedChallengeId];
+
+      // 2. Buscar submissões apenas pertencentes às turmas do treinador
       const { data: subsData } = await supabase
         .from('student_submissions')
         .select(`
@@ -34,8 +74,9 @@ export default function FiscalizacaoPage() {
             full_name,
             avatar_url
           ),
-          missions (
+          missions!inner (
             id,
+            challenge_id,
             title,
             category,
             points_rewarded
@@ -47,6 +88,7 @@ export default function FiscalizacaoPage() {
             reporter_student_id
           )
         `)
+        .in('missions.challenge_id', targetChallengeIds)
         .order('submitted_at', { ascending: false })
         .limit(60);
 
@@ -60,14 +102,11 @@ export default function FiscalizacaoPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedChallengeId]);
 
-  const handleInvalidatePhoto = async (sub: any) => {
-    const confirmAction = confirm(
-      `Invalidar esta submissão de "${sub.students?.full_name}"?\nIsso deduzirá ${sub.missions?.points_rewarded || 10} pontos do ranking do aluno.`
-    );
-    if (!confirmAction) return;
-
+  const handleConfirmInvalidate = async () => {
+    if (!invalidateTarget) return;
+    const sub = invalidateTarget;
     setProcessingId(sub.id);
     try {
       const { error } = await supabase
@@ -80,8 +119,10 @@ export default function FiscalizacaoPage() {
       setSubmissions((prev) =>
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'rejected' } : item))
       );
+      showToast(`Foto de "${sub.students?.full_name}" invalidada.`);
+      setInvalidateTarget(null);
     } catch (err: any) {
-      alert('Erro ao invalidar foto: ' + err.message);
+      showToast('Erro ao invalidar foto: ' + err.message);
     } finally {
       setProcessingId(null);
     }
@@ -100,8 +141,9 @@ export default function FiscalizacaoPage() {
       setSubmissions((prev) =>
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'approved' } : item))
       );
+      showToast('Foto reabilitada com sucesso!');
     } catch (err: any) {
-      alert('Erro ao reabilitar foto: ' + err.message);
+      showToast('Erro ao reabilitar foto: ' + err.message);
     } finally {
       setProcessingId(null);
     }
@@ -167,7 +209,22 @@ export default function FiscalizacaoPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="flex items-center gap-3 w-full sm:w-auto flex-wrap">
+          {challenges.length > 0 && (
+            <select
+              value={selectedChallengeId}
+              onChange={(e) => setSelectedChallengeId(e.target.value)}
+              className="h-10 rounded-xl bg-black border border-white/15 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/30"
+            >
+              <option value="all">Todas as Minhas Turmas ({challenges.length})</option>
+              {challenges.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+          )}
+
           <button
             onClick={fetchData}
             disabled={loading}
@@ -386,7 +443,7 @@ export default function FiscalizacaoPage() {
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleInvalidatePhoto(sub)}
+                      onClick={() => setInvalidateTarget(sub)}
                       disabled={isProcessing}
                       className="mono-button-secondary w-full py-1.5 text-xs font-mono text-zinc-400 hover:text-white"
                     >
@@ -399,6 +456,28 @@ export default function FiscalizacaoPage() {
           })}
         </div>
       )}
+
+      {/* Toast Flutuante de Feedback */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Customizado de Confirmação de Invalidação */}
+      <CustomDialog
+        isOpen={!!invalidateTarget}
+        onClose={() => setInvalidateTarget(null)}
+        title="Invalidar Submissão de Foto"
+        description={`Deseja invalidar a foto de "${invalidateTarget?.students?.full_name}" na missão "${invalidateTarget?.missions?.title || 'Missão'}"? Isso deduzirá ${invalidateTarget?.missions?.points_rewarded || 10} pontos do ranking do aluno.`}
+        confirmLabel={processingId ? 'Invalidando...' : 'Sim, Invalidar e Deduzir Pontos'}
+        cancelLabel="Voltar"
+        onConfirm={handleConfirmInvalidate}
+        isLoading={!!processingId}
+      />
     </div>
   );
 }

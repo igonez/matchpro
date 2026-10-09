@@ -24,6 +24,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { CustomDialog } from '@/components/ui/custom-dialog';
 import { createClient } from '@/lib/supabase/client';
 
 function MissionsManagerContent() {
@@ -52,15 +53,31 @@ function MissionsManagerContent() {
   const [formIsBonus, setFormIsBonus] = useState(false);
   const [submittingMission, setSubmittingMission] = useState(false);
 
-  // Estado para geração de 4 semanas
+  // Modais de Confirmação & Toasts (Substituem alert e confirm nativos)
+  const [deleteMissionTarget, setDeleteMissionTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deletingMission, setDeletingMission] = useState(false);
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [generatingTemplate, setGeneratingTemplate] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // 1. Carregar lista de desafios
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // 1. Carregar lista de desafios exclusivos do profissional (Isolamento Multi-Tenant)
   useEffect(() => {
     async function fetchChallenges() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       const { data } = await supabase
         .from('challenges')
         .select('id, title, start_date, end_date')
+        .eq('professional_id', user.id)
         .order('start_date', { ascending: false });
 
       if (data && data.length > 0) {
@@ -188,31 +205,26 @@ function MissionsManagerContent() {
     }
   };
 
-  // Excluir Missão com Confirmação
-  const handleDeleteMission = async (id: string, title: string) => {
-    if (!confirm(`Deseja excluir a missão "${title}"? Esta ação removerá a pontuação relacionada.`)) return;
-
+  // Excluir Missão com Confirmação via CustomDialog
+  const handleConfirmDeleteMission = async () => {
+    if (!deleteMissionTarget) return;
+    setDeletingMission(true);
     try {
-      const { error } = await supabase.from('missions').delete().eq('id', id);
+      const { error } = await supabase.from('missions').delete().eq('id', deleteMissionTarget.id);
       if (error) throw error;
-      setMissions((prev) => prev.filter((m) => m.id !== id));
+      setMissions((prev) => prev.filter((m) => m.id !== deleteMissionTarget.id));
+      showToast(`Missão "${deleteMissionTarget.title}" excluída com sucesso.`);
+      setDeleteMissionTarget(null);
     } catch (err: any) {
-      alert('Erro ao excluir missão: ' + err.message);
+      showToast('Erro ao excluir missão: ' + err.message);
+    } finally {
+      setDeletingMission(false);
     }
   };
 
   // Gerador Inteligente de 4 Semanas (6 Treinos, 7 Cardios, 4 Refeições Diárias)
-  const handleGenerateSmartTemplate = async () => {
+  const handleExecuteGenerateTemplate = async () => {
     if (!selectedChallengeId) return;
-    const confirmGen = confirm(
-      'Deseja gerar a estrutura completa de 4 Semanas?\n\n' +
-      '• 4 Semanas de desafio com bônus de 100% (+20 XP ao fechar a semana)\n' +
-      '• 6 Treinos da semana por sprint\n' +
-      '• 7 Cardios da semana por sprint\n' +
-      '• 4 Refeições diárias (Café, Almoço, Lanche, Jantar)\n' +
-      '• Bloqueio sequencial e anti-abuso configurados.'
-    );
-    if (!confirmGen) return;
 
     setGeneratingTemplate(true);
     try {
@@ -350,10 +362,11 @@ function MissionsManagerContent() {
         setMissions(weekMissions || []);
       }
 
-      alert('Estrutura de 4 semanas gerada com sucesso! As 4 listas (Treinos, Cardios, Refeições, Bônus) foram preenchidas.');
+      showToast('Estrutura de 4 semanas gerada com sucesso! As 4 listas foram preenchidas.');
+      setIsGenerateModalOpen(false);
     } catch (err: any) {
       console.error('Erro detalhado ao gerar template inteligente:', err);
-      alert('Erro ao gerar template inteligente: ' + (err.message || JSON.stringify(err)));
+      showToast('Erro ao gerar template inteligente: ' + (err.message || 'Erro desconhecido'));
     } finally {
       setGeneratingTemplate(false);
     }
@@ -397,7 +410,7 @@ function MissionsManagerContent() {
 
           <Button
             size="sm"
-            onClick={handleGenerateSmartTemplate}
+            onClick={() => setIsGenerateModalOpen(true)}
             disabled={generatingTemplate || !selectedChallengeId}
             className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
           >
@@ -406,6 +419,23 @@ function MissionsManagerContent() {
           </Button>
         </div>
       </div>
+
+      {/* Banner se não houver semanas cadastradas */}
+      {weeks.length === 0 && (
+        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
+          <p className="text-sm font-bold text-white font-mono">ESTA TURMA AINDA NÃO POSSUI SEMANAS DE MISSÕES</p>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
+            Clique no botão abaixo para provisionar a estrutura recomendada de 4 semanas com missões completas (Treinos, Cardios, Refeições e Bônus).
+          </p>
+          <Button
+            size="sm"
+            onClick={() => setIsGenerateModalOpen(true)}
+            className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200"
+          >
+            <Sparkles className="h-4 w-4 mr-1.5" /> Provisionar 4 Semanas Agora
+          </Button>
+        </div>
+      )}
 
       {/* Carrossel de Semanas */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-white/10">
@@ -611,7 +641,7 @@ function MissionsManagerContent() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDeleteMission(m.id, m.title)}
+                        onClick={() => setDeleteMissionTarget({ id: m.id, title: m.title })}
                         className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10"
                         title="Excluir Missão"
                       >
@@ -731,6 +761,40 @@ function MissionsManagerContent() {
           </Card>
         </div>
       )}
+
+      {/* Toast Flutuante */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Customizado: Confirmar Exclusão de Missão */}
+      <CustomDialog
+        isOpen={!!deleteMissionTarget}
+        onClose={() => setDeleteMissionTarget(null)}
+        title="Excluir Missão"
+        description={`Tem certeza que deseja excluir a missão "${deleteMissionTarget?.title}"? Esta ação removerá a pontuação relacionada do leaderboard dos alunos.`}
+        confirmLabel={deletingMission ? 'Excluindo...' : 'Sim, Excluir Missão'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteMission}
+        isLoading={deletingMission}
+      />
+
+      {/* Modal Customizado: Confirmar Geração de 4 Semanas */}
+      <CustomDialog
+        isOpen={isGenerateModalOpen}
+        onClose={() => setIsGenerateModalOpen(false)}
+        title="Provisionar Estrutura de 4 Semanas"
+        description="Deseja gerar a estrutura completa com 4 Semanas de sprints e 17 missões recomendadas (Treinos, Cardios, Refeições diárias e Bônus)? Missões já existentes não serão apagadas."
+        confirmLabel={generatingTemplate ? 'Gerando...' : 'Sim, Provisionar Agora'}
+        cancelLabel="Voltar"
+        onConfirm={handleExecuteGenerateTemplate}
+        isLoading={generatingTemplate}
+      />
     </div>
   );
 }

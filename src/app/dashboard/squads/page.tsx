@@ -39,10 +39,17 @@ export default function SquadsManagerPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // 1. Desafios do treinador
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      // 1. Desafios exclusivos do treinador logado (Isolamento Multi-Tenant)
       const { data: challengesData } = await supabase
         .from('challenges')
         .select('id, title')
+        .eq('professional_id', user.id)
         .order('created_at', { ascending: false });
 
       const safeCh = challengesData || [];

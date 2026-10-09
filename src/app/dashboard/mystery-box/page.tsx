@@ -42,9 +42,17 @@ export default function MysteryBoxConfigPage() {
     async function loadData() {
       setLoading(true);
       try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+
+        // 1. Buscar apenas turmas do treinador logado (Isolamento Multi-Tenant)
         const { data: challengesData } = await supabase
           .from('challenges')
           .select('id, title')
+          .eq('professional_id', user.id)
           .order('created_at', { ascending: false });
 
         const safeCh = challengesData || [];
@@ -53,9 +61,18 @@ export default function MysteryBoxConfigPage() {
           setSelectedChallengeId(safeCh[0].id);
         }
 
+        if (safeCh.length === 0) {
+          setRewards([]);
+          setLoading(false);
+          return;
+        }
+
+        const coachChallengeIds = safeCh.map((c: any) => c.id);
+
         const { data: rewardsData } = await supabase
           .from('mystery_box_rewards')
           .select('*')
+          .in('challenge_id', coachChallengeIds)
           .order('created_at', { ascending: false });
 
         setRewards(rewardsData || []);

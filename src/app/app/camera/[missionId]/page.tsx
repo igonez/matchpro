@@ -119,11 +119,18 @@ function CameraCaptureContent() {
         .from('submissions')
         .getPublicUrl(fileName);
 
+      // Formatar legenda com tempo e timestamp para garantir gravação mesmo sem colunas novas
+      let finalCaption = caption.trim() || '';
+      if (durationSeconds) {
+        const formattedDuration = `${Math.floor(durationSeconds / 60)}min ${durationSeconds % 60}s`;
+        finalCaption = finalCaption ? `[TEMPO: ${formattedDuration}] ${finalCaption}` : `[TEMPO: ${formattedDuration}]`;
+      }
+
       const payload: any = {
         mission_id: missionId,
         student_id: user.id,
         photo_url: publicUrl,
-        caption: caption.trim() || null,
+        caption: finalCaption || null,
         latitude: location?.latitude || null,
         longitude: location?.longitude || null,
         location_name: location?.text || null,
@@ -131,33 +138,9 @@ function CameraCaptureContent() {
         status: 'approved',
       };
 
-      if (durationSeconds) {
-        payload.duration_seconds = durationSeconds;
-      }
-      if (startedAtParam) {
-        payload.started_at = startedAtParam;
-      }
-
-      let { error: dbError } = await supabase
+      const { error: dbError } = await supabase
         .from('student_submissions')
         .insert(payload);
-
-      // Fallback de resiliência caso a coluna duration_seconds ainda não tenha sido criada no Supabase SQL
-      if (dbError && dbError.message && dbError.message.includes('duration_seconds')) {
-        console.warn('Coluna duration_seconds não encontrada no banco. Salvando tempo na nota...', dbError);
-        const fallbackPayload = { ...payload };
-        delete fallbackPayload.duration_seconds;
-        if (durationSeconds) {
-          const formattedDuration = `${Math.floor(durationSeconds / 60)}min ${durationSeconds % 60}s`;
-          fallbackPayload.caption = fallbackPayload.caption 
-            ? `[TEMPO: ${formattedDuration}] ${fallbackPayload.caption}`
-            : `[TEMPO: ${formattedDuration}]`;
-        }
-        const retry = await supabase
-          .from('student_submissions')
-          .insert(fallbackPayload);
-        dbError = retry.error;
-      }
 
       if (dbError) throw dbError;
 

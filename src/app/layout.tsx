@@ -9,7 +9,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'ArenaPro — Gamified Fitness Challenges',
+  title: 'Arena Fit Pro — Gamified Fitness Challenges',
   description: 'Plataforma SaaS de gestão gamificada de desafios de fitness, nutrição e saúde com auditoria e ranking em tempo real.',
   manifest: '/manifest.json',
   icons: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'ArenaPro',
+    title: 'Arena Fit Pro',
   },
 };
 

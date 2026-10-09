@@ -42,7 +42,7 @@ export function DashboardSidebar() {
           </div>
           <div>
             <span className="font-black text-lg tracking-tight text-white block leading-none">
-              ArenaPro
+              Arena Fit Pro
             </span>
             <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500 block mt-1">
               COACH_TERMINAL

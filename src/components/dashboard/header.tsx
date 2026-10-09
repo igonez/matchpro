@@ -78,43 +78,14 @@ export function DashboardHeader() {
             <Menu className="h-5 w-5" />
           </button>
 
-          {/* Imagem / Avatar do Coach ao lado do Menu */}
-          <Link
-            href="/dashboard/profile"
-            className="flex items-center gap-2 group p-1 rounded-xl hover:bg-white/5 transition-colors"
-            title="Acessar Meu Perfil"
-          >
-            <div className="h-9 w-9 rounded-xl bg-zinc-900 border border-white/20 overflow-hidden flex items-center justify-center shrink-0 group-hover:border-white/40 transition-colors shadow-sm">
-              {coachProfile?.avatarUrl ? (
-                <img
-                  src={coachProfile.avatarUrl}
-                  alt={coachProfile.fullName}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <User className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
-              )}
-            </div>
-
-            {/* Nome do Coach Visível no Desktop */}
-            <div className="hidden lg:flex flex-col text-left">
-              <span className="text-xs font-mono font-bold text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
-                {coachProfile?.fullName || 'Meu Perfil'}
-              </span>
-              <span className="text-[9px] font-mono text-zinc-500 uppercase">
-                Editar Perfil
-              </span>
-            </div>
-          </Link>
-
           {/* Logo / Brand Mobile */}
-          <div className="md:hidden flex items-center gap-2 ml-1">
+          <div className="md:hidden flex items-center gap-2">
             <span className="font-bold text-sm tracking-tight text-white font-mono">
-              ArenaPro
+              Arena Fit Pro
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 ml-2">
+          <div className="hidden md:flex items-center gap-2">
             <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold font-mono">Painel de Controle</span>
           </div>
         </div>
@@ -151,10 +122,10 @@ export function DashboardHeader() {
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2.5">
                   <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-                    <span className="font-bold font-mono text-white text-xs">AP</span>
+                    <span className="font-bold font-mono text-white text-xs">AFP</span>
                   </div>
                   <div>
-                    <span className="font-black text-sm tracking-tight text-white block">ArenaPro</span>
+                    <span className="font-black text-sm tracking-tight text-white block">Arena Fit Pro</span>
                     <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500">COACH_TERMINAL</span>
                   </div>
                 </div>

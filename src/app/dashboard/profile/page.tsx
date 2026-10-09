@@ -276,7 +276,7 @@ export default function ProfessionalProfilePage() {
               </div>
 
               <div className="space-y-1.5 text-center sm:text-left">
-                <h3 className="text-sm font-bold text-white font-mono">{fullName || 'Coach ArenaPro'}</h3>
+                <h3 className="text-sm font-bold text-white font-mono">{fullName || 'Coach Arena Fit Pro'}</h3>
                 <p className="text-xs text-zinc-400">{userEmail}</p>
                 <p className="text-[10px] font-mono text-zinc-500">
                   {uploadingAvatar ? 'Enviando nova foto...' : 'Formatos aceitos: JPG, PNG, WEBP até 5MB.'}

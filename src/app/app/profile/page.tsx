@@ -198,7 +198,7 @@ export default function StudentProfilePage() {
           </label>
         </div>
 
-        <h2 className="text-lg font-black text-white tracking-tight">{student?.full_name || 'Atleta ArenaPro'}</h2>
+        <h2 className="text-lg font-black text-white tracking-tight">{student?.full_name || 'Atleta Arena Fit Pro'}</h2>
         <p className="text-xs text-zinc-400 mt-0.5 font-mono">Aluno Oficial do Desafio</p>
 
         {/* Estatísticas Rápidas em Grid */}

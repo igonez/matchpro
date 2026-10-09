@@ -20,7 +20,7 @@ export default function HomePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
             </span>
-            <span className="text-white font-semibold">ArenaPro 3.0</span>
+            <span className="text-white font-semibold">Arena Fit Pro 3.0</span>
             <span className="text-zinc-500">|</span>
             <span className="text-zinc-400 hidden sm:inline">Arquitetura Monocromática & Gamificação de Alta Performance</span>
             <Link
@@ -58,7 +58,7 @@ export default function HomePage() {
             </div>
             <div>
               <span className="font-extrabold text-lg tracking-tight text-white block leading-none">
-                ArenaPro
+                Arena Fit Pro
               </span>
               <span className="text-[8px] uppercase font-mono tracking-widest text-zinc-500 block mt-0.5">
                 Enterprise OS
@@ -287,7 +287,7 @@ export default function HomePage() {
               ENGINEERING_SPEC
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Por que métodos comuns falham e o ArenaPro escala?
+              Por que métodos comuns falham e o Arena Fit Pro escala?
             </h2>
             <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
               Grupos e planilhas perdem tração em 10 dias. Criamos um sistema automatizado centrado em 
@@ -367,7 +367,7 @@ export default function HomePage() {
       <footer className="border-t border-white/[0.06] bg-black py-16 px-6 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-zinc-500 font-mono">
           <div className="flex items-center gap-3">
-            <span className="font-bold text-white text-sm">ArenaPro</span>
+            <span className="font-bold text-white text-sm">Arena Fit Pro</span>
             <span>© {new Date().getFullYear()}</span>
             <span>All rights reserved.</span>
           </div>

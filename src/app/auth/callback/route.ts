@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     if (!error && data?.user) {
       const user = data.user;
       const targetRole = roleParam || user.user_metadata?.role || 'student';
-      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuário ArenaPro';
+      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuário Arena Fit Pro';
       const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
 
       // Verificar se já existe perfil em professionals ou students

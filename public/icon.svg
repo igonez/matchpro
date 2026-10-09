@@ -24,7 +24,7 @@
   <rect width="512" height="512" rx="128" fill="url(#bgGlow)" />
   <rect width="508" height="508" x="2" y="2" rx="126" stroke="url(#metalBezel)" stroke-width="4" />
 
-  <!-- Emblema Geométrico Titanium ArenaPro -->
+  <!-- Emblema Geométrico Titanium Arena Fit Pro -->
   <g filter="url(#glowFilter)">
     <!-- Polígono Estelar / Foco Central -->
     <path d="M256 88 L296 216 L424 256 L296 296 L256 424 L216 296 L88 256 L216 216 Z" fill="url(#silverStar)" />

@@ -17,6 +17,7 @@ export function DashboardSidebar() {
 
   const navItems = [
     { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
+    { name: 'Alunos & Finanças', href: '/dashboard/students', active: pathname === '/dashboard/students' },
     { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
     { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
     { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },

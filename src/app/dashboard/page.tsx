@@ -204,30 +204,34 @@ export default function DashboardOverviewPage() {
       {/* Grid de Métricas Principais com 3D Spotlight */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         {/* Card 1: Alunos Ativos */}
-        <SpotlightCard3D className="p-5">
-          <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              ALUNOS_INSCRITOS
-            </span>
-            <span className="h-2 w-2 rounded-full bg-white" />
-          </div>
-          <div className="text-3xl font-black text-white font-mono">{stats.activeStudents}</div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Inscritos nas turmas ativas</p>
-        </SpotlightCard3D>
+        <Link href="/dashboard/students" className="block group">
+          <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
+            <div className="flex items-center justify-between pb-3">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 group-hover:text-white transition-colors">
+                ALUNOS_INSCRITOS →
+              </span>
+              <span className="h-2 w-2 rounded-full bg-white" />
+            </div>
+            <div className="text-3xl font-black text-white font-mono">{stats.activeStudents}</div>
+            <p className="text-[11px] font-mono text-zinc-500 mt-1">Inscritos nas turmas ativas</p>
+          </SpotlightCard3D>
+        </Link>
 
         {/* Card 2: Faturamento */}
-        <SpotlightCard3D className="p-5">
-          <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              FATURAMENTO_TOTAL
-            </span>
-            <span className="text-[10px] font-mono text-zinc-400">BRL</span>
-          </div>
-          <div className="text-3xl font-black text-white font-mono">
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
-          </div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Valor consolidado das inscrições</p>
-        </SpotlightCard3D>
+        <Link href="/dashboard/students" className="block group">
+          <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
+            <div className="flex items-center justify-between pb-3">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 group-hover:text-white transition-colors">
+                FATURAMENTO_TOTAL →
+              </span>
+              <span className="text-[10px] font-mono text-zinc-400">BRL</span>
+            </div>
+            <div className="text-3xl font-black text-white font-mono">
+              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
+            </div>
+            <p className="text-[11px] font-mono text-zinc-500 mt-1">Valor consolidado das inscrições</p>
+          </SpotlightCard3D>
+        </Link>
 
         {/* Card 3: Auditoria Pendente */}
         <SpotlightCard3D className="p-5">

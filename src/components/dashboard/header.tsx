@@ -54,6 +54,7 @@ export function DashboardHeader() {
 
   const navItems = [
     { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard, active: pathname === '/dashboard' },
+    { name: 'Alunos & Finanças', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
     { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
     { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
     { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },

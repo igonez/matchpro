@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
 
+import { CustomDialog } from '@/components/ui/custom-dialog';
+
 export default function EditChallengePage({
   params,
 }: {
@@ -28,6 +30,17 @@ export default function EditChallengePage({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Modal de Exclusão Segura
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [confirmDeleteText, setConfirmDeleteText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   useEffect(() => {
     async function loadChallenge() {
@@ -79,8 +92,8 @@ export default function EditChallengePage({
 
       if (updateError) throw updateError;
 
-      alert('Desafio atualizado com sucesso!');
-      router.push('/dashboard');
+      showToast('Desafio atualizado com sucesso!');
+      setTimeout(() => router.push('/dashboard'), 800);
     } catch (err: any) {
       console.error('Erro ao atualizar desafio:', err);
       setError(err.message || 'Erro ao atualizar dados.');
@@ -89,11 +102,13 @@ export default function EditChallengePage({
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm('Tem certeza de que deseja excluir este desafio? Todos os dados associados serão removidos.')) {
+  const handleConfirmDelete = async () => {
+    if (confirmDeleteText.trim().toLowerCase() !== 'excluir') {
+      setError('Digite "excluir" para confirmar.');
       return;
     }
 
+    setDeleting(true);
     try {
       const { error: delError } = await supabase
         .from('challenges')
@@ -102,16 +117,18 @@ export default function EditChallengePage({
 
       if (delError) throw delError;
 
-      alert('Desafio excluído com sucesso.');
+      setIsDeleteModalOpen(false);
       router.push('/dashboard');
     } catch (err: any) {
-      alert('Erro ao excluir: ' + err.message);
+      setError('Erro ao excluir: ' + err.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
+      <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
         <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
         Carregando dados do desafio...
       </div>
@@ -119,7 +136,17 @@ export default function EditChallengePage({
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 relative">
+      {/* Toast Notificação */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/dashboard">
@@ -136,10 +163,13 @@ export default function EditChallengePage({
         <Button
           variant="ghost"
           size="sm"
-          onClick={handleDelete}
-          className="text-xs text-zinc-500 hover:text-white hover:bg-white/10"
+          onClick={() => {
+            setConfirmDeleteText('');
+            setIsDeleteModalOpen(true);
+          }}
+          className="text-xs text-zinc-400 hover:text-white hover:bg-white/10"
         >
-          <Trash2 className="h-4 w-4 mr-1.5" /> Excluir
+          <Trash2 className="h-4 w-4 mr-1.5" /> Excluir Desafio
         </Button>
       </div>
 
@@ -240,6 +270,31 @@ export default function EditChallengePage({
           </form>
         </CardContent>
       </Card>
+
+      {/* Modal de Exclusão Segura */}
+      <CustomDialog
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Excluir Desafio"
+        description={`Esta ação apagará permanentemente o desafio "${title}", além de todas as missões e histórico dos alunos associados.`}
+        confirmLabel={deleting ? 'Excluindo...' : 'Confirmar Exclusão'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDelete}
+        isLoading={deleting}
+      >
+        <div className="space-y-3">
+          <p className="text-xs text-zinc-300 font-mono">
+            Para confirmar, digite <span className="font-bold text-white bg-white/10 px-1.5 py-0.5 rounded">excluir</span> abaixo:
+          </p>
+          <Input
+            value={confirmDeleteText}
+            onChange={(e) => setConfirmDeleteText(e.target.value)}
+            placeholder="Digite 'excluir' para confirmar"
+            className="text-xs font-mono"
+            autoFocus
+          />
+        </div>
+      </CustomDialog>
     </div>
   );
 }

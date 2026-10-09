@@ -29,11 +29,33 @@ export default function DashboardOverviewPage() {
   const [submittingNotice, setSubmittingNotice] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Modal de Convite & Compartilhamento
+  const [inviteModalChallenge, setInviteModalChallenge] = useState<any | null>(null);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 3000);
+  };
+
+  const handleToggleChallengeStatus = async (challengeId: string, currentStatus: boolean) => {
+    try {
+      const nextStatus = !currentStatus;
+      const { error } = await supabase
+        .from('challenges')
+        .update({ is_active: nextStatus })
+        .eq('id', challengeId);
+
+      if (error) throw error;
+
+      setChallenges((prev) =>
+        prev.map((c) => (c.id === challengeId ? { ...c, is_active: nextStatus } : c))
+      );
+      showToast(nextStatus ? 'Turma ativada com sucesso!' : 'Turma encerrada/pausada.');
+    } catch (err: any) {
+      showToast('Erro ao alterar status: ' + err.message);
+    }
   };
 
   useEffect(() => {
@@ -346,9 +368,17 @@ export default function DashboardOverviewPage() {
               <div key={c.id} className="mono-glass-card p-5 rounded-3xl flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono border border-white/20 px-2 py-0.5 rounded-full text-white">
-                      {c.is_active ? 'ATIVO' : 'ENCERRADO'}
-                    </span>
+                    <button
+                      onClick={() => handleToggleChallengeStatus(c.id, c.is_active)}
+                      title="Clique para alternar status da turma"
+                      className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border transition-all ${
+                        c.is_active
+                          ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
+                          : 'border-white/10 bg-black text-zinc-500 hover:text-white'
+                      }`}
+                    >
+                      {c.is_active ? '● ATIVO' : '○ ENCERRADO'}
+                    </button>
                     <span className="text-xs font-mono font-black text-white">
                       R$ {Number(c.price).toFixed(2)}
                     </span>
@@ -379,14 +409,11 @@ export default function DashboardOverviewPage() {
                       </button>
                     </Link>
                     <button
-                      onClick={() => {
-                        const link = `${window.location.origin}/join/${c.id}`;
-                        navigator.clipboard.writeText(link);
-                        showToast('Link do convite copiado!');
-                      }}
+                      onClick={() => setInviteModalChallenge(c)}
                       className="mono-button-primary px-3 py-1.5 text-xs font-mono"
+                      title="Abrir central de convite"
                     >
-                      Link
+                      Convite
                     </button>
                   </div>
                 </div>
@@ -446,6 +473,68 @@ export default function DashboardOverviewPage() {
           </label>
         </div>
       </CustomDialog>
+
+      {/* MODAL DE CONVITE & COMPARTILHAMENTO DO DESAFIO */}
+      {inviteModalChallenge && (
+        <CustomDialog
+          isOpen={!!inviteModalChallenge}
+          onClose={() => setInviteModalChallenge(null)}
+          title={`Convidar Alunos • ${inviteModalChallenge.title}`}
+          description="Compartilhe este link exclusivo com seus alunos para que eles entrem no desafio."
+          confirmLabel="Fechar"
+          onConfirm={() => setInviteModalChallenge(null)}
+        >
+          <div className="space-y-4">
+            <div>
+              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                Link Público do Desafio
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  readOnly
+                  value={typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''}
+                  className="bg-black/80 border-white/15 text-white rounded-xl text-xs font-mono select-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const link = `${window.location.origin}/join/${inviteModalChallenge.id}`;
+                    navigator.clipboard.writeText(link);
+                    showToast('Link do convite copiado!');
+                  }}
+                  className="mono-button-primary px-3 text-xs shrink-0 font-mono"
+                >
+                  Copiar
+                </button>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-white/10 bg-zinc-900/40 space-y-2">
+              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">
+                Disparo Rápido no WhatsApp
+              </span>
+              <p className="text-xs text-zinc-300">
+                Envie o convite formatado direto nos seus grupos ou no privado de cada atleta:
+              </p>
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  `Fala atleta! As inscrições para o *${inviteModalChallenge.title}* estão oficialmente abertas na plataforma Arena Fit Pro. Acesse o link abaixo e garanta sua vaga agora:\n\n${typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mono-button-secondary w-full py-2 text-xs flex items-center justify-center gap-2 font-mono"
+              >
+                Compartilhar no WhatsApp →
+              </a>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 pt-1 border-t border-white/[0.06]">
+              <span>Inscrição: R$ {Number(inviteModalChallenge.price).toFixed(2)}</span>
+              <span>Status: {inviteModalChallenge.is_active ? 'Turma Aberta' : 'Encerrada'}</span>
+            </div>
+          </div>
+        </CustomDialog>
+      )}
     </div>
   );
 }

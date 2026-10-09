@@ -19,6 +19,12 @@ export default function NewChallengePage() {
   const [price, setPrice] = useState('49.90');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +40,7 @@ export default function NewChallengePage() {
         .from('challenges')
         .insert({
           professional_id: user.id,
-          title,
+          title: title.trim(),
           start_date: startDate,
           end_date: endDate,
           price: parseFloat(price) || 0,
@@ -45,17 +51,29 @@ export default function NewChallengePage() {
 
       if (challengeError) throw challengeError;
 
+      showToast('Desafio criado com sucesso! Abrindo gerenciador de missões...');
       // Redirecionar para adicionar as missões desse desafio
-      router.push(`/dashboard/missions?challengeId=${challenge.id}`);
+      setTimeout(() => {
+        router.push(`/dashboard/missions?challengeId=${challenge.id}`);
+      }, 700);
     } catch (err: any) {
       setError(err.message || 'Erro ao criar desafio.');
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 relative">
+      {/* Toast Notificação */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-3">
         <Link href="/dashboard">
           <Button variant="ghost" size="icon" className="rounded-full">

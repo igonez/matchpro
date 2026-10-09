@@ -73,10 +73,12 @@ export default function DashboardOverviewPage() {
         const safeChallenges = challengesData || [];
         setChallenges(safeChallenges);
 
-        // 2. Contar participantes únicos
-        const { count: participantsCount } = await supabase
+        // 2. Participantes para métricas reais e faturamento
+        const { data: participantsData } = await supabase
           .from('challenge_participants')
-          .select('*', { count: 'exact', head: true });
+          .select('id, challenge_id');
+
+        const participantsList = participantsData || [];
 
         // 3. Contar submissões pendentes de auditoria
         const { count: pendingCount } = await supabase
@@ -84,14 +86,19 @@ export default function DashboardOverviewPage() {
           .select('*', { count: 'exact', head: true })
           .eq('status', 'pending');
 
-        // 4. Calcular faturamento estimado
-        const revenue = safeChallenges.reduce((acc: number, curr: any) => {
-          return acc + (Number(curr.price) || 0);
+        // 4. Calcular faturamento consolidado real (participantes x valor de cada turma)
+        const priceMap = new Map<string, number>();
+        safeChallenges.forEach((c: any) => {
+          priceMap.set(c.id, Number(c.price) || 0);
+        });
+
+        const calculatedRevenue = participantsList.reduce((acc: number, curr: any) => {
+          return acc + (priceMap.get(curr.challenge_id) || 0);
         }, 0);
 
         setStats({
-          activeStudents: participantsCount || 0,
-          totalRevenue: revenue,
+          activeStudents: participantsList.length,
+          totalRevenue: calculatedRevenue,
           pendingSubmissions: pendingCount || 0,
           activeChallenges: safeChallenges.filter((c: any) => c.is_active).length,
         });
@@ -290,10 +297,15 @@ export default function DashboardOverviewPage() {
             {atRiskStudents.map((item) => {
               const studentFirstName = item.student_name?.split(' ')[0] || 'Atleta';
               const cleanPhone = item.student_phone?.replace(/\D/g, '') || '';
+              const targetPhone = cleanPhone
+                ? cleanPhone.startsWith('55') && cleanPhone.length >= 12
+                  ? cleanPhone
+                  : `55${cleanPhone}`
+                : '';
               const message = encodeURIComponent(
                 `Fala ${studentFirstName}! Notei que você está ausente do desafio nesses últimos dias. Está tudo bem por aí? Sua equipe e eu estamos aguardando você, vamos voltar com tudo hoje!`
               );
-              const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}?text=${message}` : null;
+              const waLink = targetPhone ? `https://wa.me/${targetPhone}?text=${message}` : null;
 
               return (
                 <div
@@ -530,6 +542,27 @@ export default function DashboardOverviewPage() {
               >
                 Compartilhar no WhatsApp →
               </a>
+            </div>
+
+            {/* QR Code Monocromático para Stories / Balcão */}
+            <div className="p-3.5 rounded-xl border border-white/10 bg-black/60 flex flex-col items-center justify-center text-center space-y-3">
+              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
+                QR CODE • STORIES & BALCÃO DA ACADEMIA
+              </span>
+              <div className="p-2 bg-black border border-white/20 rounded-2xl shadow-inner">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+                    typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''
+                  )}&bgcolor=000000&color=ffffff&margin=10`}
+                  alt="QR Code do Desafio"
+                  className="w-36 h-36 rounded-lg invert brightness-125 contrast-125"
+                  loading="lazy"
+                />
+              </div>
+              <p className="text-[11px] text-zinc-400 font-mono">
+                Peça para o aluno apontar a câmera do celular para entrar na hora.
+              </p>
             </div>
 
             <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 pt-1 border-t border-white/[0.06]">

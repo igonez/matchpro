@@ -73,7 +73,7 @@ export function PwaInstallPrompt() {
             <Smartphone className="h-4 w-4" />
           </div>
           <div>
-            <p className="font-bold text-xs text-white font-mono">Adicionar Arena Fit Pro na Tela Inicial</p>
+            <p className="font-bold text-xs text-white font-mono">Adicionar ArenaFitPro na Tela Inicial</p>
             <p className="text-[10px] text-zinc-400 font-mono">Acesso rápido com 1 toque sem barra de navegador</p>
           </div>
         </div>
@@ -107,7 +107,7 @@ export function PwaInstallPrompt() {
             </div>
 
             <p className="text-xs text-zinc-300 leading-relaxed font-sans">
-              Para transformar o Arena Fit Pro em um aplicativo na sua tela de início:
+              Para transformar o ArenaFitPro em um aplicativo na sua tela de início:
             </p>
 
             <div className="space-y-3 font-mono text-xs">

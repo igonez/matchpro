@@ -534,7 +534,7 @@ export default function DashboardOverviewPage() {
               </p>
               <a
                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  `Fala atleta! As inscrições para o *${inviteModalChallenge.title}* estão oficialmente abertas na plataforma Arena Fit Pro. Acesse o link abaixo e garanta sua vaga agora:\n\n${typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''}`
+                  `Fala atleta! As inscrições para o *${inviteModalChallenge.title}* estão oficialmente abertas na plataforma ArenaFitPro. Acesse o link abaixo e garanta sua vaga agora:\n\n${typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

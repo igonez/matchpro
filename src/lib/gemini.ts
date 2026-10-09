@@ -17,7 +17,7 @@ export async function analyzeSubmissionPhoto({
   caption?: string;
 }) {
   try {
-    const prompt = `Você é o sistema de Inteligência Artificial do Arena Fit Pro, especializado em nutrição e alta performance esportiva.
+    const prompt = `Você é o sistema de Inteligência Artificial do ArenaFitPro, especializado em nutrição e alta performance esportiva.
 Analise a imagem da submissão do aluno e retorne um parecer técnico em português em formato JSON puro.
 Categoria informada pelo aluno: ${category}
 Legenda enviada pelo aluno: "${caption || 'Sem legenda'}"

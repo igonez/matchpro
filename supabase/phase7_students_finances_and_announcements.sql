@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Arena Fit Pro: Migração Fase 7 (Gestão de Alunos, Finanças & Permissões RLS)
+-- ArenaFitPro: Migração Fase 7 (Gestão de Alunos, Finanças & Permissões RLS)
 -- Execute este script no SQL Editor do painel do Supabase
 -- ==============================================================================
 

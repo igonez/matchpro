@@ -79,14 +79,14 @@ export default function LoginPage() {
           if (role === 'professional') {
             await supabase.from('professionals').insert({
               id: authData.user.id,
-              full_name: fullName || 'Profissional Arena Fit Pro',
+              full_name: fullName || 'Profissional ArenaFitPro',
               phone: phone || null,
               specialty: specialty,
             });
           } else {
             await supabase.from('students').insert({
               id: authData.user.id,
-              full_name: fullName || 'Aluno Arena Fit Pro',
+              full_name: fullName || 'Aluno ArenaFitPro',
               phone: phone || null,
             });
           }
@@ -166,7 +166,7 @@ export default function LoginPage() {
               <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
             </svg>
           </div>
-          <span className="font-extrabold text-base tracking-tight text-white">Arena Fit Pro</span>
+          <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
         </Link>
 
         <Link href="/" className="text-xs font-mono text-zinc-500 hover:text-white transition-colors">
@@ -391,7 +391,7 @@ export default function LoginPage() {
 
       {/* Footer Minimalista */}
       <div className="max-w-md w-full mx-auto text-center text-[10px] font-mono text-zinc-600 z-10 pb-2">
-        Arena Fit Pro Security Kernel • 256-Bit Encrypted
+        ArenaFitPro Security Kernel • 256-Bit Encrypted
       </div>
     </div>
   );

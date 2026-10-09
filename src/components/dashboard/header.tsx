@@ -115,7 +115,7 @@ export function DashboardHeader() {
           {/* Logo / Brand Mobile */}
           <div className="md:hidden flex items-center gap-2">
             <span className="font-bold text-sm tracking-tight text-white font-mono">
-              Arena Fit Pro
+              ArenaFitPro
             </span>
           </div>
 
@@ -159,7 +159,7 @@ export function DashboardHeader() {
                     <span className="font-bold font-mono text-white text-xs">AFP</span>
                   </div>
                   <div>
-                    <span className="font-black text-sm tracking-tight text-white block">Arena Fit Pro</span>
+                    <span className="font-black text-sm tracking-tight text-white block">ArenaFitPro</span>
                     <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500">COACH_TERMINAL</span>
                   </div>
                 </div>

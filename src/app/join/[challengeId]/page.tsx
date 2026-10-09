@@ -176,7 +176,7 @@ export default function JoinChallengePage() {
                 <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
               </svg>
             </div>
-            <span className="font-extrabold text-base tracking-tight text-white">Arena Fit Pro</span>
+            <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
           </Link>
 
           <button
@@ -275,7 +275,7 @@ export default function JoinChallengePage() {
 
       {/* Footer Minimalista */}
       <footer className="border-t border-white/[0.06] py-8 px-6 text-center text-[10px] font-mono text-zinc-600 relative z-10">
-        Arena Fit Pro Technologies • Autenticação Criptografada
+        ArenaFitPro Technologies • Autenticação Criptografada
       </footer>
     </div>
   );

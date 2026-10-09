@@ -275,7 +275,7 @@ export function StudentBottomNav() {
                 [ DESCONECTAR DA CONTA ]
               </button>
               <p className="text-[9px] font-mono text-zinc-600 text-center">
-                Arena Fit Pro OS • v3.0 Monochromatic
+                ArenaFitPro OS • v3.0 Monochromatic
               </p>
             </div>
 

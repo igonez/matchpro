@@ -15,7 +15,6 @@ import {
   ChevronRight, 
   Sparkles,
   ArrowUpRight,
-  ShieldCheck,
   TrendingUp,
   CreditCard
 } from 'lucide-react';
@@ -284,7 +283,7 @@ export default function DashboardFinanceAndStudentsPage() {
       </div>
 
       {/* Grid de Métricas Financeiras Principais */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
             <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
@@ -326,17 +325,6 @@ export default function DashboardFinanceAndStudentsPage() {
             )}
           </div>
           <p className="text-[11px] font-mono text-zinc-500 mt-1">Valor médio por atleta</p>
-        </SpotlightCard3D>
-
-        <SpotlightCard3D className="p-5">
-          <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              SEGURANÇA_DE_DADOS
-            </span>
-            <ShieldCheck className="h-4 w-4 text-white" />
-          </div>
-          <div className="text-sm font-bold text-white font-mono mt-1">ISOLAMENTO ATIVO</div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Multi-tenant via RLS Supabase</p>
         </SpotlightCard3D>
       </div>
 

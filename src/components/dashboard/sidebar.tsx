@@ -15,18 +15,50 @@ export function DashboardSidebar() {
     router.push('/login');
   };
 
-  const navItems = [
-    { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
-    { name: 'Alunos & Finanças', href: '/dashboard/students', active: pathname === '/dashboard/students' },
-    { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
-    { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
-    { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },
-    { name: 'Mural de Avisos', href: '/dashboard/announcements', active: pathname === '/dashboard/announcements' },
-    { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', active: pathname === '/dashboard/mystery-box' },
-    { name: 'Squads (Equipes)', href: '/dashboard/squads', active: pathname === '/dashboard/squads' },
-    { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors' },
-    { name: 'Criar Desafio', href: '/dashboard/challenges/new', active: pathname === '/dashboard/challenges/new' },
-    { name: 'Meu Perfil', href: '/dashboard/profile', active: pathname === '/dashboard/profile' },
+  interface NavItem {
+    name: string;
+    href: string;
+    active: boolean;
+    badge?: string;
+  }
+
+  interface NavGroup {
+    title: string;
+    items: NavItem[];
+  }
+
+  const navGroups: NavGroup[] = [
+    {
+      title: 'MONITORAMENTO',
+      items: [
+        { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
+        { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
+      ],
+    },
+    {
+      title: 'GESTÃO DA TURMA',
+      items: [
+        { name: 'Alunos & Finanças', href: '/dashboard/students', active: pathname === '/dashboard/students' },
+        { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
+        { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },
+        { name: 'Mural de Avisos', href: '/dashboard/announcements', active: pathname === '/dashboard/announcements' },
+      ],
+    },
+    {
+      title: 'RECURSOS PRO',
+      items: [
+        { name: 'Squads (Equipes)', href: '/dashboard/squads', active: pathname === '/dashboard/squads', badge: 'PRO' },
+        { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
+        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors', badge: 'PRO' },
+      ],
+    },
+    {
+      title: 'CONFIGURAÇÕES',
+      items: [
+        { name: 'Criar Desafio', href: '/dashboard/challenges/new', active: pathname === '/dashboard/challenges/new' },
+        { name: 'Meu Perfil', href: '/dashboard/profile', active: pathname === '/dashboard/profile' },
+      ],
+    },
   ];
 
   return (
@@ -51,21 +83,37 @@ export function DashboardSidebar() {
           </div>
         </Link>
 
-        {/* Navigation Monocromática com Destaque de Vidro */}
-        <nav className="space-y-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono tracking-wide transition-all ${
-                item.active
-                  ? 'bg-white/10 text-white font-bold border border-white/20 shadow-sm'
-                  : 'text-zinc-500 hover:text-white hover:bg-white/[0.04]'
-              }`}
-            >
-              <span>{item.name}</span>
-              {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
-            </Link>
+        {/* Navigation Monocromática com Subgrupos */}
+        <nav className="space-y-4">
+          {navGroups.map((group) => (
+            <div key={group.title} className="space-y-1">
+              <div className="px-3 pb-1 text-[10px] font-mono uppercase tracking-widest text-zinc-500 font-semibold select-none">
+                {group.title}
+              </div>
+              <div className="space-y-0.5">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono tracking-wide transition-all ${
+                      item.active
+                        ? 'bg-white/10 text-white font-bold border border-white/20 shadow-sm'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="truncate">{item.name}</span>
+                      {item.badge && (
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-white/10 text-zinc-400 border border-white/15 opacity-75 shrink-0">
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                    {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse shrink-0 ml-1.5" />}
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
       </div>

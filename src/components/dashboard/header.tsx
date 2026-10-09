@@ -52,18 +52,51 @@ export function DashboardHeader() {
     router.push('/login');
   };
 
-  const navItems = [
-    { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard, active: pathname === '/dashboard' },
-    { name: 'Alunos & Finanças', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
-    { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
-    { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
-    { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
-    { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
-    { name: 'Mystery Box', href: '/dashboard/mystery-box', icon: Gift, active: pathname === '/dashboard/mystery-box' },
-    { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads' },
-    { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', icon: ShoppingBag, active: pathname === '/dashboard/sponsors' },
-    { name: 'Criar Desafio', href: '/dashboard/challenges/new', icon: PlusCircle, active: pathname === '/dashboard/challenges/new' },
-    { name: 'Meu Perfil', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
+  interface NavItem {
+    name: string;
+    href: string;
+    icon: any;
+    active: boolean;
+    badge?: string;
+  }
+
+  interface NavGroup {
+    title: string;
+    items: NavItem[];
+  }
+
+  const navGroups: NavGroup[] = [
+    {
+      title: 'MONITORAMENTO',
+      items: [
+        { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard, active: pathname === '/dashboard' },
+        { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
+      ],
+    },
+    {
+      title: 'GESTÃO DA TURMA',
+      items: [
+        { name: 'Alunos & Finanças', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
+        { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
+        { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
+        { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
+      ],
+    },
+    {
+      title: 'RECURSOS PRO',
+      items: [
+        { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
+        { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', icon: Gift, active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
+        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', icon: ShoppingBag, active: pathname === '/dashboard/sponsors', badge: 'PRO' },
+      ],
+    },
+    {
+      title: 'CONFIGURAÇÕES',
+      items: [
+        { name: 'Criar Desafio', href: '/dashboard/challenges/new', icon: PlusCircle, active: pathname === '/dashboard/challenges/new' },
+        { name: 'Meu Perfil', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
+      ],
+    },
   ];
 
   return (
@@ -139,29 +172,47 @@ export function DashboardHeader() {
                 </button>
               </div>
 
-              {/* Links de Navegação Mobile */}
-              <nav className="space-y-1.5 overflow-y-auto max-h-[calc(100vh-210px)] pr-1">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono tracking-wide transition-all ${
-                        item.active
-                          ? 'bg-white text-black font-bold shadow-md'
-                          : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon className={`h-4 w-4 ${item.active ? 'text-black' : 'text-zinc-400'}`} />
-                        <span>{item.name}</span>
-                      </div>
-                      {item.active && <span className="h-1.5 w-1.5 rounded-full bg-black" />}
-                    </Link>
-                  );
-                })}
+              {/* Links de Navegação Mobile Agrupados */}
+              <nav className="space-y-4 overflow-y-auto max-h-[calc(100vh-210px)] pr-1">
+                {navGroups.map((group) => (
+                  <div key={group.title} className="space-y-1">
+                    <div className="px-3 pb-0.5 text-[9px] font-mono uppercase tracking-widest text-zinc-500 font-semibold select-none">
+                      {group.title}
+                    </div>
+                    <div className="space-y-1">
+                      {group.items.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono tracking-wide transition-all ${
+                              item.active
+                                ? 'bg-white text-black font-bold shadow-md'
+                                : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <Icon className={`h-4 w-4 shrink-0 ${item.active ? 'text-black' : 'text-zinc-400'}`} />
+                              <span className="truncate">{item.name}</span>
+                              {item.badge && (
+                                <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded shrink-0 ${
+                                  item.active
+                                    ? 'bg-black/10 text-black border border-black/20'
+                                    : 'bg-white/10 text-zinc-400 border border-white/15 opacity-75'
+                                }`}>
+                                  {item.badge}
+                                </span>
+                              )}
+                            </div>
+                            {item.active && <span className="h-1.5 w-1.5 rounded-full bg-black shrink-0 ml-1.5" />}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </nav>
             </div>
 

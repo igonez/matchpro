@@ -26,7 +26,8 @@ function CameraCaptureContent() {
   const durationSeconds = durationParam ? parseInt(durationParam, 10) : null;
   const supabase = createClient();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
   const [mission, setMission] = useState<any>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -83,6 +84,55 @@ function CameraCaptureContent() {
     );
   };
 
+  // Compressão inteligente no cliente para evitar timeouts de 15MB em conexões móveis
+  const compressImage = async (file: File): Promise<Blob> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.src = objectUrl;
+
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        const maxDimension = 1280;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(file);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob || file);
+          },
+          'image/jpeg',
+          0.82
+        );
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(file);
+      };
+    });
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -103,12 +153,14 @@ function CameraCaptureContent() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado.');
 
-      const fileExt = selectedFile.name.split('.').pop() || 'jpg';
-      const fileName = `${user.id}/${missionId}-${Date.now()}.${fileExt}`;
+      // 1. Comprimir imagem no navegador para upload ultra-rápido (< 300KB)
+      const compressedBlob = await compressImage(selectedFile);
+      const fileName = `${user.id}/${missionId}-${Date.now()}.jpg`;
 
-      const { data: storageData, error: storageError } = await supabase.storage
+      const { error: storageError } = await supabase.storage
         .from('submissions')
-        .upload(fileName, selectedFile, {
+        .upload(fileName, compressedBlob, {
+          contentType: 'image/jpeg',
           cacheControl: '3600',
           upsert: true,
         });
@@ -119,13 +171,14 @@ function CameraCaptureContent() {
         .from('submissions')
         .getPublicUrl(fileName);
 
-      // Formatar legenda com tempo e timestamp para garantir gravação mesmo sem colunas novas
+      // Formatar legenda com tempo e timestamp
       let finalCaption = caption.trim() || '';
       if (durationSeconds) {
         const formattedDuration = `${Math.floor(durationSeconds / 60)}min ${durationSeconds % 60}s`;
         finalCaption = finalCaption ? `[TEMPO: ${formattedDuration}] ${finalCaption}` : `[TEMPO: ${formattedDuration}]`;
       }
 
+      // Payload completo com tentativa de inserção
       const payload: any = {
         mission_id: missionId,
         student_id: user.id,
@@ -142,7 +195,22 @@ function CameraCaptureContent() {
         .from('student_submissions')
         .insert(payload);
 
-      if (dbError) throw dbError;
+      // Fallback resiliente: se der erro de coluna ausente, insere apenas campos obrigatórios
+      if (dbError) {
+        console.warn('Erro ao inserir com colunas extras, aplicando fallback essencial:', dbError);
+        const fallbackPayload = {
+          mission_id: missionId,
+          student_id: user.id,
+          photo_url: publicUrl,
+          caption: finalCaption || null,
+          status: 'approved',
+        };
+        const { error: fallbackError } = await supabase
+          .from('student_submissions')
+          .insert(fallbackPayload);
+
+        if (fallbackError) throw fallbackError;
+      }
 
       router.push('/app');
     } catch (err: any) {
@@ -229,10 +297,7 @@ function CameraCaptureContent() {
             </div>
           </div>
         ) : (
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full aspect-[3/4] max-h-[60vh] rounded-3xl border border-dashed border-white/20 hover:border-white/50 bg-black/70 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-colors relative group"
-          >
+          <div className="w-full aspect-[3/4] max-h-[60vh] rounded-3xl border border-dashed border-white/20 bg-black/70 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center transition-colors relative group">
             {/* Mirante Vetorial SVG */}
             <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
               <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -241,19 +306,45 @@ function CameraCaptureContent() {
               </svg>
             </div>
             <h3 className="font-bold text-sm text-white font-mono uppercase tracking-wider">
-              ACIONAR SENSOR ÓPTICO
+              REGISTRO DE CHECK-IN
             </h3>
-            <p className="text-xs text-zinc-400 max-w-xs mt-1">
-              Toque para abrir a câmera ao vivo com validação instantânea de GPS e carimbo horário.
+            <p className="text-xs text-zinc-400 max-w-xs mt-1 mb-5">
+              Tire a foto do seu treino ou escolha uma da galeria com carimbo de horário automático.
             </p>
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full max-w-xs">
+              <button
+                type="button"
+                onClick={() => cameraInputRef.current?.click()}
+                className="mono-button-primary flex-1 py-2.5 text-xs font-mono font-bold"
+              >
+                Tirar Foto Agora
+              </button>
+              <button
+                type="button"
+                onClick={() => galleryInputRef.current?.click()}
+                className="mono-button-secondary flex-1 py-2.5 text-xs font-mono"
+              >
+                Galeria de Fotos
+              </button>
+            </div>
           </div>
         )}
 
+        {/* Input da Câmera (Ambiente) */}
         <input
-          ref={fileInputRef}
+          ref={cameraInputRef}
           type="file"
           accept="image/*"
           capture="environment"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        {/* Input da Galeria */}
+        <input
+          ref={galleryInputRef}
+          type="file"
+          accept="image/*"
           onChange={handleFileChange}
           className="hidden"
         />
@@ -283,7 +374,6 @@ function CameraCaptureContent() {
                   setPreviewUrl(null);
                   setCaptureTime(null);
                   setLocation(null);
-                  fileInputRef.current?.click();
                 }}
                 disabled={uploading}
                 className="mono-button-secondary flex-1 h-11 text-xs font-mono"
@@ -301,12 +391,20 @@ function CameraCaptureContent() {
             </div>
           </div>
         ) : (
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="mono-button-primary w-full h-12 text-xs font-mono font-bold"
-          >
-            ABRIR CÂMERA DO APARELHO →
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => cameraInputRef.current?.click()}
+              className="mono-button-primary h-12 text-xs font-mono font-bold"
+            >
+              ABRIR CÂMERA →
+            </button>
+            <button
+              onClick={() => galleryInputRef.current?.click()}
+              className="mono-button-secondary h-12 text-xs font-mono"
+            >
+              USAR GALERIA
+            </button>
+          </div>
         )}
       </div>
     </div>

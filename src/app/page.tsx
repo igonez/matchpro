@@ -89,40 +89,9 @@ export default function HomePage() {
       {/* 1. Background 3D com Partículas Monocromáticas */}
       <Monochrome3DBackground />
 
-      {/* 2. Top Specular Release Pill */}
-      <div className="pt-3 px-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-center">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/10 bg-zinc-950/80 backdrop-blur-xl text-zinc-300 text-[11px] font-medium tracking-wide shadow-2xl">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
-            </span>
-            <span className="text-white font-semibold">ArenaFitPro 3.0</span>
-            <span className="text-zinc-500 hidden sm:inline">|</span>
-            <span className="text-zinc-400 hidden sm:inline">
-              Infraestrutura de Desafios Fitness & Split Pix D+0
-            </span>
-            <Link
-              href="/login"
-              className="text-white hover:text-zinc-300 font-bold ml-1 inline-flex items-center gap-1 group"
-            >
-              Criar Conta Grátis
-              <svg
-                className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Floating Navbar Monocromática Estilo Linear / 21st.dev */}
-      <header className="sticky top-4 z-50 px-4 sm:px-6 mt-2">
-        <div className="max-w-5xl mx-auto mono-glass-pill px-5 sm:px-6 h-16 flex items-center justify-between shadow-2xl">
+      {/* 2. Floating Navbar Monocromática com Cantos Arredondados */}
+      <header className="sticky top-4 sm:top-6 z-50 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto mono-glass-pill rounded-full px-5 sm:px-7 h-16 flex items-center justify-between shadow-2xl">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="h-9 w-9 rounded-xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform">
               <div className="h-full w-full bg-black rounded-[11px] flex items-center justify-center">

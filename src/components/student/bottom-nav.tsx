@@ -230,8 +230,8 @@ export function StudentBottomNav() {
 
               {/* Lista Vertical de Módulos */}
               <div className="space-y-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-2">
-                  NAVEGAÇÃO_DO_APP
+                <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-2">
+                  Navegação
                 </span>
 
                 {verticalMenuItems.map((item) => (
@@ -246,12 +246,12 @@ export function StudentBottomNav() {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold text-white">
+                      <span className="text-xs font-semibold text-white">
                         {item.title}
                       </span>
-                      {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
+                      {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
                     </div>
-                    <p className="text-[10px] font-mono text-zinc-500 mt-0.5">
+                    <p className="text-xs text-zinc-400 mt-0.5">
                       {item.subtitle}
                     </p>
                   </Link>
@@ -265,20 +265,20 @@ export function StudentBottomNav() {
                 <Link
                   href="/dashboard"
                   onClick={() => setShowVerticalMenu(false)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-white text-black font-mono font-bold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
+                  className="w-full py-2.5 px-3 rounded-xl bg-white text-black font-semibold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
                 >
-                  <span>← VOLTAR AO PAINEL DO COACH</span>
+                  <span>← Voltar ao Painel do Coach</span>
                 </Link>
               )}
 
               <button
                 onClick={handleSignOut}
-                className="w-full py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors text-center"
+                className="w-full py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition-colors text-center"
               >
-                [ DESCONECTAR DA CONTA ]
+                Sair da Conta
               </button>
-              <p className="text-[9px] font-mono text-zinc-600 text-center">
-                ArenaFitPro OS • v3.0 Monochromatic
+              <p className="text-[11px] text-zinc-500 text-center">
+                ArenaFitPro
               </p>
             </div>
 
@@ -292,10 +292,10 @@ export function StudentBottomNav() {
           <div className="mono-glass-card rounded-t-[32px] p-6 space-y-4 max-h-[80vh] flex flex-col border-t border-white/20">
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div>
-                <h3 className="font-black text-sm text-white font-mono uppercase tracking-wider">
-                  REGISTRAR CHECK-IN
+                <h3 className="font-bold text-sm text-white">
+                  Registrar Check-in
                 </h3>
-                <p className="text-[11px] text-zinc-400">Escolha a tarefa para abrir o sensor óptico com GPS</p>
+                <p className="text-xs text-zinc-400">Escolha a atividade para comprovar sua meta de hoje</p>
               </div>
               <button
                 onClick={() => setShowQuickSheet(false)}
@@ -307,7 +307,7 @@ export function StudentBottomNav() {
 
             <div className="space-y-2 overflow-y-auto flex-1 py-1">
               {pendingMissions.length === 0 ? (
-                <div className="text-center py-6 text-zinc-500 text-xs font-mono">
+                <div className="text-center py-6 text-zinc-400 text-xs">
                   Nenhuma missão configurada no momento.
                 </div>
               ) : (
@@ -319,13 +319,13 @@ export function StudentBottomNav() {
                   >
                     <div>
                       <p className="font-bold text-xs text-white">{m.title}</p>
-                      <p className="text-[10px] font-mono text-zinc-500 uppercase mt-0.5">
-                        +{m.points_rewarded} PTS • {m.category}
+                      <p className="text-xs text-zinc-400 mt-0.5">
+                        +{m.points_rewarded} pts • {m.category}
                       </p>
                     </div>
 
-                    <span className="text-[10px] font-mono font-bold text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
-                      {m.category === 'treino' || m.category === 'cardio' ? 'INICIAR ▶' : 'FOTOGRAFAR →'}
+                    <span className="text-xs font-semibold text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+                      {m.category === 'treino' || m.category === 'cardio' ? 'Iniciar' : 'Registrar foto'}
                     </span>
                   </button>
                 ))

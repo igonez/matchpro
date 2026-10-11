@@ -190,24 +190,24 @@ export default function StudentSocialFeedPage() {
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
-      {/* Header Monocromático */}
+      {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div>
-          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
-            LIVE_FEED_STREAM
+          <span className="text-[11px] text-zinc-400 font-medium block">
+            Comunidade
           </span>
-          <h1 className="text-xl font-black text-white">Comunidade & Feed</h1>
-          <p className="text-[11px] text-zinc-400">Check-ins autenticados em tempo real com GPS e horário</p>
+          <h1 className="text-xl font-black text-white">Feed da Turma</h1>
+          <p className="text-xs text-zinc-400">Check-ins autenticados em tempo real com foto e localização</p>
         </div>
       </div>
 
       {loading ? (
-        <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
+        <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-400 text-xs relative z-10">
           <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          CARREGANDO STREAM...
+          Carregando publicações...
         </div>
       ) : posts.length === 0 ? (
-        <div className="mono-glass-card p-10 text-center text-xs font-mono text-zinc-500 relative z-10">
+        <div className="mono-glass-card p-10 text-center text-xs text-zinc-400 relative z-10">
           Nenhuma publicação aprovada no momento. Os primeiros check-ins validados aparecerão aqui.
         </div>
       ) : (
@@ -225,7 +225,7 @@ export default function StudentSocialFeedPage() {
                 <div className="p-3.5 flex items-center justify-between border-b border-white/[0.06]">
                   <div className="flex items-center gap-2.5">
                     <div className="h-9 w-9 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shrink-0">
-                      <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+                      <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-bold text-xs text-white overflow-hidden">
                         {post.students?.avatar_url ? (
                           <img
                             src={post.students.avatar_url}
@@ -241,7 +241,7 @@ export default function StudentSocialFeedPage() {
                       <p className="font-bold text-xs text-white">
                         {post.students?.full_name || 'Atleta'}
                       </p>
-                      <div className="flex items-center gap-2 text-[10px] font-mono text-zinc-400">
+                      <div className="flex items-center gap-2 text-xs text-zinc-400">
                         <span>
                           {new Date(post.client_captured_at || post.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                         </span>
@@ -254,8 +254,8 @@ export default function StudentSocialFeedPage() {
                     </div>
                   </div>
 
-                  <span className="text-[10px] font-mono font-bold text-white bg-white/10 border border-white/20 px-2 py-0.5 rounded-md">
-                    +{post.missions?.points_rewarded || 10} PTS
+                  <span className="text-xs font-semibold text-white bg-white/10 border border-white/20 px-2.5 py-0.5 rounded-full font-mono">
+                    +{post.missions?.points_rewarded || 10} pts
                   </span>
                 </div>
 

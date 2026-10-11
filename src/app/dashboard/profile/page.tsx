@@ -195,14 +195,14 @@ export default function ProfessionalProfilePage() {
 
   return (
     <div className="space-y-6 max-w-4xl pb-16">
-      {/* Top Banner Monocromático */}
+      {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
-              COACH_IDENTITY
+            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+              Identidade do Treinador
             </span>
-            <span className="text-xs text-zinc-500 font-mono">ACCOUNT_SETTINGS</span>
+            <span className="text-xs text-zinc-400 font-medium">Configurações da Conta</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Meu Perfil Profissional</h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
@@ -211,9 +211,9 @@ export default function ProfessionalProfilePage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-[11px] font-mono text-zinc-400 flex items-center gap-2">
+          <div className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-zinc-400 flex items-center gap-2">
             <ShieldCheck className="h-3.5 w-3.5 text-white" />
-            <span>ID: {professionalId.substring(0, 8)}...</span>
+            <span className="font-mono">ID: {professionalId.substring(0, 8)}...</span>
           </div>
         </div>
       </div>
@@ -221,7 +221,7 @@ export default function ProfessionalProfilePage() {
       {/* Alertas de Notificação */}
       {notification && (
         <div
-          className={`p-4 rounded-2xl border text-xs font-mono flex items-center gap-2.5 transition-all ${
+          className={`p-4 rounded-2xl border text-xs font-medium flex items-center gap-2.5 transition-all ${
             notification.type === 'success'
               ? 'bg-zinc-950/80 border-white/40 text-white shadow-lg shadow-white/5'
               : 'bg-zinc-950/80 border-red-500/40 text-red-300'

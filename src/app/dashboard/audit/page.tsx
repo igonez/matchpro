@@ -197,15 +197,18 @@ export default function FiscalizacaoPage() {
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
-      {/* Header Monocromático */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-1">
-            AUDIT_KERNEL_INTERFACE
-          </span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+              Auditoria
+            </span>
+            <span className="text-xs text-zinc-400 font-medium">Revisão de check-ins</span>
+          </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Auditoria & Fiscalização de Fotos</h1>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Check-ins auditáveis com GPS e horário militar. Invalide apenas fotos em desacordo para dedução de pontos.
+            Check-ins auditáveis com foto, localização e horário. Invalide apenas fotos em desacordo para dedução de pontos.
           </p>
         </div>
 
@@ -214,7 +217,7 @@ export default function FiscalizacaoPage() {
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl bg-black border border-white/15 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/30"
+              className="h-10 rounded-xl bg-black border border-white/15 text-white text-xs px-3 font-medium focus:outline-none focus:border-white/30"
             >
               <option value="all">Todas as Minhas Turmas ({challenges.length})</option>
               {challenges.map((c) => (
@@ -228,9 +231,9 @@ export default function FiscalizacaoPage() {
           <button
             onClick={fetchData}
             disabled={loading}
-            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-mono justify-center flex"
+            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold justify-center flex"
           >
-            {loading ? 'ATUALIZANDO...' : 'ATUALIZAR FILA'}
+            {loading ? 'Atualizando...' : 'Atualizar Lista'}
           </button>
         </div>
       </div>
@@ -239,8 +242,8 @@ export default function FiscalizacaoPage() {
       {reportedCount > 0 && (
         <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between gap-3 relative z-10 border-white/20">
           <div>
-            <p className="font-bold text-xs text-white font-mono uppercase">
-              {reportedCount} FOTO(S) SINALIZADA(S) PELA TURMA
+            <p className="font-bold text-xs text-white">
+              {reportedCount} foto(s) sinalizada(s) pela turma
             </p>
             <p className="text-xs text-zinc-400">
               Colegas reportaram inconsistências nesta submissão. Avalie prioritariamente.
@@ -248,44 +251,44 @@ export default function FiscalizacaoPage() {
           </div>
           <button
             onClick={() => setFilter('reported')}
-            className="mono-button-primary px-3 py-1.5 text-xs font-mono shrink-0"
+            className="mono-button-primary px-3 py-1.5 text-xs font-semibold shrink-0"
           >
-            FILTRAR DENÚNCIAS
+            Filtrar denúncias
           </button>
         </div>
       )}
 
-      {/* Filtros em Abas Monocromáticas */}
+      {/* Filtros em Abas */}
       <div className="flex items-center gap-2 relative z-10 overflow-x-auto no-scrollbar pb-1">
         <button
           onClick={() => setFilter('all')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono shrink-0 transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all ${
             filter === 'all'
               ? 'bg-zinc-800 text-white font-bold border border-white/20'
-              : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
+              : 'bg-black/60 border border-white/10 text-zinc-400 hover:text-white'
           }`}
         >
-          TODAS ({submissions.length})
+          Todas ({submissions.length})
         </button>
         <button
           onClick={() => setFilter('approved')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono shrink-0 transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all ${
             filter === 'approved'
               ? 'bg-zinc-800 text-white font-bold border border-white/20'
-              : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
+              : 'bg-black/60 border border-white/10 text-zinc-400 hover:text-white'
           }`}
         >
-          APROVADAS
+          Aprovadas
         </button>
         <button
           onClick={() => setFilter('rejected')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-mono shrink-0 transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all ${
             filter === 'rejected'
               ? 'bg-zinc-800 text-white font-bold border border-white/20'
-              : 'bg-black/60 border border-white/10 text-zinc-500 hover:text-white'
+              : 'bg-black/60 border border-white/10 text-zinc-400 hover:text-white'
           }`}
         >
-          INVALIDADAS
+          Invalidadas
         </button>
       </div>
 
@@ -330,25 +333,25 @@ export default function FiscalizacaoPage() {
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3">
                     <img src={sub.photo_url} alt="Submissão" className="w-full h-full object-cover" />
                     {isRejected && (
-                      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center font-mono font-bold text-xs text-zinc-400">
-                        [ FOTO INVALIDADA ]
+                      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center font-bold text-xs text-zinc-300">
+                        Foto Invalidada
                       </div>
                     )}
                   </div>
 
-                  <div className="space-y-1 font-mono text-[10px] text-zinc-400">
-                    <p className="text-white font-bold text-xs font-sans">{sub.missions?.title}</p>
+                  <div className="space-y-1 text-xs text-zinc-400">
+                    <p className="text-white font-bold text-sm font-sans">{sub.missions?.title}</p>
                     {sub.duration_seconds ? (
-                      <p className="text-white font-bold bg-white/10 px-2 py-0.5 rounded-md w-fit">
-                        DURAÇÃO DO TREINO: {Math.floor(sub.duration_seconds / 60)} MIN {sub.duration_seconds % 60} SEG
+                      <p className="text-white font-semibold bg-white/10 px-2 py-0.5 rounded-md w-fit text-[11px]">
+                        Duração do treino: {Math.floor(sub.duration_seconds / 60)} min {sub.duration_seconds % 60} seg
                       </p>
                     ) : sub.caption && sub.caption.includes('[TEMPO:') ? (
-                      <p className="text-white font-bold bg-white/10 px-2 py-0.5 rounded-md w-fit">
-                        DURAÇÃO DO TREINO: {sub.caption.match(/\[TEMPO:\s*([^\]]+)\]/)?.[1] || 'REGISTRADO'}
+                      <p className="text-white font-semibold bg-white/10 px-2 py-0.5 rounded-md w-fit text-[11px]">
+                        Duração do treino: {sub.caption.match(/\[TEMPO:\s*([^\]]+)\]/)?.[1] || 'Registrado'}
                       </p>
                     ) : null}
-                    <p>HORÁRIO: {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR')}</p>
-                    {sub.location_name && <p className="truncate">GPS: {sub.location_name}</p>}
+                    <p>Horário: {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+                    {sub.location_name && <p className="truncate">Local: {sub.location_name}</p>}
                     {sub.caption && <p className="text-zinc-300 font-sans italic mt-1">"{sub.caption}"</p>}
                   </div>
 
@@ -358,64 +361,64 @@ export default function FiscalizacaoPage() {
                       type="button"
                       onClick={() => handleAnalyzeWithAI(sub)}
                       disabled={analyzingId === sub.id}
-                      className="w-full py-1.5 px-2.5 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white font-mono text-[10px] flex items-center justify-between transition-colors"
+                      className="w-full py-1.5 px-2.5 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-medium flex items-center justify-between transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
-                        <span>{analyzingId === sub.id ? 'ANALISANDO COM GEMINI...' : aiAnalysisMap[sub.id] ? 'PARECER TÉCNICO IA' : 'ANALISAR COM IA'}</span>
+                        <span>{analyzingId === sub.id ? 'Analisando com IA...' : aiAnalysisMap[sub.id] ? 'Parecer Técnico da IA' : 'Analisar com IA'}</span>
                       </div>
                       {aiAnalysisMap[sub.id] ? (
                         expandedAnalysis[sub.id] ? <ChevronUp className="w-3 h-3 text-zinc-400" /> : <ChevronDown className="w-3 h-3 text-zinc-400" />
                       ) : (
-                        <span className="text-[9px] text-zinc-500">MULTIMODAL</span>
+                        <span className="text-[10px] text-zinc-500 font-normal">Visão Computacional</span>
                       )}
                     </button>
 
                     {/* Card de Análise da IA Expandido */}
                     {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
-                      <div className="mt-2 p-2.5 rounded-xl bg-black/80 border border-white/10 font-mono text-[10px] space-y-2 animate-in fade-in duration-200">
+                      <div className="mt-2 p-2.5 rounded-xl bg-black/80 border border-white/10 text-xs space-y-2 animate-in fade-in duration-200">
                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
-                          <div className="flex items-center gap-1.5 text-white font-bold">
-                            <Brain className="w-3 h-3 text-white" />
-                            <span>PARECER MULTIMODAL</span>
+                          <div className="flex items-center gap-1.5 text-white font-semibold">
+                            <Brain className="w-3.5 h-3.5 text-white" />
+                            <span>Parecer da IA</span>
                           </div>
-                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                          <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${
                             aiAnalysisMap[sub.id].complianceScore >= 80
                               ? 'bg-white/10 text-white'
                               : 'bg-zinc-800 text-zinc-400'
                           }`}>
-                            CONFORMIDADE: {aiAnalysisMap[sub.id].complianceScore}%
+                            Conformidade: {aiAnalysisMap[sub.id].complianceScore}%
                           </span>
                         </div>
 
-                        <p className="text-zinc-300 font-sans text-[11px] leading-tight">
+                        <p className="text-zinc-300 font-sans text-xs leading-relaxed">
                           {aiAnalysisMap[sub.id].summary}
                         </p>
 
                         {/* Pílulas de Macronutrientes (Nutrição / Refeição) */}
                         {aiAnalysisMap[sub.id].estimatedMacros && (
-                          <div className="grid grid-cols-4 gap-1 pt-1">
-                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[8px] text-zinc-500 block">KCAL</span>
-                              <span className="text-white font-bold text-[9px]">
+                          <div className="grid grid-cols-4 gap-1.5 pt-1">
+                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[9px] text-zinc-400 block font-medium">Calorias</span>
+                              <span className="text-white font-bold text-xs">
                                 {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
                               </span>
                             </div>
-                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[8px] text-zinc-500 block">PROT</span>
-                              <span className="text-white font-bold text-[9px]">
+                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[9px] text-zinc-400 block font-medium">Proteína</span>
+                              <span className="text-white font-bold text-xs">
                                 {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
                               </span>
                             </div>
-                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[8px] text-zinc-500 block">CARB</span>
-                              <span className="text-white font-bold text-[9px]">
+                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[9px] text-zinc-400 block font-medium">Carbos</span>
+                              <span className="text-white font-bold text-xs">
                                 {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
                               </span>
                             </div>
-                            <div className="p-1 rounded bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[8px] text-zinc-500 block">GORD</span>
-                              <span className="text-white font-bold text-[9px]">
+                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
+                              <span className="text-[9px] text-zinc-400 block font-medium">Gordura</span>
+                              <span className="text-white font-bold text-xs">
                                 {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
                               </span>
                             </div>
@@ -423,7 +426,7 @@ export default function FiscalizacaoPage() {
                         )}
 
                         {aiAnalysisMap[sub.id].feedback && (
-                          <p className="text-zinc-400 font-sans italic text-[10px] pt-1 border-t border-white/[0.04]">
+                          <p className="text-zinc-400 font-sans italic text-xs pt-1 border-t border-white/[0.04]">
                             "{aiAnalysisMap[sub.id].feedback}"
                           </p>
                         )}
@@ -437,17 +440,17 @@ export default function FiscalizacaoPage() {
                     <button
                       onClick={() => handleReactivatePhoto(sub)}
                       disabled={isProcessing}
-                      className="mono-button-primary w-full py-1.5 text-xs font-mono"
+                      className="mono-button-primary w-full py-1.5 text-xs font-semibold"
                     >
-                      {isProcessing ? 'PROCESSANDO...' : 'REABILITAR FOTO'}
+                      {isProcessing ? 'Processando...' : 'Reabilitar Foto'}
                     </button>
                   ) : (
                     <button
                       onClick={() => setInvalidateTarget(sub)}
                       disabled={isProcessing}
-                      className="mono-button-secondary w-full py-1.5 text-xs font-mono text-zinc-400 hover:text-white"
+                      className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-zinc-400 hover:text-white"
                     >
-                      {isProcessing ? 'PROCESSANDO...' : 'INVALIDAR FOTO (DEDUZIR PONTOS)'}
+                      {isProcessing ? 'Processando...' : 'Invalidar Foto (Deduzir Pontos)'}
                     </button>
                   )}
                 </div>

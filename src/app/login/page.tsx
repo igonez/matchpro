@@ -207,14 +207,14 @@ export default function LoginPage() {
 
         <SpotlightCard3D className="p-7 sm:p-8">
           <div className="text-center mb-6">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-1">
-              SYSTEM_AUTHENTICATION
+            <span className="text-xs font-semibold text-zinc-400 block mb-1">
+              Área de Acesso
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              {mode === 'signin' ? 'Acessar Terminal' : 'Criar Credencial'}
+              {mode === 'signin' ? 'Acessar Conta' : 'Criar Conta'}
             </h1>
             <p className="text-xs text-zinc-400 mt-1">
-              {role === 'professional' ? 'Painel de Gestão do Coach' : 'Terminal de Check-in do Atleta'}
+              {role === 'professional' ? 'Painel de Gestão do Coach' : 'Aplicativo do Atleta'}
             </p>
           </div>
 
@@ -388,7 +388,7 @@ export default function LoginPage() {
           <div className="mt-5 text-center pt-4 border-t border-white/[0.06]">
             {mode === 'signin' ? (
               <p className="text-xs text-zinc-400">
-                Não tem uma credencial?{' '}
+                Ainda não tem uma conta?{' '}
                 <button
                   type="button"
                   onClick={() => setMode('signup')}
@@ -399,7 +399,7 @@ export default function LoginPage() {
               </p>
             ) : (
               <p className="text-xs text-zinc-400">
-                Já possui uma credencial?{' '}
+                Já possui uma conta?{' '}
                 <button
                   type="button"
                   onClick={() => setMode('signin')}
@@ -413,9 +413,9 @@ export default function LoginPage() {
         </SpotlightCard3D>
       </div>
 
-      {/* Footer Minimalista */}
-      <div className="max-w-md w-full mx-auto text-center text-[10px] font-mono text-zinc-600 z-10 pb-2">
-        ArenaFitPro Security Kernel • 256-Bit Encrypted
+      {/* Footer */}
+      <div className="max-w-md w-full mx-auto text-center text-xs text-zinc-500 z-10 pb-2">
+        ArenaFitPro • Plataforma Segura com Criptografia de Ponta a Ponta
       </div>
     </div>
   );

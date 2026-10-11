@@ -163,11 +163,11 @@ export function DashboardHeader() {
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2.5">
                   <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-                    <span className="font-bold font-mono text-white text-xs">AFP</span>
+                    <span className="font-bold text-white text-xs">AFP</span>
                   </div>
                   <div>
                     <span className="font-black text-sm tracking-tight text-white block">ArenaFitPro</span>
-                    <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500">COACH_TERMINAL</span>
+                    <span className="text-[11px] text-zinc-400 font-medium">Painel do Treinador</span>
                   </div>
                 </div>
 
@@ -183,7 +183,7 @@ export function DashboardHeader() {
               <nav className="space-y-4 overflow-y-auto max-h-[calc(100vh-210px)] pr-1">
                 {navGroups.map((group) => (
                   <div key={group.title} className="space-y-1">
-                    <div className="px-3 pb-0.5 text-[9px] font-mono uppercase tracking-widest text-zinc-500 font-semibold select-none">
+                    <div className="px-3 pb-0.5 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold select-none">
                       {group.title}
                     </div>
                     <div className="space-y-1">
@@ -194,9 +194,9 @@ export function DashboardHeader() {
                             key={item.href}
                             href={item.href}
                             onClick={() => setMobileMenuOpen(false)}
-                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono tracking-wide transition-all ${
+                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium tracking-wide transition-all ${
                               item.active
-                                ? 'bg-white text-black font-bold shadow-md'
+                                ? 'bg-white text-black font-semibold shadow-md'
                                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                             }`}
                           >
@@ -204,10 +204,10 @@ export function DashboardHeader() {
                               <Icon className={`h-4 w-4 shrink-0 ${item.active ? 'text-black' : 'text-zinc-400'}`} />
                               <span className="truncate">{item.name}</span>
                               {item.badge && (
-                                <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded shrink-0 ${
+                                <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
                                   item.active
                                     ? 'bg-black/10 text-black border border-black/20'
-                                    : 'bg-white/10 text-zinc-400 border border-white/15 opacity-75'
+                                    : 'bg-white/10 text-zinc-300 border border-white/15 opacity-80'
                                 }`}>
                                   {item.badge}
                                 </span>
@@ -228,17 +228,17 @@ export function DashboardHeader() {
               <Link
                 href="/app?preview=true"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all"
               >
                 <span>Visão do Aluno</span>
                 <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
               </Link>
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-mono text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors"
+                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors"
               >
                 <LogOut className="h-4 w-4" />
-                <span>DESCONECTAR</span>
+                <span>Sair da Conta</span>
               </button>
             </div>
           </div>

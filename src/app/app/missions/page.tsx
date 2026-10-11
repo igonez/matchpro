@@ -160,26 +160,26 @@ export default function StudentMissionsWeeklyPage() {
     switch (cat) {
       case 'treino':
         return (
-          <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-md border border-white/15">
-            TREINO (1/DIA)
+          <span className="text-xs text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 font-medium flex items-center gap-1">
+            <span>⚡</span> Treino (1/dia)
           </span>
         );
       case 'cardio':
         return (
-          <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-md border border-white/15">
-            CARDIO (1/DIA)
+          <span className="text-xs text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20 font-medium flex items-center gap-1">
+            <span>🏃</span> Cardio (1/dia)
           </span>
         );
       case 'refeicao':
         return (
-          <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
-            REFEIÇÃO
+          <span className="text-xs text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 font-medium flex items-center gap-1">
+            <span>🥗</span> Refeição
           </span>
         );
       case 'habito':
         return (
-          <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
-            HÁBITO
+          <span className="text-xs text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20 font-medium flex items-center gap-1">
+            <span>💧</span> Hábito
           </span>
         );
       default:
@@ -192,14 +192,14 @@ export default function StudentMissionsWeeklyPage() {
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
-      {/* Header Monocromático */}
+      {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div>
-          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
-            MISSIONS_GRID
+          <span className="text-[11px] text-zinc-400 font-medium block">
+            Missões
           </span>
           <h1 className="text-xl font-black text-white">Missões por Semana</h1>
-          <p className="text-[11px] text-zinc-400">Limite de 1 treino e 1 cardio por dia para disciplina real</p>
+          <p className="text-xs text-zinc-400">Limite de 1 treino e 1 cardio por dia para disciplina real</p>
         </div>
       </div>
 
@@ -207,24 +207,24 @@ export default function StudentMissionsWeeklyPage() {
       {(isWorkoutDailyLocked || isCardioDailyLocked) && (
         <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between text-xs relative z-10 border border-white/15">
           <div className="space-y-1">
-            <p className="font-bold text-white text-xs font-mono">
+            <p className="font-bold text-white text-xs">
               {isWorkoutDailyLocked && isCardioDailyLocked
-                ? 'LIMITE DO DIA ATINGIDO (TREINO & CARDIO)'
+                ? 'Limite do dia atingido (Treino & Cardio)'
                 : isWorkoutDailyLocked
-                ? 'TREINO DO DIA CONCLUÍDO'
-                : 'CARDIO DO DIA CONCLUÍDO'}
+                ? 'Treino do dia concluído'
+                : 'Cardio do dia concluído'}
             </p>
-            <p className="text-[11px] font-mono text-zinc-400">
-              Missão de hoje entregue. A próxima será liberada na <span className="text-white font-bold">virada do dia</span>.
+            <p className="text-xs text-zinc-400">
+              Missão de hoje entregue. A próxima será liberada na <span className="text-white font-semibold">virada do dia</span>.
             </p>
           </div>
-          <span className="text-[10px] font-mono text-zinc-300 bg-white/10 border border-white/20 px-2.5 py-1 rounded-lg shrink-0 font-bold">
-            1 POR DIA
+          <span className="text-xs text-zinc-300 bg-white/10 border border-white/20 px-2.5 py-1 rounded-lg shrink-0 font-medium">
+            1 por dia
           </span>
         </div>
       )}
 
-      {/* Seletor de Semanas em Pílulas Monocromáticas */}
+      {/* Seletor de Semanas em Pílulas */}
       {weeks.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none relative z-10">
           {weeks.map((week) => {
@@ -233,10 +233,10 @@ export default function StudentMissionsWeeklyPage() {
               <button
                 key={week.id}
                 onClick={() => setSelectedWeekId(week.id)}
-                className={`px-4 py-2 rounded-2xl border text-xs font-mono font-bold whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-2xl border text-xs font-semibold whitespace-nowrap transition-all ${
                   isSelected
                     ? 'border-white/40 bg-white/15 text-white shadow-lg'
-                    : 'border-white/[0.08] bg-black/60 text-zinc-500 hover:text-white'
+                    : 'border-white/[0.08] bg-black/60 text-zinc-400 hover:text-white'
                 }`}
               >
                 Semana {week.week_number}
@@ -250,10 +250,10 @@ export default function StudentMissionsWeeklyPage() {
       {selectedWeek && (
         <SpotlightCard3D className="p-4 space-y-2 relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-              BONUS_SEMANAL (+{selectedWeek.bonus_points || 20} PTS)
+            <span className="text-xs font-semibold text-zinc-400">
+              Bônus Semanal (+{selectedWeek.bonus_points || 20} pts)
             </span>
-            <span className="text-xs font-mono text-white font-bold">
+            <span className="text-xs text-white font-bold font-mono">
               {completedMissionsCount}/{missions.length} Feitas
             </span>
           </div>
@@ -264,9 +264,13 @@ export default function StudentMissionsWeeklyPage() {
               : `Complete todas as missões para destravar +${selectedWeek.bonus_points || 20} pontos extras.`}
           </p>
 
-          <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-white/10 mt-2">
+          <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-white/10 mt-2">
             <div
-              className="bg-white h-full rounded-full transition-all duration-500"
+              className={`h-full rounded-full transition-all duration-500 ${
+                isWeekComplete
+                  ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.5)]'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.4)]'
+              }`}
               style={{
                 width: `${missions.length > 0 ? (completedMissionsCount / missions.length) * 100 : 0}%`,
               }}
@@ -334,29 +338,30 @@ export default function StudentMissionsWeeklyPage() {
 
                   <div className="shrink-0">
                     {isApproved && (
-                      <span className="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-[10px] font-mono font-bold block">
-                        CONCLUÍDO
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold block flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Concluído
                       </span>
                     )}
 
                     {isPending && (
-                      <span className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/15 text-zinc-300 text-[10px] font-mono block">
-                        EM AUDITORIA...
+                      <span className="px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium block">
+                        Em análise...
                       </span>
                     )}
 
                     {!sub && isLocked && (
                       <div className="flex flex-col items-end gap-1">
-                        <span className="px-2.5 py-1 rounded-xl bg-black border border-white/10 text-zinc-500 text-[10px] font-mono font-bold">
-                          BLOQUEADO
+                        <span className="px-2.5 py-1 rounded-xl bg-black border border-white/10 text-zinc-500 text-xs font-medium">
+                          Bloqueado
                         </span>
                         {isDailyLocked ? (
-                          <span className="text-[9px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
-                            LIBERA AMANHÃ
+                          <span className="text-[11px] text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                            Libera amanhã
                           </span>
                         ) : (
-                          <span className="text-[9px] font-mono text-zinc-500">
-                            FAÇA O ANTERIOR
+                          <span className="text-[11px] text-zinc-500">
+                            Faça o anterior
                           </span>
                         )}
                       </div>
@@ -365,21 +370,21 @@ export default function StudentMissionsWeeklyPage() {
                     {!sub && !isLocked && (
                       mission.category === 'treino' || mission.category === 'cardio' ? (
                         activeSession?.missionId === mission.id ? (
-                          <span className="px-3 py-1.5 rounded-xl bg-white text-black font-bold text-[10px] font-mono animate-pulse block">
-                            TREINANDO...
+                          <span className="px-3 py-1.5 rounded-xl bg-white text-black font-semibold text-xs animate-pulse block">
+                            Treinando...
                           </span>
                         ) : (
                           <button
                             onClick={() => startSession(mission.id, mission.title, mission.category)}
-                            className="mono-button-primary px-3.5 py-1.5 text-[11px] font-mono"
+                            className="mono-button-primary px-3.5 py-1.5 text-xs font-semibold"
                           >
-                            {mission.category === 'treino' ? 'INICIAR TREINO ▶' : 'INICIAR CARDIO ▶'}
+                            {mission.category === 'treino' ? 'Iniciar Treino' : 'Iniciar Cardio'}
                           </button>
                         )
                       ) : (
                         <Link href={`/app/camera/${mission.id}`}>
-                          <button className="mono-button-primary px-3.5 py-1.5 text-[11px] font-mono">
-                            REGISTRAR →
+                          <button className="mono-button-primary px-3.5 py-1.5 text-xs font-semibold">
+                            Registrar Foto
                           </button>
                         </Link>
                       )

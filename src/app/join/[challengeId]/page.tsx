@@ -234,9 +234,9 @@ export default function JoinChallengePage() {
 
           <button
             onClick={copyLink}
-            className="text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+            className="text-xs font-medium text-zinc-400 hover:text-white transition-colors"
           >
-            {copied ? '[ LINK COPIADO ]' : '[ COPIAR LINK ]'}
+            {copied ? 'Link copiado!' : 'Copiar link'}
           </button>
         </div>
       </header>
@@ -250,18 +250,18 @@ export default function JoinChallengePage() {
         <SpotlightCard3D className="p-7 sm:p-9 space-y-6">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-4">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-                TURMA_OFICIAL_CONVITE
+              <span className="text-xs font-semibold text-zinc-400">
+                Convite Oficial
               </span>
-              <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
-                {Number(challenge.price) > 0 ? `R$ ${Number(challenge.price).toFixed(2)}` : 'GRATUITO'}
+              <span className="text-xs font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+                {Number(challenge.price) > 0 ? `R$ ${Number(challenge.price).toFixed(2)}` : 'Gratuito'}
               </span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
               {challenge.title}
             </h1>
-            <p className="text-xs font-mono text-zinc-400 mt-1">
+            <p className="text-xs text-zinc-400 mt-1 font-medium">
               Treinador: {challenge.professionals?.full_name || 'Coach Certificado'}
             </p>
           </div>
@@ -270,14 +270,14 @@ export default function JoinChallengePage() {
             {challenge.description || 'Desafio fitness focado em disciplina, consistência diária e evolução física com auditoria em tempo real.'}
           </p>
 
-          {/* Cronograma Monocromático */}
-          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-black/60 border border-white/[0.08] font-mono text-xs">
+          {/* Cronograma */}
+          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-black/60 border border-white/[0.08] text-xs">
             <div>
-              <span className="text-[10px] text-zinc-500 block uppercase">Início Oficial</span>
+              <span className="text-xs text-zinc-400 block font-medium">Início Oficial</span>
               <span className="font-bold text-white">{new Date(challenge.start_date).toLocaleDateString('pt-BR')}</span>
             </div>
             <div>
-              <span className="text-[10px] text-zinc-500 block uppercase">Término</span>
+              <span className="text-xs text-zinc-400 block font-medium">Término</span>
               <span className="font-bold text-white">{new Date(challenge.end_date).toLocaleDateString('pt-BR')}</span>
             </div>
           </div>
@@ -285,14 +285,14 @@ export default function JoinChallengePage() {
           {/* Resumo de Missões */}
           {missionsList.length > 0 && (
             <div className="space-y-2 pt-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">
-                GRADE_DE_MISSÕES ({missionsList.length})
+              <span className="text-xs font-semibold tracking-wide text-zinc-400 block">
+                Grade de Missões ({missionsList.length})
               </span>
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {missionsList.map((m: any) => (
-                  <div key={m.id} className="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-xs font-mono">
-                    <span className="text-zinc-300">{m.title}</span>
-                    <span className="text-white font-bold">+{m.points_rewarded} pts</span>
+                  <div key={m.id} className="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-xs">
+                    <span className="text-zinc-300 font-medium">{m.title}</span>
+                    <span className="text-white font-bold font-mono">+{m.points_rewarded} pts</span>
                   </div>
                 ))}
               </div>
@@ -300,7 +300,7 @@ export default function JoinChallengePage() {
           )}
 
           {error && (
-            <div className="p-3 rounded-xl border border-white/20 bg-black text-xs font-mono text-zinc-300">
+            <div className="p-3 rounded-xl border border-white/20 bg-black text-xs text-zinc-300">
               {error}
             </div>
           )}
@@ -309,17 +309,17 @@ export default function JoinChallengePage() {
           <div className="pt-4 border-t border-white/[0.06]">
             {alreadyJoined ? (
               <Link href="/app" className="block">
-                <button className="mono-button-primary w-full h-12 text-xs font-mono font-bold">
-                  VOCÊ JÁ ESTÁ INSCRITO • ABRIR APP →
+                <button className="mono-button-primary w-full h-12 text-xs font-semibold">
+                  Você já está inscrito • Acessar App →
                 </button>
               </Link>
             ) : (
               <button
                 onClick={handleJoin}
                 disabled={joining}
-                className="mono-button-primary w-full h-13 text-xs font-mono font-bold"
+                className="mono-button-primary w-full h-13 text-xs font-semibold"
               >
-                {joining ? 'PROCESSANDO ENTRADA...' : 'ENTRAR NA TURMA AGORA →'}
+                {joining ? 'Processando inscrição...' : 'Entrar na Turma Agora →'}
               </button>
             )}
           </div>

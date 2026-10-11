@@ -111,53 +111,55 @@ export default function LeaderboardPage() {
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
-      {/* Header Monocromático */}
+      {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div>
-          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
-            GLOBAL_RANKING_STREAM
+          <span className="text-[11px] text-zinc-400 font-medium block">
+            Ranking Geral
           </span>
           <h1 className="text-xl font-black text-white">Classificação da Turma</h1>
-          <p className="text-[11px] text-zinc-400">Pontuação computada por integridade de check-ins</p>
+          <p className="text-xs text-zinc-400">Pontuação computada por integridade de check-ins</p>
         </div>
 
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-mono text-white">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-white">
           <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
-          REALTIME
+          Ao vivo
         </div>
       </div>
 
-      {/* Seletor Monocromático: Individual vs Squads */}
+      {/* Seletor: Individual vs Squads */}
       <div className="grid grid-cols-2 p-1 rounded-2xl bg-black border border-white/[0.08] relative z-10">
         <button
           onClick={() => setActiveTab('individual')}
-          className={`py-2 text-xs font-mono font-bold rounded-xl transition-all ${
+          className={`py-2 text-xs font-semibold rounded-xl transition-all ${
             activeTab === 'individual'
               ? 'bg-zinc-800 text-white shadow-md'
-              : 'text-zinc-500 hover:text-white'
+              : 'text-zinc-400 hover:text-white'
           }`}
         >
-          INDIVIDUAL ({standings.length})
+          Individual ({standings.length})
         </button>
         <button
           onClick={() => setActiveTab('squads')}
-          className={`py-2 text-xs font-mono font-bold rounded-xl transition-all ${
+          className={`py-2 text-xs font-semibold rounded-xl transition-all ${
             activeTab === 'squads'
               ? 'bg-zinc-800 text-white shadow-md'
-              : 'text-zinc-500 hover:text-white'
+              : 'text-zinc-400 hover:text-white'
           }`}
         >
-          SQUADS ({squadStandings.length})
+          Squads ({squadStandings.length})
         </button>
       </div>
 
-      {/* PÓDIO 3D DOS TOP 3 (Quando em modo individual e com competidores) */}
+      {/* PÓDIO 3D DOS TOP 3 COM CORES DE CONQUISTA */}
       {activeTab === 'individual' && standings.length >= 3 && (
         <div className="grid grid-cols-3 gap-2 pt-2 items-end relative z-10">
-          {/* 2º Lugar */}
-          <div className="mono-glass-card p-3 rounded-2xl text-center space-y-1.5">
-            <span className="text-[10px] font-mono text-zinc-400 block font-bold">02 // PRATA</span>
-            <div className="h-11 w-11 mx-auto rounded-full bg-zinc-800 border border-white/30 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+          {/* 2º Lugar - Prata Cromada */}
+          <div className="mono-glass-card p-3 rounded-2xl text-center space-y-1.5 border-slate-400/20 bg-slate-950/40">
+            <span className="text-xs text-slate-300 block font-bold flex items-center justify-center gap-1">
+              🥈 2º Prata
+            </span>
+            <div className="h-11 w-11 mx-auto rounded-full bg-zinc-800 border-2 border-slate-300 shadow-[0_0_15px_rgba(203,213,225,0.2)] flex items-center justify-center font-bold text-xs text-white overflow-hidden">
               {standings[1]?.students?.avatar_url ? (
                 <img src={standings[1].students.avatar_url} alt="2º" className="w-full h-full object-cover" />
               ) : (
@@ -165,16 +167,16 @@ export default function LeaderboardPage() {
               )}
             </div>
             <p className="text-xs font-bold text-white truncate">{standings[1]?.students?.full_name?.split(' ')[0]}</p>
-            <p className="text-[10px] font-mono text-zinc-400 font-bold">{standings[1]?.total_points} PTS</p>
+            <p className="text-xs font-mono text-slate-300 font-bold">{standings[1]?.total_points} pts</p>
           </div>
 
-          {/* 1º Lugar (Destaque Maior com Cromo) */}
-          <SpotlightCard3D className="p-4 rounded-3xl text-center space-y-2 -translate-y-2 border-white/30 shadow-[0_0_25px_rgba(255,255,255,0.15)]">
-            <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20 inline-block font-bold">
-              01 // LÍDER
+          {/* 1º Lugar - Ouro Radiante */}
+          <SpotlightCard3D className="p-4 rounded-3xl text-center space-y-2 -translate-y-2 border-amber-400/50 bg-gradient-to-b from-amber-500/10 via-black to-black shadow-[0_0_35px_rgba(245,158,11,0.25)]">
+            <span className="text-xs text-amber-300 bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-400/40 inline-flex items-center gap-1 font-bold">
+              👑 1º Líder
             </span>
-            <div className="h-14 w-14 mx-auto rounded-full bg-gradient-to-b from-white to-zinc-800 p-px shadow-lg">
-              <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-mono font-black text-white text-sm overflow-hidden">
+            <div className="h-14 w-14 mx-auto rounded-full bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+              <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-bold text-white text-sm overflow-hidden">
                 {standings[0]?.students?.avatar_url ? (
                   <img src={standings[0].students.avatar_url} alt="1º" className="w-full h-full object-cover" />
                 ) : (
@@ -183,13 +185,17 @@ export default function LeaderboardPage() {
               </div>
             </div>
             <p className="text-xs font-black text-white truncate">{standings[0]?.students?.full_name?.split(' ')[0]}</p>
-            <p className="text-xs font-mono font-black text-white">{standings[0]?.total_points} PTS</p>
+            <p className="text-sm font-mono font-black text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
+              {standings[0]?.total_points} pts
+            </p>
           </SpotlightCard3D>
 
-          {/* 3º Lugar */}
-          <div className="mono-glass-card p-3 rounded-2xl text-center space-y-1.5">
-            <span className="text-[10px] font-mono text-zinc-400 block font-bold">03 // BRONZE</span>
-            <div className="h-11 w-11 mx-auto rounded-full bg-zinc-900 border border-white/15 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+          {/* 3º Lugar - Bronze Cobre */}
+          <div className="mono-glass-card p-3 rounded-2xl text-center space-y-1.5 border-amber-700/20 bg-stone-950/40">
+            <span className="text-xs text-amber-600 block font-bold flex items-center justify-center gap-1">
+              🥉 3º Bronze
+            </span>
+            <div className="h-11 w-11 mx-auto rounded-full bg-zinc-900 border-2 border-amber-700/60 shadow-[0_0_15px_rgba(180,83,9,0.2)] flex items-center justify-center font-bold text-xs text-white overflow-hidden">
               {standings[2]?.students?.avatar_url ? (
                 <img src={standings[2].students.avatar_url} alt="3º" className="w-full h-full object-cover" />
               ) : (
@@ -197,7 +203,7 @@ export default function LeaderboardPage() {
               )}
             </div>
             <p className="text-xs font-bold text-white truncate">{standings[2]?.students?.full_name?.split(' ')[0]}</p>
-            <p className="text-[10px] font-mono text-zinc-400 font-bold">{standings[2]?.total_points} PTS</p>
+            <p className="text-xs font-mono text-amber-600 font-bold">{standings[2]?.total_points} pts</p>
           </div>
         </div>
       )}

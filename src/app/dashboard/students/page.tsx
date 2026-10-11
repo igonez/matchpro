@@ -315,14 +315,14 @@ export default function DashboardFinanceAndStudentsPage() {
         </div>
       )}
 
-      {/* Header Monocromático de Finanças & Alunos */}
+      {/* Header de Finanças & Alunos */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
-              FINANCIAL_&_STUDENTS_KERNEL
+            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+              Alunos & Finanças
             </span>
-            <span className="text-xs text-zinc-500 font-mono">LIVE_LEDGER</span>
+            <span className="text-xs text-zinc-400 font-medium">Controle de matrículas</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
             Gestão de Alunos & Faturamento
@@ -337,7 +337,7 @@ export default function DashboardFinanceAndStudentsPage() {
             size="sm"
             variant="outline"
             onClick={handleCopyInviteLink}
-            className="rounded-xl h-10 px-3.5 text-xs font-mono text-zinc-300 border-white/10 hover:border-white/20 hover:text-white bg-white/5"
+            className="rounded-xl h-10 px-3.5 text-xs font-semibold text-zinc-300 border-white/10 hover:border-white/20 hover:text-white bg-white/5"
             title="Copiar link de convite da turma atual"
           >
             <Copy className="h-4 w-4 mr-1.5" /> Link de Convite
@@ -346,7 +346,7 @@ export default function DashboardFinanceAndStudentsPage() {
           <Button
             size="sm"
             onClick={() => setIsManualAddModalOpen(true)}
-            className="rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+            className="rounded-xl h-10 px-4 text-xs font-semibold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
           >
             <UserPlus className="h-4 w-4 mr-1.5" /> Matricular Aluno
           </Button>
@@ -357,36 +357,36 @@ export default function DashboardFinanceAndStudentsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              FATURAMENTO_TOTAL
+            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+              Faturamento Total
             </span>
-            <span className="text-[10px] font-mono text-zinc-400">BRL</span>
+            <span className="text-xs font-medium text-zinc-400">BRL</span>
           </div>
           <div className="text-3xl font-black text-white font-mono">
             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(consolidatedRevenue)}
           </div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">
+          <p className="text-xs text-zinc-500 mt-1">
             {selectedChallengeId === 'all' ? 'Soma de todas as turmas' : 'Faturamento desta turma'}
           </p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              ALUNOS_MATRICULADOS
+            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+              Alunos Matriculados
             </span>
             <Users className="h-4 w-4 text-zinc-400" />
           </div>
           <div className="text-3xl font-black text-white font-mono">
             {filteredParticipants.length}
           </div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Atletas ativos na listagem</p>
+          <p className="text-xs text-zinc-500 mt-1">Atletas ativos na listagem</p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              TICKET_MÉDIO
+            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+              Ticket Médio
             </span>
             <TrendingUp className="h-4 w-4 text-zinc-400" />
           </div>
@@ -395,7 +395,7 @@ export default function DashboardFinanceAndStudentsPage() {
               filteredParticipants.length > 0 ? consolidatedRevenue / filteredParticipants.length : currentChallengePrice
             )}
           </div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Valor médio por atleta</p>
+          <p className="text-xs text-zinc-500 mt-1">Valor médio por atleta</p>
         </SpotlightCard3D>
       </div>
 
@@ -467,32 +467,32 @@ export default function DashboardFinanceAndStudentsPage() {
       <div className="mono-glass-card rounded-3xl overflow-hidden border border-white/10 relative z-10">
         <div className="p-4 sm:p-5 border-b border-white/[0.08] flex items-center justify-between">
           <div>
-            <h3 className="text-base font-black text-white font-mono tracking-tight">
-              ATLETAS_INSCRITOS
+            <h3 className="text-base font-bold text-white tracking-tight">
+              Alunos Inscritos
             </h3>
             <p className="text-xs text-zinc-400">
               {filteredParticipants.length} atleta(s) localizado(s)
             </p>
           </div>
 
-          <span className="text-[10px] font-mono text-zinc-500 uppercase">
-            ORDENADO_POR_DATA
+          <span className="text-xs text-zinc-400 font-medium">
+            Ordenado por data
           </span>
         </div>
 
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
+          <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-400 text-xs">
             <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            CARREGANDO BASE DE ALUNOS...
+            Carregando lista de alunos...
           </div>
         ) : filteredParticipants.length === 0 ? (
-          <div className="py-16 text-center text-xs font-mono text-zinc-500">
+          <div className="py-16 text-center text-xs text-zinc-400">
             Nenhum atleta encontrado para os filtros selecionados.
           </div>
         ) : (
           <div className="divide-y divide-white/[0.06] overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-white/[0.02] text-zinc-400 uppercase text-[10px]">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-white/[0.02] text-zinc-400 text-xs font-semibold">
                 <tr>
                   <th className="py-3 px-4">Atleta</th>
                   <th className="py-3 px-4">Turma</th>
@@ -520,18 +520,18 @@ export default function DashboardFinanceAndStudentsPage() {
                             <span className="font-bold text-white block">
                               {p.student.full_name}
                             </span>
-                            <span className="text-[10px] text-zinc-500 font-mono">
-                              ID: {p.student_id.slice(0, 8)}...
+                            <span className="text-[11px] text-zinc-400">
+                              Matrícula: {p.student_id.slice(0, 8)}...
                             </span>
                           </div>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-zinc-300 font-bold">
+                      <td className="py-3 px-4 text-zinc-300 font-semibold">
                         {challengeObj?.title || 'Turma Ativa'}
                       </td>
 
-                      <td className="py-3 px-4 text-zinc-400 font-mono text-xs">
+                      <td className="py-3 px-4 text-zinc-400 text-xs">
                         {new Date(p.joined_at).toLocaleDateString('pt-BR')}
                       </td>
 
@@ -545,17 +545,17 @@ export default function DashboardFinanceAndStudentsPage() {
                           {isPaid && (
                             <Badge
                               variant="outline"
-                              className="border-white/20 text-white bg-white/10 hover:bg-white/20 text-[10px] font-mono cursor-pointer"
+                              className="border-white/20 text-white bg-white/10 hover:bg-white/20 text-xs font-semibold cursor-pointer"
                             >
-                              ● PAGO
+                              ● Pago
                             </Badge>
                           )}
                           {isPending && (
                             <Badge
                               variant="outline"
-                              className="border-zinc-700 text-zinc-400 bg-zinc-900/80 hover:border-white/40 hover:text-white text-[10px] font-mono cursor-pointer"
+                              className="border-zinc-700 text-zinc-400 bg-zinc-900/80 hover:border-white/40 hover:text-white text-xs font-semibold cursor-pointer"
                             >
-                              ○ PENDENTE
+                              ○ Pendente
                             </Badge>
                           )}
                           {!isPaid && !isPending && (

@@ -243,11 +243,11 @@ export default function HomePage() {
             <SpotlightCard3D className="md:col-span-7 p-7 min-h-[320px] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
-                  <div className="flex items-center gap-2 font-mono text-xs text-zinc-300">
+                  <div className="flex items-center gap-2 text-xs text-zinc-300 font-semibold">
                     <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-                    CAMERA_GPS_VERIFIED
+                    Câmera & GPS Verificados
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 border border-white/10 px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs uppercase tracking-wider text-zinc-400 border border-white/10 px-2.5 py-0.5 rounded-full font-medium">
                     Patente Antifraude
                   </span>
                 </div>
@@ -263,11 +263,11 @@ export default function HomePage() {
 
               <div className="p-4 rounded-2xl bg-black/60 border border-white/[0.08] backdrop-blur-xl mt-6 flex items-center justify-between">
                 <div className="space-y-1">
-                  <div className="text-[10px] font-mono text-zinc-500 uppercase">Validação Criptográfica</div>
-                  <div className="text-xs font-mono text-white font-bold">UTC Timestamp + Sensor Gyro + GPS</div>
+                  <div className="text-xs text-zinc-400 font-medium">Validação de Integridade</div>
+                  <div className="text-xs text-white font-semibold">Horário Oficial + Sensor Óptico + GPS</div>
                 </div>
-                <div className="h-8 px-3 rounded-lg border border-white/20 bg-white/10 flex items-center justify-center font-mono text-xs text-white">
-                  100% AUDITADO
+                <div className="h-8 px-3 rounded-lg border border-white/20 bg-white/10 flex items-center justify-center text-xs font-semibold text-white">
+                  100% Auditado
                 </div>
               </div>
             </SpotlightCard3D>
@@ -276,10 +276,10 @@ export default function HomePage() {
             <SpotlightCard3D className="md:col-span-5 p-7 min-h-[320px] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
-                  <span className="font-mono text-xs text-zinc-300 flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5 text-white" /> ASAAS_PIX_SPLIT
+                  <span className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-white" /> Split Pix Automático
                   </span>
-                  <span className="text-xs font-mono text-white font-bold">D+0 INSTANTÂNEO</span>
+                  <span className="text-xs text-white font-semibold">D+0 Instantâneo</span>
                 </div>
 
                 <h3 className="text-2xl font-black text-white tracking-tight mt-6 mb-2">
@@ -292,13 +292,13 @@ export default function HomePage() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-black/50 border border-white/[0.08] mt-6 flex items-center justify-between">
-                <div className="text-xs font-mono">
-                  <span className="text-zinc-500 block text-[10px]">INSCRIÇÃO RECEBIDA</span>
-                  <span className="text-white font-bold">R$ 97,00 (Pix Copia e Cola)</span>
+                <div className="text-xs">
+                  <span className="text-zinc-400 block text-[11px]">Inscrição recebida</span>
+                  <span className="text-white font-bold font-mono">R$ 97,00 (Pix Copia e Cola)</span>
                 </div>
-                <div className="text-right text-xs font-mono">
-                  <span className="text-zinc-500 block text-[10px]">SEU LÍQUIDO</span>
-                  <span className="text-emerald-400 font-bold">R$ 85,36 (Liberado)</span>
+                <div className="text-right text-xs">
+                  <span className="text-zinc-400 block text-[11px]">Seu líquido</span>
+                  <span className="text-emerald-400 font-bold font-mono">R$ 85,36 (Liberado)</span>
                 </div>
               </div>
             </SpotlightCard3D>
@@ -306,8 +306,8 @@ export default function HomePage() {
             {/* Card 3: Squads e Times Cooperativos */}
             <SpotlightCard3D className="md:col-span-4 p-6 min-h-[260px] flex flex-col justify-between">
               <div>
-                <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-zinc-400" /> SQUADS_COOPERATIVOS
+                <div className="text-xs text-zinc-400 font-semibold tracking-wide mb-2 flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-zinc-300" /> Squads Cooperativos
                 </div>
                 <h4 className="text-xl font-black text-white mb-2">Esquadrões & Times</h4>
                 <p className="text-xs text-zinc-400 leading-relaxed">
@@ -315,17 +315,17 @@ export default function HomePage() {
                   onde ninguém quer deixar o time na mão.
                 </p>
               </div>
-              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
-                <span className="text-zinc-300">🏆 Squad Guerreiros</span>
-                <span className="text-white font-bold">1º Lugar (2.450 pts)</span>
+              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
+                <span className="text-zinc-300 font-medium">🏆 Squad Guerreiros</span>
+                <span className="text-white font-bold font-mono">1º Lugar (2.450 pts)</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 4: Mystery Box & Recompensas */}
             <SpotlightCard3D className="md:col-span-4 p-6 min-h-[260px] flex flex-col justify-between">
               <div>
-                <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Gift className="w-3.5 h-3.5 text-zinc-400" /> GAMIFICATION_REWARDS
+                <div className="text-xs text-zinc-400 font-semibold tracking-wide mb-2 flex items-center gap-1.5">
+                  <Gift className="w-3.5 h-3.5 text-zinc-300" /> Recompensas Gamificadas
                 </div>
                 <h4 className="text-xl font-black text-white mb-2">Mystery Box & Streaks</h4>
                 <p className="text-xs text-zinc-400 leading-relaxed">
@@ -333,17 +333,17 @@ export default function HomePage() {
                   e brindes que geram dopamina saudável.
                 </p>
               </div>
-              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
-                <span className="text-zinc-300">🎁 Ofensiva 14 Dias</span>
-                <span className="text-amber-400 font-bold">DESBLOQUEADA</span>
+              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
+                <span className="text-zinc-300 font-medium">🎁 Ofensiva 14 Dias</span>
+                <span className="text-amber-400 font-semibold">Desbloqueada</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 5: Freeze Shield & Anti-Churn */}
             <SpotlightCard3D className="md:col-span-4 p-6 min-h-[260px] flex flex-col justify-between">
               <div>
-                <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" /> RETENTION_ENGINE
+                <div className="text-xs text-zinc-400 font-semibold tracking-wide mb-2 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" /> Mecanismo de Retenção
                 </div>
                 <h4 className="text-xl font-black text-white mb-2">Freeze Shield & Resgate</h4>
                 <p className="text-xs text-zinc-400 leading-relaxed">
@@ -351,8 +351,8 @@ export default function HomePage() {
                   avisa o treinador se algum aluno sumir por mais de 48h.
                 </p>
               </div>
-              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
-                <span className="text-zinc-300">🛡️ Escudo Ativo</span>
+              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
+                <span className="text-zinc-300 font-medium">🛡️ Escudo Ativo</span>
                 <span className="text-white font-bold">Streak Preservado</span>
               </div>
             </SpotlightCard3D>

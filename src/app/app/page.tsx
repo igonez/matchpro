@@ -213,12 +213,12 @@ export default function StudentHomePage() {
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
-      {/* 1. Header do Atleta Monocromático */}
+      {/* 1. Header do Atleta */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-center gap-3">
           <Link href="/app/profile">
             <div className="relative h-12 w-12 rounded-2xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] active:scale-95 transition-all cursor-pointer">
-              <div className="h-full w-full bg-black rounded-[15px] flex items-center justify-center font-mono font-black text-white text-base overflow-hidden">
+              <div className="h-full w-full bg-black rounded-[15px] flex items-center justify-center font-bold text-white text-base overflow-hidden">
                 {student?.avatar_url ? (
                   <img
                     src={student.avatar_url}
@@ -233,8 +233,8 @@ export default function StudentHomePage() {
           </Link>
 
           <div>
-            <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">
-              SISTEMA_ATIVO
+            <span className="text-[11px] text-zinc-400 font-medium block">
+              Olá, atleta
             </span>
             <h1 className="text-base font-black text-white leading-tight">
               {student?.full_name?.split(' ')[0] || 'Atleta'}
@@ -242,11 +242,11 @@ export default function StudentHomePage() {
           </div>
         </div>
 
-        {/* Badge Streak Monocromático */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-zinc-900/90 border border-white/10 shadow-lg">
-          <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-          <span className="text-xs font-mono font-bold text-white tracking-wider">
-            {gamState.current_streak || 1}D STREAK
+        {/* Badge Streak Vibrante */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)]">
+          <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+          <span className="text-xs font-bold text-amber-300 tracking-wide flex items-center gap-1">
+            🔥 {gamState.current_streak || 1} dias seguidos
           </span>
         </div>
       </div>
@@ -256,26 +256,26 @@ export default function StudentHomePage() {
         <SpotlightCard3D className="p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">
-                PROGRESSO_SEMANAL
+              <span className="text-xs font-semibold text-zinc-400 block">
+                Progresso Semanal
               </span>
-              <span className="text-xs font-bold text-white">Semana 1 • Dia 2 de 30</span>
+              <span className="text-xs font-medium text-white">Semana 1 • Dia 2 de 30</span>
             </div>
-            <span className="text-2xl font-black text-white font-mono">
+            <span className="text-2xl font-black text-emerald-400 font-mono drop-shadow-[0_0_12px_rgba(52,211,153,0.3)]">
               {weeklyPercentage}%
             </span>
           </div>
 
-          {/* Barra de Progresso em Gradiente Metálico */}
+          {/* Barra de Progresso com Gradiente Esmeralda Energético */}
           <div className="space-y-1.5">
-            <div className="w-full h-2 rounded-full bg-zinc-900 border border-white/10 overflow-hidden">
+            <div className="w-full h-2.5 rounded-full bg-zinc-900 border border-white/10 overflow-hidden p-0.5">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-zinc-500 via-zinc-200 to-white transition-all duration-700"
+                className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-[0_0_15px_rgba(52,211,153,0.5)] transition-all duration-700"
                 style={{ width: `${weeklyPercentage || 25}%` }}
               />
             </div>
-            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
-              <span>{totalWeeklyDone} completas</span>
+            <div className="flex items-center justify-between text-xs text-zinc-400 font-medium">
+              <span className="text-emerald-400 font-semibold">{totalWeeklyDone} completas</span>
               <span>Meta: {totalWeeklyGoals || 20}</span>
             </div>
           </div>
@@ -283,22 +283,22 @@ export default function StudentHomePage() {
           {/* Grid de 3 Métricas Tabulares */}
           <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
             <div className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-500 block">Pontos</span>
-              <span className="text-base font-black text-white font-mono block mt-0.5">
+              <span className="text-[10px] text-zinc-400 block font-medium">Pontos</span>
+              <span className="text-base font-black text-amber-400 font-mono block mt-0.5">
                 {standing?.total_points || 0}
               </span>
             </div>
 
             <div className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-500 block">Posição</span>
+              <span className="text-[10px] text-zinc-400 block font-medium">Posição</span>
               <span className="text-base font-black text-white font-mono block mt-0.5">
                 4º
               </span>
             </div>
 
             <div className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-500 block">Desafio</span>
-              <span className="text-base font-black text-white font-mono block mt-0.5">
+              <span className="text-[10px] text-zinc-400 block font-medium">Desafio</span>
+              <span className="text-base font-black text-cyan-400 font-mono block mt-0.5">
                 D2/30
               </span>
             </div>
@@ -310,52 +310,52 @@ export default function StudentHomePage() {
       <div className="grid grid-cols-2 gap-2.5 relative z-10">
         <button
           onClick={() => setIsFreezeModalOpen(true)}
-          className="mono-glass-card p-4 rounded-3xl text-left hover:border-white/30 active:scale-98 transition-all group"
+          className="mono-glass-card p-4 rounded-3xl text-left border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-950/20 active:scale-98 transition-all group shadow-[0_4px_20px_rgba(6,182,212,0.06)]"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-500">
-              SHIELD
+            <span className="text-xs font-semibold text-cyan-400 flex items-center gap-1">
+              🛡️ Escudo
             </span>
-            <span className="text-[9px] font-mono font-bold text-white border border-white/20 bg-white/5 px-2 py-0.5 rounded-md">
+            <span className="text-xs font-bold text-cyan-300 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md">
               {gamState.freeze_shields_available}x
             </span>
           </div>
-          <p className="text-xs font-black text-white mt-2 group-hover:underline">
+          <p className="text-xs font-bold text-white mt-2 group-hover:underline">
             Freeze Shield
           </p>
-          <p className="text-[10px] text-zinc-400 mt-0.5">
+          <p className="text-[11px] text-zinc-400 mt-0.5">
             Blinde seu streak hoje
           </p>
         </button>
 
         <button
           onClick={() => setIsMysteryBoxOpen(true)}
-          className="mono-glass-card p-4 rounded-3xl text-left hover:border-white/30 active:scale-98 transition-all group"
+          className="mono-glass-card p-4 rounded-3xl text-left border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-950/20 active:scale-98 transition-all group shadow-[0_4px_20px_rgba(245,158,11,0.06)]"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-500">
-              REWARD
+            <span className="text-xs font-semibold text-amber-400 flex items-center gap-1">
+              🎁 Prêmio
             </span>
-            <span className="text-[9px] font-mono font-bold text-white border border-white/20 bg-white/5 px-2 py-0.5 rounded-md">
+            <span className="text-xs font-bold text-amber-300 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded-md">
               {alreadyClaimedBox ? 'OK' : 'Sem 1'}
             </span>
           </div>
-          <p className="text-xs font-black text-white mt-2 group-hover:underline">
+          <p className="text-xs font-bold text-white mt-2 group-hover:underline">
             Mystery Box
           </p>
-          <p className="text-[10px] text-zinc-400 mt-0.5">
+          <p className="text-[11px] text-zinc-400 mt-0.5">
             {alreadyClaimedBox ? 'Resgatada' : 'Bata 100% da semana'}
           </p>
         </button>
       </div>
 
-      {/* 4. Categorias de Metas em Vidro Monocromático */}
+      {/* 4. Categorias de Metas */}
       <div className="space-y-2 relative z-10">
         <div className="flex items-center justify-between pb-1">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-            METAS_DO_DESAFIO
+          <span className="text-xs font-semibold tracking-wide text-zinc-400">
+            Metas da Semana
           </span>
-          <Link href="/app/missions" className="text-[10px] font-mono text-zinc-400 hover:text-white transition-colors">
+          <Link href="/app/missions" className="text-xs text-zinc-400 hover:text-white transition-colors font-medium">
             Ver todas →
           </Link>
         </div>
@@ -364,13 +364,13 @@ export default function StudentHomePage() {
         <Link href="/app/missions?cat=treino">
           <div className="mono-glass-card p-3.5 rounded-2xl hover:border-white/30 active:scale-98 transition-all flex items-center justify-between">
             <div>
-              <p className="text-xs font-black text-white">Treinos da Semana</p>
-              <p className="text-[10px] font-mono text-zinc-400 mt-0.5">
+              <p className="text-xs font-bold text-white">Treinos da Semana</p>
+              <p className="text-xs text-zinc-400 mt-0.5">
                 <strong className="text-white font-bold">{categoryCounts.treinos.done}</strong> de {categoryCounts.treinos.total} finalizados
               </p>
             </div>
-            <span className="text-[10px] font-mono text-zinc-400 border border-white/10 px-2 py-1 rounded-lg">
-              ABRIR →
+            <span className="text-xs font-medium text-zinc-300 border border-white/10 px-2.5 py-1 rounded-lg">
+              Abrir
             </span>
           </div>
         </Link>
@@ -379,13 +379,13 @@ export default function StudentHomePage() {
         <Link href="/app/missions?cat=cardio">
           <div className="mono-glass-card p-3.5 rounded-2xl hover:border-white/30 active:scale-98 transition-all flex items-center justify-between">
             <div>
-              <p className="text-xs font-black text-white">Cardios da Semana</p>
-              <p className="text-[10px] font-mono text-zinc-400 mt-0.5">
+              <p className="text-xs font-bold text-white">Cardios da Semana</p>
+              <p className="text-xs text-zinc-400 mt-0.5">
                 <strong className="text-white font-bold">{categoryCounts.cardios.done}</strong> de {categoryCounts.cardios.total} feitos
               </p>
             </div>
-            <span className="text-[10px] font-mono text-zinc-400 border border-white/10 px-2 py-1 rounded-lg">
-              VER CARDIOS →
+            <span className="text-xs font-medium text-zinc-300 border border-white/10 px-2.5 py-1 rounded-lg">
+              Ver cardios
             </span>
           </div>
         </Link>
@@ -394,13 +394,13 @@ export default function StudentHomePage() {
         <Link href="/app/missions?cat=refeicao">
           <div className="mono-glass-card p-3.5 rounded-2xl hover:border-white/30 active:scale-98 transition-all flex items-center justify-between">
             <div>
-              <p className="text-xs font-black text-white">Refeições de Hoje</p>
-              <p className="text-[10px] font-mono text-zinc-400 mt-0.5">
+              <p className="text-xs font-bold text-white">Refeições de Hoje</p>
+              <p className="text-xs text-zinc-400 mt-0.5">
                 <strong className="text-white font-bold">{categoryCounts.refeicoes.done}</strong> de {categoryCounts.refeicoes.total} registradas
               </p>
             </div>
-            <span className="text-[10px] font-mono text-zinc-400 border border-white/10 px-2 py-1 rounded-lg">
-              REGISTRAR →
+            <span className="text-xs font-medium text-zinc-300 border border-white/10 px-2.5 py-1 rounded-lg">
+              Registrar
             </span>
           </div>
         </Link>
@@ -409,14 +409,14 @@ export default function StudentHomePage() {
       {/* 5. Mural de Avisos da Turma */}
       {announcements.length > 0 && (
         <div className="space-y-2 relative z-10 pt-1">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">
-            MURAL_COMUNICADOS
+          <span className="text-xs font-semibold tracking-wide text-zinc-400 block">
+            Mural de Avisos
           </span>
           {announcements.map((a) => (
             <div key={a.id} className="mono-glass-card p-3.5 rounded-2xl">
               <div className="flex items-center justify-between mb-1">
                 <span className="font-bold text-xs text-white">{a.title}</span>
-                <span className="text-[9px] font-mono text-zinc-500">
+                <span className="text-xs text-zinc-400">
                   {new Date(a.created_at).toLocaleDateString('pt-BR')}
                 </span>
               </div>

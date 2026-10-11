@@ -70,7 +70,7 @@ export function DashboardSidebar() {
   return (
     <aside className="hidden md:flex w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex-col justify-between p-5 min-h-screen relative z-30 shrink-0">
       <div className="space-y-6">
-        {/* Brand Monocromático */}
+        {/* Brand */}
         <Link href="/dashboard" className="flex items-center gap-3 px-1 py-1 group">
           <div className="h-9 w-9 rounded-xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform">
             <div className="h-full w-full bg-black rounded-[11px] flex items-center justify-center">
@@ -83,17 +83,17 @@ export function DashboardSidebar() {
             <span className="font-black text-lg tracking-tight text-white block leading-none">
               ArenaFitPro
             </span>
-            <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500 block mt-1">
-              COACH_TERMINAL
+            <span className="text-[11px] text-zinc-400 font-medium block mt-1">
+              Painel do Treinador
             </span>
           </div>
         </Link>
 
-        {/* Navigation Monocromática com Subgrupos */}
+        {/* Navigation com Subgrupos */}
         <nav className="space-y-4">
           {navGroups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <div className="px-3 pb-1 text-[10px] font-mono uppercase tracking-widest text-zinc-500 font-semibold select-none">
+              <div className="px-3 pb-1 text-[11px] uppercase tracking-wider text-zinc-500 font-semibold select-none">
                 {group.title}
               </div>
               <div className="space-y-0.5">
@@ -101,21 +101,21 @@ export function DashboardSidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono tracking-wide transition-all ${
+                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
                       item.active
-                        ? 'bg-white/10 text-white font-bold border border-white/20 shadow-sm'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                        ? 'bg-white/10 text-white font-semibold border border-white/20 shadow-sm'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04] font-medium'
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="truncate">{item.name}</span>
                       {item.badge && (
-                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-white/10 text-zinc-400 border border-white/15 opacity-75 shrink-0">
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/15 opacity-80 shrink-0">
                           {item.badge}
                         </span>
                       )}
                     </div>
-                    {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse shrink-0 ml-1.5" />}
+                    {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0 ml-1.5" />}
                   </Link>
                 ))}
               </div>
@@ -128,9 +128,9 @@ export function DashboardSidebar() {
       <div className="pt-4 border-t border-white/[0.06]">
         <button
           onClick={handleSignOut}
-          className="w-full text-left px-3 py-2 text-xs font-mono text-zinc-500 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
+          className="w-full text-left px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
         >
-          [ DESCONECTAR ]
+          Sair da Conta
         </button>
       </div>
     </aside>

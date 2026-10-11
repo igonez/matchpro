@@ -196,14 +196,14 @@ export default function DashboardOverviewPage() {
         </div>
       )}
 
-      {/* Top Banner Monocromático */}
+      {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
-              TERMINAL_OVERVIEW
+            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+              Visão Geral
             </span>
-            <span className="text-xs text-zinc-500 font-mono">LIVE_DATABASE</span>
+            <span className="text-xs text-zinc-400 font-medium">Dados em tempo real</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Operação dos Desafios</h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
@@ -213,7 +213,7 @@ export default function DashboardOverviewPage() {
 
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
           <Link href="/dashboard/audit" className="w-full sm:w-auto">
-            <button className="mono-button-primary w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-mono">
+            <button className="mono-button-primary w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold">
               Auditar Fotos ({stats.pendingSubmissions})
             </button>
           </Link>
@@ -221,13 +221,13 @@ export default function DashboardOverviewPage() {
           {/* Botão que abre o modal customizado (Zero prompt nativo) */}
           <button
             onClick={() => setIsNoticeModalOpen(true)}
-            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-mono"
+            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold"
           >
             Publicar Aviso
           </button>
 
           <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
-            <button className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-mono">
+            <button className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold">
               + Novo Desafio
             </button>
           </Link>
@@ -240,13 +240,13 @@ export default function DashboardOverviewPage() {
         <Link href="/dashboard/students" className="block group">
           <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
             <div className="flex items-center justify-between pb-3">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 group-hover:text-white transition-colors">
-                ALUNOS_INSCRITOS →
+              <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
+                Alunos Inscritos →
               </span>
               <span className="h-2 w-2 rounded-full bg-white" />
             </div>
             <div className="text-3xl font-black text-white font-mono">{stats.activeStudents}</div>
-            <p className="text-[11px] font-mono text-zinc-500 mt-1">Inscritos nas turmas ativas</p>
+            <p className="text-xs text-zinc-500 mt-1">Inscritos nas turmas ativas</p>
           </SpotlightCard3D>
         </Link>
 
@@ -254,69 +254,73 @@ export default function DashboardOverviewPage() {
         <Link href="/dashboard/students" className="block group">
           <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
             <div className="flex items-center justify-between pb-3">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 group-hover:text-white transition-colors">
-                FATURAMENTO_TOTAL →
+              <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
+                Faturamento Total →
               </span>
-              <span className="text-[10px] font-mono text-zinc-400">BRL</span>
+              <span className="text-xs font-medium text-zinc-400">BRL</span>
             </div>
             <div className="text-3xl font-black text-white font-mono">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
             </div>
-            <p className="text-[11px] font-mono text-zinc-500 mt-1">Valor consolidado das inscrições</p>
+            <p className="text-xs text-zinc-500 mt-1">Valor consolidado das inscrições</p>
           </SpotlightCard3D>
         </Link>
 
         {/* Card 3: Auditoria Pendente */}
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              FILA_DE_SWIPE
+            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+              Fila de Revisão
             </span>
-            <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded-full">
-              PENDENTE
+            <span className="text-xs font-semibold text-white bg-white/10 px-2 py-0.5 rounded-full">
+              Pendente
             </span>
           </div>
           <div className="text-3xl font-black text-white font-mono">{stats.pendingSubmissions}</div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Check-ins aguardando revisão</p>
+          <p className="text-xs text-zinc-500 mt-1">Check-ins aguardando revisão</p>
         </SpotlightCard3D>
 
         {/* Card 4: Desafios Criados */}
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              DESAFIOS_TOTAIS
+            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+              Total de Desafios
             </span>
-            <span className="text-[10px] font-mono text-zinc-400">ATIVOS: {stats.activeChallenges}</span>
+            <span className="text-xs text-zinc-400">Ativos: {stats.activeChallenges}</span>
           </div>
           <div className="text-3xl font-black text-white font-mono">{challenges.length}</div>
-          <p className="text-[11px] font-mono text-zinc-500 mt-1">Turmas configuradas na plataforma</p>
+          <p className="text-xs text-zinc-500 mt-1">Turmas configuradas na plataforma</p>
         </SpotlightCard3D>
       </div>
 
-      {/* RADAR ANTI-DESISTÊNCIA (ALUNOS INATIVOS +48H) */}
+      {/* RADAR DE FREQUÊNCIA (ALUNOS INATIVOS +48H) */}
       <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-black text-white font-mono tracking-tight flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-white animate-ping" />
-              RADAR_ANTI_DESISTENCIA (INATIVOS +48H)
+            <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-500 animate-ping" />
+              Radar de Frequência (Inativos há +48h)
             </h2>
             <p className="text-xs text-zinc-400">
               Alunos que precisam de resgate via WhatsApp antes de abandonarem a rotina.
             </p>
           </div>
-          <span className="text-xs font-mono font-bold text-white border border-white/20 px-2.5 py-0.5 rounded-full">
-            {atRiskStudents.length} ALERTAS
+          <span className="text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-500/30 px-2.5 py-0.5 rounded-full">
+            {atRiskStudents.length} alertas
           </span>
         </div>
 
         {atRiskStudents.length === 0 ? (
-          <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between">
+          <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between border-emerald-500/20 bg-emerald-950/10">
             <div>
-              <p className="text-xs font-bold text-white font-mono">100% DE RETENÇÃO NA TURMA</p>
-              <p className="text-[11px] text-zinc-400">Nenhum aluno está inativo há mais de 48 horas.</p>
+              <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                <span>✓</span> 100% de Presença na Turma
+              </p>
+              <p className="text-xs text-zinc-400">Nenhum aluno está inativo há mais de 48 horas.</p>
             </div>
-            <span className="text-xs font-mono text-white">NORMAL</span>
+            <span className="text-xs font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+              Em dia
+            </span>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -336,18 +340,18 @@ export default function DashboardOverviewPage() {
               return (
                 <div
                   key={item.student_id}
-                  className="mono-glass-card p-4 rounded-2xl flex flex-col justify-between"
+                  className="mono-glass-card p-4 rounded-2xl flex flex-col justify-between border-rose-500/20 bg-rose-950/10"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono text-zinc-400 border border-white/10 px-2 py-0.5 rounded-full">
-                        {item.days_inactive} DIAS SEM FOTO
+                      <span className="text-xs text-rose-300 font-bold bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full">
+                        ⚠️ {item.days_inactive} dias sem foto
                       </span>
-                      <span className="text-[10px] font-mono text-zinc-500">{item.challenge_title}</span>
+                      <span className="text-xs text-zinc-400 font-medium">{item.challenge_title}</span>
                     </div>
 
                     <h4 className="text-sm font-black text-white">{item.student_name}</h4>
-                    <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
+                    <p className="text-xs text-zinc-400 mt-0.5">
                       Última foto: {new Date(item.last_activity_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
@@ -358,9 +362,9 @@ export default function DashboardOverviewPage() {
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mono-button-primary w-full h-8 text-xs flex items-center justify-center font-mono"
+                        className="w-full h-8 text-xs flex items-center justify-center font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all"
                       >
-                        RESGATAR NO WHATSAPP →
+                        Resgatar no WhatsApp →
                       </a>
                     ) : (
                       <button
@@ -368,9 +372,9 @@ export default function DashboardOverviewPage() {
                           navigator.clipboard.writeText(decodeURIComponent(message));
                           showToast('Mensagem de resgate copiada com sucesso!');
                         }}
-                        className="mono-button-secondary w-full h-8 text-xs font-mono"
+                        className="mono-button-secondary w-full h-8 text-xs font-semibold"
                       >
-                        COPIAR TEXTO DE RESGATE
+                        Copiar texto de resgate
                       </button>
                     )}
                   </div>
@@ -381,25 +385,25 @@ export default function DashboardOverviewPage() {
         )}
       </div>
 
-      {/* Lista de Desafios Recentes Monocromática */}
+      {/* Lista de Desafios Recentes */}
       <div className="space-y-4 relative z-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-black text-white font-mono tracking-tight">
-            TURMAS_EM_ANDAMENTO
+          <h2 className="text-base font-bold text-white tracking-tight">
+            Turmas em Andamento
           </h2>
-          <Link href="/dashboard/missions" className="text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+          <Link href="/dashboard/missions" className="text-xs text-zinc-400 hover:text-white transition-colors">
             Gerenciar Missões →
           </Link>
         </div>
 
         {challenges.length === 0 && !loading ? (
           <div className="mono-glass-card p-8 rounded-3xl text-center border-dashed">
-            <p className="font-bold text-white text-sm font-mono">NENHUM DESAFIO CRIADO AINDA</p>
+            <p className="font-bold text-white text-sm">Nenhum desafio criado ainda</p>
             <p className="text-xs text-zinc-400 mt-1 mb-4">
               Crie seu primeiro desafio para cadastrar missões e convidar alunos.
             </p>
             <Link href="/dashboard/challenges/new">
-              <button className="mono-button-primary px-5 py-2 text-xs">
+              <button className="mono-button-primary px-5 py-2 text-xs font-semibold">
                 Criar Desafio
               </button>
             </Link>
@@ -413,13 +417,13 @@ export default function DashboardOverviewPage() {
                     <button
                       onClick={() => handleToggleChallengeStatus(c.id, c.is_active)}
                       title="Clique para alternar status da turma"
-                      className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border transition-all ${
+                      className={`text-xs px-2.5 py-0.5 rounded-full border transition-all ${
                         c.is_active
                           ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
                           : 'border-white/10 bg-black text-zinc-500 hover:text-white'
                       }`}
                     >
-                      {c.is_active ? '● ATIVO' : '○ ENCERRADO'}
+                      {c.is_active ? '● Ativo' : '○ Encerrado'}
                     </button>
                     <span className="text-xs font-mono font-black text-white">
                       R$ {Number(c.price).toFixed(2)}
@@ -428,31 +432,31 @@ export default function DashboardOverviewPage() {
                   <h3 className="text-base font-black text-white line-clamp-1">
                     {c.title}
                   </h3>
-                  <p className="text-xs font-mono text-zinc-500 mt-1">
+                  <p className="text-xs text-zinc-500 mt-1">
                     {new Date(c.start_date).toLocaleDateString('pt-BR')} até{' '}
                     {new Date(c.end_date).toLocaleDateString('pt-BR')}
                   </p>
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-white/[0.06]">
-                  <div className="flex items-center justify-between text-xs font-mono text-zinc-400 mb-3">
+                  <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
                     <span>Missões ativas:</span>
                     <span className="font-bold text-white">{c.missions?.length || 0}</span>
                   </div>
                   <div className="flex gap-2">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`} className="flex-1">
-                      <button className="mono-button-secondary w-full py-1.5 text-xs font-mono">
+                      <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold">
                         Missões
                       </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <button className="mono-button-secondary px-3 py-1.5 text-xs font-mono">
+                      <button className="mono-button-secondary px-3 py-1.5 text-xs font-semibold">
                         Editar
                       </button>
                     </Link>
                     <button
                       onClick={() => setInviteModalChallenge(c)}
-                      className="mono-button-primary px-3 py-1.5 text-xs font-mono"
+                      className="mono-button-primary px-3 py-1.5 text-xs font-semibold"
                       title="Abrir central de convite"
                     >
                       Convite

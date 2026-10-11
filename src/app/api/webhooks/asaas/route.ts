@@ -4,12 +4,12 @@ import { ASAAS_CONFIG } from '@/lib/asaas/config';
 
 export async function POST(request: Request) {
   try {
-    // 1. Validação de Autenticidade do Webhook
+    // 1. Validação Rigorosa de Autenticidade do Webhook (Fail-Closed)
     const authToken = request.headers.get('asaas-access-token');
     const expectedSecret = ASAAS_CONFIG.webhookSecret;
 
-    if (expectedSecret && (!authToken || authToken !== expectedSecret)) {
-      console.warn('[Asaas Webhook] Tentativa de acesso não autorizada. Token inválido ou ausente.');
+    if (!expectedSecret || !authToken || authToken !== expectedSecret) {
+      console.warn('[Asaas Webhook] Tentativa de acesso não autorizada ou secret não configurado.');
       return NextResponse.json({ error: 'Unauthorized webhook call' }, { status: 401 });
     }
 

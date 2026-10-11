@@ -19,16 +19,39 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Desafio e nome completo são obrigatórios.' }, { status: 400 });
     }
 
-    // 2. Verificar se o coach é dono do desafio
+    // 2. Verificar se o coach é dono do desafio e validar limites de alunos do plano
     const { data: challenge, error: challengeError } = await supabase
       .from('challenges')
-      .select('id, professional_id')
+      .select(`
+        id, 
+        professional_id,
+        professionals (
+          plan_tier
+        )
+      `)
       .eq('id', challengeId)
       .eq('professional_id', user.id)
       .single();
 
     if (challengeError || !challenge) {
       return NextResponse.json({ error: 'Você não tem permissão para gerenciar este desafio.' }, { status: 403 });
+    }
+
+    const coachTier: any = (challenge.professionals as any)?.plan_tier || 'starter';
+    const maxStudentsAllowed = coachTier === 'starter' ? 15 : coachTier === 'pro' ? 100 : 9999;
+
+    const { count: currentStudentsCount } = await supabaseAdmin
+      .from('challenge_participants')
+      .select('*', { count: 'exact', head: true })
+      .eq('challenge_id', challengeId);
+
+    if ((currentStudentsCount || 0) >= maxStudentsAllowed) {
+      return NextResponse.json(
+        { 
+          error: `Limite de ${maxStudentsAllowed} alunos atingido para o seu plano (${coachTier.toUpperCase()}). Faça upgrade na Central Financeira para matricular mais alunos.` 
+        }, 
+        { status: 403 }
+      );
     }
 
     // 3. Criar ou localizar o usuário no auth.users via Supabase Admin

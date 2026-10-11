@@ -45,11 +45,17 @@ export function DashboardSidebar() {
       ],
     },
     {
+      title: 'FINANCEIRO & SAQUES',
+      items: [
+        { name: 'Central Financeira', href: '/dashboard/finance', active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+      ],
+    },
+    {
       title: 'RECURSOS PRO',
       items: [
         { name: 'Squads (Equipes)', href: '/dashboard/squads', active: pathname === '/dashboard/squads', badge: 'PRO' },
         { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
-        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors', badge: 'PRO' },
+        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors', badge: 'ELITE' },
       ],
     },
     {

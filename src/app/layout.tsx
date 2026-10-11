@@ -1,12 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
-
-const plusJakartaSans = Plus_Jakarta_Sans({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-plus-jakarta',
-});
 
 export const metadata: Metadata = {
   title: 'ArenaFitPro — Gamified Fitness Challenges',
@@ -44,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark">
-      <body className={`${plusJakartaSans.className} min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black`}>
+      <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans">
         {children}
       </body>
     </html>

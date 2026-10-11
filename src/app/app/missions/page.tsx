@@ -53,10 +53,26 @@ export default function StudentMissionsWeeklyPage() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data: weeksData } = await supabase
+        let challengeId: string | null = null;
+        const { data: part } = await supabase
+          .from('challenge_participants')
+          .select('challenge_id')
+          .eq('student_id', user.id)
+          .limit(1)
+          .maybeSingle();
+
+        challengeId = part?.challenge_id || null;
+
+        let weeksQuery = supabase
           .from('challenge_weeks')
           .select('*')
           .order('week_number', { ascending: true });
+
+        if (challengeId) {
+          weeksQuery = weeksQuery.eq('challenge_id', challengeId);
+        }
+
+        const { data: weeksData } = await weeksQuery;
 
         if (weeksData && weeksData.length > 0) {
           setWeeks(weeksData);

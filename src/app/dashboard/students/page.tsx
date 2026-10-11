@@ -258,51 +258,33 @@ export default function DashboardFinanceAndStudentsPage() {
 
     setSubmittingManual(true);
     try {
-      // 1. Gerar UUID para novo aluno ou buscar se já existe por telefone
-      const pseudoId = crypto.randomUUID();
-
-      // Inserir registro na tabela students
-      const { error: studentErr } = await supabase.from('students').insert({
-        id: pseudoId,
-        full_name: manualFullName.trim(),
-        phone: manualPhone.trim() || null,
+      const res = await fetch('/api/students/manual-enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId: manualChallengeId,
+          fullName: manualFullName.trim(),
+          phone: manualPhone.trim() || undefined,
+          paymentStatus: manualPaymentStatus,
+        }),
       });
 
-      if (studentErr && !studentErr.message.includes('duplicate')) {
-        console.warn('Inserção de estudante:', studentErr);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Falha ao matricular aluno');
       }
-
-      // 2. Inserir na tabela challenge_participants com o payment_status selecionado
-      const { data: partData, error: partErr } = await supabase
-        .from('challenge_participants')
-        .insert({
-          challenge_id: manualChallengeId,
-          student_id: pseudoId,
-          payment_status: manualPaymentStatus,
-        })
-        .select()
-        .single();
-
-      if (partErr) throw partErr;
-
-      // 3. Inicializar leaderboard do aluno
-      await supabase.from('leaderboard_standings').insert({
-        challenge_id: manualChallengeId,
-        student_id: pseudoId,
-        total_points: 0,
-      });
 
       // Atualizar lista local
       const newEntry: Participant = {
-        id: partData.id,
+        id: data.participant.id,
         challenge_id: manualChallengeId,
-        student_id: pseudoId,
-        joined_at: new Date().toISOString(),
+        student_id: data.studentId,
+        joined_at: data.participant.enrolled_at || new Date().toISOString(),
         payment_status: manualPaymentStatus,
         student: {
-          id: pseudoId,
-          full_name: manualFullName.trim(),
-          phone: manualPhone.trim(),
+          id: data.studentId,
+          full_name: data.student.full_name,
+          phone: data.student.phone,
         },
       };
 

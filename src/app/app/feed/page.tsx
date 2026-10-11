@@ -26,7 +26,18 @@ export default function StudentSocialFeedPage() {
       const { data: { user } } = await supabase.auth.getUser();
       setCurrentUser(user);
 
-      const { data: submissionsData } = await supabase
+      let challengeId: string | null = null;
+      if (user) {
+        const { data: part } = await supabase
+          .from('challenge_participants')
+          .select('challenge_id')
+          .eq('student_id', user.id)
+          .limit(1)
+          .maybeSingle();
+        challengeId = part?.challenge_id || null;
+      }
+
+      let query = supabase
         .from('student_submissions')
         .select(`
           id,
@@ -36,6 +47,7 @@ export default function StudentSocialFeedPage() {
           client_captured_at,
           submitted_at,
           student_id,
+          challenge_id,
           students (
             full_name,
             avatar_url
@@ -49,8 +61,15 @@ export default function StudentSocialFeedPage() {
             student_id
           )
         `)
-        .eq('status', 'approved')
-        .order('submitted_at', { ascending: false });
+        .eq('status', 'approved');
+
+      if (challengeId) {
+        query = query.eq('challenge_id', challengeId);
+      }
+
+      const { data: submissionsData } = await query
+        .order('submitted_at', { ascending: false })
+        .limit(50);
 
       setPosts(submissionsData || []);
     } catch (err) {

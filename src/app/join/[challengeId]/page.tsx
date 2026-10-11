@@ -7,6 +7,9 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import { Button } from '@/components/ui/button';
+import { Copy, Check, QrCode } from 'lucide-react';
 
 export default function JoinChallengePage() {
   const params = useParams();
@@ -21,6 +24,11 @@ export default function JoinChallengePage() {
   const [alreadyJoined, setAlreadyJoined] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Estados do Modal Pix Dinâmico
+  const [pixModalOpen, setPixModalOpen] = useState(false);
+  const [pixData, setPixData] = useState<{ code: string; qrBase64?: string } | null>(null);
+  const [copiedPix, setCopiedPix] = useState(false);
 
   useEffect(() => {
     async function loadChallenge() {
@@ -100,12 +108,50 @@ export default function JoinChallengePage() {
 
       const isFree = Number(challenge?.price || 0) === 0;
 
+      // Se for pago, chamamos o Asaas para gerar o Pix com Split
+      if (!isFree) {
+        const response = await fetch('/api/checkout/pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            challengeId,
+            studentName: user.user_metadata?.full_name,
+            studentEmail: user.email,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Falha ao gerar cobrança Pix.');
+        }
+
+        setPixData({
+          code: data.pixCode,
+          qrBase64: data.pixQrBase64,
+        });
+
+        // Inscreve com status pending
+        await supabase
+          .from('challenge_participants')
+          .upsert({
+            challenge_id: challengeId,
+            student_id: user.id,
+            payment_status: 'pending',
+          });
+
+        setPixModalOpen(true);
+        setJoining(false);
+        return;
+      }
+
+      // Se for gratuito, libera na hora
       const { error: joinError } = await supabase
         .from('challenge_participants')
         .insert({
           challenge_id: challengeId,
           student_id: user.id,
-          payment_status: isFree ? 'paid' : 'pending',
+          payment_status: 'paid',
         });
 
       if (joinError && !joinError.message.includes('unique')) {
@@ -279,6 +325,69 @@ export default function JoinChallengePage() {
           </div>
         </SpotlightCard3D>
       </main>
+
+      {/* Modal de Pagamento Pix Dinâmico Asaas */}
+      <CustomDialog
+        isOpen={pixModalOpen}
+        onClose={() => setPixModalOpen(false)}
+        title="Pagamento da Inscrição via Pix"
+      >
+        <div className="space-y-4 pt-2 text-center">
+          <p className="text-xs text-zinc-400">
+            Escaneie o QR Code abaixo no app do seu banco ou copie o código Pix para confirmar sua vaga instantaneamente.
+          </p>
+
+          {pixData?.qrBase64 && (
+            <div className="flex justify-center p-3 bg-white rounded-xl mx-auto w-48 h-48 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+              <img
+                src={`data:image/png;base64,${pixData.qrBase64}`}
+                alt="QR Code Pix"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          )}
+
+          <div className="space-y-1.5 text-left">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Código Copia e Cola</span>
+            <div className="flex gap-2">
+              <input
+                readOnly
+                value={pixData?.code || ''}
+                className="w-full bg-black/80 border border-white/10 rounded-lg px-3 py-2 text-xs font-mono text-zinc-300 select-all"
+              />
+              <Button
+                size="sm"
+                onClick={() => {
+                  if (pixData?.code) {
+                    navigator.clipboard.writeText(pixData.code);
+                    setCopiedPix(true);
+                    setTimeout(() => setCopiedPix(false), 2000);
+                  }
+                }}
+                className="bg-white text-black hover:bg-zinc-200 font-bold px-3 shrink-0"
+              >
+                {copiedPix ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              </Button>
+            </div>
+          </div>
+
+          <div className="text-[11px] text-zinc-500 font-mono pt-2">
+            ⚡ A confirmação é imediata. Assim que o banco aprovar, seu acesso ao app será liberado automaticamente.
+          </div>
+
+          <div className="pt-2">
+            <Button
+              onClick={() => {
+                setPixModalOpen(false);
+                router.push('/app');
+              }}
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold"
+            >
+              Já Realizei o Pagamento • Continuar
+            </Button>
+          </div>
+        </div>
+      </CustomDialog>
 
       {/* Footer Minimalista */}
       <footer className="border-t border-white/[0.06] py-8 px-6 text-center text-[10px] font-mono text-zinc-600 relative z-10">

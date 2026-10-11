@@ -99,9 +99,9 @@ export default function StudentProfilePage() {
           .select('total_points')
           .eq('student_id', user.id)
           .limit(1)
-          .single();
+          .maybeSingle();
 
-        setStanding(standingData);
+        setStanding(standingData || { total_points: 0 });
 
         // 3. Fotos enviadas
         const { data: submissionsData, count } = await supabase
@@ -113,14 +113,15 @@ export default function StudentProfilePage() {
         setSubmissionsCount(count || 0);
         setUserPhotos(submissionsData || []);
 
-        // 4. Desafio Ativo & Cofre Antes/Depois
-        const { data: ch } = await supabase
-          .from('challenges')
-          .select('id, title')
-          .eq('is_active', true)
+        // 4. Desafio Ativo vinculado ao aluno & Cofre Antes/Depois
+        const { data: participantRecord } = await supabase
+          .from('challenge_participants')
+          .select('challenge_id, challenges(id, title, is_active)')
+          .eq('student_id', user.id)
           .limit(1)
           .maybeSingle();
 
+        const ch = (participantRecord?.challenges as any) || null;
         setChallenge(ch);
 
         if (ch) {

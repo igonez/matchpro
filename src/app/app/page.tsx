@@ -54,13 +54,28 @@ export default function StudentHomePage() {
 
         setStudent(studentData || { full_name: user.email?.split('@')[0] || 'Atleta' });
 
-        const { data: challengeData } = await supabase
-          .from('challenges')
-          .select('*, challenge_weeks(*)')
-          .eq('is_active', true)
-          .order('start_date', { ascending: false })
+        let challengeData = null;
+        const { data: participation } = await supabase
+          .from('challenge_participants')
+          .select('challenge_id, challenges(*, challenge_weeks(*))')
+          .eq('student_id', user.id)
           .limit(1)
           .maybeSingle();
+
+        if (participation?.challenges) {
+          challengeData = participation.challenges as any;
+        }
+
+        if (!challengeData) {
+          const { data: fallbackCh } = await supabase
+            .from('challenges')
+            .select('*, challenge_weeks(*)')
+            .eq('is_active', true)
+            .order('start_date', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          challengeData = fallbackCh;
+        }
 
         setChallenge(challengeData);
 

@@ -182,6 +182,7 @@ function CameraCaptureContent() {
       const payload: any = {
         mission_id: missionId,
         student_id: user.id,
+        challenge_id: mission?.challenge_id || null,
         photo_url: publicUrl,
         caption: finalCaption || null,
         latitude: location?.latitude || null,
@@ -195,12 +196,13 @@ function CameraCaptureContent() {
         .from('student_submissions')
         .insert(payload);
 
-      // Fallback resiliente: se der erro de coluna ausente, insere apenas campos obrigatórios
+      // Fallback resiliente: se der erro de coluna ausente, insere apenas campos essenciais
       if (dbError) {
         console.warn('Erro ao inserir com colunas extras, aplicando fallback essencial:', dbError);
         const fallbackPayload = {
           mission_id: missionId,
           student_id: user.id,
+          challenge_id: mission?.challenge_id || null,
           photo_url: publicUrl,
           caption: finalCaption || null,
           status: 'approved',

@@ -35,6 +35,28 @@ export default function NewChallengePage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado.');
 
+      // 0. Validar Limites do Plano do Coach (Multi-Tier SaaS)
+      const { data: coachData } = await supabase
+        .from('professionals')
+        .select('plan_tier')
+        .eq('id', user.id)
+        .single();
+
+      const { count: activeChallengesCount } = await supabase
+        .from('challenges')
+        .select('*', { count: 'exact', head: true })
+        .eq('professional_id', user.id)
+        .eq('is_active', true);
+
+      const currentTier = (coachData?.plan_tier as any) || 'starter';
+      const maxAllowed = currentTier === 'starter' ? 1 : currentTier === 'pro' ? 5 : 9999;
+
+      if ((activeChallengesCount || 0) >= maxAllowed) {
+        throw new Error(
+          `Você atingiu o limite de ${maxAllowed} desafio(s) ativo(s) do seu plano atual (${currentTier.toUpperCase()}). Faça upgrade na Central Financeira para criar novas turmas.`
+        );
+      }
+
       // Criar Desafio no Supabase
       const { data: challenge, error: challengeError } = await supabase
         .from('challenges')

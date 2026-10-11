@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { FeatureGate } from '@/components/ui/feature-gate';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
@@ -25,6 +26,7 @@ export default function SponsorsManagerPage() {
   const supabase = createClient();
 
   const [loading, setLoading] = useState(true);
+  const [coachPlan, setCoachPlan] = useState<string>('starter');
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('');
   const [sponsors, setSponsors] = useState<any[]>([]);
@@ -56,6 +58,17 @@ export default function SponsorsManagerPage() {
       if (!user) {
         setLoading(false);
         return;
+      }
+
+      // 0. Carregar plano do treinador
+      const { data: profData } = await supabase
+        .from('professionals')
+        .select('plan_tier')
+        .eq('id', user.id)
+        .single();
+
+      if (profData?.plan_tier) {
+        setCoachPlan(profData.plan_tier);
       }
 
       // Buscar apenas turmas do treinador logado (Isolamento Multi-Tenant)
@@ -193,9 +206,21 @@ export default function SponsorsManagerPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <FeatureGate
+      currentTier={coachPlan}
+      requiredTier="studio"
+      featureName="Parceiros & Patrocinadores Locais"
+      featureDescription="Monetize sua arena conectando lojas de suplementos, marcas de roupas fitness e restaurantes saudáveis da sua cidade diretamente aos seus alunos."
+      benefits={[
+        'Cadastro ilimitado de patrocinadores e cupons de desconto',
+        'Links diretos de WhatsApp e sites das marcas parceiras',
+        'Aumento do valor percebido do seu desafio',
+        'Menor taxa de comissão da plataforma: apenas 8%'
+      ]}
+    >
+      <div className="space-y-6">
+        {/* Top Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
             Parceiros & Patrocinadores
@@ -434,5 +459,6 @@ export default function SponsorsManagerPage() {
         isLoading={deleting}
       />
     </div>
+  </FeatureGate>
   );
 }

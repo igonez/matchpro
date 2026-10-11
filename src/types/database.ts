@@ -19,6 +19,14 @@ export interface Database {
           instagram: string | null
           avatar_url: string | null
           stripe_account_id: string | null
+          document_type: 'CPF' | 'CNPJ' | null
+          document_number: string | null
+          plan_tier: 'starter' | 'pro' | 'studio'
+          plan_status: 'active' | 'past_due' | 'canceled'
+          asaas_customer_id: string | null
+          asaas_wallet_id: string | null
+          asaas_pix_key: string | null
+          platform_fee_percent: number
           created_at: string
         }
         Insert: {
@@ -30,6 +38,14 @@ export interface Database {
           instagram?: string | null
           avatar_url?: string | null
           stripe_account_id?: string | null
+          document_type?: 'CPF' | 'CNPJ' | null
+          document_number?: string | null
+          plan_tier?: 'starter' | 'pro' | 'studio'
+          plan_status?: 'active' | 'past_due' | 'canceled'
+          asaas_customer_id?: string | null
+          asaas_wallet_id?: string | null
+          asaas_pix_key?: string | null
+          platform_fee_percent?: number
           created_at?: string
         }
         Update: {
@@ -41,6 +57,14 @@ export interface Database {
           instagram?: string | null
           avatar_url?: string | null
           stripe_account_id?: string | null
+          document_type?: 'CPF' | 'CNPJ' | null
+          document_number?: string | null
+          plan_tier?: 'starter' | 'pro' | 'studio'
+          plan_status?: 'active' | 'past_due' | 'canceled'
+          asaas_customer_id?: string | null
+          asaas_wallet_id?: string | null
+          asaas_pix_key?: string | null
+          platform_fee_percent?: number
           created_at?: string
         }
       }
@@ -177,6 +201,56 @@ export interface Database {
           challenge_id?: string
           student_id?: string
           total_points?: number
+        }
+      }
+      payments: {
+        Row: {
+          id: string
+          challenge_id: string | null
+          student_id: string | null
+          professional_id: string
+          asaas_payment_id: string | null
+          billing_type: 'PIX' | 'CREDIT_CARD' | 'BOLETO'
+          gross_value: number
+          net_coach_value: number
+          fee_platform_value: number
+          status: 'PENDING' | 'RECEIVED' | 'CONFIRMED' | 'REFUNDED' | 'OVERDUE'
+          pix_code: string | null
+          pix_qr_url: string | null
+          paid_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          challenge_id?: string | null
+          student_id?: string | null
+          professional_id: string
+          asaas_payment_id?: string | null
+          billing_type?: 'PIX' | 'CREDIT_CARD' | 'BOLETO'
+          gross_value: number
+          net_coach_value: number
+          fee_platform_value: number
+          status?: 'PENDING' | 'RECEIVED' | 'CONFIRMED' | 'REFUNDED' | 'OVERDUE'
+          pix_code?: string | null
+          pix_qr_url?: string | null
+          paid_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          challenge_id?: string | null
+          student_id?: string | null
+          professional_id?: string
+          asaas_payment_id?: string | null
+          billing_type?: 'PIX' | 'CREDIT_CARD' | 'BOLETO'
+          gross_value?: number
+          net_coach_value?: number
+          fee_platform_value?: number
+          status?: 'PENDING' | 'RECEIVED' | 'CONFIRMED' | 'REFUNDED' | 'OVERDUE'
+          pix_code?: string | null
+          pix_qr_url?: string | null
+          paid_at?: string | null
+          created_at?: string
         }
       }
     }

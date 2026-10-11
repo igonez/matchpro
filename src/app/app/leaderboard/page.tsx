@@ -16,15 +16,37 @@ export default function LeaderboardPage() {
 
   const fetchLeaderboard = async () => {
     try {
-      const { data: challenges } = await supabase
-        .from('challenges')
-        .select('*')
-        .eq('is_active', true)
-        .order('start_date', { ascending: false })
-        .limit(1);
+      const { data: { user } } = await supabase.auth.getUser();
 
-      if (challenges && challenges.length > 0) {
-        const currentChallenge = challenges[0];
+      let currentChallenge = null;
+
+      if (user) {
+        const { data: participation } = await supabase
+          .from('challenge_participants')
+          .select('challenge_id, challenges(*)')
+          .eq('student_id', user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (participation?.challenges) {
+          currentChallenge = participation.challenges as any;
+        }
+      }
+
+      if (!currentChallenge) {
+        const { data: challenges } = await supabase
+          .from('challenges')
+          .select('*')
+          .eq('is_active', true)
+          .order('start_date', { ascending: false })
+          .limit(1);
+
+        if (challenges && challenges.length > 0) {
+          currentChallenge = challenges[0];
+        }
+      }
+
+      if (currentChallenge) {
         setActiveChallenge(currentChallenge);
 
         // A. Standings individuais
@@ -242,7 +264,7 @@ export default function LeaderboardPage() {
                   <div>
                     <h4 className="text-xs font-bold text-white">{squad.squad_name}</h4>
                     <p className="text-[10px] font-mono text-zinc-500">
-                      {squad.member_count} membros • Média: {Math.round(squad.squad_average_points)} pts
+                      {squad.total_members ?? squad.member_count ?? 0} membros • Média: {Math.round(squad.squad_average_points)} pts
                     </p>
                   </div>
                 </div>

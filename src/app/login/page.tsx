@@ -118,30 +118,37 @@ export default function LoginPage() {
             .eq('id', authData.user.id)
             .maybeSingle();
 
+          if (prof) {
+            router.push('/dashboard');
+            return;
+          }
+
+          if (student) {
+            router.push('/app');
+            return;
+          }
+
+          // Se for uma conta sem registro prévio nas tabelas públicas
           if (role === 'professional') {
             await supabase.auth.updateUser({
               data: { role: 'professional' }
             });
 
-            if (!prof) {
-              await supabase.from('professionals').insert({
-                id: authData.user.id,
-                full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
-                specialty: 'personal_trainer',
-              });
-            }
+            await supabase.from('professionals').insert({
+              id: authData.user.id,
+              full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
+              specialty: 'personal_trainer',
+            });
             router.push('/dashboard');
           } else {
             await supabase.auth.updateUser({
               data: { role: 'student' }
             });
 
-            if (!student) {
-              await supabase.from('students').insert({
-                id: authData.user.id,
-                full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
-              });
-            }
+            await supabase.from('students').insert({
+              id: authData.user.id,
+              full_name: authData.user.user_metadata?.full_name || email.split('@')[0],
+            });
             router.push('/app');
           }
         }

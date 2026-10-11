@@ -5,6 +5,43 @@ const apiKey = process.env.GEMINI_API_KEY || '';
 export const geminiClient = new GoogleGenAI({ apiKey });
 
 /**
+ * Validação rigorosa de URL para proteção contra SSRF (Server-Side Request Forgery)
+ */
+function validateSafeImageUrl(urlString: string): URL {
+  let parsed: URL;
+  try {
+    parsed = new URL(urlString);
+  } catch {
+    throw new Error('URL de imagem inválida.');
+  }
+
+  if (parsed.protocol !== 'https:') {
+    throw new Error('Apenas URLs HTTPS seguras são permitidas.');
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  const forbiddenHosts = [
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    '169.254.169.254', // AWS/GCP metadata
+    'metadata.google.internal',
+    '::1',
+  ];
+
+  if (
+    forbiddenHosts.includes(hostname) ||
+    hostname.startsWith('10.') ||
+    hostname.startsWith('192.168.') ||
+    /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
+  ) {
+    throw new Error('Destino de rede interno não permitido (SSRF Guard).');
+  }
+
+  return parsed;
+}
+
+/**
  * Analisador inteligente multimodal de fotos de refeições e treinos
  */
 export async function analyzeSubmissionPhoto({
@@ -17,6 +54,9 @@ export async function analyzeSubmissionPhoto({
   caption?: string;
 }) {
   try {
+    // 1. Validação anti-SSRF
+    validateSafeImageUrl(imageUrl);
+
     const prompt = `Você é o sistema de Inteligência Artificial do ArenaFitPro, especializado em nutrição e alta performance esportiva.
 Analise a imagem da submissão do aluno e retorne um parecer técnico em português em formato JSON puro.
 Categoria informada pelo aluno: ${category}
@@ -36,14 +76,38 @@ Retorne estritamente um objeto JSON com esta estrutura:
   "complianceScore": número de 0 a 100 indicando o nível de adequação ao desafio
 }`;
 
-    // Baixa a imagem para base64 para envio direto ao Gemini
-    const imageResponse = await fetch(imageUrl);
-    const arrayBuffer = await imageResponse.arrayBuffer();
-    const base64Data = Buffer.from(arrayBuffer).toString('base64');
-    const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg';
+    // Baixa a imagem com timeout de 8 segundos e limite de tamanho
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
+    const imageResponse = await fetch(imageUrl, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'image/*',
+      },
+    });
+    clearTimeout(timeout);
+
+    if (!imageResponse.ok) {
+      throw new Error(`Falha ao obter imagem da submissão: status ${imageResponse.status}`);
+    }
+
+    const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg';
+    if (!mimeType.startsWith('image/')) {
+      throw new Error('O conteúdo baixado não é uma imagem válida.');
+    }
+
+    const arrayBuffer = await imageResponse.arrayBuffer();
+    // Limite de 8MB para evitar esgotamento de memória no servidor
+    if (arrayBuffer.byteLength > 8 * 1024 * 1024) {
+      throw new Error('A imagem excede o tamanho máximo de 8MB.');
+    }
+
+    const base64Data = Buffer.from(arrayBuffer).toString('base64');
+
+    // Modelo oficial atualizado do Gemini (gemini-2.5-flash)
     const response = await geminiClient.models.generateContent({
-      model: 'gemini-3.5-flash-lite',
+      model: 'gemini-2.5-flash',
       contents: [
         {
           role: 'user',
@@ -65,7 +129,7 @@ Retorne estritamente um objeto JSON com esta estrutura:
 
     return JSON.parse(cleanJson);
   } catch (error: any) {
-    console.error('Erro na análise com Gemini:', error);
+    console.error('Erro na análise com Gemini:', error?.message || error);
     return {
       isValid: true,
       summary: 'Foto submetida com sucesso',

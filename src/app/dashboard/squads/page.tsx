@@ -16,6 +16,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { FeatureGate } from '@/components/ui/feature-gate';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
@@ -23,6 +24,7 @@ export default function SquadsManagerPage() {
   const supabase = createClient();
 
   const [loading, setLoading] = useState(true);
+  const [coachPlan, setCoachPlan] = useState<string>('starter');
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('');
   const [squads, setSquads] = useState<any[]>([]);
@@ -55,6 +57,17 @@ export default function SquadsManagerPage() {
       if (!user) {
         setLoading(false);
         return;
+      }
+
+      // 0. Carregar plano do treinador
+      const { data: profData } = await supabase
+        .from('professionals')
+        .select('plan_tier')
+        .eq('id', user.id)
+        .single();
+
+      if (profData?.plan_tier) {
+        setCoachPlan(profData.plan_tier);
       }
 
       // 1. Desafios exclusivos do treinador logado (Isolamento Multi-Tenant)
@@ -186,10 +199,22 @@ export default function SquadsManagerPage() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Top Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
+    <FeatureGate
+      currentTier={coachPlan}
+      requiredTier="pro"
+      featureName="Guerra de Tribos & Squads"
+      featureDescription="A divisão em micro-equipes aumenta a taxa de retenção dos alunos em mais de 40%, evitando desistências e gerando competição saudável."
+      benefits={[
+        'Criação de equipes ilimitadas por desafio',
+        'Cálculo automático de pontuação média do grupo',
+        'Redistribuição dinâmica de alunos e capitães',
+        'Taxa de split da plataforma reduzida para 12%'
+      ]}
+    >
+      <div className="space-y-8">
+        {/* Top Header */}
+        <div>
+          <div className="flex items-center gap-2 mb-1">
           <Badge className="bg-white/10 text-white border-white/20 font-black tracking-wider uppercase text-[10px] font-mono">
             Guerra de Tribos & Retenção
           </Badge>
@@ -439,5 +464,6 @@ export default function SquadsManagerPage() {
         isLoading={deleting}
       />
     </div>
+  </FeatureGate>
   );
 }

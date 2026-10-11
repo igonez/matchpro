@@ -38,12 +38,15 @@ export function StudentBottomNav() {
           .maybeSingle();
         setStudentInfo(sData || { full_name: user.email?.split('@')[0] });
 
+        const isMetaProf = user.user_metadata?.role === 'professional';
+        const hasProfCookie = typeof document !== 'undefined' && document.cookie.includes('arena_role=professional');
+
         const { data: prof } = await supabase
           .from('professionals')
           .select('id')
           .eq('id', user.id)
           .maybeSingle();
-        if (prof) {
+        if (prof || isMetaProf || hasProfCookie) {
           setIsProfessional(true);
         }
       }

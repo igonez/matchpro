@@ -17,7 +17,8 @@ import {
   PlusCircle, 
   LogOut,
   ExternalLink,
-  User
+  User,
+  Wallet
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -83,11 +84,17 @@ export function DashboardHeader() {
       ],
     },
     {
+      title: 'FINANCEIRO & SAQUES',
+      items: [
+        { name: 'Central Financeira', href: '/dashboard/finance', icon: Wallet, active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+      ],
+    },
+    {
       title: 'RECURSOS PRO',
       items: [
         { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
         { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', icon: Gift, active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
-        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', icon: ShoppingBag, active: pathname === '/dashboard/sponsors', badge: 'PRO' },
+        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', icon: ShoppingBag, active: pathname === '/dashboard/sponsors', badge: 'ELITE' },
       ],
     },
     {
@@ -237,6 +244,67 @@ export function DashboardHeader() {
           </div>
         </div>
       )}
+
+      {/* 3. Dock Inferior Mobile para o Coach (Visível apenas em telas menores que md) */}
+      <nav className="md:hidden fixed bottom-3 inset-x-0 mx-auto max-w-[390px] w-[94%] z-30">
+        <div className="bg-black/90 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.95)] border border-white/15">
+          <Link
+            href="/dashboard"
+            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+              pathname === '/dashboard'
+                ? 'text-white font-black bg-white/15'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <LayoutDashboard className="h-4 w-4 mb-0.5" />
+            <span>Início</span>
+          </Link>
+
+          <Link
+            href="/dashboard/audit"
+            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+              pathname === '/dashboard/audit'
+                ? 'text-white font-black bg-white/15'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <CheckSquare className="h-4 w-4 mb-0.5" />
+            <span>Swipe</span>
+          </Link>
+
+          <Link
+            href="/dashboard/students"
+            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+              pathname === '/dashboard/students'
+                ? 'text-white font-black bg-white/15'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <Users className="h-4 w-4 mb-0.5" />
+            <span>Alunos</span>
+          </Link>
+
+          <Link
+            href="/dashboard/finance"
+            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+              pathname === '/dashboard/finance'
+                ? 'text-white font-black bg-white/15'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <Wallet className="h-4 w-4 mb-0.5" />
+            <span>PIX</span>
+          </Link>
+
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider text-zinc-400 hover:text-white transition-all"
+          >
+            <Menu className="h-4 w-4 mb-0.5" />
+            <span>Menu</span>
+          </button>
+        </div>
+      </nav>
     </>
   );
 }

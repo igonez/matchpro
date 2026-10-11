@@ -16,13 +16,14 @@ export function ReturnToCoachBanner() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const isMetaProf = user.user_metadata?.role === 'professional';
+        const hasProfCookie = typeof document !== 'undefined' && document.cookie.includes('arena_role=professional');
         const { data: prof } = await supabase
           .from('professionals')
           .select('id')
           .eq('id', user.id)
           .maybeSingle();
 
-        const isProf = isMetaProf || !!prof;
+        const isProf = isMetaProf || hasProfCookie || !!prof;
 
         if (isProf) {
           const isPreview = typeof window !== 'undefined'

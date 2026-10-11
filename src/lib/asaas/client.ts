@@ -121,9 +121,37 @@ export class AsaasClient {
   }
 
   /**
+   * Valida e consulta uma chave Pix no DICT do Banco Central através do Asaas
+   */
+  static async validatePixAddressKey(pixKey: string): Promise<{
+    status: string;
+    key: string;
+    type?: string;
+    account?: {
+      bank?: { name: string; ispb?: string };
+      owner?: { name: string; cpfCnpj?: string };
+    };
+  }> {
+    return this.request(`/pix/addressKeys/${encodeURIComponent(pixKey)}`, {
+      method: 'GET',
+    });
+  }
+
+  /**
    * Mock inteligente para testes de desenvolvimento offline
    */
   private static async mockResponse(endpoint: string, options: RequestInit): Promise<any> {
+    if (endpoint.includes('/pix/addressKeys/')) {
+      const rawKey = decodeURIComponent(endpoint.split('/pix/addressKeys/')[1] || '');
+      return {
+        status: 'ACTIVE',
+        key: rawKey,
+        account: {
+          bank: { name: 'Banco do Brasil / Nu / Inter (Validado)', ispb: '00000000' },
+          owner: { name: 'Titular Confirmado', cpfCnpj: '***.***.***-**' },
+        },
+      };
+    }
     if (endpoint === '/customers') {
       return { id: `cus_${Math.random().toString(36).substring(7)}`, name: 'Cliente Teste' };
     }

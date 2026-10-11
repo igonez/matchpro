@@ -17,7 +17,9 @@ import {
   Building2,
   User,
   Wallet,
-  AlertCircle
+  AlertCircle,
+  Check,
+  Info
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
@@ -27,6 +29,15 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
+import { 
+  formatCPF, 
+  formatCNPJ, 
+  validateCPF, 
+  validateCNPJ, 
+  validatePixKey, 
+  detectPixKeyType,
+  cleanDigits 
+} from '@/lib/validation/brazilian-banking';
 
 interface PaymentTransaction {
   id: string;
@@ -59,6 +70,8 @@ export default function FinanceDashboardPage() {
   const [docTypeInput, setDocTypeInput] = useState<'CPF' | 'CNPJ'>('CPF');
   const [docNumberInput, setDocNumberInput] = useState('');
   const [savingAccount, setSavingAccount] = useState(false);
+  const [verifiedBankData, setVerifiedBankData] = useState<any>(null);
+  const [withdrawing, setWithdrawing] = useState(false);
   const [copiedKey, setCopiedKey] = useState(false);
   const [selectedPlanForUpgrade, setSelectedPlanForUpgrade] = useState<PlanTier>('pro');
   const [upgradePaymentMethod, setUpgradePaymentMethod] = useState<'PIX' | 'CREDIT_CARD'>('PIX');
@@ -136,32 +149,111 @@ export default function FinanceDashboardPage() {
   // Saldo disponível (simulado ou real da subconta Asaas)
   const availableBalance = totalNet;
 
+  // Validações em tempo real
+  const docDigits = cleanDigits(docNumberInput);
+  const isDocFilled = docDigits.length > 0;
+  const isDocValid = docTypeInput === 'CPF'
+    ? (docDigits.length === 11 && validateCPF(docDigits))
+    : (docDigits.length === 14 && validateCNPJ(docDigits));
+
+  const pixValidation = validatePixKey(pixKeyInput);
+  const detectedPixType = detectPixKeyType(pixKeyInput);
+
+  const handleDocChange = (val: string) => {
+    if (docTypeInput === 'CPF') {
+      setDocNumberInput(formatCPF(val));
+    } else {
+      setDocNumberInput(formatCNPJ(val));
+    }
+  };
+
+  const handleDocTypeToggle = (type: 'CPF' | 'CNPJ') => {
+    setDocTypeInput(type);
+    const digits = cleanDigits(docNumberInput);
+    if (type === 'CPF') {
+      setDocNumberInput(formatCPF(digits.slice(0, 11)));
+    } else {
+      setDocNumberInput(formatCNPJ(digits.slice(0, 14)));
+    }
+  };
+
   const handleSaveBankAccount = async () => {
     if (!coachProfile?.id) return;
+
+    if (!isDocValid) {
+      alert(`Por favor, preencha um ${docTypeInput} válido antes de salvar.`);
+      return;
+    }
+
+    if (!pixValidation.isValid) {
+      alert(`Chave Pix inválida: ${pixValidation.error || 'Verifique o formato informado.'}`);
+      return;
+    }
+
     setSavingAccount(true);
 
     try {
-      const { error } = await supabase
-        .from('professionals')
-        .update({
-          asaas_pix_key: pixKeyInput,
-          document_type: docTypeInput,
-          document_number: docNumberInput,
-        })
-        .eq('id', coachProfile.id);
+      const res = await fetch('/api/finance/bank-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentType: docTypeInput,
+          documentNumber: docNumberInput,
+          pixKey: pixKeyInput,
+        }),
+      });
 
-      if (error) throw error;
-      alert('Dados bancários e documento salvos com sucesso!');
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Erro ao validar e salvar dados bancários.');
+      }
+
       setCoachProfile((prev: any) => ({
         ...prev,
-        asaas_pix_key: pixKeyInput,
-        document_type: docTypeInput,
-        document_number: docNumberInput,
+        asaas_pix_key: data.data.pixKey,
+        document_type: data.data.documentType,
+        document_number: data.data.documentNumber,
       }));
+      setPixKeyInput(data.data.pixKey);
+      setVerifiedBankData(data.data);
+      alert(`✅ Dados bancários validados com sucesso!\n\nChave Pix: ${data.data.pixKey}\nTipo: ${data.data.pixType}\nTitular: ${data.data.ownerName}\nBanco: ${data.data.bankName}`);
     } catch (err: any) {
-      alert('Erro ao salvar dados: ' + err.message);
+      alert('Erro ao validar dados: ' + err.message);
     } finally {
       setSavingAccount(false);
+    }
+  };
+
+  const handleRequestWithdraw = async () => {
+    if (!coachProfile?.asaas_pix_key) {
+      alert('Cadastre e valide sua chave Pix antes de solicitar o saque.');
+      return;
+    }
+
+    if (availableBalance <= 0) {
+      alert('Você não possui saldo disponível para saque no momento.');
+      return;
+    }
+
+    setWithdrawing(true);
+    try {
+      const res = await fetch('/api/finance/withdraw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: availableBalance }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Falha ao solicitar saque Pix.');
+      }
+
+      alert(`✅ Saque solicitado com sucesso!\n\nValor: R$ ${availableBalance.toFixed(2)}\nChave Pix: ${coachProfile.asaas_pix_key}\nStatus: Processando (Previsão de crédito: em até 5 minutos D+0)`);
+      setWithdrawModalOpen(false);
+    } catch (err: any) {
+      alert('Erro ao processar saque: ' + err.message);
+    } finally {
+      setWithdrawing(false);
     }
   };
 
@@ -308,24 +400,42 @@ export default function FinanceDashboardPage() {
             <div>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-zinc-400" />
-                Dados Fiscais & Subconta Asaas de Repasse
+                Dados Fiscais & Conta Pix para Recebimento
               </h2>
               <p className="text-xs text-zinc-400 mt-1">
-                Configure se você recebe como Pessoa Física (CPF) ou Jurídica (CNPJ) para emissão correta e repasse instantâneo.
+                Cadastre seus dados para receber seus saques e repasses instantâneos via Pix D+0.
               </p>
             </div>
-            <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1 text-xs">
-              Split Automático Habilitado
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1 text-xs font-mono">
+                Pix D+0 Imediato
+              </Badge>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Dica importante esclarecendo a necessidade de conta no Asaas */}
+          <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start gap-3">
+            <Info className="w-5 h-5 text-zinc-300 shrink-0 mt-0.5" />
+            <div className="text-xs text-zinc-300 space-y-1">
+              <p className="font-semibold text-white">
+                Você NÃO precisa criar conta no Asaas para receber!
+              </p>
+              <p className="text-zinc-400 leading-relaxed">
+                A plataforma ArenaFitPro se encarrega de toda a liquidação bancária. Basta cadastrar abaixo a sua chave Pix do seu banco habitual (Nubank, Inter, Itaú, Bradesco, Santander, etc.). Quando você solicitar o saque, o dinheiro cai diretamente na sua conta bancária em poucos minutos.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* 1. Tipo de Documento */}
             <div>
-              <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">Tipo de Documento</label>
+              <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                Tipo de Titularidade
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => setDocTypeInput('CPF')}
+                  onClick={() => handleDocTypeToggle('CPF')}
                   className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
                     docTypeInput === 'CPF'
                       ? 'bg-white text-black border-white'
@@ -336,7 +446,7 @@ export default function FinanceDashboardPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setDocTypeInput('CNPJ')}
+                  onClick={() => handleDocTypeToggle('CNPJ')}
                   className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
                     docTypeInput === 'CNPJ'
                       ? 'bg-white text-black border-white'
@@ -348,39 +458,125 @@ export default function FinanceDashboardPage() {
               </div>
             </div>
 
+            {/* 2. Número do Documento com Validação Real */}
             <div>
-              <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
-                Número do {docTypeInput}
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-mono text-zinc-400 uppercase">
+                  Número do {docTypeInput}
+                </label>
+                {isDocFilled && (
+                  isDocValid ? (
+                    <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-bold">
+                      <Check className="w-3 h-3" /> Válido
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-mono text-rose-400 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> Inválido
+                    </span>
+                  )
+                )}
+              </div>
               <Input
                 value={docNumberInput}
-                onChange={(e) => setDocNumberInput(e.target.value)}
+                onChange={(e) => handleDocChange(e.target.value)}
                 placeholder={docTypeInput === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
-                className="bg-black/60 border-white/10 text-white placeholder:text-zinc-600"
+                maxLength={docTypeInput === 'CPF' ? 14 : 18}
+                className={`bg-black/60 text-white placeholder:text-zinc-600 ${
+                  isDocFilled 
+                    ? isDocValid 
+                      ? 'border-emerald-500/50 focus:border-emerald-500' 
+                      : 'border-rose-500/50 focus:border-rose-500'
+                    : 'border-white/10'
+                }`}
               />
+              <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                {docTypeInput === 'CPF' ? '11 dígitos com validação matemática' : '14 dígitos para empresas'}
+              </p>
             </div>
 
+            {/* 3. Chave Pix com Detecção e Validação Automática */}
             <div>
-              <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
-                Chave Pix de Recebimento (Mesmo Titular)
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-mono text-zinc-400 uppercase">
+                  Chave Pix de Recebimento
+                </label>
+                {pixKeyInput.trim() && (
+                  <div className="flex items-center gap-1.5">
+                    {detectedPixType !== 'UNKNOWN' && (
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                        {detectedPixType === 'EMAIL' ? 'E-mail' : detectedPixType === 'PHONE' ? 'Celular' : detectedPixType === 'EVP' ? 'Chave Aleatória' : detectedPixType}
+                      </span>
+                    )}
+                    {pixValidation.isValid ? (
+                      <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-0.5 font-bold">
+                        <Check className="w-3 h-3" /> Ok
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono text-rose-400 flex items-center gap-0.5">
+                        <AlertCircle className="w-3 h-3" /> Erro
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
               <div className="flex gap-2">
                 <Input
                   value={pixKeyInput}
                   onChange={(e) => setPixKeyInput(e.target.value)}
-                  placeholder="E-mail, CPF ou Telefone"
-                  className="bg-black/60 border-white/10 text-white placeholder:text-zinc-600"
+                  placeholder="E-mail, CPF, celular ou aleatória"
+                  className={`bg-black/60 text-white placeholder:text-zinc-600 ${
+                    pixKeyInput.trim()
+                      ? pixValidation.isValid
+                        ? 'border-emerald-500/50 focus:border-emerald-500'
+                        : 'border-rose-500/50 focus:border-rose-500'
+                      : 'border-white/10'
+                  }`}
                 />
                 <Button 
                   onClick={handleSaveBankAccount} 
-                  disabled={savingAccount}
-                  className="bg-white text-black hover:bg-zinc-200 font-bold shrink-0"
+                  disabled={savingAccount || !isDocValid || !pixValidation.isValid}
+                  className="bg-white text-black hover:bg-zinc-200 font-bold shrink-0 disabled:opacity-50"
                 >
-                  {savingAccount ? 'Salvando...' : 'Salvar'}
+                  {savingAccount ? 'Validando...' : 'Validar & Salvar'}
                 </Button>
               </div>
+              {pixKeyInput.trim() && !pixValidation.isValid && (
+                <p className="text-[10px] text-rose-400 mt-1 font-mono">
+                  {pixValidation.error}
+                </p>
+              )}
             </div>
           </div>
+
+          {/* Card de Confirmação de Chave Cadastrada */}
+          {coachProfile?.asaas_pix_key && (
+            <div className="mt-5 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                    Conta Validada para Saques Pix
+                    <Badge className="bg-emerald-500/20 text-emerald-400 border-0 text-[10px]">
+                      ATIVA
+                    </Badge>
+                  </div>
+                  <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
+                    Chave: <span className="text-emerald-300 font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
+                  </div>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setWithdrawModalOpen(true)}
+                className="border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10 font-bold text-xs shrink-0"
+              >
+                Solicitar Saque Agora
+              </Button>
+            </div>
+          )}
         </SpotlightCard3D>
 
         {/* Tabela de Extrato de Vendas & Inscrições */}
@@ -475,32 +671,38 @@ export default function FinanceDashboardPage() {
       >
         <div className="space-y-4 pt-2">
           <p className="text-sm text-zinc-400">
-            O valor disponível de <strong className="text-white">R$ {availableBalance.toFixed(2)}</strong> será transferido via Pix instantâneo para a chave cadastrada:
+            O valor disponível de <strong className="text-white">R$ {availableBalance.toFixed(2)}</strong> será transferido via Pix instantâneo para a sua chave:
           </p>
 
           <div className="bg-black/70 border border-white/10 rounded-xl p-3.5 font-mono text-sm text-emerald-400 flex items-center justify-between">
-            <span>{coachProfile?.asaas_pix_key || 'Chave não cadastrada'}</span>
-            <Badge className="bg-emerald-500/10 text-emerald-400 border-0 text-[10px]">
+            <span className="truncate mr-2">{coachProfile?.asaas_pix_key || 'Nenhuma chave Pix cadastrada'}</span>
+            <Badge className="bg-emerald-500/10 text-emerald-400 border-0 text-[10px] shrink-0">
               D+0 PIX
             </Badge>
           </div>
 
+          {!coachProfile?.asaas_pix_key && (
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>Você precisa cadastrar e validar sua chave Pix na seção acima antes de solicitar o saque.</span>
+            </div>
+          )}
+
           <div className="text-xs text-zinc-500">
-            A transferência é processada automaticamente pela infraestrutura do Asaas. Em dias úteis, o valor é creditado em poucos minutos.
+            A transferência é processada automaticamente pela infraestrutura bancária do Asaas diretamente para a sua conta. O valor é creditado em poucos minutos.
           </div>
 
           <div className="flex gap-2 pt-4">
             <Button
-              onClick={() => {
-                alert('Solicitação de saque Pix enviada para o Asaas com sucesso!');
-                setWithdrawModalOpen(false);
-              }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold"
+              onClick={handleRequestWithdraw}
+              disabled={withdrawing || !coachProfile?.asaas_pix_key || availableBalance <= 0}
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold disabled:opacity-50"
             >
-              Confirmar Transferência Pix
+              {withdrawing ? 'Processando Transferência...' : 'Confirmar Transferência Pix'}
             </Button>
             <Button
               variant="outline"
+              disabled={withdrawing}
               onClick={() => setWithdrawModalOpen(false)}
               className="border-white/10 text-zinc-400"
             >

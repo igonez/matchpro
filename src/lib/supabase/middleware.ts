@@ -42,25 +42,6 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // Se o usuário acessar a raiz '/'
-  if (url.pathname === '/') {
-    if (user) {
-      const isMetaProfessional = user.user_metadata?.role === 'professional';
-
-      const { data: professional } = await supabase
-        .from('professionals')
-        .select('id')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      const isProfessional = isMetaProfessional || !!professional;
-
-      url.pathname = isProfessional ? '/dashboard' : '/app';
-      return NextResponse.redirect(url);
-    }
-    return supabaseResponse;
-  }
-
   // Se não autenticado e tentando acessar rotas protegidas
   if (!user && (url.pathname.startsWith('/dashboard') || url.pathname.startsWith('/app'))) {
     url.pathname = '/login';
@@ -69,29 +50,67 @@ export async function updateSession(request: NextRequest) {
 
   // Verificação de Role quando usuário está logado
   if (user) {
-    // Checar se é profissional pela tabela professionals OU pelos metadados do auth
+    const cookieRole = request.cookies.get('arena_role')?.value;
     const isMetaProfessional = user.user_metadata?.role === 'professional';
 
-    const { data: professional } = await supabase
-      .from('professionals')
-      .select('id')
-      .eq('id', user.id)
-      .maybeSingle();
+    let isProfessional = isMetaProfessional || cookieRole === 'professional';
 
-    const isProfessional = isMetaProfessional || !!professional;
+    // Se ainda não confirmado, verifica diretamente no banco
+    if (!isProfessional) {
+      const { data: professional } = await supabase
+        .from('professionals')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (professional) {
+        isProfessional = true;
+      }
+    }
+
+    const assignedRole = isProfessional ? 'professional' : 'student';
+
+    // Se o usuário acessar a raiz '/'
+    if (url.pathname === '/') {
+      const targetPath = isProfessional ? '/dashboard' : '/app';
+      const redirectRes = NextResponse.redirect(new URL(targetPath, request.url));
+      redirectRes.cookies.set('arena_role', assignedRole, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+      });
+      return redirectRes;
+    }
 
     // Se aluno tentar acessar /dashboard, redireciona para /app
     if (!isProfessional && url.pathname.startsWith('/dashboard')) {
-      url.pathname = '/app';
-      return NextResponse.redirect(url);
+      const redirectRes = NextResponse.redirect(new URL('/app', request.url));
+      redirectRes.cookies.set('arena_role', 'student', {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+      });
+      return redirectRes;
     }
 
     // Se profissional tentar acessar /app sem modo de preview explícito, redireciona para o cockpit /dashboard
     const isPreview = url.searchParams.get('preview') === 'true';
     if (isProfessional && url.pathname.startsWith('/app') && !isPreview) {
-      url.pathname = '/dashboard';
-      return NextResponse.redirect(url);
+      const redirectRes = NextResponse.redirect(new URL('/dashboard', request.url));
+      redirectRes.cookies.set('arena_role', 'professional', {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+      });
+      return redirectRes;
     }
+
+    // Garante que o cookie de role está sempre sincronizado na resposta
+    supabaseResponse.cookies.set('arena_role', assignedRole, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
+    });
   }
 
   return supabaseResponse;

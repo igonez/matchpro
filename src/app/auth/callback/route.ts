@@ -30,7 +30,10 @@ export async function GET(request: Request) {
         .eq('id', user.id)
         .maybeSingle();
 
-      if (targetRole === 'professional') {
+      const isExistingProf = !!prof;
+      const effectiveRole = isExistingProf ? 'professional' : targetRole;
+
+      if (effectiveRole === 'professional') {
         if (!prof) {
           await supabase.from('professionals').insert({
             id: user.id,
@@ -38,7 +41,16 @@ export async function GET(request: Request) {
             specialty: 'personal_trainer',
           });
         }
-        return NextResponse.redirect(`${origin}${next || '/dashboard'}`);
+        await supabase.auth.updateUser({
+          data: { role: 'professional' }
+        });
+        const redirectRes = NextResponse.redirect(`${origin}${next || '/dashboard'}`);
+        redirectRes.cookies.set('arena_role', 'professional', {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 365,
+          sameSite: 'lax',
+        });
+        return redirectRes;
       } else {
         if (!student) {
           await supabase.from('students').insert({
@@ -47,7 +59,16 @@ export async function GET(request: Request) {
             avatar_url: avatarUrl,
           });
         }
-        return NextResponse.redirect(`${origin}${next || '/app'}`);
+        await supabase.auth.updateUser({
+          data: { role: 'student' }
+        });
+        const redirectRes = NextResponse.redirect(`${origin}${next || '/app'}`);
+        redirectRes.cookies.set('arena_role', 'student', {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 365,
+          sameSite: 'lax',
+        });
+        return redirectRes;
       }
     }
   }

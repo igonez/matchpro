@@ -76,6 +76,9 @@ export default function LoginPage() {
         if (authError) throw authError;
 
         if (authData.user) {
+          if (typeof document !== 'undefined') {
+            document.cookie = `arena_role=${role}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+          }
           if (role === 'professional') {
             await supabase.from('professionals').insert({
               id: authData.user.id,
@@ -119,17 +122,28 @@ export default function LoginPage() {
             .maybeSingle();
 
           if (prof) {
+            if (typeof document !== 'undefined') {
+              document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+            }
+            await supabase.auth.updateUser({ data: { role: 'professional' } }).catch(() => {});
             router.push('/dashboard');
             return;
           }
 
           if (student) {
+            if (typeof document !== 'undefined') {
+              document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+            }
+            await supabase.auth.updateUser({ data: { role: 'student' } }).catch(() => {});
             router.push('/app');
             return;
           }
 
           // Se for uma conta sem registro prévio nas tabelas públicas
           if (role === 'professional') {
+            if (typeof document !== 'undefined') {
+              document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+            }
             await supabase.auth.updateUser({
               data: { role: 'professional' }
             });
@@ -141,6 +155,9 @@ export default function LoginPage() {
             });
             router.push('/dashboard');
           } else {
+            if (typeof document !== 'undefined') {
+              document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+            }
             await supabase.auth.updateUser({
               data: { role: 'student' }
             });

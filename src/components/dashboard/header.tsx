@@ -18,7 +18,8 @@ import {
   LogOut,
   ExternalLink,
   User,
-  Wallet
+  Wallet,
+  Activity
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -71,13 +72,14 @@ export function DashboardHeader() {
       title: 'MONITORAMENTO',
       items: [
         { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard, active: pathname === '/dashboard' },
+        { name: 'Feed da Turma', href: '/dashboard/feed', icon: Activity, active: pathname === '/dashboard/feed' },
         { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
       ],
     },
     {
       title: 'GESTÃO DA TURMA',
       items: [
-        { name: 'Alunos & Finanças', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
+        { name: 'Alunos & Turmas', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
         { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
         { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
         { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },

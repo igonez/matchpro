@@ -56,8 +56,10 @@ function MissionsManagerContent() {
   // Modais de Confirmação & Toasts (Substituem alert e confirm nativos)
   const [deleteMissionTarget, setDeleteMissionTarget] = useState<{ id: string; title: string } | null>(null);
   const [deletingMission, setDeletingMission] = useState(false);
-  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
-  const [generatingTemplate, setGeneratingTemplate] = useState(false);
+  const [deleteWeekTarget, setDeleteWeekTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deletingWeek, setDeletingWeek] = useState(false);
+  const [editingWeekTitle, setEditingWeekTitle] = useState(false);
+  const [newWeekTitle, setNewWeekTitle] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -223,153 +225,83 @@ function MissionsManagerContent() {
     }
   };
 
-  // Gerador Inteligente de 4 Semanas (6 Treinos, 7 Cardios, 4 Refeições Diárias)
-  const handleExecuteGenerateTemplate = async () => {
-    if (!selectedChallengeId) return;
-
-    setGeneratingTemplate(true);
+  // Excluir Semana com Confirmação
+  const handleConfirmDeleteWeek = async () => {
+    if (!deleteWeekTarget) return;
+    setDeletingWeek(true);
     try {
-      // 1. Criar as 4 semanas (ou buscar se já existirem)
-      for (let i = 1; i <= 4; i++) {
-        let weekId: string | null = null;
+      // 1. Deletar missões da semana
+      await supabase.from('missions').delete().eq('week_id', deleteWeekTarget.id);
+      
+      // 2. Deletar semana
+      const { error } = await supabase.from('challenge_weeks').delete().eq('id', deleteWeekTarget.id);
+      if (error) throw error;
 
-        // Tentar buscar se a semana já existe
-        const { data: existingWeek } = await supabase
-          .from('challenge_weeks')
-          .select('id')
-          .eq('challenge_id', selectedChallengeId)
-          .eq('week_number', i)
-          .maybeSingle();
-
-        if (existingWeek) {
-          weekId = existingWeek.id;
-        } else {
-          const { data: weekData, error: weekErr } = await supabase
-            .from('challenge_weeks')
-            .insert({
-              challenge_id: selectedChallengeId,
-              week_number: i,
-              title: `Semana ${i} • Sprint ${i}`,
-              bonus_points: 20, // +20 XP de Bônus de 100%
-            })
-            .select()
-            .single();
-
-          if (weekErr) throw weekErr;
-          weekId = weekData.id;
-        }
-
-        if (!weekId) continue;
-
-        // 2. Gerar as missões segmentadas para cada semana
-        const templateMissions: any[] = [];
-
-        // 6 Treinos da semana
-        for (let t = 1; t <= 6; t++) {
-          templateMissions.push({
-            challenge_id: selectedChallengeId,
-            week_id: weekId,
-            title: `Treino #${t} da Semana`,
-            category: 'treino',
-            points_rewarded: 15,
-            requires_cooldown: true,
-            cooldown_hours: 4,
-            order_index: t,
-            is_bonus: false,
-          });
-        }
-
-        // 7 Cardios da semana
-        for (let c = 1; c <= 7; c++) {
-          templateMissions.push({
-            challenge_id: selectedChallengeId,
-            week_id: weekId,
-            title: `Cardio #${c} (Mín. 30min)`,
-            category: 'cardio',
-            points_rewarded: 10,
-            requires_cooldown: true,
-            cooldown_hours: 4,
-            order_index: c,
-            is_bonus: false,
-          });
-        }
-
-        // 4 Refeições diárias
-        const mealNames = ['Café da Manhã Limpo', 'Almoço Balanceado', 'Lanche da Tarde', 'Jantar & Ceia'];
-        mealNames.forEach((meal, idx) => {
-          templateMissions.push({
-            challenge_id: selectedChallengeId,
-            week_id: weekId,
-            title: meal,
-            category: 'refeicao',
-            points_rewarded: 10,
-            requires_cooldown: false,
-            order_index: idx + 1,
-            is_bonus: false,
-          });
-        });
-
-        // 1 Missão Bônus por semana
-        templateMissions.push({
-          challenge_id: selectedChallengeId,
-          week_id: weekId,
-          title: `Desafio Bônus: 3L Água + Alongamento`,
-          category: 'habito',
-          points_rewarded: 25,
-          requires_cooldown: false,
-          order_index: 99,
-          is_bonus: true,
-        });
-
-        let { error: missErr } = await supabase.from('missions').insert(templateMissions);
-
-        // Fallback de resiliência caso colunas novas de missions não estejam no cache do Supabase
-        if (missErr && (missErr.message.includes('column') || missErr.message.includes('schema cache'))) {
-          console.warn('Tentando insert básico de missões...', missErr);
-          const basicMissions = templateMissions.map((m) => ({
-            challenge_id: m.challenge_id,
-            week_id: m.week_id,
-            title: m.title,
-            category: m.category,
-            points_rewarded: m.points_rewarded,
-          }));
-          const retry = await supabase.from('missions').insert(basicMissions);
-          missErr = retry.error;
-        }
-
-        if (missErr) throw missErr;
+      const remainingWeeks = weeks.filter((w) => w.id !== deleteWeekTarget.id);
+      setWeeks(remainingWeeks);
+      if (remainingWeeks.length > 0) {
+        setSelectedWeekId(remainingWeeks[0].id);
+      } else {
+        setSelectedWeekId('');
+        setMissions([]);
       }
-
-      // 3. Recarregar as semanas do desafio e carregar imediatamente as missões da Semana 1
-      const { data: updatedWeeks } = await supabase
-        .from('challenge_weeks')
-        .select('*')
-        .eq('challenge_id', selectedChallengeId)
-        .order('week_number', { ascending: true });
-
-      if (updatedWeeks && updatedWeeks.length > 0) {
-        setWeeks(updatedWeeks);
-        const targetWeekId = updatedWeeks[0].id;
-        setSelectedWeekId(targetWeekId);
-
-        // Forçar busca e hidratação imediata das missões da Semana 1 nas 4 listas
-        const { data: weekMissions } = await supabase
-          .from('missions')
-          .select('*')
-          .eq('week_id', targetWeekId)
-          .order('order_index', { ascending: true })
-          .order('created_at', { ascending: true });
-
-        setMissions(weekMissions || []);
-      }
-
-      showToast('Estrutura de 4 semanas gerada com sucesso! As 4 listas foram preenchidas.');
-      setIsGenerateModalOpen(false);
+      showToast(`Semana "${deleteWeekTarget.title}" removida com sucesso.`);
+      setDeleteWeekTarget(null);
     } catch (err: any) {
-      console.error('Erro detalhado ao gerar template inteligente:', err);
-      showToast('Erro ao gerar template inteligente: ' + (err.message || 'Erro desconhecido'));
+      showToast('Erro ao excluir semana: ' + err.message);
     } finally {
-      setGeneratingTemplate(false);
+      setDeletingWeek(false);
+    }
+  };
+
+  // Renomear Semana
+  const handleSaveWeekTitle = async () => {
+    if (!selectedWeekId || !newWeekTitle.trim()) {
+      setEditingWeekTitle(false);
+      return;
+    }
+    try {
+      const { error } = await supabase
+        .from('challenge_weeks')
+        .update({ title: newWeekTitle.trim() })
+        .eq('id', selectedWeekId);
+      if (error) throw error;
+      setWeeks((prev) => prev.map((w) => w.id === selectedWeekId ? { ...w, title: newWeekTitle.trim() } : w));
+      showToast('Nome da semana atualizado!');
+    } catch (err: any) {
+      showToast('Erro ao atualizar nome da semana: ' + err.message);
+    } finally {
+      setEditingWeekTitle(false);
+    }
+  };
+
+  // Adicionar Nova Semana
+  const handleCreateNewWeek = async () => {
+    if (!selectedChallengeId) {
+      showToast('Selecione uma turma primeiro.');
+      return;
+    }
+    try {
+      const nextNum = weeks.length + 1;
+      const { data, error } = await supabase
+        .from('challenge_weeks')
+        .insert({
+          challenge_id: selectedChallengeId,
+          week_number: nextNum,
+          title: `Semana ${nextNum}`,
+          bonus_points: 20,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      if (data) {
+        const updated = [...weeks, data];
+        setWeeks(updated);
+        setSelectedWeekId(data.id);
+        showToast(`Semana ${nextNum} criada com sucesso!`);
+      }
+    } catch (err: any) {
+      showToast('Erro ao criar nova semana: ' + err.message);
     }
   };
 
@@ -411,12 +343,12 @@ function MissionsManagerContent() {
 
           <Button
             size="sm"
-            onClick={() => setIsGenerateModalOpen(true)}
-            disabled={generatingTemplate || !selectedChallengeId}
+            onClick={handleCreateNewWeek}
+            disabled={!selectedChallengeId}
             className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
           >
-            <Sparkles className="h-4 w-4 mr-1.5" />
-            {generatingTemplate ? 'Gerando...' : 'Gerar 4 Semanas Completas'}
+            <Plus className="h-4 w-4 mr-1.5" />
+            Nova Semana
           </Button>
         </div>
       </div>
@@ -426,76 +358,126 @@ function MissionsManagerContent() {
         <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
           <p className="text-sm font-bold text-white font-mono">ESTA TURMA AINDA NÃO POSSUI SEMANAS DE MISSÕES</p>
           <p className="text-xs text-zinc-400 max-w-md mx-auto">
-            Clique no botão abaixo para provisionar a estrutura recomendada de 4 semanas com missões completas (Treinos, Cardios, Refeições e Bônus).
+            Crie semanas de missões personalizadas de acordo com o planejamento da sua turma (Treinos, Cardios, Refeições e Hábitos).
           </p>
           <Button
             size="sm"
-            onClick={() => setIsGenerateModalOpen(true)}
+            onClick={handleCreateNewWeek}
             className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200"
           >
-            <Sparkles className="h-4 w-4 mr-1.5" /> Provisionar 4 Semanas Agora
+            <Plus className="h-4 w-4 mr-1.5" /> Criar Semana 1 Agora
           </Button>
         </div>
       )}
 
-      {/* Carrossel de Semanas */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-white/10">
-        {weeks.map((week) => {
-          const isSelected = week.id === selectedWeekId;
-          return (
-            <button
-              key={week.id}
-              onClick={() => setSelectedWeekId(week.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-mono font-bold whitespace-nowrap transition-all ${
-                isSelected
-                  ? 'border-white bg-white/10 text-white shadow-md shadow-black'
-                  : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20 hover:text-white'
-              }`}
-            >
-              <Calendar className="h-4 w-4 text-zinc-400" />
-              <span>{week.title}</span>
-              <span className="bg-white/10 text-zinc-300 text-[10px] px-1.5 py-0.5 rounded font-bold font-mono">
-                +20 XP 100%
-              </span>
-            </button>
-          );
-        })}
+      {/* Carrossel de Semanas e Ações da Semana Selecionada */}
+      {weeks.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-white/10">
+            {weeks.map((week) => {
+              const isSelected = week.id === selectedWeekId;
+              return (
+                <button
+                  key={week.id}
+                  onClick={() => {
+                    setSelectedWeekId(week.id);
+                    setEditingWeekTitle(false);
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-mono font-bold whitespace-nowrap transition-all ${
+                    isSelected
+                      ? 'border-white bg-white/10 text-white shadow-md shadow-black'
+                      : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20 hover:text-white'
+                  }`}
+                >
+                  <Calendar className="h-4 w-4 text-zinc-400" />
+                  <span>{week.title}</span>
+                  <span className="bg-white/10 text-zinc-300 text-[10px] px-1.5 py-0.5 rounded font-bold font-mono">
+                    +{week.bonus_points || 20} XP
+                  </span>
+                </button>
+              );
+            })}
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={async () => {
-            if (!selectedChallengeId) {
-              showToast('Selecione ou crie um desafio primeiro.');
-              return;
-            }
-            try {
-              const nextNum = weeks.length + 1;
-              const { data, error } = await supabase
-                .from('challenge_weeks')
-                .insert({
-                  challenge_id: selectedChallengeId,
-                  week_number: nextNum,
-                  title: `Semana ${nextNum}`,
-                  bonus_points: 20,
-                })
-                .select()
-                .single();
-              if (error) throw error;
-              if (data) {
-                setWeeks([...weeks, data]);
-                setSelectedWeekId(data.id);
-                showToast(`Semana ${nextNum} criada com sucesso!`);
-              }
-            } catch (err: any) {
-              showToast('Erro ao criar nova semana: ' + err.message);
-            }
-          }}
-          className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed border-white/15 hover:text-white"
-        >
-          <Plus className="h-4 w-4 mr-1" /> Nova Semana
-        </Button>
-      </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCreateNewWeek}
+              className="rounded-2xl h-10 px-3 text-xs text-zinc-400 border-dashed border-white/15 hover:text-white"
+            >
+              <Plus className="h-4 w-4 mr-1" /> Nova Semana
+            </Button>
+          </div>
+
+          {/* Barra de Ações Rápidas da Semana Selecionada */}
+          {selectedWeekId && (
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-zinc-950/60 border border-white/10 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-zinc-500 font-mono">Semana ativa:</span>
+                {editingWeekTitle ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={newWeekTitle}
+                      onChange={(e) => setNewWeekTitle(e.target.value)}
+                      placeholder="Ex: Semana 1 • Adaptação"
+                      className="h-8 w-56 text-xs bg-zinc-900 border-white/20 text-white rounded-lg"
+                      autoFocus
+                    />
+                    <Button
+                      size="sm"
+                      onClick={handleSaveWeekTitle}
+                      className="h-8 px-2.5 text-xs bg-white text-black font-bold hover:bg-zinc-200"
+                    >
+                      Salvar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setEditingWeekTitle(false)}
+                      className="h-8 px-2 text-xs text-zinc-400 hover:text-white"
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-white font-mono">
+                      {weeks.find((w) => w.id === selectedWeekId)?.title || 'Semana'}
+                    </span>
+                    <button
+                      onClick={() => {
+                        const current = weeks.find((w) => w.id === selectedWeekId);
+                        setNewWeekTitle(current?.title || '');
+                        setEditingWeekTitle(true);
+                      }}
+                      className="text-zinc-400 hover:text-white p-1 rounded transition-colors"
+                      title="Renomear semana"
+                    >
+                      <Edit3 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const current = weeks.find((w) => w.id === selectedWeekId);
+                    if (current) {
+                      setDeleteWeekTarget({ id: current.id, title: current.title });
+                    }
+                  }}
+                  className="h-8 px-3 text-xs border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40 rounded-lg"
+                >
+                  <Trash2 className="h-3.5 w-3.5 mr-1" />
+                  Excluir Esta Semana
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Segmentação em 4 Listas Claras (Abas) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -797,16 +779,16 @@ function MissionsManagerContent() {
         isLoading={deletingMission}
       />
 
-      {/* Modal Customizado: Confirmar Geração de 4 Semanas */}
+      {/* Modal Customizado: Confirmar Exclusão de Semana */}
       <CustomDialog
-        isOpen={isGenerateModalOpen}
-        onClose={() => setIsGenerateModalOpen(false)}
-        title="Provisionar Estrutura de 4 Semanas"
-        description="Deseja gerar a estrutura completa com 4 Semanas de sprints e 17 missões recomendadas (Treinos, Cardios, Refeições diárias e Bônus)? Missões já existentes não serão apagadas."
-        confirmLabel={generatingTemplate ? 'Gerando...' : 'Sim, Provisionar Agora'}
-        cancelLabel="Voltar"
-        onConfirm={handleExecuteGenerateTemplate}
-        isLoading={generatingTemplate}
+        isOpen={!!deleteWeekTarget}
+        onClose={() => setDeleteWeekTarget(null)}
+        title="Excluir Semana de Missões"
+        description={`Tem certeza que deseja excluir "${deleteWeekTarget?.title}" e todas as missões cadastradas nesta semana? Esta ação não pode ser desfeita.`}
+        confirmLabel={deletingWeek ? 'Excluindo...' : 'Sim, Excluir Semana'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteWeek}
+        isLoading={deletingWeek}
       />
     </div>
   );

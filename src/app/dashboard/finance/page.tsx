@@ -758,30 +758,38 @@ export default function FinanceDashboardPage() {
                 <Button
                   onClick={async () => {
                     if (!coachProfile?.id || !upgradePixData?.planTier) return;
+                    setUpgradeLoading(true);
                     try {
-                      const { error } = await supabase
-                        .from('professionals')
-                        .update({
-                          plan_tier: upgradePixData.planTier,
-                          platform_fee_percent: PLAN_CONFIG[upgradePixData.planTier as PlanTier].platformFeePercent,
-                        })
-                        .eq('id', coachProfile.id);
+                      const res = await fetch('/api/checkout/confirm-plan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          planTier: upgradePixData.planTier,
+                          paymentMethod: 'PIX',
+                        }),
+                      });
+                      const data = await res.json();
+                      if (!res.ok || !data.success) {
+                        throw new Error(data.error || 'Erro ao confirmar plano.');
+                      }
 
-                      if (error) throw error;
-                      alert(`Pagamento confirmado! Seu plano agora é ${upgradePixData.planName}. Todos os recursos foram desbloqueados!`);
                       setCoachProfile((prev: any) => ({
                         ...prev,
-                        plan_tier: upgradePixData.planTier,
+                        plan_tier: data.planTier,
+                        platform_fee_percent: data.platformFeePercent,
                       }));
                       setUpgradeModalOpen(false);
                       setUpgradePixData(null);
                     } catch (err: any) {
-                      alert('Erro ao confirmar upgrade: ' + err.message);
+                      console.error('Erro ao confirmar upgrade Pix:', err);
+                    } finally {
+                      setUpgradeLoading(false);
                     }
                   }}
+                  disabled={upgradeLoading}
                   className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-xs"
                 >
-                  ✓ Já Efetuei o Pagamento PIX (Ativar Plano)
+                  {upgradeLoading ? 'Confirmando...' : '✓ Já Efetuei o Pagamento PIX (Ativar Plano)'}
                 </Button>
 
                 <Button
@@ -878,7 +886,7 @@ export default function FinanceDashboardPage() {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                {/* Opção Pro */}
+                {/* Opção Pro - DISPONÍVEL */}
                 <div 
                   onClick={() => {
                     if (currentPlanTier !== 'pro') {
@@ -900,7 +908,7 @@ export default function FinanceDashboardPage() {
                         ✓ SEU PLANO ATUAL
                       </Badge>
                     ) : (
-                      <Badge className="bg-zinc-800 text-zinc-300 border-0 text-[10px]">PRO</Badge>
+                      <Badge className="bg-zinc-800 text-zinc-300 border-0 text-[10px]">RECOMENDADO</Badge>
                     )}
                   </div>
                   <div className="text-xl font-black text-white mb-2">R$ 89,90<span className="text-xs text-zinc-500 font-normal">/mês</span></div>
@@ -917,68 +925,52 @@ export default function FinanceDashboardPage() {
                   )}
                 </div>
 
-                {/* Opção Studio */}
+                {/* Opção Studio - PAUSADO / EM BREVE */}
                 <div 
-                  onClick={() => {
-                    if (currentPlanTier !== 'studio') {
-                      setSelectedPlanForUpgrade('studio');
-                    }
-                  }}
-                  className={`p-4 rounded-xl border transition-all ${
-                    currentPlanTier === 'studio'
-                      ? 'border-emerald-500/40 bg-emerald-500/5 cursor-not-allowed opacity-90'
-                      : selectedPlanForUpgrade === 'studio'
-                      ? 'border-white bg-white/5 shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-pointer'
-                      : 'border-white/10 bg-black/40 hover:border-white/20 cursor-pointer'
-                  }`}
+                  className="p-4 rounded-xl border border-white/5 bg-zinc-950/40 opacity-60 cursor-not-allowed relative"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-white text-sm">Studio & Gym</span>
-                    {currentPlanTier === 'studio' ? (
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-mono">
-                        ✓ SEU PLANO ATUAL
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px]">ELITE</Badge>
-                    )}
+                    <span className="font-bold text-zinc-400 text-sm">Studio & Gym</span>
+                    <Badge className="bg-zinc-800 text-zinc-400 border-0 text-[9px] font-mono">EM BREVE</Badge>
                   </div>
-                  <div className="text-xl font-black text-white mb-2">R$ 279,90<span className="text-xs text-zinc-500 font-normal">/mês</span></div>
-                  <ul className="text-[11px] text-zinc-400 space-y-1">
+                  <div className="text-xl font-black text-zinc-500 mb-2">R$ 279,90<span className="text-xs text-zinc-600 font-normal">/mês</span></div>
+                  <ul className="text-[11px] text-zinc-500 space-y-1">
                     <li>• Desafios Ilimitados</li>
-                    <li>• Parceiros & Cupons</li>
                     <li>• Multi-treinadores</li>
-                    <li>• Menor taxa: apenas 8%</li>
+                    <li>• Taxa ultra-reduzida: 8%</li>
                   </ul>
-                  {currentPlanTier === 'studio' && (
-                    <div className="mt-3 pt-2 border-t border-emerald-500/20 text-[10px] text-emerald-400 font-mono text-center">
-                      Você já possui este plano ativo
-                    </div>
-                  )}
+                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] text-zinc-500 font-mono text-center">
+                    Temporariamente pausado para novas turmas
+                  </div>
                 </div>
               </div>
 
-              {/* Botão de Downgrade para Starter caso o coach já esteja no Pro ou Studio */}
-              {currentPlanTier !== 'starter' && (
+              {/* Botão de Downgrade para Starter caso o coach já esteja no Pro */}
+              {currentPlanTier === 'pro' && (
                 <div className="pt-2 text-center border-t border-white/[0.06]">
                   <button
                     type="button"
                     onClick={async () => {
-                      if (!confirm('Deseja realmente voltar ao plano Starter Gratuito? Os recursos Pro (Squads e Mystery Box) serão bloqueados e a taxa de comissão passará para 18%.')) return;
+                      setUpgradeLoading(true);
                       try {
-                        const { error } = await supabase
-                          .from('professionals')
-                          .update({
-                            plan_tier: 'starter',
-                            platform_fee_percent: PLAN_CONFIG.starter.platformFeePercent,
-                          })
-                          .eq('id', coachProfile.id);
-
-                        if (error) throw error;
-                        alert('Plano alterado para Starter Gratuito com sucesso.');
-                        setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'starter' }));
+                        const res = await fetch('/api/checkout/confirm-plan', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            planTier: 'starter',
+                            paymentMethod: 'DOWNGRADE',
+                          }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok || !data.success) {
+                          throw new Error(data.error || 'Erro ao alterar plano.');
+                        }
+                        setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'starter', platform_fee_percent: data.platformFeePercent }));
                         setUpgradeModalOpen(false);
                       } catch (e: any) {
-                        alert('Erro ao cancelar assinatura: ' + e.message);
+                        console.error('Erro ao voltar para Starter:', e);
+                      } finally {
+                        setUpgradeLoading(false);
                       }
                     }}
                     className="text-xs text-zinc-500 hover:text-rose-400 transition-colors font-mono underline"
@@ -993,37 +985,34 @@ export default function FinanceDashboardPage() {
                   disabled={upgradeLoading || selectedPlanForUpgrade === currentPlanTier}
                   onClick={async () => {
                     if (selectedPlanForUpgrade === currentPlanTier) {
-                      alert('Você já possui este plano ativo!');
                       return;
                     }
 
                     if (upgradePaymentMethod === 'CREDIT_CARD') {
-                      // Simulação / Processamento de Cartão de Crédito
                       if (!cardNumber.trim() || !cardHolder.trim()) {
-                        alert('Preencha os dados do cartão de crédito para prosseguir.');
                         return;
                       }
                       setUpgradeLoading(true);
-                      setTimeout(async () => {
-                        try {
-                          const { error } = await supabase
-                            .from('professionals')
-                            .update({
-                              plan_tier: selectedPlanForUpgrade,
-                              platform_fee_percent: PLAN_CONFIG[selectedPlanForUpgrade].platformFeePercent,
-                            })
-                            .eq('id', coachProfile.id);
-
-                          if (error) throw error;
-                          alert(`Cartão aprovado com sucesso! Plano ${PLAN_CONFIG[selectedPlanForUpgrade].name} ativado.`);
-                          setCoachProfile((prev: any) => ({ ...prev, plan_tier: selectedPlanForUpgrade }));
-                          setUpgradeModalOpen(false);
-                        } catch (err: any) {
-                          alert('Erro ao aprovar cartão: ' + err.message);
-                        } finally {
-                          setUpgradeLoading(false);
+                      try {
+                        const res = await fetch('/api/checkout/confirm-plan', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            planTier: 'pro',
+                            paymentMethod: 'CREDIT_CARD',
+                          }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok || !data.success) {
+                          throw new Error(data.error || 'Erro ao aprovar cartão.');
                         }
-                      }, 1200);
+                        setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'pro', platform_fee_percent: data.platformFeePercent }));
+                        setUpgradeModalOpen(false);
+                      } catch (err: any) {
+                        console.error('Erro ao aprovar cartão:', err);
+                      } finally {
+                        setUpgradeLoading(false);
+                      }
                       return;
                     }
 
@@ -1040,7 +1029,7 @@ export default function FinanceDashboardPage() {
                     ? (upgradePaymentMethod === 'CREDIT_CARD' ? 'Processando Cartão...' : 'Gerando PIX...') 
                     : selectedPlanForUpgrade === currentPlanTier
                     ? `Plano ${PLAN_CONFIG[selectedPlanForUpgrade].name} Já Ativo`
-                    : `Contratar Plano ${PLAN_CONFIG[selectedPlanForUpgrade].name} com ${upgradePaymentMethod === 'CREDIT_CARD' ? 'Cartão' : 'PIX'}`}
+                    : `Contratar Plano Pro Coach com ${upgradePaymentMethod === 'CREDIT_CARD' ? 'Cartão' : 'PIX'}`}
                 </Button>
                 <Button
                   variant="outline"

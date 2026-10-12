@@ -745,97 +745,67 @@ export default function HomePage() {
               </Link>
             </SpotlightCard3D>
 
-            {/* PLANO 3: Studio & Gym Elite */}
-            <SpotlightCard3D className="p-8 flex flex-col justify-between border-white/[0.08] bg-zinc-950/80">
+            {/* PLANO 3: Studio & Gym Elite (PAUSADO) */}
+            <SpotlightCard3D className="p-8 flex flex-col justify-between border-white/[0.04] bg-zinc-950/40 opacity-70 relative">
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-500">
                     Academias & Boxes
                   </span>
-                  <span className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/10 text-white font-bold">
-                    ELITE
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 font-bold">
+                    PAUSADO / EM BREVE
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-black text-white mb-2">Studio & Gym Elite</h3>
-                <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+                <h3 className="text-2xl font-black text-zinc-300 mb-2">Studio & Gym Elite</h3>
+                <p className="text-xs text-zinc-500 mb-6 leading-relaxed">
                   Para boxes de CrossFit, estúdios funcionais e academias com grandes comunidades e marcas parceiras.
                 </p>
 
-                <div className="mb-6 pb-6 border-b border-white/[0.08]">
+                <div className="mb-6 pb-6 border-b border-white/[0.04]">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-white">
+                    <span className="text-4xl font-black text-zinc-400">
                       R$ {billingCycle === 'monthly' ? '279,90' : '223,90'}
                     </span>
-                    <span className="text-xs text-zinc-500 font-mono">/mês</span>
+                    <span className="text-xs text-zinc-600 font-mono">/mês</span>
                   </div>
-                  {billingCycle === 'yearly' && (
-                    <span className="text-[10px] font-mono text-emerald-400 block mt-1">
-                      Cobrado anualmente (economia de R$ 672/ano)
-                    </span>
-                  )}
-                  <div className="text-[11px] font-mono text-emerald-400 mt-2 flex items-center gap-1.5 font-bold">
-                    <Percent className="w-3.5 h-3.5 text-emerald-400" />
-                    Menor taxa do mercado: <strong className="text-white">Apenas 8%</strong>
+                  <div className="text-[11px] font-mono text-zinc-500 mt-2 flex items-center gap-1.5">
+                    <Percent className="w-3.5 h-3.5 text-zinc-500" />
+                    Menor taxa do mercado: <strong className="text-zinc-400">Apenas 8%</strong>
                   </div>
                 </div>
 
                 {/* Lista O que vem */}
                 <div className="space-y-3 mb-6">
-                  <div className="text-[11px] font-mono uppercase text-white font-bold">
+                  <div className="text-[11px] font-mono uppercase text-zinc-500 font-bold">
                     Tudo do Pro, mais:
                   </div>
-                  <ul className="space-y-2.5 text-xs text-zinc-200">
+                  <ul className="space-y-2.5 text-xs text-zinc-400">
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
                       <span><strong>Desafios ILIMITADOS (∞)</strong></span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
                       <span><strong>Alunos ILIMITADOS (∞)</strong></span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>Módulo de Patrocinadores (Sponsors)</strong></span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Cupons e parcerias com marcas locais</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
                       <span><strong>Acesso Multi-Coach</strong> (vários professores)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
                       <span>Split Pix D+0 com a menor taxa: <strong>8%</strong></span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Gerente de contas VIP dedicado</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Lista O que NÃO vem */}
-                <div className="space-y-2 mb-8 pt-4 border-t border-white/[0.06]">
-                  <div className="text-[11px] font-mono uppercase text-zinc-500">
-                    Não inclui:
-                  </div>
-                  <ul className="space-y-2 text-xs text-zinc-400">
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span>Sem limites! 100% dos recursos desbloqueados.</span>
                     </li>
                   </ul>
                 </div>
               </div>
 
-              <Link href="/login" className="block w-full">
-                <button className="mono-button-secondary w-full py-3 text-xs font-bold">
-                  Contratar Studio Elite
+              <div className="block w-full">
+                <button disabled className="w-full py-3 text-xs font-mono font-bold rounded-xl bg-zinc-900 border border-white/5 text-zinc-500 cursor-not-allowed">
+                  Pausado para Novas Turmas
                 </button>
-              </Link>
+              </div>
             </SpotlightCard3D>
 
           </div>

@@ -33,19 +33,6 @@ export default function LeaderboardPage() {
         }
       }
 
-      if (!currentChallenge) {
-        const { data: challenges } = await supabase
-          .from('challenges')
-          .select('*')
-          .eq('is_active', true)
-          .order('start_date', { ascending: false })
-          .limit(1);
-
-        if (challenges && challenges.length > 0) {
-          currentChallenge = challenges[0];
-        }
-      }
-
       if (currentChallenge) {
         setActiveChallenge(currentChallenge);
 

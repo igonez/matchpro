@@ -26,9 +26,13 @@ export function ReturnToCoachBanner() {
         const isProf = isMetaProf || hasProfCookie || !!prof;
 
         if (isProf) {
-          const isPreview = typeof window !== 'undefined'
-            ? new URLSearchParams(window.location.search).get('preview') === 'true'
-            : false;
+          const hasUrlPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === 'true';
+          const hasCookiePreview = typeof document !== 'undefined' && document.cookie.includes('arena_preview=true');
+          const isPreview = hasUrlPreview || hasCookiePreview;
+
+          if (hasUrlPreview && typeof document !== 'undefined') {
+            document.cookie = 'arena_preview=true; path=/; max-age=86400; SameSite=Lax';
+          }
 
           // Se for profissional e não houver flag de preview explícita, redireciona para o cockpit
           if (!isPreview) {
@@ -43,6 +47,13 @@ export function ReturnToCoachBanner() {
     checkRole();
   }, [supabase, router]);
 
+  const handleReturnToDashboard = () => {
+    if (typeof document !== 'undefined') {
+      document.cookie = 'arena_preview=; path=/; max-age=0; SameSite=Lax';
+    }
+    router.push('/dashboard');
+  };
+
   if (!isProfessional) return null;
 
   return (
@@ -56,13 +67,13 @@ export function ReturnToCoachBanner() {
         </span>
       </div>
 
-      <Link
-        href="/dashboard"
+      <button
+        onClick={handleReturnToDashboard}
         className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-black hover:bg-zinc-200 text-[11px] font-mono font-black transition-all active:scale-95 shadow-md"
       >
         <ArrowLeft className="h-3 w-3 text-black" />
         <span>Voltar ao Painel</span>
-      </Link>
+      </button>
     </div>
   );
 }

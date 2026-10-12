@@ -44,18 +44,25 @@ export default function StudentMaterialsPage() {
           challengeId = part?.challenge_id || null;
         }
 
-        let matsQuery = supabase.from('challenge_materials').select('*');
-        let spsQuery = supabase.from('challenge_sponsors').select('*');
-
-        if (challengeId) {
-          matsQuery = matsQuery.eq('challenge_id', challengeId);
-          spsQuery = spsQuery.eq('challenge_id', challengeId);
+        if (!challengeId) {
+          setMaterials([]);
+          setSponsors([]);
+          setLoading(false);
+          return;
         }
 
-        const { data: mats } = await matsQuery.order('created_at', { ascending: false });
+        const { data: mats } = await supabase
+          .from('challenge_materials')
+          .select('*')
+          .eq('challenge_id', challengeId)
+          .order('created_at', { ascending: false });
         setMaterials(mats || []);
 
-        const { data: sps } = await spsQuery.order('created_at', { ascending: false });
+        const { data: sps } = await supabase
+          .from('challenge_sponsors')
+          .select('*')
+          .eq('challenge_id', challengeId)
+          .order('created_at', { ascending: false });
         setSponsors(sps || []);
       } catch (err) {
         console.error('Erro ao carregar materiais:', err);

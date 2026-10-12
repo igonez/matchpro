@@ -250,19 +250,19 @@ export default function DashboardOverviewPage() {
           </SpotlightCard3D>
         </Link>
 
-        {/* Card 2: Faturamento */}
-        <Link href="/dashboard/students" className="block group">
+        {/* Card 2: Turmas Ativas */}
+        <Link href="/dashboard/challenges/new" className="block group">
           <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
             <div className="flex items-center justify-between pb-3">
               <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
-                Faturamento Total →
+                Turmas Ativas →
               </span>
-              <span className="text-xs font-medium text-zinc-400">BRL</span>
+              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                Em Andamento
+              </span>
             </div>
-            <div className="text-3xl font-black text-white font-mono">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.totalRevenue)}
-            </div>
-            <p className="text-xs text-zinc-500 mt-1">Valor consolidado das inscrições</p>
+            <div className="text-3xl font-black text-white font-mono">{stats.activeChallenges}</div>
+            <p className="text-xs text-zinc-500 mt-1">Desafios em execução no momento</p>
           </SpotlightCard3D>
         </Link>
 

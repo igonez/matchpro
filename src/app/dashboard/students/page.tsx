@@ -315,24 +315,34 @@ export default function DashboardFinanceAndStudentsPage() {
         </div>
       )}
 
-      {/* Header de Finanças & Alunos */}
+      {/* Header de Alunos & Turmas */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
-              Alunos & Finanças
+              Alunos & Turmas
             </span>
             <span className="text-xs text-zinc-400 font-medium">Controle de matrículas</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Gestão de Alunos & Faturamento
+            Gestão de Alunos & Turmas
           </h1>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Controle de matrículas, faturamento consolidado por turma e registro de pagamentos.
+            Controle de matrículas ativas e status de participação. Para extrato financeiro e saques, consulte a aba Financeiro.
           </p>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <Link href="/dashboard/finance">
+            <Button
+              size="sm"
+              variant="outline"
+              className="rounded-xl h-10 px-3.5 text-xs font-semibold text-zinc-300 border-white/10 hover:border-white/20 hover:text-white bg-white/5"
+            >
+              <CreditCard className="h-4 w-4 mr-1.5" /> Aba Financeiro →
+            </Button>
+          </Link>
+
           <Button
             size="sm"
             variant="outline"
@@ -353,49 +363,47 @@ export default function DashboardFinanceAndStudentsPage() {
         </div>
       </div>
 
-      {/* Grid de Métricas Financeiras Principais */}
+      {/* Grid de Métricas Operacionais de Alunos */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
             <span className="text-xs font-semibold tracking-wide text-zinc-400">
-              Faturamento Total
-            </span>
-            <span className="text-xs font-medium text-zinc-400">BRL</span>
-          </div>
-          <div className="text-3xl font-black text-white font-mono">
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(consolidatedRevenue)}
-          </div>
-          <p className="text-xs text-zinc-500 mt-1">
-            {selectedChallengeId === 'all' ? 'Soma de todas as turmas' : 'Faturamento desta turma'}
-          </p>
-        </SpotlightCard3D>
-
-        <SpotlightCard3D className="p-5">
-          <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-zinc-400">
-              Alunos Matriculados
+              Total de Matriculados
             </span>
             <Users className="h-4 w-4 text-zinc-400" />
           </div>
           <div className="text-3xl font-black text-white font-mono">
             {filteredParticipants.length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Atletas ativos na listagem</p>
+          <p className="text-xs text-zinc-500 mt-1">
+            {selectedChallengeId === 'all' ? 'Soma de todas as turmas' : 'Alunos nesta turma'}
+          </p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
             <span className="text-xs font-semibold tracking-wide text-zinc-400">
-              Ticket Médio
+              Inscrições Confirmadas
             </span>
-            <TrendingUp className="h-4 w-4 text-zinc-400" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="text-3xl font-black text-white font-mono">
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-              filteredParticipants.length > 0 ? consolidatedRevenue / filteredParticipants.length : currentChallengePrice
-            )}
+            {filteredParticipants.filter((p) => p.payment_status === 'paid').length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Valor médio por atleta</p>
+          <p className="text-xs text-zinc-500 mt-1">Acesso liberado e ativo</p>
+        </SpotlightCard3D>
+
+        <SpotlightCard3D className="p-5">
+          <div className="flex items-center justify-between pb-3">
+            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+              Pendentes / Cortesia
+            </span>
+            <Clock className="h-4 w-4 text-amber-400" />
+          </div>
+          <div className="text-3xl font-black text-white font-mono">
+            {filteredParticipants.filter((p) => p.payment_status !== 'paid').length}
+          </div>
+          <p className="text-xs text-zinc-500 mt-1">Aguardando confirmação ou cortesia</p>
         </SpotlightCard3D>
       </div>
 

@@ -32,13 +32,14 @@ export function DashboardSidebar() {
       title: 'MONITORAMENTO',
       items: [
         { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
+        { name: 'Feed da Turma', href: '/dashboard/feed', active: pathname === '/dashboard/feed' },
         { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
       ],
     },
     {
       title: 'GESTÃO DA TURMA',
       items: [
-        { name: 'Alunos & Finanças', href: '/dashboard/students', active: pathname === '/dashboard/students' },
+        { name: 'Alunos & Turmas', href: '/dashboard/students', active: pathname === '/dashboard/students' },
         { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
         { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },
         { name: 'Mural de Avisos', href: '/dashboard/announcements', active: pathname === '/dashboard/announcements' },

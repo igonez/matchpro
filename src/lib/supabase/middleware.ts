@@ -93,8 +93,20 @@ export async function updateSession(request: NextRequest) {
       return redirectRes;
     }
 
+    // Modo de Simulação / Visão do Aluno para Profissional
+    const hasPreviewParam = url.searchParams.get('preview') === 'true';
+    const hasPreviewCookie = request.cookies.get('arena_preview')?.value === 'true';
+    const isPreview = hasPreviewParam || hasPreviewCookie;
+
+    if (hasPreviewParam && !hasPreviewCookie) {
+      supabaseResponse.cookies.set('arena_preview', 'true', {
+        path: '/',
+        maxAge: 60 * 60 * 24, // 24 horas
+        sameSite: 'lax',
+      });
+    }
+
     // Se profissional tentar acessar /app sem modo de preview explícito, redireciona para o cockpit /dashboard
-    const isPreview = url.searchParams.get('preview') === 'true';
     if (isProfessional && url.pathname.startsWith('/app') && !isPreview) {
       const redirectRes = NextResponse.redirect(new URL('/dashboard', request.url));
       redirectRes.cookies.set('arena_role', 'professional', {

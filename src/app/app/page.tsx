@@ -8,6 +8,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { FreezeShieldModal } from '@/components/student/freeze-shield-modal';
 import { MysteryBoxModal } from '@/components/student/mystery-box-modal';
+import { QrCode, ArrowRight } from 'lucide-react';
 
 export default function StudentHomePage() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function StudentHomePage() {
   const [challenge, setChallenge] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
   const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [inviteCodeInput, setInviteCodeInput] = useState('');
   
   const [categoryCounts, setCategoryCounts] = useState({
     treinos: { done: 0, total: 0 },
@@ -66,17 +68,6 @@ export default function StudentHomePage() {
           challengeData = participation.challenges as any;
         }
 
-        if (!challengeData) {
-          const { data: fallbackCh } = await supabase
-            .from('challenges')
-            .select('*, challenge_weeks(*)')
-            .eq('is_active', true)
-            .order('start_date', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-          challengeData = fallbackCh;
-        }
-
         setChallenge(challengeData);
 
         const { data: standingData } = await supabase
@@ -105,9 +96,7 @@ export default function StudentHomePage() {
               .from('missions')
               .select('id, category, target_frequency')
               .eq('challenge_id', challengeData.id)
-          : await supabase
-              .from('missions')
-              .select('id, category, target_frequency');
+          : { data: [] };
 
         const { data: userSubmissions } = await supabase
           .from('student_submissions')
@@ -192,6 +181,15 @@ export default function StudentHomePage() {
     loadHome();
   }, [supabase, router]);
 
+  const handleEnterChallengeByCode = () => {
+    let code = inviteCodeInput.trim();
+    if (!code) return;
+    if (code.includes('/join/')) {
+      code = code.split('/join/')[1].split('?')[0].split('/')[0];
+    }
+    router.push(`/join/${code}`);
+  };
+
   const totalWeeklyGoals = 
     categoryCounts.treinos.total + 
     categoryCounts.cardios.total + 
@@ -251,6 +249,47 @@ export default function StudentHomePage() {
         </div>
       </div>
 
+      {!challenge ? (
+        /* Tela de Primeiro Acesso - Exige Convite/QR Code */
+        <div className="relative z-10 space-y-4 pt-2">
+          <SpotlightCard3D className="p-6 text-center space-y-4">
+            <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/20 mx-auto flex items-center justify-center shadow-lg">
+              <QrCode className="h-8 w-8 text-white" />
+            </div>
+
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block mb-1">
+                Acesso Inicial
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                Aguardando sua Turma
+              </h2>
+              <p className="text-xs text-zinc-400 mt-2 max-w-xs mx-auto leading-relaxed">
+                Sua conta foi criada com sucesso! Para ver suas missões e pontuar no ranking, entre através do <strong>link de convite</strong> ou <strong>QR Code</strong> compartilhado pelo seu treinador.
+              </p>
+            </div>
+
+            <div className="pt-2 space-y-2.5">
+              <input
+                type="text"
+                placeholder="Cole o código ou link da turma..."
+                value={inviteCodeInput}
+                onChange={(e) => setInviteCodeInput(e.target.value)}
+                className="w-full bg-black/60 border border-white/10 rounded-xl px-3.5 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40 font-mono"
+              />
+              <button
+                type="button"
+                onClick={handleEnterChallengeByCode}
+                className="mono-button-primary w-full py-3 text-xs font-mono font-bold flex items-center justify-center gap-2"
+              >
+                <span>Entrar na Turma</span>
+                <ArrowRight className="h-3.5 w-3.5 text-black" />
+              </button>
+            </div>
+          </SpotlightCard3D>
+        </div>
+      ) : (
+        <>
       {/* 2. Hero Card: Radar de Consistência com 3D Spotlight */}
       <div className="relative z-10">
         <SpotlightCard3D className="p-5 space-y-4">
@@ -463,6 +502,8 @@ export default function StudentHomePage() {
             }
           }}
         />
+      )}
+        </>
       )}
     </div>
   );

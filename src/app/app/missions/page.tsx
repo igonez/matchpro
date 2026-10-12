@@ -63,16 +63,17 @@ export default function StudentMissionsWeeklyPage() {
 
         challengeId = part?.challenge_id || null;
 
-        let weeksQuery = supabase
-          .from('challenge_weeks')
-          .select('*')
-          .order('week_number', { ascending: true });
-
-        if (challengeId) {
-          weeksQuery = weeksQuery.eq('challenge_id', challengeId);
+        if (!challengeId) {
+          setWeeks([]);
+          setLoading(false);
+          return;
         }
 
-        const { data: weeksData } = await weeksQuery;
+        const { data: weeksData } = await supabase
+          .from('challenge_weeks')
+          .select('*')
+          .eq('challenge_id', challengeId)
+          .order('week_number', { ascending: true });
 
         if (weeksData && weeksData.length > 0) {
           setWeeks(weeksData);

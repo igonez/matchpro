@@ -17,17 +17,19 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { planTier } = body;
 
-    if (!planTier || !['pro', 'studio'].includes(planTier)) {
-      return NextResponse.json({ error: 'Plano inválido para contratação.' }, { status: 400 });
+    if (!planTier || planTier !== 'pro') {
+      return NextResponse.json({ 
+        error: 'Apenas o plano Pro Coach está disponível no momento. O plano Studio Elite encontra-se pausado para novas assinaturas.' 
+      }, { status: 400 });
     }
 
-    const selectedTier = planTier as PlanTier;
+    const selectedTier = 'pro' as PlanTier;
     const planConfig = PLAN_CONFIG[selectedTier];
 
     // 2. Buscar perfil do profissional
     const { data: coach, error: coachError } = await supabase
       .from('professionals')
-      .select('id, full_name, plan_tier, asaas_customer_id')
+      .select('id, full_name, plan_tier, asaas_customer_id, document_number')
       .eq('id', user.id)
       .single();
 
@@ -38,10 +40,13 @@ export async function POST(request: Request) {
     // 3. Criar ou reutilizar cliente no Asaas
     let customerId = coach.asaas_customer_id;
     if (!customerId) {
+      const cleanDoc = (coach.document_number || '').replace(/\D/g, '');
+      const validCpf = cleanDoc.length === 11 || cleanDoc.length === 14 ? cleanDoc : undefined;
+
       const customer = await AsaasClient.createCustomer({
         name: coach.full_name || user.email || 'Treinador ArenaFit',
         email: user.email || 'coach@arenafit.pro',
-        cpfCnpj: '00000000000',
+        cpfCnpj: validCpf,
         externalReference: user.id,
       });
       customerId = customer.id;

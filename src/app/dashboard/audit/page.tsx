@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
@@ -180,17 +180,28 @@ export default function FiscalizacaoPage() {
     }
   };
 
-  const filteredSubmissions = submissions.filter((s) => {
-    const hasReport = s.submission_reports && s.submission_reports.length > 0;
-    if (filter === 'reported') return hasReport && s.status !== 'rejected';
-    if (filter === 'rejected') return s.status === 'rejected';
-    if (filter === 'approved') return s.status === 'approved';
-    return true;
-  });
+  const filteredSubmissions = useMemo(() => {
+    return submissions
+      .filter((s) => {
+        const hasReport = s.submission_reports && s.submission_reports.length > 0;
+        if (filter === 'reported') return hasReport && s.status !== 'rejected';
+        if (filter === 'rejected') return s.status === 'rejected';
+        if (filter === 'approved') return s.status === 'approved';
+        return true;
+      })
+      .sort((a, b) => {
+        const aReported = a.submission_reports && a.submission_reports.length > 0 ? 1 : 0;
+        const bReported = b.submission_reports && b.submission_reports.length > 0 ? 1 : 0;
+        if (aReported !== bReported) return bReported - aReported;
+        return new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime();
+      });
+  }, [submissions, filter]);
 
-  const reportedCount = submissions.filter(
-    (s) => s.submission_reports && s.submission_reports.length > 0 && s.status !== 'rejected'
-  ).length;
+  const reportedCount = useMemo(() => {
+    return submissions.filter(
+      (s) => s.submission_reports && s.submission_reports.length > 0 && s.status !== 'rejected'
+    ).length;
+  }, [submissions]);
 
   return (
     <div className="space-y-6 relative">
@@ -240,20 +251,21 @@ export default function FiscalizacaoPage() {
 
       {/* Alerta de Denúncias da Turma */}
       {reportedCount > 0 && (
-        <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between gap-3 relative z-10 border-white/20">
+        <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between gap-3 relative z-10 border-rose-500/30 bg-rose-950/20">
           <div>
-            <p className="font-bold text-xs text-white">
-              {reportedCount} foto(s) sinalizada(s) pela turma
+            <p className="font-bold text-xs text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+              {reportedCount} foto(s) sinalizada(s) pela turma por suspeita
             </p>
-            <p className="text-xs text-zinc-400">
-              Colegas reportaram inconsistências nesta submissão. Avalie prioritariamente.
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Alunos denunciaram inconsistências nestas submissões. Avalie com prioridade no topo da lista.
             </p>
           </div>
           <button
             onClick={() => setFilter('reported')}
-            className="mono-button-primary px-3 py-1.5 text-xs font-semibold shrink-0"
+            className="mono-button-primary px-3 py-1.5 text-xs font-semibold shrink-0 bg-rose-500 hover:bg-rose-400 text-white"
           >
-            Filtrar denúncias
+            Ver Denúncias Agora
           </button>
         </div>
       )}
@@ -269,6 +281,21 @@ export default function FiscalizacaoPage() {
           }`}
         >
           Todas ({submissions.length})
+        </button>
+        <button
+          onClick={() => setFilter('reported')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all flex items-center gap-1.5 ${
+            filter === 'reported'
+              ? 'bg-rose-600 text-white font-bold border border-rose-400 shadow-md'
+              : 'bg-black/60 border border-rose-500/30 text-rose-400 hover:text-rose-300'
+          }`}
+        >
+          <span>🚨 Denunciadas</span>
+          {reportedCount > 0 && (
+            <span className="px-1.5 py-0.5 bg-rose-900/80 text-rose-200 text-[10px] rounded-full font-mono font-bold">
+              {reportedCount}
+            </span>
+          )}
         </button>
         <button
           onClick={() => setFilter('approved')}
@@ -304,7 +331,7 @@ export default function FiscalizacaoPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
-          {filteredSubmissions.map((sub) => {
+          {filteredSubmissions.map((sub: any) => {
             const isRejected = sub.status === 'rejected';
             const isProcessing = processingId === sub.id;
 
@@ -329,6 +356,17 @@ export default function FiscalizacaoPage() {
                       +{sub.missions?.points_rewarded || 10} PTS
                     </span>
                   </div>
+
+                  {sub.submission_reports && sub.submission_reports.length > 0 && (
+                    <div className="mb-3 p-2 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] font-medium flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 font-bold">
+                        <span>🚨 Denunciada pela turma ({sub.submission_reports.length})</span>
+                      </span>
+                      <span className="text-[10px] font-mono text-rose-200 truncate max-w-[120px]">
+                        {sub.submission_reports[0]?.reason || 'Foto suspeita'}
+                      </span>
+                    </div>
+                  )}
 
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3">
                     <img src={sub.photo_url} alt="Submissão" className="w-full h-full object-cover" />

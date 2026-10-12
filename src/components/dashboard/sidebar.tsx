@@ -32,6 +32,7 @@ export function DashboardSidebar() {
       title: 'MONITORAMENTO',
       items: [
         { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
+        { name: 'Ranking da Turma', href: '/dashboard/leaderboard', active: pathname === '/dashboard/leaderboard', badge: 'AO VIVO' },
         { name: 'Feed da Turma', href: '/dashboard/feed', active: pathname === '/dashboard/feed' },
         { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
       ],

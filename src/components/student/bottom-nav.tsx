@@ -68,13 +68,14 @@ export function StudentBottomNav() {
     router.push('/login');
   };
 
-  // 4 abas simétricas na pílula inferior (2 na esquerda, 2 na direita)
+  // Abas na pílula inferior (Início, Missões | Câmera | Ranking, Feed + Menu)
   const leftTabs = [
     { name: 'Início', href: '/app', active: pathname === '/app' },
     { name: 'Missões', href: '/app/missions', active: pathname === '/app/missions' },
   ];
 
   const rightTabs = [
+    { name: 'Ranking', href: '/app/leaderboard', active: pathname === '/app/leaderboard' },
     { name: 'Feed', href: '/app/feed', active: pathname === '/app/feed' },
   ];
 
@@ -93,16 +94,16 @@ export function StudentBottomNav() {
       active: pathname === '/app/missions',
     },
     {
-      title: 'Feed da Turma',
-      subtitle: 'Fotos e pratos aprovados',
-      href: '/app/feed',
-      active: pathname === '/app/feed',
-    },
-    {
       title: 'Placar & Leaderboard',
       subtitle: 'Ranking individual e Squads',
       href: '/app/leaderboard',
       active: pathname === '/app/leaderboard',
+    },
+    {
+      title: 'Feed da Turma',
+      subtitle: 'Fotos e pratos aprovados',
+      href: '/app/feed',
+      active: pathname === '/app/feed',
     },
     {
       title: 'Materiais de Apoio',
@@ -121,8 +122,8 @@ export function StudentBottomNav() {
   return (
     <>
       {/* 1. Menu Inferior Horizontal (Pílula com Cantos 100% Arredondados e Palavras Encaixadas) */}
-      <nav className="fixed bottom-4 inset-x-0 mx-auto max-w-[410px] w-[94%] z-40 transition-all">
-        <div className="mono-glass-pill rounded-full px-3 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/15">
+      <nav className="fixed bottom-4 inset-x-0 mx-auto max-w-[420px] w-[96%] z-40 transition-all">
+        <div className="mono-glass-pill rounded-full px-2.5 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/15">
           
           {/* Lado Esquerdo (Início, Missões) */}
           <div className="flex items-center justify-around flex-1">
@@ -130,7 +131,7 @@ export function StudentBottomNav() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`py-1.5 px-3 text-[11px] font-mono tracking-wider transition-all rounded-full ${
+                className={`py-1 px-2.5 text-[10px] sm:text-[11px] font-mono tracking-wider transition-all rounded-full ${
                   tab.active
                     ? 'text-white font-black bg-white/15 shadow-inner'
                     : 'text-zinc-400 hover:text-white'
@@ -142,15 +143,15 @@ export function StudentBottomNav() {
           </div>
 
           {/* Botão Central de Check-in em Cromo Puro */}
-          <div className="px-2 -my-2.5">
+          <div className="px-1 -my-2.5">
             <button
               onClick={() => setShowQuickSheet(true)}
               className="flex flex-col items-center justify-center group focus:outline-none"
               title="Registrar Check-in"
             >
-              <div className="h-12 w-12 rounded-full bg-gradient-to-b from-white via-zinc-300 to-zinc-800 p-px shadow-[0_0_22px_rgba(255,255,255,0.3)] group-hover:scale-105 active:scale-95 transition-all">
+              <div className="h-11 w-11 rounded-full bg-gradient-to-b from-white via-zinc-300 to-zinc-800 p-px shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:scale-105 active:scale-95 transition-all">
                 <div className="h-full w-full bg-black rounded-full flex items-center justify-center text-white">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <circle cx="12" cy="12" r="3" strokeWidth="2" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   </svg>
@@ -159,13 +160,13 @@ export function StudentBottomNav() {
             </button>
           </div>
 
-          {/* Lado Direito (Feed, Menu Vertical) */}
+          {/* Lado Direito (Ranking, Feed, Menu) */}
           <div className="flex items-center justify-around flex-1">
             {rightTabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`py-1.5 px-3 text-[11px] font-mono tracking-wider transition-all rounded-full ${
+                className={`py-1 px-2.5 text-[10px] sm:text-[11px] font-mono tracking-wider transition-all rounded-full ${
                   tab.active
                     ? 'text-white font-black bg-white/15 shadow-inner'
                     : 'text-zinc-400 hover:text-white'
@@ -178,14 +179,15 @@ export function StudentBottomNav() {
             {/* Botão para Acionar o Menu Vertical */}
             <button
               onClick={() => setShowVerticalMenu(true)}
-              className={`py-1.5 px-3 text-[11px] font-mono tracking-wider transition-all rounded-full flex items-center gap-1.5 ${
+              aria-label="Abrir Menu"
+              className={`p-1.5 text-zinc-400 hover:text-white transition-all rounded-full hover:bg-white/10 ${
                 showVerticalMenu
                   ? 'text-white font-black bg-white/15'
-                  : 'text-zinc-400 hover:text-white'
+                  : ''
               }`}
+              title="Menu Geral"
             >
-              <span>Menu</span>
-              <Menu className="h-3 w-3 stroke-[2.2]" />
+              <Menu className="h-3.5 w-3.5 stroke-[2.2]" />
             </button>
           </div>
 

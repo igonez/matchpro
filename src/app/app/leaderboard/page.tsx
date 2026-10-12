@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
@@ -100,17 +102,26 @@ export default function LeaderboardPage() {
 
       {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
-        <div>
-          <span className="text-[11px] text-zinc-400 font-medium block">
-            Ranking Geral
-          </span>
-          <h1 className="text-xl font-black text-white">Classificação da Turma</h1>
-          <p className="text-xs text-zinc-400">Pontuação computada por integridade de check-ins</p>
-        </div>
-
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-white">
-          <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
-          Ao vivo
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/app"
+            className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
+            title="Voltar ao Início"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                RANKING OFICIAL
+              </span>
+              <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded-full font-bold">
+                AO VIVO
+              </span>
+            </div>
+            <h1 className="text-xl font-black text-white">Classificação da Turma</h1>
+            <p className="text-[11px] text-zinc-400">Pontuação computada por integridade de check-ins</p>
+          </div>
         </div>
       </div>
 

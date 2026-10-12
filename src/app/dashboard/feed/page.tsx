@@ -56,7 +56,7 @@ export default function DashboardFeedPage() {
           : [selectedChallengeId];
 
         // 2. Buscar postagens aprovadas dos alunos do treinador
-        const { data: submissionsData } = await supabase
+        const { data: submissionsData, error: subsError } = await supabase
           .from('student_submissions')
           .select(`
             id,
@@ -66,13 +66,13 @@ export default function DashboardFeedPage() {
             client_captured_at,
             submitted_at,
             location_name,
-            duration_seconds,
             student_id,
+            challenge_id,
             students (
               full_name,
               avatar_url
             ),
-            missions!inner (
+            missions (
               id,
               title,
               category,
@@ -84,11 +84,14 @@ export default function DashboardFeedPage() {
               student_id
             )
           `)
-          .in('missions.challenge_id', targetIds)
+          .in('challenge_id', targetIds)
           .eq('status', 'approved')
           .order('submitted_at', { ascending: false })
           .limit(50);
 
+        if (subsError) {
+          console.warn('Erro ao carregar feed social do coach:', subsError);
+        }
         setPosts(submissionsData || []);
       } catch (err) {
         console.error('Erro ao carregar feed social do coach:', err);

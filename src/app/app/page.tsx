@@ -17,6 +17,7 @@ export default function StudentHomePage() {
   const [student, setStudent] = useState<any>(null);
   const [challenge, setChallenge] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
+  const [rank, setRank] = useState('1º');
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [inviteCodeInput, setInviteCodeInput] = useState('');
   
@@ -78,6 +79,22 @@ export default function StudentHomePage() {
           .maybeSingle();
 
         setStanding(standingData || { total_points: 0 });
+
+        // Calcular posição real do atleta no ranking
+        if (challengeData?.id) {
+          const { data: allStandings } = await supabase
+            .from('leaderboard_standings')
+            .select('student_id, total_points')
+            .eq('challenge_id', challengeData.id)
+            .order('total_points', { ascending: false });
+
+          if (allStandings && allStandings.length > 0) {
+            const idx = allStandings.findIndex((s: any) => s.student_id === user.id);
+            setRank(idx !== -1 ? `${idx + 1}º` : `${allStandings.length + 1}º`);
+          } else {
+            setRank('1º');
+          }
+        }
 
         if (challengeData) {
           const { data: notices } = await supabase
@@ -321,19 +338,27 @@ export default function StudentHomePage() {
 
           {/* Grid de 3 Métricas Tabulares */}
           <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
-            <div className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center">
+            <Link
+              href="/app/leaderboard"
+              className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center hover:border-amber-400/40 transition-colors block"
+              title="Ver Ranking da Turma"
+            >
               <span className="text-[10px] text-zinc-400 block font-medium">Pontos</span>
               <span className="text-base font-black text-amber-400 font-mono block mt-0.5">
                 {standing?.total_points || 0}
               </span>
-            </div>
+            </Link>
 
-            <div className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center">
+            <Link
+              href="/app/leaderboard"
+              className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center hover:border-white/30 transition-colors block"
+              title="Ver Classificação Geral"
+            >
               <span className="text-[10px] text-zinc-400 block font-medium">Posição</span>
               <span className="text-base font-black text-white font-mono block mt-0.5">
-                4º
+                {rank}
               </span>
-            </div>
+            </Link>
 
             <div className="p-2.5 rounded-xl bg-black/60 border border-white/5 text-center">
               <span className="text-[10px] text-zinc-400 block font-medium">Desafio</span>
@@ -344,6 +369,33 @@ export default function StudentHomePage() {
           </div>
         </SpotlightCard3D>
       </div>
+
+      {/* Banner de Acesso Rápido ao Ranking & Leaderboard */}
+      <Link href="/app/leaderboard" className="block relative z-10 group">
+        <div className="mono-glass-card p-3.5 rounded-2xl border border-amber-500/25 bg-amber-950/15 hover:border-amber-500/50 hover:bg-amber-950/25 active:scale-98 transition-all flex items-center justify-between shadow-[0_4px_20px_rgba(245,158,11,0.08)]">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="h-10 w-10 rounded-xl bg-amber-500/15 border border-amber-500/35 flex items-center justify-center text-amber-300 font-bold text-lg shrink-0 shadow-inner">
+              🏆
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-white group-hover:text-amber-200 transition-colors">
+                  Ranking Oficial da Turma
+                </span>
+                <span className="text-[9px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
+                  AO VIVO
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-300 mt-0.5 truncate">
+                Você está em <strong className="text-amber-300 font-mono font-bold">{rank}</strong> • {standing?.total_points || 0} XP
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-mono font-bold text-zinc-300 group-hover:text-white transition-colors shrink-0 ml-2">
+            Ver Placar →
+          </span>
+        </div>
+      </Link>
 
       {/* 3. Mecanismos de Retenção: Freeze Shield & Mystery Box */}
       <div className="grid grid-cols-2 gap-2.5 relative z-10">

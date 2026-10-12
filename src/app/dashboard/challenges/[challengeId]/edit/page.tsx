@@ -3,10 +3,11 @@
 import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Trophy, Calendar, DollarSign, ArrowLeft, CheckCircle2, Trash2 } from 'lucide-react';
+import { Trophy, Calendar, DollarSign, ArrowLeft, CheckCircle2, Trash2, Layers, Plus, ExternalLink, Dumbbell, Flame, Utensils, Sparkles } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 
 import { CustomDialog } from '@/components/ui/custom-dialog';
@@ -26,6 +27,8 @@ export default function EditChallengePage({
   const [endDate, setEndDate] = useState('');
   const [price, setPrice] = useState('');
   const [isActive, setIsActive] = useState(true);
+  const [weeks, setWeeks] = useState<any[]>([]);
+  const [missions, setMissions] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -69,6 +72,30 @@ export default function EditChallengePage({
         setEndDate(data.end_date || '');
         setPrice(data.price?.toString() || '0');
         setIsActive(data.is_active ?? true);
+
+        // Carregar semanas da turma
+        const { data: weeksData } = await supabase
+          .from('challenge_weeks')
+          .select('*')
+          .eq('challenge_id', challengeId)
+          .order('week_number', { ascending: true });
+
+        setWeeks(weeksData || []);
+
+        // Carregar missões da turma (diretas por challenge_id ou por week_id)
+        const weekIds = (weeksData || []).map((w: any) => w.id);
+        let mQuery = supabase.from('missions').select('*');
+        if (weekIds.length > 0) {
+          mQuery = mQuery.or(`challenge_id.eq.${challengeId},week_id.in.(${weekIds.join(',')})`);
+        } else {
+          mQuery = mQuery.eq('challenge_id', challengeId);
+        }
+
+        const { data: missionsData } = await mQuery
+          .order('order_index', { ascending: true })
+          .order('created_at', { ascending: true });
+
+        setMissions(missionsData || []);
       } catch (err: any) {
         console.error('Erro ao buscar desafio:', err);
         setError(err.message || 'Não foi possível carregar os dados do desafio.');
@@ -285,6 +312,148 @@ export default function EditChallengePage({
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      {/* Missões & Semanas Desta Turma */}
+      <Card className="border-white/10 bg-zinc-900/50">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-lg text-white font-black tracking-tight">
+                Missões & Semanas da Turma
+              </CardTitle>
+              <Badge className="bg-white/10 text-white border-white/20 text-[10px] font-mono">
+                {missions.length} {missions.length === 1 ? 'missão' : 'missões'}
+              </Badge>
+            </div>
+            <CardDescription className="text-xs text-zinc-400 mt-1">
+              Missões salvas e ativas que aparecem para os alunos no aplicativo.
+            </CardDescription>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Link href={`/dashboard/leaderboard?challengeId=${challengeId}`}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="text-xs border-white/10 text-zinc-300 hover:text-white"
+              >
+                <Trophy className="h-3.5 w-3.5 mr-1 text-amber-400" />
+                Ver Ranking
+              </Button>
+            </Link>
+            <Link href={`/dashboard/missions?challengeId=${challengeId}`}>
+              <Button
+                type="button"
+                size="sm"
+                className="text-xs font-bold bg-white hover:bg-zinc-200 text-black shadow-md"
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Gerenciar Missões
+              </Button>
+            </Link>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {weeks.length === 0 && missions.length === 0 ? (
+            <div className="p-6 rounded-2xl bg-black/40 border border-white/10 text-center space-y-2">
+              <p className="text-xs font-mono text-zinc-400">Nenhuma missão cadastrada nesta turma ainda.</p>
+              <Link href={`/dashboard/missions?challengeId=${challengeId}`}>
+                <Button size="sm" className="mt-2 text-xs bg-white text-black hover:bg-zinc-200 font-bold">
+                  <Plus className="h-3.5 w-3.5 mr-1" /> Cadastrar Primeiras Missões
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {weeks.map((week) => {
+                const weekMissions = missions.filter((m) => m.week_id === week.id);
+                return (
+                  <div
+                    key={week.id}
+                    className="p-4 rounded-2xl bg-black/50 border border-white/[0.08] space-y-3"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                      <div className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-white" />
+                        <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                          {week.title}
+                        </h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                        {weekMissions.length} {weekMissions.length === 1 ? 'missão ativa' : 'missões ativas'}
+                      </span>
+                    </div>
+
+                    {weekMissions.length === 0 ? (
+                      <p className="text-[11px] text-zinc-500 italic py-1">
+                        Nenhuma missão cadastrada para esta semana.
+                      </p>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {weekMissions.map((m) => (
+                          <div
+                            key={m.id}
+                            className="p-3 rounded-xl bg-zinc-950/80 border border-white/[0.06] flex items-center justify-between gap-2"
+                          >
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-bold text-xs text-white truncate">{m.title}</span>
+                                {m.is_bonus && (
+                                  <Badge className="bg-amber-500/10 text-amber-300 border-amber-500/30 text-[9px]">
+                                    Bônus
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-[10px] text-zinc-400 capitalize mt-0.5 font-mono">
+                                {m.category || 'treino'} • {m.requires_cooldown ? '1x por dia' : 'Livre'}
+                              </p>
+                            </div>
+                            <span className="text-xs font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded-lg border border-white/15 shrink-0">
+                              +{m.points_rewarded}P
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Missões sem semana associada (se houver) */}
+              {missions.filter((m) => !m.week_id).length > 0 && (
+                <div className="p-4 rounded-2xl bg-black/50 border border-white/[0.08] space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                      Missões Gerais / Sem Semana
+                    </h3>
+                    <span className="text-[10px] font-mono text-zinc-400">
+                      {missions.filter((m) => !m.week_id).length} missões
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {missions.filter((m) => !m.week_id).map((m) => (
+                      <div
+                        key={m.id}
+                        className="p-3 rounded-xl bg-zinc-950/80 border border-white/[0.06] flex items-center justify-between gap-2"
+                      >
+                        <div className="min-w-0">
+                          <span className="font-bold text-xs text-white truncate block">{m.title}</span>
+                          <span className="text-[10px] text-zinc-400 capitalize font-mono">{m.category}</span>
+                        </div>
+                        <span className="text-xs font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded-lg border border-white/15">
+                          +{m.points_rewarded}P
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

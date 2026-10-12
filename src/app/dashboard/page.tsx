@@ -77,9 +77,9 @@ export default function DashboardOverviewPage() {
           .order('start_date', { ascending: false });
 
         const safeChallenges = challengesData || [];
-        setChallenges(safeChallenges);
 
         if (safeChallenges.length === 0) {
+          setChallenges([]);
           setStats({
             activeStudents: 0,
             totalRevenue: 0,
@@ -92,6 +92,38 @@ export default function DashboardOverviewPage() {
         }
 
         const coachChallengeIds = safeChallenges.map((c: any) => c.id);
+
+        // Garantir contagem precisa de missões incluindo as vinculadas por semana
+        const { data: allWeeks } = await supabase
+          .from('challenge_weeks')
+          .select('id, challenge_id')
+          .in('challenge_id', coachChallengeIds);
+
+        const weekToChallenge = new Map<string, string>();
+        allWeeks?.forEach((w: any) => weekToChallenge.set(w.id, w.challenge_id));
+
+        const weekIds = allWeeks?.map((w: any) => w.id) || [];
+        let allMissionsQuery = supabase.from('missions').select('id, challenge_id, week_id');
+        if (weekIds.length > 0) {
+          allMissionsQuery = allMissionsQuery.or(`challenge_id.in.(${coachChallengeIds.join(',')}),week_id.in.(${weekIds.join(',')})`);
+        } else {
+          allMissionsQuery = allMissionsQuery.in('challenge_id', coachChallengeIds);
+        }
+        const { data: allMissionsData } = await allMissionsQuery;
+
+        const missionsCountByChallenge = new Map<string, number>();
+        allMissionsData?.forEach((m: any) => {
+          const chId = m.challenge_id || weekToChallenge.get(m.week_id);
+          if (chId) {
+            missionsCountByChallenge.set(chId, (missionsCountByChallenge.get(chId) || 0) + 1);
+          }
+        });
+
+        const augmentedChallenges = safeChallenges.map((c: any) => ({
+          ...c,
+          missionsCount: missionsCountByChallenge.get(c.id) ?? (c.missions?.length || 0),
+        }));
+        setChallenges(augmentedChallenges);
 
         // 2. Participantes exclusivos das turmas do treinador
         const { data: participantsData } = await supabase
@@ -441,22 +473,29 @@ export default function DashboardOverviewPage() {
                 <div className="pt-4 mt-4 border-t border-white/[0.06]">
                   <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
                     <span>Missões ativas:</span>
-                    <span className="font-bold text-white">{c.missions?.length || 0}</span>
+                    <span className="font-bold text-white font-mono">
+                      {c.missionsCount ?? (c.missions?.length || 0)}
+                    </span>
                   </div>
-                  <div className="flex gap-2">
-                    <Link href={`/dashboard/missions?challengeId=${c.id}`} className="flex-1">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href={`/dashboard/missions?challengeId=${c.id}`}>
                       <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold">
-                        Missões
+                        Missões ({c.missionsCount ?? (c.missions?.length || 0)})
+                      </button>
+                    </Link>
+                    <Link href={`/dashboard/leaderboard?challengeId=${c.id}`}>
+                      <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-white hover:text-amber-300">
+                        🏆 Ranking
                       </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <button className="mono-button-secondary px-3 py-1.5 text-xs font-semibold">
-                        Editar
+                      <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold">
+                        Ver / Editar
                       </button>
                     </Link>
                     <button
                       onClick={() => setInviteModalChallenge(c)}
-                      className="mono-button-primary px-3 py-1.5 text-xs font-semibold"
+                      className="mono-button-primary w-full py-1.5 text-xs font-semibold"
                       title="Abrir central de convite"
                     >
                       Convite

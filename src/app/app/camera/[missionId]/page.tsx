@@ -58,7 +58,20 @@ function CameraCaptureContent() {
         .select('*')
         .eq('id', missionId)
         .single();
-      setMission(data);
+      
+      if (data) {
+        if (!data.challenge_id && data.week_id) {
+          const { data: weekData } = await supabase
+            .from('challenge_weeks')
+            .select('challenge_id')
+            .eq('id', data.week_id)
+            .maybeSingle();
+          if (weekData?.challenge_id) {
+            data.challenge_id = weekData.challenge_id;
+          }
+        }
+        setMission(data);
+      }
     }
     getMission();
   }, [missionId, supabase]);
@@ -243,11 +256,23 @@ function CameraCaptureContent() {
         finalCaption = finalCaption ? `[TEMPO: ${formattedDuration}] ${finalCaption}` : `[TEMPO: ${formattedDuration}]`;
       }
 
+      // Garantir resolução do challenge_id para vincular perfeitamente ao feed do treinador
+      let resolvedChallengeId = mission?.challenge_id || null;
+      if (!resolvedChallengeId) {
+        const { data: part } = await supabase
+          .from('challenge_participants')
+          .select('challenge_id')
+          .eq('student_id', user.id)
+          .limit(1)
+          .maybeSingle();
+        resolvedChallengeId = part?.challenge_id || null;
+      }
+
       // Payload completo com tentativa de inserção
       const payload: any = {
         mission_id: missionId,
         student_id: user.id,
-        challenge_id: mission?.challenge_id || null,
+        challenge_id: resolvedChallengeId,
         photo_url: publicUrl,
         caption: finalCaption || null,
         latitude: location?.latitude || null,

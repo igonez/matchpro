@@ -7,6 +7,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Input } from '@/components/ui/input';
+import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
 
 export default function DashboardOverviewPage() {
   const supabase = createClient();
@@ -212,6 +213,16 @@ export default function DashboardOverviewPage() {
       setSubmittingNotice(false);
     }
   };
+
+  if (loading) {
+    return (
+      <MobileLoadingScreen
+        title="Terminal do Coach"
+        subtitle="Carregando turmas, alunos e métricas em tempo real..."
+        fullScreen={true}
+      />
+    );
+  }
 
   return (
     <div className="space-y-8 relative">

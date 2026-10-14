@@ -8,6 +8,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { FreezeShieldModal } from '@/components/student/freeze-shield-modal';
 import { MysteryBoxModal } from '@/components/student/mystery-box-modal';
+import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
 import { QrCode, ArrowRight } from 'lucide-react';
 
 export default function StudentHomePage() {
@@ -222,6 +223,16 @@ export default function StudentHomePage() {
   const weeklyPercentage = totalWeeklyGoals > 0 
     ? Math.min(100, Math.round((totalWeeklyDone / totalWeeklyGoals) * 100))
     : 0;
+
+  if (loading) {
+    return (
+      <MobileLoadingScreen
+        title="ArenaFitPro"
+        subtitle="Sincronizando suas missões, streak e placar..."
+        fullScreen={true}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 p-4 sm:p-5 space-y-5 bg-black text-white selection:bg-white selection:text-black max-w-md mx-auto w-full pb-28 relative">

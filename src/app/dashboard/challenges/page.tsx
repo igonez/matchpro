@@ -26,6 +26,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Input } from '@/components/ui/input';
+import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
 
 interface ChallengeItem {
   id: string;
@@ -189,6 +190,16 @@ export default function ChallengesManagementPage() {
     (acc, curr) => acc + curr.studentsCount * curr.price,
     0
   );
+
+  if (loading) {
+    return (
+      <MobileLoadingScreen
+        title="Gerenciar Desafios"
+        subtitle="Carregando turmas e métricas dos desafios..."
+        fullScreen={true}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6 sm:space-y-8 min-h-screen relative pb-28">

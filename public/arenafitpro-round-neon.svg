@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="2048" height="2048" fill="none">
+  <defs>
+    <radialGradient id="bgGlowNeon" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#14210d" />
+      <stop offset="45%" stop-color="#0a1007" />
+      <stop offset="85%" stop-color="#040603" />
+      <stop offset="100%" stop-color="#000000" />
+    </radialGradient>
+
+    <!-- Bisel com reflexo Electric Lime -->
+    <linearGradient id="neonBezel" x1="100" y1="100" x2="1948" y2="1948" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ccff00" stop-opacity="0.9" />
+      <stop offset="30%" stop-color="#22c55e" stop-opacity="0.4" />
+      <stop offset="60%" stop-color="#0f172a" stop-opacity="0.9" />
+      <stop offset="85%" stop-color="#ccff00" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.8" />
+    </linearGradient>
+
+    <linearGradient id="starNeon" x1="1024" y1="420" x2="1024" y2="1628" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#f7fee7" />
+      <stop offset="70%" stop-color="#d9f99d" />
+      <stop offset="100%" stop-color="#65a30d" />
+    </linearGradient>
+
+    <filter id="neonPulse" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="50" result="blur1" />
+      <feGaussianBlur stdDeviation="20" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fundo Circular com Aura Neon Sutil -->
+  <circle cx="1024" cy="1024" r="1020" fill="url(#bgGlowNeon)" />
+  
+  <!-- Aura de fundo da estrela -->
+  <circle cx="1024" cy="1024" r="500" fill="#ccff00" fill-opacity="0.08" filter="url(#neonPulse)" />
+
+  <!-- Anel Bezel Neon -->
+  <circle cx="1024" cy="1024" r="1004" stroke="url(#neonBezel)" stroke-width="20" fill="none" />
+  <circle cx="1024" cy="1024" r="950" stroke="#ccff00" stroke-opacity="0.25" stroke-width="3" stroke-dasharray="14 14" fill="none" />
+
+  <!-- Emblema -->
+  <g filter="url(#neonPulse)">
+    <path d="M1024 420 L1160 888 L1628 1024 L1160 1160 L1024 1628 L888 1160 L420 1024 L888 888 Z" fill="url(#starNeon)" />
+    <polygon points="1024,710 1120,1024 1024,1338 928,1024" fill="#000000" fill-opacity="0.5" />
+    
+    <!-- Centro Elétrico -->
+    <circle cx="1024" cy="1024" r="75" fill="#ccff00" />
+    <circle cx="1024" cy="1024" r="48" fill="#050505" />
+    <circle cx="1024" cy="1024" r="18" fill="#ffffff" />
+  </g>
+</svg>

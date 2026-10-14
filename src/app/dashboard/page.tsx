@@ -243,24 +243,28 @@ export default function DashboardOverviewPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
-          <Link href="/dashboard/audit" className="w-full sm:w-auto">
-            <button className="mono-button-primary w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold">
-              Auditar Fotos ({stats.pendingSubmissions})
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
+          {/* 1. Botão + Novo Desafio em PRIMEIRO, fundo claro, MAIOR que os outros 2, com hover destacado */}
+          <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-white text-black hover:bg-zinc-100 rounded-2xl shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-white">
+              <span className="text-base leading-none font-black text-black group-hover:rotate-90 transition-transform duration-200">+</span>
+              <span>Novo Desafio</span>
             </button>
           </Link>
 
-          {/* Botão que abre o modal customizado (Zero prompt nativo) */}
+          {/* 2. Publicar Aviso (fundo escuro) */}
           <button
             onClick={() => setIsNoticeModalOpen(true)}
-            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold"
+            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold cursor-pointer"
           >
             Publicar Aviso
           </button>
 
-          <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
-            <button className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold">
-              + Novo Desafio
+          {/* 3. Auditar Fotos (abaixo/terceiro, fundo escuro sem evidência) */}
+          <Link href="/dashboard/audit" className="w-full sm:w-auto">
+            <button className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold text-zinc-400 hover:text-white cursor-pointer">
+              <span>Auditar Fotos</span>
+              <span className="text-[11px] font-mono text-zinc-500">({stats.pendingSubmissions})</span>
             </button>
           </Link>
         </div>
@@ -423,8 +427,9 @@ export default function DashboardOverviewPage() {
           <h2 className="text-base font-bold text-white tracking-tight">
             Turmas em Andamento
           </h2>
-          <Link href="/dashboard/missions" className="text-xs text-zinc-400 hover:text-white transition-colors">
-            Gerenciar Missões →
+          <Link href="/dashboard/challenges" className="text-xs text-zinc-400 hover:text-white transition-colors font-mono flex items-center gap-1 group">
+            <span>Gerenciar Desafios</span>
+            <span className="group-hover:translate-x-0.5 transition-transform">→</span>
           </Link>
         </div>
 

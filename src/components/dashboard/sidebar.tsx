@@ -41,6 +41,7 @@ export function DashboardSidebar() {
       title: 'GESTÃO DA TURMA',
       items: [
         { name: 'Alunos & Turmas', href: '/dashboard/students', active: pathname === '/dashboard/students' },
+        { name: 'Gerenciar Desafios', href: '/dashboard/challenges', active: pathname === '/dashboard/challenges' },
         { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
         { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },
         { name: 'Mural de Avisos', href: '/dashboard/announcements', active: pathname === '/dashboard/announcements' },

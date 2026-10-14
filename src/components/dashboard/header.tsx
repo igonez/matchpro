@@ -19,7 +19,8 @@ import {
   ExternalLink,
   User,
   Wallet,
-  Activity
+  Activity,
+  Target
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -81,6 +82,7 @@ export function DashboardHeader() {
       title: 'GESTÃO DA TURMA',
       items: [
         { name: 'Alunos & Turmas', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
+        { name: 'Gerenciar Desafios', href: '/dashboard/challenges', icon: Target, active: pathname === '/dashboard/challenges' },
         { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
         { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
         { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
@@ -111,25 +113,30 @@ export function DashboardHeader() {
 
   return (
     <>
-      <header className="h-16 border-b border-white/[0.06] px-4 md:px-8 flex items-center justify-between bg-black/80 backdrop-blur-xl sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          {/* Botão Hambúrguer Mobile */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-colors shrink-0"
-            aria-label="Abrir menu de navegação"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+      <header className="h-20 border-b border-white/[0.08] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-black/85 backdrop-blur-2xl sticky top-0 z-40">
+        <div className="flex items-center gap-3.5">
+          {/* Logo do App + Brand ArenaFitPro (sem botão hambúrguer) */}
+          <Link href="/dashboard" className="flex items-center gap-2.5 group">
+            <div className="relative h-10 w-10 rounded-2xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_20px_rgba(255,255,255,0.18)] group-hover:scale-105 transition-transform shrink-0">
+              <div className="h-full w-full bg-black rounded-[15px] flex items-center justify-center overflow-hidden p-1">
+                <img
+                  src="/arenafitpro-round-transparent.svg"
+                  alt="ArenaFitPro Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-base sm:text-lg tracking-tight text-white font-mono leading-none">
+                ArenaFitPro
+              </span>
+              <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500 mt-1 block">
+                COACH_TERMINAL
+              </span>
+            </div>
+          </Link>
 
-          {/* Logo / Brand Mobile */}
-          <div className="md:hidden flex items-center gap-2">
-            <span className="font-bold text-sm tracking-tight text-white font-mono">
-              ArenaFitPro
-            </span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-white/10">
             <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold font-mono">Painel de Controle</span>
           </div>
         </div>

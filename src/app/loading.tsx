@@ -5,7 +5,7 @@ export default function RootLoading() {
   return (
     <MobileLoadingScreen
       title="ArenaFitPro"
-      subtitle="Inicializando sistema operacional..."
+      subtitle="Carregando..."
       fullScreen={true}
     />
   );

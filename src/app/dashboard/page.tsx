@@ -13,6 +13,17 @@ export default function DashboardOverviewPage() {
   const supabase = createClient();
 
   const [loading, setLoading] = useState(true);
+  const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return !sessionStorage.getItem('arena_booted');
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
+      sessionStorage.setItem('arena_booted', 'true');
+    }
+  }, []);
+
   const [stats, setStats] = useState({
     activeStudents: 0,
     totalRevenue: 0,
@@ -214,11 +225,11 @@ export default function DashboardOverviewPage() {
     }
   };
 
-  if (loading) {
+  if (loading && isInitialBoot) {
     return (
       <MobileLoadingScreen
-        title="Terminal do Coach"
-        subtitle="Carregando turmas, alunos e métricas em tempo real..."
+        title="ArenaFitPro"
+        subtitle="Carregando painel..."
         fullScreen={true}
       />
     );

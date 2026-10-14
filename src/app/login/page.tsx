@@ -271,10 +271,8 @@ function LoginContent() {
       {/* Top Bar Minimalista */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="h-8 w-8 rounded-xl bg-zinc-900 border border-white/20 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
-            </svg>
+          <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
           <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
         </Link>

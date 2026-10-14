@@ -75,15 +75,15 @@ export function DashboardSidebar() {
       <div className="space-y-6">
         {/* Brand */}
         <Link href="/dashboard" className="flex items-center gap-3 px-1 py-1 group">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform">
-            <div className="h-full w-full bg-black rounded-[11px] flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
-              </svg>
-            </div>
+          <div className="h-9 w-9 rounded-xl overflow-hidden border border-white/15 shadow-[0_0_15px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform bg-black shrink-0">
+            <img
+              src="/app-logo.png"
+              alt="ArenaFitPro"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
-            <span className="font-black text-lg tracking-tight text-white block leading-none">
+            <span className="font-extrabold text-lg tracking-tight text-white block leading-none">
               ArenaFitPro
             </span>
             <span className="text-[11px] text-zinc-400 font-medium block mt-1">

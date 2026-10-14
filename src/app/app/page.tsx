@@ -39,6 +39,16 @@ export default function StudentHomePage() {
   const [alreadyClaimedBox, setAlreadyClaimedBox] = useState(false);
 
   const [loading, setLoading] = useState(true);
+  const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return !sessionStorage.getItem('arena_booted');
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
+      sessionStorage.setItem('arena_booted', 'true');
+    }
+  }, []);
 
   useEffect(() => {
     async function loadHome() {
@@ -224,11 +234,11 @@ export default function StudentHomePage() {
     ? Math.min(100, Math.round((totalWeeklyDone / totalWeeklyGoals) * 100))
     : 0;
 
-  if (loading) {
+  if (loading && isInitialBoot) {
     return (
       <MobileLoadingScreen
         title="ArenaFitPro"
-        subtitle="Sincronizando suas missões, streak e placar..."
+        subtitle="Carregando sua arena..."
         fullScreen={true}
       />
     );
@@ -277,7 +287,12 @@ export default function StudentHomePage() {
         </div>
       </div>
 
-      {!challenge ? (
+      {loading ? (
+        <div className="relative z-10 space-y-4 pt-2 animate-pulse">
+          <div className="h-36 rounded-3xl bg-white/[0.04] border border-white/10" />
+          <div className="h-44 rounded-3xl bg-white/[0.04] border border-white/10" />
+        </div>
+      ) : !challenge ? (
         /* Tela de Primeiro Acesso - Exige Convite/QR Code */
         <div className="relative z-10 space-y-4 pt-2">
           <SpotlightCard3D className="p-6 text-center space-y-4">

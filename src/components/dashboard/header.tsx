@@ -117,27 +117,25 @@ export function DashboardHeader() {
         <div className="flex items-center gap-3.5">
           {/* Logo do App + Brand ArenaFitPro (sem botão hambúrguer) */}
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="relative h-10 w-10 rounded-2xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_20px_rgba(255,255,255,0.18)] group-hover:scale-105 transition-transform shrink-0">
-              <div className="h-full w-full bg-black rounded-[15px] flex items-center justify-center overflow-hidden p-1">
-                <img
-                  src="/arenafitpro-round-transparent.svg"
-                  alt="ArenaFitPro Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
+            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-white/15 shadow-[0_0_15px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform shrink-0 bg-black">
+              <img
+                src="/app-logo.png"
+                alt="ArenaFitPro Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex flex-col">
-              <span className="font-black text-base sm:text-lg tracking-tight text-white font-mono leading-none">
+              <span className="font-extrabold text-base sm:text-lg tracking-tight text-white leading-none">
                 ArenaFitPro
               </span>
-              <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-500 mt-1 block">
-                COACH_TERMINAL
+              <span className="text-[10px] uppercase font-medium tracking-wider text-zinc-400 mt-1 block">
+                Painel do Treinador
               </span>
             </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-white/10">
-            <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold font-mono">Painel de Controle</span>
+            <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold">Painel de Controle</span>
           </div>
         </div>
 
@@ -172,11 +170,11 @@ export function DashboardHeader() {
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-                    <span className="font-bold text-white text-xs">AFP</span>
+                  <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center shrink-0">
+                    <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="font-black text-sm tracking-tight text-white block">ArenaFitPro</span>
+                    <span className="font-extrabold text-sm tracking-tight text-white block">ArenaFitPro</span>
                     <span className="text-[11px] text-zinc-400 font-medium">Painel do Treinador</span>
                   </div>
                 </div>

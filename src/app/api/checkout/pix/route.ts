@@ -58,12 +58,19 @@ export async function POST(request: Request) {
     const netCoach = Number((price - feePlatform).toFixed(2));
 
     // 3. Criar ou Obter Cliente Pagador no Asaas
-    const customer = await AsaasClient.createCustomer({
+    const cleanStudentCpf = (studentCpf || '').replace(/\D/g, '');
+    const validStudentDoc = cleanStudentCpf.length === 11 || cleanStudentCpf.length === 14 ? cleanStudentCpf : undefined;
+
+    const studentCustomerPayload: any = {
       name: studentName || user.user_metadata?.full_name || 'Aluno ArenaFit',
       email: studentEmail || user.email || 'aluno@arenafit.com',
-      cpfCnpj: studentCpf || '00000000000',
       externalReference: user.id,
-    });
+    };
+    if (validStudentDoc) {
+      studentCustomerPayload.cpfCnpj = validStudentDoc;
+    }
+
+    const customer = await AsaasClient.createCustomer(studentCustomerPayload);
 
     // 4. Configurar Split se o treinador já tiver walletId configurado
     const splitConfig = professional?.asaas_wallet_id

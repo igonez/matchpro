@@ -116,9 +116,25 @@ export class AsaasClient {
     value: number;
     cycle: string;
   }> {
+    const payload: any = {
+      customer: input.customerId,
+      billingType: input.billingType,
+      value: input.value,
+      nextDueDate: input.nextDueDate,
+      cycle: input.cycle,
+      description: input.description,
+    };
+
+    if (input.creditCard) {
+      payload.creditCard = input.creditCard;
+    }
+    if (input.creditCardHolderInfo) {
+      payload.creditCardHolderInfo = input.creditCardHolderInfo;
+    }
+
     return this.request('/subscriptions', {
       method: 'POST',
-      body: JSON.stringify(input),
+      body: JSON.stringify(payload),
     });
   }
 

@@ -43,13 +43,17 @@ export async function POST(request: Request) {
       const cleanDoc = (coach.document_number || '').replace(/\D/g, '');
       const validCpf = cleanDoc.length === 11 || cleanDoc.length === 14 ? cleanDoc : undefined;
 
-      const customer = await AsaasClient.createCustomer({
-        name: coach.full_name || user.email || 'Treinador ArenaFit',
+      const customerPayload: any = {
+        name: coach.full_name || user.user_metadata?.full_name || user.email || 'Treinador ArenaFit',
         email: user.email || 'coach@arenafit.pro',
-        cpfCnpj: validCpf || '00000000000',
-        phone: coach.phone || undefined,
+        phone: coach.phone || user.user_metadata?.phone || undefined,
         externalReference: user.id,
-      });
+      };
+      if (validCpf) {
+        customerPayload.cpfCnpj = validCpf;
+      }
+
+      const customer = await AsaasClient.createCustomer(customerPayload);
       customerId = customer.id;
 
       await supabaseAdmin
@@ -62,16 +66,54 @@ export async function POST(request: Request) {
     const today = new Date();
     const nextDueDate = today.toISOString().split('T')[0];
 
-    const subscription = await AsaasClient.createSubscription({
-      customerId,
-      billingType: billingType === 'CREDIT_CARD' ? 'CREDIT_CARD' : 'PIX',
-      value: planConfig.priceMonthly,
-      nextDueDate,
-      cycle: 'MONTHLY',
-      description: `Assinatura Mensal Plataforma ArenaFitPro - Plano ${planConfig.name}`,
-      creditCard: billingType === 'CREDIT_CARD' ? creditCard : undefined,
-      creditCardHolderInfo: billingType === 'CREDIT_CARD' ? creditCardHolderInfo : undefined,
-    });
+    let subscription: any;
+    try {
+      subscription = await AsaasClient.createSubscription({
+        customerId,
+        billingType: billingType === 'CREDIT_CARD' ? 'CREDIT_CARD' : 'PIX',
+        value: planConfig.priceMonthly,
+        nextDueDate,
+        cycle: 'MONTHLY',
+        description: `Assinatura Mensal Plataforma ArenaFitPro - Plano ${planConfig.name}`,
+        creditCard: billingType === 'CREDIT_CARD' ? creditCard : undefined,
+        creditCardHolderInfo: billingType === 'CREDIT_CARD' ? creditCardHolderInfo : undefined,
+      });
+    } catch (subErr: any) {
+      // Se o cliente for inválido ou não existir no Asaas (ex: ID antigo/ambiente diferente), gera um novo cliente e tenta novamente
+      if (subErr?.message?.includes('Cliente inválido') || subErr?.message?.includes('invalid_customer')) {
+        console.warn('[Checkout Coach Plan] Cliente Asaas inválido, gerando novo cliente...');
+        const cleanDoc = (coach.document_number || '').replace(/\D/g, '');
+        const validCpf = cleanDoc.length === 11 || cleanDoc.length === 14 ? cleanDoc : undefined;
+        const freshCustomerPayload: any = {
+          name: coach.full_name || user.user_metadata?.full_name || user.email || 'Treinador ArenaFit',
+          email: user.email || 'coach@arenafit.pro',
+          phone: coach.phone || user.user_metadata?.phone || undefined,
+          externalReference: user.id,
+        };
+        if (validCpf) freshCustomerPayload.cpfCnpj = validCpf;
+
+        const freshCustomer = await AsaasClient.createCustomer(freshCustomerPayload);
+        customerId = freshCustomer.id;
+
+        await supabaseAdmin
+          .from('professionals')
+          .update({ asaas_customer_id: customerId })
+          .eq('id', user.id);
+
+        subscription = await AsaasClient.createSubscription({
+          customerId,
+          billingType: billingType === 'CREDIT_CARD' ? 'CREDIT_CARD' : 'PIX',
+          value: planConfig.priceMonthly,
+          nextDueDate,
+          cycle: 'MONTHLY',
+          description: `Assinatura Mensal Plataforma ArenaFitPro - Plano ${planConfig.name}`,
+          creditCard: billingType === 'CREDIT_CARD' ? creditCard : undefined,
+          creditCardHolderInfo: billingType === 'CREDIT_CARD' ? creditCardHolderInfo : undefined,
+        });
+      } else {
+        throw subErr;
+      }
+    }
 
     // Salvar ID da assinatura no perfil do treinador
     await supabaseAdmin

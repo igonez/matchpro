@@ -78,7 +78,7 @@ export default function ProfessionalProfilePage() {
   const [state, setState] = useState('');
   const [loadingCep, setLoadingCep] = useState(false);
   const [asaasWalletId, setAsaasWalletId] = useState<string | null>(null);
-  const [asaasPixKey, setAsaasPixKey] = useState<string | null>(null);
+  const [asaasPixKey, setAsaasPixKey] = useState<string>('');
   const [planCycle, setPlanCycle] = useState<string>('MONTHLY');
   const [currentPeriodEnd, setCurrentPeriodEnd] = useState<string | null>(null);
 
@@ -167,7 +167,7 @@ export default function ProfessionalProfilePage() {
           setCity(prof.city || '');
           setState(prof.state || '');
           setAsaasWalletId(prof.asaas_wallet_id || null);
-          setAsaasPixKey(prof.asaas_pix_key || null);
+          setAsaasPixKey(prof.asaas_pix_key || '');
           setPlanCycle(prof.plan_cycle || 'MONTHLY');
           setCurrentPeriodEnd(prof.current_period_end || null);
         } else {
@@ -297,9 +297,8 @@ export default function ProfessionalProfilePage() {
         },
       });
 
-      // 2. Gravar na tabela professionals
-      const payload: any = {
-        id: professionalId,
+      // 2. Gravar na tabela professionals usando UPDATE (para não colidir com triggers de plano)
+      const updatePayload: any = {
         full_name: fullName.trim(),
         specialty,
         phone: phone.trim() || null,
@@ -308,7 +307,6 @@ export default function ProfessionalProfilePage() {
         avatar_url: avatarUrl,
         document_type: documentType,
         document_number: documentNumber.trim() || null,
-        cref_number: crefNumber.trim() || null,
         birth_date: birthDate || null,
         postal_code: postalCode || null,
         address: address || null,
@@ -318,21 +316,55 @@ export default function ProfessionalProfilePage() {
         state: state || null,
       };
 
-      const { error: fullUpdateError } = await supabase
-        .from('professionals')
-        .upsert(payload);
+      if (asaasPixKey && asaasPixKey.trim()) {
+        updatePayload.asaas_pix_key = asaasPixKey.trim();
+      }
 
-      if (fullUpdateError) {
-        // Fallback caso colunas não estejam migradas
-        await supabase.from('professionals').upsert({
-          id: professionalId,
-          full_name: fullName.trim(),
-          specialty,
+      // Tenta atualizar incluindo cref_number
+      let { error: updateError } = await supabase
+        .from('professionals')
+        .update({ ...updatePayload, cref_number: crefNumber.trim() || null })
+        .eq('id', professionalId);
+
+      // Se falhar (ex: coluna cref_number não existe ainda no banco), tenta sem cref_number
+      if (updateError) {
+        console.warn('Tentativa com cref_number falhou, salvando dados principais:', updateError.message);
+        const { error: retryError } = await supabase
+          .from('professionals')
+          .update(updatePayload)
+          .eq('id', professionalId);
+
+        if (retryError) {
+          console.error('Erro ao atualizar tabela professionals:', retryError);
+          throw new Error('Falha ao salvar dados no banco: ' + retryError.message);
+        }
+      }
+
+      // 3. Sincronização em segundo plano com o gateway Asaas (se documento e chave Pix presentes)
+      const cleanDoc = cleanDigits(documentNumber);
+      if (asaasPixKey && asaasPixKey.trim() && cleanDoc.length >= 11) {
+        fetch('/api/finance/bank-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            documentType,
+            documentNumber,
+            pixKey: asaasPixKey.trim(),
+            birthDate: documentType === 'CPF' ? birthDate : undefined,
+            postalCode,
+            address,
+            addressNumber,
+            province,
+            city,
+            state,
+          }),
+        }).catch((apiErr) => {
+          console.warn('Sincronização bancária em segundo plano:', apiErr);
         });
       }
 
       setDocumentVerified(isDocNowVerified);
-      showToast('Perfil profissional atualizado com sucesso!');
+      showToast('Perfil profissional e dados fiscais atualizados com sucesso!');
     } catch (err: any) {
       console.error('Erro ao salvar perfil:', err);
       showToast('Erro ao salvar alterações: ' + err.message);
@@ -517,8 +549,8 @@ export default function ProfessionalProfilePage() {
               </div>
             </div>
 
-            {/* Inputs de Documento e Registro */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/5">
+            {/* Inputs de Documento, Registro e Chave Pix */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-white/5">
               <div>
                 <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
                   Documento Pessoal / Empresa *
@@ -542,24 +574,41 @@ export default function ProfessionalProfilePage() {
                   />
                 </div>
                 <span className="text-[10px] text-zinc-500 font-mono mt-1 block">
-                  Necessário para a liberação dos saques automáticos no Asaas.
+                  Sincronizado com a Área Financeira.
+                </span>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5 flex items-center gap-1.5">
+                  <CreditCard className="h-3.5 w-3.5 text-white" />
+                  <span>Chave Pix de Recebimento</span>
+                </label>
+                <Input
+                  type="text"
+                  value={asaasPixKey}
+                  onChange={(e) => setAsaasPixKey(e.target.value)}
+                  placeholder="E-mail, CPF, celular ou aleatória"
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono"
+                />
+                <span className="text-[10px] text-zinc-500 font-mono mt-1 block">
+                  Para recebimento de repasses e saques.
                 </span>
               </div>
 
               <div>
                 <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5 flex items-center gap-1.5">
                   <Award className="h-3.5 w-3.5 text-white" />
-                  <span>Registro Profissional (CREF / CRN / CFN)</span>
+                  <span>Registro Profissional (CREF / CRN)</span>
                 </label>
                 <Input
                   type="text"
                   value={crefNumber}
                   onChange={(e) => setCrefNumber(e.target.value)}
-                  placeholder="Ex: CREF 012345-G/SP ou CRN-3 4567"
+                  placeholder="Ex: CREF 012345-G/SP"
                   className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono"
                 />
                 <span className="text-[10px] text-zinc-500 font-mono mt-1 block">
-                  Exibido aos alunos como garantia de credencial técnica.
+                  Exibido aos alunos como garantia técnica.
                 </span>
               </div>
             </div>
@@ -593,7 +642,7 @@ export default function ProfessionalProfilePage() {
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-black text-white font-mono">{planTier.toUpperCase()}</span>
                   <Badge className="bg-white/10 text-white border-0 text-[10px]">
-                    Taxa: {PLAN_CONFIG[planTier as PlanTier]?.platformFeePercent || 18}%
+                    Taxa: {PLAN_CONFIG[planTier as PlanTier]?.platformFeePercent || 15}%
                   </Badge>
                 </div>
                 <p className="text-[10px] text-zinc-500 mt-1 font-mono">

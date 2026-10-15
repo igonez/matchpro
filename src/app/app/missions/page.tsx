@@ -13,6 +13,7 @@ export default function StudentMissionsWeeklyPage() {
 
   const [weeks, setWeeks] = useState<any[]>([]);
   const [selectedWeekId, setSelectedWeekId] = useState<string>('');
+  const [currentChallengeId, setCurrentChallengeId] = useState<string | null>(null);
   const [missions, setMissions] = useState<any[]>([]);
   const [submissions, setSubmissions] = useState<Record<string, any>>({});
   const [todaySubmissions, setTodaySubmissions] = useState<any[]>([]);
@@ -62,6 +63,7 @@ export default function StudentMissionsWeeklyPage() {
           .maybeSingle();
 
         challengeId = part?.challenge_id || null;
+        setCurrentChallengeId(challengeId);
 
         if (!challengeId) {
           setWeeks([]);
@@ -135,7 +137,23 @@ export default function StudentMissionsWeeklyPage() {
         .order('order_index', { ascending: true })
         .order('points_rewarded', { ascending: false });
 
-      setMissions(data || []);
+      let result = data || [];
+
+      // Fallback: Se não houver missões associadas a esta week_id, buscar pelo challenge_id
+      if (result.length === 0 && currentChallengeId) {
+        const { data: directData } = await supabase
+          .from('missions')
+          .select('*')
+          .eq('challenge_id', currentChallengeId)
+          .order('order_index', { ascending: true })
+          .order('points_rewarded', { ascending: false });
+
+        if (directData && directData.length > 0) {
+          result = directData;
+        }
+      }
+
+      setMissions(result);
     }
 
     loadWeeklyMissions();

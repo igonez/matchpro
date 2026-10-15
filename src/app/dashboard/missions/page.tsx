@@ -38,6 +38,7 @@ function MissionsManagerContent() {
   const [selectedWeekId, setSelectedWeekId] = useState<string>('');
   const [missions, setMissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generatingTemplate, setGeneratingTemplate] = useState(false);
 
   // Active Category Tab: treinos | cardios | refeicoes | bonus
   const [activeTab, setActiveTab] = useState<'treinos' | 'cardios' | 'refeicoes' | 'bonus'>('treinos');
@@ -116,7 +117,7 @@ function MissionsManagerContent() {
     }
   }, [selectedChallengeId]);
 
-  // 3. Carregar missões da semana selecionada
+  // 3. Carregar missões da semana selecionada (com fallback de resiliência)
   const fetchMissions = async (weekId: string) => {
     if (!weekId) return;
     const { data } = await supabase
@@ -126,7 +127,22 @@ function MissionsManagerContent() {
       .order('order_index', { ascending: true })
       .order('created_at', { ascending: true });
 
-    setMissions(data || []);
+    let result = data || [];
+
+    // Fallback: Se não encontrar missões por week_id, verificar se existem missões do desafio sem week_id
+    if (result.length === 0 && selectedChallengeId) {
+      const { data: directMissions } = await supabase
+        .from('missions')
+        .select('*')
+        .eq('challenge_id', selectedChallengeId)
+        .order('order_index', { ascending: true });
+
+      if (directMissions && directMissions.length > 0) {
+        result = directMissions;
+      }
+    }
+
+    setMissions(result);
   };
 
   useEffect(() => {
@@ -134,6 +150,131 @@ function MissionsManagerContent() {
       fetchMissions(selectedWeekId);
     }
   }, [selectedWeekId]);
+
+  // Gerar Template Completo de 4 Semanas de Missões com 1 Clique
+  const handleGenerateSmartTemplate = async () => {
+    if (!selectedChallengeId) {
+      showToast('Selecione uma turma primeiro.');
+      return;
+    }
+
+    setGeneratingTemplate(true);
+    try {
+      // 1. Garantir que as 4 semanas existam
+      let currentWeeks = [...weeks];
+      if (currentWeeks.length === 0) {
+        const defaultWeeks = [
+          { challenge_id: selectedChallengeId, week_number: 1, title: 'Semana 1 • Sprint 1 (Ativação)', bonus_points: 20 },
+          { challenge_id: selectedChallengeId, week_number: 2, title: 'Semana 2 • Sprint 2 (Intensidade)', bonus_points: 20 },
+          { challenge_id: selectedChallengeId, week_number: 3, title: 'Semana 3 • Sprint 3 (Consistência)', bonus_points: 20 },
+          { challenge_id: selectedChallengeId, week_number: 4, title: 'Semana 4 • Sprint 4 (Sprint Final)', bonus_points: 20 },
+        ];
+        const { data: createdWeeks, error: wErr } = await supabase
+          .from('challenge_weeks')
+          .insert(defaultWeeks)
+          .select();
+        if (wErr) throw wErr;
+        currentWeeks = createdWeeks || [];
+        setWeeks(currentWeeks);
+        if (currentWeeks.length > 0) {
+          setSelectedWeekId(currentWeeks[0].id);
+        }
+      }
+
+      // 2. Para cada semana, verificar se já tem missões ou criar as missões padrão
+      const allMissionsToInsert: any[] = [];
+      for (const week of currentWeeks) {
+        const { count } = await supabase
+          .from('missions')
+          .select('*', { count: 'exact', head: true })
+          .eq('week_id', week.id);
+
+        if ((count || 0) > 0) continue; // Pula se já houver missões nessa semana
+
+        // 6 Treinos da semana
+        for (let t = 1; t <= 6; t++) {
+          allMissionsToInsert.push({
+            challenge_id: selectedChallengeId,
+            week_id: week.id,
+            title: `Treino #${t} da Semana`,
+            category: 'treino',
+            points_rewarded: 15,
+            requires_cooldown: true,
+            cooldown_hours: 4,
+            order_index: t,
+            is_bonus: false,
+          });
+        }
+
+        // 7 Cardios da semana
+        for (let c = 1; c <= 7; c++) {
+          allMissionsToInsert.push({
+            challenge_id: selectedChallengeId,
+            week_id: week.id,
+            title: `Cardio #${c} (Mín. 30min)`,
+            category: 'cardio',
+            points_rewarded: 10,
+            requires_cooldown: true,
+            cooldown_hours: 4,
+            order_index: c,
+            is_bonus: false,
+          });
+        }
+
+        // 4 Refeições diárias
+        const meals = ['Café da Manhã Limpo', 'Almoço Balanceado', 'Lanche da Tarde', 'Jantar & Ceia'];
+        meals.forEach((meal, idx) => {
+          allMissionsToInsert.push({
+            challenge_id: selectedChallengeId,
+            week_id: week.id,
+            title: meal,
+            category: 'refeicao',
+            points_rewarded: 10,
+            requires_cooldown: false,
+            order_index: idx + 1,
+            is_bonus: false,
+          });
+        });
+
+        // 1 Missão Bônus por semana
+        allMissionsToInsert.push({
+          challenge_id: selectedChallengeId,
+          week_id: week.id,
+          title: 'Desafio Bônus: 3L Água + Alongamento',
+          category: 'habito',
+          points_rewarded: 25,
+          requires_cooldown: false,
+          order_index: 99,
+          is_bonus: true,
+        });
+      }
+
+      if (allMissionsToInsert.length > 0) {
+        let { error: mErr } = await supabase.from('missions').insert(allMissionsToInsert);
+        if (mErr && (mErr.message.includes('column') || mErr.message.includes('schema cache'))) {
+          const basicMissions = allMissionsToInsert.map((m) => ({
+            challenge_id: m.challenge_id,
+            week_id: m.week_id,
+            title: m.title,
+            category: m.category,
+            points_rewarded: m.points_rewarded,
+          }));
+          await supabase.from('missions').insert(basicMissions);
+        }
+      }
+
+      showToast('Template de 4 semanas e missões ativas gerado com sucesso!');
+      if (selectedWeekId) {
+        await fetchMissions(selectedWeekId);
+      } else if (currentWeeks.length > 0) {
+        setSelectedWeekId(currentWeeks[0].id);
+      }
+    } catch (err: any) {
+      showToast('Erro ao gerar template: ' + err.message);
+    } finally {
+      setGeneratingTemplate(false);
+    }
+  };
 
   // Abrir Modal para Criar Missão
   const handleOpenCreateModal = (catDefault: 'treino' | 'cardio' | 'refeicao' | 'habito') => {
@@ -343,9 +484,23 @@ function MissionsManagerContent() {
 
           <Button
             size="sm"
+            onClick={handleGenerateSmartTemplate}
+            disabled={!selectedChallengeId || generatingTemplate}
+            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5"
+          >
+            {generatingTemplate ? (
+              <span className="flex items-center gap-1.5 animate-pulse">⚡ Gerando...</span>
+            ) : (
+              <span className="flex items-center gap-1.5">⚡ Gerar Template (4 Semanas)</span>
+            )}
+          </Button>
+
+          <Button
+            size="sm"
             onClick={handleCreateNewWeek}
             disabled={!selectedChallengeId}
-            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+            variant="outline"
+            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold border-white/20 text-white hover:bg-white/10"
           >
             <Plus className="h-4 w-4 mr-1.5" />
             Nova Semana
@@ -589,9 +744,35 @@ function MissionsManagerContent() {
 
             if (currentList.length === 0) {
               return (
-                <div className="py-12 text-center text-zinc-500 text-xs">
-                  <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-40" />
-                  Nenhuma missão cadastrada nesta lista ainda. Clique no botão acima ou gere o template de 4 semanas.
+                <div className="py-12 text-center text-zinc-500 text-xs space-y-3">
+                  <AlertCircle className="h-8 w-8 mx-auto opacity-40 text-zinc-400" />
+                  <p className="font-semibold text-zinc-300">
+                    Nenhuma missão cadastrada nesta lista da {selectedWeek?.title || 'Semana'}.
+                  </p>
+                  <p className="text-zinc-500 max-w-sm mx-auto text-[11px]">
+                    Você pode criar missões manualmente ou gerar automaticamente o pacote oficial com 1 clique.
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleOpenCreateModal(
+                        activeTab === 'treinos' ? 'treino' : activeTab === 'cardios' ? 'cardio' : activeTab === 'refeicoes' ? 'refeicao' : 'habito'
+                      )}
+                      variant="outline"
+                      className="text-xs border-white/20 text-white hover:bg-white/10 rounded-xl"
+                    >
+                      <Plus className="h-3.5 w-3.5 mr-1" />
+                      Criar Missão Manual
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleGenerateSmartTemplate}
+                      disabled={generatingTemplate}
+                      className="text-xs font-bold bg-white text-black hover:bg-zinc-200 rounded-xl shadow-md"
+                    >
+                      {generatingTemplate ? 'Gerando...' : '⚡ Gerar Template Completo (4 Semanas)'}
+                    </Button>
+                  </div>
                 </div>
               );
             }

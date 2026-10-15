@@ -73,7 +73,7 @@ export default function NewChallengePage() {
 
       if (challengeError) throw challengeError;
 
-      // Auto-provisionar as 4 semanas padrão do desafio para evitar tela de missões órfã
+      // Auto-provisionar as 4 semanas padrão e todas as missões ativas do desafio
       try {
         const defaultWeeks = [
           { challenge_id: challenge.id, week_number: 1, title: 'Semana 1 • Sprint 1 (Ativação)', bonus_points: 20 },
@@ -81,13 +81,99 @@ export default function NewChallengePage() {
           { challenge_id: challenge.id, week_number: 3, title: 'Semana 3 • Sprint 3 (Consistência)', bonus_points: 20 },
           { challenge_id: challenge.id, week_number: 4, title: 'Semana 4 • Sprint 4 (Sprint Final)', bonus_points: 20 },
         ];
-        await supabase.from('challenge_weeks').insert(defaultWeeks);
+        
+        const { data: createdWeeks, error: wErr } = await supabase
+          .from('challenge_weeks')
+          .insert(defaultWeeks)
+          .select();
+
+        if (wErr) {
+          console.warn('Erro ao criar semanas:', wErr);
+        }
+
+        // Criar as missões ativas para cada semana criada
+        if (createdWeeks && createdWeeks.length > 0) {
+          const defaultMissions: any[] = [];
+          
+          for (const week of createdWeeks) {
+            // 1. Treinos (6 treinos na semana)
+            for (let t = 1; t <= 6; t++) {
+              defaultMissions.push({
+                challenge_id: challenge.id,
+                week_id: week.id,
+                title: `Treino #${t} da Semana`,
+                category: 'treino',
+                points_rewarded: 15,
+                requires_cooldown: true,
+                cooldown_hours: 4,
+                order_index: t,
+                is_bonus: false,
+              });
+            }
+
+            // 2. Cardios (7 cardios na semana)
+            for (let c = 1; c <= 7; c++) {
+              defaultMissions.push({
+                challenge_id: challenge.id,
+                week_id: week.id,
+                title: `Cardio #${c} (Mín. 30min)`,
+                category: 'cardio',
+                points_rewarded: 10,
+                requires_cooldown: true,
+                cooldown_hours: 4,
+                order_index: c,
+                is_bonus: false,
+              });
+            }
+
+            // 3. Refeições Diárias
+            const meals = ['Café da Manhã Limpo', 'Almoço Balanceado', 'Lanche da Tarde', 'Jantar & Ceia'];
+            meals.forEach((meal, idx) => {
+              defaultMissions.push({
+                challenge_id: challenge.id,
+                week_id: week.id,
+                title: meal,
+                category: 'refeicao',
+                points_rewarded: 10,
+                requires_cooldown: false,
+                order_index: idx + 1,
+                is_bonus: false,
+              });
+            });
+
+            // 4. Bônus / Hábito
+            defaultMissions.push({
+              challenge_id: challenge.id,
+              week_id: week.id,
+              title: 'Desafio Bônus: 3L Água + Alongamento',
+              category: 'habito',
+              points_rewarded: 25,
+              requires_cooldown: false,
+              order_index: 99,
+              is_bonus: true,
+            });
+          }
+
+          let { error: mErr } = await supabase.from('missions').insert(defaultMissions);
+
+          // Fallback resiliente caso colunas opcionais não existam no cache do Supabase
+          if (mErr && (mErr.message.includes('column') || mErr.message.includes('schema cache'))) {
+            console.warn('Erro de coluna no schema cache. Tentando insert básico...', mErr);
+            const basicMissions = defaultMissions.map((m) => ({
+              challenge_id: m.challenge_id,
+              week_id: m.week_id,
+              title: m.title,
+              category: m.category,
+              points_rewarded: m.points_rewarded,
+            }));
+            await supabase.from('missions').insert(basicMissions);
+          }
+        }
       } catch (weekErr) {
-        console.warn('Erro não bloqueante ao criar semanas padrão:', weekErr);
+        console.warn('Erro não bloqueante ao criar semanas e missões padrão:', weekErr);
       }
 
-      showToast('Desafio criado com sucesso! Abrindo gerenciador de missões...');
-      // Redirecionar para adicionar as missões desse desafio
+      showToast('Desafio e missões padrão criados com sucesso!');
       setTimeout(() => {
         router.push(`/dashboard/missions?challengeId=${challenge.id}`);
       }, 700);

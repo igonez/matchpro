@@ -128,17 +128,33 @@ export async function POST(request: Request) {
     if (city) updatePayload.city = city;
     if (state) updatePayload.state = state;
 
-    const { error: updateError } = await supabaseAdmin
+    let { error: updateError } = await supabaseAdmin
       .from('professionals')
       .update(updatePayload)
       .eq('id', user.id);
 
+    // Se falhar (ex: colunas de endereço/data de nascimento ainda não migradas no banco), tenta salvar o essencial
     if (updateError) {
-      console.error('Erro ao salvar no banco:', updateError);
-      return NextResponse.json(
-        { error: 'Falha ao salvar dados bancários no banco de dados.' },
-        { status: 500 }
-      );
+      console.warn('Erro ao salvar campos estendidos no banco, tentando fallback básico:', updateError);
+      const basicPayload: any = {
+        document_type: documentType,
+        document_number: documentNumber.trim(),
+        asaas_pix_key: pixValidation.formatted,
+      };
+      if (walletId) basicPayload.asaas_wallet_id = walletId;
+
+      const { error: fallbackError } = await supabaseAdmin
+        .from('professionals')
+        .update(basicPayload)
+        .eq('id', user.id);
+
+      if (fallbackError) {
+        console.error('Erro também no fallback ao salvar no banco:', fallbackError);
+        return NextResponse.json(
+          { error: `Falha ao salvar dados bancários no banco de dados: ${fallbackError.message || fallbackError.details || 'Verifique as permissões de tabela.'}` },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json({

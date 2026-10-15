@@ -226,13 +226,7 @@ export default function DashboardOverviewPage() {
   };
 
   if (loading && isInitialBoot) {
-    return (
-      <MobileLoadingScreen
-        title="ArenaFitPro"
-        subtitle="Carregando painel..."
-        fullScreen={true}
-      />
-    );
+    return <MobileLoadingScreen fullScreen={true} />;
   }
 
   return (

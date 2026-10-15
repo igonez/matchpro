@@ -235,13 +235,7 @@ export default function StudentHomePage() {
     : 0;
 
   if (loading && isInitialBoot) {
-    return (
-      <MobileLoadingScreen
-        title="ArenaFitPro"
-        subtitle="Carregando sua arena..."
-        fullScreen={true}
-      />
-    );
+    return <MobileLoadingScreen fullScreen={true} />;
   }
 
   return (

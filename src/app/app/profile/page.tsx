@@ -34,6 +34,7 @@ export default function StudentProfilePage() {
 
   const [student, setStudent] = useState<any>(null);
   const [challenge, setChallenge] = useState<any>(null);
+  const [participation, setParticipation] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
   const [submissionsCount, setSubmissionsCount] = useState(0);
   const [userPhotos, setUserPhotos] = useState<any[]>([]);
@@ -128,14 +129,15 @@ export default function StudentProfilePage() {
         setSubmissionsCount(count || 0);
         setUserPhotos(submissionsData || []);
 
-        // 4. Desafio Ativo vinculado ao aluno & Cofre Antes/Depois
+        // 4. Desafio Ativo vinculado ao aluno & Inscrição Oficial
         const { data: participantRecord } = await supabase
           .from('challenge_participants')
-          .select('challenge_id, challenges(id, title, is_active)')
+          .select('challenge_id, payment_status, joined_at, challenges(id, title, is_active, start_date, end_date, price)')
           .eq('student_id', user.id)
           .limit(1)
           .maybeSingle();
 
+        setParticipation(participantRecord || null);
         const ch = (participantRecord?.challenges as any) || null;
         setChallenge(ch);
 
@@ -290,6 +292,51 @@ export default function StudentProfilePage() {
           </div>
         </div>
       </Card>
+
+      {/* MINHA TURMA ATUAL & STATUS DA MATRÍCULA */}
+      {challenge && (
+        <Card className="mono-glass-card p-4 rounded-3xl border border-white/10 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-white" />
+              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                Minha Turma Atual
+              </span>
+            </div>
+            {participation?.payment_status === 'paid' ? (
+              <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono">
+                ✓ PAGO & CONFIRMADO
+              </Badge>
+            ) : participation?.payment_status === 'complimentary' ? (
+              <Badge className="bg-white/10 text-white border border-white/20 text-[10px] font-mono">
+                ✦ VAGA CORTESIA
+              </Badge>
+            ) : (
+              <Badge className="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-mono">
+                ⚠ PAGAMENTO PENDENTE
+              </Badge>
+            )}
+          </div>
+
+          <div className="p-3 rounded-2xl bg-black/50 border border-white/5 space-y-1.5">
+            <h4 className="text-sm font-black text-white">{challenge.title}</h4>
+            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1">
+              <span>Período da Turma:</span>
+              <span className="text-zinc-200">
+                {challenge.start_date ? new Date(challenge.start_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'} até {challenge.end_date ? new Date(challenge.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
+              </span>
+            </div>
+            {participation?.joined_at && (
+              <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                <span>Inscrito em:</span>
+                <span className="text-zinc-200">
+                  {new Date(participation.joined_at).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
 
       {/* FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
       <div

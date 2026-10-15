@@ -3,6 +3,22 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { 
+  LayoutDashboard, 
+  CheckSquare, 
+  Trophy, 
+  BookOpen, 
+  Bell, 
+  Gift, 
+  Users, 
+  PlusCircle, 
+  User, 
+  Wallet, 
+  Activity, 
+  Target,
+  LogOut,
+  Sparkles
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export function DashboardSidebar() {
@@ -18,8 +34,10 @@ export function DashboardSidebar() {
   interface NavItem {
     name: string;
     href: string;
+    icon: any;
     active: boolean;
     badge?: string;
+    isCta?: boolean;
   }
 
   interface NavGroup {
@@ -29,43 +47,42 @@ export function DashboardSidebar() {
 
   const navGroups: NavGroup[] = [
     {
-      title: 'MONITORAMENTO',
+      title: 'VISÃO GERAL',
       items: [
-        { name: 'Visão Geral', href: '/dashboard', active: pathname === '/dashboard' },
-        { name: 'Ranking da Turma', href: '/dashboard/leaderboard', active: pathname === '/dashboard/leaderboard', badge: 'AO VIVO' },
-        { name: 'Feed da Turma', href: '/dashboard/feed', active: pathname === '/dashboard/feed' },
-        { name: 'Auditoria Swipe', href: '/dashboard/audit', active: pathname === '/dashboard/audit' },
+        { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard, active: pathname === '/dashboard' },
       ],
     },
     {
-      title: 'GESTÃO DA TURMA',
+      title: 'DESAFIOS & TURMAS',
       items: [
-        { name: 'Alunos & Turmas', href: '/dashboard/students', active: pathname === '/dashboard/students' },
-        { name: 'Gerenciar Desafios', href: '/dashboard/challenges', active: pathname === '/dashboard/challenges' },
-        { name: 'Missões & Regras', href: '/dashboard/missions', active: pathname === '/dashboard/missions' },
-        { name: 'Materiais de Apoio', href: '/dashboard/materials', active: pathname === '/dashboard/materials' },
-        { name: 'Mural de Avisos', href: '/dashboard/announcements', active: pathname === '/dashboard/announcements' },
+        { name: '+ Novo Desafio', href: '/dashboard/challenges/new', icon: PlusCircle, active: pathname === '/dashboard/challenges/new', isCta: true },
+        { name: 'Meus Desafios', href: '/dashboard/challenges', icon: Target, active: pathname === '/dashboard/challenges' },
+        { name: 'Alunos & Turmas', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
+        { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
       ],
     },
     {
-      title: 'FINANCEIRO & SAQUES',
+      title: 'ENGAJAMENTO & MODERAÇÃO',
       items: [
-        { name: 'Central Financeira', href: '/dashboard/finance', active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+        { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
+        { name: 'Feed Social da Turma', href: '/dashboard/feed', icon: Activity, active: pathname === '/dashboard/feed' },
+        { name: 'Ranking da Turma', href: '/dashboard/leaderboard', icon: Trophy, active: pathname === '/dashboard/leaderboard', badge: 'AO VIVO' },
+        { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
+        { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
       ],
     },
     {
       title: 'RECURSOS PRO',
       items: [
-        { name: 'Squads (Equipes)', href: '/dashboard/squads', active: pathname === '/dashboard/squads', badge: 'PRO' },
-        { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
-        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', active: pathname === '/dashboard/sponsors', badge: 'ELITE' },
+        { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
+        { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', icon: Gift, active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
       ],
     },
     {
-      title: 'CONFIGURAÇÕES',
+      title: 'FINANÇAS & CONTA',
       items: [
-        { name: 'Criar Desafio', href: '/dashboard/challenges/new', active: pathname === '/dashboard/challenges/new' },
-        { name: 'Meu Perfil', href: '/dashboard/profile', active: pathname === '/dashboard/profile' },
+        { name: 'Central Financeira', href: '/dashboard/finance', icon: Wallet, active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+        { name: 'Meu Perfil & Fiscais', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
       ],
     },
   ];
@@ -96,31 +113,55 @@ export function DashboardSidebar() {
         <nav className="space-y-4">
           {navGroups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <div className="px-3 pb-1 text-[11px] uppercase tracking-wider text-zinc-500 font-semibold select-none">
+              <div className="px-3 pb-1 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold select-none">
                 {group.title}
               </div>
-              <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
-                      item.active
-                        ? 'bg-white/10 text-white font-semibold border border-white/20 shadow-sm'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04] font-medium'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="truncate">{item.name}</span>
-                      {item.badge && (
-                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/15 opacity-80 shrink-0">
-                          {item.badge}
-                        </span>
-                      )}
-                    </div>
-                    {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0 ml-1.5" />}
-                  </Link>
-                ))}
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  if (item.isCta) {
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
+                          item.active
+                            ? 'bg-white text-black font-black shadow-[0_0_20px_rgba(255,255,255,0.25)]'
+                            : 'bg-white/10 hover:bg-white text-white hover:text-black font-bold border border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <Icon className="w-4 h-4 shrink-0" />
+                          <span className="truncate">{item.name}</span>
+                        </div>
+                        <Sparkles className="w-3.5 h-3.5 shrink-0 opacity-70" />
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
+                        item.active
+                          ? 'bg-white/10 text-white font-semibold border border-white/20 shadow-sm'
+                          : 'text-zinc-400 hover:text-white hover:bg-white/[0.04] font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-white' : 'text-zinc-400'}`} />
+                        <span className="truncate">{item.name}</span>
+                        {item.badge && (
+                          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/15 opacity-80 shrink-0">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0 ml-1.5" />}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -131,9 +172,10 @@ export function DashboardSidebar() {
       <div className="pt-4 border-t border-white/[0.06]">
         <button
           onClick={handleSignOut}
-          className="w-full text-left px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
+          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
         >
-          Sair da Conta
+          <LogOut className="w-4 h-4 text-zinc-400" />
+          <span>Sair da Conta</span>
         </button>
       </div>
     </aside>

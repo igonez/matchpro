@@ -24,8 +24,18 @@ export interface Database {
           plan_tier: 'starter' | 'pro' | 'studio'
           plan_status: 'active' | 'past_due' | 'canceled'
           asaas_customer_id: string | null
+          asaas_subscription_id: string | null
           asaas_wallet_id: string | null
           asaas_pix_key: string | null
+          plan_cycle: string | null
+          current_period_end: string | null
+          birth_date: string | null
+          postal_code: string | null
+          address: string | null
+          address_number: string | null
+          province: string | null
+          city: string | null
+          state: string | null
           platform_fee_percent: number
           created_at: string
         }
@@ -43,8 +53,18 @@ export interface Database {
           plan_tier?: 'starter' | 'pro' | 'studio'
           plan_status?: 'active' | 'past_due' | 'canceled'
           asaas_customer_id?: string | null
+          asaas_subscription_id?: string | null
           asaas_wallet_id?: string | null
           asaas_pix_key?: string | null
+          plan_cycle?: string | null
+          current_period_end?: string | null
+          birth_date?: string | null
+          postal_code?: string | null
+          address?: string | null
+          address_number?: string | null
+          province?: string | null
+          city?: string | null
+          state?: string | null
           platform_fee_percent?: number
           created_at?: string
         }
@@ -62,8 +82,18 @@ export interface Database {
           plan_tier?: 'starter' | 'pro' | 'studio'
           plan_status?: 'active' | 'past_due' | 'canceled'
           asaas_customer_id?: string | null
+          asaas_subscription_id?: string | null
           asaas_wallet_id?: string | null
           asaas_pix_key?: string | null
+          plan_cycle?: string | null
+          current_period_end?: string | null
+          birth_date?: string | null
+          postal_code?: string | null
+          address?: string | null
+          address_number?: string | null
+          province?: string | null
+          city?: string | null
+          state?: string | null
           platform_fee_percent?: number
           created_at?: string
         }

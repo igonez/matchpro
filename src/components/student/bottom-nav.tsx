@@ -3,7 +3,21 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  Flame, 
+  CheckCircle, 
+  Trophy, 
+  Activity, 
+  BookOpen, 
+  User, 
+  LogOut, 
+  Sparkles, 
+  ChevronRight,
+  ShieldCheck,
+  Target
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
 
@@ -68,9 +82,9 @@ export function StudentBottomNav() {
     router.push('/login');
   };
 
-  // Abas na pílula inferior (Início, Missões | Câmera | Ranking, Feed + Menu)
+  // Abas na pílula inferior (Hoje, Missões | Check-in | Ranking, Feed + Menu)
   const leftTabs = [
-    { name: 'Início', href: '/app', active: pathname === '/app' },
+    { name: 'Hoje', href: '/app', active: pathname === '/app' },
     { name: 'Missões', href: '/app/missions', active: pathname === '/app/missions' },
   ];
 
@@ -79,43 +93,64 @@ export function StudentBottomNav() {
     { name: 'Feed', href: '/app/feed', active: pathname === '/app/feed' },
   ];
 
-  // Itens do Menu Vertical (Áreas completas do App)
-  const verticalMenuItems = [
+  // Seções categorizadas do Drawer Vertical
+  const verticalMenuSections = [
     {
-      title: 'Início',
-      subtitle: 'Painel diário e consistência',
-      href: '/app',
-      active: pathname === '/app',
+      category: 'MINHA JORNADA',
+      items: [
+        {
+          title: 'Hoje (Painel Diário)',
+          subtitle: 'Metas diárias, água e streak',
+          href: '/app',
+          icon: Target,
+          active: pathname === '/app',
+        },
+        {
+          title: 'Missões da Semana',
+          subtitle: 'Treinos, cardios e refeições',
+          href: '/app/missions',
+          icon: CheckCircle,
+          active: pathname === '/app/missions',
+        },
+        {
+          title: 'Placar & Leaderboard',
+          subtitle: 'Ranking individual e Squads',
+          href: '/app/leaderboard',
+          icon: Trophy,
+          active: pathname === '/app/leaderboard',
+        },
+        {
+          title: 'Feed da Turma',
+          subtitle: 'Fotos e check-ins aprovados',
+          href: '/app/feed',
+          icon: Activity,
+          active: pathname === '/app/feed',
+        },
+      ],
     },
     {
-      title: 'Missões da Semana',
-      subtitle: 'Treinos, cardios e refeições',
-      href: '/app/missions',
-      active: pathname === '/app/missions',
+      category: 'CONTEÚDO & APOIO',
+      items: [
+        {
+          title: 'Materiais de Apoio',
+          subtitle: 'PDFs, dietas e treinos do coach',
+          href: '/app/materials',
+          icon: BookOpen,
+          active: pathname === '/app/materials',
+        },
+      ],
     },
     {
-      title: 'Placar & Leaderboard',
-      subtitle: 'Ranking individual e Squads',
-      href: '/app/leaderboard',
-      active: pathname === '/app/leaderboard',
-    },
-    {
-      title: 'Feed da Turma',
-      subtitle: 'Fotos e pratos aprovados',
-      href: '/app/feed',
-      active: pathname === '/app/feed',
-    },
-    {
-      title: 'Materiais de Apoio',
-      subtitle: 'Arquivos, PDFs e orientações',
-      href: '/app/materials',
-      active: pathname === '/app/materials',
-    },
-    {
-      title: 'Meu Perfil',
-      subtitle: 'Histórico, streak e badges',
-      href: '/app/profile',
-      active: pathname === '/app/profile',
+      category: 'CONTA',
+      items: [
+        {
+          title: 'Meu Perfil & Inscrição',
+          subtitle: 'Histórico, streak e comprovantes',
+          href: '/app/profile',
+          icon: User,
+          active: pathname === '/app/profile',
+        },
+      ],
     },
   ];
 
@@ -230,33 +265,46 @@ export function StudentBottomNav() {
                 </button>
               </div>
 
-              {/* Lista Vertical de Módulos */}
-              <div className="space-y-2">
-                <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-2">
-                  Navegação
-                </span>
-
-                {verticalMenuItems.map((item) => (
-                  <Link
-                    key={item.title}
-                    href={item.href}
-                    onClick={() => setShowVerticalMenu(false)}
-                    className={`block p-3 rounded-2xl border transition-all ${
-                      item.active
-                        ? 'bg-white/10 border-white/30 text-white shadow-md'
-                        : 'bg-black/60 border-white/[0.06] text-zinc-400 hover:text-white hover:border-white/20'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">
-                        {item.title}
-                      </span>
-                      {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+              {/* Lista Vertical de Módulos Categorizados */}
+              <div className="space-y-4">
+                {verticalMenuSections.map((section) => (
+                  <div key={section.category} className="space-y-1.5">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-bold block px-1">
+                      {section.category}
+                    </span>
+                    <div className="space-y-1">
+                      {section.items.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.title}
+                            href={item.href}
+                            onClick={() => setShowVerticalMenu(false)}
+                            className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+                              item.active
+                                ? 'bg-white/10 border-white/30 text-white shadow-md'
+                                : 'bg-black/40 border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div className={`p-1.5 rounded-lg ${item.active ? 'bg-white text-black' : 'bg-white/5 text-zinc-400'}`}>
+                                <Icon className="w-3.5 h-3.5" />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="text-xs font-semibold text-white leading-tight truncate">
+                                  {item.title}
+                                </div>
+                                <p className="text-[10px] text-zinc-500 leading-tight truncate mt-0.5">
+                                  {item.subtitle}
+                                </p>
+                              </div>
+                            </div>
+                            <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+                          </Link>
+                        );
+                      })}
                     </div>
-                    <p className="text-xs text-zinc-400 mt-0.5">
-                      {item.subtitle}
-                    </p>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>

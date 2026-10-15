@@ -38,6 +38,8 @@ interface ChallengeItem {
   created_at?: string;
   studentsCount: number;
   missionsCount: number;
+  grossRevenue: number;
+  netRevenue: number;
 }
 
 export default function ChallengesManagementPage() {
@@ -127,11 +129,27 @@ export default function ChallengesManagementPage() {
           }
         });
 
+        // 4. Carregar total arrecadado por desafio
+        const { data: paymentsData } = await supabase
+          .from('payments')
+          .select('challenge_id, gross_value, net_coach_value, status')
+          .in('challenge_id', challengeIds)
+          .in('status', ['RECEIVED', 'CONFIRMED']);
+
+        const grossRevenueMap = new Map<string, number>();
+        const netRevenueMap = new Map<string, number>();
+        paymentsData?.forEach((p: any) => {
+          grossRevenueMap.set(p.challenge_id, (grossRevenueMap.get(p.challenge_id) || 0) + Number(p.gross_value || 0));
+          netRevenueMap.set(p.challenge_id, (netRevenueMap.get(p.challenge_id) || 0) + Number(p.net_coach_value || 0));
+        });
+
         const augmented = safeChallenges.map((c: any) => ({
           ...c,
           price: Number(c.price) || 0,
           studentsCount: studentsCountMap.get(c.id) || 0,
           missionsCount: missionsCountMap.get(c.id) || 0,
+          grossRevenue: grossRevenueMap.get(c.id) || 0,
+          netRevenue: netRevenueMap.get(c.id) || 0,
         }));
 
         setChallenges(augmented);
@@ -378,8 +396,8 @@ export default function ChallengesManagementPage() {
                 className="mono-glass-card p-5 sm:p-6 rounded-3xl flex flex-col justify-between border border-white/[0.08] hover:border-white/25 transition-all group"
               >
                 <div className="space-y-4">
-                  {/* Topo do Card: Badge de Status e Preço */}
-                  <div className="flex items-center justify-between">
+                  {/* Topo do Card: Badge de Status e Preço / Split */}
+                  <div className="flex items-center justify-between gap-2">
                     <button
                       onClick={() => handleToggleStatus(c.id, c.is_active)}
                       title="Clique para alternar status da turma"
@@ -392,9 +410,22 @@ export default function ChallengesManagementPage() {
                       {c.is_active ? '● Ativo' : '○ Encerrado'}
                     </button>
 
-                    <span className="text-sm font-mono font-black text-white">
-                      {c.price > 0 ? `R$ ${c.price.toFixed(2).replace('.', ',')}` : 'Gratuito'}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {c.price > 0 ? (
+                        <>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
+                            Split Asaas
+                          </span>
+                          <span className="text-sm font-mono font-black text-white">
+                            R$ {c.price.toFixed(2).replace('.', ',')}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-xs font-mono font-bold text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10">
+                          Gratuito
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Título e Período */}
@@ -408,19 +439,26 @@ export default function ChallengesManagementPage() {
                     </div>
                   </div>
 
-                  {/* Grid de Métricas da Turma */}
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.06]">
-                    <div className="p-3 rounded-2xl bg-black/60 border border-white/[0.06]">
+                  {/* Grid de Métricas da Turma (Alunos, Missões e Líquido) */}
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
+                    <div className="p-2.5 rounded-2xl bg-black/60 border border-white/[0.06] text-center">
                       <span className="text-[10px] font-mono uppercase text-zinc-500 block">Alunos</span>
-                      <span className="text-lg font-black text-white font-mono block mt-0.5">
+                      <span className="text-base font-black text-white font-mono block mt-0.5">
                         {c.studentsCount}
                       </span>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-black/60 border border-white/[0.06]">
+                    <div className="p-2.5 rounded-2xl bg-black/60 border border-white/[0.06] text-center">
                       <span className="text-[10px] font-mono uppercase text-zinc-500 block">Missões</span>
-                      <span className="text-lg font-black text-white font-mono block mt-0.5">
+                      <span className="text-base font-black text-white font-mono block mt-0.5">
                         {c.missionsCount}
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-2xl bg-black/60 border border-white/[0.06] text-center">
+                      <span className="text-[10px] font-mono uppercase text-zinc-500 block">Líquido</span>
+                      <span className="text-base font-black text-emerald-400 font-mono block mt-0.5 truncate">
+                        R$ {c.netRevenue > 0 ? c.netRevenue.toFixed(0) : '0'}
                       </span>
                     </div>
                   </div>

@@ -14,7 +14,20 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { documentType, documentNumber, pixKey } = body;
+    const { 
+      documentType, 
+      documentNumber, 
+      pixKey,
+      birthDate,
+      postalCode,
+      address,
+      addressNumber,
+      province,
+      city,
+      state,
+      companyType,
+      mobilePhone
+    } = body;
 
     // 1. Validação do Tipo de Documento
     if (!documentType || !['CPF', 'CNPJ'].includes(documentType)) {
@@ -30,6 +43,12 @@ export async function POST(request: Request) {
       if (!validateCPF(rawDocDigits)) {
         return NextResponse.json(
           { error: 'O CPF informado é inválido. Verifique os números digitados.' },
+          { status: 400 }
+        );
+      }
+      if (birthDate && !/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
+        return NextResponse.json(
+          { error: 'Data de nascimento inválida. Utilize o formato AAAA-MM-DD.' },
           { status: 400 }
         );
       }
@@ -57,18 +76,61 @@ export async function POST(request: Request) {
       asaasBankInfo = await AsaasClient.validatePixAddressKey(pixValidation.formatted);
     } catch (asaasErr: any) {
       console.warn('Aviso ao consultar DICT no Asaas:', asaasErr?.message);
-      // Não bloqueia caso o ambiente sandbox não tenha conexão direta com o BACEN,
-      // mas registra a intenção de validação
     }
 
-    // 5. Salvar de forma segura no Supabase
+    // 5. Obter ou Criar Subconta no Asaas para viabilizar o Split Automático
+    const { data: coachData } = await supabaseAdmin
+      .from('professionals')
+      .select('id, full_name, phone, asaas_wallet_id')
+      .eq('id', user.id)
+      .single();
+
+    let walletId = coachData?.asaas_wallet_id;
+
+    if (!walletId) {
+      try {
+        const subaccount = await AsaasClient.createSubaccount({
+          name: coachData?.full_name || user.user_metadata?.full_name || 'Profissional ArenaFitPro',
+          email: user.email || 'coach@arenafit.pro',
+          cpfCnpj: rawDocDigits,
+          birthDate: documentType === 'CPF' ? birthDate : undefined,
+          mobilePhone: mobilePhone || coachData?.phone || user.user_metadata?.phone || '11999999999',
+          incomeValue: 5000,
+          companyType: documentType === 'CNPJ' ? (companyType || 'MEI') : undefined,
+          address: address || 'Rua Principal',
+          addressNumber: addressNumber || 'S/N',
+          province: province || 'Centro',
+          postalCode: postalCode ? cleanDigits(postalCode) : '01310100',
+        });
+
+        if (subaccount?.walletId) {
+          walletId = subaccount.walletId;
+          console.log(`[Asaas Subconta] Subconta criada com sucesso! Wallet ID: ${walletId}`);
+        }
+      } catch (subErr: any) {
+        console.warn('Aviso ao criar subconta no Asaas:', subErr?.message);
+      }
+    }
+
+    // 6. Salvar de forma segura no Supabase
+    const updatePayload: any = {
+      document_type: documentType,
+      document_number: documentNumber.trim(),
+      asaas_pix_key: pixValidation.formatted,
+    };
+
+    if (walletId) updatePayload.asaas_wallet_id = walletId;
+    if (birthDate) updatePayload.birth_date = birthDate;
+    if (postalCode) updatePayload.postal_code = postalCode;
+    if (address) updatePayload.address = address;
+    if (addressNumber) updatePayload.address_number = addressNumber;
+    if (province) updatePayload.province = province;
+    if (city) updatePayload.city = city;
+    if (state) updatePayload.state = state;
+
     const { error: updateError } = await supabaseAdmin
       .from('professionals')
-      .update({
-        document_type: documentType,
-        document_number: documentNumber.trim(),
-        asaas_pix_key: pixValidation.formatted,
-      })
+      .update(updatePayload)
       .eq('id', user.id);
 
     if (updateError) {
@@ -81,12 +143,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Dados bancários e documento validados e salvos com sucesso!',
+      message: 'Dados bancários e carteira de Split configurados com sucesso!',
       data: {
         documentType,
         documentNumber,
         pixKey: pixValidation.formatted,
         pixType: pixValidation.type,
+        walletId: walletId || null,
         bankName: asaasBankInfo?.account?.bank?.name || 'Banco Identificado via Pix',
         ownerName: asaasBankInfo?.account?.owner?.name || user.user_metadata?.full_name || 'Titular Verificado',
       },

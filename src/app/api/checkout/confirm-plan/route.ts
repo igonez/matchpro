@@ -16,7 +16,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { planTier, paymentMethod } = body;
 
-    // Permitir apenas 'pro' e 'starter' (studio está pausado)
+    // Em produção, upgrades não podem ser confirmados sem webhook do gateway
+    if (planTier !== 'starter' && process.env.NODE_ENV === 'production') {
+      return NextResponse.json({ 
+        error: 'Upgrades de plano devem ser realizados exclusivamente através do fluxo oficial de pagamento Asaas.' 
+      }, { status: 403 });
+    }
+
+    // Permitir apenas 'starter' (downgrade) ou 'pro' (em dev/test)
     if (!planTier || !['starter', 'pro'].includes(planTier)) {
       return NextResponse.json({ 
         error: 'Plano inválido ou temporariamente indisponível para contratação.' 

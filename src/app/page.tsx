@@ -50,9 +50,8 @@ export default function HomePage() {
 
   // Cálculos da Calculadora
   const grossRevenue = studentsCount * ticketPrice;
-  const netStarter = grossRevenue * 0.82; // 18% taxa
-  const netPro = grossRevenue * 0.88; // 12% taxa
-  const netStudio = grossRevenue * 0.92; // 8% taxa
+  const netStarter = grossRevenue * 0.85; // 15% taxa
+  const netPro = grossRevenue * 0.92; // 8% taxa
   const proAdvantage = netPro - netStarter;
 
   const toggleFaq = (index: number) => {
@@ -90,7 +89,7 @@ export default function HomePage() {
     },
     {
       q: 'Preciso pagar algo para criar minha conta e lançar meu primeiro desafio?',
-      a: 'Não! O plano Starter Coach é 100% gratuito de mensalidade. Você pode criar seu cadastro em 1 minuto, configurar seu desafio de até 15 alunos e lançar sem cadastrar cartão de crédito. Você só compartilha a taxa de split de 18% quando seus alunos efetuarem o pagamento.',
+      a: 'Não! O plano Starter Coach é 100% gratuito de mensalidade. Você pode criar seu cadastro em 1 minuto, configurar seu desafio de até 10 alunos e lançar sem cadastrar cartão de crédito. Você só compartilha a taxa de split de 15% quando seus alunos efetuarem o pagamento.',
     },
   ];
 
@@ -684,12 +683,12 @@ export default function HomePage() {
 
                 <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-xs text-zinc-400 space-y-1">
                   <p>
-                    💡 <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa cai de 18% para apenas 12%. 
+                    💡 <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa cai de 15% para apenas 8%. 
                     Com {studentsCount} alunos a R$ {ticketPrice}, você ganha{' '}
                     <strong className="text-emerald-400">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>{' '}
-                    extras a mais — o plano de R$ 89,90 se paga sozinho e sobra lucro!
+                    extras a mais — o plano de R$ 49,90 se paga sozinho e sobra lucro!
                   </p>
                 </div>
               </div>
@@ -708,7 +707,7 @@ export default function HomePage() {
                 <div className="space-y-3 font-mono text-xs">
                   <div className="flex justify-between items-center p-2.5 rounded-xl bg-zinc-900/60">
                     <div>
-                      <span className="text-zinc-400 block font-sans text-xs">Plano Starter (Taxa 18%)</span>
+                      <span className="text-zinc-400 block font-sans text-xs">Plano Starter (Taxa 15%)</span>
                       <span className="text-[10px] text-zinc-500">Gratuito</span>
                     </div>
                     <span className="text-sm font-bold text-zinc-300">
@@ -719,22 +718,12 @@ export default function HomePage() {
                   <div className="flex justify-between items-center p-2.5 rounded-xl bg-white/10 border border-white/20">
                     <div>
                       <span className="text-white font-sans text-xs font-bold flex items-center gap-1.5">
-                        Plano Pro (Taxa 12%) <span className="text-[9px] bg-white text-black px-1.5 py-0.5 rounded font-bold">RECOMENDADO</span>
+                        Plano Pro (Taxa 8%) <span className="text-[9px] bg-white text-black px-1.5 py-0.5 rounded font-bold">RECOMENDADO</span>
                       </span>
-                      <span className="text-[10px] text-zinc-400">R$ 89,90/mês</span>
+                      <span className="text-[10px] text-zinc-400">R$ 49,90/mês</span>
                     </div>
                     <span className="text-sm font-bold text-emerald-400">
                       R$ {netPro.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center p-2.5 rounded-xl bg-zinc-900/60">
-                    <div>
-                      <span className="text-zinc-300 font-sans text-xs">Plano Studio (Taxa 8%)</span>
-                      <span className="text-[10px] text-zinc-500">Academias & Boxes</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">
-                      R$ {netStudio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>
@@ -796,8 +785,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Grid dos 3 Cards de Preço */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+          {/* Grid dos 2 Cards de Preço */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
             
             {/* PLANO 1: Starter Coach */}
             <SpotlightCard3D className="p-8 flex flex-col justify-between border-white/[0.08] bg-zinc-950/80">
@@ -823,7 +812,7 @@ export default function HomePage() {
                   </div>
                   <div className="text-[11px] font-mono text-zinc-400 mt-2 flex items-center gap-1.5">
                     <Percent className="w-3.5 h-3.5 text-zinc-400" />
-                    Taxa de split: <strong className="text-white">18% sobre inscrições</strong>
+                    Taxa de split: <strong className="text-white">15% sobre inscrições</strong>
                   </div>
                 </div>
 
@@ -839,7 +828,7 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Até <strong>15 alunos</strong> no desafio</span>
+                      <span>Até <strong>10 alunos</strong> no desafio</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -923,18 +912,18 @@ export default function HomePage() {
                 <div className="mb-6 pb-6 border-b border-white/[0.08]">
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-black text-white">
-                      R$ {billingCycle === 'monthly' ? '89,90' : '71,90'}
+                      R$ {billingCycle === 'monthly' ? '49,90' : '39,90'}
                     </span>
                     <span className="text-xs text-zinc-500 font-mono">/mês</span>
                   </div>
                   {billingCycle === 'yearly' && (
                     <span className="text-[10px] font-mono text-emerald-400 block mt-1">
-                      Cobrado anualmente (economia de R$ 216/ano)
+                      Cobrado anualmente (economia de R$ 120/ano)
                     </span>
                   )}
                   <div className="text-[11px] font-mono text-emerald-400 mt-2 flex items-center gap-1.5 font-bold">
                     <Percent className="w-3.5 h-3.5 text-emerald-400" />
-                    Taxa reduzida: 12% (Economize 33% em taxas!)
+                    Taxa ultra-reduzida: 8% (Economize quase 50% em taxas!)
                   </div>
                 </div>
 
@@ -979,22 +968,6 @@ export default function HomePage() {
                   </ul>
                 </div>
 
-                {/* Lista O que NÃO vem */}
-                <div className="space-y-2 mb-8 pt-4 border-t border-white/[0.06]">
-                  <div className="text-[11px] font-mono uppercase text-zinc-500">
-                    Não inclui:
-                  </div>
-                  <ul className="space-y-2 text-xs text-zinc-500">
-                    <li className="flex items-center gap-2.5">
-                      <X className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
-                      <span>Módulo de Patrocinadores Locais (Sponsors)</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <X className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
-                      <span>Múltiplos treinadores vinculados (Multi-Coach)</span>
-                    </li>
-                  </ul>
-                </div>
               </div>
 
               <Link href="/login" className="block w-full">
@@ -1004,70 +977,6 @@ export default function HomePage() {
                 </button>
               </Link>
             </SpotlightCard3D>
-
-            {/* PLANO 3: Studio & Gym Elite (PAUSADO) */}
-            <SpotlightCard3D className="p-8 flex flex-col justify-between border-white/[0.04] bg-zinc-950/40 opacity-70 relative">
-              <div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-500">
-                    Academias & Boxes
-                  </span>
-                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 font-bold">
-                    PAUSADO / EM BREVE
-                  </span>
-                </div>
-
-                <h3 className="text-2xl font-black text-zinc-300 mb-2">Studio & Gym Elite</h3>
-                <p className="text-xs text-zinc-500 mb-6 leading-relaxed">
-                  Para boxes de CrossFit, estúdios funcionais e academias com grandes comunidades e marcas parceiras.
-                </p>
-
-                <div className="mb-6 pb-6 border-b border-white/[0.04]">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-zinc-400">
-                      R$ {billingCycle === 'monthly' ? '279,90' : '223,90'}
-                    </span>
-                    <span className="text-xs text-zinc-600 font-mono">/mês</span>
-                  </div>
-                  <div className="text-[11px] font-mono text-zinc-500 mt-2 flex items-center gap-1.5">
-                    <Percent className="w-3.5 h-3.5 text-zinc-500" />
-                    Menor taxa do mercado: <strong className="text-zinc-400">Apenas 8%</strong>
-                  </div>
-                </div>
-
-                {/* Lista O que vem */}
-                <div className="space-y-3 mb-6">
-                  <div className="text-[11px] font-mono uppercase text-zinc-500 font-bold">
-                    Tudo do Pro, mais:
-                  </div>
-                  <ul className="space-y-2.5 text-xs text-zinc-400">
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span><strong>Desafios ILIMITADOS (∞)</strong></span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span><strong>Alunos ILIMITADOS (∞)</strong></span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span><strong>Acesso Multi-Coach</strong> (vários professores)</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span>Split Pix D+0 com a menor taxa: <strong>8%</strong></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="block w-full">
-                <button disabled className="w-full py-3 text-xs font-mono font-bold rounded-xl bg-zinc-900 border border-white/5 text-zinc-500 cursor-not-allowed">
-                  Pausado para Novas Turmas
-                </button>
-              </div>
-            </SpotlightCard3D>
-
           </div>
 
           {/* 10. Tabela Comparativa Detalhada Estilo Dark Matrix */}
@@ -1088,93 +997,78 @@ export default function HomePage() {
                     <th className="p-4 sm:p-5 font-mono text-zinc-400 uppercase tracking-wider text-[11px]">Recursos & Capacidade</th>
                     <th className="p-4 sm:p-5 font-bold text-center text-zinc-300">Starter Coach</th>
                     <th className="p-4 sm:p-5 font-bold text-center text-white bg-white/5">Pro Coach</th>
-                    <th className="p-4 sm:p-5 font-bold text-center text-zinc-300">Studio & Gym</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.05]">
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Mensalidade</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400 font-mono font-bold">R$ 0</td>
-                    <td className="p-4 sm:p-5 text-center text-white font-mono font-bold bg-white/5">R$ 89,90/mês</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono font-bold">R$ 279,90/mês</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-mono font-bold bg-white/5">R$ 49,90/mês</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Taxa de Split da Plataforma</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-400 font-mono">18%</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">12%</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold">8% (mínima)</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-400 font-mono">15%</td>
+                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">8%</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Entrada por Código de Convite & Link</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Desafios Ativos Simultâneos</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400">1 Desafio</td>
                     <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">Até 5 Desafios</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">Ilimitados (∞)</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Limite de Alunos por Desafio</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-400">Até 15 alunos</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-400">Até 10 alunos</td>
                     <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">Até 100 alunos</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">Ilimitados (∞)</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Câmera Nativa Antifraude & GPS</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Pódio & Ranking Oficial da Turma</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Feed Social com Fotos Auditadas</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-600 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Saque Pix D+0 no Asaas</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Squads & Times Cooperativos</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-600 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Mystery Box & Streaks de Treino</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-600 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Radar Anti-Churn & Resgate WhatsApp</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-600 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-300 font-medium">Canal de Suporte</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400">Comunidade & Docs</td>
                     <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">WhatsApp Prioritário</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">Gerente VIP Dedicado</td>
                   </tr>
                 </tbody>
               </table>
@@ -1248,7 +1142,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-6">
             <Trophy className="w-3.5 h-3.5 text-white" />
-            Junte-se à Elite dos Treinadores
+            Junte-se aos Melhores Treinadores
           </div>
 
           <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-6 leading-tight">

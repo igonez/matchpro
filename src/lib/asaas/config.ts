@@ -59,3 +59,31 @@ export interface AsaasSubscriptionInput {
     phone: string;
   };
 }
+
+export interface AsaasSubaccountInput {
+  name: string;
+  email: string;
+  cpfCnpj: string;
+  birthDate?: string;
+  phone?: string;
+  mobilePhone?: string;
+  incomeValue?: number;
+  companyType?: string;
+  address?: string;
+  addressNumber?: string;
+  province?: string;
+  postalCode?: string;
+}
+
+export interface AsaasSubaccountResponse {
+  id: string;
+  name: string;
+  email: string;
+  walletId: string;
+  apiKey?: string;
+  accountNumber?: {
+    agency: string;
+    account: string;
+    accountDigit: string;
+  };
+}

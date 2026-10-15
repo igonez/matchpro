@@ -550,18 +550,26 @@ export default function DashboardFinanceAndStudentsPage() {
                           title="Clique para alternar o status de pagamento"
                           className="transition-transform active:scale-95"
                         >
-                          {isPaid && (
+                          {isPaid && (challengeObj?.price || 0) > 0 && (
                             <Badge
                               variant="outline"
-                              className="border-white/20 text-white bg-white/10 hover:bg-white/20 text-xs font-semibold cursor-pointer"
+                              className="border-emerald-500/30 text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold cursor-pointer font-mono"
                             >
-                              ● Pago
+                              ● Pago (Split)
+                            </Badge>
+                          )}
+                          {isPaid && (challengeObj?.price || 0) === 0 && (
+                            <Badge
+                              variant="outline"
+                              className="border-white/20 text-white bg-white/10 hover:bg-white/20 text-xs font-semibold cursor-pointer font-mono"
+                            >
+                              ● Gratuito
                             </Badge>
                           )}
                           {isPending && (
                             <Badge
                               variant="outline"
-                              className="border-zinc-700 text-zinc-400 bg-zinc-900/80 hover:border-white/40 hover:text-white text-xs font-semibold cursor-pointer"
+                              className="border-amber-500/30 text-amber-300 bg-amber-500/10 hover:border-amber-400 text-xs font-semibold cursor-pointer font-mono"
                             >
                               ○ Pendente
                             </Badge>

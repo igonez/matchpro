@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ASAAS_CONFIG } from '@/lib/asaas/config';
+import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 
 export async function POST(request: Request) {
   try {
@@ -60,18 +61,41 @@ export async function POST(request: Request) {
         }
       }
 
-      // 2.3. Se for assinatura de plano do treinador (externalReference ou custom)
-      if (payment.externalReference && payment.externalReference.startsWith('coach_plan_')) {
-        // Formato: coach_plan_{planTier}_{coachId}
+      // 2.3. Se for assinatura de plano do treinador (via payment.subscription ou externalReference)
+      const subId = payment.subscription;
+      if (subId) {
+        const { data: coachSub } = await supabaseAdmin
+          .from('professionals')
+          .select('id')
+          .eq('asaas_subscription_id', subId)
+          .maybeSingle();
+
+        if (coachSub?.id) {
+          const nextMonth = new Date(Date.now() + 32 * 24 * 60 * 60 * 1000).toISOString();
+          await supabaseAdmin
+            .from('professionals')
+            .update({
+              plan_tier: 'pro',
+              plan_status: 'active',
+              platform_fee_percent: PLAN_CONFIG.pro.platformFeePercent,
+              current_period_end: nextMonth,
+            })
+            .eq('id', coachSub.id);
+          console.log(`[Asaas Webhook] Assinatura recorrente ${subId} confirmada/renovada para treinador ${coachSub.id}`);
+        }
+      } else if (payment.externalReference && payment.externalReference.startsWith('coach_plan_')) {
+        // Fallback para cobrança com externalReference
         const parts = payment.externalReference.split('_');
-        const planTier = parts[2];
+        const planTier = parts[2] as PlanTier;
         const coachId = parts[3];
-        if (coachId && ['starter', 'pro', 'studio'].includes(planTier)) {
+        if (coachId && ['starter', 'pro'].includes(planTier)) {
+          const tierConfig = PLAN_CONFIG[planTier] || PLAN_CONFIG.starter;
           await supabaseAdmin
             .from('professionals')
             .update({
               plan_tier: planTier,
               plan_status: 'active',
+              platform_fee_percent: tierConfig.platformFeePercent,
             })
             .eq('id', coachId);
           console.log(`[Asaas Webhook] Plano do treinador ${coachId} atualizado para ${planTier}`);
@@ -79,7 +103,41 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Eventos de Estorno / Reembolso
+    // 3. Evento de Inadimplência na Assinatura (Atraso de pagamento)
+    if (event === 'PAYMENT_OVERDUE') {
+      const subId = payment?.subscription;
+      if (subId) {
+        await supabaseAdmin
+          .from('professionals')
+          .update({ plan_status: 'past_due' })
+          .eq('asaas_subscription_id', subId);
+        console.warn(`[Asaas Webhook] Assinatura ${subId} com pagamento em atraso (past_due).`);
+      }
+    }
+
+    // 4. Eventos de Cancelamento / Inativação de Assinatura
+    if (event === 'SUBSCRIPTION_INACTIVATED' || event === 'SUBSCRIPTION_DELETED') {
+      const subId = payload?.subscription?.id || payment?.subscription;
+      if (subId) {
+        await supabaseAdmin
+          .from('professionals')
+          .update({
+            plan_tier: 'starter',
+            plan_status: 'canceled',
+            platform_fee_percent: 18,
+          })
+          .eq('asaas_subscription_id', subId);
+        console.log(`[Asaas Webhook] Assinatura ${subId} inativada. Treinador revertido para plano Starter.`);
+      }
+    }
+
+    // 5. Evento de Liquidação de Split
+    if (event === 'PAYMENT_SPLIT_DONE') {
+      const splitId = payload?.additionalInfo?.splitId;
+      console.log(`[Asaas Webhook] Split liquidado com sucesso! Cobrança: ${payment?.id}, Split ID: ${splitId}`);
+    }
+
+    // 6. Eventos de Estorno / Reembolso
     if (event === 'PAYMENT_REFUNDED') {
       const { data: refundedPayment } = await supabaseAdmin
         .from('payments')

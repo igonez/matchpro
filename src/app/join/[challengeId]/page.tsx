@@ -82,6 +82,50 @@ export default function JoinChallengePage() {
     loadChallenge();
   }, [challengeId, supabase]);
 
+  // Escutar liberação do pagamento via Supabase Realtime
+  useEffect(() => {
+    if (!challengeId || !user?.id) return;
+
+    const channel = supabase
+      .channel(`payment-check-${challengeId}-${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'challenge_participants',
+          filter: `challenge_id=eq.${challengeId}`,
+        },
+        async (payload: any) => {
+          if (
+            payload.new?.student_id === user.id &&
+            payload.new?.payment_status === 'paid'
+          ) {
+            try {
+              const confetti = await import('canvas-confetti');
+              confetti.default({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+              });
+            } catch (e) {
+              console.log('Confetti loaded');
+            }
+            setPixModalOpen(false);
+            setAlreadyJoined(true);
+            setTimeout(() => {
+              router.push('/app');
+            }, 1200);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [challengeId, user?.id, supabase, router]);
+
   const handleJoin = async () => {
     setError(null);
 
@@ -371,8 +415,16 @@ export default function JoinChallengePage() {
             </div>
           </div>
 
-          <div className="text-[11px] text-zinc-500 font-mono pt-2">
-            ⚡ A confirmação é imediata. Assim que o banco aprovar, seu acesso ao app será liberado automaticamente.
+          <div className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-emerald-950/30 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <span>Aguardando liquidação bancária em tempo real...</span>
+          </div>
+
+          <div className="text-[11px] text-zinc-500 font-mono pt-1">
+            ⚡ A confirmação é instantânea. Assim que o Pix for aprovado, você será redirecionado automaticamente.
           </div>
 
           <div className="pt-2">

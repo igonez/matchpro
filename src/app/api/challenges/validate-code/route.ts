@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 
 export async function POST(request: Request) {
   try {
@@ -34,9 +35,11 @@ export async function POST(request: Request) {
         start_date,
         end_date,
         is_active,
+        professional_id,
         professionals (
           full_name,
-          specialty
+          specialty,
+          plan_tier
         )
       `);
 
@@ -66,6 +69,25 @@ export async function POST(request: Request) {
           message: 'Código de turma não encontrado ou o desafio já foi encerrado pelo treinador.',
         },
         { status: 404 }
+      );
+    }
+
+    // Validar capacidade de alunos de acordo com o plano do treinador
+    const { count: studentCount } = await supabase
+      .from('challenge_participants')
+      .select('*', { count: 'exact', head: true })
+      .eq('challenge_id', challengeData.id);
+
+    const coachPlan = (challengeData.professionals?.plan_tier as PlanTier) || 'starter';
+    const planLimits = PLAN_CONFIG[coachPlan] || PLAN_CONFIG.starter;
+
+    if ((studentCount || 0) >= planLimits.maxStudentsPerChallenge) {
+      return NextResponse.json(
+        {
+          valid: false,
+          message: `Esta turma já atingiu a capacidade máxima de ${planLimits.maxStudentsPerChallenge} alunos. Converse com o treinador para verificar novas vagas.`,
+        },
+        { status: 400 }
       );
     }
 

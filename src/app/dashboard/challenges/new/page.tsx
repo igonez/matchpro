@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trophy, Calendar, DollarSign, ArrowLeft, CheckCircle2, CreditCard } from 'lucide-react';
+import { Trophy, Calendar, DollarSign, ArrowLeft, CheckCircle2, CreditCard, AlertTriangle, ExternalLink } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,31 @@ export default function NewChallengePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [hasWalletId, setHasWalletId] = useState<boolean | null>(null);
+  const [checkingWallet, setCheckingWallet] = useState(true);
+
+  useEffect(() => {
+    async function checkCoachWallet() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data: coachData } = await supabase
+          .from('professionals')
+          .select('asaas_wallet_id')
+          .eq('id', user.id)
+          .single();
+
+        setHasWalletId(!!coachData?.asaas_wallet_id);
+      } catch (err) {
+        console.warn('Erro ao verificar carteira do coach:', err);
+      } finally {
+        setCheckingWallet(false);
+      }
+    }
+
+    checkCoachWallet();
+  }, [supabase]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -35,12 +60,19 @@ export default function NewChallengePage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado.');
 
-      // 0. Validar Limites do Plano do Coach (Multi-Tier SaaS)
+      // 0. Validar Limites do Plano do Coach (Multi-Tier SaaS) & Subconta para Split
       const { data: coachData } = await supabase
         .from('professionals')
-        .select('plan_tier')
+        .select('plan_tier, asaas_wallet_id')
         .eq('id', user.id)
         .single();
+
+      const parsedPrice = parseFloat(price) || 0;
+      if (parsedPrice > 0 && !coachData?.asaas_wallet_id) {
+        throw new Error(
+          'Para criar um desafio pago com Split automático, você precisa primeiro configurar seus dados de recebimento na Central Financeira.'
+        );
+      }
 
       const { count: activeChallengesCount } = await supabase
         .from('challenges')
@@ -275,6 +307,44 @@ export default function NewChallengePage() {
                 Digite 0.00 para desafio gratuito entre seus alunos.
               </p>
             </div>
+
+            {/* Split / Subconta Warning ou Confirmation */}
+            {parseFloat(price) > 0 && !checkingWallet && hasWalletId === false && (
+              <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 text-xs space-y-3">
+                <div className="flex items-start gap-2.5">
+                  <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-amber-300 font-mono">
+                      Atenção: Configure seus dados bancários para receber
+                    </p>
+                    <p className="text-zinc-300 mt-1 leading-relaxed">
+                      Para lançar desafios pagos e receber os pagamentos dos alunos via Split automático no Pix, configure seus dados fiscais e bancários na Central Financeira.
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-1 flex items-center justify-end">
+                  <Link href="/dashboard/finance" target="_blank">
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      className="bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs h-8 flex items-center gap-1.5"
+                    >
+                      Configurar Recebimento na Central Financeira
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {parseFloat(price) > 0 && !checkingWallet && hasWalletId === true && (
+              <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                <span className="font-mono">
+                  Split de Pagamentos ativo: As inscrições pagas serão transferidas automaticamente para sua carteira.
+                </span>
+              </div>
+            )}
 
             {/* Checkout Placeholder / Informação Gateway */}
             <div className="p-4 rounded-xl border border-white/10 bg-zinc-950/60 flex items-start gap-3">

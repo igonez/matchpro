@@ -19,7 +19,10 @@ import {
   Wallet,
   AlertCircle,
   Check,
-  Info
+  Info,
+  MapPin,
+  Calendar,
+  Loader2
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
@@ -69,6 +72,14 @@ export default function FinanceDashboardPage() {
   const [pixKeyInput, setPixKeyInput] = useState('');
   const [docTypeInput, setDocTypeInput] = useState<'CPF' | 'CNPJ'>('CPF');
   const [docNumberInput, setDocNumberInput] = useState('');
+  const [birthDateInput, setBirthDateInput] = useState('');
+  const [cepInput, setCepInput] = useState('');
+  const [addressInput, setAddressInput] = useState('');
+  const [numberInput, setNumberInput] = useState('');
+  const [provinceInput, setProvinceInput] = useState('');
+  const [cityInput, setCityInput] = useState('');
+  const [stateInput, setStateInput] = useState('');
+  const [loadingCep, setLoadingCep] = useState(false);
   const [savingAccount, setSavingAccount] = useState(false);
   const [verifiedBankData, setVerifiedBankData] = useState<any>(null);
   const [withdrawing, setWithdrawing] = useState(false);
@@ -101,6 +112,13 @@ export default function FinanceDashboardPage() {
           setPixKeyInput(prof.asaas_pix_key || '');
           setDocTypeInput(prof.document_type || 'CPF');
           setDocNumberInput(prof.document_number || '');
+          setBirthDateInput(prof.birth_date || '');
+          setCepInput(prof.postal_code || '');
+          setAddressInput(prof.address || '');
+          setNumberInput(prof.address_number || '');
+          setProvinceInput(prof.province || '');
+          setCityInput(prof.city || '');
+          setStateInput(prof.state || '');
         }
 
         // 2. Carregar transações
@@ -177,6 +195,28 @@ export default function FinanceDashboardPage() {
     }
   };
 
+  const handleCepChange = async (val: string) => {
+    setCepInput(val);
+    const clean = cleanDigits(val);
+    if (clean.length === 8) {
+      setLoadingCep(true);
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${clean}/json/`);
+        const data = await res.json();
+        if (!data.erro) {
+          setAddressInput(data.logradouro || '');
+          setProvinceInput(data.bairro || '');
+          setCityInput(data.localidade || '');
+          setStateInput(data.uf || '');
+        }
+      } catch (e) {
+        console.warn('Erro ao consultar ViaCEP:', e);
+      } finally {
+        setLoadingCep(false);
+      }
+    }
+  };
+
   const handleSaveBankAccount = async () => {
     if (!coachProfile?.id) return;
 
@@ -190,6 +230,11 @@ export default function FinanceDashboardPage() {
       return;
     }
 
+    if (docTypeInput === 'CPF' && birthDateInput && !/^\d{4}-\d{2}-\d{2}$/.test(birthDateInput)) {
+      alert('Data de nascimento deve estar no formato AAAA-MM-DD.');
+      return;
+    }
+
     setSavingAccount(true);
 
     try {
@@ -200,6 +245,13 @@ export default function FinanceDashboardPage() {
           documentType: docTypeInput,
           documentNumber: docNumberInput,
           pixKey: pixKeyInput,
+          birthDate: docTypeInput === 'CPF' ? birthDateInput : undefined,
+          postalCode: cepInput,
+          address: addressInput,
+          addressNumber: numberInput,
+          province: provinceInput,
+          city: cityInput,
+          state: stateInput,
         }),
       });
 
@@ -213,10 +265,23 @@ export default function FinanceDashboardPage() {
         asaas_pix_key: data.data.pixKey,
         document_type: data.data.documentType,
         document_number: data.data.documentNumber,
+        asaas_wallet_id: data.data.walletId || prev?.asaas_wallet_id,
+        birth_date: birthDateInput,
+        postal_code: cepInput,
+        address: addressInput,
+        address_number: numberInput,
+        province: provinceInput,
+        city: cityInput,
+        state: stateInput,
       }));
       setPixKeyInput(data.data.pixKey);
       setVerifiedBankData(data.data);
-      alert(`✅ Dados bancários validados com sucesso!\n\nChave Pix: ${data.data.pixKey}\nTipo: ${data.data.pixType}\nTitular: ${data.data.ownerName}\nBanco: ${data.data.bankName}`);
+
+      const splitMsg = data.data.walletId 
+        ? `\n\n🎉 Subconta Asaas ativada! (Wallet ID: ${data.data.walletId})\nSeus desafios pagos agora realizam Split automático para sua carteira!` 
+        : '';
+
+      alert(`✅ Dados de recebimento salvos com sucesso!\n\nChave Pix: ${data.data.pixKey}\nTitular: ${data.data.ownerName}\nBanco: ${data.data.bankName}${splitMsg}`);
     } catch (err: any) {
       alert('Erro ao validar dados: ' + err.message);
     } finally {
@@ -400,13 +465,24 @@ export default function FinanceDashboardPage() {
             <div>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-zinc-400" />
-                Dados Fiscais & Conta Pix para Recebimento
+                Dados Fiscais, Endereço & Subconta Asaas (Split)
               </h2>
               <p className="text-xs text-zinc-400 mt-1">
-                Cadastre seus dados para receber seus saques e repasses instantâneos via Pix D+0.
+                Cadastre seus dados para receber repasses automáticos via Split e saques Pix D+0 instantâneos.
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {coachProfile?.asaas_wallet_id ? (
+                <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 px-3 py-1 text-xs font-mono flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Split Ativo • {coachProfile.asaas_wallet_id.slice(0, 14)}...
+                </Badge>
+              ) : (
+                <Badge className="bg-amber-500/10 text-amber-300 border-amber-500/30 px-3 py-1 text-xs font-mono flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  Subconta Pendente de Cadastro
+                </Badge>
+              )}
               <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1 text-xs font-mono">
                 Pix D+0 Imediato
               </Badge>
@@ -418,112 +494,143 @@ export default function FinanceDashboardPage() {
             <Info className="w-5 h-5 text-zinc-300 shrink-0 mt-0.5" />
             <div className="text-xs text-zinc-300 space-y-1">
               <p className="font-semibold text-white">
-                Você NÃO precisa criar conta no Asaas para receber!
+                Como funciona o Split e a Subconta do Personal?
               </p>
               <p className="text-zinc-400 leading-relaxed">
-                A plataforma ArenaFitPro se encarrega de toda a liquidação bancária. Basta cadastrar abaixo a sua chave Pix do seu banco habitual (Nubank, Inter, Itaú, Bradesco, Santander, etc.). Quando você solicitar o saque, o dinheiro cai diretamente na sua conta bancária em poucos minutos.
+                Ao preencher seus dados fiscais e de endereço abaixo, nossa integração cria automaticamente a sua subconta no Asaas. Quando um aluno compra seu desafio, o valor é dividido (Split) automaticamente e cai diretamente na sua carteira. Você não precisa criar conta manualmente no site do Asaas!
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* 1. Tipo de Documento */}
+          <div className="space-y-6">
+            {/* Bloco 1: Dados do Titular e Pix */}
             <div>
-              <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
-                Tipo de Titularidade
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleDocTypeToggle('CPF')}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
-                    docTypeInput === 'CPF'
-                      ? 'bg-white text-black border-white'
-                      : 'bg-black text-zinc-400 border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  CPF (Pessoa Física)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDocTypeToggle('CNPJ')}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
-                    docTypeInput === 'CNPJ'
-                      ? 'bg-white text-black border-white'
-                      : 'bg-black text-zinc-400 border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  CNPJ (MEI / Empresa)
-                </button>
+              <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold mb-3 flex items-center gap-2">
+                <User className="w-4 h-4 text-zinc-400" />
+                1. Identificação Fiscal & Chave Pix
               </div>
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* 1.1 Tipo de Documento */}
+                <div>
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    Tipo de Titularidade
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDocTypeToggle('CPF')}
+                      className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
+                        docTypeInput === 'CPF'
+                          ? 'bg-white text-black border-white'
+                          : 'bg-black text-zinc-400 border-white/10 hover:border-white/20'
+                      }`}
+                    >
+                      CPF (Física)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDocTypeToggle('CNPJ')}
+                      className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
+                        docTypeInput === 'CNPJ'
+                          ? 'bg-white text-black border-white'
+                          : 'bg-black text-zinc-400 border-white/10 hover:border-white/20'
+                      }`}
+                    >
+                      CNPJ (MEI/PJ)
+                    </button>
+                  </div>
+                </div>
 
-            {/* 2. Número do Documento com Validação Real */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-mono text-zinc-400 uppercase">
-                  Número do {docTypeInput}
-                </label>
-                {isDocFilled && (
-                  isDocValid ? (
-                    <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-bold">
-                      <Check className="w-3 h-3" /> Válido
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-mono text-rose-400 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> Inválido
-                    </span>
-                  )
-                )}
-              </div>
-              <Input
-                value={docNumberInput}
-                onChange={(e) => handleDocChange(e.target.value)}
-                placeholder={docTypeInput === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
-                maxLength={docTypeInput === 'CPF' ? 14 : 18}
-                className={`bg-black/60 text-white placeholder:text-zinc-600 ${
-                  isDocFilled 
-                    ? isDocValid 
-                      ? 'border-emerald-500/50 focus:border-emerald-500' 
-                      : 'border-rose-500/50 focus:border-rose-500'
-                    : 'border-white/10'
-                }`}
-              />
-              <p className="text-[10px] text-zinc-500 mt-1 font-mono">
-                {docTypeInput === 'CPF' ? '11 dígitos com validação matemática' : '14 dígitos para empresas'}
-              </p>
-            </div>
-
-            {/* 3. Chave Pix com Detecção e Validação Automática */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-mono text-zinc-400 uppercase">
-                  Chave Pix de Recebimento
-                </label>
-                {pixKeyInput.trim() && (
-                  <div className="flex items-center gap-1.5">
-                    {detectedPixType !== 'UNKNOWN' && (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
-                        {detectedPixType === 'EMAIL' ? 'E-mail' : detectedPixType === 'PHONE' ? 'Celular' : detectedPixType === 'EVP' ? 'Chave Aleatória' : detectedPixType}
-                      </span>
-                    )}
-                    {pixValidation.isValid ? (
-                      <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-0.5 font-bold">
-                        <Check className="w-3 h-3" /> Ok
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-mono text-rose-400 flex items-center gap-0.5">
-                        <AlertCircle className="w-3 h-3" /> Erro
-                      </span>
+                {/* 1.2 Número do Documento */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-mono text-zinc-400 uppercase">
+                      Número do {docTypeInput}
+                    </label>
+                    {isDocFilled && (
+                      isDocValid ? (
+                        <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-bold">
+                          <Check className="w-3 h-3" /> Válido
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-mono text-rose-400 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" /> Inválido
+                        </span>
+                      )
                     )}
                   </div>
-                )}
+                  <Input
+                    value={docNumberInput}
+                    onChange={(e) => handleDocChange(e.target.value)}
+                    placeholder={docTypeInput === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
+                    maxLength={docTypeInput === 'CPF' ? 14 : 18}
+                    className={`bg-black/60 text-white placeholder:text-zinc-600 ${
+                      isDocFilled 
+                        ? isDocValid 
+                          ? 'border-emerald-500/50 focus:border-emerald-500' 
+                          : 'border-rose-500/50 focus:border-rose-500'
+                        : 'border-white/10'
+                    }`}
+                  />
+                  <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                    {docTypeInput === 'CPF' ? '11 dígitos com validação matemática' : '14 dígitos para empresas'}
+                  </p>
+                </div>
+
+                {/* 1.3 Data de Nascimento (apenas se CPF) ou Razão */}
+                <div>
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    {docTypeInput === 'CPF' ? 'Data de Nascimento' : 'Tipo de Empresa (Asaas)'}
+                  </label>
+                  {docTypeInput === 'CPF' ? (
+                    <div className="relative">
+                      <Input
+                        type="date"
+                        value={birthDateInput}
+                        onChange={(e) => setBirthDateInput(e.target.value)}
+                        className="bg-black/60 text-white border-white/10 focus:border-white/30"
+                      />
+                    </div>
+                  ) : (
+                    <div className="py-2.5 px-3 rounded-lg bg-black/60 border border-white/10 text-xs font-mono text-zinc-300">
+                      MEI / Sociedade Limitada
+                    </div>
+                  )}
+                  <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                    {docTypeInput === 'CPF' ? 'Obrigatório pelo Asaas para subconta PF' : 'Identificação de pessoa jurídica'}
+                  </p>
+                </div>
               </div>
-              <div className="flex gap-2">
+
+              {/* Linha da Chave Pix */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-mono text-zinc-400 uppercase">
+                    Chave Pix para Recebimento de Repasses
+                  </label>
+                  {pixKeyInput.trim() && (
+                    <div className="flex items-center gap-1.5">
+                      {detectedPixType !== 'UNKNOWN' && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                          {detectedPixType === 'EMAIL' ? 'E-mail' : detectedPixType === 'PHONE' ? 'Celular' : detectedPixType === 'EVP' ? 'Chave Aleatória' : detectedPixType}
+                        </span>
+                      )}
+                      {pixValidation.isValid ? (
+                        <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-0.5 font-bold">
+                          <Check className="w-3 h-3" /> Ok
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-mono text-rose-400 flex items-center gap-0.5">
+                          <AlertCircle className="w-3 h-3" /> Erro
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
                 <Input
                   value={pixKeyInput}
                   onChange={(e) => setPixKeyInput(e.target.value)}
-                  placeholder="E-mail, CPF, celular ou aleatória"
+                  placeholder="Seu E-mail, CPF, celular com DDD ou chave aleatória"
                   className={`bg-black/60 text-white placeholder:text-zinc-600 ${
                     pixKeyInput.trim()
                       ? pixValidation.isValid
@@ -532,38 +639,160 @@ export default function FinanceDashboardPage() {
                       : 'border-white/10'
                   }`}
                 />
-                <Button 
-                  onClick={handleSaveBankAccount} 
-                  disabled={savingAccount || !isDocValid || !pixValidation.isValid}
-                  className="bg-white text-black hover:bg-zinc-200 font-bold shrink-0 disabled:opacity-50"
-                >
-                  {savingAccount ? 'Validando...' : 'Validar & Salvar'}
-                </Button>
+                {pixKeyInput.trim() && !pixValidation.isValid && (
+                  <p className="text-[10px] text-rose-400 mt-1 font-mono">
+                    {pixValidation.error}
+                  </p>
+                )}
               </div>
-              {pixKeyInput.trim() && !pixValidation.isValid && (
-                <p className="text-[10px] text-rose-400 mt-1 font-mono">
-                  {pixValidation.error}
-                </p>
-              )}
+            </div>
+
+            {/* Bloco 2: Endereço (Necessário para a subconta Asaas) */}
+            <div className="pt-4 border-t border-white/[0.06]">
+              <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold mb-3 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-zinc-400" />
+                2. Endereço Comercial / Residencial (Exigido pelo BACEN / Asaas)
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+                {/* CEP */}
+                <div className="md:col-span-2">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-mono text-zinc-400 uppercase">
+                      CEP
+                    </label>
+                    {loadingCep && (
+                      <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-1">
+                        <Loader2 className="w-3 h-3 animate-spin" /> Buscando...
+                      </span>
+                    )}
+                  </div>
+                  <Input
+                    value={cepInput}
+                    onChange={(e) => handleCepChange(e.target.value)}
+                    placeholder="00000-000"
+                    maxLength={9}
+                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                  />
+                  <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                    Preenchimento automático via ViaCEP
+                  </p>
+                </div>
+
+                {/* Logradouro / Rua */}
+                <div className="md:col-span-3">
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    Logradouro / Rua / Avenida
+                  </label>
+                  <Input
+                    value={addressInput}
+                    onChange={(e) => setAddressInput(e.target.value)}
+                    placeholder="Ex: Av. Paulista"
+                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                  />
+                </div>
+
+                {/* Número */}
+                <div className="md:col-span-1">
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    Número
+                  </label>
+                  <Input
+                    value={numberInput}
+                    onChange={(e) => setNumberInput(e.target.value)}
+                    placeholder="100"
+                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                  />
+                </div>
+
+                {/* Bairro */}
+                <div className="md:col-span-2">
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    Bairro
+                  </label>
+                  <Input
+                    value={provinceInput}
+                    onChange={(e) => setProvinceInput(e.target.value)}
+                    placeholder="Centro"
+                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                  />
+                </div>
+
+                {/* Cidade */}
+                <div className="md:col-span-3">
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    Cidade
+                  </label>
+                  <Input
+                    value={cityInput}
+                    onChange={(e) => setCityInput(e.target.value)}
+                    placeholder="São Paulo"
+                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                  />
+                </div>
+
+                {/* UF */}
+                <div className="md:col-span-1">
+                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                    UF
+                  </label>
+                  <Input
+                    value={stateInput}
+                    onChange={(e) => setStateInput(e.target.value.toUpperCase())}
+                    placeholder="SP"
+                    maxLength={2}
+                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600 uppercase"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bloco 3: Botão de Salvar e Criar Subconta */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xs text-zinc-400 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Dados protegidos por criptografia de ponta a ponta e auditoria BACEN.</span>
+              </div>
+              <Button 
+                onClick={handleSaveBankAccount} 
+                disabled={savingAccount || !isDocValid || !pixValidation.isValid}
+                className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold px-6 py-2.5 h-auto disabled:opacity-50"
+              >
+                {savingAccount ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Gerando Subconta & Salvando...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Salvar Dados & Ativar Split
+                  </>
+                )}
+              </Button>
             </div>
           </div>
 
-          {/* Card de Confirmação de Chave Cadastrada */}
+          {/* Card de Confirmação de Chave Cadastrada & Subconta */}
           {coachProfile?.asaas_pix_key && (
-            <div className="mt-5 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="mt-6 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white flex items-center gap-2">
-                    Conta Validada para Saques Pix
+                    Conta e Split Configurados
                     <Badge className="bg-emerald-500/20 text-emerald-400 border-0 text-[10px]">
                       ATIVA
                     </Badge>
+                    {coachProfile.asaas_wallet_id && (
+                      <span className="text-[10px] font-mono text-zinc-400">
+                        (Wallet ID: {coachProfile.asaas_wallet_id})
+                      </span>
+                    )}
                   </div>
                   <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
-                    Chave: <span className="text-emerald-300 font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
+                    Chave Pix: <span className="text-emerald-300 font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
                   </div>
                 </div>
               </div>
@@ -573,7 +802,7 @@ export default function FinanceDashboardPage() {
                 onClick={() => setWithdrawModalOpen(true)}
                 className="border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10 font-bold text-xs shrink-0"
               >
-                Solicitar Saque Agora
+                Solicitar Saque Pix
               </Button>
             </div>
           )}
@@ -885,7 +1114,7 @@ export default function FinanceDashboardPage() {
                 Escolha o plano ideal para a sua estrutura. A contratação é imediata.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+              <div className="pt-2">
                 {/* Opção Pro - DISPONÍVEL */}
                 <div 
                   onClick={() => {
@@ -893,7 +1122,7 @@ export default function FinanceDashboardPage() {
                       setSelectedPlanForUpgrade('pro');
                     }
                   }}
-                  className={`p-4 rounded-xl border transition-all ${
+                  className={`p-5 rounded-xl border transition-all ${
                     currentPlanTier === 'pro'
                       ? 'border-emerald-500/40 bg-emerald-500/5 cursor-not-allowed opacity-90'
                       : selectedPlanForUpgrade === 'pro'
@@ -902,46 +1131,27 @@ export default function FinanceDashboardPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-white text-sm">Pro Coach</span>
+                    <span className="font-bold text-white text-base">Pro Coach</span>
                     {currentPlanTier === 'pro' ? (
                       <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-mono">
                         ✓ SEU PLANO ATUAL
                       </Badge>
                     ) : (
-                      <Badge className="bg-zinc-800 text-zinc-300 border-0 text-[10px]">RECOMENDADO</Badge>
+                      <Badge className="bg-white text-black font-extrabold border-0 text-[10px]">RECOMENDADO</Badge>
                     )}
                   </div>
-                  <div className="text-xl font-black text-white mb-2">R$ 89,90<span className="text-xs text-zinc-500 font-normal">/mês</span></div>
-                  <ul className="text-[11px] text-zinc-400 space-y-1">
-                    <li>• Desbloqueia Squads</li>
-                    <li>• Desbloqueia Mystery Box</li>
-                    <li>• Taxa reduzida para 12%</li>
-                    <li>• Até 5 desafios ativos</li>
+                  <div className="text-2xl font-black text-white mb-2">R$ 49,90<span className="text-xs text-zinc-500 font-normal">/mês</span></div>
+                  <ul className="text-xs text-zinc-300 space-y-1.5 mb-2">
+                    <li className="flex items-center gap-1.5">• Desbloqueia <strong className="text-white">Squads (Times Cooperativos)</strong></li>
+                    <li className="flex items-center gap-1.5">• Desbloqueia <strong className="text-white">Mystery Box & Streaks Gamificados</strong></li>
+                    <li className="flex items-center gap-1.5">• Taxa de Split ultra-reduzida para <strong className="text-emerald-400">8%</strong></li>
+                    <li className="flex items-center gap-1.5">• Até <strong className="text-white">5 desafios simultâneos</strong> (100 alunos/desafio)</li>
                   </ul>
                   {currentPlanTier === 'pro' && (
                     <div className="mt-3 pt-2 border-t border-emerald-500/20 text-[10px] text-emerald-400 font-mono text-center">
                       Você já possui este plano ativo
                     </div>
                   )}
-                </div>
-
-                {/* Opção Studio - PAUSADO / EM BREVE */}
-                <div 
-                  className="p-4 rounded-xl border border-white/5 bg-zinc-950/40 opacity-60 cursor-not-allowed relative"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-zinc-400 text-sm">Studio & Gym</span>
-                    <Badge className="bg-zinc-800 text-zinc-400 border-0 text-[9px] font-mono">EM BREVE</Badge>
-                  </div>
-                  <div className="text-xl font-black text-zinc-500 mb-2">R$ 279,90<span className="text-xs text-zinc-600 font-normal">/mês</span></div>
-                  <ul className="text-[11px] text-zinc-500 space-y-1">
-                    <li>• Desafios Ilimitados</li>
-                    <li>• Multi-treinadores</li>
-                    <li>• Taxa ultra-reduzida: 8%</li>
-                  </ul>
-                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] text-zinc-500 font-mono text-center">
-                    Temporariamente pausado para novas turmas
-                  </div>
                 </div>
               </div>
 
@@ -990,26 +1200,44 @@ export default function FinanceDashboardPage() {
 
                     if (upgradePaymentMethod === 'CREDIT_CARD') {
                       if (!cardNumber.trim() || !cardHolder.trim()) {
+                        alert('Preencha os dados do cartão de crédito para continuar.');
                         return;
                       }
                       setUpgradeLoading(true);
                       try {
-                        const res = await fetch('/api/checkout/confirm-plan', {
+                        const expiryParts = cardExpiry.split('/');
+                        const res = await fetch('/api/checkout/coach-plan', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({
                             planTier: 'pro',
-                            paymentMethod: 'CREDIT_CARD',
+                            billingType: 'CREDIT_CARD',
+                            creditCard: {
+                              holderName: cardHolder.trim(),
+                              number: cardNumber.replace(/\D/g, ''),
+                              expiryMonth: expiryParts[0]?.trim() || '12',
+                              expiryYear: expiryParts[1]?.length === 2 ? '20' + expiryParts[1].trim() : (expiryParts[1]?.trim() || '2028'),
+                              ccv: cardCvv.trim(),
+                            },
+                            creditCardHolderInfo: {
+                              name: cardHolder.trim(),
+                              email: coachProfile?.email || 'coach@arenafit.pro',
+                              cpfCnpj: cleanDigits(coachProfile?.document_number || '') || '00000000000',
+                              postalCode: '01310100',
+                              addressNumber: '100',
+                              phone: coachProfile?.phone || '11999999999',
+                            },
                           }),
                         });
                         const data = await res.json();
                         if (!res.ok || !data.success) {
-                          throw new Error(data.error || 'Erro ao aprovar cartão.');
+                          throw new Error(data.error || 'Erro ao processar assinatura com cartão.');
                         }
-                        setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'pro', platform_fee_percent: data.platformFeePercent }));
+                        setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'pro', platform_fee_percent: 12 }));
                         setUpgradeModalOpen(false);
+                        alert('🎉 Assinatura Pro ativada com sucesso com cobrança recorrente no cartão!');
                       } catch (err: any) {
-                        console.error('Erro ao aprovar cartão:', err);
+                        alert('Erro ao processar assinatura no cartão: ' + err.message);
                       } finally {
                         setUpgradeLoading(false);
                       }

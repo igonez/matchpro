@@ -19,7 +19,13 @@ import {
   Sparkles,
   ArrowRight,
   Lock,
-  Smartphone
+  Smartphone,
+  MapPin,
+  Calendar,
+  CreditCard,
+  Wallet,
+  Loader2,
+  Check
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -27,6 +33,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { 
+  formatCPF, 
+  formatCNPJ, 
+  validateCPF, 
+  validateCNPJ, 
+  cleanDigits 
+} from '@/lib/validation/brazilian-banking';
+import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 
 export default function ProfessionalProfilePage() {
   const router = useRouter();
@@ -53,6 +67,50 @@ export default function ProfessionalProfilePage() {
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [documentVerified, setDocumentVerified] = useState(false);
   const [planTier, setPlanTier] = useState('starter');
+
+  // Novos campos: Endereço, Data de Nascimento, Asaas Subconta e Assinatura
+  const [birthDate, setBirthDate] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [address, setAddress] = useState('');
+  const [addressNumber, setAddressNumber] = useState('');
+  const [province, setProvince] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [loadingCep, setLoadingCep] = useState(false);
+  const [asaasWalletId, setAsaasWalletId] = useState<string | null>(null);
+  const [asaasPixKey, setAsaasPixKey] = useState<string | null>(null);
+  const [planCycle, setPlanCycle] = useState<string>('MONTHLY');
+  const [currentPeriodEnd, setCurrentPeriodEnd] = useState<string | null>(null);
+
+  const handleCepChange = async (val: string) => {
+    setPostalCode(val);
+    const clean = cleanDigits(val);
+    if (clean.length === 8) {
+      setLoadingCep(true);
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${clean}/json/`);
+        const data = await res.json();
+        if (!data.erro) {
+          setAddress(data.logradouro || '');
+          setProvince(data.bairro || '');
+          setCity(data.localidade || '');
+          setState(data.uf || '');
+        }
+      } catch (e) {
+        console.warn('Erro ao consultar ViaCEP:', e);
+      } finally {
+        setLoadingCep(false);
+      }
+    }
+  };
+
+  const handleDocChange = (val: string) => {
+    if (documentType === 'CPF') {
+      setDocumentNumber(formatCPF(val));
+    } else {
+      setDocumentNumber(formatCNPJ(val));
+    }
+  };
 
   // Modal para verificação de telefone via código SMS/WhatsApp
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
@@ -101,6 +159,17 @@ export default function ProfessionalProfilePage() {
           setDocumentNumber(docNum);
           setCrefNumber(prof.cref_number || metadata.cref_number || '');
           setPlanTier(prof.plan_tier || 'starter');
+          setBirthDate(prof.birth_date || '');
+          setPostalCode(prof.postal_code || '');
+          setAddress(prof.address || '');
+          setAddressNumber(prof.address_number || '');
+          setProvince(prof.province || '');
+          setCity(prof.city || '');
+          setState(prof.state || '');
+          setAsaasWalletId(prof.asaas_wallet_id || null);
+          setAsaasPixKey(prof.asaas_pix_key || null);
+          setPlanCycle(prof.plan_cycle || 'MONTHLY');
+          setCurrentPeriodEnd(prof.current_period_end || null);
         } else {
           setFullName(metadata.full_name || user.email?.split('@')[0] || '');
           setPhone(phNum);
@@ -239,6 +308,14 @@ export default function ProfessionalProfilePage() {
         avatar_url: avatarUrl,
         document_type: documentType,
         document_number: documentNumber.trim() || null,
+        cref_number: crefNumber.trim() || null,
+        birth_date: birthDate || null,
+        postal_code: postalCode || null,
+        address: address || null,
+        address_number: addressNumber || null,
+        province: province || null,
+        city: city || null,
+        state: state || null,
       };
 
       const { error: fullUpdateError } = await supabase
@@ -458,8 +535,9 @@ export default function ProfessionalProfilePage() {
                   <Input
                     type="text"
                     value={documentNumber}
-                    onChange={(e) => setDocumentNumber(e.target.value)}
+                    onChange={(e) => handleDocChange(e.target.value)}
                     placeholder={documentType === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
+                    maxLength={documentType === 'CPF' ? 14 : 18}
                     className="flex-1 bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono"
                   />
                 </div>
@@ -483,6 +561,198 @@ export default function ProfessionalProfilePage() {
                 <span className="text-[10px] text-zinc-500 font-mono mt-1 block">
                   Exibido aos alunos como garantia de credencial técnica.
                 </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Card: Assinatura do Treinador & Subconta Asaas (Split) */}
+        <Card className="border-white/10 bg-zinc-950/60 backdrop-blur-xl rounded-2xl">
+          <CardHeader className="pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
+                  <Wallet className="h-4 w-4 text-white" /> Assinatura do Coach & Subconta Asaas
+                </CardTitle>
+                <CardDescription className="text-xs text-zinc-400">
+                  Status da sua assinatura da plataforma e subconta para recebimento de repasses (Split).
+                </CardDescription>
+              </div>
+              <Link href="/dashboard/finance">
+                <Button type="button" variant="outline" size="sm" className="h-8 text-xs font-mono border-white/20 text-white hover:bg-white/10 flex items-center gap-1.5">
+                  <span>Central Financeira</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-xl border border-white/10 bg-black/40">
+                <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold block mb-1">Plano Atual</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-black text-white font-mono">{planTier.toUpperCase()}</span>
+                  <Badge className="bg-white/10 text-white border-0 text-[10px]">
+                    Taxa: {PLAN_CONFIG[planTier as PlanTier]?.platformFeePercent || 18}%
+                  </Badge>
+                </div>
+                <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                  Renovação: {currentPeriodEnd ? new Date(currentPeriodEnd).toLocaleDateString('pt-BR') : 'Mensal ativo'}
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-white/10 bg-black/40">
+                <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold block mb-1">Subconta Asaas (Split)</span>
+                {asaasWalletId ? (
+                  <div>
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono font-bold">
+                      <Check className="w-3.5 h-3.5" /> ATIVA PARA SPLIT
+                    </div>
+                    <p className="text-[10px] text-zinc-400 font-mono truncate mt-1">
+                      ID: {asaasWalletId}
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center gap-1.5 text-xs text-amber-400 font-mono font-bold">
+                      <AlertCircle className="w-3.5 h-3.5" /> PENDENTE
+                    </div>
+                    <p className="text-[10px] text-zinc-500 mt-1">
+                      Preencha o endereço abaixo para ativar repasses automáticos.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-white/10 bg-black/40">
+                <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold block mb-1">Chave Pix de Saque</span>
+                <p className="text-xs text-white font-mono font-bold truncate">
+                  {asaasPixKey || 'Não cadastrada'}
+                </p>
+                <p className="text-[10px] text-zinc-500 mt-1">
+                  {asaasPixKey ? 'Saques Pix D+0 liberados' : 'Cadastre para receber saques'}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Card: Endereço do Treinador (Exigido pelo Asaas / BACEN) */}
+        <Card className="border-white/10 bg-zinc-950/60 backdrop-blur-xl rounded-2xl">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
+              <MapPin className="h-4 w-4 text-white" /> Endereço & Dados de Cadastro Asaas
+            </CardTitle>
+            <CardDescription className="text-xs text-zinc-400">
+              Esses dados são exigidos pelas normas regulatórias do BACEN e Asaas para emissão de subcontas e repasses.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-6 gap-3">
+              {/* CEP */}
+              <div className="sm:col-span-2">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+                    CEP
+                  </label>
+                  {loadingCep && (
+                    <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-1">
+                      <Loader2 className="w-3 h-3 animate-spin" /> Buscando...
+                    </span>
+                  )}
+                </div>
+                <Input
+                  type="text"
+                  value={postalCode}
+                  onChange={(e) => handleCepChange(e.target.value)}
+                  placeholder="00000-000"
+                  maxLength={9}
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono"
+                />
+              </div>
+
+              {/* Logradouro */}
+              <div className="sm:col-span-3">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
+                  Logradouro / Rua / Avenida
+                </label>
+                <Input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Ex: Av. Paulista"
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                />
+              </div>
+
+              {/* Número */}
+              <div className="sm:col-span-1">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
+                  Número
+                </label>
+                <Input
+                  type="text"
+                  value={addressNumber}
+                  onChange={(e) => setAddressNumber(e.target.value)}
+                  placeholder="100"
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono"
+                />
+              </div>
+
+              {/* Bairro */}
+              <div className="sm:col-span-2">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
+                  Bairro
+                </label>
+                <Input
+                  type="text"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                  placeholder="Centro"
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                />
+              </div>
+
+              {/* Cidade */}
+              <div className="sm:col-span-2">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
+                  Cidade
+                </label>
+                <Input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="São Paulo"
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                />
+              </div>
+
+              {/* UF */}
+              <div className="sm:col-span-1">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
+                  UF
+                </label>
+                <Input
+                  type="text"
+                  value={state}
+                  onChange={(e) => setState(e.target.value.toUpperCase())}
+                  placeholder="SP"
+                  maxLength={2}
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono uppercase"
+                />
+              </div>
+
+              {/* Data de Nascimento (para CPF) */}
+              <div className="sm:col-span-1">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">
+                  Nascimento
+                </label>
+                <Input
+                  type="date"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs font-mono"
+                />
               </div>
             </div>
           </CardContent>

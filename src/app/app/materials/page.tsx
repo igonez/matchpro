@@ -10,9 +10,7 @@ import {
   Download, 
   Play, 
   Search, 
-  Sparkles,
-  Building2,
-  Tag
+  Sparkles
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,8 +21,7 @@ export default function StudentMaterialsPage() {
   const supabase = createClient();
 
   const [materials, setMaterials] = useState<any[]>([]);
-  const [sponsors, setSponsors] = useState<any[]>([]);
-  const [filter, setFilter] = useState<'all' | 'pdf' | 'video' | 'cardapio' | 'parceiros'>('all');
+  const [filter, setFilter] = useState<'all' | 'pdf' | 'video' | 'cardapio'>('all');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,7 +43,6 @@ export default function StudentMaterialsPage() {
 
         if (!challengeId) {
           setMaterials([]);
-          setSponsors([]);
           setLoading(false);
           return;
         }
@@ -57,13 +53,6 @@ export default function StudentMaterialsPage() {
           .eq('challenge_id', challengeId)
           .order('created_at', { ascending: false });
         setMaterials(mats || []);
-
-        const { data: sps } = await supabase
-          .from('challenge_sponsors')
-          .select('*')
-          .eq('challenge_id', challengeId)
-          .order('created_at', { ascending: false });
-        setSponsors(sps || []);
       } catch (err) {
         console.error('Erro ao carregar materiais:', err);
       } finally {
@@ -154,67 +143,9 @@ export default function StudentMaterialsPage() {
         >
           Cardápios
         </button>
-        <button
-          onClick={() => setFilter('parceiros')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
-            filter === 'parceiros'
-              ? 'bg-white text-black shadow-md'
-              : 'bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white'
-          }`}
-        >
-          Parceiros & Cupons ({sponsors.length})
-        </button>
       </div>
 
-      {/* SEÇÃO DE PATROCINADORES / CUPONS */}
-      {filter === 'parceiros' ? (
-        <div className="space-y-3">
-          {sponsors.length === 0 ? (
-            <div className="text-center py-12 text-zinc-500 text-xs border border-dashed border-white/10 rounded-2xl">
-              Nenhum parceiro ou cupom cadastrado para esta turma ainda.
-            </div>
-          ) : (
-            sponsors.map((sp) => (
-              <Card
-                key={sp.id}
-                className="border-white/15 bg-zinc-900/60 p-4 rounded-2xl space-y-3 shadow-lg"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-[10px] font-black uppercase text-zinc-400 font-mono tracking-wider">
-                      Parceiro Oficial
-                    </span>
-                    <h3 className="font-black text-base text-white mt-0.5">{sp.name}</h3>
-                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                      {sp.discount_description}
-                    </p>
-                  </div>
-                  {sp.discount_code && (
-                    <div className="px-2.5 py-1 rounded-xl bg-white/10 border border-white/20 text-white font-mono text-xs font-bold">
-                      {sp.discount_code}
-                    </div>
-                  )}
-                </div>
-
-                {sp.whatsapp_or_link && (
-                  <div className="pt-2 border-t border-white/10 flex justify-end">
-                    <a
-                      href={sp.whatsapp_or_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto"
-                    >
-                      <Button size="sm" className="w-full h-8 text-xs font-bold bg-white hover:bg-zinc-200 text-black rounded-xl">
-                        Aproveitar Desconto →
-                      </Button>
-                    </a>
-                  </div>
-                )}
-              </Card>
-            ))
-          )}
-        </div>
-      ) : loading ? (
+      {loading ? (
         <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs">
           <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
           Carregando materiais de apoio...

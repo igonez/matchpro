@@ -13,7 +13,6 @@ import {
   Bell, 
   Gift, 
   Users, 
-  ShoppingBag, 
   PlusCircle, 
   LogOut,
   ExternalLink,
@@ -61,6 +60,7 @@ export function DashboardHeader() {
     icon: any;
     active: boolean;
     badge?: string;
+    isCta?: boolean;
   }
 
   interface NavGroup {
@@ -70,28 +70,28 @@ export function DashboardHeader() {
 
   const navGroups: NavGroup[] = [
     {
-      title: 'MONITORAMENTO',
+      title: 'VISÃO GERAL',
       items: [
         { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard, active: pathname === '/dashboard' },
-        { name: 'Ranking da Turma', href: '/dashboard/leaderboard', icon: Trophy, active: pathname === '/dashboard/leaderboard', badge: 'AO VIVO' },
-        { name: 'Feed da Turma', href: '/dashboard/feed', icon: Activity, active: pathname === '/dashboard/feed' },
-        { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
       ],
     },
     {
-      title: 'GESTÃO DA TURMA',
+      title: 'DESAFIOS & TURMAS',
       items: [
+        { name: '+ Novo Desafio', href: '/dashboard/challenges/new', icon: PlusCircle, active: pathname === '/dashboard/challenges/new', isCta: true },
+        { name: 'Meus Desafios', href: '/dashboard/challenges', icon: Target, active: pathname === '/dashboard/challenges' },
         { name: 'Alunos & Turmas', href: '/dashboard/students', icon: Users, active: pathname === '/dashboard/students' },
-        { name: 'Gerenciar Desafios', href: '/dashboard/challenges', icon: Target, active: pathname === '/dashboard/challenges' },
         { name: 'Missões & Regras', href: '/dashboard/missions', icon: Trophy, active: pathname === '/dashboard/missions' },
-        { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
-        { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
       ],
     },
     {
-      title: 'FINANCEIRO & SAQUES',
+      title: 'ENGAJAMENTO & MODERAÇÃO',
       items: [
-        { name: 'Central Financeira', href: '/dashboard/finance', icon: Wallet, active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+        { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
+        { name: 'Feed Social da Turma', href: '/dashboard/feed', icon: Activity, active: pathname === '/dashboard/feed' },
+        { name: 'Ranking da Turma', href: '/dashboard/leaderboard', icon: Trophy, active: pathname === '/dashboard/leaderboard', badge: 'AO VIVO' },
+        { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
+        { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
       ],
     },
     {
@@ -99,14 +99,13 @@ export function DashboardHeader() {
       items: [
         { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
         { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', icon: Gift, active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
-        { name: 'Parceiros & Cupons', href: '/dashboard/sponsors', icon: ShoppingBag, active: pathname === '/dashboard/sponsors', badge: 'ELITE' },
       ],
     },
     {
-      title: 'CONFIGURAÇÕES',
+      title: 'FINANÇAS & CONTA',
       items: [
-        { name: 'Criar Desafio', href: '/dashboard/challenges/new', icon: PlusCircle, active: pathname === '/dashboard/challenges/new' },
-        { name: 'Meu Perfil', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
+        { name: 'Central Financeira', href: '/dashboard/finance', icon: Wallet, active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+        { name: 'Meu Perfil & Fiscais', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
       ],
     },
   ];
@@ -197,6 +196,27 @@ export function DashboardHeader() {
                     <div className="space-y-1">
                       {group.items.map((item) => {
                         const Icon = item.icon;
+                        if (item.isCta) {
+                          return (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              onClick={() => setMobileMenuOpen(false)}
+                              className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-black tracking-wide transition-all ${
+                                item.active
+                                  ? 'bg-white text-black shadow-lg'
+                                  : 'bg-white/10 hover:bg-white text-white hover:text-black border border-white/20'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <Icon className="h-4 w-4 shrink-0" />
+                                <span className="truncate">{item.name}</span>
+                              </div>
+                              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/20 text-white">CRIAR</span>
+                            </Link>
+                          );
+                        }
+
                         return (
                           <Link
                             key={item.href}

@@ -3,7 +3,9 @@ import {
   AsaasCustomerInput, 
   AsaasPixChargeInput, 
   AsaasPixQrCodeResponse,
-  AsaasSubscriptionInput 
+  AsaasSubscriptionInput,
+  AsaasSubaccountInput,
+  AsaasSubaccountResponse
 } from './config';
 
 /**
@@ -121,6 +123,57 @@ export class AsaasClient {
   }
 
   /**
+   * Cria uma subconta no Asaas para o profissional (necessária para receber Split)
+   */
+  static async createSubaccount(input: AsaasSubaccountInput): Promise<AsaasSubaccountResponse> {
+    const payload: any = {
+      name: input.name,
+      email: input.email,
+      cpfCnpj: input.cpfCnpj.replace(/\D/g, ''),
+      incomeValue: input.incomeValue || 5000,
+      phone: input.phone,
+      mobilePhone: input.mobilePhone || input.phone,
+    };
+
+    if (input.birthDate) {
+      payload.birthDate = input.birthDate;
+    }
+    if (input.companyType) {
+      payload.companyType = input.companyType;
+    }
+    if (input.address) {
+      payload.address = input.address;
+      payload.addressNumber = input.addressNumber || 'S/N';
+      payload.province = input.province || 'Centro';
+      payload.postalCode = input.postalCode?.replace(/\D/g, '');
+    }
+
+    return this.request<AsaasSubaccountResponse>('/accounts', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  /**
+   * Lista as cobranças geradas por uma assinatura
+   */
+  static async getSubscriptionPayments(subscriptionId: string): Promise<{
+    data: Array<{
+      id: string;
+      value: number;
+      netValue: number;
+      status: string;
+      billingType: string;
+      dueDate: string;
+      invoiceUrl?: string;
+    }>;
+  }> {
+    return this.request(`/subscriptions/${subscriptionId}/payments`, {
+      method: 'GET',
+    });
+  }
+
+  /**
    * Valida e consulta uma chave Pix no DICT do Banco Central através do Asaas
    */
   static async validatePixAddressKey(pixKey: string): Promise<{
@@ -182,12 +235,30 @@ export class AsaasClient {
         expirationDate: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
       };
     }
-    if (endpoint === '/subscriptions') {
+    if (endpoint === '/accounts') {
+      const mockWallet = `wallet_${Math.random().toString(36).substring(2, 10)}`;
       return {
-        id: `sub_${Math.random().toString(36).substring(7)}`,
-        status: 'ACTIVE',
-        value: 89.90,
-        cycle: 'MONTHLY',
+        id: `acc_${Math.random().toString(36).substring(7)}`,
+        name: 'Treinador Parceiro',
+        email: 'treinador@arenafit.pro',
+        walletId: mockWallet,
+        apiKey: `$aact_${Math.random().toString(36).substring(2, 15)}`,
+      };
+    }
+    if (endpoint.includes('/subscriptions') && endpoint.includes('/payments')) {
+      const mockPayId = `pay_${Math.random().toString(36).substring(7)}`;
+      return {
+        data: [
+          {
+            id: mockPayId,
+            value: 89.90,
+            netValue: 87.90,
+            status: 'PENDING',
+            billingType: 'PIX',
+            dueDate: new Date().toISOString().split('T')[0],
+            invoiceUrl: `https://sandbox.asaas.com/i/${mockPayId}`,
+          },
+        ],
       };
     }
     return { success: true };

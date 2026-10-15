@@ -31,7 +31,6 @@ export function FeatureGate({
   const tierWeight: Record<PlanTier, number> = {
     starter: 1,
     pro: 2,
-    studio: 3,
   };
 
   const hasAccess = tierWeight[activeTier] >= tierWeight[requiredTier];

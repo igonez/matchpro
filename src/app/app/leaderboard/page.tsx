@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trophy, TrendingUp } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
@@ -15,6 +15,7 @@ export default function LeaderboardPage() {
   const [squadStandings, setSquadStandings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeChallenge, setActiveChallenge] = useState<any>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const fetchLeaderboard = async () => {
     try {
@@ -23,6 +24,7 @@ export default function LeaderboardPage() {
       let currentChallenge = null;
 
       if (user) {
+        setCurrentUserId(user.id);
         const { data: participation } = await supabase
           .from('challenge_participants')
           .select('challenge_id, challenges(*)')
@@ -95,6 +97,16 @@ export default function LeaderboardPage() {
     };
   }, [supabase]);
 
+  // Cálculo da posição do aluno logado e diferença para o próximo colocado
+  const myIndex = currentUserId ? standings.findIndex((s) => s.student_id === currentUserId) : -1;
+  const myRank = myIndex >= 0 ? myIndex + 1 : null;
+  const myStanding = myIndex >= 0 ? standings[myIndex] : null;
+  const nextRankUp = myIndex > 0 ? standings[myIndex - 1] : null;
+  const pointsToOvertake =
+    myStanding && nextRankUp
+      ? Math.max(0, Number(nextRankUp.total_points || 0) - Number(myStanding.total_points || 0))
+      : 0;
+
   return (
     <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative">
       {/* Background 3D Animado */}
@@ -124,6 +136,46 @@ export default function LeaderboardPage() {
           </div>
         </div>
       </div>
+
+      {/* BARRA COMPETITIVA: SUA POSIÇÃO NA TURMA */}
+      {!loading && activeTab === 'individual' && myStanding && myRank && (
+        <div className="mono-glass-card p-3.5 rounded-2xl border border-white/25 bg-white/[0.04] flex items-center justify-between gap-3 relative z-10 shadow-[0_0_25px_rgba(255,255,255,0.06)]">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="h-10 w-10 rounded-xl bg-white text-black flex flex-col items-center justify-center shrink-0 font-mono shadow-md">
+              <span className="text-[8px] font-bold uppercase leading-none opacity-70">POS</span>
+              <span className="text-xs font-black leading-tight">#{String(myRank).padStart(2, '0')}</span>
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-black text-white truncate">Sua Posição na Turma</span>
+                <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-white/15 text-white border border-white/20">
+                  VOCÊ
+                </span>
+              </div>
+              <p className="text-[10px] font-mono text-zinc-300 mt-0.5 truncate flex items-center gap-1">
+                {myRank === 1 ? (
+                  <>
+                    <Trophy className="h-3 w-3 text-amber-400 shrink-0" /> Você está liderando a turma! Mantenha o ritmo.
+                  </>
+                ) : (
+                  <>
+                    <TrendingUp className="h-3 w-3 text-emerald-400 shrink-0" />
+                    {pointsToOvertake === 0
+                      ? `Empatado com #${myRank - 1} (${nextRankUp?.students?.full_name?.split(' ')[0] || 'Atleta'})`
+                      : `Faltam ${pointsToOvertake} pts para alcançar #${myRank - 1} (${nextRankUp?.students?.full_name?.split(' ')[0] || 'Atleta'})`}
+                  </>
+                )}
+              </p>
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <span className="text-sm font-mono font-black text-white block leading-none">
+              {myStanding.total_points}
+            </span>
+            <span className="text-[9px] font-mono text-zinc-400 uppercase">PTS</span>
+          </div>
+        </div>
+      )}
 
       {/* Seletor: Individual vs Squads */}
       <div className="grid grid-cols-2 p-1 rounded-2xl bg-black border border-white/[0.08] relative z-10">
@@ -164,7 +216,10 @@ export default function LeaderboardPage() {
                 standings[1]?.students?.full_name?.charAt(0) || '2'
               )}
             </div>
-            <p className="text-xs font-bold text-white truncate">{standings[1]?.students?.full_name?.split(' ')[0]}</p>
+            <p className="text-xs font-bold text-white truncate">
+              {standings[1]?.students?.full_name?.split(' ')[0]}
+              {standings[1]?.student_id === currentUserId ? ' (Você)' : ''}
+            </p>
             <p className="text-xs font-mono text-slate-300 font-bold">{standings[1]?.total_points} pts</p>
           </div>
 
@@ -182,7 +237,10 @@ export default function LeaderboardPage() {
                 )}
               </div>
             </div>
-            <p className="text-xs font-black text-white truncate">{standings[0]?.students?.full_name?.split(' ')[0]}</p>
+            <p className="text-xs font-black text-white truncate">
+              {standings[0]?.students?.full_name?.split(' ')[0]}
+              {standings[0]?.student_id === currentUserId ? ' (Você)' : ''}
+            </p>
             <p className="text-sm font-mono font-black text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
               {standings[0]?.total_points} pts
             </p>
@@ -200,7 +258,10 @@ export default function LeaderboardPage() {
                 standings[2]?.students?.full_name?.charAt(0) || '3'
               )}
             </div>
-            <p className="text-xs font-bold text-white truncate">{standings[2]?.students?.full_name?.split(' ')[0]}</p>
+            <p className="text-xs font-bold text-white truncate">
+              {standings[2]?.students?.full_name?.split(' ')[0]}
+              {standings[2]?.student_id === currentUserId ? ' (Você)' : ''}
+            </p>
             <p className="text-xs font-mono text-amber-600 font-bold">{standings[2]?.total_points} pts</p>
           </div>
         </div>
@@ -221,24 +282,32 @@ export default function LeaderboardPage() {
           ) : (
             standings.slice(standings.length >= 3 ? 3 : 0).map((item, idx) => {
               const actualRank = (standings.length >= 3 ? 3 : 0) + idx + 1;
+              const isMe = item.student_id === currentUserId;
               return (
                 <div
                   key={item.id}
-                  className="mono-glass-card p-3.5 rounded-2xl flex items-center justify-between"
+                  className={`mono-glass-card p-3.5 rounded-2xl flex items-center justify-between transition-all ${
+                    isMe ? 'border-white/35 bg-white/[0.06] shadow-[0_0_20px_rgba(255,255,255,0.08)]' : ''
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs text-zinc-500 w-5 text-center">
+                    <span className={`font-mono text-xs w-5 text-center font-bold ${isMe ? 'text-white' : 'text-zinc-500'}`}>
                       #{String(actualRank).padStart(2, '0')}
                     </span>
-                    <div className="h-8 w-8 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+                    <div className={`h-8 w-8 rounded-full bg-zinc-900 border flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden ${isMe ? 'border-white/40' : 'border-white/10'}`}>
                       {item.students?.avatar_url ? (
                         <img src={item.students.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                       ) : (
                         item.students?.full_name?.charAt(0) || 'A'
                       )}
                     </div>
-                    <div>
+                    <div className="flex items-center gap-1.5">
                       <p className="text-xs font-bold text-white">{item.students?.full_name || 'Atleta'}</p>
+                      {isMe && (
+                        <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-white text-black">
+                          VOCÊ
+                        </span>
+                      )}
                     </div>
                   </div>
 

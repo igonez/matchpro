@@ -27,6 +27,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { TransformationVaultModal } from '@/components/student/transformation-vault-modal';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { CustomDialog } from '@/components/ui/custom-dialog';
 
 export default function StudentProfilePage() {
   const router = useRouter();
@@ -36,8 +38,10 @@ export default function StudentProfilePage() {
   const [challenge, setChallenge] = useState<any>(null);
   const [participation, setParticipation] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
+  const [streakDays, setStreakDays] = useState<number>(0);
   const [submissionsCount, setSubmissionsCount] = useState(0);
   const [userPhotos, setUserPhotos] = useState<any[]>([]);
+  const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
   const [vaultData, setVaultData] = useState<any>(null);
   const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -107,29 +111,9 @@ export default function StudentProfilePage() {
           .eq('id', user.id)
           .single();
 
-        setStudent(studentData || { full_name: user.email?.split('@')[0] || 'Atleta' });
+        setStudent(studentData || { id: user.id, full_name: user.email?.split('@')[0] || 'Atleta' });
 
-        // 2. Pontos
-        const { data: standingData } = await supabase
-          .from('leaderboard_standings')
-          .select('total_points')
-          .eq('student_id', user.id)
-          .limit(1)
-          .maybeSingle();
-
-        setStanding(standingData || { total_points: 0 });
-
-        // 3. Fotos enviadas
-        const { data: submissionsData, count } = await supabase
-          .from('student_submissions')
-          .select('id, photo_url, status, submitted_at, missions(title)', { count: 'exact' })
-          .eq('student_id', user.id)
-          .order('submitted_at', { ascending: false });
-
-        setSubmissionsCount(count || 0);
-        setUserPhotos(submissionsData || []);
-
-        // 4. Desafio Ativo vinculado ao aluno & Inscrição Oficial
+        // 2. Desafio Ativo vinculado ao aluno & Inscrição Oficial
         const { data: participantRecord } = await supabase
           .from('challenge_participants')
           .select('challenge_id, payment_status, joined_at, challenges(id, title, is_active, start_date, end_date, price)')
@@ -140,6 +124,42 @@ export default function StudentProfilePage() {
         setParticipation(participantRecord || null);
         const ch = (participantRecord?.challenges as any) || null;
         setChallenge(ch);
+
+        // 3. Pontos escopados ao desafio ativo (com fallback caso necessário)
+        let standingQuery = supabase
+          .from('leaderboard_standings')
+          .select('total_points')
+          .eq('student_id', user.id);
+
+        if (ch?.id) {
+          standingQuery = standingQuery.eq('challenge_id', ch.id);
+        }
+
+        const { data: standingData } = await standingQuery.limit(1).maybeSingle();
+        setStanding(standingData || { total_points: 0 });
+
+        // 4. Streak Real do Aluno (student_gamification_state)
+        let gamifQuery = supabase
+          .from('student_gamification_state')
+          .select('current_streak')
+          .eq('student_id', user.id);
+
+        if (ch?.id) {
+          gamifQuery = gamifQuery.eq('challenge_id', ch.id);
+        }
+
+        const { data: gamifData } = await gamifQuery.limit(1).maybeSingle();
+        setStreakDays(gamifData?.current_streak || 0);
+
+        // 5. Fotos enviadas pelo aluno
+        const { data: submissionsData, count } = await supabase
+          .from('student_submissions')
+          .select('id, photo_url, caption, status, submitted_at, missions(title, points)', { count: 'exact' })
+          .eq('student_id', user.id)
+          .order('submitted_at', { ascending: false });
+
+        setSubmissionsCount(count || 0);
+        setUserPhotos(submissionsData || []);
 
         if (ch) {
           const { data: vault } = await supabase
@@ -216,9 +236,11 @@ export default function StudentProfilePage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-5">
+    <div className="flex flex-col flex-1 p-4 space-y-5 max-w-md mx-auto w-full pb-28 relative">
+      <Monochrome3DBackground />
+
       {/* Header do Perfil */}
-      <div className="flex items-center justify-between pt-1">
+      <div className="flex items-center justify-between pt-1 relative z-10">
         <h1 className="text-xl font-black text-white tracking-tight">Meu Perfil</h1>
         <Button
           variant="ghost"
@@ -231,7 +253,7 @@ export default function StudentProfilePage() {
       </div>
 
       {/* Card Principal do Usuário */}
-      <Card className="border border-white/10 bg-zinc-900/60 p-5 rounded-3xl shadow-xl text-center">
+      <Card className="mono-glass-card border border-white/10 p-5 rounded-3xl shadow-xl text-center relative z-10">
         {/* Avatar com upload de foto */}
         <div className="relative mx-auto w-24 h-24 rounded-full border border-white/20 p-1 bg-white/5 shadow-xl shadow-black mb-3 group">
           <div className="w-full h-full bg-zinc-950 rounded-full flex items-center justify-center font-black text-2xl text-white overflow-hidden relative">
@@ -266,7 +288,9 @@ export default function StudentProfilePage() {
         </div>
 
         <h2 className="text-lg font-black text-white tracking-tight">{student?.full_name || 'Atleta ArenaFitPro'}</h2>
-        <p className="text-xs text-zinc-400 mt-0.5 font-mono">Aluno Oficial do Desafio</p>
+        <p className="text-xs text-zinc-400 mt-0.5 font-mono">
+          {challenge?.title ? `Atleta • ${challenge.title}` : 'Aluno Oficial do Desafio'}
+        </p>
 
         {/* Estatísticas Rápidas em Grid */}
         <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-white/10">
@@ -278,14 +302,14 @@ export default function StudentProfilePage() {
           </div>
 
           <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
-            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Streak</span>
+            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Ofensiva</span>
             <span className="text-base font-black text-white mt-0.5 block font-mono">
-              3 Dias
+              🔥 {streakDays} {streakDays === 1 ? 'Dia' : 'Dias'}
             </span>
           </div>
 
           <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
-            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Fotos</span>
+            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Check-ins</span>
             <span className="text-base font-black text-white mt-0.5 block font-mono">
               {submissionsCount}
             </span>
@@ -295,7 +319,7 @@ export default function StudentProfilePage() {
 
       {/* MINHA TURMA ATUAL & STATUS DA MATRÍCULA */}
       {challenge && (
-        <Card className="mono-glass-card p-4 rounded-3xl border border-white/10 space-y-3">
+        <Card className="mono-glass-card p-4 rounded-3xl border border-white/10 space-y-3 relative z-10">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-white" />
@@ -341,7 +365,7 @@ export default function StudentProfilePage() {
       {/* FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
       <div
         onClick={() => setIsVaultModalOpen(true)}
-        className="p-4 rounded-3xl bg-zinc-900/60 border border-white/15 flex items-center justify-between gap-3 cursor-pointer hover:border-white/30 transition-all group shadow-lg"
+        className="mono-glass-card p-4 rounded-3xl border border-white/15 flex items-center justify-between gap-3 cursor-pointer hover:border-white/30 transition-all group shadow-lg relative z-10"
       >
         <div className="flex items-center gap-3">
           <div className="h-11 w-11 rounded-2xl bg-white/5 text-white border border-white/10 flex items-center justify-center shrink-0">
@@ -376,13 +400,13 @@ export default function StudentProfilePage() {
       </div>
 
       {/* SEÇÃO DE INTEGRAÇÕES & RECURSOS (Itens 14 & 18) */}
-      <div className="space-y-2.5">
+      <div className="space-y-2.5 relative z-10">
         <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
           Integrações & Conexões
         </h3>
 
         {/* Item 14: Integração com Strava */}
-        <div className="p-4 rounded-2xl border border-white/10 bg-zinc-900/50 flex items-center justify-between gap-3">
+        <div className="mono-glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-[#FC4C02]/10 border border-[#FC4C02]/30 flex items-center justify-center text-[#FC4C02]">
               <Activity className="h-5 w-5" />
@@ -415,7 +439,7 @@ export default function StudentProfilePage() {
         </div>
 
         {/* Item 18: Mandar Notificação no Celular */}
-        <div className="p-4 rounded-2xl border border-white/10 bg-zinc-900/50 flex items-center justify-between gap-3">
+        <div className="mono-glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
               <Bell className="h-5 w-5" />
@@ -449,16 +473,16 @@ export default function StudentProfilePage() {
       </div>
 
       {/* SEÇÃO DE LINKS DE SUPORTE E LEGAIS (Itens 20 & 21) */}
-      <div className="space-y-2">
+      <div className="space-y-2 relative z-10">
         <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
           Suporte & Informações
         </h3>
         <div className="grid grid-cols-2 gap-2">
-          <Link href="/ajuda" className="p-3.5 rounded-2xl border border-white/10 bg-zinc-900/40 hover:bg-zinc-900/80 transition-colors flex items-center gap-2.5">
+          <Link href="/ajuda" className="mono-glass-card p-3.5 rounded-2xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-2.5">
             <HelpCircle className="h-4 w-4 text-zinc-400" />
             <span className="text-xs text-zinc-300 font-medium font-mono">Central de Ajuda</span>
           </Link>
-          <Link href="/termos" className="p-3.5 rounded-2xl border border-white/10 bg-zinc-900/40 hover:bg-zinc-900/80 transition-colors flex items-center gap-2.5">
+          <Link href="/termos" className="mono-glass-card p-3.5 rounded-2xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-2.5">
             <FileText className="h-4 w-4 text-zinc-400" />
             <span className="text-xs text-zinc-300 font-medium font-mono">Termos & Privacidade</span>
           </Link>
@@ -466,10 +490,15 @@ export default function StudentProfilePage() {
       </div>
 
       {/* Histórico de Fotos do Aluno */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
-          Minha Galeria de Missões ({userPhotos.length})
-        </h3>
+      <div className="space-y-3 relative z-10">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
+            Minha Galeria de Missões ({userPhotos.length})
+          </h3>
+          {userPhotos.length > 0 && (
+            <span className="text-[10px] font-mono text-zinc-500">Toque para ampliar</span>
+          )}
+        </div>
 
         {userPhotos.length === 0 ? (
           <div className="text-center py-8 text-zinc-500 text-xs border border-dashed border-white/10 rounded-2xl">
@@ -478,30 +507,86 @@ export default function StudentProfilePage() {
         ) : (
           <div className="grid grid-cols-3 gap-2">
             {userPhotos.map((item) => (
-              <div
+              <button
                 key={item.id}
-                className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 group"
+                type="button"
+                onClick={() => setSelectedPhoto(item)}
+                className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 group text-left focus:outline-none focus:ring-2 focus:ring-white/30"
               >
                 <img
                   src={item.photo_url}
                   alt="Missão"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-1 text-center">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-2">
                   <span className="text-[10px] font-bold text-white line-clamp-1">
-                    {item.missions?.title}
+                    {item.missions?.title || 'Check-in'}
                   </span>
-                  <span className={`text-[9px] font-black uppercase mt-1 font-mono ${
-                    item.status === 'approved' ? 'text-white' : item.status === 'rejected' ? 'text-zinc-500' : 'text-zinc-300'
+                  <span className={`text-[8px] font-black uppercase font-mono ${
+                    item.status === 'approved' ? 'text-emerald-400' : item.status === 'rejected' ? 'text-red-400' : 'text-amber-300'
                   }`}>
-                    {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Em Análise'}
+                    {item.status === 'approved' ? '✓ Aprovada' : item.status === 'rejected' ? '✕ Recusada' : '⏳ Em Análise'}
                   </span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
       </div>
+
+      {/* Modal de Visualização de Foto da Galeria */}
+      <CustomDialog
+        isOpen={Boolean(selectedPhoto)}
+        onClose={() => setSelectedPhoto(null)}
+        title={selectedPhoto?.missions?.title || 'Registro de Missão'}
+      >
+        {selectedPhoto && (
+          <div className="space-y-3">
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-black max-h-[60vh] flex items-center justify-center">
+              <img
+                src={selectedPhoto.photo_url}
+                alt={selectedPhoto?.missions?.title || 'Foto da Missão'}
+                className="w-full h-auto max-h-[60vh] object-contain"
+              />
+            </div>
+
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="text-zinc-400">
+                {selectedPhoto.submitted_at
+                  ? new Date(selectedPhoto.submitted_at).toLocaleString('pt-BR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : ''}
+              </span>
+              <Badge
+                className={`text-[10px] font-mono ${
+                  selectedPhoto.status === 'approved'
+                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    : selectedPhoto.status === 'rejected'
+                    ? 'bg-red-500/15 text-red-400 border-red-500/30'
+                    : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                }`}
+              >
+                {selectedPhoto.status === 'approved'
+                  ? '✓ APROVADA'
+                  : selectedPhoto.status === 'rejected'
+                  ? '✕ RECUSADA'
+                  : '⏳ EM ANÁLISE'}
+              </Badge>
+            </div>
+
+            {selectedPhoto.caption && (
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-zinc-300">
+                {selectedPhoto.caption}
+              </div>
+            )}
+          </div>
+        )}
+      </CustomDialog>
 
       {/* Toast Flutuante */}
       {toastMessage && (

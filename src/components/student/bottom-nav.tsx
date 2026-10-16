@@ -33,40 +33,91 @@ export function StudentBottomNav() {
   const [studentInfo, setStudentInfo] = useState<any>(null);
   const [isProfessional, setIsProfessional] = useState(false);
 
-  useEffect(() => {
-    async function loadData() {
-      // 1. Carregar missões para o seletor rápido
-      const { data: mData } = await supabase
-        .from('missions')
-        .select('id, title, category, points_rewarded')
-        .limit(10);
-      setPendingMissions(mData || []);
+  const loadQuickMissions = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-      // 2. Carregar dados do aluno e checar se é profissional
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: sData } = await supabase
-          .from('students')
-          .select('full_name, avatar_url')
-          .eq('id', user.id)
-          .maybeSingle();
-        setStudentInfo(sData || { full_name: user.email?.split('@')[0] });
+    const { data: sData } = await supabase
+      .from('students')
+      .select('full_name, avatar_url')
+      .eq('id', user.id)
+      .maybeSingle();
+    setStudentInfo(sData || { full_name: user.email?.split('@')[0] });
 
-        const isMetaProf = user.user_metadata?.role === 'professional';
-        const hasProfCookie = typeof document !== 'undefined' && document.cookie.includes('arena_role=professional');
+    const isMetaProf = user.user_metadata?.role === 'professional';
+    const hasProfCookie = typeof document !== 'undefined' && document.cookie.includes('arena_role=professional');
 
-        const { data: prof } = await supabase
-          .from('professionals')
-          .select('id')
-          .eq('id', user.id)
-          .maybeSingle();
-        if (prof || isMetaProf || hasProfCookie) {
-          setIsProfessional(true);
-        }
-      }
+    const { data: prof } = await supabase
+      .from('professionals')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (prof || isMetaProf || hasProfCookie) {
+      setIsProfessional(true);
     }
-    loadData();
-  }, [supabase]);
+
+    // Buscar desafio ativo do aluno (isolamento multi-tenant)
+    const { data: part } = await supabase
+      .from('challenge_participants')
+      .select('challenge_id')
+      .eq('student_id', user.id)
+      .limit(1)
+      .maybeSingle();
+
+    if (!part?.challenge_id) {
+      setPendingMissions([]);
+      return;
+    }
+
+    const { data: mData } = await supabase
+      .from('missions')
+      .select('id, title, category, points_rewarded, order_index')
+      .eq('challenge_id', part.challenge_id)
+      .order('order_index', { ascending: true });
+
+    const { data: userSubs } = await supabase
+      .from('student_submissions')
+      .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
+      .eq('student_id', user.id);
+
+    const doneIds = new Set(
+      (userSubs || []).filter((s: any) => s.status === 'approved' || s.status === 'pending').map((s: any) => s.mission_id)
+    );
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    let treinoLockedToday = false;
+    let cardioLockedToday = false;
+
+    (userSubs || []).forEach((s: any) => {
+      const dt = new Date(s.submitted_at || s.client_captured_at);
+      if (dt >= startOfToday) {
+        if (s.missions?.category === 'treino') treinoLockedToday = true;
+        if (s.missions?.category === 'cardio') cardioLockedToday = true;
+      }
+    });
+
+    // Filtrar apenas missões disponíveis para hoje (1 próxima de cada categoria de treino/cardio + hábitos/refeições não feitas)
+    const seenSequenceCat = new Set<string>();
+    const available = (mData || []).filter((m: any) => {
+      if (doneIds.has(m.id)) return false;
+      if (m.category === 'treino') {
+        if (treinoLockedToday || seenSequenceCat.has('treino')) return false;
+        seenSequenceCat.add('treino');
+      }
+      if (m.category === 'cardio') {
+        if (cardioLockedToday || seenSequenceCat.has('cardio')) return false;
+        seenSequenceCat.add('cardio');
+      }
+      return true;
+    });
+
+    setPendingMissions(available);
+  };
+
+  useEffect(() => {
+    loadQuickMissions();
+  }, [supabase, showQuickSheet]);
 
   const handleQuickRegister = (mission: any) => {
     setShowQuickSheet(false);

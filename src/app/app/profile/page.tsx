@@ -17,7 +17,6 @@ import {
   Unlock,
   Sparkles,
   Bell,
-  Activity,
   HelpCircle,
   FileText
 } from 'lucide-react';
@@ -47,8 +46,7 @@ export default function StudentProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Integrações (Strava & Push)
-  const [stravaConnected, setStravaConnected] = useState(false);
+  // Notificações Push
   const [pushEnabled, setPushEnabled] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -181,29 +179,14 @@ export default function StudentProfilePage() {
     loadProfile();
   }, [supabase, router]);
 
-  // Carregar status do Strava e Push notifications
+  // Carregar status de Push notifications
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const isStrava = localStorage.getItem('arena_strava_connected') === 'true';
-      setStravaConnected(isStrava);
-
       if ('Notification' in window) {
         setPushEnabled(Notification.permission === 'granted');
       }
     }
   }, []);
-
-  const handleToggleStrava = () => {
-    if (stravaConnected) {
-      localStorage.removeItem('arena_strava_connected');
-      setStravaConnected(false);
-      showToast('Conta do Strava desconectada.');
-    } else {
-      localStorage.setItem('arena_strava_connected', 'true');
-      setStravaConnected(true);
-      showToast('Strava conectado com sucesso! Atividades sincronizadas.');
-    }
-  };
 
   const handleTogglePush = async () => {
     if (typeof window === 'undefined' || !('Notification' in window)) {
@@ -399,44 +382,11 @@ export default function StudentProfilePage() {
         <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-white transition-colors shrink-0" />
       </div>
 
-      {/* SEÇÃO DE INTEGRAÇÕES & RECURSOS (Itens 14 & 18) */}
+      {/* SEÇÃO DE PREFERÊNCIAS & NOTIFICAÇÕES */}
       <div className="space-y-2.5 relative z-10">
         <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
-          Integrações & Conexões
+          Notificações & Alertas
         </h3>
-
-        {/* Item 14: Integração com Strava */}
-        <div className="mono-glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-[#FC4C02]/10 border border-[#FC4C02]/30 flex items-center justify-center text-[#FC4C02]">
-              <Activity className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h4 className="text-xs font-bold text-white font-mono">Strava Running & Cycling</h4>
-                {stravaConnected && (
-                  <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-mono">
-                    ✓ CONECTADO
-                  </Badge>
-                )}
-              </div>
-              <p className="text-[11px] text-zinc-400">
-                Sincronize cardios, corridas e pedaladas com pontuação automática.
-              </p>
-            </div>
-          </div>
-          <Button
-            size="sm"
-            onClick={handleToggleStrava}
-            className={`text-xs font-mono font-bold rounded-xl h-8 px-3 ${
-              stravaConnected
-                ? 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                : 'bg-white text-black hover:bg-zinc-200'
-            }`}
-          >
-            {stravaConnected ? 'Desconectar' : 'Conectar'}
-          </Button>
-        </div>
 
         {/* Item 18: Mandar Notificação no Celular */}
         <div className="mono-glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-3">

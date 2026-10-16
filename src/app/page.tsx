@@ -20,7 +20,6 @@ import {
   Users,
   Sparkles,
   ArrowRight,
-  Gift,
   Flame,
   HelpCircle,
   Smartphone,
@@ -99,8 +98,8 @@ export default function HomePage() {
       a: 'Em plataformas antigas de checkout, todo o faturamento bruto passa pela sua conta pessoal/PJ e você é tributado sobre 100% do valor, pagando imposto até sobre as taxas da plataforma. No split nativo da ArenaFitPro, a transação é dividida na raiz bancária: você emite nota fiscal apenas sobre o seu lucro real e nós emitimos sobre a nossa taxa.',
     },
     {
-      q: 'O que são os Squads Cooperativos, a Mystery Box e o Freeze Shield?',
-      a: 'São mecânicas comprovadas de retenção: os Squads dividem a turma em equipes colaborativas (pressão social positiva onde ninguém quer decepcionar os parceiros); a Mystery Box premia consistência com caixas de recompensas secretas; e o Freeze Shield (Escudo de Streak) permite ao aluno congelar o streak em imprevistos ou emergências, evitando o abandono do desafio.',
+      q: 'Como funcionam os Squads Cooperativos e o Radar de Frequência?',
+      a: 'São mecânicas comprovadas de retenção: os Squads dividem a turma em equipes colaborativas (pressão social positiva onde ninguém quer decepcionar os parceiros, aumentando a disciplina e conclusão de treinos); e o Radar de Frequência monitora alunos em risco com alertas automáticos para intervenção ágil via WhatsApp.',
     },
     {
       q: 'Preciso pagar algo para criar minha conta e lançar meu primeiro desafio?',
@@ -146,8 +145,8 @@ export default function HomePage() {
       'Câmera Antifraude com Bloqueio de Galeria',
       'IA Nutricional com Estimativa de Macronutrientes',
       'Split Pix D+0 integrado ao Asaas',
-      'Squads Cooperativos e Mystery Box',
-      'Freeze Shield para proteção de Streak',
+      'Squads Cooperativos e Equipes',
+      'Radar de Frequência e Alertas Anti-Churn',
     ],
     provider: {
       '@type': 'Organization',
@@ -514,15 +513,14 @@ export default function HomePage() {
             </SpotlightCard3D>
 
             {/* Card 3: Squads e Times Cooperativos */}
-            <SpotlightCard3D className="md:col-span-4 p-6 min-h-[260px] flex flex-col justify-between">
+            <SpotlightCard3D className="md:col-span-6 p-6 min-h-[260px] flex flex-col justify-between">
               <div>
                 <div className="text-xs text-zinc-300 font-semibold tracking-wide mb-2 flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5 text-zinc-300" /> Squads Cooperativos
                 </div>
                 <h4 className="text-xl font-black text-white mb-2">Esquadrões & Times</h4>
                 <p className="text-xs text-zinc-300 leading-relaxed">
-                  Os alunos se unem em equipes. A pontuação é somada, gerando um ambiente de companheirismo 
-                  onde ninguém quer deixar o time na mão.
+                  Os alunos se unem em equipes colaborativas. A pontuação é somada, gerando um ambiente de companheirismo e responsabilidade coletiva onde ninguém quer deixar o time na mão.
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
@@ -531,39 +529,20 @@ export default function HomePage() {
               </div>
             </SpotlightCard3D>
 
-            {/* Card 4: Mystery Box & Recompensas */}
-            <SpotlightCard3D className="md:col-span-4 p-6 min-h-[260px] flex flex-col justify-between">
+            {/* Card 4: Radar Anti-Churn & Resgate WhatsApp */}
+            <SpotlightCard3D className="md:col-span-6 p-6 min-h-[260px] flex flex-col justify-between">
               <div>
                 <div className="text-xs text-zinc-300 font-semibold tracking-wide mb-2 flex items-center gap-1.5">
-                  <Gift className="w-3.5 h-3.5 text-zinc-300" /> Recompensas Gamificadas
+                  <Activity className="w-3.5 h-3.5 text-zinc-300" /> Prevenção Ativa de Abandono
                 </div>
-                <h4 className="text-xl font-black text-white mb-2">Mystery Box & Streaks</h4>
+                <h4 className="text-xl font-black text-white mb-2">Radar Anti-Churn & WhatsApp</h4>
                 <p className="text-xs text-zinc-300 leading-relaxed">
-                  Caixas de recompensas que abrem conforme a sequência de treinos avança. Medalhas exclusivas 
-                  e brindes que geram dopamina saudável.
+                  Monitoramento inteligente que identifica alunos inativos há mais de 48 horas. Você recebe alertas em tempo real e dispara mensagens de resgate no WhatsApp com 1 toque.
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
-                <span className="text-zinc-300 font-medium">🎁 Ofensiva 14 Dias</span>
-                <span className="text-amber-400 font-semibold">Desbloqueada</span>
-              </div>
-            </SpotlightCard3D>
-
-            {/* Card 5: Freeze Shield & Anti-Churn */}
-            <SpotlightCard3D className="md:col-span-4 p-6 min-h-[260px] flex flex-col justify-between">
-              <div>
-                <div className="text-xs text-zinc-300 font-semibold tracking-wide mb-2 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" /> Mecanismo de Retenção
-                </div>
-                <h4 className="text-xl font-black text-white mb-2">Freeze Shield & Resgate</h4>
-                <p className="text-xs text-zinc-300 leading-relaxed">
-                  O aluno congela o streak em dias de emergência sem abandonar o desafio. Radar automático que 
-                  avisa o treinador se algum aluno sumir por mais de 48h.
-                </p>
-              </div>
-              <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
-                <span className="text-zinc-300 font-medium">🛡️ Escudo Ativo</span>
-                <span className="text-white font-bold">Streak Preservado</span>
+                <span className="text-zinc-300 font-medium">⚡ Alerta de Risco</span>
+                <span className="text-emerald-400 font-bold font-mono">Resgate em 1 Toque</span>
               </div>
             </SpotlightCard3D>
           </div>
@@ -976,11 +955,11 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center gap-2.5">
                       <X className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                      <span>Mystery Box de Recompensas</span>
+                      <span>IA Nutricional Avançada</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <X className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                      <span>IA Nutricional Avançada</span>
+                      <span>Radar Anti-Churn & WhatsApp</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <X className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
@@ -1059,14 +1038,6 @@ export default function HomePage() {
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span><strong>Squads & Times Cooperativos</strong> liberados</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>Mystery Box de Recompensas</strong> & Badges</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>Freeze Shield (Escudo de Ofensiva)</strong></span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -1163,11 +1134,6 @@ export default function HomePage() {
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Squads & Times Cooperativos</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-500 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Mystery Box & Streaks de Treino</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-500 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
                   </tr>

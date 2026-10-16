@@ -11,7 +11,6 @@ import {
   Trophy, 
   BookOpen, 
   Bell, 
-  Gift, 
   Users, 
   PlusCircle, 
   LogOut,
@@ -98,7 +97,6 @@ export function DashboardHeader() {
       title: 'RECURSOS PRO',
       items: [
         { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
-        { name: 'Mystery Box (Prêmios)', href: '/dashboard/mystery-box', icon: Gift, active: pathname === '/dashboard/mystery-box', badge: 'PRO' },
       ],
     },
     {

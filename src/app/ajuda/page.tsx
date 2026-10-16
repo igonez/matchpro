@@ -23,8 +23,8 @@ const FAQ_ITEMS = [
     a: 'A foto denunciada é imediatamente destacada no painel do treinador na aba "🚨 Denunciadas" da central de auditoria, permitindo ao coach rejeitar o check-in ou remover a pontuação com 1 clique.',
   },
   {
-    q: 'Como conectar a conta do Strava para sincronizar treinos?',
-    a: 'Na aba Meu Perfil do aplicativo do aluno, acesse o card "Integração Strava" e autorize a conexão. Suas corridas e pedaladas serão contabilizadas automaticamente nas missões de cardio.',
+    q: 'Como comprovar a execução dos treinos e cardios?',
+    a: 'Basta tocar no botão de check-in ou selecionar a missão. Para treinos e cardios, você pode acionar o cronômetro ativo e registrar a foto ao vivo na câmera antifraude com sensor de horário e localização.',
   },
   {
     q: 'Posso usar o ArenaFitPro no computador e no celular?',
@@ -74,7 +74,7 @@ export default function HelpFaqPage() {
           <Input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar dúvida ou tópico (ex: Pix, câmera, Strava, calorias)..."
+            placeholder="Buscar dúvida ou tópico (ex: Pix, câmera, squads, calorias)..."
             className="pl-10 h-12 bg-zinc-950 border-white/15 text-white rounded-2xl text-xs placeholder:text-zinc-600 focus:border-white/40"
           />
         </div>

@@ -21,7 +21,7 @@ export function SocialProofTestimonials() {
       location: 'Belo Horizonte, MG',
       stats: '88 alunas • Turma Seca Verão',
       quote:
-        'A Câmera com IA Nutricional é um diferencial absurdo. Minhas pacientes não conseguem mais enviar foto antiga tirada semana passada. Elas amam ver os macros calculados na hora e disputar as Mystery Boxes semanais.',
+        'A Câmera com IA Nutricional é um diferencial absurdo. Minhas pacientes não conseguem mais enviar foto antiga tirada semana passada. Elas amam ver os macros calculados na hora e disputar as primeiras colocações no pódio semanal.',
       retention: '93.5% retenção',
     },
     {

@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { useWorkoutSession } from '@/lib/workout-session-context';
-import { Clock, CheckCircle2, Lock, ChevronDown, ChevronUp } from 'lucide-react';
+import { Clock, CheckCircle2, Lock, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 
 export default function StudentMissionsWeeklyPage() {
   return (
@@ -19,6 +19,7 @@ export default function StudentMissionsWeeklyPage() {
 
 function StudentMissionsContent() {
   const supabase = createClient();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialCat = searchParams.get('cat') || 'all';
   const { activeSession, startSession } = useWorkoutSession();
@@ -272,93 +273,124 @@ function StudentMissionsContent() {
     }
   };
 
-  const renderMissionCard = (mission: any) => (
-    <div
-      key={mission.id}
-      className={`mono-glass-card p-4 rounded-2xl transition-all ${
-        mission.isApproved
-          ? 'border-emerald-500/25 bg-emerald-950/10'
-          : mission.isLocked
-          ? 'opacity-65 border-white/5'
-          : 'border-white/15 hover:border-white/35'
-      }`}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1.5 flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-bold text-xs text-white">{mission.title}</span>
-            {mission.is_bonus && (
-              <span className="text-[9px] font-mono text-amber-300 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.2 rounded">
-                ★ BÔNUS
-              </span>
+  const handleMissionClick = (mission: any) => {
+    if (mission.isApproved || mission.isPending || mission.isLocked) return;
+    if (mission.category === 'treino' || mission.category === 'cardio') {
+      if (activeSession?.missionId === mission.id) return;
+      startSession(mission.id, mission.title, mission.category);
+    } else {
+      router.push(`/app/camera/${mission.id}`);
+    }
+  };
+
+  const renderMissionCard = (mission: any) => {
+    const isActionable = !mission.sub && !mission.isLocked;
+    const isCurrentlyActive = activeSession?.missionId === mission.id;
+
+    return (
+      <div
+        key={mission.id}
+        onClick={() => isActionable && handleMissionClick(mission)}
+        className={`group p-3.5 sm:p-4 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+          mission.isApproved
+            ? 'border-emerald-500/20 bg-emerald-950/15 opacity-85'
+            : mission.isPending
+            ? 'border-amber-500/20 bg-amber-950/15'
+            : mission.isLocked
+            ? 'border-white/5 bg-zinc-950/50 opacity-60'
+            : 'border-white/15 bg-zinc-900/60 hover:bg-zinc-800/80 hover:border-white/30 active:scale-[0.99] cursor-pointer shadow-sm'
+        }`}
+      >
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          {/* Status Indicator Left */}
+          <div className="shrink-0">
+            {mission.isApproved ? (
+              <div className="h-8 w-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                <CheckCircle2 className="h-4 w-4" />
+              </div>
+            ) : mission.isPending ? (
+              <div className="h-8 w-8 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300">
+                <Clock className="h-4 w-4" />
+              </div>
+            ) : mission.isLocked ? (
+              <div className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-500">
+                <Lock className="h-3.5 w-3.5" />
+              </div>
+            ) : (
+              <div className="h-8 w-8 rounded-full bg-white/10 border border-white/20 group-hover:border-white/50 group-hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                <span className="text-xs">
+                  {mission.category === 'treino' ? '⚡' : mission.category === 'cardio' ? '🏃' : mission.category === 'refeicao' ? '🥗' : '💧'}
+                </span>
+              </div>
             )}
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            {getCategoryBadge(mission.category)}
-            <span className="text-[10px] font-mono font-bold text-zinc-300 bg-white/5 px-2 py-0.5 rounded border border-white/10">
-              +{mission.points_rewarded} PTS
-            </span>
+          {/* Details Middle */}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className={`text-xs font-bold truncate ${mission.isApproved ? 'line-through text-zinc-400' : 'text-white'}`}>
+                {mission.title}
+              </span>
+              {mission.is_bonus && (
+                <span className="text-[9px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1 rounded">
+                  ★ BÔNUS
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 mt-1">
+              {getCategoryBadge(mission.category)}
+              <span className="text-[10px] font-mono font-bold text-zinc-400">
+                +{mission.points_rewarded} XP
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="shrink-0">
+        {/* Action / State Right */}
+        <div className="shrink-0 flex items-center gap-2">
           {mission.isApproved && (
-            <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-              Concluído
+            <span className="text-[11px] font-mono text-emerald-400 font-bold">
+              +Feito
             </span>
           )}
 
           {mission.isPending && (
-            <span className="px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium block">
-              Em análise...
+            <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/20">
+              Análise
             </span>
           )}
 
-          {!mission.sub && mission.isLocked && (
-            <div className="flex flex-col items-end gap-1">
-              <span className="px-2.5 py-1 rounded-xl bg-black border border-white/10 text-zinc-400 text-[11px] font-mono flex items-center gap-1">
-                <Lock className="h-3 w-3" /> Bloqueado
-              </span>
+          {mission.isLocked && (
+            <div className="text-right">
               {mission.isDailyLocked ? (
-                <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 block">
                   ⏱ {timeUntilMidnight || 'Amanhã'}
                 </span>
               ) : (
-                <span className="text-[10px] font-mono text-zinc-500">
-                  Conclua a anterior
+                <span className="text-[10px] font-mono text-zinc-500 block">
+                  Bloqueada
                 </span>
               )}
             </div>
           )}
 
-          {!mission.sub && !mission.isLocked && (
-            mission.category === 'treino' || mission.category === 'cardio' ? (
-              activeSession?.missionId === mission.id ? (
-                <span className="px-3 py-1.5 rounded-xl bg-white text-black font-semibold text-xs animate-pulse block">
-                  Treinando...
-                </span>
-              ) : (
-                <button
-                  onClick={() => startSession(mission.id, mission.title, mission.category)}
-                  className="mono-button-primary px-3.5 py-2 text-xs font-bold"
-                >
-                  {mission.category === 'treino' ? 'Iniciar Treino' : 'Iniciar Cardio'}
-                </button>
-              )
+          {isActionable && (
+            isCurrentlyActive ? (
+              <span className="px-2.5 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-[11px] animate-pulse">
+                Em andamento
+              </span>
             ) : (
-              <Link href={`/app/camera/${mission.id}`}>
-                <button className="mono-button-primary px-3.5 py-2 text-xs font-bold">
-                  Registrar Foto
-                </button>
-              </Link>
+              <span className="px-3 py-1.5 rounded-xl bg-white text-black font-semibold text-xs group-hover:bg-zinc-200 transition-colors shadow-sm flex items-center gap-1">
+                {mission.category === 'treino' || mission.category === 'cardio' ? 'Iniciar' : 'Foto'}
+                <ChevronRight className="h-3 w-3" />
+              </span>
             )
           )}
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative">

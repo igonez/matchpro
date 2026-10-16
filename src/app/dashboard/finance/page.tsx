@@ -1222,7 +1222,7 @@ export default function FinanceDashboardPage() {
                   <div className="text-2xl font-black text-white mb-2">R$ 49,90<span className="text-xs text-zinc-500 font-normal">/mês</span></div>
                   <ul className="text-xs text-zinc-300 space-y-1.5 mb-2">
                     <li className="flex items-center gap-1.5">• Desbloqueia <strong className="text-white">Squads (Times Cooperativos)</strong></li>
-                    <li className="flex items-center gap-1.5">• Desbloqueia <strong className="text-white">Mystery Box & Streaks Gamificados</strong></li>
+                    <li className="flex items-center gap-1.5">• <strong className="text-white">Radar Anti-Churn & Resgate WhatsApp</strong></li>
                     <li className="flex items-center gap-1.5">• Taxa de Split ultra-reduzida para <strong className="text-emerald-400">8%</strong></li>
                     <li className="flex items-center gap-1.5">• Até <strong className="text-white">5 desafios simultâneos</strong> (100 alunos/desafio)</li>
                   </ul>

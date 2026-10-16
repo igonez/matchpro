@@ -7,7 +7,6 @@ export interface PlanLimits {
   maxActiveChallenges: number;
   maxStudentsPerChallenge: number;
   hasSquads: boolean;
-  hasMysteryBox: boolean;
   platformFeePercent: number; // Taxa de split da plataforma ArenaFit
   description: string;
 }
@@ -20,7 +19,6 @@ export const PLAN_CONFIG: Record<PlanTier, PlanLimits> = {
     maxActiveChallenges: 1,
     maxStudentsPerChallenge: 10,
     hasSquads: false,
-    hasMysteryBox: false,
     platformFeePercent: 15,
     description: 'Ideal para personais iniciando seus primeiros desafios online com até 10 alunos.',
   },
@@ -31,13 +29,12 @@ export const PLAN_CONFIG: Record<PlanTier, PlanLimits> = {
     maxActiveChallenges: 5,
     maxStudentsPerChallenge: 100,
     hasSquads: true,
-    hasMysteryBox: true,
     platformFeePercent: 8,
-    description: 'Gamificação completa com Squads, Mystery Box e taxa ultra-reduzida de 8%.',
+    description: 'Gamificação completa com Squads e taxa ultra-reduzida de 8%.',
   },
 };
 
-export type FeatureKey = 'hasSquads' | 'hasMysteryBox';
+export type FeatureKey = 'hasSquads';
 
 export function canAccessFeature(tier: PlanTier | string | null | undefined, feature: FeatureKey): boolean {
   const currentTier = (tier as PlanTier) || 'starter';

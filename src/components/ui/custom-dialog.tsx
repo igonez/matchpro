@@ -11,6 +11,9 @@ interface CustomDialogProps {
   children?: React.ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
+  confirmText?: string;
+  cancelText?: string;
+  variant?: 'default' | 'destructive';
   onConfirm?: () => void;
   isLoading?: boolean;
   hideFooter?: boolean;
@@ -23,14 +26,20 @@ export function CustomDialog({
   title,
   description,
   children,
-  confirmLabel = 'Confirmar',
-  cancelLabel = 'Cancelar',
+  confirmLabel,
+  cancelLabel,
+  confirmText,
+  cancelText,
+  variant = 'default',
   onConfirm,
   isLoading = false,
   hideFooter = false,
   tag = 'SISTEMA_DIALOG',
 }: CustomDialogProps) {
   if (!isOpen) return null;
+
+  const resolvedConfirmLabel = confirmText || confirmLabel || 'Confirmar';
+  const resolvedCancelLabel = cancelText || cancelLabel || (onConfirm ? 'Cancelar' : 'Fechar');
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
@@ -67,25 +76,40 @@ export function CustomDialog({
         {/* Ações */}
         {!hideFooter && (
           <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-white/[0.08]">
-            {cancelLabel && (
+            {onConfirm ? (
+              <>
+                {resolvedCancelLabel && (
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    disabled={isLoading}
+                    className="mono-button-secondary px-4 py-2 text-xs font-mono"
+                  >
+                    {resolvedCancelLabel}
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={onConfirm}
+                  disabled={isLoading}
+                  className={
+                    variant === 'destructive'
+                      ? 'px-5 py-2 text-xs font-mono font-bold rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-colors'
+                      : 'mono-button-primary px-5 py-2 text-xs font-mono font-bold'
+                  }
+                >
+                  {isLoading ? 'PROCESSANDO...' : resolvedConfirmLabel}
+                </button>
+              </>
+            ) : (
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="mono-button-secondary px-4 py-2 text-xs font-mono"
-              >
-                {cancelLabel}
-              </button>
-            )}
-
-            {onConfirm && (
-              <button
-                type="button"
-                onClick={onConfirm}
-                disabled={isLoading}
                 className="mono-button-primary px-5 py-2 text-xs font-mono font-bold"
               >
-                {isLoading ? 'PROCESSANDO...' : confirmLabel}
+                {confirmText || confirmLabel || resolvedCancelLabel}
               </button>
             )}
           </div>

@@ -833,110 +833,96 @@ function MissionsManagerContent() {
       </Card>
 
       {/* Modal Customizável de Edição / Criação */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <Card className="max-w-md w-full border-white/15 bg-zinc-950 p-6 shadow-2xl relative text-white">
-            <button
+      <CustomDialog
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={editingMission ? 'Editar Missão' : 'Nova Missão Customizada'}
+        description="Ajuste os parâmetros de pontuação, categoria e bloqueio da missão."
+        hideFooter
+      >
+        <form onSubmit={handleSaveMission} className="space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-zinc-300 block mb-1">Título da Missão</label>
+            <Input
+              value={formTitle}
+              onChange={(e) => setFormTitle(e.target.value)}
+              placeholder="Ex: Treino de Pernas & Glúteos"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">Categoria</label>
+              <select
+                value={formCategory}
+                onChange={(e: any) => setFormCategory(e.target.value)}
+                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+              >
+                <option value="treino">Treino</option>
+                <option value="cardio">Cardio</option>
+                <option value="refeicao">Refeição</option>
+                <option value="habito">Hábito / Água</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">Pontos (XP)</label>
+              <Input
+                type="number"
+                min={1}
+                value={formPoints}
+                onChange={(e) => setFormPoints(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Opção de Trava Diária (Current Day) */}
+          <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2.5">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
+              <input
+                type="checkbox"
+                checked={formRequiresCooldown}
+                onChange={(e) => setFormRequiresCooldown(e.target.checked)}
+                className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
+              />
+              <span>Trava Diária: Liberar apenas 1 por dia (libera na virada das 00:00)</span>
+            </label>
+            <p className="text-[11px] text-zinc-400 pl-6">
+              Garante a disciplina biológica do aluno evitando múltiplos envios no mesmo dia.
+            </p>
+
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1">
+              <input
+                type="checkbox"
+                checked={formIsBonus}
+                onChange={(e) => setFormIsBonus(e.target.checked)}
+                className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
+              />
+              <span>Marcar como Missão Extra / Bônus</span>
+            </label>
+          </div>
+
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+              className="flex-1 text-xs border-white/10 text-zinc-400 hover:text-white"
             >
-              <X className="h-5 w-5" />
-            </button>
-
-            <CardHeader className="p-0 pb-4">
-              <CardTitle className="text-lg font-black text-white tracking-tight">
-                {editingMission ? 'Editar Missão' : 'Nova Missão Customizada'}
-              </CardTitle>
-              <CardDescription className="text-xs text-zinc-400">
-                Ajuste os parâmetros de pontuação, categoria e bloqueio da missão.
-              </CardDescription>
-            </CardHeader>
-
-            <form onSubmit={handleSaveMission} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-zinc-300 block mb-1">Título da Missão</label>
-                <Input
-                  value={formTitle}
-                  onChange={(e) => setFormTitle(e.target.value)}
-                  placeholder="Ex: Treino de Pernas & Glúteos"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-zinc-300 block mb-1">Categoria</label>
-                  <select
-                    value={formCategory}
-                    onChange={(e: any) => setFormCategory(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
-                  >
-                    <option value="treino">Treino</option>
-                    <option value="cardio">Cardio</option>
-                    <option value="refeicao">Refeição</option>
-                    <option value="habito">Hábito / Água</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">Pontos (XP)</label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={formPoints}
-                    onChange={(e) => setFormPoints(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Opção de Trava Diária (Current Day) */}
-              <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2.5">
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
-                  <input
-                    type="checkbox"
-                    checked={formRequiresCooldown}
-                    onChange={(e) => setFormRequiresCooldown(e.target.checked)}
-                    className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
-                  />
-                  <span>Trava Diária: Liberar apenas 1 por dia (libera na virada das 00:00)</span>
-                </label>
-                <p className="text-[11px] text-zinc-400 pl-6">
-                  Garante a disciplina biológica do aluno evitando múltiplos envios no mesmo dia.
-                </p>
-
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1">
-                  <input
-                    type="checkbox"
-                    checked={formIsBonus}
-                    onChange={(e) => setFormIsBonus(e.target.checked)}
-                    className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
-                  />
-                  <span>Marcar como Missão Extra / Bônus</span>
-                </label>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 text-xs border-white/10 text-zinc-400 hover:text-white"
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={submittingMission}
-                  className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black"
-                >
-                  {submittingMission ? 'Salvando...' : 'Salvar Missão'}
-                </Button>
-              </div>
-            </form>
-          </Card>
-        </div>
-      )}
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={submittingMission}
+              className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black"
+            >
+              {submittingMission ? 'Salvando...' : 'Salvar Missão'}
+            </Button>
+          </div>
+        </form>
+      </CustomDialog>
 
       {/* Toast Flutuante */}
       {toastMessage && (

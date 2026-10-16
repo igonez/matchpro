@@ -49,6 +49,12 @@ export function TransformationVaultModal({
   const [weight, setWeight] = useState('');
   const [notes, setNotes] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  const showStatus = (msg: string) => {
+    setStatusMessage(msg);
+    setTimeout(() => setStatusMessage(null), 3500);
+  };
 
   if (!isOpen) return null;
 
@@ -120,9 +126,10 @@ export function TransformationVaultModal({
       setNotes('');
       setActiveTab('view');
       onVaultUpdated();
+      showStatus('Foto salva com segurança no cofre!');
     } catch (err) {
       console.error('Erro no upload da foto do cofre:', err);
-      alert('Não foi possível enviar a foto. Tente novamente.');
+      showStatus('Não foi possível enviar a foto. Tente novamente.');
     } finally {
       setUploading(false);
     }
@@ -134,7 +141,7 @@ export function TransformationVaultModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-3xl bg-zinc-900 border border-zinc-800 p-5 text-white shadow-2xl relative overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="w-full max-w-md rounded-3xl mono-glass-card border border-white/15 p-5 text-white shadow-2xl relative overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Glow de fundo */}
         <div className="absolute -top-20 -right-20 w-44 h-44 bg-white/5 rounded-full blur-3xl pointer-events-none" />
@@ -146,8 +153,9 @@ export function TransformationVaultModal({
               {isUnlocked ? <Unlock className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 font-mono">
-                Transformação Blindada
+              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 font-mono flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse inline-block" />
+                SISTEMA_DIALOG • COFRE_EVOLUCAO
               </span>
               <h3 className="text-base font-black text-white leading-tight">Cofre Antes & Depois</h3>
             </div>
@@ -161,6 +169,12 @@ export function TransformationVaultModal({
             Fechar
           </Button>
         </div>
+
+        {statusMessage && (
+          <div className="mt-3 p-3 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold text-center animate-in fade-in duration-200">
+            {statusMessage}
+          </div>
+        )}
 
         {/* CONTEÚDO PRINCIPAL: VIEW OU UPLOADS */}
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
@@ -240,7 +254,7 @@ export function TransformationVaultModal({
                   {/* Botão de Compartilhar nos Stories */}
                   <Button
                     onClick={() => {
-                      alert('Story pronto para exportação.');
+                      showStatus('Story pronto para exportação!');
                     }}
                     className="w-full h-11 rounded-xl text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 flex items-center justify-center gap-2"
                   >

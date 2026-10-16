@@ -667,6 +667,7 @@ function JoinChallengeContent() {
         isOpen={pixModalOpen}
         onClose={() => setPixModalOpen(false)}
         title="Pagamento da Inscrição via Pix"
+        hideFooter
       >
         <div className="space-y-4 pt-2 text-center">
           <p className="text-xs text-zinc-400">

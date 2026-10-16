@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { X } from 'lucide-react';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { CustomDialog } from '@/components/ui/custom-dialog';
 
 export default function StudentSocialFeedPage() {
   const supabase = createClient();
@@ -19,6 +20,35 @@ export default function StudentSocialFeedPage() {
   const [commentText, setCommentText] = useState('');
   const [commentsList, setCommentsList] = useState<any[]>([]);
   const [submittingComment, setSubmittingComment] = useState(false);
+
+  // Modal de Denúncia e Toast Padrão
+  const [reportTargetPost, setReportTargetPost] = useState<any | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleConfirmReport = async () => {
+    if (!currentUser || !reportTargetPost) return;
+    const post = reportTargetPost;
+    setReportTargetPost(null);
+
+    const { error } = await supabase.from('submission_reports').insert({
+      submission_id: post.id,
+      reporter_student_id: currentUser.id,
+      reason: 'Denúncia de foto suspeita',
+    });
+
+    if (error && error.message.includes('unique')) {
+      showToast('Você já sinalizou esta foto anteriormente.');
+    } else if (error) {
+      showToast('Erro ao enviar sinalização: ' + error.message);
+    } else {
+      showToast('Foto enviada para averiguação da comissão técnica.');
+    }
+  };
 
   const fetchFeed = async () => {
     setLoading(true);
@@ -300,24 +330,9 @@ export default function StudentSocialFeedPage() {
                     </button>
 
                     <button
-                      onClick={async () => {
+                      onClick={() => {
                         if (!currentUser) return;
-                        const confirmReport = confirm('Deseja sinalizar esta foto para auditoria por suspeita de fraude?');
-                        if (!confirmReport) return;
-
-                        const { error } = await supabase.from('submission_reports').insert({
-                          submission_id: post.id,
-                          reporter_student_id: currentUser.id,
-                          reason: 'Denúncia de foto suspeita',
-                        });
-
-                        if (error && error.message.includes('unique')) {
-                          alert('Você já sinalizou esta foto anteriormente.');
-                        } else if (error) {
-                          alert('Erro ao enviar sinalização: ' + error.message);
-                        } else {
-                          alert('Foto enviada para averiguação da comissão técnica.');
-                        }
+                        setReportTargetPost(post);
                       }}
                       className="ml-auto text-[10px] font-mono text-zinc-600 hover:text-white"
                       title="Sinalizar foto suspeita"
@@ -341,14 +356,36 @@ export default function StudentSocialFeedPage() {
         </div>
       )}
 
+      {/* Modal de Confirmação de Denúncia Padrão */}
+      <CustomDialog
+        isOpen={Boolean(reportTargetPost)}
+        onClose={() => setReportTargetPost(null)}
+        onConfirm={handleConfirmReport}
+        title="Sinalizar Publicação para Auditoria"
+        description="Deseja sinalizar esta foto para auditoria da comissão técnica por suspeita de fraude ou descumprimento das regras?"
+        confirmText="Sinalizar Foto"
+        cancelText="Cancelar"
+        variant="destructive"
+      />
+
+      {/* Toast Monocromático Flutuante */}
+      {toastMessage && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 mono-glass-card px-5 py-3 rounded-2xl border border-white/25 text-white text-xs font-bold shadow-[0_0_30px_rgba(255,255,255,0.12)] animate-in fade-in slide-in-from-bottom-4 duration-200 max-w-xs text-center">
+          {toastMessage}
+        </div>
+      )}
+
       {/* Sheet de Comentários Monocromático */}
       {activeCommentPost && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
           <div className="mono-glass-card rounded-t-[32px] max-h-[75vh] flex flex-col p-5 border-t border-white/20">
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-              <span className="font-bold text-xs text-white font-mono uppercase tracking-wider">
-                COMENTÁRIOS DA FOTO
-              </span>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-white animate-pulse" />
+                <span className="font-bold text-xs text-white font-mono uppercase tracking-wider">
+                  SISTEMA_DIALOG • COMENTÁRIOS DA FOTO
+                </span>
+              </div>
               <button
                 onClick={() => setActiveCommentPost(null)}
                 className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"

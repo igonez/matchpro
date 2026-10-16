@@ -92,6 +92,17 @@ export default function FinanceDashboardPage() {
   const [cardCvv, setCardCvv] = useState('');
   const [upgradeLoading, setUpgradeLoading] = useState(false);
   const [upgradePixData, setUpgradePixData] = useState<any>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [dialogNotice, setDialogNotice] = useState<{
+    title: string;
+    description: string;
+    details?: string[];
+  } | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
 
   useEffect(() => {
     async function loadFinanceData() {
@@ -221,17 +232,26 @@ export default function FinanceDashboardPage() {
     if (!coachProfile?.id) return;
 
     if (!isDocValid) {
-      alert(`Por favor, preencha um ${docTypeInput} válido antes de salvar.`);
+      setDialogNotice({
+        title: 'Documento Inválido',
+        description: `Por favor, preencha um ${docTypeInput} válido antes de salvar seus dados de recebimento.`,
+      });
       return;
     }
 
     if (!pixValidation.isValid) {
-      alert(`Chave Pix inválida: ${pixValidation.error || 'Verifique o formato informado.'}`);
+      setDialogNotice({
+        title: 'Chave Pix Inválida',
+        description: pixValidation.error || 'Verifique o formato da chave Pix informada.',
+      });
       return;
     }
 
     if (docTypeInput === 'CPF' && birthDateInput && !/^\d{4}-\d{2}-\d{2}$/.test(birthDateInput)) {
-      alert('Data de nascimento deve estar no formato AAAA-MM-DD.');
+      setDialogNotice({
+        title: 'Data de Nascimento Inválida',
+        description: 'A data de nascimento deve estar no formato válido.',
+      });
       return;
     }
 
@@ -277,13 +297,27 @@ export default function FinanceDashboardPage() {
       setPixKeyInput(data.data.pixKey);
       setVerifiedBankData(data.data);
 
-      const splitMsg = data.data.walletId 
-        ? `\n\n🎉 Subconta Asaas ativada! (Wallet ID: ${data.data.walletId})\nSeus desafios pagos agora realizam Split automático para sua carteira!` 
-        : '';
+      const details = [
+        `Chave Pix: ${data.data.pixKey}`,
+        `Titular: ${data.data.ownerName}`,
+        `Banco: ${data.data.bankName}`,
+      ];
+      if (data.data.walletId) {
+        details.push(`Subconta Asaas Ativa (Wallet ID: ${data.data.walletId})`);
+      }
 
-      alert(`✅ Dados de recebimento salvos com sucesso!\n\nChave Pix: ${data.data.pixKey}\nTitular: ${data.data.ownerName}\nBanco: ${data.data.bankName}${splitMsg}`);
+      setDialogNotice({
+        title: 'Dados de Recebimento Salvos!',
+        description: data.data.walletId
+          ? 'Seus desafios pagos agora realizam Split automático para sua carteira digital.'
+          : 'Seus dados bancários foram validados e vinculados com sucesso.',
+        details,
+      });
     } catch (err: any) {
-      alert('Erro ao validar dados: ' + err.message);
+      setDialogNotice({
+        title: 'Erro ao Validar Dados',
+        description: err.message || 'Não foi possível salvar os dados bancários.',
+      });
     } finally {
       setSavingAccount(false);
     }
@@ -291,12 +325,18 @@ export default function FinanceDashboardPage() {
 
   const handleRequestWithdraw = async () => {
     if (!coachProfile?.asaas_pix_key) {
-      alert('Cadastre e valide sua chave Pix antes de solicitar o saque.');
+      setDialogNotice({
+        title: 'Chave Pix Necessária',
+        description: 'Cadastre e valide sua chave Pix antes de solicitar o saque.',
+      });
       return;
     }
 
     if (availableBalance <= 0) {
-      alert('Você não possui saldo disponível para saque no momento.');
+      setDialogNotice({
+        title: 'Saldo Insuficiente',
+        description: 'Você não possui saldo disponível para saque no momento.',
+      });
       return;
     }
 
@@ -313,10 +353,21 @@ export default function FinanceDashboardPage() {
         throw new Error(data.error || 'Falha ao solicitar saque Pix.');
       }
 
-      alert(`✅ Saque solicitado com sucesso!\n\nValor: R$ ${availableBalance.toFixed(2)}\nChave Pix: ${coachProfile.asaas_pix_key}\nStatus: Processando (Previsão de crédito: em até 5 minutos D+0)`);
       setWithdrawModalOpen(false);
+      setDialogNotice({
+        title: 'Saque Solicitado com Sucesso!',
+        description: 'Sua transferência Pix foi enviada para processamento bancário imediato (D+0).',
+        details: [
+          `Valor: R$ ${availableBalance.toFixed(2)}`,
+          `Chave Pix: ${coachProfile.asaas_pix_key}`,
+          `Status: Processando (Previsão: até 5 minutos)`,
+        ],
+      });
     } catch (err: any) {
-      alert('Erro ao processar saque: ' + err.message);
+      setDialogNotice({
+        title: 'Erro ao Processar Saque',
+        description: err.message || 'Não foi possível concluir a solicitação de saque.',
+      });
     } finally {
       setWithdrawing(false);
     }
@@ -339,7 +390,10 @@ export default function FinanceDashboardPage() {
 
       setUpgradePixData(data);
     } catch (err: any) {
-      alert('Erro ao iniciar upgrade de plano: ' + err.message);
+      setDialogNotice({
+        title: 'Erro ao Iniciar Upgrade',
+        description: err.message || 'Falha ao comunicar com o gateway de pagamento.',
+      });
     } finally {
       setUpgradeLoading(false);
     }
@@ -897,6 +951,7 @@ export default function FinanceDashboardPage() {
         isOpen={withdrawModalOpen}
         onClose={() => setWithdrawModalOpen(false)}
         title="Solicitar Saque Pix Imediato"
+        hideFooter
       >
         <div className="space-y-4 pt-2">
           <p className="text-sm text-zinc-400">
@@ -949,6 +1004,7 @@ export default function FinanceDashboardPage() {
           setUpgradePixData(null);
         }}
         title="Upgrade de Plano ArenaFitPro"
+        hideFooter
       >
         <div className="space-y-4 pt-2">
           {upgradePixData ? (
@@ -974,7 +1030,7 @@ export default function FinanceDashboardPage() {
                   <Button
                     onClick={() => {
                       navigator.clipboard.writeText(upgradePixData.pixCode);
-                      alert('Código PIX Copia e Cola copiado para a área de transferência!');
+                      showToast('Código PIX Copia e Cola copiado para a área de transferência!');
                     }}
                     className="w-full bg-white text-black hover:bg-zinc-200 font-bold text-xs"
                   >
@@ -1009,8 +1065,13 @@ export default function FinanceDashboardPage() {
                       }));
                       setUpgradeModalOpen(false);
                       setUpgradePixData(null);
+                      showToast('Plano Pro Coach ativado com sucesso!');
                     } catch (err: any) {
                       console.error('Erro ao confirmar upgrade Pix:', err);
+                      setDialogNotice({
+                        title: 'Erro ao Confirmar Plano',
+                        description: err.message || 'Não foi possível confirmar a ativação do plano.',
+                      });
                     } finally {
                       setUpgradeLoading(false);
                     }
@@ -1200,7 +1261,10 @@ export default function FinanceDashboardPage() {
 
                     if (upgradePaymentMethod === 'CREDIT_CARD') {
                       if (!cardNumber.trim() || !cardHolder.trim()) {
-                        alert('Preencha os dados do cartão de crédito para continuar.');
+                        setDialogNotice({
+                          title: 'Dados do Cartão Incompletos',
+                          description: 'Preencha os dados do cartão de crédito para continuar.',
+                        });
                         return;
                       }
                       setUpgradeLoading(true);
@@ -1235,9 +1299,15 @@ export default function FinanceDashboardPage() {
                         }
                         setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'pro', platform_fee_percent: 12 }));
                         setUpgradeModalOpen(false);
-                        alert('🎉 Assinatura Pro ativada com sucesso com cobrança recorrente no cartão!');
+                        setDialogNotice({
+                          title: 'Assinatura Pro Ativada!',
+                          description: 'Sua assinatura Pro Coach foi ativada com sucesso com cobrança recorrente no cartão!',
+                        });
                       } catch (err: any) {
-                        alert('Erro ao processar assinatura no cartão: ' + err.message);
+                        setDialogNotice({
+                          title: 'Erro na Assinatura',
+                          description: err.message || 'Erro ao processar assinatura no cartão.',
+                        });
                       } finally {
                         setUpgradeLoading(false);
                       }
@@ -1271,6 +1341,34 @@ export default function FinanceDashboardPage() {
           )}
         </div>
       </CustomDialog>
+
+      {/* Modal de Avisos e Confirmações do Sistema */}
+      <CustomDialog
+        isOpen={Boolean(dialogNotice)}
+        onClose={() => setDialogNotice(null)}
+        title={dialogNotice?.title || 'Aviso do Sistema'}
+        description={dialogNotice?.description}
+        confirmText="Entendido"
+      >
+        {dialogNotice?.details && dialogNotice.details.length > 0 && (
+          <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 space-y-1.5 text-xs font-mono text-zinc-300">
+            {dialogNotice.details.map((line, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0" />
+                <span>{line}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </CustomDialog>
+
+      {/* Toast Monocromático Flutuante */}
+      {toastMessage && (
+        <div className="fixed bottom-8 right-8 z-50 mono-glass-card px-5 py-3.5 rounded-2xl border border-white/25 text-white text-xs font-bold shadow-[0_0_30px_rgba(255,255,255,0.12)] animate-in fade-in slide-in-from-bottom-4 duration-200 flex items-center gap-2.5">
+          <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }

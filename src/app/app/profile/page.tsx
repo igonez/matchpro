@@ -81,10 +81,10 @@ export default function StudentProfilePage() {
       if (updateError) throw updateError;
 
       setStudent((prev: any) => ({ ...prev, avatar_url: publicUrl }));
-      alert('Foto de perfil atualizada com sucesso.');
+      showToast('Foto de perfil atualizada com sucesso!');
     } catch (err: any) {
       console.error('Erro ao atualizar foto de perfil:', err);
-      alert('Não foi possível enviar a foto de perfil: ' + (err.message || 'Tente novamente.'));
+      showToast('Não foi possível enviar a foto de perfil: ' + (err.message || 'Tente novamente.'));
     } finally {
       setUploadingAvatar(false);
     }

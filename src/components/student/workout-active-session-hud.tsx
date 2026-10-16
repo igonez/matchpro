@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWorkoutSession } from '@/lib/workout-session-context';
 import { Play, Square, X, ChevronUp, ChevronDown, Camera, AlertTriangle } from 'lucide-react';
+import { CustomDialog } from '@/components/ui/custom-dialog';
 
 export function WorkoutActiveSessionHud() {
   const router = useRouter();
@@ -183,30 +184,16 @@ export function WorkoutActiveSessionHud() {
       )}
 
       {/* Modal de Confirmação para Cancelar Sessão */}
-      {showConfirmCancel && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="mono-glass-card p-6 rounded-3xl max-w-xs w-full text-center space-y-4 border-white/20">
-            <h3 className="text-sm font-bold font-mono text-white">CANCELAR SESSÃO?</h3>
-            <p className="text-xs text-zinc-400">
-              O cronômetro será zerado e o treino não será registrado no placar.
-            </p>
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={() => setShowConfirmCancel(false)}
-                className="mono-button-secondary flex-1 py-2 text-xs font-mono"
-              >
-                VOLTAR
-              </button>
-              <button
-                onClick={handleConfirmCancel}
-                className="mono-button-primary flex-1 py-2 text-xs font-mono bg-zinc-800 text-white"
-              >
-                SIM, DESCARTAR
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CustomDialog
+        isOpen={showConfirmCancel}
+        onClose={() => setShowConfirmCancel(false)}
+        onConfirm={handleConfirmCancel}
+        title="Cancelar Sessão de Treino?"
+        description="O cronômetro será zerado e este treino não será registrado no placar."
+        confirmText="Sim, Descartar"
+        cancelText="Voltar"
+        variant="destructive"
+      />
     </>
   );
 }

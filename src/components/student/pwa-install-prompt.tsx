@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Smartphone, X, Share, PlusSquare } from 'lucide-react';
+import { CustomDialog } from '@/components/ui/custom-dialog';
 
 export function PwaInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -96,45 +97,30 @@ export function PwaInstallPrompt() {
       </div>
 
       {/* Modal Guia Especial para iPhone / iOS */}
-      {showIosGuide && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-4">
-          <div className="mono-glass-card p-6 rounded-3xl max-w-sm w-full space-y-4 border-white/20 animate-in fade-in slide-in-from-bottom-4">
-            <div className="flex items-center justify-between pb-2 border-b border-white/10">
-              <span className="text-xs font-bold font-mono text-white">INSTALAÇÃO NO IPHONE / IPAD</span>
-              <button onClick={() => setShowIosGuide(false)} className="text-zinc-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </button>
+      <CustomDialog
+        isOpen={showIosGuide}
+        onClose={() => setShowIosGuide(false)}
+        title="Instalação no iPhone / iPad"
+        description="Para transformar o ArenaFitPro em um aplicativo na sua tela de início:"
+        confirmText="Entendi"
+        tag="SISTEMA_DIALOG • PWA_IOS"
+      >
+        <div className="space-y-3 font-mono text-xs text-zinc-200">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/10">
+            <div className="h-7 w-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-white">
+              <Share className="h-4 w-4" />
             </div>
+            <span>1. Toque no botão <strong className="text-white">Compartilhar</strong> na barra inferior do Safari.</span>
+          </div>
 
-            <p className="text-xs text-zinc-300 leading-relaxed font-sans">
-              Para transformar o ArenaFitPro em um aplicativo na sua tela de início:
-            </p>
-
-            <div className="space-y-3 font-mono text-xs">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/10">
-                <div className="h-7 w-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-white">
-                  <Share className="h-4 w-4" />
-                </div>
-                <span>1. Toque no botão <strong>Compartilhar</strong> na barra inferior do Safari.</span>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/10">
-                <div className="h-7 w-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-white">
-                  <PlusSquare className="h-4 w-4" />
-                </div>
-                <span>2. Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong>.</span>
-              </div>
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/10">
+            <div className="h-7 w-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-white">
+              <PlusSquare className="h-4 w-4" />
             </div>
-
-            <button
-              onClick={() => setShowIosGuide(false)}
-              className="mono-button-primary w-full py-2.5 text-xs font-mono"
-            >
-              ENTENDI
-            </button>
+            <span>2. Role para baixo e toque em <strong className="text-white">&quot;Adicionar à Tela de Início&quot;</strong>.</span>
           </div>
         </div>
-      )}
+      </CustomDialog>
     </>
   );
 }

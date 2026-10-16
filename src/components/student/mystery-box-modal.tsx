@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Gift, Sparkles, Trophy, Star, Shield, ArrowRight, Check } from 'lucide-react';
+import { Gift, Sparkles, Trophy, Check, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { createClient } from '@/lib/supabase/client';
+import { CustomDialog } from '@/components/ui/custom-dialog';
 
 interface MysteryBoxModalProps {
   isOpen: boolean;
@@ -30,12 +30,14 @@ export function MysteryBoxModal({
   const supabase = createClient();
   const [opening, setOpening] = useState(false);
   const [revealedReward, setRevealedReward] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleOpenBox = async () => {
     if (!isEligible || alreadyClaimed || opening) return;
     setOpening(true);
+    setErrorMessage(null);
 
     try {
       // 1. Buscar recompensas disponíveis
@@ -124,7 +126,7 @@ export function MysteryBoxModal({
     } catch (err) {
       console.error('Erro ao abrir Mystery Box:', err);
       setOpening(false);
-      alert('Erro ao resgatar a caixa da semana.');
+      setErrorMessage('Erro ao resgatar a caixa da semana. Tente novamente.');
     }
   };
 
@@ -142,99 +144,98 @@ export function MysteryBoxModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-sm rounded-3xl bg-zinc-950/95 border border-white/15 p-6 text-white shadow-2xl shadow-black relative overflow-hidden text-center">
-        {/* Glow de fundo monocromatico */}
-        <div className="absolute -top-24 -left-24 w-52 h-52 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-52 h-52 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+    <CustomDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Mystery Box • Semana ${weekNumber}`}
+      tag="SISTEMA_DIALOG • MYSTERY_BOX"
+      hideFooter
+    >
+      {/* ESTADO 1: RECOMPENSA REVELADA */}
+      {revealedReward ? (
+        <div className="py-4 space-y-4 text-center animate-in zoom-in-95 duration-300">
+          <div className="h-20 w-20 mx-auto rounded-3xl bg-white/10 border border-white/20 p-0.5 shadow-2xl shadow-white/5">
+            <div className="h-full w-full bg-zinc-900 rounded-[22px] flex items-center justify-center text-white">
+              <Trophy className="h-10 w-10 animate-bounce stroke-[1.8]" />
+            </div>
+          </div>
 
-        {/* ESTADO 1: RECOMPENSA REVELADA */}
-        {revealedReward ? (
-          <div className="py-4 space-y-4 animate-in zoom-in-95 duration-300">
-            <div className="h-20 w-20 mx-auto rounded-3xl bg-white/10 border border-white/20 p-0.5 shadow-2xl shadow-white/5">
-              <div className="h-full w-full bg-zinc-900 rounded-[22px] flex items-center justify-center text-white">
-                <Trophy className="h-10 w-10 animate-bounce stroke-[1.8]" />
+          <div>
+            {getRarityBadge(revealedReward.rarity || 'rare')}
+            <h3 className="text-xl font-black text-white mt-2 tracking-tight">{revealedReward.title}</h3>
+            <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">
+              {revealedReward.description}
+            </p>
+          </div>
+
+          <div className="p-3 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-300 font-bold flex items-center justify-center gap-2">
+            <Check className="h-4 w-4 text-white" /> Recompensa creditada na sua conta
+          </div>
+
+          <Button
+            onClick={onClose}
+            className="w-full h-11 rounded-xl text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+          >
+            Confirmar e Concluir
+          </Button>
+        </div>
+      ) : (
+        /* ESTADO 2: ANIMAÇÃO DA CAIXA OU TELA INICIAL */
+        <div className="space-y-4 text-center">
+          {/* Ícone Central da Caixa */}
+          <div className="py-3">
+            <div
+              className={`h-24 w-24 mx-auto rounded-3xl bg-zinc-900 border border-white/20 p-1 shadow-2xl shadow-black flex items-center justify-center transition-all ${
+                opening ? 'animate-spin scale-110 border-white' : 'hover:scale-105 hover:border-white/40 cursor-pointer'
+              }`}
+              onClick={handleOpenBox}
+            >
+              <div className="h-full w-full bg-zinc-950 rounded-[20px] flex items-center justify-center text-white">
+                <Gift className={`h-12 w-12 stroke-[1.8] ${opening ? 'animate-pulse' : ''}`} />
               </div>
             </div>
+          </div>
 
-            <div>
-              {getRarityBadge(revealedReward.rarity || 'rare')}
-              <h3 className="text-xl font-black text-white mt-2 tracking-tight">{revealedReward.title}</h3>
-              <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">
-                {revealedReward.description}
-              </p>
+          {alreadyClaimed ? (
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400">
+              Você já resgatou a sua Mystery Box desta semana. Mantenha o ritmo para a próxima semana.
             </div>
-
-            <div className="p-3 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-300 font-bold flex items-center justify-center gap-2">
-              <Check className="h-4 w-4 text-white" /> Recompensa creditada na sua conta
+          ) : !isEligible ? (
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400 leading-relaxed text-left">
+              <strong className="text-white block mb-0.5">Caixa Bloqueada</strong>
+              Conclua 100% das metas da semana para liberar o resgate da caixa e acumular vantagens no ranking.
             </div>
+          ) : (
+            <p className="text-xs text-zinc-300">
+              Parabéns! Você atingiu 100% de consistência. Desbloqueie sua caixa misteriosa agora.
+            </p>
+          )}
 
+          {errorMessage && (
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2 text-left">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          <div className="flex items-center gap-2 pt-1">
             <Button
+              variant="outline"
               onClick={onClose}
-              className="w-full h-11 rounded-xl text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+              className="flex-1 rounded-xl h-11 text-xs font-bold border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
             >
-              Confirmar e Concluir
+              Voltar
+            </Button>
+            <Button
+              onClick={handleOpenBox}
+              disabled={!isEligible || alreadyClaimed || opening}
+              className="flex-1 rounded-xl h-11 text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 disabled:opacity-40"
+            >
+              {opening ? 'Abrindo...' : 'Abrir Caixa'}
             </Button>
           </div>
-        ) : (
-          /* ESTADO 2: ANIMAÇÃO DA CAIXA OU TELA INICIAL */
-          <div className="space-y-5">
-            <div className="space-y-1">
-              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center justify-center gap-1 font-mono">
-                <Sparkles className="h-3 w-3" /> Recompensa Semanal
-              </span>
-              <h3 className="text-xl font-black text-white tracking-tight">Mystery Box</h3>
-              <p className="text-xs text-zinc-500 font-mono">Semana {weekNumber} do Desafio</p>
-            </div>
-
-            {/* Ícone Central da Caixa */}
-            <div className="py-4">
-              <div
-                className={`h-28 w-28 mx-auto rounded-3xl bg-zinc-900 border border-white/20 p-1 shadow-2xl shadow-black flex items-center justify-center transition-all ${
-                  opening ? 'animate-spin scale-110 border-white' : 'hover:scale-105 hover:border-white/40 cursor-pointer'
-                }`}
-                onClick={handleOpenBox}
-              >
-                <div className="h-full w-full bg-zinc-950 rounded-[20px] flex items-center justify-center text-white">
-                  <Gift className={`h-14 w-14 stroke-[1.8] ${opening ? 'animate-pulse' : ''}`} />
-                </div>
-              </div>
-            </div>
-
-            {alreadyClaimed ? (
-              <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400">
-                Você já resgatou a sua Mystery Box desta semana. Mantenha o ritmo para a próxima semana.
-              </div>
-            ) : !isEligible ? (
-              <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400 leading-relaxed text-left">
-                <strong className="text-white block mb-0.5">Caixa Bloqueada</strong>
-                Conclua 100% das metas da semana para liberar o resgate da caixa e acumular vantagens no ranking.
-              </div>
-            ) : (
-              <p className="text-xs text-zinc-300">
-                Parabéns. Você atingiu 100% de consistência. Desbloqueie sua caixa misteriosa agora.
-              </p>
-            )}
-
-            <div className="flex items-center gap-2 pt-1">
-              <Button
-                variant="outline"
-                onClick={onClose}
-                className="flex-1 rounded-xl h-11 text-xs font-bold border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
-              >
-                Voltar
-              </Button>
-              <Button
-                onClick={handleOpenBox}
-                disabled={!isEligible || alreadyClaimed || opening}
-                className="flex-1 rounded-xl h-11 text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 disabled:opacity-40"
-              >
-                {opening ? 'Abrindo...' : 'Abrir Caixa'}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </CustomDialog>
   );
 }

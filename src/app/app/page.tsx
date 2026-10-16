@@ -10,7 +10,24 @@ import { FreezeShieldModal } from '@/components/student/freeze-shield-modal';
 import { MysteryBoxModal } from '@/components/student/mystery-box-modal';
 import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
 import { useWorkoutSession } from '@/lib/workout-session-context';
-import { QrCode, ArrowRight, Pin, Megaphone, CheckCircle2, Play, Camera, Sparkles } from 'lucide-react';
+import { 
+  QrCode, 
+  ArrowRight, 
+  Pin, 
+  Megaphone, 
+  CheckCircle2, 
+  Play, 
+  Camera, 
+  Sparkles, 
+  Trophy, 
+  ShieldCheck, 
+  Gift, 
+  Flame, 
+  Zap, 
+  Activity, 
+  Utensils, 
+  Droplets 
+} from 'lucide-react';
 
 export default function StudentHomePage() {
   const router = useRouter();
@@ -382,37 +399,37 @@ export default function StudentHomePage() {
             </div>
           )}
 
-          <SpotlightCard3D className="p-6 text-center space-y-4">
-            <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/20 mx-auto flex items-center justify-center shadow-lg">
+          <SpotlightCard3D className="p-7 text-center space-y-4">
+            <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/20 mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(255,255,255,0.08)]">
               <QrCode className="h-8 w-8 text-white" />
             </div>
 
             <div>
               <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block mb-1">
-                Acesso Inicial
+                ACESSO À ARENA
               </span>
-              <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                Aguardando sua Turma
+              <h2 className="text-xl font-black text-white tracking-tight">
+                Conecte-se à sua Turma
               </h2>
-              <p className="text-xs text-zinc-400 mt-2 max-w-xs mx-auto leading-relaxed">
-                Sua conta foi criada com sucesso! Para ver suas missões e pontuar no ranking, entre através do <strong>link de convite</strong> ou <strong>QR Code</strong> compartilhado pelo seu treinador.
+              <p className="text-xs text-zinc-300 mt-2 max-w-xs mx-auto leading-relaxed">
+                Digite o <strong>Código de Convite</strong> fornecido pelo seu treinador para liberar seu cronograma de missões com auditoria por IA e disputar o pódio da sua turma.
               </p>
             </div>
 
             <div className="pt-2 space-y-2.5">
               <input
                 type="text"
-                placeholder="Cole o código ou link da turma..."
+                placeholder="Ex: VERAO-2026 ou link do convite..."
                 value={inviteCodeInput}
                 onChange={(e) => setInviteCodeInput(e.target.value)}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3.5 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40 font-mono"
+                className="w-full bg-black/70 border border-white/15 rounded-xl px-4 py-3 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/50 font-mono transition-colors"
               />
               <button
                 type="button"
                 onClick={handleEnterChallengeByCode}
-                className="mono-button-primary w-full py-3 text-xs font-mono font-bold flex items-center justify-center gap-2"
+                className="mono-button-primary w-full py-3.5 text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
               >
-                <span>Entrar na Turma</span>
+                <span>Validar e Entrar na Turma</span>
                 <ArrowRight className="h-3.5 w-3.5 text-black" />
               </button>
             </div>
@@ -679,10 +696,10 @@ export default function StudentHomePage() {
           {/* 5. Banner de Acesso Rápido ao Ranking & Arquivos */}
           <div className="grid grid-cols-1 gap-2.5 relative z-10">
             <Link href="/app/leaderboard" className="block group">
-              <div className="mono-glass-card p-3.5 rounded-2xl border border-amber-500/25 bg-amber-950/15 hover:border-amber-500/50 active:scale-98 transition-all flex items-center justify-between">
+              <div className="mono-glass-card p-3.5 rounded-2xl border border-amber-500/25 bg-amber-950/15 hover:border-amber-500/50 active:scale-98 transition-all flex items-center justify-between shadow-[0_4px_20px_rgba(245,158,11,0.08)]">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="h-10 w-10 rounded-xl bg-amber-500/15 border border-amber-500/35 flex items-center justify-center text-amber-300 font-bold text-lg shrink-0">
-                    🏆
+                    <Trophy className="w-5 h-5 text-amber-400" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -712,8 +729,8 @@ export default function StudentHomePage() {
               className="mono-glass-card p-4 rounded-3xl text-left border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-950/20 active:scale-98 transition-all group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-cyan-400 flex items-center gap-1">
-                  🛡️ Escudo
+                <span className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-cyan-400" /> Escudo
                 </span>
                 <span className="text-xs font-bold text-cyan-300 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md font-mono">
                   {gamState.freeze_shields_available}x
@@ -722,7 +739,7 @@ export default function StudentHomePage() {
               <p className="text-xs font-bold text-white mt-2 group-hover:underline">
                 Freeze Shield
               </p>
-              <p className="text-[11px] text-zinc-400 mt-0.5">
+              <p className="text-[11px] text-zinc-300 mt-0.5">
                 Blinde seu streak hoje
               </p>
             </button>
@@ -732,8 +749,8 @@ export default function StudentHomePage() {
               className="mono-glass-card p-4 rounded-3xl text-left border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-950/20 active:scale-98 transition-all group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-amber-400 flex items-center gap-1">
-                  🎁 Prêmio
+                <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                  <Gift className="w-4 h-4 text-amber-400" /> Recompensa
                 </span>
                 <span className="text-xs font-bold text-amber-300 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded-md font-mono">
                   {alreadyClaimedBox ? 'OK' : `Sem ${challengeTimeline.currentWeek}`}
@@ -742,7 +759,7 @@ export default function StudentHomePage() {
               <p className="text-xs font-bold text-white mt-2 group-hover:underline">
                 Mystery Box
               </p>
-              <p className="text-[11px] text-zinc-400 mt-0.5">
+              <p className="text-[11px] text-zinc-300 mt-0.5">
                 {alreadyClaimedBox ? 'Resgatada' : weeklyPercentage >= 100 ? 'Pronta para abrir!' : 'Bata 100% da meta'}
               </p>
             </button>

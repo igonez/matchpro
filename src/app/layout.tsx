@@ -2,8 +2,59 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ArenaFitPro — Gamified Fitness Challenges',
-  description: 'Plataforma SaaS de gestão gamificada de desafios de fitness, nutrição e saúde com auditoria e ranking em tempo real.',
+  metadataBase: new URL('https://arenafitpro.com.br'),
+  title: 'ArenaFitPro — Gamification OS para Desafios Fitness & Split Pix D+0',
+  description:
+    'A plataforma definitiva para Personais, Consultorias e Academias criarem desafios fitness gamificados de alta retenção com Câmera Antifraude, IA Nutricional e Split Pix D+0 no Asaas.',
+  keywords: [
+    'desafio fitness',
+    'gamificação fitness',
+    'personal trainer',
+    'consultoria online',
+    'split pix',
+    'ranking fitness',
+    'app academia',
+    'asaas split',
+    'nutrição esportiva',
+  ],
+  authors: [{ name: 'ArenaFitPro Team' }],
+  creator: 'ArenaFitPro',
+  publisher: 'ArenaFitPro',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    url: 'https://arenafitpro.com.br',
+    siteName: 'ArenaFitPro',
+    title: 'ArenaFitPro — Gamification OS para Desafios Fitness & Split Pix D+0',
+    description:
+      'Retenção comprovada de 94.8%. Câmera com IA Nutricional, Pódio ao Vivo e Split Pix D+0 sem bitributação.',
+    images: [
+      {
+        url: '/app-logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'ArenaFitPro Gamification OS',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ArenaFitPro — Desafios Fitness Gamificados',
+    description:
+      'Multiplique a retenção dos seus alunos com o sistema operacional para desafios fitness de alta performance.',
+    images: ['/app-logo.png'],
+  },
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -36,7 +87,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark">
+    <html lang="pt-BR" className="dark scroll-smooth">
       <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans">
         {children}
       </body>

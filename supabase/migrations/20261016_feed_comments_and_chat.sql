@@ -7,13 +7,26 @@ CREATE TABLE IF NOT EXISTS public.submission_comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   submission_id UUID NOT NULL REFERENCES public.student_submissions(id) ON DELETE CASCADE,
   student_id UUID REFERENCES public.students(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   user_name TEXT NOT NULL DEFAULT 'Aluno',
   user_avatar TEXT,
   user_role TEXT NOT NULL DEFAULT 'student',
   content TEXT NOT NULL CHECK (length(trim(content)) > 0 AND length(content) <= 1000),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Garantir que todas as colunas existam caso a tabela já tenha sido criada anteriormente
+ALTER TABLE public.submission_comments 
+  ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS student_id UUID REFERENCES public.students(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS user_name TEXT NOT NULL DEFAULT 'Aluno',
+  ADD COLUMN IF NOT EXISTS user_avatar TEXT,
+  ADD COLUMN IF NOT EXISTS user_role TEXT NOT NULL DEFAULT 'student';
+
+-- Preencher user_id caso registros antigos existissem apenas com student_id
+UPDATE public.submission_comments 
+SET user_id = student_id 
+WHERE user_id IS NULL AND student_id IS NOT NULL;
 
 -- Índices de performance
 CREATE INDEX IF NOT EXISTS idx_submission_comments_submission 
@@ -35,26 +48,33 @@ DROP POLICY IF EXISTS "Usuario autenticado pode postar comentario" ON public.sub
 CREATE POLICY "Usuario autenticado pode postar comentario"
 ON public.submission_comments FOR INSERT
 TO authenticated
-WITH CHECK (auth.uid() = user_id);
+WITH CHECK (auth.uid() = user_id OR auth.uid() = student_id);
 
 DROP POLICY IF EXISTS "Autor ou admin pode excluir comentario" ON public.submission_comments;
 CREATE POLICY "Autor ou admin pode excluir comentario"
 ON public.submission_comments FOR DELETE
 TO authenticated
-USING (auth.uid() = user_id OR auth.role() = 'service_role');
+USING (auth.uid() = user_id OR auth.uid() = student_id OR auth.role() = 'service_role');
 
 
 -- 2. TABELA DO MURAL / CHAT DA TURMA (CHALLENGE MESSAGES)
 CREATE TABLE IF NOT EXISTS public.challenge_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   challenge_id UUID NOT NULL REFERENCES public.challenges(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   user_name TEXT NOT NULL DEFAULT 'Participante',
   user_avatar TEXT,
   user_role TEXT NOT NULL DEFAULT 'student', -- 'student' | 'coach'
   content TEXT NOT NULL CHECK (length(trim(content)) > 0 AND length(content) <= 2000),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Garantir que todas as colunas existam caso a tabela já tenha sido criada anteriormente
+ALTER TABLE public.challenge_messages 
+  ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS user_name TEXT NOT NULL DEFAULT 'Participante',
+  ADD COLUMN IF NOT EXISTS user_avatar TEXT,
+  ADD COLUMN IF NOT EXISTS user_role TEXT NOT NULL DEFAULT 'student';
 
 -- Índices de performance
 CREATE INDEX IF NOT EXISTS idx_challenge_messages_challenge 

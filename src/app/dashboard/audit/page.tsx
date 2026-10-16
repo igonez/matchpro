@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
-import { Sparkles, Brain, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Filter } from 'lucide-react';
+import { Sparkles, Brain, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Filter, CheckCheck, Loader2 } from 'lucide-react';
 
 export default function FiscalizacaoPage() {
   const supabase = createClient();
@@ -12,9 +12,10 @@ export default function FiscalizacaoPage() {
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('all');
   const [submissions, setSubmissions] = useState<any[]>([]);
-  const [filter, setFilter] = useState<'all' | 'reported' | 'approved' | 'rejected'>('all');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'reported' | 'approved' | 'rejected'>('all');
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [batchApproving, setBatchApproving] = useState(false);
   const [analyzingId, setAnalyzingId] = useState<string | null>(null);
   const [aiAnalysisMap, setAiAnalysisMap] = useState<Record<string, any>>({});
   const [expandedAnalysis, setExpandedAnalysis] = useState<Record<string, boolean>>({});
@@ -180,10 +181,41 @@ export default function FiscalizacaoPage() {
     }
   };
 
+  const handleBatchApprovePending = async () => {
+    const pendingIds = submissions
+      .filter((s) => s.status === 'pending')
+      .map((s) => s.id);
+
+    if (pendingIds.length === 0) {
+      showToast('Nenhuma submissão pendente para aprovar.');
+      return;
+    }
+
+    setBatchApproving(true);
+    try {
+      const { error } = await supabase
+        .from('student_submissions')
+        .update({ status: 'approved' })
+        .in('id', pendingIds);
+
+      if (error) throw error;
+
+      setSubmissions((prev) =>
+        prev.map((s) => (pendingIds.includes(s.id) ? { ...s, status: 'approved' } : s))
+      );
+      showToast(`${pendingIds.length} submissão(ões) aprovada(s) em lote com sucesso!`);
+    } catch (err: any) {
+      showToast('Erro ao aprovar em lote: ' + err.message);
+    } finally {
+      setBatchApproving(false);
+    }
+  };
+
   const filteredSubmissions = useMemo(() => {
     return submissions
       .filter((s) => {
         const hasReport = s.submission_reports && s.submission_reports.length > 0;
+        if (filter === 'pending') return s.status === 'pending';
         if (filter === 'reported') return hasReport && s.status !== 'rejected';
         if (filter === 'rejected') return s.status === 'rejected';
         if (filter === 'approved') return s.status === 'approved';
@@ -201,6 +233,10 @@ export default function FiscalizacaoPage() {
     return submissions.filter(
       (s) => s.submission_reports && s.submission_reports.length > 0 && s.status !== 'rejected'
     ).length;
+  }, [submissions]);
+
+  const pendingCount = useMemo(() => {
+    return submissions.filter((s) => s.status === 'pending').length;
   }, [submissions]);
 
   return (
@@ -237,6 +273,21 @@ export default function FiscalizacaoPage() {
                 </option>
               ))}
             </select>
+          )}
+
+          {pendingCount > 0 && (
+            <button
+              onClick={handleBatchApprovePending}
+              disabled={batchApproving || loading}
+              className="mono-button-primary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold justify-center flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
+            >
+              {batchApproving ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <CheckCheck className="h-3.5 w-3.5" />
+              )}
+              <span>Aprovar Fila ({pendingCount})</span>
+            </button>
           )}
 
           <button
@@ -281,6 +332,21 @@ export default function FiscalizacaoPage() {
           }`}
         >
           Todas ({submissions.length})
+        </button>
+        <button
+          onClick={() => setFilter('pending')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all flex items-center gap-1.5 ${
+            filter === 'pending'
+              ? 'bg-amber-600 text-white font-bold border border-amber-400 shadow-md'
+              : 'bg-black/60 border border-amber-500/30 text-amber-400 hover:text-amber-300'
+          }`}
+        >
+          <span>⏳ Pendentes</span>
+          {pendingCount > 0 && (
+            <span className="px-1.5 py-0.5 bg-amber-900/80 text-amber-200 text-[10px] rounded-full font-mono font-bold">
+              {pendingCount}
+            </span>
+          )}
         </button>
         <button
           onClick={() => setFilter('reported')}
@@ -474,7 +540,25 @@ export default function FiscalizacaoPage() {
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-white/[0.06] flex gap-2">
-                  {isRejected ? (
+                  {sub.status === 'pending' ? (
+                    <>
+                      <button
+                        onClick={() => handleReactivatePhoto(sub)}
+                        disabled={isProcessing}
+                        className="mono-button-primary w-full py-1.5 text-xs font-semibold flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        <span>{isProcessing ? 'Aprovando...' : 'Aprovar'}</span>
+                      </button>
+                      <button
+                        onClick={() => setInvalidateTarget(sub)}
+                        disabled={isProcessing}
+                        className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 border-rose-500/30 cursor-pointer"
+                      >
+                        Recusar
+                      </button>
+                    </>
+                  ) : isRejected ? (
                     <button
                       onClick={() => handleReactivatePhoto(sub)}
                       disabled={isProcessing}

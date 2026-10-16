@@ -58,6 +58,17 @@ export async function POST(request: Request) {
           console.error('[Asaas Webhook] Erro ao liberar participante do desafio:', partError);
         } else {
           console.log(`[Asaas Webhook] Acesso liberado: aluno ${updatedPayment.student_id} no desafio ${updatedPayment.challenge_id}`);
+          // Garantir presença imediata no ranking da turma
+          await supabaseAdmin
+            .from('leaderboard_standings')
+            .upsert(
+              {
+                challenge_id: updatedPayment.challenge_id,
+                student_id: updatedPayment.student_id,
+                total_points: 0,
+              },
+              { onConflict: 'challenge_id,student_id', ignoreDuplicates: true }
+            );
         }
       }
 

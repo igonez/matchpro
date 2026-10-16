@@ -72,11 +72,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validar capacidade de alunos de acordo com o plano do treinador
+    // Validar capacidade de alunos de acordo com o plano do treinador (apenas inscritos confirmados)
     const { count: studentCount } = await supabase
       .from('challenge_participants')
       .select('*', { count: 'exact', head: true })
-      .eq('challenge_id', challengeData.id);
+      .eq('challenge_id', challengeData.id)
+      .in('payment_status', ['paid', 'complimentary']);
 
     const coachPlan = (challengeData.professionals?.plan_tier as PlanTier) || 'starter';
     const planLimits = PLAN_CONFIG[coachPlan] || PLAN_CONFIG.starter;

@@ -41,6 +41,7 @@ function CameraCaptureContent() {
 
   // IA Nutricional e Medição Calórica (Item 13)
   const [analyzingAi, setAnalyzingAi] = useState(false);
+  const [aiAnalysisResult, setAiAnalysisResult] = useState<{ isValid: boolean; complianceScore: number } | null>(null);
   const [aiMacros, setAiMacros] = useState<{
     calories: string;
     protein: string;
@@ -49,6 +50,15 @@ function CameraCaptureContent() {
     summary: string;
     feedback?: string;
   } | null>(null);
+
+  const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
   useEffect(() => {
     async function getMission() {
@@ -175,23 +185,24 @@ function CameraCaptureContent() {
       if (isMeal) {
         setAnalyzingAi(true);
         try {
-          // Upload temporário para obter URL e analisar
-          const tempName = `temp_${Date.now()}.jpg`;
           const compressed = await compressImage(file);
-          const { error: upErr } = await supabase.storage.from('submissions').upload(tempName, compressed);
-          if (!upErr) {
-            const { data: { publicUrl } } = supabase.storage.from('submissions').getPublicUrl(tempName);
-            const res = await fetch('/api/ai/analyze-submission', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                photoUrl: publicUrl,
-                category: 'refeicao',
-                caption: caption || mission?.title,
-              }),
+          const base64Data = await blobToBase64(compressed);
+          const res = await fetch('/api/ai/analyze-submission', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageBase64: base64Data,
+              category: 'refeicao',
+              caption: caption || mission?.title,
+            }),
+          });
+          const data = await res.json();
+          if (data?.analysis) {
+            setAiAnalysisResult({
+              isValid: data.analysis.isValid !== false,
+              complianceScore: data.analysis.complianceScore ?? 100,
             });
-            const data = await res.json();
-            if (data?.analysis?.estimatedMacros) {
+            if (data.analysis.estimatedMacros) {
               setAiMacros({
                 calories: data.analysis.estimatedMacros.calories || '~420 kcal',
                 protein: data.analysis.estimatedMacros.protein || '~30g',
@@ -268,6 +279,11 @@ function CameraCaptureContent() {
         resolvedChallengeId = part?.challenge_id || null;
       }
 
+      // Se a IA julgou como não-conforme ou com pontuação muito baixa, envia como 'pending' para aprovação do treinador
+      const calculatedStatus = (aiAnalysisResult && (!aiAnalysisResult.isValid || aiAnalysisResult.complianceScore < 40))
+        ? 'pending'
+        : 'approved';
+
       // Payload completo com tentativa de inserção
       const payload: any = {
         mission_id: missionId,
@@ -279,7 +295,7 @@ function CameraCaptureContent() {
         longitude: location?.longitude || null,
         location_name: location?.text || null,
         client_captured_at: captureTime ? captureTime.toISOString() : new Date().toISOString(),
-        status: 'approved',
+        status: calculatedStatus,
       };
 
       const { error: dbError } = await supabase
@@ -295,7 +311,7 @@ function CameraCaptureContent() {
           challenge_id: mission?.challenge_id || null,
           photo_url: publicUrl,
           caption: finalCaption || null,
-          status: 'approved',
+          status: calculatedStatus,
         };
         const { error: fallbackError } = await supabase
           .from('student_submissions')

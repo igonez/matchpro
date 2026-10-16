@@ -193,13 +193,23 @@ export default function DashboardFinanceAndStudentsPage() {
   // Alternar Status de Pagamento (Pendente ⇄ Pago)
   const handleTogglePaymentStatus = async (participantId: string, currentStatus?: string) => {
     const nextStatus = currentStatus === 'paid' ? 'pending' : 'paid';
+    const participant = participants.find((p) => p.id === participantId);
     try {
-      const { error } = await supabase
-        .from('challenge_participants')
-        .update({ payment_status: nextStatus })
-        .eq('id', participantId);
+      const res = await fetch('/api/students/payment-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          participantId,
+          challengeId: participant?.challenge_id || selectedChallengeId,
+          studentId: participant?.student_id,
+          paymentStatus: nextStatus,
+        }),
+      });
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Falha ao atualizar status de pagamento.');
+      }
 
       setParticipants((prev) =>
         prev.map((p) => (p.id === participantId ? { ...p, payment_status: nextStatus } : p))

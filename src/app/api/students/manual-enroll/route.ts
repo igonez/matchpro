@@ -44,7 +44,8 @@ export async function POST(request: Request) {
     const { count: currentStudentsCount } = await supabaseAdmin
       .from('challenge_participants')
       .select('*', { count: 'exact', head: true })
-      .eq('challenge_id', challengeId);
+      .eq('challenge_id', challengeId)
+      .in('payment_status', ['paid', 'complimentary']);
 
     if ((currentStudentsCount || 0) >= maxStudentsAllowed) {
       return NextResponse.json(
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
     if (createAuthError) {
       // Se o email já existir, buscar o usuário existente
       if (createAuthError.message.includes('already exists') || createAuthError.message.includes('unique')) {
-        const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
+        const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
         const found = existingUsers?.users?.find((u: any) => u.email === cleanEmail);
         if (found) {
           studentId = found.id;

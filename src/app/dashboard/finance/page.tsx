@@ -83,6 +83,7 @@ export default function FinanceDashboardPage() {
   const [savingAccount, setSavingAccount] = useState(false);
   const [verifiedBankData, setVerifiedBankData] = useState<any>(null);
   const [withdrawing, setWithdrawing] = useState(false);
+  const [totalWithdrawn, setTotalWithdrawn] = useState(0);
   const [copiedKey, setCopiedKey] = useState(false);
   const [selectedPlanForUpgrade, setSelectedPlanForUpgrade] = useState<PlanTier>('pro');
   const [upgradePaymentMethod, setUpgradePaymentMethod] = useState<'PIX' | 'CREDIT_CARD'>('PIX');
@@ -146,6 +147,22 @@ export default function FinanceDashboardPage() {
         if (txs) {
           setPayments(txs as any);
         }
+
+        // 3. Carregar saques já solicitados
+        try {
+          const { data: pastWithdrawals } = await supabase
+            .from('withdrawals')
+            .select('amount')
+            .eq('professional_id', user.id)
+            .in('status', ['COMPLETED', 'PENDING']);
+
+          if (pastWithdrawals) {
+            const withdrawnSum = pastWithdrawals.reduce((acc: number, w: any) => acc + Number(w.amount || 0), 0);
+            setTotalWithdrawn(withdrawnSum);
+          }
+        } catch (wErr) {
+          console.warn('Tabela withdrawals ainda não criada ou vazia:', wErr);
+        }
       } catch (err) {
         console.error('Erro ao carregar dados financeiros:', err);
       } finally {
@@ -175,8 +192,8 @@ export default function FinanceDashboardPage() {
     .filter(p => p.status === 'RECEIVED' || p.status === 'CONFIRMED')
     .reduce((acc, curr) => acc + Number(curr.fee_platform_value || 0), 0);
 
-  // Saldo disponível (simulado ou real da subconta Asaas)
-  const availableBalance = totalNet;
+  // Saldo disponível real (Total Líquido menos Saques já realizados)
+  const availableBalance = Math.max(0, Number((totalNet - totalWithdrawn).toFixed(2)));
 
   // Validações em tempo real
   const docDigits = cleanDigits(docNumberInput);
@@ -354,6 +371,7 @@ export default function FinanceDashboardPage() {
       }
 
       setWithdrawModalOpen(false);
+      setTotalWithdrawn((prev) => prev + availableBalance);
       setDialogNotice({
         title: 'Saque Solicitado com Sucesso!',
         description: 'Sua transferência Pix foi enviada para processamento bancário imediato (D+0).',

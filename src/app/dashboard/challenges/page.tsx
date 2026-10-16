@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
@@ -19,7 +19,9 @@ import {
   ArrowLeft,
   DollarSign,
   Layers,
-  ChevronRight
+  ChevronRight,
+  CopyPlus,
+  Loader2
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
@@ -50,6 +52,7 @@ export default function ChallengesManagementPage() {
   const [loading, setLoading] = useState(true);
   const [filterTab, setFilterTab] = useState<'active' | 'all' | 'ended'>('active');
   const [searchQuery, setSearchQuery] = useState('');
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
   
   // Modal de Compartilhamento & QR Code
   const [inviteModalChallenge, setInviteModalChallenge] = useState<ChallengeItem | null>(null);
@@ -60,109 +63,218 @@ export default function ChallengesManagementPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  const loadChallenges = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+
+      // 1. Carregar desafios exclusivos do treinador autenticado (multi-tenant)
+      const { data: challengesData, error: chError } = await supabase
+        .from('challenges')
+        .select('*')
+        .eq('professional_id', user.id)
+        .order('start_date', { ascending: false });
+
+      if (chError) {
+        console.error('Erro ao buscar desafios:', chError);
+        setLoading(false);
+        return;
+      }
+
+      const safeChallenges = challengesData || [];
+      const challengeIds = safeChallenges.map((c: any) => c.id);
+
+      if (challengeIds.length === 0) {
+        setChallenges([]);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Contar participantes com matrícula confirmada por desafio
+      const { data: participantsData } = await supabase
+        .from('challenge_participants')
+        .select('challenge_id')
+        .in('challenge_id', challengeIds)
+        .in('payment_status', ['paid', 'complimentary']);
+
+      const studentsCountMap = new Map<string, number>();
+      participantsData?.forEach((p: any) => {
+        studentsCountMap.set(p.challenge_id, (studentsCountMap.get(p.challenge_id) || 0) + 1);
+      });
+
+      // 3. Contar missões por desafio (diretas ou via challenge_weeks)
+      const { data: weeksData } = await supabase
+        .from('challenge_weeks')
+        .select('id, challenge_id')
+        .in('challenge_id', challengeIds);
+
+      const weekToChallenge = new Map<string, string>();
+      weeksData?.forEach((w: any) => weekToChallenge.set(w.id, w.challenge_id));
+
+      const weekIds = weeksData?.map((w: any) => w.id) || [];
+      let missionsQuery = supabase.from('missions').select('id, challenge_id, week_id');
+      if (weekIds.length > 0) {
+        missionsQuery = missionsQuery.or(`challenge_id.in.(${challengeIds.join(',')}),week_id.in.(${weekIds.join(',')})`);
+      } else {
+        missionsQuery = missionsQuery.in('challenge_id', challengeIds);
+      }
+
+      const { data: missionsData } = await missionsQuery;
+      const missionsCountMap = new Map<string, number>();
+      missionsData?.forEach((m: any) => {
+        const chId = m.challenge_id || weekToChallenge.get(m.week_id);
+        if (chId) {
+          missionsCountMap.set(chId, (missionsCountMap.get(chId) || 0) + 1);
+        }
+      });
+
+      // 4. Carregar total arrecadado por desafio
+      const { data: paymentsData } = await supabase
+        .from('payments')
+        .select('challenge_id, gross_value, net_coach_value, status')
+        .in('challenge_id', challengeIds)
+        .in('status', ['RECEIVED', 'CONFIRMED']);
+
+      const grossRevenueMap = new Map<string, number>();
+      const netRevenueMap = new Map<string, number>();
+      paymentsData?.forEach((p: any) => {
+        grossRevenueMap.set(p.challenge_id, (grossRevenueMap.get(p.challenge_id) || 0) + Number(p.gross_value || 0));
+        netRevenueMap.set(p.challenge_id, (netRevenueMap.get(p.challenge_id) || 0) + Number(p.net_coach_value || 0));
+      });
+
+      const augmented = safeChallenges.map((c: any) => ({
+        ...c,
+        price: Number(c.price) || 0,
+        studentsCount: studentsCountMap.get(c.id) || 0,
+        missionsCount: missionsCountMap.get(c.id) || 0,
+        grossRevenue: grossRevenueMap.get(c.id) || 0,
+        netRevenue: netRevenueMap.get(c.id) || 0,
+      }));
+
+      setChallenges(augmented);
+
+    } catch (err) {
+      console.error('Falha geral ao buscar desafios:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [supabase, router]);
+
   useEffect(() => {
-    async function loadChallenges() {
-      setLoading(true);
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          router.push('/login');
-          return;
-        }
+    loadChallenges();
+  }, [loadChallenges]);
 
-        // 1. Carregar desafios exclusivos do treinador autenticado (multi-tenant)
-        const { data: challengesData, error: chError } = await supabase
-          .from('challenges')
-          .select('*')
-          .eq('professional_id', user.id)
-          .order('start_date', { ascending: false });
+  // Duplicar Turma completa com semanas e missões (Clone Challenge)
+  const handleDuplicateChallenge = async (challengeId: string) => {
+    if (duplicatingId) return;
+    setDuplicatingId(challengeId);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Não autenticado.');
 
-        if (chError) {
-          console.error('Erro ao buscar desafios:', chError);
-          setLoading(false);
-          return;
-        }
+      // 1. Obter dados completos da turma original
+      const { data: orig, error: origError } = await supabase
+        .from('challenges')
+        .select('*')
+        .eq('id', challengeId)
+        .single();
 
-        const safeChallenges = challengesData || [];
-        const challengeIds = safeChallenges.map((c: any) => c.id);
+      if (origError || !orig) throw new Error('Desafio original não encontrado.');
 
-        if (challengeIds.length === 0) {
-          setChallenges([]);
-          setLoading(false);
-          return;
-        }
+      // 2. Calcular novas datas mantendo duração original
+      const origStart = new Date(orig.start_date || new Date());
+      const origEnd = new Date(orig.end_date || new Date(Date.now() + 30 * 86400000));
+      const durationMs = Math.max(origEnd.getTime() - origStart.getTime(), 7 * 86400000);
+      const newStart = new Date();
+      const newEnd = new Date(newStart.getTime() + durationMs);
 
-        // 2. Contar participantes por desafio
-        const { data: participantsData } = await supabase
-          .from('challenge_participants')
-          .select('challenge_id')
-          .in('challenge_id', challengeIds);
+      // 3. Inserir nova turma duplicada
+      const newChallengePayload = {
+        professional_id: user.id,
+        title: `${orig.title} (Nova Turma)`,
+        description: orig.description,
+        rules: orig.rules,
+        start_date: newStart.toISOString(),
+        end_date: newEnd.toISOString(),
+        price: orig.price,
+        cover_url: orig.cover_url,
+        is_active: true,
+      };
 
-        const studentsCountMap = new Map<string, number>();
-        participantsData?.forEach((p: any) => {
-          studentsCountMap.set(p.challenge_id, (studentsCountMap.get(p.challenge_id) || 0) + 1);
-        });
+      const { data: newChallenge, error: insertError } = await supabase
+        .from('challenges')
+        .insert(newChallengePayload)
+        .select()
+        .single();
 
-        // 3. Contar missões por desafio (diretas ou via challenge_weeks)
-        const { data: weeksData } = await supabase
-          .from('challenge_weeks')
-          .select('id, challenge_id')
-          .in('challenge_id', challengeIds);
+      if (insertError) throw insertError;
 
-        const weekToChallenge = new Map<string, string>();
-        weeksData?.forEach((w: any) => weekToChallenge.set(w.id, w.challenge_id));
+      // 4. Clonar semanas se existirem
+      const { data: origWeeks } = await supabase
+        .from('challenge_weeks')
+        .select('*')
+        .eq('challenge_id', challengeId)
+        .order('week_number', { ascending: true });
 
-        const weekIds = weeksData?.map((w: any) => w.id) || [];
-        let missionsQuery = supabase.from('missions').select('id, challenge_id, week_id');
-        if (weekIds.length > 0) {
-          missionsQuery = missionsQuery.or(`challenge_id.in.(${challengeIds.join(',')}),week_id.in.(${weekIds.join(',')})`);
-        } else {
-          missionsQuery = missionsQuery.in('challenge_id', challengeIds);
-        }
+      const weekMapping = new Map<string, string>();
+      if (origWeeks && origWeeks.length > 0) {
+        for (const w of origWeeks) {
+          const { data: insertedWeek } = await supabase
+            .from('challenge_weeks')
+            .insert({
+              challenge_id: newChallenge.id,
+              week_number: w.week_number,
+              title: w.title,
+              theme: w.theme,
+            })
+            .select('id')
+            .single();
 
-        const { data: missionsData } = await missionsQuery;
-        const missionsCountMap = new Map<string, number>();
-        missionsData?.forEach((m: any) => {
-          const chId = m.challenge_id || weekToChallenge.get(m.week_id);
-          if (chId) {
-            missionsCountMap.set(chId, (missionsCountMap.get(chId) || 0) + 1);
+          if (insertedWeek) {
+            weekMapping.set(w.id, insertedWeek.id);
           }
-        });
+        }
+      }
 
-        // 4. Carregar total arrecadado por desafio
-        const { data: paymentsData } = await supabase
-          .from('payments')
-          .select('challenge_id, gross_value, net_coach_value, status')
-          .in('challenge_id', challengeIds)
-          .in('status', ['RECEIVED', 'CONFIRMED']);
+      // 5. Clonar missões originais
+      const weekIdsParam = origWeeks && origWeeks.length > 0 ? origWeeks.map((w: any) => w.id) : [];
+      let origMissionsQuery = supabase.from('missions').select('*');
+      if (weekIdsParam.length > 0) {
+        origMissionsQuery = origMissionsQuery.or(`challenge_id.eq.${challengeId},week_id.in.(${weekIdsParam.join(',')})`);
+      } else {
+        origMissionsQuery = origMissionsQuery.eq('challenge_id', challengeId);
+      }
 
-        const grossRevenueMap = new Map<string, number>();
-        const netRevenueMap = new Map<string, number>();
-        paymentsData?.forEach((p: any) => {
-          grossRevenueMap.set(p.challenge_id, (grossRevenueMap.get(p.challenge_id) || 0) + Number(p.gross_value || 0));
-          netRevenueMap.set(p.challenge_id, (netRevenueMap.get(p.challenge_id) || 0) + Number(p.net_coach_value || 0));
-        });
+      const { data: origMissions } = await origMissionsQuery;
 
-        const augmented = safeChallenges.map((c: any) => ({
-          ...c,
-          price: Number(c.price) || 0,
-          studentsCount: studentsCountMap.get(c.id) || 0,
-          missionsCount: missionsCountMap.get(c.id) || 0,
-          grossRevenue: grossRevenueMap.get(c.id) || 0,
-          netRevenue: netRevenueMap.get(c.id) || 0,
+      if (origMissions && origMissions.length > 0) {
+        const clonedMissions = origMissions.map((m: any) => ({
+          title: m.title,
+          description: m.description,
+          points: m.points,
+          category: m.category,
+          frequency: m.frequency,
+          verification_type: m.verification_type,
+          challenge_id: newChallenge.id,
+          week_id: m.week_id ? weekMapping.get(m.week_id) || null : null,
         }));
 
-        setChallenges(augmented);
-
-      } catch (err) {
-        console.error('Falha geral ao buscar desafios:', err);
-      } finally {
-        setLoading(false);
+        await supabase.from('missions').insert(clonedMissions);
       }
-    }
 
-    loadChallenges();
-  }, [supabase, router]);
+      showToast(`Turma duplicada com sucesso com ${origMissions?.length || 0} missões!`);
+      await loadChallenges();
+    } catch (err: any) {
+      console.error('Erro ao duplicar desafio:', err);
+      showToast(err.message || 'Erro ao duplicar turma.');
+    } finally {
+      setDuplicatingId(null);
+    }
+  };
 
   // Alternar status ativo/encerrado de uma turma
   const handleToggleStatus = async (challengeId: string, currentStatus: boolean) => {
@@ -476,17 +588,31 @@ export default function ChallengesManagementPage() {
                   </button>
 
                   {/* Ações Secundárias em Linha */}
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     <Link
                       href={`/dashboard/challenges/${c.id}/edit`}
-                      className="w-full text-center py-2 px-3 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-xs font-mono font-bold text-zinc-300 transition-all"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-[11px] font-mono font-bold text-zinc-300 transition-all truncate"
                     >
-                      Editar Desafio
+                      Editar
                     </Link>
+
+                    <button
+                      onClick={() => handleDuplicateChallenge(c.id)}
+                      disabled={duplicatingId === c.id}
+                      className="w-full text-center py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-[11px] font-mono font-bold text-zinc-300 transition-all flex items-center justify-center gap-1 disabled:opacity-50 cursor-pointer"
+                      title="Clonar esta turma com todas as missões"
+                    >
+                      {duplicatingId === c.id ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <CopyPlus className="h-3 w-3" />
+                      )}
+                      <span>Clonar</span>
+                    </button>
 
                     <Link
                       href={`/dashboard/missions?challengeId=${c.id}`}
-                      className="w-full text-center py-2 px-3 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-xs font-mono font-bold text-zinc-300 transition-all flex items-center justify-center gap-1"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-[11px] font-mono font-bold text-zinc-300 transition-all flex items-center justify-center gap-0.5"
                     >
                       <span>Missões</span>
                       <ChevronRight className="h-3 w-3" />

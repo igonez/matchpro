@@ -226,7 +226,7 @@ export default function MysteryBoxConfigPage() {
         'Configuração de probabilidades e itens raros/lendários',
         'Sorteio automático da roleta aos domingos para alunos 100%',
         'Engajamento comprovado em retenção de alunos',
-        'Taxa de comissão reduzida na plataforma para 12%'
+        'Taxa de comissão reduzida na plataforma para 8%'
       ]}
     >
       <div className="space-y-8">

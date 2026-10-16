@@ -34,13 +34,38 @@ export async function POST(request: Request) {
     const planConfig = PLAN_CONFIG[selectedTier];
     const platformFee = planConfig.platformFeePercent;
 
-    // 2. Atualizar plano do treinador de forma segura via service_role (bypassa trigger anti-tamper)
+    // 2. Se for downgrade para Starter, cancelar assinatura ativa no Asaas
+    if (selectedTier === 'starter') {
+      const { data: coachProf } = await supabaseAdmin
+        .from('professionals')
+        .select('asaas_subscription_id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (coachProf?.asaas_subscription_id) {
+        try {
+          const { AsaasClient } = await import('@/lib/asaas/client');
+          await AsaasClient.cancelSubscription(coachProf.asaas_subscription_id);
+          console.log(`[Downgrade] Assinatura Asaas ${coachProf.asaas_subscription_id} cancelada com sucesso.`);
+        } catch (subCancelErr: any) {
+          console.warn('[Downgrade] Aviso ao cancelar assinatura Asaas:', subCancelErr?.message);
+        }
+      }
+    }
+
+    // 3. Atualizar plano do treinador de forma segura via service_role (bypassa trigger anti-tamper)
+    const updateFields: any = {
+      plan_tier: selectedTier,
+      platform_fee_percent: platformFee,
+    };
+    if (selectedTier === 'starter') {
+      updateFields.asaas_subscription_id = null;
+      updateFields.plan_status = 'canceled';
+    }
+
     const { data: updatedCoach, error: updateError } = await supabaseAdmin
       .from('professionals')
-      .update({
-        plan_tier: selectedTier,
-        platform_fee_percent: platformFee,
-      })
+      .update(updateFields)
       .eq('id', user.id)
       .select('id, full_name, plan_tier, platform_fee_percent')
       .single();

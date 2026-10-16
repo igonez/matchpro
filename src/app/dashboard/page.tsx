@@ -137,13 +137,16 @@ export default function DashboardOverviewPage() {
         }));
         setChallenges(augmentedChallenges);
 
-        // 2. Participantes exclusivos das turmas do treinador
+        // 2. Participantes exclusivos das turmas do treinador com matrícula confirmada
         const { data: participantsData } = await supabase
           .from('challenge_participants')
-          .select('id, challenge_id')
+          .select('id, challenge_id, payment_status')
           .in('challenge_id', coachChallengeIds);
 
         const participantsList = participantsData || [];
+        const confirmedParticipants = participantsList.filter((p: any) =>
+          p.payment_status === 'paid' || p.payment_status === 'complimentary'
+        );
 
         // 3. Submissões pendentes de auditoria exclusivas das turmas do treinador
         const { count: pendingCount } = await supabase
@@ -152,18 +155,20 @@ export default function DashboardOverviewPage() {
           .eq('status', 'pending')
           .in('missions.challenge_id', coachChallengeIds);
 
-        // 4. Calcular faturamento consolidado real (participantes x valor de cada turma)
+        // 4. Calcular faturamento consolidado real (apenas alunos com pagamento 'paid')
         const priceMap = new Map<string, number>();
         safeChallenges.forEach((c: any) => {
           priceMap.set(c.id, Number(c.price) || 0);
         });
 
-        const calculatedRevenue = participantsList.reduce((acc: number, curr: any) => {
-          return acc + (priceMap.get(curr.challenge_id) || 0);
-        }, 0);
+        const calculatedRevenue = confirmedParticipants
+          .filter((p: any) => p.payment_status === 'paid')
+          .reduce((acc: number, curr: any) => {
+            return acc + (priceMap.get(curr.challenge_id) || 0);
+          }, 0);
 
         setStats({
-          activeStudents: participantsList.length,
+          activeStudents: confirmedParticipants.length,
           totalRevenue: calculatedRevenue,
           pendingSubmissions: pendingCount || 0,
           activeChallenges: safeChallenges.filter((c: any) => c.is_active).length,

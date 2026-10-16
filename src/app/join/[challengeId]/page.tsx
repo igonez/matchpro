@@ -39,6 +39,8 @@ function JoinChallengeContent() {
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [pixData, setPixData] = useState<{ code: string; qrBase64?: string } | null>(null);
   const [copiedPix, setCopiedPix] = useState(false);
+  const [checkingPixStatus, setCheckingPixStatus] = useState(false);
+  const [pixFeedback, setPixFeedback] = useState<string | null>(null);
 
   const enrollAuthenticatedStudent = async (activeUser: any, loadedChallenge: any) => {
     const targetChallenge = loadedChallenge || challenge;
@@ -717,18 +719,47 @@ function JoinChallengeContent() {
           </div>
 
           <div className="text-[11px] text-zinc-500 font-mono pt-1">
-            ⚡ A confirmação é instantânea. Assim que o Pix for aprovado, você será redirecionado automaticamente.
+            ⚡ A confirmação é instantânea. Assim que o Pix for aprovado pelo seu banco, sua tela abrirá automaticamente.
           </div>
+
+          {pixFeedback && (
+            <div className="p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 text-xs font-mono text-center">
+              {pixFeedback}
+            </div>
+          )}
 
           <div className="pt-2">
             <Button
-              onClick={() => {
-                setPixModalOpen(false);
-                router.push('/app');
+              type="button"
+              disabled={checkingPixStatus}
+              onClick={async () => {
+                if (!user || !challenge) return;
+                setCheckingPixStatus(true);
+                setPixFeedback(null);
+                try {
+                  const { data: part } = await supabase
+                    .from('challenge_participants')
+                    .select('payment_status')
+                    .eq('challenge_id', challenge.id)
+                    .eq('student_id', user.id)
+                    .maybeSingle();
+
+                  if (part && (part.payment_status === 'paid' || part.payment_status === 'complimentary')) {
+                    setPixModalOpen(false);
+                    setAlreadyJoined(true);
+                    router.push('/app');
+                  } else {
+                    setPixFeedback('Pagamento ainda não compensado no Asaas. Se já transferiu, aguarde alguns instantes que a tela abrirá automaticamente!');
+                  }
+                } catch (e: any) {
+                  setPixFeedback('Erro ao checar status: ' + e.message);
+                } finally {
+                  setCheckingPixStatus(false);
+                }
               }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold"
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold h-11 text-xs"
             >
-              Já Realizei o Pagamento • Continuar
+              {checkingPixStatus ? 'Verificando com o Banco...' : 'Já Realizei o Pagamento • Verificar Liberação'}
             </Button>
           </div>
         </div>

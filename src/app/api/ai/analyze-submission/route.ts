@@ -16,17 +16,18 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { photoUrl, category = 'refeicao', caption = '' } = body;
+    const { photoUrl, imageBase64, category = 'refeicao', caption = '' } = body;
 
-    if (!photoUrl) {
+    if (!photoUrl && !imageBase64) {
       return NextResponse.json(
-        { error: 'Parâmetro photoUrl é obrigatório.' },
+        { error: 'Parâmetro photoUrl ou imageBase64 é obrigatório.' },
         { status: 400 }
       );
     }
 
     const analysis = await analyzeSubmissionPhoto({
       imageUrl: photoUrl,
+      imageBase64,
       category,
       caption,
     });

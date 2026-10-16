@@ -52,8 +52,14 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     const cookieRole = request.cookies.get('arena_role')?.value;
     const isMetaProfessional = user.user_metadata?.role === 'professional';
+    const isMetaStudent = user.user_metadata?.role === 'student';
 
-    let isProfessional = isMetaProfessional || cookieRole === 'professional';
+    let isProfessional = isMetaProfessional;
+
+    // Só permite fallback no cookie se o usuário não for explicitamente declarado como aluno no Auth
+    if (!isProfessional && cookieRole === 'professional' && !isMetaStudent) {
+      isProfessional = true;
+    }
 
     // Se ainda não confirmado, verifica diretamente no banco
     if (!isProfessional) {

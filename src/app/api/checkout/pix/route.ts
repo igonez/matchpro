@@ -54,11 +54,12 @@ export async function POST(request: Request) {
     const planLimits = PLAN_CONFIG[planTier] || PLAN_CONFIG.starter;
     const feePercent = Number(professional?.platform_fee_percent || planLimits.platformFeePercent || 15);
 
-    // Validar se a turma atingiu a capacidade máxima do plano do treinador
+    // Validar se a turma atingiu a capacidade máxima do plano do treinador (apenas inscritos confirmados)
     const { count: currentStudents } = await supabaseAdmin
       .from('challenge_participants')
       .select('*', { count: 'exact', head: true })
-      .eq('challenge_id', challengeId);
+      .eq('challenge_id', challengeId)
+      .in('payment_status', ['paid', 'complimentary']);
 
     if ((currentStudents || 0) >= planLimits.maxStudentsPerChallenge) {
       return NextResponse.json(

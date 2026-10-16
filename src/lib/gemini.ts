@@ -46,17 +46,16 @@ function validateSafeImageUrl(urlString: string): URL {
  */
 export async function analyzeSubmissionPhoto({
   imageUrl,
+  imageBase64,
   category,
   caption,
 }: {
-  imageUrl: string;
+  imageUrl?: string;
+  imageBase64?: string;
   category: 'treino' | 'cardio' | 'refeicao' | 'habito' | string;
   caption?: string;
 }) {
   try {
-    // 1. Validação anti-SSRF
-    validateSafeImageUrl(imageUrl);
-
     const prompt = `Você é o sistema de Inteligência Artificial do ArenaFitPro, especializado em nutrição e alta performance esportiva.
 Analise a imagem da submissão do aluno e retorne um parecer técnico em português em formato JSON puro.
 Categoria informada pelo aluno: ${category}
@@ -76,34 +75,52 @@ Retorne estritamente um objeto JSON com esta estrutura:
   "complianceScore": número de 0 a 100 indicando o nível de adequação ao desafio
 }`;
 
-    // Baixa a imagem com timeout de 8 segundos e limite de tamanho
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    let base64Data: string;
+    let mimeType = 'image/jpeg';
 
-    const imageResponse = await fetch(imageUrl, {
-      signal: controller.signal,
-      headers: {
-        'Accept': 'image/*',
-      },
-    });
-    clearTimeout(timeout);
+    if (imageBase64) {
+      const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+      if (matches && matches.length === 3) {
+        mimeType = matches[1];
+        base64Data = matches[2];
+      } else {
+        base64Data = imageBase64;
+      }
+    } else if (imageUrl) {
+      // 1. Validação anti-SSRF
+      validateSafeImageUrl(imageUrl);
 
-    if (!imageResponse.ok) {
-      throw new Error(`Falha ao obter imagem da submissão: status ${imageResponse.status}`);
+      // Baixa a imagem com timeout de 8 segundos e limite de tamanho
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+
+      const imageResponse = await fetch(imageUrl, {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'image/*',
+        },
+      });
+      clearTimeout(timeout);
+
+      if (!imageResponse.ok) {
+        throw new Error(`Falha ao obter imagem da submissão: status ${imageResponse.status}`);
+      }
+
+      mimeType = imageResponse.headers.get('content-type') || 'image/jpeg';
+      if (!mimeType.startsWith('image/')) {
+        throw new Error('O conteúdo baixado não é uma imagem válida.');
+      }
+
+      const arrayBuffer = await imageResponse.arrayBuffer();
+      // Limite de 8MB para evitar esgotamento de memória no servidor
+      if (arrayBuffer.byteLength > 8 * 1024 * 1024) {
+        throw new Error('A imagem excede o tamanho máximo de 8MB.');
+      }
+
+      base64Data = Buffer.from(arrayBuffer).toString('base64');
+    } else {
+      throw new Error('Informe imageBase64 ou imageUrl.');
     }
-
-    const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg';
-    if (!mimeType.startsWith('image/')) {
-      throw new Error('O conteúdo baixado não é uma imagem válida.');
-    }
-
-    const arrayBuffer = await imageResponse.arrayBuffer();
-    // Limite de 8MB para evitar esgotamento de memória no servidor
-    if (arrayBuffer.byteLength > 8 * 1024 * 1024) {
-      throw new Error('A imagem excede o tamanho máximo de 8MB.');
-    }
-
-    const base64Data = Buffer.from(arrayBuffer).toString('base64');
 
     // Modelo oficial atualizado do Gemini (gemini-2.5-flash)
     const response = await geminiClient.models.generateContent({

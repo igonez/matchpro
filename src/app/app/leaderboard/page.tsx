@@ -29,6 +29,8 @@ export default function LeaderboardPage() {
           .from('challenge_participants')
           .select('challenge_id, challenges(*)')
           .eq('student_id', user.id)
+          .in('payment_status', ['paid', 'complimentary'])
+          .order('joined_at', { ascending: false })
           .limit(1)
           .maybeSingle();
 

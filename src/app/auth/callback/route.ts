@@ -6,6 +6,7 @@ export async function GET(request: Request) {
   const code = searchParams.get('code');
   const roleParam = searchParams.get('role'); // 'professional' | 'student'
   const next = searchParams.get('next');
+  const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : null;
 
   if (code) {
     const supabase = await createClient();
@@ -44,7 +45,7 @@ export async function GET(request: Request) {
         await supabase.auth.updateUser({
           data: { role: 'professional' }
         });
-        const redirectRes = NextResponse.redirect(`${origin}${next || '/dashboard'}`);
+        const redirectRes = NextResponse.redirect(`${origin}${safeNext || '/dashboard'}`);
         redirectRes.cookies.set('arena_role', 'professional', {
           path: '/',
           maxAge: 60 * 60 * 24 * 365,
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
         await supabase.auth.updateUser({
           data: { role: 'student' }
         });
-        const redirectRes = NextResponse.redirect(`${origin}${next || '/app'}`);
+        const redirectRes = NextResponse.redirect(`${origin}${safeNext || '/app'}`);
         redirectRes.cookies.set('arena_role', 'student', {
           path: '/',
           maxAge: 60 * 60 * 24 * 365,

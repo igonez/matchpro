@@ -19,6 +19,7 @@ export default function StudentHomePage() {
 
   const [student, setStudent] = useState<any>(null);
   const [challenge, setChallenge] = useState<any>(null);
+  const [pendingChallenge, setPendingChallenge] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
   const [rank, setRank] = useState('1º');
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -76,18 +77,37 @@ export default function StudentHomePage() {
         setStudent(studentData || { full_name: user.email?.split('@')[0] || 'Atleta' });
 
         let challengeData: any = null;
+        let pendingData: any = null;
+
         const { data: participation } = await supabase
           .from('challenge_participants')
-          .select('challenge_id, challenges(*, challenge_weeks(*))')
+          .select('challenge_id, payment_status, challenges(*, challenge_weeks(*))')
           .eq('student_id', user.id)
+          .in('payment_status', ['paid', 'complimentary'])
+          .order('joined_at', { ascending: false })
           .limit(1)
           .maybeSingle();
 
         if (participation?.challenges) {
           challengeData = participation.challenges as any;
+        } else {
+          // Checar se há inscrição pendente de pagamento Pix
+          const { data: pendingPart } = await supabase
+            .from('challenge_participants')
+            .select('challenge_id, payment_status, challenges(id, title, price)')
+            .eq('student_id', user.id)
+            .eq('payment_status', 'pending')
+            .order('joined_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          if (pendingPart?.challenges) {
+            pendingData = pendingPart.challenges as any;
+          }
         }
 
         setChallenge(challengeData);
+        setPendingChallenge(pendingData);
 
         if (challengeData?.id) {
           const { data: standingData } = await supabase
@@ -341,8 +361,27 @@ export default function StudentHomePage() {
           <div className="h-44 rounded-3xl bg-white/[0.04] border border-white/10" />
         </div>
       ) : !challenge ? (
-        /* Tela de Primeiro Acesso - Exige Convite/QR Code */
+        /* Tela de Primeiro Acesso - Exige Convite/QR Code ou Pagamento Pendente */
         <div className="relative z-10 space-y-4 pt-2">
+          {pendingChallenge && (
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300">
+                  Inscrição Aguardando Pagamento Pix
+                </span>
+              </div>
+              <p className="text-xs text-zinc-300">
+                Você iniciou a inscrição na turma <strong>{pendingChallenge.title}</strong> (R$ {Number(pendingChallenge.price || 0).toFixed(2)}).
+              </p>
+              <Link href={`/join/${pendingChallenge.id}`} className="block pt-1">
+                <button className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs font-mono transition-colors">
+                  Concluir Pagamento no Pix →
+                </button>
+              </Link>
+            </div>
+          )}
+
           <SpotlightCard3D className="p-6 text-center space-y-4">
             <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/20 mx-auto flex items-center justify-center shadow-lg">
               <QrCode className="h-8 w-8 text-white" />

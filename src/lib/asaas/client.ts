@@ -20,40 +20,69 @@ export class AsaasClient {
       ...(options.headers || {}),
     };
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-      });
+    const maxRetries = 3;
+    let lastError: any = null;
 
-      const data = await response.json();
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const response = await fetch(url, {
+          ...options,
+          headers,
+        });
 
-      if (!response.ok) {
-        console.error('Erro na resposta da API Asaas:', data);
-        const errorMessage = data?.errors?.[0]?.description || 'Erro ao processar requisição no Asaas.';
-        const errorCode = data?.errors?.[0]?.code;
-        
-        // Em desenvolvimento local, se a chave do Sandbox der erro de autenticação, ativa o simulador local
-        if (
-          process.env.NODE_ENV !== 'production' && 
-          (response.status === 401 || errorCode === 'invalid_access_token' || errorCode === 'invalid_access_token_format')
-        ) {
-          console.warn(`[Asaas Client Fallback] Autenticação rejeitada (${errorCode || response.status}). Ativando simulador local para ${endpoint}`);
-          return (await AsaasClient.mockResponse(endpoint, options)) as T;
+        // Se for erro transitório ou rate limit e ainda houver tentativas
+        if ((response.status === 429 || (response.status >= 500 && response.status <= 504)) && attempt < maxRetries) {
+          const retryAfter = response.headers.get('Retry-After');
+          let delayMs = 500 * Math.pow(2, attempt) + Math.random() * 200;
+          if (retryAfter) {
+            const seconds = Number(retryAfter);
+            if (Number.isFinite(seconds) && seconds > 0) {
+              delayMs = seconds * 1000;
+            }
+          }
+          console.warn(`[Asaas API Throttling/5xx] Status ${response.status}. Tentativa ${attempt + 1}/${maxRetries}. Aguardando ${Math.round(delayMs)}ms...`);
+          await new Promise((r) => setTimeout(r, delayMs));
+          continue;
         }
 
-        throw new Error(errorMessage);
-      }
+        const data = await response.json();
 
-      return data as T;
-    } catch (err: any) {
-      // Modo Mock de Fallback para testes locais em desenvolvimento
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(`[Asaas Client Mock] Executando mock local para ${endpoint}`);
-        return (await AsaasClient.mockResponse(endpoint, options)) as T;
+        if (!response.ok) {
+          console.error('Erro na resposta da API Asaas:', data);
+          const errorMessage = data?.errors?.[0]?.description || 'Erro ao processar requisição no Asaas.';
+          const errorCode = data?.errors?.[0]?.code;
+          
+          // Em desenvolvimento local, se a chave do Sandbox der erro de autenticação, ativa o simulador local
+          if (
+            process.env.NODE_ENV !== 'production' && 
+            (response.status === 401 || errorCode === 'invalid_access_token' || errorCode === 'invalid_access_token_format')
+          ) {
+            console.warn(`[Asaas Client Fallback] Autenticação rejeitada (${errorCode || response.status}). Ativando simulador local para ${endpoint}`);
+            return (await AsaasClient.mockResponse(endpoint, options)) as T;
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        return data as T;
+      } catch (err: any) {
+        lastError = err;
+        if (attempt < maxRetries && (err.name === 'AbortError' || err.name === 'TypeError')) {
+          const delayMs = 500 * Math.pow(2, attempt) + Math.random() * 200;
+          await new Promise((r) => setTimeout(r, delayMs));
+          continue;
+        }
+
+        // Modo Mock de Fallback para testes locais em desenvolvimento
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(`[Asaas Client Mock] Executando mock local para ${endpoint}:`, err?.message || err);
+          return (await AsaasClient.mockResponse(endpoint, options)) as T;
+        }
+        throw err;
       }
-      throw err;
     }
+
+    throw lastError || new Error(`Falha após ${maxRetries} tentativas na API Asaas.`);
   }
 
   /**
@@ -135,6 +164,36 @@ export class AsaasClient {
     return this.request('/subscriptions', {
       method: 'POST',
       body: JSON.stringify(payload),
+    });
+  }
+
+  /**
+   * Cancela uma assinatura recorrente no Asaas
+   */
+  static async cancelSubscription(subscriptionId: string): Promise<{ deleted: boolean; id: string }> {
+    return this.request(`/subscriptions/${subscriptionId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  /**
+   * Transfere valor via Pix para a chave do treinador
+   */
+  static async createPixTransfer(input: {
+    value: number;
+    pixAddressKey: string;
+    pixAddressKeyType?: string;
+    description?: string;
+  }): Promise<{ id: string; status: string; value: number }> {
+    return this.request('/transfers', {
+      method: 'POST',
+      body: JSON.stringify({
+        value: input.value,
+        pixAddressKey: input.pixAddressKey,
+        pixAddressKeyType: input.pixAddressKeyType,
+        description: input.description || 'Saque de Rendimentos - ArenaFitPro',
+        operationType: 'PIX',
+      }),
     });
   }
 

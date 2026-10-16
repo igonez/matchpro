@@ -208,7 +208,7 @@ export default function SquadsManagerPage() {
         'Criação de equipes ilimitadas por desafio',
         'Cálculo automático de pontuação média do grupo',
         'Redistribuição dinâmica de alunos e capitães',
-        'Taxa de split da plataforma reduzida para 12%'
+        'Taxa de split da plataforma reduzida para 8%'
       ]}
     >
       <div className="space-y-8">

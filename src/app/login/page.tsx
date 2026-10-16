@@ -13,8 +13,11 @@ import { Trophy, ArrowRight, Check, Clipboard, Sparkles, User, ShieldCheck } fro
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialCode = searchParams.get('code') || '';
   const redirectParam = searchParams.get('redirect') || '';
+  const extractedFromRedirect = redirectParam.includes('/join/')
+    ? redirectParam.split('/join/')[1]?.split('?')[0]?.split('/')[0] || ''
+    : '';
+  const initialCode = searchParams.get('code') || extractedFromRedirect || '';
 
   const supabase = createClient();
 

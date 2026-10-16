@@ -340,27 +340,37 @@ export default function ProfessionalProfilePage() {
         }
       }
 
-      // 3. Sincronização em segundo plano com o gateway Asaas (se documento e chave Pix presentes)
+      // 3. Sincronização com o gateway Asaas (se documento e chave Pix presentes)
       const cleanDoc = cleanDigits(documentNumber);
       if (asaasPixKey && asaasPixKey.trim() && cleanDoc.length >= 11) {
-        fetch('/api/finance/bank-account', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            documentType,
-            documentNumber,
-            pixKey: asaasPixKey.trim(),
-            birthDate: documentType === 'CPF' ? birthDate : undefined,
-            postalCode,
-            address,
-            addressNumber,
-            province,
-            city,
-            state,
-          }),
-        }).catch((apiErr) => {
-          console.warn('Sincronização bancária em segundo plano:', apiErr);
-        });
+        try {
+          const bankRes = await fetch('/api/finance/bank-account', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              documentType,
+              documentNumber,
+              pixKey: asaasPixKey.trim(),
+              mobilePhone: phone.trim() || undefined,
+              birthDate: documentType === 'CPF' ? birthDate : undefined,
+              postalCode,
+              address,
+              addressNumber,
+              province,
+              city,
+              state,
+            }),
+          });
+          const bankData = await bankRes.json();
+          if (bankData?.data?.walletId) {
+            setAsaasWalletId(bankData.data.walletId);
+          }
+          if (bankData?.data?.pixKey) {
+            setAsaasPixKey(bankData.data.pixKey);
+          }
+        } catch (apiErr) {
+          console.warn('Sincronização bancária:', apiErr);
+        }
       }
 
       setDocumentVerified(isDocNowVerified);

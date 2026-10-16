@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
@@ -9,12 +9,15 @@ import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, QrCode } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Copy, Check, QrCode, Sparkles, User, ArrowRight } from 'lucide-react';
 
-export default function JoinChallengePage() {
+function JoinChallengeContent() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const challengeId = params?.challengeId as string;
+  const autoJoinParam = searchParams?.get('autojoin') === '1';
   const supabase = createClient();
 
   const [challenge, setChallenge] = useState<any>(null);
@@ -25,10 +28,135 @@ export default function JoinChallengePage() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Estados de Cadastro / Login Direto na página do convite
+  const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   // Estados do Modal Pix Dinâmico
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [pixData, setPixData] = useState<{ code: string; qrBase64?: string } | null>(null);
   const [copiedPix, setCopiedPix] = useState(false);
+
+  const enrollAuthenticatedStudent = async (activeUser: any, loadedChallenge: any) => {
+    const targetChallenge = loadedChallenge || challenge;
+    if (!targetChallenge || !activeUser) return;
+
+    setError(null);
+    setJoining(true);
+
+    try {
+      if (typeof document !== 'undefined') {
+        document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+      }
+
+      const { data: studentRecord } = await supabase
+        .from('students')
+        .select('id')
+        .eq('id', activeUser.id)
+        .maybeSingle();
+
+      const studentDisplayName =
+        fullName.trim() ||
+        activeUser.user_metadata?.full_name ||
+        activeUser.user_metadata?.name ||
+        activeUser.email?.split('@')[0] ||
+        'Aluno';
+
+      if (!studentRecord) {
+        await supabase.from('students').insert({
+          id: activeUser.id,
+          full_name: studentDisplayName,
+          phone: phone.trim() || activeUser.user_metadata?.phone || null,
+        });
+      }
+
+      const isFree = Number(targetChallenge?.price || 0) === 0;
+
+      // Se for pago, chamamos o Asaas para gerar o Pix com Split
+      if (!isFree) {
+        const response = await fetch('/api/checkout/pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            challengeId: targetChallenge.id,
+            studentName: studentDisplayName,
+            studentEmail: activeUser.email || email.trim(),
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Falha ao gerar cobrança Pix.');
+        }
+
+        setPixData({
+          code: data.pixCode,
+          qrBase64: data.pixQrBase64,
+        });
+
+        // Inscreve com status pending
+        await supabase
+          .from('challenge_participants')
+          .upsert({
+            challenge_id: targetChallenge.id,
+            student_id: activeUser.id,
+            payment_status: 'pending',
+          });
+
+        setPixModalOpen(true);
+        setJoining(false);
+        return;
+      }
+
+      // Se for gratuito, validar capacidade antes de liberar
+      const { count: currentStudents } = await supabase
+        .from('challenge_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('challenge_id', targetChallenge.id);
+
+      const coachTier = targetChallenge?.professionals?.plan_tier || 'starter';
+      const maxAllowed = coachTier === 'pro' ? 100 : 10;
+      if ((currentStudents || 0) >= maxAllowed) {
+        throw new Error(`Esta turma atingiu a capacidade máxima de ${maxAllowed} alunos.`);
+      }
+
+      const { error: joinError } = await supabase
+        .from('challenge_participants')
+        .insert({
+          challenge_id: targetChallenge.id,
+          student_id: activeUser.id,
+          payment_status: 'paid',
+        });
+
+      if (joinError && !joinError.message.includes('unique')) {
+        throw joinError;
+      }
+
+      try {
+        await supabase
+          .from('leaderboard_standings')
+          .insert({
+            challenge_id: targetChallenge.id,
+            student_id: activeUser.id,
+            total_points: 0,
+          });
+      } catch (leadErr) {
+        console.warn('Leaderboard já inicializado:', leadErr);
+      }
+
+      setAlreadyJoined(true);
+      router.push('/app');
+    } catch (err: any) {
+      console.error('Erro ao ingressar:', err);
+      setError(err.message || 'Erro ao ingressar no desafio.');
+    } finally {
+      setJoining(false);
+    }
+  };
 
   useEffect(() => {
     async function loadChallenge() {
@@ -36,13 +164,35 @@ export default function JoinChallengePage() {
       setLoading(true);
 
       try {
+        let resolvedId = challengeId;
+        const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(challengeId);
+
+        if (!isUUID) {
+          try {
+            const valRes = await fetch('/api/challenges/validate-code', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ code: challengeId }),
+            });
+            const valData = await valRes.json();
+            if (valData.valid && valData.challenge?.id) {
+              resolvedId = valData.challenge.id;
+            } else {
+              throw new Error(valData.message || 'Código de turma não encontrado.');
+            }
+          } catch (codeErr: any) {
+            throw new Error(codeErr.message || 'Código de turma ou link de convite inválido.');
+          }
+        }
+
         const { data: challengeData, error: challengeError } = await supabase
           .from('challenges')
           .select(`
             *,
             professionals (
               full_name,
-              specialty
+              specialty,
+              plan_tier
             ),
             missions (
               id,
@@ -50,7 +200,7 @@ export default function JoinChallengePage() {
               points_rewarded
             )
           `)
-          .eq('id', challengeId)
+          .eq('id', resolvedId)
           .single();
 
         if (challengeError) throw challengeError;
@@ -62,13 +212,16 @@ export default function JoinChallengePage() {
         if (currentUser) {
           const { data: participant } = await supabase
             .from('challenge_participants')
-            .select('id')
-            .eq('challenge_id', challengeId)
+            .select('id, payment_status')
+            .eq('challenge_id', challengeData.id)
             .eq('student_id', currentUser.id)
             .maybeSingle();
 
-          if (participant) {
+          if (participant && participant.payment_status === 'paid') {
             setAlreadyJoined(true);
+          } else if (autoJoinParam) {
+            // Se voltou do login Google com autojoin=1, já inicia a matrícula/checkout!
+            await enrollAuthenticatedStudent(currentUser, challengeData);
           }
         }
       } catch (err: any) {
@@ -84,17 +237,18 @@ export default function JoinChallengePage() {
 
   // Escutar liberação do pagamento via Supabase Realtime
   useEffect(() => {
-    if (!challengeId || !user?.id) return;
+    const targetChallengeId = challenge?.id || challengeId;
+    if (!targetChallengeId || !user?.id) return;
 
     const channel = supabase
-      .channel(`payment-check-${challengeId}-${user.id}`)
+      .channel(`payment-check-${targetChallengeId}-${user.id}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'challenge_participants',
-          filter: `challenge_id=eq.${challengeId}`,
+          filter: `challenge_id=eq.${targetChallengeId}`,
         },
         async (payload: any) => {
           if (
@@ -124,102 +278,81 @@ export default function JoinChallengePage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [challengeId, user?.id, supabase, router]);
+  }, [challenge?.id, challengeId, user?.id, supabase, router]);
 
   const handleJoin = async () => {
+    if (!user) return;
+    await enrollAuthenticatedStudent(user, challenge);
+  };
+
+  const handleGoogleQuickJoin = async () => {
     setError(null);
+    setJoining(true);
+    try {
+      const targetId = challenge?.id || challengeId;
+      const nextUrl = encodeURIComponent(`/join/${targetId}?autojoin=1`);
+      const redirectUrl = `${window.location.origin}/auth/callback?role=student&next=${nextUrl}`;
 
-    if (!user) {
-      router.push(`/login?redirect=/join/${challengeId}`);
-      return;
+      const { data, error: oauthErr } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (oauthErr) throw oauthErr;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      setError(err.message || 'Erro ao conectar com Google.');
+      setJoining(false);
     }
+  };
 
+  const handleDirectAuthAndJoin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
     setJoining(true);
 
     try {
-      const { data: studentRecord } = await supabase
-        .from('students')
-        .select('id')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (!studentRecord) {
-        await supabase.from('students').insert({
-          id: user.id,
-          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Aluno',
-        });
-      }
-
-      const isFree = Number(challenge?.price || 0) === 0;
-
-      // Se for pago, chamamos o Asaas para gerar o Pix com Split
-      if (!isFree) {
-        const response = await fetch('/api/checkout/pix', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            challengeId,
-            studentName: user.user_metadata?.full_name,
-            studentEmail: user.email,
-          }),
+      if (authMode === 'signup') {
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            data: {
+              full_name: fullName.trim(),
+              phone: phone.trim(),
+              role: 'student',
+            },
+          },
         });
 
-        const data = await response.json();
+        if (signUpError) throw signUpError;
+        if (!authData.user) throw new Error('Não foi possível criar sua conta.');
 
-        if (!response.ok) {
-          throw new Error(data.error || 'Falha ao gerar cobrança Pix.');
-        }
-
-        setPixData({
-          code: data.pixCode,
-          qrBase64: data.pixQrBase64,
+        setUser(authData.user);
+        await enrollAuthenticatedStudent(authData.user, challenge);
+      } else {
+        const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
         });
 
-        // Inscreve com status pending
-        await supabase
-          .from('challenge_participants')
-          .upsert({
-            challenge_id: challengeId,
-            student_id: user.id,
-            payment_status: 'pending',
-          });
+        if (signInError) throw signInError;
+        if (!authData.user) throw new Error('Credenciais inválidas.');
 
-        setPixModalOpen(true);
-        setJoining(false);
-        return;
+        setUser(authData.user);
+        await enrollAuthenticatedStudent(authData.user, challenge);
       }
-
-      // Se for gratuito, libera na hora
-      const { error: joinError } = await supabase
-        .from('challenge_participants')
-        .insert({
-          challenge_id: challengeId,
-          student_id: user.id,
-          payment_status: 'paid',
-        });
-
-      if (joinError && !joinError.message.includes('unique')) {
-        throw joinError;
-      }
-
-      try {
-        await supabase
-          .from('leaderboard_standings')
-          .insert({
-            challenge_id: challengeId,
-            student_id: user.id,
-            total_points: 0,
-          });
-      } catch (leadErr) {
-        console.warn('Leaderboard já inicializado:', leadErr);
-      }
-
-      setAlreadyJoined(true);
-      router.push('/app');
     } catch (err: any) {
-      console.error('Erro ao ingressar:', err);
-      setError(err.message || 'Erro ao ingressar no desafio.');
-    } finally {
+      console.error('Erro na autenticação direta:', err);
+      setError(err.message || 'Erro ao autenticar e entrar na turma.');
       setJoining(false);
     }
   };
@@ -344,27 +477,186 @@ export default function JoinChallengePage() {
           )}
 
           {error && (
-            <div className="p-3 rounded-xl border border-white/20 bg-black text-xs text-zinc-300">
+            <div className="p-3 rounded-xl border border-rose-500/30 bg-rose-950/20 text-xs font-mono text-rose-300">
               {error}
             </div>
           )}
 
-          {/* Botão de Ação */}
-          <div className="pt-4 border-t border-white/[0.06]">
+          {/* Área de Ação / Cadastro Direto sem sair da tela */}
+          <div className="pt-4 border-t border-white/[0.08]">
             {alreadyJoined ? (
               <Link href="/app" className="block">
                 <button className="mono-button-primary w-full h-12 text-xs font-semibold">
                   Você já está inscrito • Acessar App →
                 </button>
               </Link>
-            ) : (
+            ) : user ? (
               <button
                 onClick={handleJoin}
                 disabled={joining}
                 className="mono-button-primary w-full h-13 text-xs font-semibold"
               >
-                {joining ? 'Processando inscrição...' : 'Entrar na Turma Agora →'}
+                {joining
+                  ? 'Processando inscrição...'
+                  : Number(challenge.price) > 0
+                  ? `Confirmar Vaga (R$ ${Number(challenge.price).toFixed(2)}) →`
+                  : 'Confirmar Minha Inscrição →'}
               </button>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+                    Crie sua conta para entrar na turma
+                  </span>
+                </div>
+
+                {/* Alternador: Criar Conta vs Já Tenho Conta */}
+                <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-white/[0.06]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('signup');
+                      setError(null);
+                    }}
+                    className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                      authMode === 'signup'
+                        ? 'bg-white text-black shadow'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>Criar Conta</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('signin');
+                      setError(null);
+                    }}
+                    className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                      authMode === 'signin'
+                        ? 'bg-white text-black shadow'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <User className="h-3.5 w-3.5" />
+                    <span>Já tenho conta</span>
+                  </button>
+                </div>
+
+                {/* Entrada 1-Clique com Google */}
+                <button
+                  type="button"
+                  disabled={joining}
+                  onClick={handleGoogleQuickJoin}
+                  className="w-full h-11 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm group"
+                >
+                  <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                  </svg>
+                  <span>Continuar com Google (1 Clique)</span>
+                </button>
+
+                <div className="relative flex items-center justify-center my-2">
+                  <div className="border-t border-white/10 w-full" />
+                  <span className="bg-[#09090b] px-3 text-[10px] font-mono uppercase text-zinc-500 absolute">
+                    ou preencha abaixo
+                  </span>
+                </div>
+
+                {/* Formulário Direto */}
+                <form onSubmit={handleDirectAuthAndJoin} className="space-y-3">
+                  {authMode === 'signup' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                          Seu Nome Completo
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="Ex: Matheus Oliveira"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          required
+                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                          WhatsApp
+                        </label>
+                        <Input
+                          type="tel"
+                          placeholder="(11) 99999-9999"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          required
+                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                        E-mail
+                      </label>
+                      <Input
+                        type="email"
+                        placeholder="seu@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                        Senha
+                      </label>
+                      <Input
+                        type="password"
+                        placeholder="Mínimo 6 caracteres"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={joining}
+                    className="mono-button-primary w-full h-12 text-xs font-bold flex items-center justify-center gap-2 mt-2"
+                  >
+                    {joining ? (
+                      <>
+                        <div className="h-4 w-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        <span>Entrando na turma...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>
+                          {authMode === 'signup'
+                            ? Number(challenge.price) > 0
+                              ? `Criar Conta e Ir para o Pix (R$ ${Number(challenge.price).toFixed(2)})`
+                              : 'Criar Conta e Entrar na Turma'
+                            : Number(challenge.price) > 0
+                            ? `Entrar e Ir para o Pix (R$ ${Number(challenge.price).toFixed(2)})`
+                            : 'Entrar na Turma Agora'}
+                        </span>
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
             )}
           </div>
         </SpotlightCard3D>
@@ -446,5 +738,20 @@ export default function JoinChallengePage() {
         ArenaFitPro Technologies • Autenticação Criptografada
       </footer>
     </div>
+  );
+}
+
+export default function JoinChallengePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black flex flex-col items-center justify-center text-zinc-500 gap-3 font-mono text-xs">
+          <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          CARREGANDO CREDENCIAL DO DESAFIO...
+        </div>
+      }
+    >
+      <JoinChallengeContent />
+    </Suspense>
   );
 }

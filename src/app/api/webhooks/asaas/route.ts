@@ -124,10 +124,10 @@ export async function POST(request: Request) {
           .update({
             plan_tier: 'starter',
             plan_status: 'canceled',
-            platform_fee_percent: 18,
+            platform_fee_percent: PLAN_CONFIG.starter.platformFeePercent,
           })
           .eq('asaas_subscription_id', subId);
-        console.log(`[Asaas Webhook] Assinatura ${subId} inativada. Treinador revertido para plano Starter.`);
+        console.log(`[Asaas Webhook] Assinatura ${subId} inativada. Treinador revertido para plano Starter (15%).`);
       }
     }
 

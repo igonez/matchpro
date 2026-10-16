@@ -31,11 +31,11 @@ export default function NewChallengePage() {
 
         const { data: coachData } = await supabase
           .from('professionals')
-          .select('asaas_wallet_id')
+          .select('asaas_wallet_id, asaas_pix_key')
           .eq('id', user.id)
           .single();
 
-        setHasWalletId(!!coachData?.asaas_wallet_id);
+        setHasWalletId(!!(coachData?.asaas_wallet_id || coachData?.asaas_pix_key));
       } catch (err) {
         console.warn('Erro ao verificar carteira do coach:', err);
       } finally {
@@ -63,12 +63,12 @@ export default function NewChallengePage() {
       // 0. Validar Limites do Plano do Coach (Multi-Tier SaaS) & Subconta para Split
       const { data: coachData } = await supabase
         .from('professionals')
-        .select('plan_tier, asaas_wallet_id')
+        .select('plan_tier, asaas_wallet_id, asaas_pix_key')
         .eq('id', user.id)
         .single();
 
       const parsedPrice = parseFloat(price) || 0;
-      if (parsedPrice > 0 && !coachData?.asaas_wallet_id) {
+      if (parsedPrice > 0 && !coachData?.asaas_wallet_id && !coachData?.asaas_pix_key) {
         throw new Error(
           'Para criar um desafio pago com Split automático, você precisa primeiro configurar seus dados de recebimento na Central Financeira.'
         );

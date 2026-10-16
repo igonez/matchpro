@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 
 export async function POST(request: Request) {
   try {
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
     const { data: challenge, error: challengeError } = await supabase
       .from('challenges')
       .select(`
-        id, 
+        id,
         professional_id,
         professionals (
           plan_tier
@@ -37,8 +38,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Você não tem permissão para gerenciar este desafio.' }, { status: 403 });
     }
 
-    const coachTier: any = (challenge.professionals as any)?.plan_tier || 'starter';
-    const maxStudentsAllowed = coachTier === 'starter' ? 15 : coachTier === 'pro' ? 100 : 9999;
+    const coachTier: PlanTier = ((challenge.professionals as any)?.plan_tier as PlanTier) || 'starter';
+    const maxStudentsAllowed = PLAN_CONFIG[coachTier]?.maxStudentsPerChallenge || 10;
 
     const { count: currentStudentsCount } = await supabaseAdmin
       .from('challenge_participants')
@@ -111,7 +112,7 @@ export async function POST(request: Request) {
         },
         { onConflict: 'challenge_id,student_id' }
       )
-      .select('id, challenge_id, student_id, payment_status, enrolled_at')
+      .select('id, challenge_id, student_id, payment_status')
       .single();
 
     if (partError) {

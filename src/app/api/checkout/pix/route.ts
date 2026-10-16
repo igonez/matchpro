@@ -21,8 +21,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
     }
 
-    // 2. Buscar detalhes do desafio e do treinador
-    const { data: challenge, error: chError } = await supabase
+    // 2. Buscar detalhes do desafio e do treinador com supabaseAdmin para contornar RLS de professionals
+    const { data: challenge, error: chError } = await supabaseAdmin
       .from('challenges')
       .select(`
         id,
@@ -51,7 +51,21 @@ export async function POST(request: Request) {
 
     const professional: any = challenge.professionals;
     const planTier: PlanTier = professional?.plan_tier || 'starter';
-    const feePercent = Number(professional?.platform_fee_percent || PLAN_CONFIG[planTier].platformFeePercent || 18);
+    const planLimits = PLAN_CONFIG[planTier] || PLAN_CONFIG.starter;
+    const feePercent = Number(professional?.platform_fee_percent || planLimits.platformFeePercent || 15);
+
+    // Validar se a turma atingiu a capacidade máxima do plano do treinador
+    const { count: currentStudents } = await supabaseAdmin
+      .from('challenge_participants')
+      .select('*', { count: 'exact', head: true })
+      .eq('challenge_id', challengeId);
+
+    if ((currentStudents || 0) >= planLimits.maxStudentsPerChallenge) {
+      return NextResponse.json(
+        { error: `Esta turma atingiu a capacidade máxima de ${planLimits.maxStudentsPerChallenge} alunos permitida pelo plano do treinador.` },
+        { status: 400 }
+      );
+    }
 
     // Cálculos do Split
     const feePlatform = Number(((price * feePercent) / 100).toFixed(2));

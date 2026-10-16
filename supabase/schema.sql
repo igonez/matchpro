@@ -64,32 +64,42 @@ create table if not exists public.leaderboard_standings (
   unique (challenge_id, student_id)
 );
 
--- Trigger Function: Automatic Leaderboard Points on Approval
+-- Trigger Function: Automatic Leaderboard Points on Approval / Rejection Lifecycle
 create or replace function public.handle_submission_approval()
 returns trigger as $$
 declare
   v_challenge_id uuid;
   v_points integer;
 begin
-  if (old.status != 'approved' and new.status = 'approved') then
-    select challenge_id, points_rewarded into v_challenge_id, v_points
-    from public.missions where id = new.mission_id;
-    
+  select challenge_id, points_rewarded into v_challenge_id, v_points
+  from public.missions where id = coalesce(new.mission_id, old.mission_id);
+
+  -- Cenário A: Nova submissão aprovada ou transição para aprovada
+  if (tg_op = 'INSERT' and new.status = 'approved') or 
+     (tg_op = 'UPDATE' and old.status != 'approved' and new.status = 'approved') then
     insert into public.leaderboard_standings (challenge_id, student_id, total_points)
-    values (v_challenge_id, new.student_id, v_points)
+    values (coalesce(new.challenge_id, v_challenge_id), new.student_id, v_points)
     on conflict (challenge_id, student_id)
     do update set total_points = leaderboard_standings.total_points + excluded.total_points;
+
+  -- Cenário B: Submissão que era aprovada foi rejeitada pelo treinador (dedução)
+  elsif (tg_op = 'UPDATE' and old.status = 'approved' and new.status = 'rejected') then
+    update public.leaderboard_standings
+    set total_points = greatest(0, total_points - v_points)
+    where challenge_id = coalesce(new.challenge_id, v_challenge_id) and student_id = new.student_id;
   end if;
+
   return new;
 end;
 $$ language plpgsql security definer;
 
 -- Trigger definition
 drop trigger if exists on_submission_approved on public.student_submissions;
+drop trigger if exists on_submission_lifecycle on public.student_submissions;
+
 create trigger on_submission_approved
-  after update on public.student_submissions
-  for each row when (old.status is distinct from new.status)
-  execute function public.handle_submission_approval();
+  after insert or update on public.student_submissions
+  for each row execute function public.handle_submission_approval();
 
 -- RLS (Row Level Security)
 alter table public.professionals enable row level security;

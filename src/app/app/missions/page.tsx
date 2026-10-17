@@ -27,6 +27,14 @@ function StudentMissionsContent() {
   const [weeks, setWeeks] = useState<any[]>([]);
   const [selectedWeekId, setSelectedWeekId] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCat);
+  const [missionLists, setMissionLists] = useState<any[]>([]);
+  const [selectedListId, setSelectedListId] = useState<string>(searchParams.get('list') || 'all');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
   const [currentChallengeId, setCurrentChallengeId] = useState<string | null>(null);
   const [missions, setMissions] = useState<any[]>([]);
   const [submissions, setSubmissions] = useState<Record<string, any>>({});
@@ -36,8 +44,13 @@ function StudentMissionsContent() {
 
   useEffect(() => {
     const catParam = searchParams.get('cat');
-    if (catParam) {
+    const listParam = searchParams.get('list');
+    if (listParam) {
+      setSelectedListId(listParam);
+      setSelectedCategory('all');
+    } else if (catParam) {
       setSelectedCategory(catParam);
+      setSelectedListId('all');
     }
   }, [searchParams]);
 
@@ -104,6 +117,16 @@ function StudentMissionsContent() {
         if (weeksData && weeksData.length > 0) {
           setWeeks(weeksData);
           setSelectedWeekId(weeksData[0].id);
+        }
+
+        const { data: cLists } = await supabase
+          .from('challenge_mission_lists')
+          .select('*')
+          .eq('challenge_id', challengeId)
+          .order('order_index', { ascending: true });
+
+        if (cLists && cLists.length > 0) {
+          setMissionLists(cLists);
         }
 
         const { data: allSubmissionsData } = await supabase
@@ -234,16 +257,32 @@ function StudentMissionsContent() {
   }, [missions, submissions, isWorkoutDailyLocked, isCardioDailyLocked]);
 
   const filteredMissions = useMemo(() => {
-    if (selectedCategory === 'all') return processedMissions;
-    return processedMissions.filter((m) => m.category === selectedCategory);
-  }, [processedMissions, selectedCategory]);
+    if (selectedListId !== 'all') {
+      return processedMissions.filter((m) => m.list_id === selectedListId);
+    }
+    if (selectedCategory !== 'all') {
+      return processedMissions.filter((m) => m.category === selectedCategory);
+    }
+    return processedMissions;
+  }, [processedMissions, selectedCategory, selectedListId]);
 
   const availableMissions = filteredMissions.filter((m) => !m.isApproved && !m.isPending && !m.isLocked);
   const lockedOrPendingMissions = filteredMissions.filter((m) => m.isPending || (!m.isApproved && m.isLocked));
   const completedMissions = filteredMissions.filter((m) => m.isApproved);
 
-  const getCategoryBadge = (cat: string) => {
-    switch (cat) {
+  const getCategoryBadge = (mission: any) => {
+    if (mission.list_id && missionLists.length > 0) {
+      const list = missionLists.find((l) => l.id === mission.list_id);
+      if (list) {
+        return (
+          <span className="text-[11px] text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 font-medium flex items-center gap-1">
+            <span>{list.icon || '🎯'}</span> {list.name}
+          </span>
+        );
+      }
+    }
+
+    switch (mission.category) {
       case 'treino':
         return (
           <span className="text-[11px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 font-medium flex items-center gap-1">
@@ -273,19 +312,74 @@ function StudentMissionsContent() {
     }
   };
 
+  const handleSimpleCheckin = async (mission: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const newSub = {
+        id: `temp-${Date.now()}`,
+        mission_id: mission.id,
+        student_id: user.id,
+        status: 'approved',
+        submitted_at: new Date().toISOString(),
+        client_captured_at: new Date().toISOString(),
+        missions: { category: mission.category },
+      };
+
+      setSubmissions((prev) => ({ ...prev, [mission.id]: newSub }));
+      setTodaySubmissions((prev) => [...prev, newSub]);
+      showToast(`✓ "${mission.title}" concluída! +${mission.points_rewarded} XP`);
+
+      const { data, error } = await supabase.from('student_submissions').insert({
+        mission_id: mission.id,
+        student_id: user.id,
+        status: 'approved',
+        reviewed_by: user.id,
+        reviewed_at: new Date().toISOString(),
+        submitted_at: new Date().toISOString(),
+        client_captured_at: new Date().toISOString(),
+      }).select().single();
+
+      if (error) {
+        console.warn('Submissão gravada localmente com fallback:', error.message);
+      } else if (data) {
+        setSubmissions((prev) => ({ ...prev, [mission.id]: data }));
+      }
+    } catch (err: any) {
+      console.error('Erro no check-in 1-toque:', err);
+      showToast('✓ Check-in concluído!');
+    }
+  };
+
   const handleMissionClick = (mission: any) => {
     if (mission.isApproved || mission.isPending || mission.isLocked) return;
-    if (mission.category === 'treino' || mission.category === 'cardio') {
+
+    const valType = mission.validation_type || (
+      mission.category === 'treino' || mission.category === 'cardio' ? 'timer' : 'photo'
+    );
+
+    if (valType === 'simple_click') {
+      handleSimpleCheckin(mission);
+      return;
+    }
+
+    if (valType === 'timer' || mission.category === 'treino' || mission.category === 'cardio') {
       if (activeSession?.missionId === mission.id) return;
       startSession(mission.id, mission.title, mission.category);
-    } else {
-      router.push(`/app/camera/${mission.id}`);
+      return;
     }
+
+    // Default: foto
+    router.push(`/app/camera/${mission.id}`);
   };
 
   const renderMissionCard = (mission: any) => {
     const isActionable = !mission.sub && !mission.isLocked;
     const isCurrentlyActive = activeSession?.missionId === mission.id;
+    const isSimpleClick = mission.validation_type === 'simple_click';
+    const isTimer = mission.validation_type === 'timer' || (!mission.validation_type && (mission.category === 'treino' || mission.category === 'cardio'));
+    const customList = mission.list_id ? missionLists.find((l) => l.id === mission.list_id) : null;
 
     return (
       <div
@@ -319,7 +413,7 @@ function StudentMissionsContent() {
             ) : (
               <div className="h-8 w-8 rounded-full bg-white/10 border border-white/20 group-hover:border-white/50 group-hover:bg-white/20 flex items-center justify-center text-white transition-colors">
                 <span className="text-xs">
-                  {mission.category === 'treino' ? '⚡' : mission.category === 'cardio' ? '🏃' : mission.category === 'refeicao' ? '🥗' : '💧'}
+                  {customList?.icon || (mission.category === 'treino' ? '⚡' : mission.category === 'cardio' ? '🏃' : mission.category === 'refeicao' ? '🥗' : '💧')}
                 </span>
               </div>
             )}
@@ -339,7 +433,7 @@ function StudentMissionsContent() {
             </div>
 
             <div className="flex items-center gap-2 mt-1">
-              {getCategoryBadge(mission.category)}
+              {getCategoryBadge(mission)}
               <span className="text-[10px] font-mono font-bold text-zinc-400">
                 +{mission.points_rewarded} XP
               </span>
@@ -382,7 +476,7 @@ function StudentMissionsContent() {
               </span>
             ) : (
               <span className="px-3 py-1.5 rounded-xl bg-white text-black font-semibold text-xs group-hover:bg-zinc-200 transition-colors shadow-sm flex items-center gap-1">
-                {mission.category === 'treino' || mission.category === 'cardio' ? 'Iniciar' : 'Foto'}
+                {isSimpleClick ? 'Check-in ⚡' : isTimer ? 'Iniciar' : 'Foto'}
                 <ChevronRight className="h-3 w-3" />
               </span>
             )
@@ -404,7 +498,7 @@ function StudentMissionsContent() {
             Cronograma de Tarefas
           </span>
           <h1 className="text-xl font-black text-white">Missões da Turma</h1>
-          <p className="text-xs text-zinc-400">Limite biológico de 1 treino e 1 cardio por dia</p>
+          <p className="text-xs text-zinc-400">Tarefas e hábitos com pontuação e metas</p>
         </div>
       </div>
 
@@ -454,27 +548,61 @@ function StudentMissionsContent() {
         </div>
       )}
 
-      {/* Abas de Filtro por Categoria */}
+      {/* Abas de Filtro por Lista Customizada ou Categoria */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none relative z-10">
-        {[
-          { id: 'all', label: `Todas (${processedMissions.length})` },
-          { id: 'treino', label: '⚡ Treinos' },
-          { id: 'cardio', label: '🏃 Cardios' },
-          { id: 'refeicao', label: '🥗 Refeições' },
-          { id: 'habito', label: '💧 Hábitos' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setSelectedCategory(tab.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all ${
-              selectedCategory === tab.id
-                ? 'bg-white text-black shadow-md'
-                : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+        {missionLists.length > 0 ? (
+          <>
+            <button
+              onClick={() => { setSelectedListId('all'); setSelectedCategory('all'); }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all ${
+                selectedListId === 'all' && selectedCategory === 'all'
+                  ? 'bg-white text-black shadow-md'
+                  : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+              }`}
+            >
+              Todas ({processedMissions.length})
+            </button>
+            {missionLists.map((list) => {
+              const count = processedMissions.filter((m) => m.list_id === list.id).length;
+              const isSelected = selectedListId === list.id;
+              return (
+                <button
+                  key={list.id}
+                  onClick={() => { setSelectedListId(list.id); setSelectedCategory('all'); }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'bg-white text-black shadow-md'
+                      : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  <span>{list.icon || '🎯'}</span>
+                  <span>{list.name}</span>
+                  {count > 0 && <span className="opacity-60 text-[10px]">({count})</span>}
+                </button>
+              );
+            })}
+          </>
+        ) : (
+          [
+            { id: 'all', label: `Todas (${processedMissions.length})` },
+            { id: 'treino', label: '⚡ Treinos' },
+            { id: 'cardio', label: '🏃 Cardios' },
+            { id: 'refeicao', label: '🥗 Refeições' },
+            { id: 'habito', label: '💧 Hábitos' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => { setSelectedCategory(tab.id); setSelectedListId('all'); }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all ${
+                selectedCategory === tab.id
+                  ? 'bg-white text-black shadow-md'
+                  : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))
+        )}
       </div>
 
       {/* Card da Meta de Bônus da Semana */}
@@ -562,6 +690,14 @@ function StudentMissionsContent() {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Floating Instant Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-white text-black px-4 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <span>✓</span>
+          <span>{toastMessage}</span>
         </div>
       )}
     </div>

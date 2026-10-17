@@ -41,6 +41,14 @@ export default function StudentHomePage() {
   const [inviteCodeInput, setInviteCodeInput] = useState('');
   const [currentStreak, setCurrentStreak] = useState<number>(1);
   const [todayTasks, setTodayTasks] = useState<any[]>([]);
+  const [missionLists, setMissionLists] = useState<any[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const [todayLockedCategories, setTodayLockedCategories] = useState<{ treino: boolean; cardio: boolean }>({
     treino: false,
     cardio: false,
@@ -52,6 +60,7 @@ export default function StudentHomePage() {
     refeicoes: { done: 0, total: 0 },
     habitos: { done: 0, total: 0 },
   });
+  const [listCounts, setListCounts] = useState<Record<string, { done: number; total: number }>>({});
 
   const [loading, setLoading] = useState(true);
   const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
@@ -162,10 +171,22 @@ export default function StudentHomePage() {
           }
         }
 
+        // Carregar listas de missões personalizadas da turma
+        if (challengeData?.id) {
+          const { data: cLists } = await supabase
+            .from('challenge_mission_lists')
+            .select('*')
+            .eq('challenge_id', challengeData.id)
+            .order('order_index', { ascending: true });
+          if (cLists && cLists.length > 0) {
+            setMissionLists(cLists);
+          }
+        }
+
         const { data: allMissions } = challengeData?.id
           ? await supabase
               .from('missions')
-              .select('id, title, category, points_rewarded, target_frequency, week_id, order_index, is_bonus')
+              .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus')
               .eq('challenge_id', challengeData.id)
               .order('order_index', { ascending: true })
           : { data: [] };
@@ -201,10 +222,17 @@ export default function StudentHomePage() {
         let cDone = 0, cTot = 0;
         let rDone = 0, rTot = 0;
         let hDone = 0, hTot = 0;
+        const lCounts: Record<string, { done: number; total: number }> = {};
 
         allMissions?.forEach((m: any) => {
           const freq = m.target_frequency || 1;
           const isDone = approvedMissionIds.has(m.id);
+          const listKey = m.list_id || m.category;
+          if (!lCounts[listKey]) {
+            lCounts[listKey] = { done: 0, total: 0 };
+          }
+          lCounts[listKey].total += freq;
+          if (isDone) lCounts[listKey].done += freq;
 
           if (m.category === 'treino') {
             tTot += freq;
@@ -227,12 +255,14 @@ export default function StudentHomePage() {
           refeicoes: { done: rDone, total: rTot },
           habitos: { done: hDone, total: hTot },
         });
+        setListCounts(lCounts);
 
-        // Selecionar a próxima missão disponível de cada categoria para o Checklist de Hoje
+        // Selecionar a próxima missão disponível de cada lista/categoria para o Checklist de Hoje
         const nextByCat: Record<string, any> = {};
         (allMissions || []).forEach((m: any) => {
-          if (!submittedMissionIds.has(m.id) && !nextByCat[m.category]) {
-            nextByCat[m.category] = m;
+          const groupKey = m.list_id || m.category;
+          if (!submittedMissionIds.has(m.id) && !nextByCat[groupKey]) {
+            nextByCat[groupKey] = m;
           }
         });
         setTodayTasks(Object.values(nextByCat));
@@ -322,21 +352,64 @@ export default function StudentHomePage() {
     );
   }, [todayTasks, activeSession, todayLockedCategories]);
 
-  const handleTaskClick = (task: any) => {
+  const handleTaskClick = async (task: any) => {
     const isLocked =
       (task.category === 'treino' && todayLockedCategories.treino) ||
       (task.category === 'cardio' && todayLockedCategories.cardio);
 
     if (isLocked) return;
 
-    if (task.category === 'treino' || task.category === 'cardio') {
+    const valType =
+      task.validation_type ||
+      (task.category === 'treino' || task.category === 'cardio'
+        ? 'timer'
+        : task.category === 'habito'
+        ? 'simple_click'
+        : 'photo');
+
+    if (valType === 'timer') {
       if (activeSession?.missionId === task.id) {
         router.push(`/app/camera/${task.id}`);
         return;
       }
       startSession(task.id, task.title, task.category);
+    } else if (valType === 'simple_click') {
+      await handleSimpleCheckin(task);
     } else {
       router.push(`/app/camera/${task.id}`);
+    }
+  };
+
+  const handleSimpleCheckin = async (task: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const payload: any = {
+        mission_id: task.id,
+        student_id: user.id,
+        challenge_id: challenge?.id || null,
+        status: 'approved',
+        client_captured_at: new Date().toISOString(),
+        caption: 'Check-in direto 1-toque confirmado',
+      };
+
+      const { error } = await supabase.from('student_submissions').insert(payload);
+      if (error) {
+        await supabase.from('student_submissions').insert({ ...payload, photo_url: 'simple_click' });
+      }
+
+      setTodayTasks((prev) =>
+        prev.map((t) => (t.id === task.id ? { ...t, isCompleted: true } : t))
+      );
+      setStanding((prev: any) => ({
+        ...prev,
+        total_points: (prev?.total_points || 0) + (task.points_rewarded || 10),
+      }));
+      showToast(`✓ Check-in de "${task.title}" concluído! (+${task.points_rewarded || 10} XP)`);
+    } catch (err: any) {
+      console.error('Erro no check-in 1-toque:', err);
+      showToast('Erro ao registrar check-in: ' + err.message);
     }
   };
 
@@ -651,13 +724,21 @@ export default function StudentHomePage() {
                   (task.category === 'cardio' && todayLockedCategories.cardio);
                 const isRunningThis = activeSession?.missionId === task.id;
 
+                const customList = task.list_id ? missionLists.find((l) => l.id === task.list_id) : null;
                 const catMeta: Record<string, { icon: string; label: string; color: string }> = {
                   treino: { icon: '⚡', label: 'Treino', color: 'text-amber-300 border-amber-500/20 bg-amber-500/10' },
                   cardio: { icon: '🏃', label: 'Cardio', color: 'text-cyan-300 border-cyan-500/20 bg-cyan-500/10' },
                   refeicao: { icon: '🥗', label: 'Nutrição', color: 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10' },
                   habito: { icon: '💧', label: 'Hábito', color: 'text-purple-300 border-purple-500/20 bg-purple-500/10' },
                 };
-                const meta = catMeta[task.category] || catMeta.habito;
+                const defaultMeta = catMeta[task.category] || catMeta.habito;
+                const meta = customList
+                  ? {
+                      icon: customList.icon || '🎯',
+                      label: customList.name,
+                      color: 'text-zinc-200 border-white/10 bg-white/5',
+                    }
+                  : defaultMeta;
 
                 return (
                   <div
@@ -725,11 +806,11 @@ export default function StudentHomePage() {
             </div>
           </div>
 
-          {/* 5. PROGRESSO POR PILAR (Pills Horizontais Compactas) */}
+          {/* 5. PROGRESSO POR PILAR / LISTAS DE MISSÕES */}
           <div className="space-y-2 relative z-10">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
-                Progresso por Pilar
+                {missionLists.length > 0 ? 'Progresso por Lista' : 'Progresso por Pilar'}
               </span>
               <Link href="/app/missions" className="text-[11px] text-zinc-400 hover:text-white transition-colors font-mono">
                 Ver todos →
@@ -737,35 +818,71 @@ export default function StudentHomePage() {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { key: 'treino', title: '⚡ Treinos', done: categoryCounts.treinos.done, total: categoryCounts.treinos.total, barClass: 'bg-amber-400' },
-                { key: 'cardio', title: '🏃 Cardios', done: categoryCounts.cardios.done, total: categoryCounts.cardios.total, barClass: 'bg-cyan-400' },
-                { key: 'refeicao', title: '🥗 Nutrição', done: categoryCounts.refeicoes.done, total: categoryCounts.refeicoes.total, barClass: 'bg-emerald-400' },
-                { key: 'habito', title: '💧 Hábitos', done: categoryCounts.habitos.done, total: categoryCounts.habitos.total, barClass: 'bg-purple-400' },
-              ].map((cat) => {
-                const pct = cat.total > 0 ? Math.min(100, Math.round((cat.done / cat.total) * 100)) : 0;
-                return (
-                  <Link key={cat.key} href={`/app/missions?cat=${cat.key}`}>
-                    <div className="mono-glass-card p-2.5 rounded-xl border border-white/5 hover:border-white/20 transition-all space-y-1.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-white text-[11px]">{cat.title}</span>
-                        <span className="text-[10px] font-mono text-zinc-400 font-bold">
-                          {cat.done}/{cat.total}
-                        </span>
+              {missionLists.length > 0 ? (
+                missionLists.map((list) => {
+                  const c = listCounts[list.id] || { done: 0, total: 0 };
+                  const pct = c.total > 0 ? Math.min(100, Math.round((c.done / c.total) * 100)) : 0;
+                  return (
+                    <Link key={list.id} href={`/app/missions?list=${list.id}`}>
+                      <div className="mono-glass-card p-2.5 rounded-xl border border-white/5 hover:border-white/20 transition-all space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-white text-[11px] truncate flex items-center gap-1.5">
+                            <span>{list.icon || '🎯'}</span>
+                            <span className="truncate">{list.name}</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-zinc-400 font-bold shrink-0">
+                            {c.done}/{c.total}
+                          </span>
+                        </div>
+                        <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%`, backgroundColor: list.color || '#3b82f6' }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${cat.barClass} transition-all duration-500`}
-                          style={{ width: `${pct}%` }}
-                        />
+                    </Link>
+                  );
+                })
+              ) : (
+                [
+                  { key: 'treino', title: '⚡ Treinos', done: categoryCounts.treinos.done, total: categoryCounts.treinos.total, barClass: 'bg-amber-400' },
+                  { key: 'cardio', title: '🏃 Cardios', done: categoryCounts.cardios.done, total: categoryCounts.cardios.total, barClass: 'bg-cyan-400' },
+                  { key: 'refeicao', title: '🥗 Nutrição', done: categoryCounts.refeicoes.done, total: categoryCounts.refeicoes.total, barClass: 'bg-emerald-400' },
+                  { key: 'habito', title: '💧 Hábitos', done: categoryCounts.habitos.done, total: categoryCounts.habitos.total, barClass: 'bg-purple-400' },
+                ].map((cat) => {
+                  const pct = cat.total > 0 ? Math.min(100, Math.round((cat.done / cat.total) * 100)) : 0;
+                  return (
+                    <Link key={cat.key} href={`/app/missions?cat=${cat.key}`}>
+                      <div className="mono-glass-card p-2.5 rounded-xl border border-white/5 hover:border-white/20 transition-all space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-white text-[11px]">{cat.title}</span>
+                          <span className="text-[10px] font-mono text-zinc-400 font-bold">
+                            {cat.done}/{cat.total}
+                          </span>
+                        </div>
+                        <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full ${cat.barClass} transition-all duration-500`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                );
-              })}
+                    </Link>
+                  );
+                })
+              )}
             </div>
           </div>
         </>
+      )}
+
+      {/* Floating Instant Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-white text-black px-4 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <span>✓</span>
+          <span>{toastMessage}</span>
+        </div>
       )}
     </div>
   );

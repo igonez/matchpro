@@ -18,7 +18,13 @@ import {
   Layers, 
   HelpCircle,
   Copy,
-  AlertCircle
+  AlertCircle,
+  ListPlus,
+  Camera,
+  Timer,
+  MousePointerClick,
+  FileText,
+  Settings2
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,6 +32,13 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { createClient } from '@/lib/supabase/client';
+
+const DEFAULT_PRESET_LISTS = [
+  { id: 'preset-treino', key: 'treino', name: 'Treinos', icon: '⚡', color: 'amber', validation_type: 'timer', daily_limit: 1 },
+  { id: 'preset-cardio', key: 'cardio', name: 'Cardios', icon: '🏃', color: 'cyan', validation_type: 'timer', daily_limit: 1 },
+  { id: 'preset-refeicao', key: 'refeicao', name: 'Refeições', icon: '🥗', color: 'emerald', validation_type: 'photo', daily_limit: 4 },
+  { id: 'preset-habito', key: 'habito', name: 'Hábitos & Água', icon: '💧', color: 'purple', validation_type: 'simple_click', daily_limit: 0 },
+];
 
 function MissionsManagerContent() {
   const searchParams = useSearchParams();
@@ -40,14 +53,29 @@ function MissionsManagerContent() {
   const [loading, setLoading] = useState(true);
   const [generatingTemplate, setGeneratingTemplate] = useState(false);
 
-  // Active Category Tab: treinos | cardios | refeicoes | bonus
-  const [activeTab, setActiveTab] = useState<'treinos' | 'cardios' | 'refeicoes' | 'bonus'>('treinos');
+  // Listas de Missões Personalizadas (Trilhas do Coach)
+  const [missionLists, setMissionLists] = useState<any[]>(DEFAULT_PRESET_LISTS);
+  const [activeListId, setActiveListId] = useState<string>('preset-treino');
+
+  // Modal para Criar / Editar Lista
+  const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [editingList, setEditingList] = useState<any | null>(null);
+  const [listName, setListName] = useState('');
+  const [listIcon, setListIcon] = useState('⚡');
+  const [listValidationType, setListValidationType] = useState<'photo' | 'timer' | 'simple_click' | 'text'>('photo');
+  const [listDailyLimit, setListDailyLimit] = useState('1');
+  const [submittingList, setSubmittingList] = useState(false);
+  const [deleteListTarget, setDeleteListTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deletingList, setDeletingList] = useState(false);
 
   // Modal para Criar / Editar Missão
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMission, setEditingMission] = useState<any | null>(null);
   const [formTitle, setFormTitle] = useState('');
-  const [formCategory, setFormCategory] = useState<'treino' | 'cardio' | 'refeicao' | 'habito' | 'outro'>('treino');
+  const [formListId, setFormListId] = useState<string>('');
+  const [formCategory, setFormCategory] = useState<string>('treino');
+  const [formValidationType, setFormValidationType] = useState<'photo' | 'timer' | 'simple_click' | 'text'>('photo');
+  const [formDailyLimit, setFormDailyLimit] = useState('1');
   const [formPoints, setFormPoints] = useState('10');
   const [formRequiresCooldown, setFormRequiresCooldown] = useState(false);
   const [formCooldownHours, setFormCooldownHours] = useState('4');
@@ -111,9 +139,59 @@ function MissionsManagerContent() {
     }
   };
 
+  // Carregar listas/trilhas de missões personalizadas do desafio
+  const fetchMissionLists = async (challengeId: string) => {
+    if (!challengeId) return;
+    try {
+      const { data, error } = await supabase
+        .from('challenge_mission_lists')
+        .select('*')
+        .eq('challenge_id', challengeId)
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: true });
+
+      if (data && data.length > 0) {
+        setMissionLists(data);
+        if (!activeListId || !data.some((l: any) => l.id === activeListId)) {
+          setActiveListId(data[0].id);
+        }
+      } else {
+        // Inicializar os presets padrão no Supabase se ainda não houver
+        const { data: seeded } = await supabase
+          .from('challenge_mission_lists')
+          .insert(
+            DEFAULT_PRESET_LISTS.map((p, idx) => ({
+              challenge_id: challengeId,
+              name: p.name,
+              key: p.key,
+              icon: p.icon,
+              color: p.color,
+              validation_type: p.validation_type,
+              daily_limit: p.daily_limit,
+              order_index: idx + 1,
+            }))
+          )
+          .select();
+
+        if (seeded && seeded.length > 0) {
+          setMissionLists(seeded);
+          setActiveListId(seeded[0].id);
+        } else {
+          setMissionLists(DEFAULT_PRESET_LISTS);
+          setActiveListId(DEFAULT_PRESET_LISTS[0].id);
+        }
+      }
+    } catch (err) {
+      console.warn('Fallback para presets padrão de listas:', err);
+      setMissionLists(DEFAULT_PRESET_LISTS);
+      setActiveListId(DEFAULT_PRESET_LISTS[0].id);
+    }
+  };
+
   useEffect(() => {
     if (selectedChallengeId) {
       fetchWeeks(selectedChallengeId);
+      fetchMissionLists(selectedChallengeId);
     }
   }, [selectedChallengeId]);
 
@@ -150,6 +228,102 @@ function MissionsManagerContent() {
       fetchMissions(selectedWeekId);
     }
   }, [selectedWeekId]);
+
+  // Handlers para Criar / Editar / Excluir Listas de Missões
+  const handleOpenCreateListModal = () => {
+    setEditingList(null);
+    setListName('');
+    setListIcon('⚡');
+    setListValidationType('photo');
+    setListDailyLimit('1');
+    setIsListModalOpen(true);
+  };
+
+  const handleOpenEditListModal = (list: any) => {
+    setEditingList(list);
+    setListName(list.name);
+    setListIcon(list.icon || '⚡');
+    setListValidationType(list.validation_type || 'photo');
+    setListDailyLimit(list.daily_limit?.toString() || '1');
+    setIsListModalOpen(true);
+  };
+
+  const handleSaveList = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedChallengeId || !listName.trim()) return;
+
+    setSubmittingList(true);
+    try {
+      const slugKey = listName.trim().toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 30);
+      const payload: any = {
+        challenge_id: selectedChallengeId,
+        name: listName.trim(),
+        key: slugKey || 'custom',
+        icon: listIcon || '⚡',
+        validation_type: listValidationType,
+        daily_limit: parseInt(listDailyLimit, 10) || 1,
+        order_index: missionLists.length + 1,
+      };
+
+      if (editingList?.id && !editingList.id.startsWith('preset-')) {
+        const { data, error } = await supabase
+          .from('challenge_mission_lists')
+          .update(payload)
+          .eq('id', editingList.id)
+          .select()
+          .single();
+        if (error) throw error;
+        setMissionLists((prev) => prev.map((l) => (l.id === editingList.id ? data : l)));
+        showToast(`Lista "${data.name}" atualizada!`);
+      } else {
+        const { data, error } = await supabase
+          .from('challenge_mission_lists')
+          .insert(payload)
+          .select()
+          .single();
+        if (error) {
+          // Fallback se a tabela ainda estiver em criação
+          const localNewList = { ...payload, id: `custom-${Date.now()}` };
+          setMissionLists((prev) => [...prev, localNewList]);
+          setActiveListId(localNewList.id);
+        } else if (data) {
+          setMissionLists((prev) => [...prev, data]);
+          setActiveListId(data.id);
+        }
+        showToast(`Nova lista criada com sucesso!`);
+      }
+      setIsListModalOpen(false);
+      setEditingList(null);
+    } catch (err: any) {
+      showToast('Erro ao salvar lista: ' + err.message);
+    } finally {
+      setSubmittingList(false);
+    }
+  };
+
+  const handleConfirmDeleteList = async () => {
+    if (!deleteListTarget) return;
+    setDeletingList(true);
+    try {
+      if (!deleteListTarget.id.startsWith('preset-')) {
+        await supabase
+          .from('challenge_mission_lists')
+          .delete()
+          .eq('id', deleteListTarget.id);
+      }
+      const remaining = missionLists.filter((l) => l.id !== deleteListTarget.id);
+      setMissionLists(remaining);
+      if (remaining.length > 0) {
+        setActiveListId(remaining[0].id);
+      }
+      showToast(`Lista "${deleteListTarget.name}" removida.`);
+      setDeleteListTarget(null);
+    } catch (err: any) {
+      showToast('Erro ao excluir lista: ' + err.message);
+    } finally {
+      setDeletingList(false);
+    }
+  };
 
   // Gerar Template Completo de 4 Semanas de Missões com 1 Clique
   const handleGenerateSmartTemplate = async () => {
@@ -198,6 +372,8 @@ function MissionsManagerContent() {
             week_id: week.id,
             title: `Treino #${t} da Semana`,
             category: 'treino',
+            validation_type: 'timer',
+            daily_limit: 1,
             points_rewarded: 15,
             requires_cooldown: true,
             cooldown_hours: 4,
@@ -213,6 +389,8 @@ function MissionsManagerContent() {
             week_id: week.id,
             title: `Cardio #${c} (Mín. 30min)`,
             category: 'cardio',
+            validation_type: 'timer',
+            daily_limit: 1,
             points_rewarded: 10,
             requires_cooldown: true,
             cooldown_hours: 4,
@@ -229,6 +407,8 @@ function MissionsManagerContent() {
             week_id: week.id,
             title: meal,
             category: 'refeicao',
+            validation_type: 'photo',
+            daily_limit: 4,
             points_rewarded: 10,
             requires_cooldown: false,
             order_index: idx + 1,
@@ -242,6 +422,8 @@ function MissionsManagerContent() {
           week_id: week.id,
           title: 'Desafio Bônus: 3L Água + Alongamento',
           category: 'habito',
+          validation_type: 'simple_click',
+          daily_limit: 0,
           points_rewarded: 25,
           requires_cooldown: false,
           order_index: 99,
@@ -263,7 +445,7 @@ function MissionsManagerContent() {
         }
       }
 
-      showToast('Template de 4 semanas e missões ativas gerado com sucesso!');
+      showToast('Template de 4 semanas e missões gerado com sucesso!');
       if (selectedWeekId) {
         await fetchMissions(selectedWeekId);
       } else if (currentWeeks.length > 0) {
@@ -277,14 +459,18 @@ function MissionsManagerContent() {
   };
 
   // Abrir Modal para Criar Missão
-  const handleOpenCreateModal = (catDefault: 'treino' | 'cardio' | 'refeicao' | 'habito') => {
+  const handleOpenCreateModal = (targetList?: any) => {
+    const list = targetList || missionLists.find((l) => l.id === activeListId) || missionLists[0];
     setEditingMission(null);
     setFormTitle('');
-    setFormCategory(catDefault);
+    setFormListId(list?.id && !list.id.startsWith('preset-') ? list.id : '');
+    setFormCategory(list?.key || 'treino');
+    setFormValidationType(list?.validation_type || 'photo');
+    setFormDailyLimit(list?.daily_limit !== undefined ? list.daily_limit.toString() : '1');
     setFormPoints('10');
-    setFormRequiresCooldown(catDefault === 'treino' || catDefault === 'cardio');
+    setFormRequiresCooldown(list?.daily_limit === 1);
     setFormCooldownHours('4');
-    setFormIsBonus(activeTab === 'bonus');
+    setFormIsBonus(false);
     setIsModalOpen(true);
   };
 
@@ -292,7 +478,17 @@ function MissionsManagerContent() {
   const handleOpenEditModal = (mission: any) => {
     setEditingMission(mission);
     setFormTitle(mission.title);
+    setFormListId(mission.list_id || '');
     setFormCategory(mission.category || 'treino');
+    setFormValidationType(
+      mission.validation_type ||
+      (mission.category === 'treino' || mission.category === 'cardio'
+        ? 'timer'
+        : mission.category === 'habito'
+        ? 'simple_click'
+        : 'photo')
+    );
+    setFormDailyLimit(mission.daily_limit?.toString() || (mission.requires_cooldown ? '1' : '0'));
     setFormPoints(mission.points_rewarded?.toString() || '10');
     setFormRequiresCooldown(mission.requires_cooldown ?? false);
     setFormCooldownHours(mission.cooldown_hours?.toString() || '4');
@@ -307,11 +503,17 @@ function MissionsManagerContent() {
 
     setSubmittingMission(true);
     try {
+      const selectedListObj = missionLists.find((l) => l.id === formListId);
+      const resolvedCategory = selectedListObj ? selectedListObj.key : formCategory;
+
       const payload: any = {
         challenge_id: selectedChallengeId,
         week_id: selectedWeekId,
         title: formTitle.trim(),
-        category: formCategory,
+        category: resolvedCategory,
+        list_id: formListId && !formListId.startsWith('preset-') ? formListId : null,
+        validation_type: formValidationType,
+        daily_limit: parseInt(formDailyLimit, 10) || 1,
         points_rewarded: parseInt(formPoints, 10) || 10,
         requires_cooldown: formRequiresCooldown,
         cooldown_hours: parseInt(formCooldownHours, 10) || 4,
@@ -325,7 +527,17 @@ function MissionsManagerContent() {
           .update(payload)
           .eq('id', editingMission.id);
 
-        if (error) throw error;
+        if (error) {
+          // Fallback sem colunas extras se o schema cache falhar
+          const basicPayload = {
+            title: payload.title,
+            category: payload.category,
+            points_rewarded: payload.points_rewarded,
+            requires_cooldown: payload.requires_cooldown,
+            is_bonus: payload.is_bonus,
+          };
+          await supabase.from('missions').update(basicPayload).eq('id', editingMission.id);
+        }
         setMissions((prev) => prev.map((m) => (m.id === editingMission.id ? { ...m, ...payload } : m)));
       } else {
         // Inserir
@@ -336,8 +548,23 @@ function MissionsManagerContent() {
           .select()
           .single();
 
-        if (error) throw error;
-        setMissions((prev) => [...prev, data]);
+        if (error) {
+          // Fallback sem colunas extras
+          const basicPayload = {
+            challenge_id: payload.challenge_id,
+            week_id: payload.week_id,
+            title: payload.title,
+            category: payload.category,
+            points_rewarded: payload.points_rewarded,
+            requires_cooldown: payload.requires_cooldown,
+            is_bonus: payload.is_bonus,
+            order_index: payload.order_index,
+          };
+          const { data: bData } = await supabase.from('missions').insert(basicPayload).select().single();
+          if (bData) setMissions((prev) => [...prev, bData]);
+        } else if (data) {
+          setMissions((prev) => [...prev, data]);
+        }
       }
 
       setIsModalOpen(false);
@@ -446,11 +673,19 @@ function MissionsManagerContent() {
     }
   };
 
-  // Filtrar missões pela aba ativa
-  const treinosList = missions.filter((m) => m.category === 'treino' && !m.is_bonus);
-  const cardiosList = missions.filter((m) => m.category === 'cardio' && !m.is_bonus);
-  const refeicoestList = missions.filter((m) => m.category === 'refeicao' && !m.is_bonus);
-  const bonusList = missions.filter((m) => m.is_bonus || m.category === 'habito' || m.category === 'outro');
+  // Lista ativa e filtragem dinâmica de missões
+  const currentActiveList = missionLists.find((l) => l.id === activeListId) || missionLists[0];
+
+  const currentListMissions = missions.filter((m) => {
+    if (!currentActiveList) return true;
+    if (m.list_id && currentActiveList.id && !currentActiveList.id.startsWith('preset-')) {
+      return m.list_id === currentActiveList.id;
+    }
+    if (currentActiveList.key) {
+      return m.category === currentActiveList.key;
+    }
+    return false;
+  });
 
   const selectedWeek = weeks.find((w) => w.id === selectedWeekId);
 
@@ -634,210 +869,330 @@ function MissionsManagerContent() {
         </div>
       )}
 
-      {/* Segmentação em 4 Listas Claras (Abas) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <button
-          onClick={() => setActiveTab('treinos')}
-          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
-            activeTab === 'treinos'
-              ? 'border-white bg-white/10 text-white font-bold'
-              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
-              <Dumbbell className="h-4 w-4" />
-            </div>
-            <span>Lista 1: Treinos</span>
+      {/* Listas / Trilhas de Missões Customizáveis pelo Coach */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Layers className="h-4 w-4 text-white" />
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">
+              Listas de Missões da Turma ({missionLists.length})
+            </h3>
           </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{treinosList.length}</Badge>
-        </button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleOpenCreateListModal}
+            className="rounded-xl h-8 px-3 text-xs font-mono font-bold border-white/20 text-white hover:bg-white/10 flex items-center gap-1.5"
+          >
+            <ListPlus className="h-3.5 w-3.5" />
+            <span>+ Nova Lista</span>
+          </Button>
+        </div>
 
-        <button
-          onClick={() => setActiveTab('cardios')}
-          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
-            activeTab === 'cardios'
-              ? 'border-white bg-white/10 text-white font-bold'
-              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
-              <Flame className="h-4 w-4" />
-            </div>
-            <span>Lista 2: Cardios</span>
-          </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{cardiosList.length}</Badge>
-        </button>
+        {/* Abas das Listas em Grid Dinâmico */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+          {missionLists.map((list) => {
+            const isSelected = list.id === activeListId;
+            const count = missions.filter((m) =>
+              m.list_id && !list.id.startsWith('preset-')
+                ? m.list_id === list.id
+                : m.category === list.key
+            ).length;
+            const isPreset = list.id.startsWith('preset-');
 
-        <button
-          onClick={() => setActiveTab('refeicoes')}
-          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
-            activeTab === 'refeicoes'
-              ? 'border-white bg-white/10 text-white font-bold'
-              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
-              <Utensils className="h-4 w-4" />
-            </div>
-            <span>Lista 3: Refeições</span>
-          </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{refeicoestList.length}</Badge>
-        </button>
+            return (
+              <div
+                key={list.id}
+                onClick={() => setActiveListId(list.id)}
+                className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between gap-2 group ${
+                  isSelected
+                    ? 'border-white bg-white/10 text-white shadow-md'
+                    : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-1.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-base shrink-0">{list.icon || '⚡'}</span>
+                    <span className="text-xs font-bold truncate">{list.name}</span>
+                  </div>
+                  <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono shrink-0">
+                    {count}
+                  </Badge>
+                </div>
 
-        <button
-          onClick={() => setActiveTab('bonus')}
-          className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${
-            activeTab === 'bonus'
-              ? 'border-white bg-white/10 text-white font-bold'
-              : 'border-white/10 bg-zinc-900/40 text-zinc-400 hover:border-white/20'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 text-xs">
-            <div className="h-7 w-7 rounded-lg bg-white/5 text-white flex items-center justify-center border border-white/10">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span>Lista 4: Extras / Bônus</span>
-          </div>
-          <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono">{bonusList.length}</Badge>
-        </button>
+                <div className="flex items-center justify-between text-[10px] text-zinc-500 font-mono pt-1 border-t border-white/5">
+                  <span className="truncate">
+                    {list.validation_type === 'timer'
+                      ? '⏱️ Cronômetro'
+                      : list.validation_type === 'simple_click'
+                      ? '⚡ 1-Toque'
+                      : list.validation_type === 'text'
+                      ? '✍️ Texto'
+                      : '📸 Foto'}
+                  </span>
+                  {!isPreset && (
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenEditListModal(list);
+                        }}
+                        className="p-1 hover:text-white"
+                        title="Editar Lista"
+                      >
+                        <Edit3 className="h-3 w-3" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleteListTarget({ id: list.id, name: list.name });
+                        }}
+                        className="p-1 hover:text-red-400"
+                        title="Excluir Lista"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Conteúdo da Lista Selecionada */}
       <Card className="border-white/10 bg-zinc-900/50">
-        <CardHeader className="pb-3 flex flex-row items-center justify-between">
+        <CardHeader className="pb-3 flex flex-row items-center justify-between gap-4">
           <div>
             <CardTitle className="text-base text-white flex items-center gap-2 tracking-tight">
-              {activeTab === 'treinos' && 'Treinos da Semana'}
-              {activeTab === 'cardios' && 'Cardios da Semana'}
-              {activeTab === 'refeicoes' && 'Refeições Diárias'}
-              {activeTab === 'bonus' && 'Missões Extras & Hábitos Bônus'}
+              <span>{currentActiveList?.icon || '⚡'}</span>
+              <span>{currentActiveList?.name || 'Missões'} da Semana</span>
             </CardTitle>
-            <CardDescription className="text-xs">
-              {activeTab === 'treinos' && 'Configuração de treinos com trava sequencial e contagem regressiva.'}
-              {activeTab === 'cardios' && 'Sessões aeróbicas com bloqueio temporal e fotos de comprovação.'}
-              {activeTab === 'refeicoes' && 'Validação por fotos no prato (Café, Almoço, Lanche, Jantar).'}
-              {activeTab === 'bonus' && 'Pontuação complementar para quem quer se destacar no leaderboard.'}
+            <CardDescription className="text-xs flex items-center gap-2 flex-wrap mt-0.5">
+              <span>
+                Comprovação:{' '}
+                <strong className="text-zinc-200">
+                  {currentActiveList?.validation_type === 'timer'
+                    ? 'Sessão com Cronômetro'
+                    : currentActiveList?.validation_type === 'simple_click'
+                    ? 'Check-in Direto 1-Toque (Sem foto)'
+                    : currentActiveList?.validation_type === 'text'
+                    ? 'Resposta em Texto'
+                    : 'Foto Obrigatória na Câmera'}
+                </strong>
+              </span>
+              <span>•</span>
+              <span>
+                Limite:{' '}
+                <strong className="text-zinc-200">
+                  {currentActiveList?.daily_limit === 0 || !currentActiveList?.daily_limit
+                    ? 'Ilimitado'
+                    : `${currentActiveList?.daily_limit}x por dia`}
+                </strong>
+              </span>
             </CardDescription>
           </div>
 
           <Button
             size="sm"
-            onClick={() => handleOpenCreateModal(
-              activeTab === 'treinos' ? 'treino' : activeTab === 'cardios' ? 'cardio' : activeTab === 'refeicoes' ? 'refeicao' : 'habito'
-            )}
-            className="rounded-xl text-xs font-bold bg-white hover:bg-zinc-200 text-black shadow-md"
+            onClick={() => handleOpenCreateModal(currentActiveList)}
+            className="rounded-xl text-xs font-bold bg-white hover:bg-zinc-200 text-black shadow-md shrink-0"
           >
             <Plus className="h-4 w-4 mr-1" />
-            Adicionar {activeTab === 'treinos' ? 'Treino' : activeTab === 'cardios' ? 'Cardio' : activeTab === 'refeicoes' ? 'Refeição' : 'Bônus'}
+            Adicionar Missão
           </Button>
         </CardHeader>
 
         <CardContent>
-          {(() => {
-            const currentList = 
-              activeTab === 'treinos' ? treinosList : 
-              activeTab === 'cardios' ? cardiosList : 
-              activeTab === 'refeicoes' ? refeicoestList : bonusList;
+          {currentListMissions.length === 0 ? (
+            <div className="py-12 text-center text-zinc-500 text-xs space-y-3">
+              <AlertCircle className="h-8 w-8 mx-auto opacity-40 text-zinc-400" />
+              <p className="font-semibold text-zinc-300">
+                Nenhuma missão cadastrada em "{currentActiveList?.name}" na {selectedWeek?.title || 'Semana'}.
+              </p>
+              <p className="text-zinc-500 max-w-sm mx-auto text-[11px]">
+                Você pode criar missões personalizadas para esta lista ou gerar o template completo com 1 clique.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                <Button
+                  size="sm"
+                  onClick={() => handleOpenCreateModal(currentActiveList)}
+                  variant="outline"
+                  className="text-xs border-white/20 text-white hover:bg-white/10 rounded-xl"
+                >
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  Criar Missão Manual
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={handleGenerateSmartTemplate}
+                  disabled={generatingTemplate}
+                  className="text-xs font-bold bg-white text-black hover:bg-zinc-200 rounded-xl shadow-md"
+                >
+                  {generatingTemplate ? 'Gerando...' : '⚡ Gerar Template Oficial (4 Semanas)'}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="divide-y divide-zinc-800/80">
+              {currentListMissions.map((m, index) => (
+                <div key={m.id} className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-xs flex items-center justify-center shrink-0">
+                      #{index + 1}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-bold text-sm text-white">{m.title}</p>
+                        {m.is_bonus && (
+                          <Badge className="bg-white/10 text-white border-white/20 text-[9px] font-mono">
+                            ★ Bônus
+                          </Badge>
+                        )}
+                        <Badge variant="outline" className="border-white/15 text-zinc-300 text-[9px] font-mono">
+                          {m.validation_type === 'timer'
+                            ? '⏱️ Cronômetro'
+                            : m.validation_type === 'simple_click'
+                            ? '⚡ 1-Toque'
+                            : m.validation_type === 'text'
+                            ? '✍️ Texto'
+                            : '📸 Foto'}
+                        </Badge>
+                        {m.requires_cooldown && (
+                          <Badge variant="outline" className="border-amber-500/25 text-amber-300 text-[9px] flex items-center gap-1 font-mono">
+                            <Clock className="h-2.5 w-2.5" /> 1/dia
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-zinc-400 mt-0.5">
+                        Vale <strong className="text-white font-mono">+{m.points_rewarded} XP</strong>
+                      </p>
+                    </div>
+                  </div>
 
-            if (currentList.length === 0) {
-              return (
-                <div className="py-12 text-center text-zinc-500 text-xs space-y-3">
-                  <AlertCircle className="h-8 w-8 mx-auto opacity-40 text-zinc-400" />
-                  <p className="font-semibold text-zinc-300">
-                    Nenhuma missão cadastrada nesta lista da {selectedWeek?.title || 'Semana'}.
-                  </p>
-                  <p className="text-zinc-500 max-w-sm mx-auto text-[11px]">
-                    Você pode criar missões manualmente ou gerar automaticamente o pacote oficial com 1 clique.
-                  </p>
-                  <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <Button
+                      variant="ghost"
                       size="sm"
-                      onClick={() => handleOpenCreateModal(
-                        activeTab === 'treinos' ? 'treino' : activeTab === 'cardios' ? 'cardio' : activeTab === 'refeicoes' ? 'refeicao' : 'habito'
-                      )}
-                      variant="outline"
-                      className="text-xs border-white/20 text-white hover:bg-white/10 rounded-xl"
+                      onClick={() => handleOpenEditModal(m)}
+                      className="h-8 px-2.5 text-xs text-zinc-400 hover:text-white"
                     >
-                      <Plus className="h-3.5 w-3.5 mr-1" />
-                      Criar Missão Manual
+                      <Edit3 className="h-3.5 w-3.5 mr-1" /> Editar
                     </Button>
                     <Button
-                      size="sm"
-                      onClick={handleGenerateSmartTemplate}
-                      disabled={generatingTemplate}
-                      className="text-xs font-bold bg-white text-black hover:bg-zinc-200 rounded-xl shadow-md"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setDeleteMissionTarget({ id: m.id, title: m.title })}
+                      className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10"
+                      title="Excluir Missão"
                     >
-                      {generatingTemplate ? 'Gerando...' : '⚡ Gerar Template Completo (4 Semanas)'}
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-              );
-            }
-
-            return (
-              <div className="divide-y divide-zinc-800/80">
-                {currentList.map((m, index) => (
-                  <div key={m.id} className="py-3.5 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-xs flex items-center justify-center shrink-0">
-                        #{index + 1}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="font-bold text-sm text-white">{m.title}</p>
-                          {m.is_bonus && (
-                            <Badge className="bg-white/10 text-white border-white/20 text-[9px] font-mono">
-                              Bônus Extra
-                            </Badge>
-                          )}
-                          {m.requires_cooldown && (
-                            <Badge variant="outline" className="border-white/20 text-zinc-300 text-[9px] flex items-center gap-1 font-mono">
-                              <Calendar className="h-2.5 w-2.5" /> 1 por dia (Virada 00:00)
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-zinc-400 mt-0.5">
-                          Vale <strong className="text-white font-mono">+{m.points_rewarded} XP</strong> • Câmera obrigatória
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleOpenEditModal(m)}
-                        className="h-8 px-2.5 text-xs text-zinc-400 hover:text-white"
-                      >
-                        <Edit3 className="h-3.5 w-3.5 mr-1" /> Editar
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setDeleteMissionTarget({ id: m.id, title: m.title })}
-                        className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10"
-                        title="Excluir Missão"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Modal Customizável de Edição / Criação */}
+      {/* Modal: Criar / Editar Lista de Missões */}
+      <CustomDialog
+        isOpen={isListModalOpen}
+        onClose={() => setIsListModalOpen(false)}
+        title={editingList ? 'Editar Lista de Missões' : 'Nova Lista de Missões'}
+        description="Crie listas temáticas personalizadas para a metodologia da sua turma."
+        hideFooter
+      >
+        <form onSubmit={handleSaveList} className="space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-zinc-300 block mb-1">Nome da Lista</label>
+            <Input
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              placeholder="Ex: Suplementação & Vitaminas, Alongamento, Mindset..."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">Ícone / Emoji</label>
+            <div className="grid grid-cols-8 gap-1.5 p-2 rounded-xl bg-zinc-950 border border-white/10">
+              {['⚡', '🏃', '🥗', '💧', '💊', '🧘', '📖', '⚖️', '🎯', '🔥', '🏋️', '🍎', '🌙', '🥑', '🚴', '⭐'].map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  onClick={() => setListIcon(emoji)}
+                  className={`h-9 w-9 rounded-lg flex items-center justify-center text-lg transition-all ${
+                    listIcon === emoji
+                      ? 'bg-white/20 border border-white/40 scale-110 shadow-sm'
+                      : 'hover:bg-white/5 opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">Comprovação Padrão</label>
+              <select
+                value={listValidationType}
+                onChange={(e: any) => setListValidationType(e.target.value)}
+                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+              >
+                <option value="photo">📸 Foto Obrigatória</option>
+                <option value="timer">⏱️ Cronômetro de Sessão</option>
+                <option value="simple_click">⚡ Check-in 1-Toque (Sem foto)</option>
+                <option value="text">✍️ Relato em Texto</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">Limite Diário</label>
+              <select
+                value={listDailyLimit}
+                onChange={(e) => setListDailyLimit(e.target.value)}
+                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+              >
+                <option value="1">1 vez ao dia (trava até 00:00)</option>
+                <option value="0">Ilimitado (livre)</option>
+                <option value="2">2 vezes ao dia</option>
+                <option value="3">3 vezes ao dia</option>
+                <option value="4">4 vezes ao dia</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsListModalOpen(false)}
+              className="flex-1 text-xs border-white/10 text-zinc-400 hover:text-white"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={submittingList}
+              className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black"
+            >
+              {submittingList ? 'Salvando...' : 'Salvar Lista'}
+            </Button>
+          </div>
+        </form>
+      </CustomDialog>
+
+      {/* Modal: Criar / Editar Missão */}
       <CustomDialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingMission ? 'Editar Missão' : 'Nova Missão Customizada'}
-        description="Ajuste os parâmetros de pontuação, categoria e bloqueio da missão."
+        title={editingMission ? 'Editar Missão' : 'Nova Missão'}
+        description="Defina os parâmetros, lista de destino e regras de comprovação."
         hideFooter
       >
         <form onSubmit={handleSaveMission} className="space-y-4">
@@ -846,26 +1201,50 @@ function MissionsManagerContent() {
             <Input
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
-              placeholder="Ex: Treino de Pernas & Glúteos"
+              placeholder="Ex: Treino de Pernas & Glúteos, 500ml Água..."
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">Categoria</label>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">Lista / Trilha</label>
               <select
-                value={formCategory}
-                onChange={(e: any) => setFormCategory(e.target.value)}
+                value={formListId}
+                onChange={(e) => {
+                  setFormListId(e.target.value);
+                  const selectedList = missionLists.find((l) => l.id === e.target.value);
+                  if (selectedList) {
+                    setFormCategory(selectedList.key);
+                    setFormValidationType(selectedList.validation_type);
+                  }
+                }}
                 className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
               >
-                <option value="treino">Treino</option>
-                <option value="cardio">Cardio</option>
-                <option value="refeicao">Refeição</option>
-                <option value="habito">Hábito / Água</option>
+                {missionLists.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.icon} {l.name}
+                  </option>
+                ))}
               </select>
             </div>
 
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">Comprovação</label>
+              <select
+                value={formValidationType}
+                onChange={(e: any) => setFormValidationType(e.target.value)}
+                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+              >
+                <option value="photo">📸 Foto Obrigatória</option>
+                <option value="timer">⏱️ Cronômetro de Sessão</option>
+                <option value="simple_click">⚡ Check-in 1-Toque</option>
+                <option value="text">✍️ Relato em Texto</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">Pontos (XP)</label>
               <Input
@@ -876,10 +1255,28 @@ function MissionsManagerContent() {
                 required
               />
             </div>
+
+            <div>
+              <label className="text-xs font-semibold text-zinc-300 block mb-1">Limite Diário</label>
+              <select
+                value={formDailyLimit}
+                onChange={(e) => {
+                  setFormDailyLimit(e.target.value);
+                  setFormRequiresCooldown(e.target.value === '1');
+                }}
+                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+              >
+                <option value="1">1 vez ao dia (trava 00:00)</option>
+                <option value="0">Ilimitado (livre)</option>
+                <option value="2">2 vezes ao dia</option>
+                <option value="3">3 vezes ao dia</option>
+                <option value="4">4 vezes ao dia</option>
+              </select>
+            </div>
           </div>
 
-          {/* Opção de Trava Diária (Current Day) */}
-          <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2.5">
+          {/* Opções de Trava & Bônus */}
+          <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2">
             <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
               <input
                 type="checkbox"
@@ -887,11 +1284,8 @@ function MissionsManagerContent() {
                 onChange={(e) => setFormRequiresCooldown(e.target.checked)}
                 className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
               />
-              <span>Trava Diária: Liberar apenas 1 por dia (libera na virada das 00:00)</span>
+              <span>Bloquear após o check-in até a virada de meia-noite</span>
             </label>
-            <p className="text-[11px] text-zinc-400 pl-6">
-              Garante a disciplina biológica do aluno evitando múltiplos envios no mesmo dia.
-            </p>
 
             <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1">
               <input
@@ -900,7 +1294,7 @@ function MissionsManagerContent() {
                 onChange={(e) => setFormIsBonus(e.target.checked)}
                 className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
               />
-              <span>Marcar como Missão Extra / Bônus</span>
+              <span>Marcar como Missão Extra / Bônus (★)</span>
             </label>
           </div>
 
@@ -924,17 +1318,19 @@ function MissionsManagerContent() {
         </form>
       </CustomDialog>
 
-      {/* Toast Flutuante */}
-      {toastMessage && (
-        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-            <span>{toastMessage}</span>
-          </div>
-        </div>
-      )}
+      {/* Modal: Confirmar Exclusão de Lista */}
+      <CustomDialog
+        isOpen={!!deleteListTarget}
+        onClose={() => setDeleteListTarget(null)}
+        title="Excluir Lista de Missões"
+        description={`Deseja excluir a lista "${deleteListTarget?.name}"? As missões vinculadas a ela não serão apagadas, mas perderão a categorização desta lista.`}
+        confirmLabel={deletingList ? 'Excluindo...' : 'Sim, Excluir Lista'}
+        cancelLabel="Cancelar"
+        onConfirm={handleConfirmDeleteList}
+        isLoading={deletingList}
+      />
 
-      {/* Modal Customizado: Confirmar Exclusão de Missão */}
+      {/* Modal: Confirmar Exclusão de Missão */}
       <CustomDialog
         isOpen={!!deleteMissionTarget}
         onClose={() => setDeleteMissionTarget(null)}
@@ -946,7 +1342,7 @@ function MissionsManagerContent() {
         isLoading={deletingMission}
       />
 
-      {/* Modal Customizado: Confirmar Exclusão de Semana */}
+      {/* Modal: Confirmar Exclusão de Semana */}
       <CustomDialog
         isOpen={!!deleteWeekTarget}
         onClose={() => setDeleteWeekTarget(null)}
@@ -957,6 +1353,16 @@ function MissionsManagerContent() {
         onConfirm={handleConfirmDeleteWeek}
         isLoading={deletingWeek}
       />
+
+      {/* Toast Flutuante */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

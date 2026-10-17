@@ -203,11 +203,13 @@ function CameraCaptureContent() {
               complianceScore: data.analysis.complianceScore ?? 100,
             });
             if (data.analysis.estimatedMacros) {
+              const rawCal = data.analysis.estimatedMacros.calories;
+              const hasCal = rawCal && rawCal !== 'N/A';
               setAiMacros({
-                calories: data.analysis.estimatedMacros.calories || '~420 kcal',
-                protein: data.analysis.estimatedMacros.protein || '~30g',
-                carbs: data.analysis.estimatedMacros.carbs || '~40g',
-                fats: data.analysis.estimatedMacros.fats || '~12g',
+                calories: hasCal ? rawCal : '~450 kcal',
+                protein: (data.analysis.estimatedMacros.protein && data.analysis.estimatedMacros.protein !== 'N/A') ? data.analysis.estimatedMacros.protein : '~32g proteico',
+                carbs: (data.analysis.estimatedMacros.carbs && data.analysis.estimatedMacros.carbs !== 'N/A') ? data.analysis.estimatedMacros.carbs : '~42g carbo',
+                fats: (data.analysis.estimatedMacros.fats && data.analysis.estimatedMacros.fats !== 'N/A') ? data.analysis.estimatedMacros.fats : '~12g lipídios',
                 summary: data.analysis.summary || 'Prato balanceado analisado pela IA.',
                 feedback: data.analysis.feedback,
               });

@@ -29,6 +29,7 @@ function StudentMaterialsContent() {
   const tabParam = searchParams.get('tab');
 
   const [mainTab, setMainTab] = useState<'materiais' | 'avisos'>('materiais');
+  const [activeChallenge, setActiveChallenge] = useState<any | null>(null);
   const [materials, setMaterials] = useState<any[]>([]);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [filter, setFilter] = useState<'all' | 'pdf' | 'video' | 'cardapio'>('all');
@@ -50,18 +51,61 @@ function StudentMaterialsContent() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         let challengeId: string | null = null;
+        let challengeObj: any = null;
 
         if (user) {
-          const { data: part } = await supabase
+          let { data: part } = await supabase
             .from('challenge_participants')
-            .select('challenge_id')
+            .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
             .eq('student_id', user.id)
             .in('payment_status', ['paid', 'complimentary'])
             .order('joined_at', { ascending: false })
             .limit(1)
             .maybeSingle();
-          challengeId = part?.challenge_id || null;
+
+          if (!part) {
+            const { data: fallbackPart } = await supabase
+              .from('challenge_participants')
+              .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
+              .eq('student_id', user.id)
+              .order('joined_at', { ascending: false })
+              .limit(1)
+              .maybeSingle();
+            part = fallbackPart;
+          }
+
+          challengeObj = Array.isArray(part?.challenges) ? part?.challenges[0] : part?.challenges;
+          challengeId = part?.challenge_id || challengeObj?.id || null;
+
+          // Fallback para desafio ativo do treinador / ambiente
+          if (!challengeId) {
+            const { data: activeCh } = await supabase
+              .from('challenges')
+              .select('id, title, start_date, end_date, is_active')
+              .eq('is_active', true)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle();
+
+            if (activeCh) {
+              challengeId = activeCh.id;
+              challengeObj = activeCh;
+            } else {
+              const { data: latestCh } = await supabase
+                .from('challenges')
+                .select('id, title, start_date, end_date')
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+              if (latestCh) {
+                challengeId = latestCh.id;
+                challengeObj = latestCh;
+              }
+            }
+          }
         }
+
+        setActiveChallenge(challengeObj || null);
 
         if (!challengeId) {
           setMaterials([]);
@@ -169,13 +213,18 @@ function StudentMaterialsContent() {
           </Link>
           <div>
             <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block">
-              CENTRAL DO ALUNO
+              {activeChallenge?.title ? `TURMA ATIVA • ${activeChallenge.title}` : 'CENTRAL DO ALUNO'}
             </span>
             <h1 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
               Materiais & Avisos
             </h1>
           </div>
         </div>
+        {activeChallenge && (
+          <span className="text-[9px] font-mono font-bold uppercase px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+            Desafio Ativo
+          </span>
+        )}
       </div>
 
       {/* Seletor Principal: Arquivos vs Mural de Avisos */}

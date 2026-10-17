@@ -57,15 +57,26 @@ export default function DashboardMaterialsPage() {
         return;
       }
 
-      const { data } = await supabase
+      let { data, error } = await supabase
         .from('challenges')
-        .select('id, title')
+        .select('id, title, is_active, start_date')
         .eq('professional_id', user.id)
+        .order('is_active', { ascending: false })
         .order('start_date', { ascending: false });
+
+      if (error) {
+        const fallback = await supabase
+          .from('challenges')
+          .select('id, title, start_date')
+          .eq('professional_id', user.id)
+          .order('start_date', { ascending: false });
+        data = fallback.data as any;
+      }
 
       if (data && data.length > 0) {
         setChallenges(data);
-        setSelectedChallengeId(data[0].id);
+        const activeChallenge = data.find((c: any) => c.is_active === true) || data[0];
+        setSelectedChallengeId(activeChallenge.id);
       }
       setLoading(false);
     }

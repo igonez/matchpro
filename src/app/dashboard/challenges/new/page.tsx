@@ -123,17 +123,18 @@ export default function NewChallengePage() {
           console.warn('Erro ao criar semanas:', wErr);
         }
 
-        // Criar as missões ativas para cada semana criada
+        // Criar as missões iniciais apenas para a Semana 1 (as semanas 2, 3 e 4 ficam livres para programação futura ou cópia)
         if (createdWeeks && createdWeeks.length > 0) {
           const defaultMissions: any[] = [];
-          
-          for (const week of createdWeeks) {
-            // 1. Treinos (6 treinos na semana)
+          const week1 = createdWeeks.find((w: any) => Number(w.week_number) === 1) || createdWeeks[0];
+
+          if (week1) {
+            // 1. Treinos (6 treinos na Semana 1)
             for (let t = 1; t <= 6; t++) {
               defaultMissions.push({
                 challenge_id: challenge.id,
-                week_id: week.id,
-                title: `Treino #${t} da Semana`,
+                week_id: week1.id,
+                title: `Treino #${t} da Semana 1`,
                 category: 'treino',
                 points_rewarded: 15,
                 requires_cooldown: true,
@@ -143,12 +144,12 @@ export default function NewChallengePage() {
               });
             }
 
-            // 2. Cardios (7 cardios na semana)
+            // 2. Cardios (7 cardios na Semana 1)
             for (let c = 1; c <= 7; c++) {
               defaultMissions.push({
                 challenge_id: challenge.id,
-                week_id: week.id,
-                title: `Cardio #${c} (Mín. 30min)`,
+                week_id: week1.id,
+                title: `Cardio #${c} (Mín. 30min) • Semana 1`,
                 category: 'cardio',
                 points_rewarded: 10,
                 requires_cooldown: true,
@@ -163,8 +164,8 @@ export default function NewChallengePage() {
             meals.forEach((meal, idx) => {
               defaultMissions.push({
                 challenge_id: challenge.id,
-                week_id: week.id,
-                title: meal,
+                week_id: week1.id,
+                title: `${meal} • Semana 1`,
                 category: 'refeicao',
                 points_rewarded: 10,
                 requires_cooldown: false,
@@ -176,8 +177,8 @@ export default function NewChallengePage() {
             // 4. Bônus / Hábito
             defaultMissions.push({
               challenge_id: challenge.id,
-              week_id: week.id,
-              title: 'Desafio Bônus: 3L Água + Alongamento',
+              week_id: week1.id,
+              title: 'Desafio Bônus: 3L Água + Alongamento • Semana 1',
               category: 'habito',
               points_rewarded: 25,
               requires_cooldown: false,

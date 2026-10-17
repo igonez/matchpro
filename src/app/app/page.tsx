@@ -240,13 +240,37 @@ export default function StudentHomePage() {
           }
         }
 
-        const { data: allMissions } = challengeData?.id
+        const { data: rawMissions } = challengeData?.id
           ? await supabase
               .from('missions')
               .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus')
               .eq('challenge_id', challengeData.id)
               .order('order_index', { ascending: true })
           : { data: [] };
+
+        // Filtrar missões apenas da semana ativa atual para não multiplicar as metas semanais por 4
+        let allMissions = rawMissions || [];
+        if (challengeData?.id && allMissions.length > 0) {
+          const startRaw = challengeData.start_date
+            ? new Date(challengeData.start_date + 'T00:00:00')
+            : new Date(new Date().setHours(0, 0, 0, 0));
+          const nowDay = new Date();
+          nowDay.setHours(0, 0, 0, 0);
+          const diffDays = Math.floor((nowDay.getTime() - startRaw.getTime()) / 86400000);
+          const weeksArr = Array.isArray(challengeData.challenge_weeks) ? challengeData.challenge_weeks : [];
+          const maxW = Math.max(4, ...weeksArr.map((w: any) => Number(w.week_number) || 0));
+          const activeWeekNum = Math.min(maxW, Math.max(1, Math.floor(Math.max(0, diffDays) / 7) + 1));
+          const activeWeekObj = weeksArr.find((w: any) => Number(w.week_number) === activeWeekNum);
+
+          if (activeWeekObj?.id) {
+            const weekFiltered = allMissions.filter(
+              (m: any) => m.week_id === activeWeekObj.id || (activeWeekNum === 1 && !m.week_id)
+            );
+            if (weekFiltered.length > 0 || activeWeekNum > 1) {
+              allMissions = weekFiltered;
+            }
+          }
+        }
 
         const { data: userSubmissions } = await supabase
           .from('student_submissions')
@@ -799,86 +823,123 @@ export default function StudentHomePage() {
             </div>
           </div>
 
-          {/* 4. CHECKLIST DIÁRIO */}
-          <div className="space-y-3 relative z-10">
+          {/* 4. BLOCOS DE MISSÕES DE HOJE */}
+          <div className="space-y-3.5 relative z-10">
             <div className="flex items-center justify-between px-1">
               <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 font-mono">
-                CHECKLIST DE HOJE
+                BLOCOS DE EXECUÇÃO DE HOJE
               </span>
-              <Link href="/app/missions" className="text-[10px] text-zinc-500 hover:text-white transition-colors font-mono tracking-wider">
-                CRONOGRAMA COMPLETO →
+              <Link href="/app/missions" className="text-[10px] text-amber-300 hover:text-white transition-colors font-mono font-bold tracking-wider">
+                VER SEMANAS 1 A 4 →
               </Link>
             </div>
 
-            <div className="space-y-2">
-              {todayTasks.map((task) => {
-                const isDailyLocked =
-                  (task.category === 'treino' && todayLockedCategories.treino) ||
-                  (task.category === 'cardio' && todayLockedCategories.cardio);
-                const isRunningThis = activeSession?.missionId === task.id;
+            {[
+              {
+                id: 'fisico',
+                title: 'Bloco de Treino & Condicionamento',
+                subtitle: 'Sessões físicas com cronômetro e câmera (1/dia)',
+                categories: ['treino', 'cardio'],
+                borderClass: 'border-amber-500/20',
+                badgeClass: 'text-amber-300 bg-amber-500/10 border-amber-500/25',
+              },
+              {
+                id: 'rotina',
+                title: 'Bloco de Nutrição & Hábitos',
+                subtitle: 'Pratos auditados por IA e metas de rotina',
+                categories: ['refeicao', 'habito'],
+                borderClass: 'border-emerald-500/20',
+                badgeClass: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/25',
+              },
+            ].map((group) => {
+              const groupTasks = todayTasks.filter((t) => group.categories.includes(t.category));
+              if (groupTasks.length === 0) return null;
 
-                const customList = task.list_id ? missionLists.find((l) => l.id === task.list_id) : null;
-                const catMeta: Record<string, { label: string; color: string }> = {
-                  treino: { label: 'TREINO', color: 'text-zinc-300 border-white/10 bg-white/5' },
-                  cardio: { label: 'CARDIO', color: 'text-zinc-300 border-white/10 bg-white/5' },
-                  refeicao: { label: 'NUTRIÇÃO', color: 'text-zinc-300 border-white/10 bg-white/5' },
-                  habito: { label: 'HÁBITO', color: 'text-zinc-300 border-white/10 bg-white/5' },
-                };
-                const defaultMeta = catMeta[task.category] || catMeta.habito;
-                const meta = customList
-                  ? {
-                      label: customList.name.toUpperCase(),
-                      color: 'text-zinc-200 border-white/10 bg-white/5',
-                    }
-                  : defaultMeta;
-
-                return (
-                  <div
-                    key={task.id}
-                    onClick={() => handleTaskClick(task)}
-                    className={`p-3.5 rounded-2xl bg-zinc-950 border flex items-center justify-between gap-3 transition-all cursor-pointer ${
-                      isDailyLocked
-                        ? 'opacity-50 border-white/5'
-                        : isRunningThis
-                        ? 'border-white/40 shadow-lg'
-                        : 'border-white/10 hover:border-white/25'
-                    }`}
-                  >
-                    {/* Mission Details */}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-[9px] font-mono tracking-wider font-bold px-1.5 py-0.2 rounded border ${meta.color}`}>
-                          {meta.label}
-                        </span>
-                        <span className="text-[10px] font-mono text-zinc-500">
-                          +{task.points_rewarded} XP
-                        </span>
-                      </div>
-                      <p className={`text-xs font-bold truncate ${isDailyLocked ? 'line-through text-zinc-500' : 'text-white'}`}>
-                        {task.title}
-                      </p>
+              return (
+                <div
+                  key={group.id}
+                  className={`p-3.5 rounded-3xl bg-zinc-950/95 border ${group.borderClass} space-y-2.5`}
+                >
+                  <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                    <div>
+                      <h4 className="text-xs font-black text-white tracking-tight">{group.title}</h4>
+                      <p className="text-[10px] text-zinc-400">{group.subtitle}</p>
                     </div>
-
-                    {/* Right Status Action */}
-                    <div className="shrink-0">
-                      {isDailyLocked ? (
-                        <span className="text-[9px] font-mono text-zinc-500 tracking-wider uppercase">
-                          CONCLUÍDO
-                        </span>
-                      ) : isRunningThis ? (
-                        <span className="text-[9px] font-mono font-bold text-white tracking-wider uppercase">
-                          EM ANDAMENTO
-                        </span>
-                      ) : (
-                        <span className="text-[10px] font-mono text-zinc-500 group-hover:text-white">
-                          →
-                        </span>
-                      )}
-                    </div>
+                    <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border uppercase ${group.badgeClass}`}>
+                      {groupTasks.length} {groupTasks.length === 1 ? 'missão' : 'missões'}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
+
+                  <div className="space-y-2">
+                    {groupTasks.map((task) => {
+                      const isDailyLocked =
+                        (task.category === 'treino' && todayLockedCategories.treino) ||
+                        (task.category === 'cardio' && todayLockedCategories.cardio);
+                      const isRunningThis = activeSession?.missionId === task.id;
+
+                      const customList = task.list_id ? missionLists.find((l) => l.id === task.list_id) : null;
+                      const catMeta: Record<string, { label: string; color: string }> = {
+                        treino: { label: 'TREINO', color: 'text-amber-300 border-amber-500/25 bg-amber-500/10' },
+                        cardio: { label: 'CARDIO', color: 'text-cyan-300 border-cyan-500/25 bg-cyan-500/10' },
+                        refeicao: { label: 'NUTRIÇÃO', color: 'text-emerald-300 border-emerald-500/25 bg-emerald-500/10' },
+                        habito: { label: 'HÁBITO', color: 'text-purple-300 border-purple-500/25 bg-purple-500/10' },
+                      };
+                      const defaultMeta = catMeta[task.category] || catMeta.habito;
+                      const meta = customList
+                        ? {
+                            label: customList.name.toUpperCase(),
+                            color: 'text-zinc-200 border-white/10 bg-white/5',
+                          }
+                        : defaultMeta;
+
+                      return (
+                        <div
+                          key={task.id}
+                          onClick={() => handleTaskClick(task)}
+                          className={`p-3 rounded-2xl bg-black/60 border flex items-center justify-between gap-3 transition-all cursor-pointer ${
+                            isDailyLocked
+                              ? 'opacity-50 border-white/5'
+                              : isRunningThis
+                              ? 'border-white/40 shadow-lg'
+                              : 'border-white/10 hover:border-white/25'
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className={`text-[9px] font-mono tracking-wider font-bold px-1.5 py-0.2 rounded border ${meta.color}`}>
+                                {meta.label}
+                              </span>
+                              <span className="text-[10px] font-mono font-bold text-amber-300">
+                                +{task.points_rewarded} XP
+                              </span>
+                            </div>
+                            <p className={`text-xs font-bold truncate ${isDailyLocked ? 'line-through text-zinc-500' : 'text-white'}`}>
+                              {task.title}
+                            </p>
+                          </div>
+
+                          <div className="shrink-0">
+                            {isDailyLocked ? (
+                              <span className="text-[9px] font-mono text-emerald-400 tracking-wider uppercase font-bold">
+                                CONCLUÍDO
+                              </span>
+                            ) : isRunningThis ? (
+                              <span className="text-[9px] font-mono font-bold text-white tracking-wider uppercase">
+                                EM ANDAMENTO
+                              </span>
+                            ) : (
+                              <span className="px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-mono font-bold text-white">
+                                Iniciar →
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* 5. PROGRESSO POR PILAR / LISTAS DE MISSÕES */}

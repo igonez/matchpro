@@ -20,7 +20,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'O que acontece se um aluno denunciar uma foto inadequada no feed?',
-    a: 'A foto denunciada é imediatamente destacada no painel do treinador na aba "🚨 Denunciadas" da central de auditoria, permitindo ao coach rejeitar o check-in ou remover a pontuação com 1 clique.',
+    a: 'A foto denunciada é imediatamente destacada no painel do treinador na aba "Denunciadas" da central de auditoria, permitindo ao coach rejeitar o check-in ou remover a pontuação com 1 clique.',
   },
   {
     q: 'Como comprovar a execução dos treinos e cardios?',

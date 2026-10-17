@@ -396,7 +396,7 @@ function CameraCaptureContent() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                        ⚡ MEDIÇÃO CALÓRICA IA
+                        MEDIÇÃO CALÓRICA IA
                       </span>
                       <span className="text-xs font-black text-white bg-white/10 px-2 py-0.5 rounded-md">
                         {aiMacros.calories}

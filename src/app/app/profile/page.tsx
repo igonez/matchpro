@@ -206,7 +206,7 @@ export default function StudentProfilePage() {
 
           setAchievementsList(list);
           if (newlyUnlocked.length > 0) {
-            showToast(`🏆 Nova conquista: ${newlyUnlocked[0].title}! (+${newlyUnlocked[0].points_reward} XP)`);
+            showToast(`Nova conquista: ${newlyUnlocked[0].title}! (+${newlyUnlocked[0].points_reward} XP)`);
           }
         }
 
@@ -338,7 +338,7 @@ export default function StudentProfilePage() {
           <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
             <span className="text-[11px] text-zinc-500 block font-mono uppercase">Ofensiva</span>
             <span className="text-base font-black text-white mt-0.5 block font-mono">
-              🔥 {streakDays} {streakDays === 1 ? 'Dia' : 'Dias'}
+              {streakDays} {streakDays === 1 ? 'Dia' : 'Dias'}
             </span>
           </div>
 
@@ -371,7 +371,7 @@ export default function StudentProfilePage() {
               </Badge>
             ) : (
               <Badge className="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-mono">
-                ⚠ PAGAMENTO PENDENTE
+                PAGAMENTO PENDENTE
               </Badge>
             )}
           </div>
@@ -396,7 +396,7 @@ export default function StudentProfilePage() {
         </Card>
       )}
 
-      {/* 🏅 CONQUISTAS & MEDALHAS DA ARENA (Sistema de Mérito Limpo) */}
+      {/* CONQUISTAS & MEDALHAS DA ARENA (Sistema de Mérito Limpo) */}
       <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between px-1">
           <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono flex items-center gap-1.5">

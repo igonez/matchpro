@@ -92,8 +92,7 @@ export default function EditChallengePage({
         }
 
         const { data: missionsData } = await mQuery
-          .order('order_index', { ascending: true })
-          .order('created_at', { ascending: true });
+          .order('order_index', { ascending: true });
 
         setMissions(missionsData || []);
       } catch (err: any) {

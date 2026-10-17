@@ -73,9 +73,10 @@ export default function SquadsManagerPage() {
       // 1. Desafios exclusivos do treinador logado (Isolamento Multi-Tenant)
       const { data: challengesData } = await supabase
         .from('challenges')
-        .select('id, title')
+        .select('id, title, is_active, start_date')
         .eq('professional_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('is_active', { ascending: false })
+        .order('start_date', { ascending: false });
 
       const safeCh = challengesData || [];
       setChallenges(safeCh);

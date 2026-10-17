@@ -61,12 +61,12 @@ export const REACTIONS: ReactionDef[] = [
 ];
 
 export const QUICK_PRAISE_CHIPS = [
-  'Boa monstro! 🔥',
-  'Foco total! 💪',
-  'Disciplina pura! 👏',
-  'Treino pago! 👊',
-  'Inspiração demais! ✨',
-  'Bora pra cima! 🚀',
+  'Boa monstro!',
+  'Foco total!',
+  'Disciplina pura!',
+  'Treino pago!',
+  'Inspiração demais!',
+  'Bora pra cima!',
 ];
 
 export default function StudentSocialFeedPage() {
@@ -488,7 +488,7 @@ export default function StudentSocialFeedPage() {
             challengeId: currentChallengeId,
             studentId: activeCommentPost.student_id,
             type: 'feed_comment',
-            title: isCoach ? '⚡ Feedback do Coach!' : 'Novo Comentário no seu Check-in',
+            title: isCoach ? 'Feedback do Coach!' : 'Novo Comentário no seu Check-in',
             message: `${authorName}: "${commentText.trim().slice(0, 60)}"`,
             link: '/app/feed',
           });
@@ -728,7 +728,7 @@ export default function StudentSocialFeedPage() {
                       </span>
                     </div>
 
-                    {/* Imagem do Post com Duplo Toque para 🔥 */}
+                    {/* Imagem do Post com Duplo Toque */}
                     <div
                       onClick={() => handlePhotoDoubleTap(post.id)}
                       className="relative aspect-square w-full bg-black overflow-hidden cursor-pointer select-none group"
@@ -739,11 +739,11 @@ export default function StudentSocialFeedPage() {
                         className="w-full h-full object-cover transition-transform duration-300 group-active:scale-[0.99]"
                       />
 
-                      {/* Feedback Visual Sutil no Duplo Toque */}
+                      {/* Feedback Visual de Emoji no Duplo Toque */}
                       {burstReaction && burstReaction.postId === post.id && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30 animate-in fade-in zoom-in duration-200">
-                          <span className="text-xs font-mono font-black tracking-widest text-black bg-white px-3.5 py-1.5 rounded-full uppercase shadow-2xl">
-                            RECONHECIDO
+                          <span className="text-6xl drop-shadow-[0_0_24px_rgba(0,0,0,0.8)]">
+                            {burstReaction.emoji}
                           </span>
                         </div>
                       )}
@@ -753,28 +753,38 @@ export default function StudentSocialFeedPage() {
                       </div>
                     </div>
 
-                    {/* Ações Sociais Tipográficas */}
+                    {/* Dock de Reações com Emojis e Comentários */}
                     <div className="p-3.5 space-y-3">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleToggleReaction(post.id, 'fire')}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${
-                              myReaction
-                                ? 'bg-white text-black font-black'
-                                : 'bg-white/[0.04] text-zinc-400 hover:text-white border border-white/10 font-bold'
-                            }`}
-                          >
-                            <span>RECONHECER</span>
-                            {likes.length > 0 && <span className="ml-1.5 font-mono">{likes.length}</span>}
-                          </button>
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/[0.08]">
+                            {REACTIONS.map((r) => {
+                              const isSelected = myReaction === r.key;
+                              const count = counts[r.key];
+                              return (
+                                <button
+                                  key={r.key}
+                                  onClick={() => handleToggleReaction(post.id, r.key)}
+                                  className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
+                                    isSelected
+                                      ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
+                                      : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                                  }`}
+                                  title={`Reagir com ${r.label}`}
+                                >
+                                  <span className="text-sm">{r.emoji}</span>
+                                  {count > 0 && <span className="text-[11px]">{count}</span>}
+                                </button>
+                              );
+                            })}
+                          </div>
 
                           <button
                             onClick={() => handleOpenComments(post)}
-                            className="px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider text-zinc-400 hover:text-white bg-white/[0.04] border border-white/10 transition-all cursor-pointer font-bold"
+                            className="px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider text-zinc-400 hover:text-white bg-white/[0.04] border border-white/10 transition-all cursor-pointer font-bold flex items-center gap-1.5"
                           >
-                            <span>COMENTÁRIOS</span>
-                            {commentsCount > 0 && <span className="ml-1.5 font-mono text-white">{commentsCount}</span>}
+                            <MessageSquare className="h-3.5 w-3.5" />
+                            <span>{commentsCount}</span>
                           </button>
                         </div>
 
@@ -850,7 +860,7 @@ export default function StudentSocialFeedPage() {
                       </span>
                       {isCoach && (
                         <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-bold">
-                          ⚡ COACH
+                          COACH
                         </span>
                       )}
                       <span className="text-zinc-600">•</span>

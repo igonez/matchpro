@@ -32,28 +32,28 @@ export interface ReactionDef {
 export const REACTIONS: ReactionDef[] = [
   {
     key: 'fire',
-    emoji: 'RESPEITO',
+    emoji: '🔥',
     label: 'Respeito',
     activeBg: 'bg-amber-400/20 text-amber-300',
     activeBorder: 'border-amber-400/40',
   },
   {
     key: 'muscle',
-    emoji: 'FORÇA',
+    emoji: '💪',
     label: 'Força',
     activeBg: 'bg-emerald-400/20 text-emerald-300',
     activeBorder: 'border-emerald-400/40',
   },
   {
     key: 'clap',
-    emoji: 'DISCIPLINA',
+    emoji: '👏',
     label: 'Disciplina',
     activeBg: 'bg-sky-400/20 text-sky-300',
     activeBorder: 'border-sky-400/40',
   },
   {
     key: 'heart',
-    emoji: 'APOIO',
+    emoji: '❤️',
     label: 'Apoio',
     activeBg: 'bg-rose-400/20 text-rose-300',
     activeBorder: 'border-rose-400/40',
@@ -487,7 +487,7 @@ export default function DashboardFeedPage() {
                 <div className="space-y-1.5 text-xs text-zinc-300">
                   {post.duration_seconds && (
                     <p className="text-white font-mono text-[11px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-md w-fit">
-                      ⏱ Duração: {Math.floor(post.duration_seconds / 60)}min {post.duration_seconds % 60}s
+                      Duração: {Math.floor(post.duration_seconds / 60)}min {post.duration_seconds % 60}s
                     </p>
                   )}
 

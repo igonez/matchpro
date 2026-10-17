@@ -45,9 +45,10 @@ export default function FiscalizacaoPage() {
       // 1. Buscar apenas turmas do treinador autenticado (Isolamento Multi-Tenant)
       const { data: coachChallenges } = await supabase
         .from('challenges')
-        .select('id, title')
+        .select('id, title, is_active, start_date')
         .eq('professional_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('is_active', { ascending: false })
+        .order('start_date', { ascending: false });
 
       const safeChallenges = coachChallenges || [];
       setChallenges(safeChallenges);

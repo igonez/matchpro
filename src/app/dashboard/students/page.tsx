@@ -59,16 +59,8 @@ export default function DashboardFinanceAndStudentsPage() {
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('all');
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterPayment, setFilterPayment] = useState<'all' | 'paid' | 'pending' | 'complimentary'>('all');
+  const [filterPayment, setFilterPayment] = useState<'all' | 'paid' | 'pending'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  // Modal para Adicionar Aluno Manualmente
-  const [isManualAddModalOpen, setIsManualAddModalOpen] = useState(false);
-  const [manualFullName, setManualFullName] = useState('');
-  const [manualPhone, setManualPhone] = useState('');
-  const [manualChallengeId, setManualChallengeId] = useState('');
-  const [manualPaymentStatus, setManualPaymentStatus] = useState<'paid' | 'complimentary' | 'pending'>('paid');
-  const [submittingManual, setSubmittingManual] = useState(false);
 
   // Modal de Exclusão de Matrícula
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
@@ -99,9 +91,6 @@ export default function DashboardFinanceAndStudentsPage() {
 
         const safeChallenges = challengesData || [];
         setChallenges(safeChallenges);
-        if (safeChallenges.length > 0 && selectedChallengeId === 'all') {
-          setManualChallengeId(safeChallenges[0].id);
-        }
 
         if (safeChallenges.length === 0) {
           setParticipants([]);
@@ -190,36 +179,6 @@ export default function DashboardFinanceAndStudentsPage() {
     return (Number(c?.price) || 0) * count;
   }, [participants, challenges, selectedChallengeId]);
 
-  // Alternar Status de Pagamento (Pendente ⇄ Pago)
-  const handleTogglePaymentStatus = async (participantId: string, currentStatus?: string) => {
-    const nextStatus = currentStatus === 'paid' ? 'pending' : 'paid';
-    const participant = participants.find((p) => p.id === participantId);
-    try {
-      const res = await fetch('/api/students/payment-status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          participantId,
-          challengeId: participant?.challenge_id || selectedChallengeId,
-          studentId: participant?.student_id,
-          paymentStatus: nextStatus,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Falha ao atualizar status de pagamento.');
-      }
-
-      setParticipants((prev) =>
-        prev.map((p) => (p.id === participantId ? { ...p, payment_status: nextStatus } : p))
-      );
-      showToast(nextStatus === 'paid' ? 'Pagamento marcado como PAGO!' : 'Status alterado para PENDENTE.');
-    } catch (err: any) {
-      showToast('Erro ao atualizar status: ' + err.message);
-    }
-  };
-
   // Remover / Desmatricular Aluno da Turma
   const handleConfirmDeleteParticipant = async () => {
     if (!deleteTarget) return;
@@ -255,60 +214,7 @@ export default function DashboardFinanceAndStudentsPage() {
 
     const inviteUrl = `${window.location.origin}/join/${targetChallenge.id}`;
     navigator.clipboard.writeText(inviteUrl);
-    showToast(`Link copiado: ${targetChallenge.title}`);
-  };
-
-  // Ação: Matricular Aluno Manualmente (Balcão / Pix Direto)
-  const handleAddStudentManually = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!manualChallengeId || !manualFullName.trim()) {
-      showToast('Preencha os campos obrigatórios.');
-      return;
-    }
-
-    setSubmittingManual(true);
-    try {
-      const res = await fetch('/api/students/manual-enroll', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          challengeId: manualChallengeId,
-          fullName: manualFullName.trim(),
-          phone: manualPhone.trim() || undefined,
-          paymentStatus: manualPaymentStatus,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Falha ao matricular aluno');
-      }
-
-      // Atualizar lista local
-      const newEntry: Participant = {
-        id: data.participant.id,
-        challenge_id: manualChallengeId,
-        student_id: data.studentId,
-        joined_at: data.participant.enrolled_at || new Date().toISOString(),
-        payment_status: manualPaymentStatus,
-        student: {
-          id: data.studentId,
-          full_name: data.student.full_name,
-          phone: data.student.phone,
-        },
-      };
-
-      setParticipants((prev) => [newEntry, ...prev]);
-      setIsManualAddModalOpen(false);
-      setManualFullName('');
-      setManualPhone('');
-      showToast('Aluno matriculado com sucesso na turma!');
-    } catch (err: any) {
-      console.error('Erro ao matricular aluno:', err);
-      showToast('Erro ao matricular: ' + (err.message || 'Verifique os dados.'));
-    } finally {
-      setSubmittingManual(false);
-    }
+    showToast(`Link de convite copiado: ${targetChallenge.title}`);
   };
 
   return (
@@ -332,13 +238,13 @@ export default function DashboardFinanceAndStudentsPage() {
             <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
               Alunos & Turmas
             </span>
-            <span className="text-xs text-zinc-400 font-medium">Controle de matrículas</span>
+            <span className="text-xs text-zinc-400 font-medium">Matrículas oficiais via Checkout</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
             Gestão de Alunos & Turmas
           </h1>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Controle de matrículas ativas e status de participação. Para extrato financeiro e saques, consulte a aba Financeiro.
+            Todas as matrículas são processadas automaticamente após a confirmação do pagamento via app. Compartilhe o link de convite para novos alunos entrarem.
           </p>
         </div>
 
@@ -355,20 +261,11 @@ export default function DashboardFinanceAndStudentsPage() {
 
           <Button
             size="sm"
-            variant="outline"
             onClick={handleCopyInviteLink}
-            className="rounded-xl h-10 px-3.5 text-xs font-semibold text-zinc-300 border-white/10 hover:border-white/20 hover:text-white bg-white/5"
-            title="Copiar link de convite da turma atual"
-          >
-            <Copy className="h-4 w-4 mr-1.5" /> Link de Convite
-          </Button>
-
-          <Button
-            size="sm"
-            onClick={() => setIsManualAddModalOpen(true)}
             className="rounded-xl h-10 px-4 text-xs font-semibold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+            title="Copiar link de convite para matrícula via app"
           >
-            <UserPlus className="h-4 w-4 mr-1.5" /> Matricular Aluno
+            <Copy className="h-4 w-4 mr-1.5" /> Copiar Link de Convite
           </Button>
         </div>
       </div>
@@ -400,20 +297,20 @@ export default function DashboardFinanceAndStudentsPage() {
           <div className="text-3xl font-black text-white font-mono">
             {filteredParticipants.filter((p) => p.payment_status === 'paid').length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Acesso liberado e ativo</p>
+          <p className="text-xs text-zinc-500 mt-1">Pagamento confirmado via plataforma</p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-5">
           <div className="flex items-center justify-between pb-3">
             <span className="text-xs font-semibold tracking-wide text-zinc-400">
-              Pendentes / Cortesia
+              Aguardando Confirmação Pix
             </span>
             <Clock className="h-4 w-4 text-amber-400" />
           </div>
           <div className="text-3xl font-black text-white font-mono">
-            {filteredParticipants.filter((p) => p.payment_status !== 'paid').length}
+            {filteredParticipants.filter((p) => p.payment_status === 'pending').length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Aguardando confirmação ou cortesia</p>
+          <p className="text-xs text-zinc-500 mt-1">Checkout iniciado no aplicativo</p>
         </SpotlightCard3D>
       </div>
 
@@ -469,14 +366,14 @@ export default function DashboardFinanceAndStudentsPage() {
             Confirmados
           </button>
           <button
-            onClick={() => setFilterPayment('complimentary')}
+            onClick={() => setFilterPayment('pending')}
             className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
-              filterPayment === 'complimentary'
+              filterPayment === 'pending'
                 ? 'bg-white text-black'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
             }`}
           >
-            Cortesias / Balcão
+            Pendentes
           </button>
         </div>
       </div>
@@ -515,7 +412,7 @@ export default function DashboardFinanceAndStudentsPage() {
                   <th className="py-3 px-4">Atleta</th>
                   <th className="py-3 px-4">Turma</th>
                   <th className="py-3 px-4">Entrada</th>
-                  <th className="py-3 px-4">Status Pgto</th>
+                  <th className="py-3 px-4">Status Pgto (App)</th>
                   <th className="py-3 px-4 text-right">Ações</th>
                 </tr>
               </thead>
@@ -554,45 +451,38 @@ export default function DashboardFinanceAndStudentsPage() {
                       </td>
 
                       <td className="py-3 px-4">
-                        <button
-                          type="button"
-                          onClick={() => handleTogglePaymentStatus(p.id, p.payment_status)}
-                          title="Clique para alternar o status de pagamento"
-                          className="transition-transform active:scale-95"
-                        >
-                          {isPaid && (challengeObj?.price || 0) > 0 && (
-                            <Badge
-                              variant="outline"
-                              className="border-emerald-500/30 text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold cursor-pointer font-mono"
-                            >
-                              ● Pago (Split)
-                            </Badge>
-                          )}
-                          {isPaid && (challengeObj?.price || 0) === 0 && (
-                            <Badge
-                              variant="outline"
-                              className="border-white/20 text-white bg-white/10 hover:bg-white/20 text-xs font-semibold cursor-pointer font-mono"
-                            >
-                              ● Gratuito
-                            </Badge>
-                          )}
-                          {isPending && (
-                            <Badge
-                              variant="outline"
-                              className="border-amber-500/30 text-amber-300 bg-amber-500/10 hover:border-amber-400 text-xs font-semibold cursor-pointer font-mono"
-                            >
-                              ○ Pendente
-                            </Badge>
-                          )}
-                          {!isPaid && !isPending && (
-                            <Badge
-                              variant="outline"
-                              className="border-white/20 text-zinc-300 bg-white/5 text-[10px] font-mono cursor-pointer uppercase tracking-wider"
-                            >
-                              CORTESIA
-                            </Badge>
-                          )}
-                        </button>
+                        {isPaid && (challengeObj?.price || 0) > 0 && (
+                          <Badge
+                            variant="outline"
+                            className="border-emerald-500/30 text-emerald-300 bg-emerald-500/10 text-xs font-semibold font-mono"
+                          >
+                            ● Pago via App
+                          </Badge>
+                        )}
+                        {isPaid && (challengeObj?.price || 0) === 0 && (
+                          <Badge
+                            variant="outline"
+                            className="border-white/20 text-white bg-white/10 text-xs font-semibold font-mono"
+                          >
+                            ● Gratuito (App)
+                          </Badge>
+                        )}
+                        {isPending && (
+                          <Badge
+                            variant="outline"
+                            className="border-amber-500/30 text-amber-300 bg-amber-500/10 text-xs font-semibold font-mono"
+                          >
+                            ○ Aguardando Pix
+                          </Badge>
+                        )}
+                        {!isPaid && !isPending && (
+                          <Badge
+                            variant="outline"
+                            className="border-white/20 text-zinc-300 bg-white/5 text-[10px] font-mono uppercase tracking-wider"
+                          >
+                            ATIVO
+                          </Badge>
+                        )}
                       </td>
 
                       <td className="py-3 px-4 text-right">
@@ -627,81 +517,6 @@ export default function DashboardFinanceAndStudentsPage() {
           </div>
         )}
       </div>
-
-      {/* Modal Customizado: Matricular Aluno Manualmente */}
-      <CustomDialog
-        isOpen={isManualAddModalOpen}
-        onClose={() => setIsManualAddModalOpen(false)}
-        title="Matricular Aluno Manualmente"
-        description="Cadastre um aluno diretamente na turma (útil para alunos que pagaram no balcão da academia, via Pix direto ou cortesia)."
-        confirmLabel={submittingManual ? 'Salvando...' : 'Confirmar Matrícula'}
-        cancelLabel="Cancelar"
-        onConfirm={() => {
-          const form = document.getElementById('manual-student-form') as HTMLFormElement;
-          if (form) form.requestSubmit();
-        }}
-        isLoading={submittingManual}
-      >
-        <form id="manual-student-form" onSubmit={handleAddStudentManually} className="space-y-4">
-          <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
-              Nome Completo do Aluno *
-            </label>
-            <Input
-              value={manualFullName}
-              onChange={(e) => setManualFullName(e.target.value)}
-              placeholder="Ex: Carlos Eduardo Silveira"
-              required
-              className="bg-black/80 border-white/15 text-white rounded-xl text-xs h-10"
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
-              WhatsApp / Celular com DDD (Opcional)
-            </label>
-            <Input
-              value={manualPhone}
-              onChange={(e) => setManualPhone(e.target.value)}
-              placeholder="Ex: 11988887777"
-              className="bg-black/80 border-white/15 text-white rounded-xl text-xs h-10 font-mono"
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
-              Selecione o Desafio / Turma *
-            </label>
-            <select
-              value={manualChallengeId}
-              onChange={(e) => setManualChallengeId(e.target.value)}
-              className="w-full h-10 rounded-xl bg-black border border-white/15 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/30"
-              required
-            >
-              {challenges.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title} • R$ {Number(c.price).toFixed(2)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
-              Origem do Pagamento
-            </label>
-            <select
-              value={manualPaymentStatus}
-              onChange={(e: any) => setManualPaymentStatus(e.target.value)}
-              className="w-full h-10 rounded-xl bg-black border border-white/15 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/30"
-            >
-              <option value="paid">Pago (Pix Direto / Balcão da Academia)</option>
-              <option value="complimentary">Cortesia / Bolsista da Turma</option>
-              <option value="pending">Pendente (Aguardando Confirmação)</option>
-            </select>
-          </div>
-        </form>
-      </CustomDialog>
 
       {/* Modal Customizado: Confirmar Exclusão de Matrícula */}
       <CustomDialog

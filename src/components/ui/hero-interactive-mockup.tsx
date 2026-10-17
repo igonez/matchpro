@@ -127,7 +127,7 @@ export function HeroInteractiveMockup() {
                       <GoldMedalBadge size={38} className="mb-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
                     </div>
                     <span className="text-xs font-black text-white truncate max-w-[80px]">Carlos E.</span>
-                    <span className="text-[10px] font-mono text-amber-400 font-bold">2.140 pts 🔥</span>
+                    <span className="text-[10px] font-mono text-amber-400 font-bold">2.140 pts</span>
                     <div className="w-full h-28 bg-gradient-to-t from-amber-500/20 via-zinc-900 to-amber-500/30 rounded-t-xl border-t border-x border-amber-400/50 mt-1.5 flex items-center justify-center">
                       <span className="font-mono font-black text-amber-300 text-lg">1º</span>
                     </div>

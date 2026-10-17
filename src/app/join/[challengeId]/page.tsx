@@ -719,7 +719,7 @@ function JoinChallengeContent() {
           </div>
 
           <div className="text-[11px] text-zinc-500 font-mono pt-1">
-            ⚡ A confirmação é instantânea. Assim que o Pix for aprovado pelo seu banco, sua tela abrirá automaticamente.
+            A confirmação é instantânea. Assim que o Pix for aprovado pelo seu banco, sua tela abrirá automaticamente.
           </div>
 
           {pixFeedback && (

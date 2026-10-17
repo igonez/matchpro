@@ -79,7 +79,7 @@ export default function HomePage() {
     },
     {
       q: 'O que acontece se o aluno já participou de desafios anteriores ou trocou de aparelho?',
-      a: 'A nossa tela de acesso possui modo inteligente duplo: "Tenho um Código" para quem está entrando agora e "Já sou da Turma" para alunos que já possuem histórico. Com apenas 1 toque via Google ou e-mail, todo o streak 🔥, XP acumulado e medalhas são restaurados instantaneamente.',
+      a: 'A nossa tela de acesso possui modo inteligente duplo: "Tenho um Código" para quem está entrando agora e "Já sou da Turma" para alunos que já possuem histórico. Com apenas 1 toque via Google ou e-mail, todo o streak, XP acumulado e medalhas são restaurados instantaneamente.',
     },
     {
       q: 'O ranking, pódio e feed de fotos funcionam no celular do aluno e no meu painel?',
@@ -419,7 +419,7 @@ export default function HomePage() {
               </div>
               <div className="mt-6 p-3 rounded-xl bg-black/60 border border-white/[0.08] text-xs font-mono text-zinc-300 flex items-center justify-between">
                 <span>Engajamento Diário</span>
-                <span className="text-amber-400 font-semibold">🔥 Streak Ativo</span>
+                <span className="text-amber-400 font-semibold flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> Streak Ativo</span>
               </div>
             </SpotlightCard3D>
           </div>
@@ -524,7 +524,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
-                <span className="text-zinc-300 font-medium">🏆 Squad Guerreiros</span>
+                <span className="text-zinc-300 font-medium flex items-center gap-1.5"><Trophy className="w-3.5 h-3.5 text-amber-400" /> Squad Guerreiros</span>
                 <span className="text-white font-bold font-mono">1º Lugar (2.450 pts)</span>
               </div>
             </SpotlightCard3D>
@@ -541,7 +541,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs">
-                <span className="text-zinc-300 font-medium">⚡ Alerta de Risco</span>
+                <span className="text-zinc-300 font-medium flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-amber-400" /> Alerta de Risco</span>
                 <span className="text-emerald-400 font-bold font-mono">Resgate em 1 Toque</span>
               </div>
             </SpotlightCard3D>
@@ -602,7 +602,7 @@ export default function HomePage() {
                     <GoldMedalBadge size={52} className="drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]" />
                   </div>
                   <span className="text-xs sm:text-sm font-black text-white text-center truncate max-w-[100px]">Carlos E.</span>
-                  <span className="text-[10px] font-mono text-amber-400 font-bold">2.140 pts 🔥</span>
+                  <span className="text-[10px] font-mono text-amber-400 font-bold">2.140 pts</span>
                   <div className="w-full h-32 bg-gradient-to-t from-amber-500/20 via-zinc-900 to-amber-500/30 rounded-t-2xl border-t border-x border-amber-400/50 mt-3 flex items-center justify-center">
                     <span className="font-mono font-black text-amber-300 text-2xl">1º</span>
                   </div>
@@ -624,7 +624,7 @@ export default function HomePage() {
               <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between text-xs">
                 <span className="text-zinc-300">Incentivo com 1 clique para alunos em perigo:</span>
                 <span className="text-emerald-400 font-mono font-semibold flex items-center gap-1">
-                  💬 Disparar WhatsApp
+                  Disparar WhatsApp
                 </span>
               </div>
             </div>
@@ -659,9 +659,9 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="text-xs text-zinc-300 mt-1 flex items-center justify-between">
-                    <span>🔥 Streak de 14 dias atingido!</span>
+                    <span>Streak de 14 dias atingido!</span>
                     <span className="text-zinc-400 text-[11px] flex items-center gap-1">
-                      ❤️ 18 aplausos
+                      18 reações
                     </span>
                   </div>
                 </div>
@@ -683,9 +683,9 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="text-xs text-zinc-300 mt-1 flex items-center justify-between">
-                    <span>🥗 35g Proteína detectada pelo sensor</span>
+                    <span>35g Proteína detectada pelo sensor</span>
                     <span className="text-zinc-400 text-[11px] flex items-center gap-1">
-                      ❤️ 12 aplausos
+                      12 reações
                     </span>
                   </div>
                 </div>
@@ -773,7 +773,7 @@ export default function HomePage() {
 
                 <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-xs text-zinc-300 space-y-1">
                   <p>
-                    💡 <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa cai de 15% para apenas 8%. 
+                    <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa cai de 15% para apenas 8%. 
                     Com {studentsCount} alunos a R$ {ticketPrice}, você ganha{' '}
                     <strong className="text-emerald-400">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

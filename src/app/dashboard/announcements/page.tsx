@@ -55,16 +55,22 @@ export default function AnnouncementsManagerPage() {
       }
 
       // Buscar apenas turmas do treinador logado (Isolamento Multi-Tenant)
-      const { data: challengesData } = await supabase
+      const { data: challengesData, error: chErr } = await supabase
         .from('challenges')
-        .select('id, title')
+        .select('id, title, start_date, end_date, is_active')
         .eq('professional_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('is_active', { ascending: false })
+        .order('start_date', { ascending: false });
+
+      if (chErr) {
+        console.error('Erro ao buscar desafios para o mural:', chErr);
+      }
 
       const safeCh = challengesData || [];
       setChallenges(safeCh);
 
-      const targetId = selectedChallengeId || (safeCh.length > 0 ? safeCh[0].id : '');
+      const activeCh = safeCh.find((c: any) => c.is_active !== false) || safeCh[0];
+      const targetId = selectedChallengeId || (activeCh ? activeCh.id : '');
       if (!selectedChallengeId && targetId) {
         setSelectedChallengeId(targetId);
       }
@@ -195,21 +201,49 @@ export default function AnnouncementsManagerPage() {
 
         {challenges.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-zinc-400 font-mono">Turma:</span>
+            <span className="text-xs font-semibold text-zinc-400 font-mono">Desafio Ativo:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
+              className="h-10 rounded-xl border border-white/15 bg-zinc-900 px-3 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.title}
+                  {c.title} {c.is_active !== false ? '• (Ativo)' : '• (Encerrado)'}
                 </option>
               ))}
             </select>
           </div>
         )}
       </div>
+
+      {selectedChallengeId && challenges.length > 0 && (() => {
+        const currentCh = challenges.find((c) => c.id === selectedChallengeId);
+        if (!currentCh) return null;
+        return (
+          <div className="p-4 rounded-2xl bg-zinc-900/70 border border-white/10 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className={`h-2.5 w-2.5 rounded-full ${currentCh.is_active !== false ? 'bg-emerald-400 animate-pulse' : 'bg-zinc-500'}`} />
+              <div>
+                <p className="text-xs font-bold text-white flex items-center gap-2">
+                  <span>Turma Conectada: {currentCh.title}</span>
+                  <Badge className={currentCh.is_active !== false ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 text-[10px] font-mono' : 'bg-zinc-800 text-zinc-400 border-white/10 text-[10px] font-mono'}>
+                    {currentCh.is_active !== false ? 'DESAFIO ATIVO' : 'ENCERRADO'}
+                  </Badge>
+                </p>
+                {currentCh.start_date && (
+                  <p className="text-[11px] text-zinc-400 font-mono mt-0.5">
+                    Período: {new Date(currentCh.start_date + 'T00:00:00').toLocaleDateString('pt-BR')} até {currentCh.end_date ? new Date(currentCh.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : 'Contínuo'}
+                  </p>
+                )}
+              </div>
+            </div>
+            <span className="text-[11px] font-mono text-zinc-400">
+              {announcements.length} {announcements.length === 1 ? 'comunicado publicado' : 'comunicados publicados'}
+            </span>
+          </div>
+        );
+      })()}
 
       {challenges.length === 0 && !loading && (
         <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">

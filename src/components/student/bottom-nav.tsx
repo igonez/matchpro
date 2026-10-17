@@ -16,7 +16,10 @@ import {
   Sparkles, 
   ChevronRight,
   Target,
-  Award
+  Award,
+  Dumbbell,
+  Utensils,
+  Droplets
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
@@ -66,8 +69,9 @@ export function StudentBottomNav() {
     // Buscar desafio ativo do aluno (isolamento multi-tenant)
     const { data: part } = await supabase
       .from('challenge_participants')
-      .select('challenge_id')
+      .select('challenge_id, challenges(start_date, challenge_weeks(id, week_number))')
       .eq('student_id', user.id)
+      .order('joined_at', { ascending: false })
       .limit(1)
       .maybeSingle();
 
@@ -85,11 +89,35 @@ export function StudentBottomNav() {
 
     setMissionLists(listsData || []);
 
-    const { data: mData } = await supabase
+    const { data: rawMData } = await supabase
       .from('missions')
-      .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, order_index')
+      .select('id, challenge_id, week_id, title, category, list_id, validation_type, daily_limit, points_rewarded, order_index')
       .eq('challenge_id', part.challenge_id)
       .order('order_index', { ascending: true });
+
+    let mData = rawMData || [];
+    const chObj: any = Array.isArray(part.challenges) ? part.challenges[0] : part.challenges;
+    if (chObj && mData.length > 0) {
+      const startRaw = chObj.start_date
+        ? new Date(chObj.start_date + 'T00:00:00')
+        : new Date(new Date().setHours(0, 0, 0, 0));
+      const nowDay = new Date();
+      nowDay.setHours(0, 0, 0, 0);
+      const diffDays = Math.floor((nowDay.getTime() - startRaw.getTime()) / 86400000);
+      const weeksArr = Array.isArray(chObj.challenge_weeks) ? chObj.challenge_weeks : [];
+      const maxW = Math.max(4, ...weeksArr.map((w: any) => Number(w.week_number) || 0));
+      const activeWeekNum = Math.min(maxW, Math.max(1, Math.floor(Math.max(0, diffDays) / 7) + 1));
+      const activeWeekObj = weeksArr.find((w: any) => Number(w.week_number) === activeWeekNum);
+
+      if (activeWeekObj?.id) {
+        const weekFiltered = mData.filter(
+          (m: any) => m.week_id === activeWeekObj.id || (activeWeekNum === 1 && !m.week_id)
+        );
+        if (weekFiltered.length > 0 || activeWeekNum > 1) {
+          mData = weekFiltered;
+        }
+      }
+    }
 
     const { data: userSubs } = await supabase
       .from('student_submissions')
@@ -147,15 +175,26 @@ export function StudentBottomNav() {
       setPendingMissions((prev) => prev.filter((m) => m.id !== mission.id));
       showToast(`"${mission.title}" concluída! +${mission.points_rewarded} XP`);
 
-      await supabase.from('student_submissions').insert({
+      const nowIso = new Date().toISOString();
+      const { error } = await supabase.from('student_submissions').insert({
+        challenge_id: mission.challenge_id || null,
         mission_id: mission.id,
         student_id: user.id,
         status: 'approved',
-        reviewed_by: user.id,
-        reviewed_at: new Date().toISOString(),
-        submitted_at: new Date().toISOString(),
-        client_captured_at: new Date().toISOString(),
+        photo_url: 'simple_click',
+        submitted_at: nowIso,
+        client_captured_at: nowIso,
       });
+
+      if (error && (error.message.includes('column') || error.message.includes('schema cache'))) {
+        await supabase.from('student_submissions').insert({
+          mission_id: mission.id,
+          student_id: user.id,
+          status: 'approved',
+          photo_url: 'simple_click',
+          client_captured_at: nowIso,
+        });
+      }
 
       // Notificar páginas (como a Home) para recarregar
       if (typeof window !== 'undefined') {
@@ -553,14 +592,15 @@ export function StudentBottomNav() {
                   const isSimpleClick = valType === 'simple_click';
                   const isTimer = valType === 'timer' || (!m.validation_type && (m.category === 'treino' || m.category === 'cardio'));
 
-                  const catMeta: Record<string, { tag: string; label: string; color: string }> = {
-                    treino: { tag: 'TRN', label: 'Treino', color: 'border-amber-400/30 text-amber-300 bg-amber-400/10' },
-                    cardio: { tag: 'CRD', label: 'Cardio', color: 'border-cyan-400/30 text-cyan-300 bg-cyan-400/10' },
-                    refeicao: { tag: 'REF', label: 'Nutrição', color: 'border-emerald-400/30 text-emerald-300 bg-emerald-400/10' },
-                    habito: { tag: 'HAB', label: 'Hábito', color: 'border-purple-400/30 text-purple-300 bg-purple-400/10' },
+                  const catMeta: Record<string, { Icon: any; label: string; color: string }> = {
+                    treino: { Icon: Dumbbell, label: 'Treino', color: 'border-amber-400/30 text-amber-300 bg-amber-400/10' },
+                    cardio: { Icon: Activity, label: 'Cardio', color: 'border-cyan-400/30 text-cyan-300 bg-cyan-400/10' },
+                    refeicao: { Icon: Utensils, label: 'Nutrição', color: 'border-emerald-400/30 text-emerald-300 bg-emerald-400/10' },
+                    habito: { Icon: Droplets, label: 'Hábito', color: 'border-purple-400/30 text-purple-300 bg-purple-400/10' },
                   };
 
-                  const currentMeta = catMeta[m.category] || { tag: 'MET', label: m.category, color: 'border-white/10 text-white bg-white/5' };
+                  const currentMeta = catMeta[m.category] || { Icon: Target, label: m.category, color: 'border-white/10 text-white bg-white/5' };
+                  const CategoryIcon = currentMeta.Icon;
                   const listLabel = customList?.name || currentMeta.label;
 
                   return (
@@ -570,8 +610,8 @@ export function StudentBottomNav() {
                       className="w-full p-3 rounded-2xl bg-zinc-950/60 border border-white/[0.08] hover:border-white/25 hover:bg-zinc-900/60 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className={`h-8 w-8 rounded-xl border flex items-center justify-center font-mono font-bold text-[10px] shrink-0 transition-colors ${currentMeta.color}`}>
-                          {currentMeta.tag}
+                        <div className={`h-8 w-8 rounded-xl border flex items-center justify-center shrink-0 transition-colors ${currentMeta.color}`}>
+                          <CategoryIcon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="font-bold text-xs text-white truncate">{m.title}</p>

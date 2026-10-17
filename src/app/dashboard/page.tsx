@@ -420,7 +420,7 @@ export default function DashboardOverviewPage() {
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full h-8 text-xs flex items-center justify-center font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all"
+                        className="w-full h-11 min-h-[44px] text-xs flex items-center justify-center font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all"
                       >
                         Resgatar no WhatsApp →
                       </a>
@@ -430,7 +430,7 @@ export default function DashboardOverviewPage() {
                           navigator.clipboard.writeText(decodeURIComponent(message));
                           showToast('Mensagem de resgate copiada com sucesso!');
                         }}
-                        className="mono-button-secondary w-full h-8 text-xs font-semibold"
+                        className="mono-button-secondary w-full h-11 min-h-[44px] text-xs font-semibold"
                       >
                         Copiar texto de resgate
                       </button>
@@ -462,7 +462,7 @@ export default function DashboardOverviewPage() {
               Crie seu primeiro desafio para cadastrar missões e convidar alunos.
             </p>
             <Link href="/dashboard/challenges/new">
-              <button className="mono-button-primary px-5 py-2 text-xs font-semibold">
+              <button className="mono-button-primary px-5 py-2.5 min-h-[44px] text-xs font-semibold">
                 Criar Desafio
               </button>
             </Link>
@@ -476,7 +476,7 @@ export default function DashboardOverviewPage() {
                     <button
                       onClick={() => handleToggleChallengeStatus(c.id, c.is_active)}
                       title="Clique para alternar status da turma"
-                      className={`text-xs px-2.5 py-0.5 rounded-full border transition-all ${
+                      className={`text-xs px-3 py-1.5 min-h-[36px] rounded-full border transition-all ${
                         c.is_active
                           ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
                           : 'border-white/10 bg-black text-zinc-500 hover:text-white'
@@ -506,23 +506,23 @@ export default function DashboardOverviewPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`}>
-                      <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold">
+                      <button className="mono-button-secondary w-full py-2 min-h-[44px] text-xs font-semibold">
                         Missões ({c.missionsCount ?? (c.missions?.length || 0)})
                       </button>
                     </Link>
                     <Link href={`/dashboard/leaderboard?challengeId=${c.id}`}>
-                      <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-white hover:text-amber-300">
+                      <button className="mono-button-secondary w-full py-2 min-h-[44px] text-xs font-semibold text-white hover:text-amber-300">
                         Ranking
                       </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold">
+                      <button className="mono-button-secondary w-full py-2 min-h-[44px] text-xs font-semibold">
                         Ver / Editar
                       </button>
                     </Link>
                     <button
                       onClick={() => setInviteModalChallenge(c)}
-                      className="mono-button-primary w-full py-1.5 text-xs font-semibold"
+                      className="mono-button-primary w-full py-2 min-h-[44px] text-xs font-semibold"
                       title="Abrir central de convite"
                     >
                       Convite

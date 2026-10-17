@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, HelpCircle, ChevronDown, ChevronUp, Search, MessageCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { JsonLd } from '@/components/seo/json-ld';
 
 const FAQ_ITEMS = [
   {
@@ -32,6 +33,38 @@ const FAQ_ITEMS = [
   },
 ];
 
+const helpFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+
+const helpBreadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Início',
+      item: 'https://arenafitpro.com.br',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Central de Ajuda & FAQ',
+      item: 'https://arenafitpro.com.br/ajuda',
+    },
+  ],
+};
+
 export default function HelpFaqPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -44,10 +77,12 @@ export default function HelpFaqPage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-6 sm:p-12 relative max-w-4xl mx-auto">
+      <JsonLd data={helpFaqSchema} />
+      <JsonLd data={helpBreadcrumbSchema} />
       <div className="mb-8">
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors p-2 rounded-xl bg-white/5 border border-white/10"
+          className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors px-3.5 py-2.5 min-h-[44px] rounded-xl bg-white/5 border border-white/10"
         >
           <ArrowLeft className="h-4 w-4" /> Voltar ao Início
         </Link>
@@ -56,7 +91,7 @@ export default function HelpFaqPage() {
       <div className="space-y-6">
         <div className="space-y-2 border-b border-white/10 pb-6">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono uppercase bg-white/10 text-white px-2.5 py-0.5 rounded-full border border-white/20">
+            <span className="text-xs font-mono uppercase bg-white/10 text-white px-3 py-1 rounded-full border border-white/20">
               SUPORTE & CONHECIMENTO
             </span>
           </div>
@@ -90,7 +125,7 @@ export default function HelpFaqPage() {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-4 text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
+                  className="w-full p-4 min-h-[48px] text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
                 >
                   <span className="text-sm font-bold text-white flex items-center gap-2">
                     <HelpCircle className="h-4 w-4 text-zinc-400 shrink-0" />
@@ -124,7 +159,7 @@ export default function HelpFaqPage() {
             href="https://wa.me/5511999999999?text=Ol%C3%A1%2C+preciso+de+ajuda+com+o+ArenaFitPro"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2.5 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-zinc-200 transition-colors flex items-center gap-2 shrink-0"
+            className="px-4 py-2.5 min-h-[44px] rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-zinc-200 transition-colors flex items-center gap-2 shrink-0"
           >
             <MessageCircle className="h-4 w-4" /> Suporte WhatsApp
           </a>

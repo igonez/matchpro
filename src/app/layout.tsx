@@ -73,12 +73,32 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from '@/components/seo/json-ld';
+
 export const viewport: Viewport = {
   themeColor: '#000000',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ArenaFitPro',
+  legalName: 'ArenaFitPro Tecnologia e Gamificação Fitness Ltda',
+  url: 'https://arenafitpro.com.br',
+  logo: 'https://arenafitpro.com.br/app-logo.png',
+  description:
+    'Infraestrutura SaaS Multi-Tenant de gamificação para desafios fitness com Câmera Antifraude, IA Nutricional e Split Pix D+0.',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer support',
+    email: 'suporte@arenafit.pro',
+    availableLanguage: ['Portuguese'],
+  },
 };
 
 export default function RootLayout({
@@ -88,9 +108,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark scroll-smooth">
-      <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans">
+      <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans text-base leading-relaxed">
+        <JsonLd data={organizationSchema} />
         {children}
       </body>
     </html>
   );
 }
+

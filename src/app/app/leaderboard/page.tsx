@@ -322,7 +322,7 @@ export default function LeaderboardPage() {
   const top3 = standings[2] || null;
 
   return (
-    <div className="flex flex-col flex-1 p-5 space-y-6 max-w-md mx-auto w-full pb-32 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-6 w-full pb-32 relative">
       <Monochrome3DBackground />
 
       {/* Header Editorial com Status Ao Vivo */}
@@ -348,7 +348,7 @@ export default function LeaderboardPage() {
         </div>
         <Link
           href="/app"
-          className="h-9 px-3 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0"
+          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           VOLTAR
@@ -463,7 +463,7 @@ export default function LeaderboardPage() {
       <div className="grid grid-cols-2 p-1.5 rounded-2xl bg-zinc-950 border border-white/10 relative z-10">
         <button
           onClick={() => setActiveTab('individual')}
-          className={`py-2.5 text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+          className={`py-2.5 min-h-[44px] text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === 'individual'
               ? 'bg-white text-black font-black rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)]'
               : 'text-zinc-400 hover:text-white font-medium'
@@ -474,7 +474,7 @@ export default function LeaderboardPage() {
         </button>
         <button
           onClick={() => setActiveTab('squads')}
-          className={`py-2.5 text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+          className={`py-2.5 min-h-[44px] text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === 'squads'
               ? 'bg-white text-black font-black rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)]'
               : 'text-zinc-400 hover:text-white font-medium'

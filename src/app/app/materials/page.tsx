@@ -198,7 +198,7 @@ function StudentMaterialsContent() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative text-white">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-4 w-full pb-28 relative text-white">
       <Monochrome3DBackground />
 
       {/* Header */}
@@ -206,7 +206,7 @@ function StudentMaterialsContent() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/app"
-            className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
+            className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
             title="Voltar ao Início"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -231,7 +231,7 @@ function StudentMaterialsContent() {
       <div className="grid grid-cols-2 p-1 rounded-2xl bg-black border border-white/[0.08] relative z-10 font-mono">
         <button
           onClick={() => setMainTab('materiais')}
-          className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-2.5 min-h-[44px] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             mainTab === 'materiais'
               ? 'bg-white text-black shadow-md'
               : 'text-zinc-400 hover:text-white'
@@ -242,7 +242,7 @@ function StudentMaterialsContent() {
         </button>
         <button
           onClick={() => setMainTab('avisos')}
-          className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-2.5 min-h-[44px] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             mainTab === 'avisos'
               ? 'bg-white text-black shadow-md'
               : 'text-zinc-400 hover:text-white'
@@ -265,7 +265,7 @@ function StudentMaterialsContent() {
               ? 'Buscar cardápio, treino, vídeo ou PDF...'
               : 'Buscar comunicados do treinador...'
           }
-          className="w-full h-10 pl-10 pr-4 rounded-2xl bg-black/70 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/30 font-mono"
+          className="w-full h-11 min-h-[44px] pl-10 pr-4 rounded-2xl bg-black/70 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/30 font-mono"
         />
       </div>
 
@@ -275,7 +275,7 @@ function StudentMaterialsContent() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-mono relative z-10">
             <button
               onClick={() => setFilter('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'all'
                   ? 'bg-white text-black shadow-md'
                   : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
@@ -285,7 +285,7 @@ function StudentMaterialsContent() {
             </button>
             <button
               onClick={() => setFilter('pdf')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'pdf'
                   ? 'bg-white text-black shadow-md'
                   : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
@@ -295,7 +295,7 @@ function StudentMaterialsContent() {
             </button>
             <button
               onClick={() => setFilter('video')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'video'
                   ? 'bg-white text-black shadow-md'
                   : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
@@ -305,7 +305,7 @@ function StudentMaterialsContent() {
             </button>
             <button
               onClick={() => setFilter('cardapio')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'cardapio'
                   ? 'bg-white text-black shadow-md'
                   : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
@@ -357,7 +357,7 @@ function StudentMaterialsContent() {
                       size="sm"
                       variant="outline"
                       onClick={() => setPreviewMaterial(mat)}
-                      className="h-9 px-3 text-xs font-mono font-bold border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl"
+                      className="h-11 min-h-[44px] px-3.5 text-xs font-mono font-bold border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl"
                     >
                       Detalhes
                     </Button>
@@ -367,7 +367,7 @@ function StudentMaterialsContent() {
                       rel="noopener noreferrer"
                       className="flex-1 sm:flex-initial"
                     >
-                      <Button size="sm" className="w-full h-9 px-4 text-xs font-bold bg-white hover:bg-zinc-200 text-black rounded-xl shadow-md">
+                      <Button size="sm" className="w-full h-11 min-h-[44px] px-4 text-xs font-bold bg-white hover:bg-zinc-200 text-black rounded-xl shadow-md">
                         {mat.type === 'video' ? (
                           <>
                             <Play className="h-3.5 w-3.5 mr-1.5 fill-current" /> Assistir Aula

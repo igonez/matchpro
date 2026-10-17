@@ -3,14 +3,35 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, ArrowLeft, FileText, Lock } from 'lucide-react';
+import { JsonLd } from '@/components/seo/json-ld';
+
+const termsBreadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Início',
+      item: 'https://arenafitpro.com.br',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Termos de Uso & Política de Privacidade',
+      item: 'https://arenafitpro.com.br/termos',
+    },
+  ],
+};
 
 export default function TermsAndPrivacyPage() {
   return (
     <div className="min-h-screen bg-black text-white p-6 sm:p-12 relative max-w-4xl mx-auto">
+      <JsonLd data={termsBreadcrumbSchema} />
       <div className="mb-8">
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors p-2 rounded-xl bg-white/5 border border-white/10"
+          className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors px-3.5 py-2.5 min-h-[44px] rounded-xl bg-white/5 border border-white/10"
         >
           <ArrowLeft className="h-4 w-4" /> Voltar ao Início
         </Link>
@@ -19,7 +40,7 @@ export default function TermsAndPrivacyPage() {
       <div className="space-y-6">
         <div className="space-y-2 border-b border-white/10 pb-6">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono uppercase bg-white/10 text-white px-2.5 py-0.5 rounded-full border border-white/20">
+            <span className="text-xs font-mono uppercase bg-white/10 text-white px-3 py-1 rounded-full border border-white/20">
               DOCUMENTO LEGAL v2.4
             </span>
           </div>

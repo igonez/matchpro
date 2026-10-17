@@ -496,7 +496,7 @@ function JoinChallengeContent() {
               <button
                 onClick={handleJoin}
                 disabled={joining}
-                className="mono-button-primary w-full h-13 text-xs font-semibold"
+                className="mono-button-primary w-full h-12 min-h-[48px] text-xs font-semibold"
               >
                 {joining
                   ? 'Processando inscrição...'
@@ -520,7 +520,7 @@ function JoinChallengeContent() {
                       setAuthMode('signup');
                       setError(null);
                     }}
-                    className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                       authMode === 'signup'
                         ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
@@ -535,7 +535,7 @@ function JoinChallengeContent() {
                       setAuthMode('signin');
                       setError(null);
                     }}
-                    className={`py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                       authMode === 'signin'
                         ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
@@ -551,7 +551,7 @@ function JoinChallengeContent() {
                   type="button"
                   disabled={joining}
                   onClick={handleGoogleQuickJoin}
-                  className="w-full h-11 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm group"
+                  className="w-full h-11 min-h-[44px] rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm group"
                 >
                   <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -583,7 +583,7 @@ function JoinChallengeContent() {
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           required
-                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
                         />
                       </div>
                       <div>
@@ -596,7 +596,7 @@ function JoinChallengeContent() {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           required
-                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
                         />
                       </div>
                     </div>
@@ -613,7 +613,7 @@ function JoinChallengeContent() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
                       />
                     </div>
                     <div>
@@ -627,7 +627,7 @@ function JoinChallengeContent() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength={6}
-                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
                       />
                     </div>
                   </div>

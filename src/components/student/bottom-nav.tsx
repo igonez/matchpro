@@ -310,20 +310,20 @@ export function StudentBottomNav() {
 
   return (
     <>
-      {/* 1. Menu Inferior Horizontal (Pílula com Cantos 100% Arredondados e Palavras Encaixadas) */}
-      <nav className="fixed bottom-4 inset-x-0 mx-auto max-w-[420px] w-[96%] z-40 transition-all">
-        <div className="mono-glass-pill rounded-full px-2.5 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/15">
+      {/* 1. Menu Inferior Horizontal (Pílula Responsiva Mobile-First + Web com Touch Targets >= 44px) */}
+      <nav className="fixed bottom-3 sm:bottom-5 inset-x-0 mx-auto max-w-[430px] sm:max-w-lg w-[95%] z-40 transition-all">
+        <div className="mono-glass-pill rounded-full px-2.5 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/15">
           
-          {/* Lado Esquerdo (Início, Missões) */}
-          <div className="flex items-center justify-around flex-1">
+          {/* Lado Esquerdo (Hoje, Missões) */}
+          <div className="flex items-center justify-around flex-1 gap-1">
             {leftTabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`py-1 px-2.5 text-[10px] sm:text-[11px] font-mono tracking-wider transition-all rounded-full ${
+                className={`min-h-[44px] flex items-center justify-center px-3 sm:px-4 text-xs font-mono tracking-wider transition-all rounded-full ${
                   tab.active
                     ? 'text-white font-black bg-white/15 shadow-inner'
-                    : 'text-zinc-400 hover:text-white'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {tab.name}
@@ -332,14 +332,14 @@ export function StudentBottomNav() {
           </div>
 
           {/* Botão Central de Check-in em Cromo Puro */}
-          <div className="px-1 -my-2.5">
+          <div className="px-1.5 -my-2.5">
             <button
               onClick={() => setShowQuickSheet(true)}
-              className="flex flex-col items-center justify-center group focus:outline-none"
+              className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer"
               title={activeSession ? 'Sessão Ativa em Andamento' : 'Registrar Check-in'}
             >
               <div
-                className={`h-11 w-11 rounded-full p-px transition-all ${
+                className={`h-12 w-12 rounded-full p-px transition-all ${
                   activeSession
                     ? 'bg-gradient-to-b from-emerald-300 via-emerald-500 to-emerald-800 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-105'
                     : 'bg-gradient-to-b from-white via-zinc-300 to-zinc-800 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:scale-105 active:scale-95'
@@ -349,7 +349,7 @@ export function StudentBottomNav() {
                   {activeSession ? (
                     <span className="text-emerald-400 font-bold text-xs animate-pulse">▶</span>
                   ) : (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <circle cx="12" cy="12" r="3" strokeWidth="2" />
                       <path
                         strokeLinecap="round"
@@ -365,15 +365,15 @@ export function StudentBottomNav() {
           </div>
 
           {/* Lado Direito (Ranking, Feed, Menu) */}
-          <div className="flex items-center justify-around flex-1">
+          <div className="flex items-center justify-around flex-1 gap-1">
             {rightTabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`py-1 px-2.5 text-[10px] sm:text-[11px] font-mono tracking-wider transition-all rounded-full ${
+                className={`min-h-[44px] flex items-center justify-center px-3 sm:px-4 text-xs font-mono tracking-wider transition-all rounded-full ${
                   tab.active
                     ? 'text-white font-black bg-white/15 shadow-inner'
-                    : 'text-zinc-400 hover:text-white'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {tab.name}
@@ -384,14 +384,14 @@ export function StudentBottomNav() {
             <button
               onClick={() => setShowVerticalMenu(true)}
               aria-label="Abrir Menu"
-              className={`p-1.5 text-zinc-400 hover:text-white transition-all rounded-full hover:bg-white/10 ${
+              className={`min-h-[44px] min-w-[44px] flex items-center justify-center text-zinc-300 hover:text-white transition-all rounded-full hover:bg-white/10 cursor-pointer ${
                 showVerticalMenu
                   ? 'text-white font-black bg-white/15'
                   : ''
               }`}
               title="Menu Geral"
             >
-              <Menu className="h-3.5 w-3.5 stroke-[2.2]" />
+              <Menu className="h-4 w-4 stroke-[2.2]" />
             </button>
           </div>
 
@@ -428,7 +428,8 @@ export function StudentBottomNav() {
 
                 <button
                   onClick={() => setShowVerticalMenu(false)}
-                  className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
+                  aria-label="Fechar menu"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -449,7 +450,7 @@ export function StudentBottomNav() {
                             key={item.title}
                             href={item.href}
                             onClick={() => setShowVerticalMenu(false)}
-                            className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+                            className={`flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border transition-all ${
                               item.active
                                 ? 'bg-white/10 border-white/30 text-white shadow-md'
                                 : 'bg-black/40 border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]'
@@ -484,7 +485,7 @@ export function StudentBottomNav() {
                 <Link
                   href="/dashboard"
                   onClick={() => setShowVerticalMenu(false)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-white text-black font-semibold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-white text-black font-semibold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
                 >
                   <span>← Voltar ao Painel do Coach</span>
                 </Link>
@@ -492,7 +493,7 @@ export function StudentBottomNav() {
 
               <button
                 onClick={handleSignOut}
-                className="w-full py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition-colors text-center"
+                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition-colors text-center cursor-pointer"
               >
                 Sair da Conta
               </button>
@@ -507,22 +508,23 @@ export function StudentBottomNav() {
 
       {/* 3. Bottom Sheet Rápido de Check-in ao tocar na Câmera */}
       {showQuickSheet && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
-          <div className="mono-glass-card rounded-t-[32px] p-6 space-y-4 max-h-[85vh] flex flex-col border-t border-white/20">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+          <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 space-y-4 max-h-[85vh] flex flex-col border-t border-white/20">
             {/* Header do Sheet */}
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div>
-                <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                <h3 className="font-bold text-sm sm:text-base text-white flex items-center gap-2">
                   <span>Check-in Rápido</span>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/10 text-zinc-300">
+                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-200">
                     {pendingMissions.length} pendente{pendingMissions.length !== 1 ? 's' : ''}
                   </span>
                 </h3>
-                <p className="text-xs text-zinc-400">Escolha a atividade para comprovar sua meta de hoje</p>
+                <p className="text-xs sm:text-sm text-zinc-300 mt-0.5">Escolha a atividade para comprovar sua meta de hoje</p>
               </div>
               <button
                 onClick={() => setShowQuickSheet(false)}
-                className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
+                aria-label="Fechar check-in rápido"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -536,10 +538,10 @@ export function StudentBottomNav() {
                     ▶
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[9px] font-mono text-emerald-400 uppercase tracking-wider block font-bold">
+                    <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block font-bold">
                       Sessão em Andamento
                     </span>
-                    <p className="font-bold text-xs text-white truncate">
+                    <p className="font-bold text-xs sm:text-sm text-white truncate">
                       {activeSession.missionTitle}
                     </p>
                   </div>
@@ -557,7 +559,7 @@ export function StudentBottomNav() {
                       );
                     }
                   }}
-                  className="shrink-0 px-3.5 py-1.5 rounded-xl bg-emerald-400 text-black font-mono font-bold text-xs hover:bg-emerald-300 transition-all shadow-md flex items-center gap-1 active:scale-95 uppercase tracking-wider"
+                  className="shrink-0 min-h-[44px] px-4 py-2 rounded-xl bg-emerald-400 text-black font-mono font-bold text-xs hover:bg-emerald-300 transition-all shadow-md flex items-center gap-1 active:scale-95 uppercase tracking-wider cursor-pointer"
                 >
                   <span>Finalizar</span>
                 </button>
@@ -565,20 +567,20 @@ export function StudentBottomNav() {
             )}
 
             {/* Lista de Metas Disponíveis para Check-in */}
-            <div className="space-y-2 overflow-y-auto flex-1 py-1">
+            <div className="space-y-2.5 overflow-y-auto flex-1 py-1">
               {pendingMissions.length === 0 && !activeSession ? (
                 <div className="text-center py-8 space-y-3">
                   <div className="h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
                     <CheckCircle className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-bold text-xs text-white uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
-                    <p className="text-[11px] text-zinc-400 mt-0.5">Excelente disciplina. Seu streak e XP estão garantidos.</p>
+                    <p className="font-bold text-xs sm:text-sm text-white uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
+                    <p className="text-xs text-zinc-300 mt-1">Excelente disciplina. Seu streak e XP estão garantidos.</p>
                   </div>
                   <Link
                     href="/app/missions"
                     onClick={() => setShowQuickSheet(false)}
-                    className="inline-block px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+                    className="inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-200 hover:text-white transition-colors"
                   >
                     Ver cronograma da semana →
                   </Link>
@@ -607,19 +609,19 @@ export function StudentBottomNav() {
                     <div
                       key={m.id}
                       onClick={() => handleQuickRegister(m)}
-                      className="w-full p-3 rounded-2xl bg-zinc-950/60 border border-white/[0.08] hover:border-white/25 hover:bg-zinc-900/60 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
+                      className="w-full p-3.5 rounded-2xl bg-zinc-950/60 border border-white/10 hover:border-white/25 hover:bg-zinc-900/60 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className={`h-8 w-8 rounded-xl border flex items-center justify-center shrink-0 transition-colors ${currentMeta.color}`}>
+                        <div className={`h-10 w-10 rounded-xl border flex items-center justify-center shrink-0 transition-colors ${currentMeta.color}`}>
                           <CategoryIcon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-xs text-white truncate">{m.title}</p>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+                          <p className="font-bold text-xs sm:text-sm text-white truncate">{m.title}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-300 bg-white/5 px-2 py-0.5 rounded border border-white/10">
                               {listLabel}
                             </span>
-                            <span className="text-[10px] font-mono font-bold text-amber-300">
+                            <span className="text-xs font-mono font-bold text-amber-300">
                               +{m.points_rewarded} XP
                             </span>
                           </div>
@@ -634,16 +636,16 @@ export function StudentBottomNav() {
                               e.stopPropagation();
                               handleSimpleCheckin(m);
                             }}
-                            className="px-3 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors shadow-sm active:scale-95 uppercase tracking-wider"
+                            className="min-h-[44px] px-3.5 py-2 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors shadow-sm active:scale-95 uppercase tracking-wider cursor-pointer"
                           >
                             Check-in
                           </button>
                         ) : isTimer ? (
-                          <span className="px-3 py-1.5 rounded-xl bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-1 shadow-sm uppercase tracking-wider">
+                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-1 shadow-sm uppercase tracking-wider">
                             Iniciar Sessão
                           </span>
                         ) : (
-                          <span className="px-3 py-1.5 rounded-xl bg-white/10 text-white font-mono font-medium text-xs border border-white/15 flex items-center gap-1 group-hover:bg-white/20 transition-colors uppercase tracking-wider">
+                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-white/10 text-white font-mono font-medium text-xs border border-white/15 flex items-center gap-1 group-hover:bg-white/20 transition-colors uppercase tracking-wider">
                             Foto
                           </span>
                         )}

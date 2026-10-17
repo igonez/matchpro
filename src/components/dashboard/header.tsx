@@ -140,16 +140,25 @@ export function DashboardHeader() {
           <Link
             href="/app?preview=true"
             target="_blank"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-zinc-300 hover:text-white hover:border-white/20 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:border-white/20 transition-colors"
           >
             <span>Ver como Aluno</span>
-            <ExternalLink className="h-3 w-3 text-zinc-400" />
+            <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
           </Link>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-[11px] font-mono text-zinc-300">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs font-mono text-zinc-300">
             <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
             <span className="hidden sm:inline">Servidor</span> Conectado
           </div>
+
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="Abrir menu do painel"
+            className="md:hidden h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-white/5 border border-white/15 flex items-center justify-center text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
         </div>
       </header>
 
@@ -178,7 +187,8 @@ export function DashboardHeader() {
 
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
+                  aria-label="Fechar menu do painel"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -200,7 +210,7 @@ export function DashboardHeader() {
                               key={item.href}
                               href={item.href}
                               onClick={() => setMobileMenuOpen(false)}
-                              className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-black tracking-wide transition-all ${
+                              className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-black tracking-wide transition-all ${
                                 item.active
                                   ? 'bg-white text-black shadow-lg'
                                   : 'bg-white/10 hover:bg-white text-white hover:text-black border border-white/20'
@@ -220,7 +230,7 @@ export function DashboardHeader() {
                             key={item.href}
                             href={item.href}
                             onClick={() => setMobileMenuOpen(false)}
-                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium tracking-wide transition-all ${
+                            className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide transition-all ${
                               item.active
                                 ? 'bg-white text-black font-semibold shadow-md'
                                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
@@ -254,14 +264,14 @@ export function DashboardHeader() {
               <Link
                 href="/app?preview=true"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all"
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all"
               >
                 <span>Visão do Aluno</span>
                 <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
               </Link>
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors"
+                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sair da Conta</span>
@@ -272,11 +282,11 @@ export function DashboardHeader() {
       )}
 
       {/* 3. Dock Inferior Mobile para o Coach (Visível apenas em telas menores que md) */}
-      <nav className="md:hidden fixed bottom-3 inset-x-0 mx-auto max-w-[390px] w-[94%] z-30">
-        <div className="bg-black/90 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.95)] border border-white/15">
+      <nav className="md:hidden fixed bottom-3 inset-x-0 mx-auto max-w-[430px] w-[94%] z-30 pb-safe">
+        <div className="bg-black/95 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.95)] border border-white/15">
           <Link
             href="/dashboard"
-            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
               pathname === '/dashboard'
                 ? 'text-white font-black bg-white/15'
                 : 'text-zinc-400 hover:text-white'
@@ -288,7 +298,7 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/audit"
-            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
               pathname === '/dashboard/audit'
                 ? 'text-white font-black bg-white/15'
                 : 'text-zinc-400 hover:text-white'
@@ -300,7 +310,7 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/students"
-            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
               pathname === '/dashboard/students'
                 ? 'text-white font-black bg-white/15'
                 : 'text-zinc-400 hover:text-white'
@@ -312,7 +322,7 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/finance"
-            className={`flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
               pathname === '/dashboard/finance'
                 ? 'text-white font-black bg-white/15'
                 : 'text-zinc-400 hover:text-white'
@@ -324,7 +334,7 @@ export function DashboardHeader() {
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="flex flex-col items-center py-1 px-2.5 rounded-full text-[10px] font-mono tracking-wider text-zinc-400 hover:text-white transition-all"
+            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-zinc-400 hover:text-white transition-all"
           >
             <Menu className="h-4 w-4 mb-0.5" />
             <span>Menu</span>

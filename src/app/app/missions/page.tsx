@@ -777,7 +777,7 @@ function StudentMissionsContent() {
   ];
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-5 max-w-md mx-auto w-full pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full pb-28 relative">
       <Monochrome3DBackground />
 
       {/* Header */}

@@ -111,3 +111,39 @@ body {
   100% { transform: translateX(250%); }
 }
 
+/* ==========================================================================
+   Mobile-First Ergonomics, Legibility Floors & Safe Area Support
+   ========================================================================== */
+
+/* Garante que micro-textos arbitrários (8px, 9px, 10px) nunca fiquem ilegíveis em telas mobile */
+[class*="text-[7px]"],
+[class*="text-[8px]"],
+[class*="text-[9px]"] {
+  font-size: 0.6875rem !important; /* 11px mínimo absoluto */
+  line-height: 1.35 !important;
+}
+
+[class*="text-[10px]"] {
+  font-size: 0.75rem !important; /* 12px legível */
+  line-height: 1.4 !important;
+}
+
+/* Previne auto-zoom forçado do iOS Safari ao focar inputs em telas mobile */
+@media (max-width: 640px) {
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Suporte a Safe Area (iPhone Dynamic Island / Home Indicator) */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.pt-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+

@@ -148,12 +148,12 @@ export function NotificationsDrawer({
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
-      <div className="mono-glass-card rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-white/20 shadow-2xl">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+      <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-white/20 shadow-2xl">
         {/* Header do Drawer */}
         <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-white border border-white/15">
+            <div className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center text-white border border-white/15">
               <Bell className="h-4 w-4" />
             </div>
             <div>
@@ -165,27 +165,28 @@ export function NotificationsDrawer({
                   </span>
                 )}
               </div>
-              <p className="text-[10px] font-mono text-zinc-400">Alertas de streak, ranking e comunidade</p>
+              <p className="text-[11px] font-mono text-zinc-400">Alertas de streak, ranking e comunidade</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-[10px] font-mono text-zinc-400 hover:text-white flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+                className="text-[11px] font-mono text-zinc-400 hover:text-white flex items-center gap-1 px-3 py-2 min-h-[44px] rounded-xl hover:bg-white/5 transition-colors cursor-pointer"
                 title="Marcar todas como lidas"
               >
-                <CheckCheck className="h-3 w-3" />
+                <CheckCheck className="h-3.5 w-3.5" />
                 <span>Ler todas</span>
               </button>
             )}
 
             <button
               onClick={onClose}
-              className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+              aria-label="Fechar notificações"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         </div>

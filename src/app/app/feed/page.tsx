@@ -615,7 +615,7 @@ export default function StudentSocialFeedPage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-4 max-w-md mx-auto w-full pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-4 w-full pb-28 relative">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
@@ -634,7 +634,7 @@ export default function StudentSocialFeedPage() {
       <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-white/10 relative z-10">
         <button
           onClick={() => setActiveTab('feed')}
-          className={`py-2 text-xs font-mono tracking-wider transition-all cursor-pointer ${
+          className={`py-2.5 min-h-[44px] flex items-center justify-center text-xs font-mono tracking-wider transition-all cursor-pointer ${
             activeTab === 'feed'
               ? 'bg-white text-black font-black rounded-lg shadow-md'
               : 'text-zinc-400 hover:text-white font-medium'
@@ -645,7 +645,7 @@ export default function StudentSocialFeedPage() {
 
         <button
           onClick={() => setActiveTab('chat')}
-          className={`py-2 text-xs font-mono tracking-wider transition-all cursor-pointer ${
+          className={`py-2.5 min-h-[44px] flex items-center justify-center text-xs font-mono tracking-wider transition-all cursor-pointer ${
             activeTab === 'chat'
               ? 'bg-white text-black font-black rounded-lg shadow-md'
               : 'text-zinc-400 hover:text-white font-medium'
@@ -670,7 +670,7 @@ export default function StudentSocialFeedPage() {
               Nenhuma publicação aprovada no momento. Os primeiros check-ins validados aparecerão aqui.
             </div>
           ) : (
-            <div className="space-y-4 relative z-10">
+            <div className="space-y-4 max-w-xl mx-auto w-full relative z-10">
               {posts.map((post) => {
                 const likes: any[] = post.submission_likes || [];
                 const commentsCount = post.submission_comments?.length || 0;
@@ -731,7 +731,7 @@ export default function StudentSocialFeedPage() {
                     {/* Imagem do Post com Duplo Toque */}
                     <div
                       onClick={() => handlePhotoDoubleTap(post.id)}
-                      className="relative aspect-square w-full bg-black overflow-hidden cursor-pointer select-none group"
+                      className="relative aspect-square sm:aspect-[4/3] max-h-[520px] w-full bg-black overflow-hidden cursor-pointer select-none group"
                     >
                       <img
                         src={post.photo_url}
@@ -765,7 +765,7 @@ export default function StudentSocialFeedPage() {
                                 <button
                                   key={r.key}
                                   onClick={() => handleToggleReaction(post.id, r.key)}
-                                  className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
+                                  className={`flex items-center justify-center gap-1 px-2.5 py-1.5 min-h-[38px] rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
                                     isSelected
                                       ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
                                       : 'text-zinc-400 hover:text-white hover:bg-white/10'
@@ -781,7 +781,7 @@ export default function StudentSocialFeedPage() {
 
                           <button
                             onClick={() => handleOpenComments(post)}
-                            className="px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider text-zinc-400 hover:text-white bg-white/[0.04] border border-white/10 transition-all cursor-pointer font-bold flex items-center gap-1.5"
+                            className="px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono tracking-wider text-zinc-400 hover:text-white bg-white/[0.04] border border-white/10 transition-all cursor-pointer font-bold flex items-center gap-1.5"
                           >
                             <MessageSquare className="h-3.5 w-3.5" />
                             <span>{commentsCount}</span>
@@ -793,7 +793,7 @@ export default function StudentSocialFeedPage() {
                             if (!currentUser) return;
                             setReportTargetPost(post);
                           }}
-                          className="text-[9px] font-mono tracking-wider text-zinc-600 hover:text-rose-400 cursor-pointer uppercase transition-colors px-2 py-1"
+                          className="text-[10px] font-mono tracking-wider text-zinc-500 hover:text-rose-400 cursor-pointer uppercase transition-colors px-2.5 py-2 min-h-[40px] flex items-center"
                           title="Sinalizar foto suspeita"
                         >
                           SINALIZAR
@@ -909,12 +909,13 @@ export default function StudentSocialFeedPage() {
               placeholder="Digite sua mensagem para a turma..."
               value={newChatMessage}
               onChange={(e) => setNewChatMessage(e.target.value)}
-              className="h-10 text-xs rounded-xl bg-zinc-900/90 border-white/15 text-white placeholder:text-zinc-500 focus:border-white/40"
+              className="h-11 text-xs rounded-xl bg-zinc-900/90 border-white/15 text-white placeholder:text-zinc-500 focus:border-white/40"
             />
             <button
               type="submit"
               disabled={sendingChatMessage || !newChatMessage.trim()}
-              className="mono-button-primary h-10 px-4 text-xs font-mono shrink-0 flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
+              aria-label="Enviar mensagem"
+              className="mono-button-primary h-11 min-h-[44px] px-4 text-xs font-mono shrink-0 flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
             >
               {sendingChatMessage ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -930,8 +931,8 @@ export default function StudentSocialFeedPage() {
       {/* SHEET / MODAL DE COMENTÁRIOS DA FOTO                                      */}
       {/* ========================================================================= */}
       {activeCommentPost && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
-          <div className="mono-glass-card rounded-t-[32px] max-h-[80vh] flex flex-col p-5 border-t border-white/20">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+          <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[80vh] flex flex-col p-5 border-t border-white/20">
             {/* Header do Sheet */}
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div className="flex items-center gap-2">
@@ -942,9 +943,10 @@ export default function StudentSocialFeedPage() {
               </div>
               <button
                 onClick={() => setActiveCommentPost(null)}
-                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Fechar comentários"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
@@ -1021,7 +1023,7 @@ export default function StudentSocialFeedPage() {
                     key={chip}
                     type="button"
                     onClick={() => setCommentText(chip)}
-                    className="text-[11px] font-sans font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/30 hover:bg-white/10 shrink-0 transition-all cursor-pointer active:scale-95"
+                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/30 hover:bg-white/10 shrink-0 transition-all cursor-pointer active:scale-95"
                   >
                     {chip}
                   </button>
@@ -1036,12 +1038,12 @@ export default function StudentSocialFeedPage() {
                 placeholder="Escreva um comentário de incentivo..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="h-10 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
+                className="h-11 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
               />
               <button
                 type="submit"
                 disabled={submittingComment || !commentText.trim()}
-                className="mono-button-primary px-4 h-10 text-xs font-mono flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 shrink-0"
+                className="mono-button-primary px-4 h-11 min-h-[44px] text-xs font-mono flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 shrink-0"
               >
                 {submittingComment ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

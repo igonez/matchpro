@@ -332,13 +332,13 @@ function CameraCaptureContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between p-4 bg-black text-white relative max-w-md mx-auto w-full selection:bg-white selection:text-black">
+    <div className="min-h-screen flex flex-col justify-between p-4 sm:p-6 bg-black text-white relative max-w-xl mx-auto w-full selection:bg-white selection:text-black">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Bar Monocromático */}
       <div className="flex items-center justify-between z-10 pt-1">
-        <Link href="/app" className="p-2 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white transition-colors">
+        <Link href="/app" className="px-3.5 py-2 min-h-[44px] h-11 inline-flex items-center rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors">
           ← Voltar
         </Link>
         <div className="text-center">

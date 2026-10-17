@@ -316,12 +316,12 @@ export default function DashboardFinanceAndStudentsPage() {
 
       {/* Barra de Filtros e Busca de Alunos */}
       <div className="mono-glass-card p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 relative z-10 border border-white/10">
-        <div className="flex flex-1 items-center gap-2">
+        <div className="flex flex-col sm:flex-row flex-1 items-stretch sm:items-center gap-2.5">
           {/* Seletor de Desafio */}
           <select
             value={selectedChallengeId}
             onChange={(e) => setSelectedChallengeId(e.target.value)}
-            className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-mono font-bold text-white focus:outline-none focus:border-white/30"
+            className="h-11 min-h-[44px] w-full sm:w-auto rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-mono font-bold text-white focus:outline-none focus:border-white/30"
           >
             <option value="all">Todas as Turmas ({challenges.length})</option>
             {challenges.map((c) => (
@@ -333,12 +333,12 @@ export default function DashboardFinanceAndStudentsPage() {
 
           {/* Campo de Busca */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-500" />
+            <Search className="absolute left-3 top-3.5 h-4 w-4 text-zinc-500" />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar atleta por nome ou WhatsApp..."
-              className="pl-9 h-10 text-xs font-mono bg-zinc-900/60 border-white/10 text-white rounded-xl"
+              className="pl-9 h-11 min-h-[44px] text-xs font-mono bg-zinc-900/60 border-white/10 text-white rounded-xl"
             />
           </div>
         </div>
@@ -347,7 +347,7 @@ export default function DashboardFinanceAndStudentsPage() {
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           <button
             onClick={() => setFilterPayment('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono font-bold transition-all shrink-0 ${
               filterPayment === 'all'
                 ? 'bg-white text-black'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
@@ -357,7 +357,7 @@ export default function DashboardFinanceAndStudentsPage() {
           </button>
           <button
             onClick={() => setFilterPayment('paid')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono font-bold transition-all shrink-0 ${
               filterPayment === 'paid'
                 ? 'bg-white text-black'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
@@ -367,7 +367,7 @@ export default function DashboardFinanceAndStudentsPage() {
           </button>
           <button
             onClick={() => setFilterPayment('pending')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono font-bold transition-all shrink-0 ${
               filterPayment === 'pending'
                 ? 'bg-white text-black'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
@@ -492,20 +492,20 @@ export default function DashboardFinanceAndStudentsPage() {
                               href={waLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 text-[11px]"
+                              className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 text-[11px]"
                               title="Chamar no WhatsApp"
                             >
-                              <Phone className="h-3 w-3" />
+                              <Phone className="h-3.5 w-3.5" />
                             </a>
                           )}
 
                           <button
                             type="button"
                             onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
-                            className="p-1 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-colors"
+                            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-colors flex items-center justify-center"
                             title="Remover matrícula da turma"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </td>

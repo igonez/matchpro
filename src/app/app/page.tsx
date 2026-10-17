@@ -518,7 +518,7 @@ export default function StudentHomePage() {
   const topAnnouncement = announcements[0] || null;
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-5 space-y-4 bg-black text-white selection:bg-white selection:text-black max-w-md mx-auto w-full pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 bg-black text-white selection:bg-white selection:text-black w-full pb-28 relative">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
@@ -542,34 +542,34 @@ export default function StudentHomePage() {
           </Link>
 
           <div>
-            <span className="text-[11px] text-zinc-400 font-medium block">
+            <span className="text-xs text-zinc-400 font-medium block">
               {challenge?.title || 'Olá, atleta'}
             </span>
-            <h1 className="text-base font-black text-white leading-tight">
+            <h1 className="text-base sm:text-lg font-black text-white leading-tight">
               {student?.full_name?.split(' ')[0] || 'Atleta'}
             </h1>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {/* Sino de Notificações com Badge */}
           <button
             type="button"
             onClick={() => setIsNotificationsOpen(true)}
-            className="relative h-9 w-9 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0"
+            className="relative h-10 w-10 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0"
             title="Notificações e Alertas"
           >
             <Bell className="h-4 w-4" />
             {unreadNotifsCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-amber-400 text-black text-[9px] font-mono font-black flex items-center justify-center shadow-[0_0_10px_rgba(251,191,36,0.6)]">
+              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-amber-400 text-black text-[11px] font-mono font-black flex items-center justify-center shadow-[0_0_10px_rgba(251,191,36,0.6)]">
                 {unreadNotifsCount > 9 ? '9+' : unreadNotifsCount}
               </span>
             )}
           </button>
 
           {/* Badge Streak Tipográfico */}
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-950 border border-white/10 shrink-0">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 shrink-0">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
             <span className="text-xs font-mono font-bold text-white tracking-wider">
               {currentStreak}D OFENSIVA
             </span>
@@ -587,56 +587,56 @@ export default function StudentHomePage() {
         /* Tela de Primeiro Acesso - Exige Convite/QR Code ou Pagamento Pendente */
         <div className="relative z-10 space-y-4 pt-2">
           {pendingChallenge && (
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 space-y-2">
+            <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 space-y-2.5">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
                   Inscrição Aguardando Pagamento Pix
                 </span>
               </div>
-              <p className="text-xs text-zinc-300">
+              <p className="text-xs sm:text-sm text-zinc-200">
                 Você iniciou a inscrição na turma <strong>{pendingChallenge.title}</strong> (R$ {Number(pendingChallenge.price || 0).toFixed(2)}).
               </p>
               <Link href={`/join/${pendingChallenge.id}`} className="block pt-1">
-                <button className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs font-mono transition-colors">
+                <button className="w-full min-h-[44px] py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs sm:text-sm font-mono transition-colors cursor-pointer">
                   Concluir Pagamento no Pix →
                 </button>
               </Link>
             </div>
           )}
 
-          <SpotlightCard3D className="p-7 text-center space-y-4">
+          <SpotlightCard3D className="p-6 sm:p-8 text-center space-y-4">
             <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/20 mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(255,255,255,0.08)]">
               <QrCode className="h-8 w-8 text-white" />
             </div>
 
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block mb-1">
+              <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 block mb-1">
                 ACESSO À ARENA
               </span>
-              <h2 className="text-xl font-black text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 Conecte-se à sua Turma
               </h2>
-              <p className="text-xs text-zinc-300 mt-2 max-w-xs mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-zinc-300 mt-2 max-w-md mx-auto leading-relaxed">
                 Digite o <strong>Código de Convite</strong> fornecido pelo seu treinador para liberar seu cronograma de missões com auditoria por IA e disputar o pódio da sua turma.
               </p>
             </div>
 
-            <div className="pt-2 space-y-2.5">
+            <div className="pt-2 space-y-3 max-w-md mx-auto">
               <input
                 type="text"
                 placeholder="Ex: VERAO-2026 ou link do convite..."
                 value={inviteCodeInput}
                 onChange={(e) => setInviteCodeInput(e.target.value)}
-                className="w-full bg-black/70 border border-white/15 rounded-xl px-4 py-3 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/50 font-mono transition-colors"
+                className="w-full bg-black/70 border border-white/15 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/50 font-mono transition-colors"
               />
               <button
                 type="button"
                 onClick={handleEnterChallengeByCode}
-                className="mono-button-primary w-full py-3.5 text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)] cursor-pointer"
               >
                 <span>Validar e Entrar na Turma</span>
-                <ArrowRight className="h-3.5 w-3.5 text-black" />
+                <ArrowRight className="h-4 w-4 text-black" />
               </button>
             </div>
           </SpotlightCard3D>
@@ -647,15 +647,15 @@ export default function StudentHomePage() {
           {streakRisk.isAtRisk && (
             <div className="relative z-10 p-4 rounded-2xl bg-zinc-950 border border-amber-500/40 flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
+                <p className="text-xs sm:text-sm font-mono font-bold text-amber-300 uppercase tracking-wider">
                   OFENSIVA EM RISCO ({currentStreak} DIAS ATIVOS)
                 </p>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <p className="text-xs sm:text-sm text-zinc-300 mt-0.5">
                   Faltam {streakRisk.hoursLeft}h para a meia-noite. Registre seu check-in de hoje.
                 </p>
               </div>
               <Link href="/app/missions">
-                <button className="px-3.5 py-2 rounded-xl bg-white text-black text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer">
+                <button className="min-h-[40px] px-4 py-2 rounded-xl bg-white text-black text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer">
                   SALVAR
                 </button>
               </Link>
@@ -665,20 +665,20 @@ export default function StudentHomePage() {
           {/* 1.5 Banner de Aviso em Destaque do Treinador */}
           {topAnnouncement && (
             <div className="relative z-10">
-              <div className="p-3.5 rounded-2xl border border-white/10 bg-zinc-950 space-y-1">
+              <div className="p-4 rounded-2xl border border-white/10 bg-zinc-950 space-y-1.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
+                  <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400">
                     {topAnnouncement.is_pinned ? 'AVISO FIXADO' : 'AVISO DO TREINADOR'}
                   </span>
                   <Link
                     href="/app/materials?tab=avisos"
-                    className="text-[10px] font-mono text-zinc-500 hover:text-white"
+                    className="text-xs font-mono text-zinc-400 hover:text-white"
                   >
                     VER TODOS ({announcements.length}) →
                   </Link>
                 </div>
-                <p className="text-xs font-bold text-white leading-tight">{topAnnouncement.title}</p>
-                <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">
+                <p className="text-sm font-bold text-white leading-tight">{topAnnouncement.title}</p>
+                <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed line-clamp-2">
                   {topAnnouncement.content}
                 </p>
               </div>
@@ -688,28 +688,28 @@ export default function StudentHomePage() {
           {/* 2. CARD DE AÇÃO FOCAL: O Próximo Passo de Hoje */}
           {focalTask ? (
             <div className="relative z-10">
-              <div className="p-5 rounded-3xl border border-white/15 bg-zinc-950 shadow-2xl space-y-3">
+              <div className="p-5 sm:p-6 rounded-3xl border border-white/15 bg-zinc-950 shadow-2xl space-y-3.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-white/15 bg-white/5 text-zinc-300">
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded border border-white/15 bg-white/5 text-zinc-200">
                       PRÓXIMA AÇÃO
                     </span>
                     {activeSession?.missionId === focalTask.id && (
-                      <span className="text-[9px] font-mono font-bold text-emerald-400 tracking-wider">
+                      <span className="text-[11px] font-mono font-bold text-emerald-400 tracking-wider">
                         EM ANDAMENTO
                       </span>
                     )}
                   </div>
-                  <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs sm:text-sm font-mono font-bold text-white bg-white/10 px-3 py-1 rounded-full">
                     +{focalTask.points_rewarded} XP
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-lg font-black text-white tracking-tight leading-snug">
+                  <h3 className="text-lg sm:text-xl font-black text-white tracking-tight leading-snug">
                     {focalTask.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                     {focalTask.category === 'treino'
                       ? 'Inicie o cronômetro oficial e comprove a execução com a câmera antifraude ao terminar.'
                       : focalTask.category === 'cardio'
@@ -726,21 +726,21 @@ export default function StudentHomePage() {
                     activeSession?.missionId === focalTask.id ? (
                       <button
                         onClick={() => router.push(`/app/camera/${focalTask.id}`)}
-                        className="w-full py-3.5 text-xs font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors"
+                        className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer"
                       >
                         FINALIZAR SESSÃO & REGISTRAR FOTO →
                       </button>
                     ) : (
                       <button
                         onClick={() => startSession(focalTask.id, focalTask.title, focalTask.category)}
-                        className="w-full py-3.5 text-xs font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors"
+                        className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer"
                       >
                         INICIAR {focalTask.category === 'treino' ? 'TREINO' : 'CARDIO'} AGORA →
                       </button>
                     )
                   ) : (
                     <Link href={`/app/camera/${focalTask.id}`} className="block w-full">
-                      <button className="w-full py-3.5 text-xs font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors">
+                      <button className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer">
                         REGISTRAR FOTO AO VIVO →
                       </button>
                     </Link>
@@ -750,11 +750,11 @@ export default function StudentHomePage() {
             </div>
           ) : (
             <div className="relative z-10">
-              <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-1.5">
-                <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase font-bold block">
+              <div className="p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-1.5">
+                <span className="text-xs font-mono tracking-widest text-emerald-400 uppercase font-bold block">
                   TODAS AS METAS DE HOJE CONCLUÍDAS
                 </span>
-                <p className="text-xs text-zinc-400 max-w-xs mx-auto">
+                <p className="text-xs sm:text-sm text-zinc-300 max-w-sm mx-auto">
                   Excelente consistência. Seu streak está seguro e seus pontos foram computados.
                 </p>
               </div>
@@ -763,26 +763,26 @@ export default function StudentHomePage() {
 
           {/* 3. RADAR DE PROGRESSO SEMANAL & PLACAR */}
           <div className="relative z-10">
-            <div className="p-4 rounded-3xl border border-white/10 bg-zinc-950 space-y-3">
-              <div className="flex items-center justify-between text-xs">
+            <div className="p-4 sm:p-5 rounded-3xl border border-white/10 bg-zinc-950 space-y-3.5">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase block">JORNADA SEMANAL</span>
+                  <span className="text-xs font-mono tracking-widest text-zinc-400 uppercase block">JORNADA SEMANAL</span>
                   <span className="font-bold text-white mt-0.5 block">
                     Semana {challengeTimeline.currentWeek} • Dia {challengeTimeline.currentDay}/{challengeTimeline.totalDays}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-lg font-black font-mono text-white">
+                  <span className="text-lg sm:text-xl font-black font-mono text-white">
                     {weeklyPercentage}%
                   </span>
-                  <span className="text-[10px] text-zinc-500 block font-mono">
+                  <span className="text-xs text-zinc-400 block font-mono">
                     {totalWeeklyDone}/{totalWeeklyGoals} METAS
                   </span>
                 </div>
               </div>
 
               {/* Barra de Progresso Minimalista */}
-              <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
+              <div className="w-full h-1.5 rounded-full bg-zinc-900 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-white transition-all duration-700"
                   style={{ width: `${Math.max(4, weeklyPercentage)}%` }}
@@ -790,32 +790,32 @@ export default function StudentHomePage() {
               </div>
 
               {/* 3 Métricas Rápidas */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
-                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-center">
-                  <span className="text-[9px] text-zinc-500 block uppercase font-mono tracking-wider">PONTOS</span>
-                  <span className="text-sm font-black text-white font-mono block mt-0.5">
+              <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-white/[0.06]">
+                <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-center">
+                  <span className="text-[11px] text-zinc-400 block uppercase font-mono tracking-wider">PONTOS</span>
+                  <span className="text-sm sm:text-base font-black text-white font-mono block mt-0.5">
                     {standing?.total_points || 0}
                   </span>
                 </div>
 
                 <Link
                   href="/app/leaderboard"
-                  className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-center hover:border-white/20 transition-colors block group"
+                  className="p-3 rounded-xl bg-black/40 border border-white/5 text-center hover:border-white/20 transition-colors block group"
                   title="Ver Classificação Geral"
                 >
-                  <span className="text-[9px] text-zinc-500 block uppercase font-mono tracking-wider group-hover:text-white">POSIÇÃO</span>
-                  <span className="text-sm font-black text-white font-mono block mt-0.5">
+                  <span className="text-[11px] text-zinc-400 block uppercase font-mono tracking-wider group-hover:text-white">POSIÇÃO</span>
+                  <span className="text-sm sm:text-base font-black text-white font-mono block mt-0.5">
                     {rank}
                   </span>
                 </Link>
 
                 <Link
                   href="/app/materials"
-                  className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-center hover:border-white/20 transition-colors block group"
+                  className="p-3 rounded-xl bg-black/40 border border-white/5 text-center hover:border-white/20 transition-colors block group"
                   title="Ver Arquivos do Treinador"
                 >
-                  <span className="text-[9px] text-zinc-500 block uppercase font-mono tracking-wider group-hover:text-white">GUIA/PDF</span>
-                  <span className="text-sm font-black text-zinc-300 font-mono block mt-0.5">
+                  <span className="text-[11px] text-zinc-400 block uppercase font-mono tracking-wider group-hover:text-white">GUIA/PDF</span>
+                  <span className="text-xs sm:text-sm font-black text-zinc-200 font-mono block mt-1">
                     ACESSAR →
                   </span>
                 </Link>
@@ -824,12 +824,12 @@ export default function StudentHomePage() {
           </div>
 
           {/* 4. BLOCOS DE MISSÕES DE HOJE */}
-          <div className="space-y-3.5 relative z-10">
+          <div className="space-y-4 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 font-mono">
+              <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 font-mono">
                 BLOCOS DE EXECUÇÃO DE HOJE
               </span>
-              <Link href="/app/missions" className="text-[10px] text-amber-300 hover:text-white transition-colors font-mono font-bold tracking-wider">
+              <Link href="/app/missions" className="text-xs text-amber-300 hover:text-white transition-colors font-mono font-bold tracking-wider">
                 VER SEMANAS 1 A 4 →
               </Link>
             </div>
@@ -858,19 +858,19 @@ export default function StudentHomePage() {
               return (
                 <div
                   key={group.id}
-                  className={`p-3.5 rounded-3xl bg-zinc-950/95 border ${group.borderClass} space-y-2.5`}
+                  className={`p-4 sm:p-5 rounded-3xl bg-zinc-950/95 border ${group.borderClass} space-y-3`}
                 >
-                  <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/[0.06]">
                     <div>
-                      <h4 className="text-xs font-black text-white tracking-tight">{group.title}</h4>
-                      <p className="text-[10px] text-zinc-400">{group.subtitle}</p>
+                      <h4 className="text-sm sm:text-base font-black text-white tracking-tight">{group.title}</h4>
+                      <p className="text-xs text-zinc-400">{group.subtitle}</p>
                     </div>
-                    <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border uppercase ${group.badgeClass}`}>
+                    <span className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase shrink-0 ${group.badgeClass}`}>
                       {groupTasks.length} {groupTasks.length === 1 ? 'missão' : 'missões'}
                     </span>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {groupTasks.map((task) => {
                       const isDailyLocked =
                         (task.category === 'treino' && todayLockedCategories.treino) ||
@@ -896,7 +896,7 @@ export default function StudentHomePage() {
                         <div
                           key={task.id}
                           onClick={() => handleTaskClick(task)}
-                          className={`p-3 rounded-2xl bg-black/60 border flex items-center justify-between gap-3 transition-all cursor-pointer ${
+                          className={`p-3.5 rounded-2xl bg-black/60 border flex items-center justify-between gap-3 transition-all cursor-pointer ${
                             isDailyLocked
                               ? 'opacity-50 border-white/5'
                               : isRunningThis
@@ -906,29 +906,29 @@ export default function StudentHomePage() {
                         >
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className={`text-[9px] font-mono tracking-wider font-bold px-1.5 py-0.2 rounded border ${meta.color}`}>
+                              <span className={`text-[11px] font-mono tracking-wider font-bold px-2 py-0.5 rounded border ${meta.color}`}>
                                 {meta.label}
                               </span>
-                              <span className="text-[10px] font-mono font-bold text-amber-300">
+                              <span className="text-xs font-mono font-bold text-amber-300">
                                 +{task.points_rewarded} XP
                               </span>
                             </div>
-                            <p className={`text-xs font-bold truncate ${isDailyLocked ? 'line-through text-zinc-500' : 'text-white'}`}>
+                            <p className={`text-xs sm:text-sm font-bold truncate ${isDailyLocked ? 'line-through text-zinc-500' : 'text-white'}`}>
                               {task.title}
                             </p>
                           </div>
 
                           <div className="shrink-0">
                             {isDailyLocked ? (
-                              <span className="text-[9px] font-mono text-emerald-400 tracking-wider uppercase font-bold">
+                              <span className="text-[11px] font-mono text-emerald-400 tracking-wider uppercase font-bold">
                                 CONCLUÍDO
                               </span>
                             ) : isRunningThis ? (
-                              <span className="text-[9px] font-mono font-bold text-white tracking-wider uppercase">
+                              <span className="text-[11px] font-mono font-bold text-white tracking-wider uppercase">
                                 EM ANDAMENTO
                               </span>
                             ) : (
-                              <span className="px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-mono font-bold text-white">
+                              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-xs font-mono font-bold text-white">
                                 Iniciar →
                               </span>
                             )}
@@ -945,31 +945,31 @@ export default function StudentHomePage() {
           {/* 5. PROGRESSO POR PILAR / LISTAS DE MISSÕES */}
           <div className="space-y-3 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 font-mono">
+              <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 font-mono">
                 {missionLists.length > 0 ? 'PROGRESSO POR LISTA' : 'PROGRESSO POR PILAR'}
               </span>
-              <Link href="/app/missions" className="text-[10px] text-zinc-500 hover:text-white transition-colors font-mono tracking-wider">
+              <Link href="/app/missions" className="text-xs text-zinc-400 hover:text-white transition-colors font-mono tracking-wider">
                 VER TODOS →
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {missionLists.length > 0 ? (
                 missionLists.map((list) => {
                   const c = listCounts[list.id] || { done: 0, total: 0 };
                   const pct = c.total > 0 ? Math.min(100, Math.round((c.done / c.total) * 100)) : 0;
                   return (
                     <Link key={list.id} href={`/app/missions?list=${list.id}`}>
-                      <div className="p-3 rounded-2xl bg-zinc-950 border border-white/10 hover:border-white/25 transition-all space-y-2">
+                      <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/10 hover:border-white/25 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-white text-[11px] truncate uppercase tracking-wider">
+                          <span className="font-bold text-white text-xs truncate uppercase tracking-wider">
                             {list.name}
                           </span>
-                          <span className="text-[10px] font-mono text-zinc-400 font-bold shrink-0">
+                          <span className="text-xs font-mono text-zinc-400 font-bold shrink-0">
                             {c.done}/{c.total}
                           </span>
                         </div>
-                        <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
+                        <div className="w-full h-1.5 rounded-full bg-zinc-900 overflow-hidden">
                           <div
                             className="h-full rounded-full bg-white transition-all duration-500"
                             style={{ width: `${pct}%` }}
@@ -989,14 +989,14 @@ export default function StudentHomePage() {
                   const pct = cat.total > 0 ? Math.min(100, Math.round((cat.done / cat.total) * 100)) : 0;
                   return (
                     <Link key={cat.key} href={`/app/missions?cat=${cat.key}`}>
-                      <div className="p-3 rounded-2xl bg-zinc-950 border border-white/10 hover:border-white/25 transition-all space-y-2">
+                      <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/10 hover:border-white/25 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-white text-[11px] font-mono tracking-wider">{cat.title}</span>
-                          <span className="text-[10px] font-mono text-zinc-400 font-bold">
+                          <span className="font-bold text-white text-xs font-mono tracking-wider">{cat.title}</span>
+                          <span className="text-xs font-mono text-zinc-400 font-bold">
                             {cat.done}/{cat.total}
                           </span>
                         </div>
-                        <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
+                        <div className="w-full h-1.5 rounded-full bg-zinc-900 overflow-hidden">
                           <div
                             className="h-full rounded-full bg-white transition-all duration-500"
                             style={{ width: `${pct}%` }}

@@ -60,17 +60,17 @@ export function WorkoutActiveSessionHud() {
     <>
       {/* 1. Barra Flutuante Minimizada (Acima do menu inferior ou topo) */}
       {!isExpanded && (
-        <div className="fixed bottom-20 inset-x-0 mx-auto max-w-[390px] w-[92%] z-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <div className="bg-zinc-950/95 border border-white/20 rounded-2xl p-3 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex items-center justify-between">
+        <div className="fixed bottom-20 inset-x-0 mx-auto max-w-[430px] sm:max-w-lg w-[95%] z-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="bg-zinc-950/95 border border-white/20 rounded-2xl p-3 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex items-center justify-between gap-3">
             <div 
               onClick={() => setIsExpanded(true)}
-              className="flex items-center gap-3 cursor-pointer flex-1"
+              className="flex items-center gap-3 cursor-pointer flex-1 min-w-0"
             >
-              <div className="h-9 w-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center relative">
+              <div className="h-10 w-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center relative shrink-0">
                 <span className="h-2.5 w-2.5 rounded-full bg-white animate-ping absolute" />
                 <span className="h-2 w-2 rounded-full bg-white relative z-10" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
                     {activeSession.category === 'treino' ? 'TREINO ATIVO' : 'CARDIO ATIVO'}
@@ -82,17 +82,18 @@ export function WorkoutActiveSessionHud() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handleFinishAndTakePhoto}
-                className="mono-button-primary px-3 py-1.5 text-xs font-mono flex items-center gap-1.5 shadow-md"
+                className="mono-button-primary min-h-[44px] px-3.5 py-2 text-xs font-mono flex items-center gap-1.5 shadow-md"
               >
                 <Camera className="h-3.5 w-3.5" />
                 <span>FINALIZAR</span>
               </button>
               <button
                 onClick={() => setIsExpanded(true)}
-                className="h-8 w-8 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
+                aria-label="Expandir cronômetro"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
               >
                 <ChevronUp className="h-4 w-4" />
               </button>
@@ -105,7 +106,7 @@ export function WorkoutActiveSessionHud() {
       {isExpanded && (
         <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-6 animate-in fade-in zoom-in-95 duration-200">
           {/* Top Bar HUD */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between max-w-md sm:max-w-xl mx-auto w-full">
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" />
               <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
@@ -114,7 +115,8 @@ export function WorkoutActiveSessionHud() {
             </div>
             <button
               onClick={() => setIsExpanded(false)}
-              className="h-9 w-9 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
+              aria-label="Minimizar cronômetro"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
             >
               <ChevronDown className="h-5 w-5" />
             </button>

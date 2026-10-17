@@ -273,14 +273,14 @@ function LoginContent() {
 
       {/* Top Bar Minimalista */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
           <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
           <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
         </Link>
 
-        <Link href="/" className="text-xs font-mono text-zinc-500 hover:text-white transition-colors">
+        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
           ← Início
         </Link>
       </div>
@@ -315,7 +315,7 @@ function LoginContent() {
                 setRole('student');
                 setErrorMessage(null);
               }}
-              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+              className={`py-2 min-h-[44px] text-xs font-bold rounded-xl transition-all ${
                 role === 'student'
                   ? 'bg-zinc-800 text-white shadow-md'
                   : 'text-zinc-500 hover:text-zinc-300'
@@ -329,7 +329,7 @@ function LoginContent() {
                 setRole('professional');
                 setErrorMessage(null);
               }}
-              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+              className={`py-2 min-h-[44px] text-xs font-bold rounded-xl transition-all ${
                 role === 'professional'
                   ? 'bg-zinc-800 text-white shadow-md'
                   : 'text-zinc-500 hover:text-zinc-300'
@@ -364,7 +364,7 @@ function LoginContent() {
                     setStudentMode('code');
                     setErrorMessage(null);
                   }}
-                  className={`py-1.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                     studentMode === 'code'
                       ? 'bg-white text-black shadow'
                       : 'text-zinc-400 hover:text-white'
@@ -379,7 +379,7 @@ function LoginContent() {
                     setStudentMode('signin');
                     setErrorMessage(null);
                   }}
-                  className={`py-1.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                     studentMode === 'signin'
                       ? 'bg-white text-black shadow'
                       : 'text-zinc-400 hover:text-white'
@@ -503,7 +503,7 @@ function LoginContent() {
                       {/* Opção 2: Formulário com e-mail */}
                       <form onSubmit={handleEmailAuth} className="space-y-3">
                         <div>
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                          <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-1">
                             Seu Nome Completo
                           </label>
                           <Input
@@ -512,12 +512,12 @@ function LoginContent() {
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
                             required
-                            className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                            className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
                           />
                         </div>
 
                         <div>
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                          <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-1">
                             WhatsApp (para rankings e avisos do coach)
                           </label>
                           <Input
@@ -526,13 +526,13 @@ function LoginContent() {
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             required
-                            className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                            className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-1">
                               E-mail
                             </label>
                             <Input
@@ -541,11 +541,11 @@ function LoginContent() {
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               required
-                              className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                              className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
                             />
                           </div>
                           <div>
-                            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-1">
                               Senha
                             </label>
                             <Input
@@ -554,7 +554,7 @@ function LoginContent() {
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
                               required
-                              className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-10 text-xs"
+                              className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
                             />
                           </div>
                         </div>

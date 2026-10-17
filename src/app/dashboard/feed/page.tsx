@@ -533,14 +533,14 @@ export default function DashboardFeedPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleOpenComments(post)}
-                      className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer bg-white/[0.04] hover:bg-white/[0.08] px-3 py-1.5 rounded-xl border border-white/[0.08]"
+                      className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer bg-white/[0.04] hover:bg-white/[0.08] px-3.5 py-2 min-h-[44px] rounded-xl border border-white/[0.08]"
                     >
                       <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
                       <span>{commentsCount}</span>
                     </button>
 
                     <Link href={`/dashboard/audit`}>
-                      <button className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors p-1">
+                      <button className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors px-2.5 py-2 min-h-[44px] flex items-center">
                         [ Auditoria ]
                       </button>
                     </Link>
@@ -554,8 +554,8 @@ export default function DashboardFeedPage() {
 
       {/* Modal / Gaveta de Comentários do Coach */}
       {activeCommentPost && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end max-w-lg mx-auto">
-          <div className="mono-glass-card rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-white/20">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+          <div className="mono-glass-card w-full max-w-lg sm:max-w-xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-white/20">
             {/* Header do Sheet */}
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div className="flex items-center gap-2">
@@ -568,9 +568,10 @@ export default function DashboardFeedPage() {
               </div>
               <button
                 onClick={() => setActiveCommentPost(null)}
-                className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Fechar comentários"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
@@ -641,7 +642,7 @@ export default function DashboardFeedPage() {
                     key={chip}
                     type="button"
                     onClick={() => setCommentText(chip)}
-                    className="text-[11px] font-sans font-medium px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-200 hover:text-white hover:border-amber-500/40 hover:bg-amber-500/20 shrink-0 transition-all cursor-pointer active:scale-95"
+                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-200 hover:text-white hover:border-amber-500/40 hover:bg-amber-500/20 shrink-0 transition-all cursor-pointer active:scale-95"
                   >
                     {chip}
                   </button>
@@ -656,12 +657,12 @@ export default function DashboardFeedPage() {
                 placeholder="Escreva um feedback ou elogio do Coach..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="h-10 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
+                className="h-11 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
               />
               <button
                 type="submit"
                 disabled={submittingComment || !commentText.trim()}
-                className="mono-button-primary px-4 h-10 text-xs font-mono flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 shrink-0"
+                className="mono-button-primary px-4 h-11 min-h-[44px] text-xs font-mono flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 shrink-0"
               >
                 {submittingComment ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

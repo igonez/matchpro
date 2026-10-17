@@ -270,7 +270,7 @@ export default function StudentProfilePage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 space-y-5 max-w-md mx-auto w-full pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full pb-28 relative">
       <Monochrome3DBackground />
 
       {/* Header do Perfil */}
@@ -280,7 +280,7 @@ export default function StudentProfilePage() {
           variant="ghost"
           size="sm"
           onClick={handleSignOut}
-          className="text-xs text-zinc-400 hover:text-white hover:bg-white/10"
+          className="h-11 min-h-[44px] px-3.5 text-xs text-zinc-400 hover:text-white hover:bg-white/10"
         >
           <LogOut className="h-4 w-4 mr-1.5" /> Sair
         </Button>
@@ -488,7 +488,7 @@ export default function StudentProfilePage() {
           <Button
             size="sm"
             onClick={handleTogglePush}
-            className={`text-xs font-mono font-bold rounded-xl h-8 px-3 ${
+            className={`text-xs font-mono font-bold rounded-xl h-11 min-h-[44px] px-3.5 shrink-0 ${
               pushEnabled
                 ? 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 : 'bg-white text-black hover:bg-zinc-200'

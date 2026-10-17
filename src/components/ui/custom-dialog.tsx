@@ -64,9 +64,10 @@ export function CustomDialog({
           <button
             type="button"
             onClick={onClose}
-            className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
+            aria-label="Fechar janela"
+            className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
@@ -83,7 +84,7 @@ export function CustomDialog({
                     type="button"
                     onClick={onClose}
                     disabled={isLoading}
-                    className="mono-button-secondary px-4 py-2 text-xs font-mono"
+                    className="mono-button-secondary px-4 py-2 min-h-[44px] text-xs font-mono"
                   >
                     {resolvedCancelLabel}
                   </button>
@@ -95,8 +96,8 @@ export function CustomDialog({
                   disabled={isLoading}
                   className={
                     variant === 'destructive'
-                      ? 'px-5 py-2 text-xs font-mono font-bold rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-colors'
-                      : 'mono-button-primary px-5 py-2 text-xs font-mono font-bold'
+                      ? 'px-5 py-2 min-h-[44px] text-xs font-mono font-bold rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-colors'
+                      : 'mono-button-primary px-5 py-2 min-h-[44px] text-xs font-mono font-bold'
                   }
                 >
                   {isLoading ? 'PROCESSANDO...' : resolvedConfirmLabel}
@@ -107,7 +108,7 @@ export function CustomDialog({
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="mono-button-primary px-5 py-2 text-xs font-mono font-bold"
+                className="mono-button-primary px-5 py-2 min-h-[44px] text-xs font-mono font-bold"
               >
                 {confirmText || confirmLabel || resolvedCancelLabel}
               </button>

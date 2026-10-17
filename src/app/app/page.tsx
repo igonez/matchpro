@@ -61,6 +61,7 @@ export default function StudentHomePage() {
     habitos: { done: 0, total: 0 },
   });
   const [listCounts, setListCounts] = useState<Record<string, { done: number; total: number }>>({});
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [loading, setLoading] = useState(true);
   const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
@@ -72,6 +73,12 @@ export default function StudentHomePage() {
     if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
       sessionStorage.setItem('arena_booted', 'true');
     }
+
+    const handleRemoteCompletion = () => {
+      setRefreshKey((k) => k + 1);
+    };
+    window.addEventListener('arena_mission_completed', handleRemoteCompletion);
+    return () => window.removeEventListener('arena_mission_completed', handleRemoteCompletion);
   }, []);
 
   useEffect(() => {
@@ -274,7 +281,7 @@ export default function StudentHomePage() {
     }
 
     loadHome();
-  }, [supabase, router]);
+  }, [supabase, router, refreshKey]);
 
   const handleEnterChallengeByCode = () => {
     let code = inviteCodeInput.trim();

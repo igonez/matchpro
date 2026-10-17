@@ -41,6 +41,15 @@ function StudentMissionsContent() {
   const [todaySubmissions, setTodaySubmissions] = useState<any[]>([]);
   const [showCompletedSection, setShowCompletedSection] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const handleRemoteCompletion = () => {
+      setRefreshKey((k) => k + 1);
+    };
+    window.addEventListener('arena_mission_completed', handleRemoteCompletion);
+    return () => window.removeEventListener('arena_mission_completed', handleRemoteCompletion);
+  }, []);
 
   useEffect(() => {
     const catParam = searchParams.get('cat');
@@ -159,7 +168,7 @@ function StudentMissionsContent() {
     }
 
     loadData();
-  }, [supabase]);
+  }, [supabase, refreshKey]);
 
   // 2. Carregar missões da semana ativa (sempre filtradas pelo challenge_id do aluno)
   useEffect(() => {

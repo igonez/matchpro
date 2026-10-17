@@ -18,6 +18,56 @@ import {
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 
+export type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
+
+export interface ReactionDef {
+  key: ReactionType;
+  emoji: string;
+  label: string;
+  activeBg: string;
+  activeBorder: string;
+}
+
+export const REACTIONS: ReactionDef[] = [
+  {
+    key: 'fire',
+    emoji: '🔥',
+    label: 'Fogo',
+    activeBg: 'bg-amber-500/20 text-amber-300',
+    activeBorder: 'border-amber-500/40',
+  },
+  {
+    key: 'muscle',
+    emoji: '💪',
+    label: 'Força',
+    activeBg: 'bg-emerald-500/20 text-emerald-300',
+    activeBorder: 'border-emerald-500/40',
+  },
+  {
+    key: 'clap',
+    emoji: '👏',
+    label: 'Palmas',
+    activeBg: 'bg-sky-500/20 text-sky-300',
+    activeBorder: 'border-sky-500/40',
+  },
+  {
+    key: 'heart',
+    emoji: '❤️',
+    label: 'Coração',
+    activeBg: 'bg-rose-500/20 text-rose-300',
+    activeBorder: 'border-rose-500/40',
+  },
+];
+
+export const QUICK_PRAISE_CHIPS = [
+  'Boa monstro! 🔥',
+  'Foco total! 💪',
+  'Disciplina pura! 👏',
+  'Treino pago! 👊',
+  'Inspiração demais! ✨',
+  'Bora pra cima! 🚀',
+];
+
 export default function StudentSocialFeedPage() {
   const supabase = createClient();
 
@@ -32,6 +82,10 @@ export default function StudentSocialFeedPage() {
   const [challengeTitle, setChallengeTitle] = useState<string>('Turma');
   const [loading, setLoading] = useState(true);
 
+  // Efeito Delícia de Reação Rápida / Double Tap
+  const [burstReaction, setBurstReaction] = useState<{ postId: string; emoji: string } | null>(null);
+  const lastTapRef = useRef<{ time: number; postId: string }>({ time: 0, postId: '' });
+
   // Modal / Gaveta de Comentários das Fotos
   const [activeCommentPost, setActiveCommentPost] = useState<any | null>(null);
   const [commentText, setCommentText] = useState('');
@@ -44,6 +98,7 @@ export default function StudentSocialFeedPage() {
   const [newChatMessage, setNewChatMessage] = useState('');
   const [sendingChatMessage, setSendingChatMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const commentsEndRef = useRef<HTMLDivElement>(null);
 
   // Modal de Denúncia e Toast
   const [reportTargetPost, setReportTargetPost] = useState<any | null>(null);
@@ -132,7 +187,8 @@ export default function StudentSocialFeedPage() {
           ),
           submission_likes (
             id,
-            student_id
+            student_id,
+            reaction_type
           ),
           submission_comments (
             id
@@ -223,35 +279,68 @@ export default function StudentSocialFeedPage() {
     };
   }, [currentChallengeId]);
 
-  // 3. CURTIDAS (LIKES)
-  const handleToggleLike = async (postId: string, userLiked: boolean) => {
+  // 3. MULTI-REAÇÕES (EMOJIS) & DOUBLE TAP DELIGHT
+  const handlePhotoDoubleTap = (postId: string) => {
+    const now = Date.now();
+    if (lastTapRef.current.postId === postId && now - lastTapRef.current.time < 350) {
+      handleToggleReaction(postId, 'fire');
+      setBurstReaction({ postId, emoji: '🔥' });
+      setTimeout(() => setBurstReaction(null), 900);
+      lastTapRef.current = { time: 0, postId: '' };
+    } else {
+      lastTapRef.current = { time: now, postId };
+    }
+  };
+
+  const handleToggleReaction = async (postId: string, reactionType: ReactionType) => {
     if (!currentUser) return;
 
+    const targetPost = posts.find((p) => p.id === postId);
+    if (!targetPost) return;
+
+    const currentLikes: any[] = targetPost.submission_likes || [];
+    const existing = currentLikes.find((l: any) => l.student_id === currentUser.id);
+    const isSameType = existing && (existing.reaction_type || 'fire') === reactionType;
+
+    // Atualização otimista imediata na interface
     setPosts((prev) =>
       prev.map((p) => {
         if (p.id === postId) {
-          const currentLikes = p.submission_likes || [];
-          if (userLiked) {
-            return {
-              ...p,
-              submission_likes: currentLikes.filter((l: any) => l.student_id !== currentUser.id),
-            };
+          let updatedLikes = [...(p.submission_likes || [])];
+          if (isSameType) {
+            // Remove reação
+            updatedLikes = updatedLikes.filter((l: any) => l.student_id !== currentUser.id);
+          } else if (existing) {
+            // Alterna tipo
+            updatedLikes = updatedLikes.map((l: any) =>
+              l.student_id === currentUser.id ? { ...l, reaction_type: reactionType } : l
+            );
           } else {
-            return {
-              ...p,
-              submission_likes: [...currentLikes, { id: 'temp', student_id: currentUser.id }],
-            };
+            // Adiciona nova
+            updatedLikes.push({
+              id: 'temp-' + Date.now(),
+              submission_id: postId,
+              student_id: currentUser.id,
+              reaction_type: reactionType,
+            });
           }
+          return { ...p, submission_likes: updatedLikes };
         }
         return p;
       })
     );
 
     try {
-      if (userLiked) {
+      if (isSameType) {
         await supabase
           .from('submission_likes')
           .delete()
+          .eq('submission_id', postId)
+          .eq('student_id', currentUser.id);
+      } else if (existing) {
+        await supabase
+          .from('submission_likes')
+          .update({ reaction_type: reactionType })
           .eq('submission_id', postId)
           .eq('student_id', currentUser.id);
       } else {
@@ -260,10 +349,11 @@ export default function StudentSocialFeedPage() {
           .insert({
             submission_id: postId,
             student_id: currentUser.id,
+            reaction_type: reactionType,
           });
       }
     } catch (err) {
-      console.error('Erro ao alternar like:', err);
+      console.error('Erro ao atualizar reação:', err);
     }
   };
 
@@ -288,6 +378,49 @@ export default function StudentSocialFeedPage() {
       setLoadingComments(false);
     }
   };
+
+  // Realtime para comentários da foto aberta
+  useEffect(() => {
+    if (!activeCommentPost?.id) return;
+
+    const channel = supabase
+      .channel(`comments_${activeCommentPost.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'submission_comments',
+          filter: `submission_id=eq.${activeCommentPost.id}`,
+        },
+        (payload: any) => {
+          setCommentsList((prev) => {
+            if (prev.some((c) => c.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
+          setTimeout(() => {
+            commentsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'submission_comments',
+          filter: `submission_id=eq.${activeCommentPost.id}`,
+        },
+        (payload: any) => {
+          setCommentsList((prev) => prev.filter((c) => c.id !== payload.old.id));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeCommentPost?.id]);
 
   const handleSendComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -522,14 +655,23 @@ export default function StudentSocialFeedPage() {
           ) : (
             <div className="space-y-4 relative z-10">
               {posts.map((post) => {
-                const likes = post.submission_likes || [];
-                const userLiked = likes.some((l: any) => l.student_id === currentUser?.id);
+                const likes: any[] = post.submission_likes || [];
                 const commentsCount = post.submission_comments?.length || 0;
+
+                // Agrupamento de reações
+                const counts: Record<ReactionType, number> = { fire: 0, muscle: 0, clap: 0, heart: 0 };
+                let myReaction: ReactionType | null = null;
+
+                likes.forEach((l: any) => {
+                  const type: ReactionType = (l.reaction_type as ReactionType) || 'fire';
+                  if (counts[type] !== undefined) counts[type]++;
+                  if (l.student_id === currentUser?.id) myReaction = type;
+                });
 
                 return (
                   <div
                     key={post.id}
-                    className="mono-glass-card rounded-3xl overflow-hidden"
+                    className="mono-glass-card rounded-3xl overflow-hidden border border-white/10"
                   >
                     {/* Header do Post */}
                     <div className="p-3.5 flex items-center justify-between border-b border-white/[0.06]">
@@ -569,56 +711,83 @@ export default function StudentSocialFeedPage() {
                       </span>
                     </div>
 
-                    {/* Imagem do Post com Tag Flutuante */}
-                    <div className="relative aspect-square w-full bg-black overflow-hidden">
+                    {/* Imagem do Post com Duplo Toque para 🔥 */}
+                    <div
+                      onClick={() => handlePhotoDoubleTap(post.id)}
+                      className="relative aspect-square w-full bg-black overflow-hidden cursor-pointer select-none group"
+                    >
                       <img
                         src={post.photo_url}
                         alt="Foto da missão"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-300 group-active:scale-[0.99]"
                       />
+
+                      {/* Burst Animation no Duplo Toque */}
+                      {burstReaction && burstReaction.postId === post.id && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30 animate-in fade-in zoom-in duration-200">
+                          <span className="text-7xl animate-pulse select-none drop-shadow-[0_0_30px_rgba(251,146,60,0.9)]">
+                            {burstReaction.emoji}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold text-white border border-white/15">
                         {post.missions?.title || 'Check-in Realizado'}
                       </div>
                     </div>
 
-                    {/* Ações Sociais (Curtir, Comentar, Denunciar) */}
-                    <div className="p-3.5 space-y-2.5">
-                      <div className="flex items-center gap-4">
-                        {/* Curtir */}
-                        <button
-                          onClick={() => handleToggleLike(post.id, userLiked)}
-                          className={`flex items-center gap-1.5 text-xs font-mono font-bold transition-all cursor-pointer ${
-                            userLiked ? 'text-rose-400' : 'text-zinc-400 hover:text-white'
-                          }`}
-                        >
-                          <Heart className={`w-4 h-4 ${userLiked ? 'fill-rose-500 text-rose-500' : 'text-zinc-400'}`} />
-                          <span>{likes.length}</span>
-                        </button>
+                    {/* Ações Sociais (Multi-Reações & Comentários) */}
+                    <div className="p-3.5 space-y-3">
+                      {/* Pílulas de Reações com Contagem Ativa */}
+                      <div className="flex items-center justify-between gap-2">
+                        {/* Dock de Reação Rápida 4 Emojis */}
+                        <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/[0.08]">
+                          {REACTIONS.map((r) => {
+                            const isSelected = myReaction === r.key;
+                            const count = counts[r.key];
+                            return (
+                              <button
+                                key={r.key}
+                                onClick={() => handleToggleReaction(post.id, r.key)}
+                                className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
+                                  isSelected
+                                    ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
+                                    : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                                }`}
+                                title={`Reagir com ${r.label}`}
+                              >
+                                <span>{r.emoji}</span>
+                                {count > 0 && <span className="text-[11px]">{count}</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
 
-                        {/* Comentários com contador real */}
-                        <button
-                          onClick={() => handleOpenComments(post)}
-                          className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
-                        >
-                          <MessageSquare className="w-4 h-4 text-zinc-400" />
-                          <span>{commentsCount} {commentsCount === 1 ? 'comentário' : 'comentários'}</span>
-                        </button>
+                        {/* Botões Secundários: Comentários e Denúncia */}
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleOpenComments(post)}
+                            className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer bg-white/[0.04] hover:bg-white/[0.08] px-3 py-1.5 rounded-xl border border-white/[0.08]"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                            <span>{commentsCount}</span>
+                          </button>
 
-                        {/* Denunciar */}
-                        <button
-                          onClick={() => {
-                            if (!currentUser) return;
-                            setReportTargetPost(post);
-                          }}
-                          className="ml-auto text-[10px] font-mono text-zinc-600 hover:text-white cursor-pointer"
-                          title="Sinalizar foto suspeita"
-                        >
-                          [ DENUNCIAR ]
-                        </button>
+                          <button
+                            onClick={() => {
+                              if (!currentUser) return;
+                              setReportTargetPost(post);
+                            }}
+                            className="text-[10px] font-mono text-zinc-600 hover:text-rose-400 cursor-pointer p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                            title="Sinalizar foto suspeita"
+                          >
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </div>
 
                       {post.caption && (
-                        <p className="text-xs text-zinc-300 font-sans">
+                        <p className="text-xs text-zinc-300 font-sans leading-relaxed pt-0.5">
                           <span className="font-bold text-white mr-1.5">
                             {post.students?.full_name?.split(' ')[0]}:
                           </span>
@@ -827,10 +996,27 @@ export default function StudentSocialFeedPage() {
                   );
                 })
               )}
+              <div ref={commentsEndRef} />
+            </div>
+
+            {/* Chips de Incentivo Rápido (1-Touch) */}
+            <div className="pt-2">
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 no-scrollbar">
+                {QUICK_PRAISE_CHIPS.map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => setCommentText(chip)}
+                    className="text-[11px] font-sans font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/30 hover:bg-white/10 shrink-0 transition-all cursor-pointer active:scale-95"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Input para envio de comentário */}
-            <form onSubmit={handleSendComment} className="pt-3 flex items-center gap-2 border-t border-white/[0.08]">
+            <form onSubmit={handleSendComment} className="pt-2 flex items-center gap-2 border-t border-white/[0.08]">
               <Input
                 type="text"
                 placeholder="Escreva um comentário de incentivo..."
@@ -841,7 +1027,7 @@ export default function StudentSocialFeedPage() {
               <button
                 type="submit"
                 disabled={submittingComment || !commentText.trim()}
-                className="mono-button-primary px-4 h-10 text-xs font-mono flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
+                className="mono-button-primary px-4 h-10 text-xs font-mono flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 shrink-0"
               >
                 {submittingComment ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

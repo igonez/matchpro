@@ -15,8 +15,8 @@ import {
   LogOut, 
   Sparkles, 
   ChevronRight,
-  ShieldCheck,
-  Target
+  Target,
+  Award
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
@@ -257,6 +257,13 @@ export function StudentBottomNav() {
           href: '/app/profile',
           icon: User,
           active: pathname === '/app/profile',
+        },
+        {
+          title: 'Conquistas & Medalhas',
+          subtitle: 'Badges de mérito e ofensiva',
+          href: '/app/profile',
+          icon: Award,
+          active: false,
         },
       ],
     },

@@ -28,6 +28,8 @@ import { createClient } from '@/lib/supabase/client';
 import { TransformationVaultModal } from '@/components/student/transformation-vault-modal';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { AchievementsGrid } from '@/components/student/achievements-grid';
+import { getStudentAchievementsWithProgress, StudentAchievementStatus, DEFAULT_ACHIEVEMENTS } from '@/lib/achievements';
 
 export default function StudentProfilePage() {
   const router = useRouter();
@@ -39,6 +41,7 @@ export default function StudentProfilePage() {
   const [standing, setStanding] = useState<any>(null);
   const [streakDays, setStreakDays] = useState<number>(0);
   const [submissionsCount, setSubmissionsCount] = useState(0);
+  const [achievementsList, setAchievementsList] = useState<StudentAchievementStatus[]>([]);
   const [userPhotos, setUserPhotos] = useState<any[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
   const [vaultData, setVaultData] = useState<any>(null);
@@ -152,12 +155,60 @@ export default function StudentProfilePage() {
         // 5. Fotos enviadas pelo aluno
         const { data: submissionsData, count } = await supabase
           .from('student_submissions')
-          .select('id, photo_url, caption, status, submitted_at, missions(title, points)', { count: 'exact' })
+          .select('id, photo_url, caption, status, submitted_at, missions(title, category, points_rewarded)', { count: 'exact' })
           .eq('student_id', user.id)
           .order('submitted_at', { ascending: false });
 
         setSubmissionsCount(count || 0);
         setUserPhotos(submissionsData || []);
+
+        let wCount = 0;
+        let cCount = 0;
+        let mCount = 0;
+        (submissionsData || []).forEach((s: any) => {
+          if (s.status === 'approved') {
+            const cat = s.missions?.category;
+            if (cat === 'treino') wCount++;
+            if (cat === 'cardio') cCount++;
+            if (cat === 'refeicao') mCount++;
+          }
+        });
+
+        // 6. Ranking atual na turma
+        let currentRank = 1;
+        if (ch?.id) {
+          const { data: allStandings } = await supabase
+            .from('leaderboard_standings')
+            .select('student_id, total_points')
+            .eq('challenge_id', ch.id)
+            .order('total_points', { ascending: false });
+
+          if (allStandings && allStandings.length > 0) {
+            const idx = allStandings.findIndex((s: any) => s.student_id === user.id);
+            currentRank = idx !== -1 ? idx + 1 : allStandings.length + 1;
+          }
+
+          // 7. Avaliar Conquistas e Medalhas de Mérito
+          const { list, newlyUnlocked } = await getStudentAchievementsWithProgress(
+            supabase,
+            user.id,
+            ch.id,
+            {
+              streakDays: gamifData?.current_streak || 0,
+              totalPoints: standingData?.total_points || 0,
+              totalSubmissions: count || 0,
+              workoutCount: wCount,
+              cardioCount: cCount,
+              mealCount: mCount,
+              currentRank,
+            }
+          );
+
+          setAchievementsList(list);
+          if (newlyUnlocked.length > 0) {
+            showToast(`🏆 Nova conquista: ${newlyUnlocked[0].title}! (+${newlyUnlocked[0].points_reward} XP)`);
+          }
+        }
 
         if (ch) {
           const { data: vault } = await supabase
@@ -344,6 +395,32 @@ export default function StudentProfilePage() {
           </div>
         </Card>
       )}
+
+      {/* 🏅 CONQUISTAS & MEDALHAS DA ARENA (Sistema de Mérito Limpo) */}
+      <div className="space-y-3 relative z-10">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono flex items-center gap-1.5">
+            <Award className="h-4 w-4 text-amber-300" />
+            <span>Conquistas & Medalhas</span>
+          </span>
+          <span className="text-[11px] font-mono text-zinc-400">
+            {achievementsList.filter((a) => a.isUnlocked).length}/{achievementsList.length || DEFAULT_ACHIEVEMENTS.length}
+          </span>
+        </div>
+
+        <AchievementsGrid
+          achievements={
+            achievementsList.length > 0
+              ? achievementsList
+              : DEFAULT_ACHIEVEMENTS.map((a) => ({
+                  ...a,
+                  isUnlocked: false,
+                  currentValue: 0,
+                  progressPercent: 0,
+                }))
+          }
+        />
+      </div>
 
       {/* FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
       <div

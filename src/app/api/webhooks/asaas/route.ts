@@ -1,16 +1,25 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ASAAS_CONFIG } from '@/lib/asaas/config';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 
+function safeCompare(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
 export async function POST(request: Request) {
   try {
-    // 1. Validação Rigorosa de Autenticidade do Webhook (Fail-Closed)
-    const authToken = request.headers.get('asaas-access-token');
+    // 1. Validação Rigorosa de Autenticidade do Webhook (Timing-Safe & Fail-Closed)
+    const authToken = request.headers.get('asaas-access-token') || '';
     const expectedSecret = ASAAS_CONFIG.webhookSecret;
 
-    if (!expectedSecret || !authToken || authToken !== expectedSecret) {
-      console.warn('[Asaas Webhook] Tentativa de acesso não autorizada ou secret não configurado.');
+    if (!expectedSecret || !authToken || !safeCompare(authToken, expectedSecret)) {
+      console.warn('[Asaas Webhook] Tentativa de acesso não autorizada ao webhook.');
       return NextResponse.json({ error: 'Unauthorized webhook call' }, { status: 401 });
     }
 
@@ -18,15 +27,32 @@ export async function POST(request: Request) {
     const event = payload?.event;
     const payment = payload?.payment;
 
-    console.log(`[Asaas Webhook] Evento verificado: ${event}`, payment?.id);
+    const eventId = payload?.id || `${event}_${payment?.id || Date.now()}`;
+    console.log(`[Asaas Webhook] Evento verificado: ${event} [${eventId}]`);
 
-    if (!payment?.id) {
+    // 2. Verificação de Idempotência (Evita duplicidade ao reenviar webhooks)
+    try {
+      const { data: alreadyProcessed } = await supabaseAdmin
+        .from('processed_webhooks')
+        .select('event_id')
+        .eq('event_id', eventId)
+        .maybeSingle();
+
+      if (alreadyProcessed) {
+        console.log(`[Asaas Webhook] Evento ${eventId} já processado anteriormente. Ignorando reexecução.`);
+        return NextResponse.json({ success: true, duplicate: true });
+      }
+    } catch (idemErr) {
+      console.warn('[Asaas Webhook] Aviso ao verificar processed_webhooks:', idemErr);
+    }
+
+    if (!payment?.id && !payload?.subscription) {
       return NextResponse.json({ received: true });
     }
 
-    // 2. Eventos de Pagamento Aprovado / Confirmado
+    // 3. Eventos de Pagamento Aprovado / Confirmado
     if (event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED') {
-      // 2.1. Atualizar transação na tabela de pagamentos via admin
+      // 3.1. Atualizar transação na tabela de pagamentos via admin
       const { data: updatedPayment, error: paymentUpdateError } = await supabaseAdmin
         .from('payments')
         .update({
@@ -41,7 +67,7 @@ export async function POST(request: Request) {
         console.error('[Asaas Webhook] Erro ao atualizar status de pagamento:', paymentUpdateError);
       }
 
-      // 2.2. Se for inscrição de aluno em desafio, garantir liberação imediata
+      // 3.2. Se for inscrição de aluno em desafio, garantir liberação imediata
       if (updatedPayment?.challenge_id && updatedPayment?.student_id) {
         const { error: partError } = await supabaseAdmin
           .from('challenge_participants')
@@ -165,6 +191,20 @@ export async function POST(request: Request) {
           .eq('challenge_id', refundedPayment.challenge_id)
           .eq('student_id', refundedPayment.student_id);
       }
+    }
+
+    // 7. Registrar evento como processado para garantir idempotência futura
+    try {
+      await supabaseAdmin.from('processed_webhooks').upsert(
+        {
+          event_id: eventId,
+          event_type: event || 'UNKNOWN',
+          processed_at: new Date().toISOString(),
+        },
+        { onConflict: 'event_id' }
+      );
+    } catch (whErr) {
+      console.warn('[Asaas Webhook] Aviso ao gravar log de idempotência:', whErr);
     }
 
     return NextResponse.json({ success: true });

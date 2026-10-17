@@ -57,10 +57,7 @@ export function Monochrome3DBackground() {
       });
     }
 
-    let time = 0;
-
     const render = () => {
-      time += 0.008;
       // Suavização do mouse
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
@@ -121,7 +118,7 @@ export function Monochrome3DBackground() {
       const centerX = width / 2;
       const centerY = height / 2;
 
-      for (let p of particles) {
+      for (const p of particles) {
         p.z -= p.speed;
         if (p.z <= 10) {
           p.z = 1000;

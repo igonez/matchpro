@@ -122,11 +122,11 @@ Retorne estritamente um objeto JSON com esta estrutura:
       throw new Error('Informe imageBase64 ou imageUrl.');
     }
 
-    // Modelo oficial atualizado do Gemini (gemini-3.8-flash com fallback)
+    // Modelo oficial atualizado do Gemini (gemini-2.5-flash com fallback para gemini-2.0-flash)
     let response: any;
     try {
       response = await geminiClient.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-2.5-flash',
         contents: [
           {
             role: 'user',
@@ -143,9 +143,9 @@ Retorne estritamente um objeto JSON com esta estrutura:
         ],
       });
     } catch (primaryErr: any) {
-      console.warn('Falha no modelo gemini-3.8-flash, tentando gemini-3.5-flash-lite:', primaryErr?.message);
+      console.warn('Falha no modelo gemini-2.5-flash, tentando gemini-2.0-flash:', primaryErr?.message);
       response = await geminiClient.models.generateContent({
-        model: 'gemini-3.5-flash-lite',
+        model: 'gemini-2.0-flash',
         contents: [
           {
             role: 'user',
@@ -169,15 +169,13 @@ Retorne estritamente um objeto JSON com esta estrutura:
     return JSON.parse(cleanJson);
   } catch (error: any) {
     console.error('Erro na análise com Gemini:', error?.message || error);
-    const isMeal = category === 'refeicao' || String(category).toLowerCase().includes('refei');
     return {
-      isValid: true,
-      summary: isMeal ? 'Refeição identificada e validada.' : 'Atividade física registrada com sucesso.',
-      estimatedMacros: isMeal
-        ? { calories: '480 kcal', protein: '32g', carbs: '45g', fats: '14g' }
-        : { calories: 'N/A', protein: 'N/A', carbs: 'N/A', fats: 'N/A' },
-      feedback: 'Registro confirmado! Continue mantendo a consistência no plano.',
-      complianceScore: 95,
+      isValid: false,
+      summary: 'Não foi possível analisar a imagem automaticamente.',
+      estimatedMacros: { calories: 'N/A', protein: 'N/A', carbs: 'N/A', fats: 'N/A' },
+      feedback: 'A imagem foi registrada e aguarda validação do treinador.',
+      complianceScore: 0,
+      requiresManualReview: true,
     };
   }
 }

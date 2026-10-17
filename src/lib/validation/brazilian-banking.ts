@@ -28,8 +28,8 @@ export function validateCPF(cpf: string): boolean {
   for (let i = 0; i < 9; i++) {
     sum += parseInt(digits.charAt(i), 10) * (10 - i);
   }
-  let rev = 11 - (sum % 11);
-  let digit1 = rev === 10 || rev === 11 ? 0 : rev;
+  const rev1 = 11 - (sum % 11);
+  const digit1 = rev1 === 10 || rev1 === 11 ? 0 : rev1;
   if (digit1 !== parseInt(digits.charAt(9), 10)) return false;
 
   // Segundo dígito verificador
@@ -37,8 +37,8 @@ export function validateCPF(cpf: string): boolean {
   for (let i = 0; i < 10; i++) {
     sum += parseInt(digits.charAt(i), 10) * (11 - i);
   }
-  rev = 11 - (sum % 11);
-  let digit2 = rev === 10 || rev === 11 ? 0 : rev;
+  const rev2 = 11 - (sum % 11);
+  const digit2 = rev2 === 10 || rev2 === 11 ? 0 : rev2;
   if (digit2 !== parseInt(digits.charAt(10), 10)) return false;
 
   return true;
@@ -61,8 +61,8 @@ export function validateCNPJ(cnpj: string): boolean {
   for (let i = 0; i < 12; i++) {
     sum += parseInt(digits.charAt(i), 10) * weights1[i];
   }
-  let remainder = sum % 11;
-  let digit1 = remainder < 2 ? 0 : 11 - remainder;
+  const remainder1 = sum % 11;
+  const digit1 = remainder1 < 2 ? 0 : 11 - remainder1;
   if (digit1 !== parseInt(digits.charAt(12), 10)) return false;
 
   // Segundo dígito verificador
@@ -71,8 +71,8 @@ export function validateCNPJ(cnpj: string): boolean {
   for (let i = 0; i < 13; i++) {
     sum += parseInt(digits.charAt(i), 10) * weights2[i];
   }
-  remainder = sum % 11;
-  let digit2 = remainder < 2 ? 0 : 11 - remainder;
+  const remainder2 = sum % 11;
+  const digit2 = remainder2 < 2 ? 0 : 11 - remainder2;
   if (digit2 !== parseInt(digits.charAt(13), 10)) return false;
 
   return true;

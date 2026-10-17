@@ -164,7 +164,7 @@ export async function getStudentAchievementsWithProgress(
   }
 
   // Buscar conquistas já desbloqueadas no Supabase
-  let unlockedMap: Record<string, string> = {};
+  const unlockedMap: Record<string, string> = {};
   try {
     const { data: userUnlocked } = await supabase
       .from('student_achievements')

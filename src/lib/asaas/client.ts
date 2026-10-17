@@ -7,6 +7,7 @@ import {
   AsaasSubaccountInput,
   AsaasSubaccountResponse
 } from './config';
+import QRCode from 'qrcode';
 
 /**
  * Cliente HTTP para a API v3 do Asaas (Sandbox e Produção)
@@ -297,7 +298,6 @@ export class AsaasClient {
       const payload = '00020101021226830014br.gov.bcb.pix2561pix-sandbox.asaas.com/qr/v2/mock5204000053039865802BR5920ArenaFitPro Plataforma6009Sao Paulo62070503***6304E7A1';
       let encodedImage = '';
       try {
-        const QRCode = require('qrcode');
         const url = await QRCode.toDataURL(payload, { margin: 1, width: 256 });
         encodedImage = url.replace(/^data:image\/png;base64,/, '');
       } catch (e) {

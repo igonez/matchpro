@@ -171,30 +171,25 @@ export function StudentBottomNav() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      const res = await fetch('/api/submissions/simple-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          missionId: mission.id,
+          challengeId: mission.challenge_id || null,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        showToast(json?.error || 'Erro ao registrar check-in.');
+        return;
+      }
+
       // Remoção otimista da lista rápida
       setPendingMissions((prev) => prev.filter((m) => m.id !== mission.id));
       showToast(`"${mission.title}" concluída! +${mission.points_rewarded} XP`);
-
-      const nowIso = new Date().toISOString();
-      const { error } = await supabase.from('student_submissions').insert({
-        challenge_id: mission.challenge_id || null,
-        mission_id: mission.id,
-        student_id: user.id,
-        status: 'approved',
-        photo_url: 'simple_click',
-        submitted_at: nowIso,
-        client_captured_at: nowIso,
-      });
-
-      if (error && (error.message.includes('column') || error.message.includes('schema cache'))) {
-        await supabase.from('student_submissions').insert({
-          mission_id: mission.id,
-          student_id: user.id,
-          status: 'approved',
-          photo_url: 'simple_click',
-          client_captured_at: nowIso,
-        });
-      }
 
       // Notificar páginas (como a Home) para recarregar
       if (typeof window !== 'undefined') {
@@ -202,7 +197,7 @@ export function StudentBottomNav() {
       }
     } catch (err: any) {
       console.error('Erro no check-in rápido:', err);
-      showToast('Check-in concluído!');
+      showToast('Erro ao registrar check-in.');
     }
   };
 

@@ -14,11 +14,10 @@ export async function GET(request: Request) {
     
     if (!error && data?.user) {
       const user = data.user;
-      const targetRole = roleParam || user.user_metadata?.role || 'student';
       const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuário ArenaFitPro';
       const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
 
-      // Verificar se já existe perfil em professionals ou students
+      // 1. Verificar registros existentes no banco de dados (Fonte da Verdade)
       const { data: prof } = await supabase
         .from('professionals')
         .select('id')
@@ -31,8 +30,29 @@ export async function GET(request: Request) {
         .eq('id', user.id)
         .maybeSingle();
 
-      const isExistingProf = !!prof;
-      const effectiveRole = isExistingProf ? 'professional' : targetRole;
+      // Prevenção de Elevação de Privilégio:
+      // Se já for aluno cadastrado, NÃO permite transitar para treinador via URL param
+      let effectiveRole: 'professional' | 'student';
+
+      if (prof) {
+        effectiveRole = 'professional';
+      } else if (student) {
+        effectiveRole = 'student';
+      } else {
+        // Usuário novo: define papel inicial baseado na intenção do cadastro
+        effectiveRole = roleParam === 'professional' || user.user_metadata?.role === 'professional'
+          ? 'professional'
+          : 'student';
+      }
+
+      const isProduction = process.env.NODE_ENV === 'production';
+      const cookieOptions = {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax' as const,
+        httpOnly: true,
+        secure: isProduction,
+      };
 
       if (effectiveRole === 'professional') {
         if (!prof) {
@@ -46,11 +66,7 @@ export async function GET(request: Request) {
           data: { role: 'professional' }
         });
         const redirectRes = NextResponse.redirect(`${origin}${safeNext || '/dashboard'}`);
-        redirectRes.cookies.set('arena_role', 'professional', {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365,
-          sameSite: 'lax',
-        });
+        redirectRes.cookies.set('arena_role', 'professional', cookieOptions);
         return redirectRes;
       } else {
         if (!student) {
@@ -64,11 +80,7 @@ export async function GET(request: Request) {
           data: { role: 'student' }
         });
         const redirectRes = NextResponse.redirect(`${origin}${safeNext || '/app'}`);
-        redirectRes.cookies.set('arena_role', 'student', {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365,
-          sameSite: 'lax',
-        });
+        redirectRes.cookies.set('arena_role', 'student', cookieOptions);
         return redirectRes;
       }
     }
@@ -77,4 +89,3 @@ export async function GET(request: Request) {
   // Se falhar o exchange, envia de volta ao login
   return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
 }
-

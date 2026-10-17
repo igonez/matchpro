@@ -527,49 +527,30 @@ function StudentMissionsContent() {
         missions: { category: mission.category },
       };
 
-      setSubmissions((prev) => ({ ...prev, [mission.id]: newSub }));
-      setTodaySubmissions((prev) => [...prev, newSub]);
+      const res = await fetch('/api/submissions/simple-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          missionId: mission.id,
+          challengeId: currentChallengeId,
+          caption: 'Check-in de hábito diário',
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        showToast(json?.error || 'Erro ao registrar check-in.');
+        return;
+      }
+
+      const confirmedSub = json.submission || newSub;
+      setSubmissions((prev) => ({ ...prev, [mission.id]: confirmedSub }));
+      setTodaySubmissions((prev) => [...prev, confirmedSub]);
       showToast(`"${mission.title}" concluída! +${mission.points_rewarded} XP`);
-
-      const nowIso = new Date().toISOString();
-      let { data, error } = await supabase
-        .from('student_submissions')
-        .insert({
-          challenge_id: currentChallengeId,
-          mission_id: mission.id,
-          student_id: user.id,
-          status: 'approved',
-          photo_url: 'simple_click',
-          submitted_at: nowIso,
-          client_captured_at: nowIso,
-        })
-        .select()
-        .single();
-
-      if (error && (error.message.includes('column') || error.message.includes('schema cache'))) {
-        const fallbackRes = await supabase
-          .from('student_submissions')
-          .insert({
-            mission_id: mission.id,
-            student_id: user.id,
-            status: 'approved',
-            photo_url: 'simple_click',
-            client_captured_at: nowIso,
-          })
-          .select()
-          .single();
-        data = fallbackRes.data;
-        error = fallbackRes.error;
-      }
-
-      if (error) {
-        console.warn('Submissão gravada localmente com fallback:', error.message);
-      } else if (data) {
-        setSubmissions((prev) => ({ ...prev, [mission.id]: data }));
-      }
     } catch (err: any) {
       console.error('Erro no check-in 1-toque:', err);
-      showToast('Check-in concluído!');
+      showToast('Erro ao registrar check-in.');
     }
   };
 

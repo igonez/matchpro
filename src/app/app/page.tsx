@@ -463,21 +463,21 @@ export default function StudentHomePage() {
 
   const handleSimpleCheckin = async (task: any) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      const res = await fetch('/api/submissions/simple-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          missionId: task.id,
+          challengeId: challenge?.id || null,
+          caption: 'Check-in direto 1-toque confirmado',
+        }),
+      });
 
-      const payload: any = {
-        mission_id: task.id,
-        student_id: user.id,
-        challenge_id: challenge?.id || null,
-        status: 'approved',
-        client_captured_at: new Date().toISOString(),
-        caption: 'Check-in direto 1-toque confirmado',
-      };
+      const json = await res.json();
 
-      const { error } = await supabase.from('student_submissions').insert(payload);
-      if (error) {
-        await supabase.from('student_submissions').insert({ ...payload, photo_url: 'simple_click' });
+      if (!res.ok) {
+        showToast(json?.error || 'Erro ao registrar check-in.');
+        return;
       }
 
       setTodayTasks((prev) =>

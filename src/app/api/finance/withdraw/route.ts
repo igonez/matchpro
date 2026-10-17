@@ -37,23 +37,32 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
     const requestedAmount = Number(body.amount || 0);
 
-    if (requestedAmount <= 0) {
+    if (requestedAmount < 5) {
       return NextResponse.json(
-        { error: 'Informe um valor válido maior que R$ 0,00 para saque.' },
+        { error: 'O valor mínimo para solicitação de saque Pix é de R$ 5,00.' },
         { status: 400 }
       );
     }
 
-    // 1. Calcular saldo real disponível (Total Líquido Recebido menos Saques anteriores)
-    const { data: payments } = await supabaseAdmin
+    // 1. Calcular saldo real liquidado disponível (Apenas pagamentos com status RECEIVED)
+    // Importante: status CONFIRMED (cartão/boleto pendente de liquidação) NÃO pode ser sacado.
+    const { data: payments, error: paymentsError } = await supabaseAdmin
       .from('payments')
       .select('net_coach_value')
       .eq('professional_id', user.id)
-      .in('status', ['RECEIVED', 'CONFIRMED']);
+      .eq('status', 'RECEIVED');
+
+    if (paymentsError) {
+      console.error('[Withdraw API] Erro ao consultar pagamentos liquidados:', paymentsError);
+      return NextResponse.json(
+        { error: 'Não foi possível consultar seu saldo liquidado no momento.' },
+        { status: 500 }
+      );
+    }
 
     const totalNet = (payments || []).reduce((acc: number, p: any) => acc + Number(p.net_coach_value || 0), 0);
 
-    // Buscar saques já realizados ou em processamento
+    // Buscar saques já realizados ou em processamento (COMPLETED ou PENDING)
     let totalWithdrawn = 0;
     try {
       const { data: pastWithdrawals } = await supabaseAdmin
@@ -64,7 +73,7 @@ export async function POST(request: Request) {
 
       totalWithdrawn = (pastWithdrawals || []).reduce((acc: number, w: any) => acc + Number(w.amount || 0), 0);
     } catch (wErr) {
-      console.warn('[Withdraw] Tabela withdrawals ainda não inicializada, fallback para 0:', wErr);
+      console.warn('[Withdraw API] Tabela withdrawals ainda não inicializada:', wErr);
     }
 
     const availableBalance = Math.max(0, Number((totalNet - totalWithdrawn).toFixed(2)));
@@ -72,38 +81,46 @@ export async function POST(request: Request) {
     if (requestedAmount > availableBalance) {
       return NextResponse.json(
         { 
-          error: `Saldo insuficiente. Seu saldo disponível para saque é de R$ ${availableBalance.toFixed(2)}.` 
+          error: `Saldo disponível insuficiente. Seu saldo disponível para saque é de R$ ${availableBalance.toFixed(2)}.` 
         },
         { status: 400 }
       );
     }
 
-    // 2. Executar transferência Pix via infraestrutura bancária Asaas
-    let asaasTransferId = `transf_pix_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    // 2. Executar transferência Pix real via infraestrutura bancária Asaas
+    let transferRes: { id: string; status: string; value: number };
     try {
-      const transferRes = await AsaasClient.createPixTransfer({
+      transferRes = await AsaasClient.createPixTransfer({
         value: requestedAmount,
         pixAddressKey: prof.asaas_pix_key,
         pixAddressKeyType: pixValidation.type?.toUpperCase() || 'EVP',
         description: `Saque ArenaFitPro - ${prof.full_name || 'Coach'}`,
       });
-      if (transferRes?.id) {
-        asaasTransferId = transferRes.id;
+
+      if (!transferRes?.id) {
+        throw new Error('O banco Asaas não retornou o identificador da transferência.');
       }
     } catch (transfErr: any) {
-      console.warn('[Withdraw API] Aviso ao emitir transferência Pix no Asaas:', transfErr?.message);
+      console.error('[Withdraw API] Falha na emissão de transferência Pix no Asaas:', transfErr?.message);
+      return NextResponse.json(
+        { 
+          error: `Falha na transferência bancária: ${transfErr?.message || 'A instituição bancária recusou a transação.'}` 
+        },
+        { status: 502 }
+      );
     }
 
-    // 3. Registrar o saque na tabela withdrawals via supabaseAdmin
-    try {
-      await supabaseAdmin.from('withdrawals').insert({
-        professional_id: user.id,
-        amount: requestedAmount,
-        pix_key: prof.asaas_pix_key,
-        asaas_transfer_id: asaasTransferId,
-        status: 'COMPLETED',
-      });
-    } catch (insertErr) {
+    // 3. Registrar o saque na tabela withdrawals via supabaseAdmin com status retornado pelo Asaas
+    const finalStatus = transferRes.status === 'PENDING' ? 'PENDING' : 'COMPLETED';
+    const { error: insertErr } = await supabaseAdmin.from('withdrawals').insert({
+      professional_id: user.id,
+      amount: requestedAmount,
+      pix_key: prof.asaas_pix_key,
+      asaas_transfer_id: transferRes.id,
+      status: finalStatus,
+    });
+
+    if (insertErr) {
       console.error('[Withdraw API] Erro ao registrar saque no banco:', insertErr);
     }
 
@@ -111,14 +128,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Transferência Pix concluída com sucesso via infraestrutura bancária!',
+      message: 'Transferência Pix iniciada com sucesso via infraestrutura bancária!',
       data: {
-        transferId: asaasTransferId,
+        transferId: transferRes.id,
         pixKey: prof.asaas_pix_key,
         amount: requestedAmount,
         previousBalance: availableBalance,
         newBalance,
-        status: 'COMPLETED',
+        status: finalStatus,
         estimatedArrival: 'Em até 5 minutos (D+0)',
       },
     });

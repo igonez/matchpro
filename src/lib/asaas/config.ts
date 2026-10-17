@@ -3,10 +3,10 @@
 
 export const ASAAS_CONFIG = {
   baseUrl: process.env.ASAAS_BASE_URL || 'https://sandbox.asaas.com/api/v3',
-  apiKey: process.env.ASAAS_API_KEY || '$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwOjokYWFjaF8wMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDA=',
-  webhookSecret: process.env.ASAAS_WEBHOOK_SECRET || 'arenafit_webhook_secret_dev',
+  apiKey: process.env.ASAAS_API_KEY || '',
+  webhookSecret: process.env.ASAAS_WEBHOOK_SECRET || '',
   // Wallet ID da conta Master da plataforma ArenaFitPro
-  platformWalletId: process.env.ASAAS_PLATFORM_WALLET_ID || 'wallet_arenafit_master',
+  platformWalletId: process.env.ASAAS_PLATFORM_WALLET_ID || '',
 };
 
 export interface AsaasCustomerInput {

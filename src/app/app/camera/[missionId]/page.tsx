@@ -281,10 +281,8 @@ function CameraCaptureContent() {
         resolvedChallengeId = part?.challenge_id || null;
       }
 
-      // Se a IA julgou como não-conforme ou com pontuação muito baixa, envia como 'pending' para aprovação do treinador
-      const calculatedStatus = (aiAnalysisResult && (!aiAnalysisResult.isValid || aiAnalysisResult.complianceScore < 40))
-        ? 'pending'
-        : 'approved';
+      // Submissões fotográficas são enviadas com status 'pending' para a fila de auditoria do treinador
+      const calculatedStatus = 'pending';
 
       // Payload completo com tentativa de inserção
       const payload: any = {

@@ -283,6 +283,55 @@ export interface Database {
           created_at?: string
         }
       }
+      processed_webhooks: {
+        Row: {
+          event_id: string
+          event_type: string
+          processed_at: string
+        }
+        Insert: {
+          event_id: string
+          event_type: string
+          processed_at?: string
+        }
+        Update: {
+          event_id?: string
+          event_type?: string
+          processed_at?: string
+        }
+      }
+      withdrawals: {
+        Row: {
+          id: string
+          professional_id: string
+          amount: number
+          pix_key: string
+          asaas_transfer_id: string
+          status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED'
+          error_reason: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          professional_id: string
+          amount: number
+          pix_key: string
+          asaas_transfer_id: string
+          status?: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED'
+          error_reason?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          professional_id?: string
+          amount?: number
+          pix_key?: string
+          asaas_transfer_id?: string
+          status?: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED'
+          error_reason?: string | null
+          created_at?: string
+        }
+      }
     }
   }
 }

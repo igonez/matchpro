@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { Star, ShieldCheck, TrendingUp, Users, Flame } from 'lucide-react';
+import { Star, ShieldCheck, Flame } from 'lucide-react';
 
 export function SocialProofTestimonials() {
   const testimonials = [
@@ -64,7 +64,7 @@ export function SocialProofTestimonials() {
                 </div>
 
                 <p className="text-sm sm:text-base text-zinc-200 leading-relaxed mb-6 italic">
-                  "{item.quote}"
+                  &ldquo;{item.quote}&rdquo;
                 </p>
               </div>
 

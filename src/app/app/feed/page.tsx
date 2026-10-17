@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { createStudentNotification } from '@/lib/notifications';
 
 export type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
 
@@ -351,6 +352,19 @@ export default function StudentSocialFeedPage() {
             student_id: currentUser.id,
             reaction_type: reactionType,
           });
+
+        // Notificar autor da foto se for outro atleta
+        if (targetPost.student_id && targetPost.student_id !== currentUser.id && currentChallengeId) {
+          const emojiIcon = REACTIONS.find((r) => r.key === reactionType)?.emoji || '🔥';
+          createStudentNotification({
+            challengeId: currentChallengeId,
+            studentId: targetPost.student_id,
+            type: 'feed_reaction',
+            title: `Nova Reação ${emojiIcon}`,
+            message: `${userProfile?.full_name?.split(' ')[0] || 'Um atleta'} reagiu com ${emojiIcon} no seu check-in!`,
+            link: '/app/feed',
+          });
+        }
       }
     } catch (err) {
       console.error('Erro ao atualizar reação:', err);
@@ -467,6 +481,18 @@ export default function StudentSocialFeedPage() {
             return p;
           })
         );
+
+        // Notificar autor da foto se for outro atleta
+        if (activeCommentPost.student_id && activeCommentPost.student_id !== currentUser.id && currentChallengeId) {
+          createStudentNotification({
+            challengeId: currentChallengeId,
+            studentId: activeCommentPost.student_id,
+            type: 'feed_comment',
+            title: isCoach ? '⚡ Feedback do Coach!' : 'Novo Comentário no seu Check-in',
+            message: `${authorName}: "${commentText.trim().slice(0, 60)}"`,
+            link: '/app/feed',
+          });
+        }
       }
     } catch (err: any) {
       console.error('Erro ao postar comentário:', err);

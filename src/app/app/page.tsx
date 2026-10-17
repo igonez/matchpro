@@ -24,8 +24,11 @@ import {
   Utensils, 
   Droplets,
   ChevronRight,
-  Circle
+  Circle,
+  Bell
 } from 'lucide-react';
+import { NotificationsDrawer } from '@/components/student/notifications-drawer';
+import { checkStreakRisk, sendBrowserNotification } from '@/lib/notifications';
 
 export default function StudentHomePage() {
   const router = useRouter();
@@ -63,11 +66,58 @@ export default function StudentHomePage() {
   const [listCounts, setListCounts] = useState<Record<string, { done: number; total: number }>>({});
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // Central de Notificações
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [unreadNotifsCount, setUnreadNotifsCount] = useState(0);
+
   const [loading, setLoading] = useState(true);
   const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return !sessionStorage.getItem('arena_booted');
   });
+
+  // Carregar contagem de notificações não lidas em tempo real
+  useEffect(() => {
+    if (!student?.id) return;
+
+    async function loadUnreadCount() {
+      try {
+        const { count, error } = await supabase
+          .from('student_notifications')
+          .select('*', { count: 'exact', head: true })
+          .eq('student_id', student.id)
+          .eq('is_read', false);
+
+        if (!error && count !== null) {
+          setUnreadNotifsCount(count);
+        }
+      } catch (e) {
+        // Silencioso
+      }
+    }
+
+    loadUnreadCount();
+
+    const channel = supabase
+      .channel(`unread_count_${student.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'student_notifications',
+          filter: `student_id=eq.${student.id}`,
+        },
+        () => {
+          loadUnreadCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [student?.id, supabase]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
@@ -420,6 +470,23 @@ export default function StudentHomePage() {
     }
   };
 
+  const streakRisk = useMemo(() => {
+    const completedToday = todayTasks.filter((t) => t.isCompleted).length;
+    return checkStreakRisk({ todayCompletedCount: completedToday });
+  }, [todayTasks]);
+
+  useEffect(() => {
+    if (streakRisk.isAtRisk && typeof window !== 'undefined') {
+      const alerted = sessionStorage.getItem('arena_streak_alert_sent');
+      if (!alerted) {
+        sessionStorage.setItem('arena_streak_alert_sent', 'true');
+        sendBrowserNotification('🔥 ArenaFit: Ofensiva em Risco!', {
+          body: streakRisk.alertMessage,
+        });
+      }
+    }
+  }, [streakRisk.isAtRisk, streakRisk.alertMessage]);
+
   if (loading && isInitialBoot) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
@@ -460,12 +527,29 @@ export default function StudentHomePage() {
           </div>
         </div>
 
-        {/* Badge Streak Vibrante */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)]">
-          <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-          <span className="text-xs font-bold text-amber-300 tracking-wide flex items-center gap-1 font-mono">
-            🔥 {currentStreak}d ofensiva
-          </span>
+        <div className="flex items-center gap-2">
+          {/* Sino de Notificações com Badge */}
+          <button
+            type="button"
+            onClick={() => setIsNotificationsOpen(true)}
+            className="relative h-9 w-9 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0"
+            title="Notificações e Alertas"
+          >
+            <Bell className="h-4 w-4" />
+            {unreadNotifsCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-amber-400 text-black text-[9px] font-mono font-black flex items-center justify-center shadow-[0_0_10px_rgba(251,191,36,0.6)]">
+                {unreadNotifsCount > 9 ? '9+' : unreadNotifsCount}
+              </span>
+            )}
+          </button>
+
+          {/* Badge Streak Vibrante */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)] shrink-0">
+            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-xs font-bold text-amber-300 tracking-wide flex items-center gap-1 font-mono">
+              🔥 {currentStreak}d ofensiva
+            </span>
+          </div>
         </div>
       </div>
 
@@ -535,6 +619,30 @@ export default function StudentHomePage() {
         </div>
       ) : (
         <>
+          {/* Alerta de Urgência de Streak (Proteção das 20h) */}
+          {streakRisk.isAtRisk && (
+            <div className="relative z-10 p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/40 via-red-950/30 to-black border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.2)] flex items-center justify-between gap-3 animate-pulse">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0">
+                  <Flame className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-amber-200">
+                    Ofensiva em Risco! ({currentStreak} dias ativos)
+                  </p>
+                  <p className="text-[11px] text-zinc-300">
+                    Faltam {streakRisk.hoursLeft}h para a meia-noite. Faça seu check-in hoje!
+                  </p>
+                </div>
+              </div>
+              <Link href="/app/missions">
+                <button className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer shadow-sm">
+                  Salvar 🔥
+                </button>
+              </Link>
+            </div>
+          )}
+
           {/* 1.5 Banner de Aviso em Destaque do Treinador */}
           {topAnnouncement && (
             <div className="relative z-10">
@@ -890,6 +998,16 @@ export default function StudentHomePage() {
           <span>✓</span>
           <span>{toastMessage}</span>
         </div>
+      )}
+
+      {/* Central de Notificações Drawer */}
+      {student && (
+        <NotificationsDrawer
+          isOpen={isNotificationsOpen}
+          onClose={() => setIsNotificationsOpen(false)}
+          studentId={student.id}
+          challengeId={challenge?.id}
+        />
       )}
     </div>
   );

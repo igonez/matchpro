@@ -117,7 +117,7 @@ export function checkStreakRisk({
     return {
       isAtRisk: true,
       hoursLeft,
-      alertMessage: `⚠️ Restam apenas ${hoursLeft}h para a virada do dia! Complete sua missão de hoje para não zerar sua ofensiva.`,
+      alertMessage: `Restam apenas ${hoursLeft}h para a virada do dia! Complete sua meta para preservar sua ofensiva.`,
     };
   }
 

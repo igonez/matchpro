@@ -32,41 +32,41 @@ export interface ReactionDef {
 export const REACTIONS: ReactionDef[] = [
   {
     key: 'fire',
-    emoji: '🔥',
-    label: 'Fogo',
-    activeBg: 'bg-amber-500/20 text-amber-300',
-    activeBorder: 'border-amber-500/40',
+    emoji: 'RESPEITO',
+    label: 'Respeito',
+    activeBg: 'bg-amber-400/20 text-amber-300',
+    activeBorder: 'border-amber-400/40',
   },
   {
     key: 'muscle',
-    emoji: '💪',
+    emoji: 'FORÇA',
     label: 'Força',
-    activeBg: 'bg-emerald-500/20 text-emerald-300',
-    activeBorder: 'border-emerald-500/40',
+    activeBg: 'bg-emerald-400/20 text-emerald-300',
+    activeBorder: 'border-emerald-400/40',
   },
   {
     key: 'clap',
-    emoji: '👏',
-    label: 'Palmas',
-    activeBg: 'bg-sky-500/20 text-sky-300',
-    activeBorder: 'border-sky-500/40',
+    emoji: 'DISCIPLINA',
+    label: 'Disciplina',
+    activeBg: 'bg-sky-400/20 text-sky-300',
+    activeBorder: 'border-sky-400/40',
   },
   {
     key: 'heart',
-    emoji: '❤️',
-    label: 'Coração',
-    activeBg: 'bg-rose-500/20 text-rose-300',
-    activeBorder: 'border-rose-500/40',
+    emoji: 'APOIO',
+    label: 'Apoio',
+    activeBg: 'bg-rose-400/20 text-rose-300',
+    activeBorder: 'border-rose-400/40',
   },
 ];
 
 export const COACH_PRAISE_CHIPS = [
-  'Excelente treino! 👏',
-  'Orgulho da dedicação! 🔥',
-  'Mantenha a constância! 💪',
-  'Execução impecável! ✨',
-  'Bora bater a meta! 🚀',
-  'Treino de campeão! 🏆',
+  'Excelente treino! Foco total mantido.',
+  'Orgulho da dedicação e constância.',
+  'Mantenha a constância e disciplina.',
+  'Execução impecável. Parabéns.',
+  'Meta diária batida com sucesso.',
+  'Padrão profissional de entrega.',
 ];
 
 export default function DashboardFeedPage() {
@@ -559,8 +559,8 @@ export default function DashboardFeedPage() {
             {/* Header do Sheet */}
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold">
-                  ⚡ COACH
+                <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest uppercase">
+                  COACH
                 </span>
                 <span className="font-bold text-xs text-white font-mono uppercase tracking-wider">
                   Feedback para {activeCommentPost.students?.full_name?.split(' ')[0]}

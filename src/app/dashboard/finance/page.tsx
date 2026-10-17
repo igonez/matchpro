@@ -1097,7 +1097,7 @@ export default function FinanceDashboardPage() {
                   disabled={upgradeLoading}
                   className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-xs"
                 >
-                  {upgradeLoading ? 'Confirmando...' : '✓ Já Efetuei o Pagamento PIX (Ativar Plano)'}
+                  {upgradeLoading ? 'Confirmando...' : 'Já Efetuei o Pagamento PIX (Ativar Plano)'}
                 </Button>
 
                 <Button
@@ -1125,7 +1125,7 @@ export default function FinanceDashboardPage() {
                       : 'text-zinc-400 hover:text-white'
                   }`}
                 >
-                  ⚡ PIX Recorrente (D+0)
+                  PIX Recorrente (D+0)
                 </button>
                 <button
                   type="button"
@@ -1136,7 +1136,7 @@ export default function FinanceDashboardPage() {
                       : 'text-zinc-400 hover:text-white'
                   }`}
                 >
-                  💳 Cartão de Crédito
+                  Cartão de Crédito
                 </button>
               </div>
 
@@ -1184,7 +1184,7 @@ export default function FinanceDashboardPage() {
                     />
                   </div>
                   <p className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
-                    🔒 Criptografia PCI Asaas • Renovação mensal sem bloqueio de limite
+                    Criptografia PCI Asaas • Renovação mensal sem bloqueio de limite
                   </p>
                 </div>
               )}
@@ -1212,8 +1212,8 @@ export default function FinanceDashboardPage() {
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-white text-base">Pro Coach</span>
                     {currentPlanTier === 'pro' ? (
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-mono">
-                        ✓ SEU PLANO ATUAL
+                      <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-mono uppercase tracking-wider">
+                        SEU PLANO ATUAL
                       </Badge>
                     ) : (
                       <Badge className="bg-white text-black font-extrabold border-0 text-[10px]">RECOMENDADO</Badge>

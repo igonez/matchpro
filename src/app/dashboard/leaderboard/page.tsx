@@ -303,8 +303,8 @@ function CoachLeaderboardContent() {
                     )}
                   </div>
                 </div>
-                <span className="absolute -top-2.5 -right-2.5 h-7 w-7 rounded-full bg-amber-400 text-black font-black text-sm flex items-center justify-center font-mono shadow-lg">
-                  👑
+                <span className="absolute -top-2.5 -right-2.5 h-6 w-6 rounded-full bg-amber-400 text-black font-black text-xs flex items-center justify-center font-mono shadow-lg">
+                  1
                 </span>
               </div>
               <p className="text-xs font-black text-white text-center truncate max-w-[100px]">
@@ -430,7 +430,11 @@ function CoachLeaderboardContent() {
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-white truncate flex items-center gap-1.5">
                             <span>{studentName}</span>
-                            {index === 0 && <span title="Líder Atual">👑</span>}
+                            {index === 0 && (
+                              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40 uppercase tracking-wider">
+                                LÍDER
+                              </span>
+                            )}
                           </p>
                           <p className="text-[11px] text-zinc-400 font-mono mt-0.5">
                             {item.approvedMissions || 0} {item.approvedMissions === 1 ? 'missão concluída' : 'missões concluídas'}

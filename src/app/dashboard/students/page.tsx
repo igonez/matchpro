@@ -587,9 +587,9 @@ export default function DashboardFinanceAndStudentsPage() {
                           {!isPaid && !isPending && (
                             <Badge
                               variant="outline"
-                              className="border-white/20 text-zinc-300 bg-white/5 text-[10px] font-mono cursor-pointer"
+                              className="border-white/20 text-zinc-300 bg-white/5 text-[10px] font-mono cursor-pointer uppercase tracking-wider"
                             >
-                              ✦ CORTESIA
+                              CORTESIA
                             </Badge>
                           )}
                         </button>

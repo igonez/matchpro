@@ -463,7 +463,7 @@ export default function StudentHomePage() {
         ...prev,
         total_points: (prev?.total_points || 0) + (task.points_rewarded || 10),
       }));
-      showToast(`✓ Check-in de "${task.title}" concluído! (+${task.points_rewarded || 10} XP)`);
+      showToast(`Check-in de "${task.title}" concluído! (+${task.points_rewarded || 10} XP)`);
     } catch (err: any) {
       console.error('Erro no check-in 1-toque:', err);
       showToast('Erro ao registrar check-in: ' + err.message);
@@ -480,7 +480,7 @@ export default function StudentHomePage() {
       const alerted = sessionStorage.getItem('arena_streak_alert_sent');
       if (!alerted) {
         sessionStorage.setItem('arena_streak_alert_sent', 'true');
-        sendBrowserNotification('🔥 ArenaFit: Ofensiva em Risco!', {
+        sendBrowserNotification('ArenaFit: Ofensiva em Risco', {
           body: streakRisk.alertMessage,
         });
       }
@@ -953,8 +953,8 @@ export default function StudentHomePage() {
 
       {/* Floating Instant Toast */}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-white text-black px-4 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <span>✓</span>
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-white text-black px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
           <span>{toastMessage}</span>
         </div>
       )}

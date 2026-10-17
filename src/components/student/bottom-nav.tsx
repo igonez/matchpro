@@ -145,7 +145,7 @@ export function StudentBottomNav() {
 
       // Remoção otimista da lista rápida
       setPendingMissions((prev) => prev.filter((m) => m.id !== mission.id));
-      showToast(`✓ "${mission.title}" concluída! +${mission.points_rewarded} XP`);
+      showToast(`"${mission.title}" concluída! +${mission.points_rewarded} XP`);
 
       await supabase.from('student_submissions').insert({
         mission_id: mission.id,
@@ -163,7 +163,7 @@ export function StudentBottomNav() {
       }
     } catch (err: any) {
       console.error('Erro no check-in rápido:', err);
-      showToast('✓ Check-in concluído!');
+      showToast('Check-in concluído!');
     }
   };
 
@@ -518,9 +518,9 @@ export function StudentBottomNav() {
                       );
                     }
                   }}
-                  className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-400 text-black font-bold text-xs hover:bg-emerald-300 transition-all shadow-md flex items-center gap-1 active:scale-95"
+                  className="shrink-0 px-3.5 py-1.5 rounded-xl bg-emerald-400 text-black font-mono font-bold text-xs hover:bg-emerald-300 transition-all shadow-md flex items-center gap-1 active:scale-95 uppercase tracking-wider"
                 >
-                  <span>Finalizar 📸</span>
+                  <span>Finalizar</span>
                 </button>
               </div>
             )}
@@ -529,17 +529,17 @@ export function StudentBottomNav() {
             <div className="space-y-2 overflow-y-auto flex-1 py-1">
               {pendingMissions.length === 0 && !activeSession ? (
                 <div className="text-center py-8 space-y-3">
-                  <div className="h-12 w-12 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto text-lg">
-                    ✓
+                  <div className="h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
+                    <CheckCircle className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-bold text-xs text-white">Todas as metas de hoje cumpridas!</p>
+                    <p className="font-bold text-xs text-white uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
                     <p className="text-[11px] text-zinc-400 mt-0.5">Excelente disciplina. Seu streak e XP estão garantidos.</p>
                   </div>
                   <Link
                     href="/app/missions"
                     onClick={() => setShowQuickSheet(false)}
-                    className="inline-block px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-zinc-300 hover:text-white transition-colors"
+                    className="inline-block px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
                   >
                     Ver cronograma da semana →
                   </Link>
@@ -553,15 +553,15 @@ export function StudentBottomNav() {
                   const isSimpleClick = valType === 'simple_click';
                   const isTimer = valType === 'timer' || (!m.validation_type && (m.category === 'treino' || m.category === 'cardio'));
 
-                  const catMeta: Record<string, { icon: string; label: string }> = {
-                    treino: { icon: '⚡', label: 'Treino' },
-                    cardio: { icon: '🏃', label: 'Cardio' },
-                    refeicao: { icon: '🥗', label: 'Nutrição' },
-                    habito: { icon: '💧', label: 'Hábito' },
+                  const catMeta: Record<string, { tag: string; label: string; color: string }> = {
+                    treino: { tag: 'TRN', label: 'Treino', color: 'border-amber-400/30 text-amber-300 bg-amber-400/10' },
+                    cardio: { tag: 'CRD', label: 'Cardio', color: 'border-cyan-400/30 text-cyan-300 bg-cyan-400/10' },
+                    refeicao: { tag: 'REF', label: 'Nutrição', color: 'border-emerald-400/30 text-emerald-300 bg-emerald-400/10' },
+                    habito: { tag: 'HAB', label: 'Hábito', color: 'border-purple-400/30 text-purple-300 bg-purple-400/10' },
                   };
 
-                  const icon = customList?.icon || catMeta[m.category]?.icon || '🎯';
-                  const listLabel = customList?.name || catMeta[m.category]?.label || m.category;
+                  const currentMeta = catMeta[m.category] || { tag: 'MET', label: m.category, color: 'border-white/10 text-white bg-white/5' };
+                  const listLabel = customList?.name || currentMeta.label;
 
                   return (
                     <div
@@ -570,16 +570,16 @@ export function StudentBottomNav() {
                       className="w-full p-3 rounded-2xl bg-zinc-950/60 border border-white/[0.08] hover:border-white/25 hover:bg-zinc-900/60 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="h-8 w-8 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 flex items-center justify-center text-xs shrink-0 transition-colors">
-                          {icon}
+                        <div className={`h-8 w-8 rounded-xl border flex items-center justify-center font-mono font-bold text-[10px] shrink-0 transition-colors ${currentMeta.color}`}>
+                          {currentMeta.tag}
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="font-bold text-xs text-white truncate">{m.title}</p>
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="text-[9px] font-mono text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+                            <span className="text-[9px] font-mono uppercase tracking-wider text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
                               {listLabel}
                             </span>
-                            <span className="text-[10px] font-mono font-bold text-zinc-400">
+                            <span className="text-[10px] font-mono font-bold text-amber-300">
                               +{m.points_rewarded} XP
                             </span>
                           </div>
@@ -594,17 +594,17 @@ export function StudentBottomNav() {
                               e.stopPropagation();
                               handleSimpleCheckin(m);
                             }}
-                            className="px-3 py-1.5 rounded-xl bg-white text-black font-bold text-xs hover:bg-zinc-200 transition-colors shadow-sm active:scale-95"
+                            className="px-3 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors shadow-sm active:scale-95 uppercase tracking-wider"
                           >
-                            Check-in ⚡
+                            Check-in
                           </button>
                         ) : isTimer ? (
-                          <span className="px-3 py-1.5 rounded-xl bg-amber-400 text-black font-bold text-xs flex items-center gap-1 shadow-sm">
-                            Iniciar ⏱️
+                          <span className="px-3 py-1.5 rounded-xl bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-1 shadow-sm uppercase tracking-wider">
+                            Iniciar Sessão
                           </span>
                         ) : (
-                          <span className="px-3 py-1.5 rounded-xl bg-white/10 text-white font-medium text-xs border border-white/15 flex items-center gap-1 group-hover:bg-white/20 transition-colors">
-                            Foto 📸
+                          <span className="px-3 py-1.5 rounded-xl bg-white/10 text-white font-mono font-medium text-xs border border-white/15 flex items-center gap-1 group-hover:bg-white/20 transition-colors uppercase tracking-wider">
+                            Foto
                           </span>
                         )}
                       </div>
@@ -619,8 +619,8 @@ export function StudentBottomNav() {
 
       {/* Toast Flutuante da Barra */}
       {toastMessage && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-white text-black px-4 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <span>✓</span>
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-white text-black px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
           <span>{toastMessage}</span>
         </div>
       )}

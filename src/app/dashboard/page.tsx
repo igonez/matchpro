@@ -370,12 +370,12 @@ export default function DashboardOverviewPage() {
         {atRiskStudents.length === 0 ? (
           <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between border-emerald-500/20 bg-emerald-950/10">
             <div>
-              <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                <span>✓</span> 100% de Presença na Turma
+              <p className="text-xs font-bold text-emerald-400 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 100% de Presença na Turma
               </p>
               <p className="text-xs text-zinc-400">Nenhum aluno está inativo há mais de 48 horas.</p>
             </div>
-            <span className="text-xs font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
               Em dia
             </span>
           </div>
@@ -401,8 +401,9 @@ export default function DashboardOverviewPage() {
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-rose-300 font-bold bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full">
-                        ⚠️ {item.days_inactive} dias sem foto
+                      <span className="text-xs text-rose-300 font-mono font-bold bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full flex items-center gap-1.5 uppercase tracking-wider">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                        {item.days_inactive} dias sem foto
                       </span>
                       <span className="text-xs text-zinc-400 font-medium">{item.challenge_title}</span>
                     </div>
@@ -511,7 +512,7 @@ export default function DashboardOverviewPage() {
                     </Link>
                     <Link href={`/dashboard/leaderboard?challengeId=${c.id}`}>
                       <button className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-white hover:text-amber-300">
-                        🏆 Ranking
+                        Ranking
                       </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>

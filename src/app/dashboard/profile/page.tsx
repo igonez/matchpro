@@ -493,12 +493,12 @@ export default function ProfessionalProfilePage() {
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase text-zinc-400 font-bold">Documento (KYC)</span>
                   {documentVerified ? (
-                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono">
-                      ✓ VERIFICADO
+                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono uppercase tracking-wider">
+                      VERIFICADO
                     </Badge>
                   ) : (
-                    <Badge className="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-mono">
-                      ⚠ PENDENTE
+                    <Badge className="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-mono uppercase tracking-wider">
+                      PENDENTE
                     </Badge>
                   )}
                 </div>
@@ -515,12 +515,12 @@ export default function ProfessionalProfilePage() {
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase text-zinc-400 font-bold">Telefone Celular</span>
                   {phoneVerified ? (
-                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono">
-                      ✓ VERIFICADO
+                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono uppercase tracking-wider">
+                      VERIFICADO
                     </Badge>
                   ) : (
-                    <Badge className="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-mono">
-                      ⚠ NÃO VERIFICADO
+                    <Badge className="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-mono uppercase tracking-wider">
+                      NÃO VERIFICADO
                     </Badge>
                   )}
                 </div>
@@ -546,8 +546,8 @@ export default function ProfessionalProfilePage() {
               <div className="p-4 rounded-xl border border-white/10 bg-black/40 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase text-zinc-400 font-bold">E-mail de Login</span>
-                  <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono">
-                    ✓ VERIFICADO
+                  <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono uppercase tracking-wider">
+                    VERIFICADO
                   </Badge>
                 </div>
                 <p className="text-xs text-zinc-300 font-mono truncate">

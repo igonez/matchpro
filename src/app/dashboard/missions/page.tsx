@@ -34,10 +34,10 @@ import { CustomDialog } from '@/components/ui/custom-dialog';
 import { createClient } from '@/lib/supabase/client';
 
 const DEFAULT_PRESET_LISTS = [
-  { id: 'preset-treino', key: 'treino', name: 'Treinos', icon: '⚡', color: 'amber', validation_type: 'timer', daily_limit: 1 },
-  { id: 'preset-cardio', key: 'cardio', name: 'Cardios', icon: '🏃', color: 'cyan', validation_type: 'timer', daily_limit: 1 },
-  { id: 'preset-refeicao', key: 'refeicao', name: 'Refeições', icon: '🥗', color: 'emerald', validation_type: 'photo', daily_limit: 4 },
-  { id: 'preset-habito', key: 'habito', name: 'Hábitos & Água', icon: '💧', color: 'purple', validation_type: 'simple_click', daily_limit: 0 },
+  { id: 'preset-treino', key: 'treino', name: 'Treinos', icon: 'TRN', color: 'amber', validation_type: 'timer', daily_limit: 1 },
+  { id: 'preset-cardio', key: 'cardio', name: 'Cardios', icon: 'CRD', color: 'cyan', validation_type: 'timer', daily_limit: 1 },
+  { id: 'preset-refeicao', key: 'refeicao', name: 'Refeições', icon: 'REF', color: 'emerald', validation_type: 'photo', daily_limit: 4 },
+  { id: 'preset-habito', key: 'habito', name: 'Hábitos & Água', icon: 'HAB', color: 'purple', validation_type: 'simple_click', daily_limit: 0 },
 ];
 
 function MissionsManagerContent() {
@@ -61,7 +61,7 @@ function MissionsManagerContent() {
   const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [editingList, setEditingList] = useState<any | null>(null);
   const [listName, setListName] = useState('');
-  const [listIcon, setListIcon] = useState('⚡');
+  const [listIcon, setListIcon] = useState('TRN');
   const [listValidationType, setListValidationType] = useState<'photo' | 'timer' | 'simple_click' | 'text'>('photo');
   const [listDailyLimit, setListDailyLimit] = useState('1');
   const [submittingList, setSubmittingList] = useState(false);
@@ -233,7 +233,7 @@ function MissionsManagerContent() {
   const handleOpenCreateListModal = () => {
     setEditingList(null);
     setListName('');
-    setListIcon('⚡');
+    setListIcon('TRN');
     setListValidationType('photo');
     setListDailyLimit('1');
     setIsListModalOpen(true);
@@ -242,7 +242,7 @@ function MissionsManagerContent() {
   const handleOpenEditListModal = (list: any) => {
     setEditingList(list);
     setListName(list.name);
-    setListIcon(list.icon || '⚡');
+    setListIcon(list.icon || 'TRN');
     setListValidationType(list.validation_type || 'photo');
     setListDailyLimit(list.daily_limit?.toString() || '1');
     setIsListModalOpen(true);
@@ -259,7 +259,7 @@ function MissionsManagerContent() {
         challenge_id: selectedChallengeId,
         name: listName.trim(),
         key: slugKey || 'custom',
-        icon: listIcon || '⚡',
+        icon: listIcon || 'TRN',
         validation_type: listValidationType,
         daily_limit: parseInt(listDailyLimit, 10) || 1,
         order_index: missionLists.length + 1,
@@ -721,12 +721,12 @@ function MissionsManagerContent() {
             size="sm"
             onClick={handleGenerateSmartTemplate}
             disabled={!selectedChallengeId || generatingTemplate}
-            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5"
+            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5 uppercase tracking-wider"
           >
             {generatingTemplate ? (
-              <span className="flex items-center gap-1.5 animate-pulse">⚡ Gerando...</span>
+              <span className="flex items-center gap-1.5 animate-pulse">Gerando...</span>
             ) : (
-              <span className="flex items-center gap-1.5">⚡ Gerar Template (4 Semanas)</span>
+              <span className="flex items-center gap-1.5">Gerar Template (4 Semanas)</span>
             )}
           </Button>
 
@@ -912,7 +912,9 @@ function MissionsManagerContent() {
               >
                 <div className="flex items-center justify-between gap-1.5">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-base shrink-0">{list.icon || '⚡'}</span>
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/5 border border-white/10 uppercase tracking-widest text-zinc-300 shrink-0">
+                      {list.key ? list.key.slice(0, 3).toUpperCase() : list.name.slice(0, 3).toUpperCase()}
+                    </span>
                     <span className="text-xs font-bold truncate">{list.name}</span>
                   </div>
                   <Badge className="bg-zinc-800 text-zinc-300 text-[10px] font-mono shrink-0">
@@ -920,15 +922,15 @@ function MissionsManagerContent() {
                   </Badge>
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] text-zinc-500 font-mono pt-1 border-t border-white/5">
+                <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono pt-1 border-t border-white/5 uppercase tracking-wider">
                   <span className="truncate">
                     {list.validation_type === 'timer'
-                      ? '⏱️ Cronômetro'
+                      ? 'Cronômetro'
                       : list.validation_type === 'simple_click'
-                      ? '⚡ 1-Toque'
+                      ? '1-Toque'
                       : list.validation_type === 'text'
-                      ? '✍️ Texto'
-                      : '📸 Foto'}
+                      ? 'Texto'
+                      : 'Foto'}
                   </span>
                   {!isPreset && (
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -966,7 +968,9 @@ function MissionsManagerContent() {
         <CardHeader className="pb-3 flex flex-row items-center justify-between gap-4">
           <div>
             <CardTitle className="text-base text-white flex items-center gap-2 tracking-tight">
-              <span>{currentActiveList?.icon || '⚡'}</span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white/10 border border-white/20 uppercase tracking-widest text-zinc-300">
+                {currentActiveList?.key ? currentActiveList.key.slice(0, 3).toUpperCase() : currentActiveList?.name?.slice(0, 3).toUpperCase() || 'LST'}
+              </span>
               <span>{currentActiveList?.name || 'Missões'} da Semana</span>
             </CardTitle>
             <CardDescription className="text-xs flex items-center gap-2 flex-wrap mt-0.5">
@@ -1028,9 +1032,9 @@ function MissionsManagerContent() {
                   size="sm"
                   onClick={handleGenerateSmartTemplate}
                   disabled={generatingTemplate}
-                  className="text-xs font-bold bg-white text-black hover:bg-zinc-200 rounded-xl shadow-md"
+                  className="text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 rounded-xl shadow-md uppercase tracking-wider"
                 >
-                  {generatingTemplate ? 'Gerando...' : '⚡ Gerar Template Oficial (4 Semanas)'}
+                  {generatingTemplate ? 'Gerando...' : 'Gerar Template Oficial (4 Semanas)'}
                 </Button>
               </div>
             </div>
@@ -1046,18 +1050,18 @@ function MissionsManagerContent() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-bold text-sm text-white">{m.title}</p>
                         {m.is_bonus && (
-                          <Badge className="bg-white/10 text-white border-white/20 text-[9px] font-mono">
-                            ★ Bônus
+                          <Badge className="bg-amber-400/10 text-amber-300 border-amber-400/20 text-[9px] font-mono tracking-wider uppercase font-bold">
+                            BÔNUS
                           </Badge>
                         )}
-                        <Badge variant="outline" className="border-white/15 text-zinc-300 text-[9px] font-mono">
+                        <Badge variant="outline" className="border-white/15 text-zinc-300 text-[9px] font-mono uppercase tracking-wider">
                           {m.validation_type === 'timer'
-                            ? '⏱️ Cronômetro'
+                            ? 'Cronômetro'
                             : m.validation_type === 'simple_click'
-                            ? '⚡ 1-Toque'
+                            ? '1-Toque'
                             : m.validation_type === 'text'
-                            ? '✍️ Texto'
-                            : '📸 Foto'}
+                            ? 'Texto'
+                            : 'Foto'}
                         </Badge>
                         {m.requires_cooldown && (
                           <Badge variant="outline" className="border-amber-500/25 text-amber-300 text-[9px] flex items-center gap-1 font-mono">
@@ -1117,20 +1121,20 @@ function MissionsManagerContent() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">Ícone / Emoji</label>
-            <div className="grid grid-cols-8 gap-1.5 p-2 rounded-xl bg-zinc-950 border border-white/10">
-              {['⚡', '🏃', '🥗', '💧', '💊', '🧘', '📖', '⚖️', '🎯', '🔥', '🏋️', '🍎', '🌙', '🥑', '🚴', '⭐'].map((emoji) => (
+            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">Identificador da Trilha (Tag Mono)</label>
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 p-2 rounded-xl bg-zinc-950 border border-white/10">
+              {['TRN', 'CRD', 'REF', 'HAB', 'REC', 'SUP', 'PES', 'MET'].map((tag) => (
                 <button
-                  key={emoji}
+                  key={tag}
                   type="button"
-                  onClick={() => setListIcon(emoji)}
-                  className={`h-9 w-9 rounded-lg flex items-center justify-center text-lg transition-all ${
-                    listIcon === emoji
-                      ? 'bg-white/20 border border-white/40 scale-110 shadow-sm'
-                      : 'hover:bg-white/5 opacity-70 hover:opacity-100'
+                  onClick={() => setListIcon(tag)}
+                  className={`h-9 rounded-lg flex items-center justify-center font-mono font-bold text-xs uppercase tracking-wider transition-all ${
+                    listIcon === tag
+                      ? 'bg-white text-black shadow-sm'
+                      : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  {emoji}
+                  {tag}
                 </button>
               ))}
             </div>
@@ -1144,10 +1148,10 @@ function MissionsManagerContent() {
                 onChange={(e: any) => setListValidationType(e.target.value)}
                 className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
               >
-                <option value="photo">📸 Foto Obrigatória</option>
-                <option value="timer">⏱️ Cronômetro de Sessão</option>
-                <option value="simple_click">⚡ Check-in 1-Toque (Sem foto)</option>
-                <option value="text">✍️ Relato em Texto</option>
+                <option value="photo">Foto Obrigatória</option>
+                <option value="timer">Cronômetro de Sessão</option>
+                <option value="simple_click">Check-in 1-Toque (Sem foto)</option>
+                <option value="text">Relato em Texto</option>
               </select>
             </div>
 
@@ -1236,10 +1240,10 @@ function MissionsManagerContent() {
                 onChange={(e: any) => setFormValidationType(e.target.value)}
                 className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
               >
-                <option value="photo">📸 Foto Obrigatória</option>
-                <option value="timer">⏱️ Cronômetro de Sessão</option>
-                <option value="simple_click">⚡ Check-in 1-Toque</option>
-                <option value="text">✍️ Relato em Texto</option>
+                <option value="photo">Foto Obrigatória</option>
+                <option value="timer">Cronômetro de Sessão</option>
+                <option value="simple_click">Check-in 1-Toque</option>
+                <option value="text">Relato em Texto</option>
               </select>
             </div>
           </div>
@@ -1294,7 +1298,7 @@ function MissionsManagerContent() {
                 onChange={(e) => setFormIsBonus(e.target.checked)}
                 className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
               />
-              <span>Marcar como Missão Extra / Bônus (★)</span>
+              <span>Marcar como Missão Extra / Bônus</span>
             </label>
           </div>
 

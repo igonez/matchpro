@@ -17,12 +17,24 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
 
   const categories = [
     { id: 'all', label: `Todas (${achievements.length})` },
-    { id: 'streak', label: '🔥 Ofensiva' },
-    { id: 'workout', label: '🏋️ Treino' },
-    { id: 'cardio', label: '🏃 Cardio' },
-    { id: 'nutrition', label: '🥗 Nutrição' },
-    { id: 'ranking', label: '🥇 Pódio' },
+    { id: 'streak', label: 'Ofensiva' },
+    { id: 'workout', label: 'Treino' },
+    { id: 'cardio', label: 'Cardio' },
+    { id: 'nutrition', label: 'Nutrição' },
+    { id: 'ranking', label: 'Pódio' },
   ];
+
+  const getBadgeColor = (category: string, isUnlocked: boolean) => {
+    if (!isUnlocked) return 'border-white/10 text-zinc-500 bg-white/5';
+    switch (category) {
+      case 'streak': return 'border-amber-400/40 text-amber-300 bg-amber-400/10 shadow-[0_0_15px_rgba(251,191,36,0.15)]';
+      case 'cardio': return 'border-cyan-400/40 text-cyan-300 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.15)]';
+      case 'nutrition': return 'border-emerald-400/40 text-emerald-300 bg-emerald-400/10 shadow-[0_0_15px_rgba(52,211,153,0.15)]';
+      case 'ranking': return 'border-amber-400/50 text-amber-200 bg-amber-500/20 shadow-[0_0_20px_rgba(251,191,36,0.25)]';
+      case 'points': return 'border-purple-400/40 text-purple-300 bg-purple-400/10 shadow-[0_0_15px_rgba(192,132,252,0.15)]';
+      default: return 'border-white/20 text-white bg-white/10';
+    }
+  };
 
   const filtered = activeCategory === 'all'
     ? achievements
@@ -37,8 +49,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
             <Trophy className="h-5 w-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span>Medalhas da Arena</span>
+            <h4 className="text-xs font-bold text-white flex items-center gap-1.5 uppercase tracking-wider">
+              <span>Medalhas de Mérito</span>
               <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.2 rounded">
                 +{totalPoints} XP
               </span>
@@ -54,7 +66,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
           <span className="text-sm font-black font-mono text-white">
             {Math.round((unlockedCount / (achievements.length || 1)) * 100)}%
           </span>
-          <span className="text-[9px] font-mono text-zinc-500 block uppercase">
+          <span className="text-[9px] font-mono text-zinc-500 block uppercase tracking-widest">
             Completude
           </span>
         </div>
@@ -66,7 +78,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all uppercase tracking-wider ${
               activeCategory === cat.id
                 ? 'bg-white text-black shadow-sm'
                 : 'bg-zinc-900/70 border border-white/10 text-zinc-400 hover:text-white'
@@ -92,23 +104,22 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
             >
               <div className="flex items-start justify-between gap-2">
                 <div
-                  className={`h-11 w-11 rounded-2xl flex items-center justify-center text-xl shrink-0 transition-transform group-hover:scale-110 ${
+                  className={`h-11 w-11 rounded-xl flex items-center justify-center font-mono font-black text-xs uppercase tracking-wider shrink-0 transition-transform group-hover:scale-105 border ${getBadgeColor(
+                    ach.category,
                     ach.isUnlocked
-                      ? 'bg-white/10 border border-white/20 shadow-inner'
-                      : 'bg-white/5 border border-white/10 grayscale'
-                  }`}
+                  )}`}
                 >
                   {ach.icon}
                 </div>
 
                 <div className="shrink-0">
                   {ach.isUnlocked ? (
-                    <span className="h-5 w-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-xs">
-                      ✓
+                    <span className="h-5 w-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-400" />
                     </span>
                   ) : (
-                    <span className="h-5 w-5 rounded-full bg-white/5 border border-white/10 text-zinc-500 flex items-center justify-center text-[10px]">
-                      <Lock className="h-3 w-3" />
+                    <span className="h-5 w-5 rounded-full bg-white/5 border border-white/10 text-zinc-500 flex items-center justify-center">
+                      <Lock className="h-2.5 w-2.5" />
                     </span>
                   )}
                 </div>
@@ -159,12 +170,15 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
               <X className="h-4 w-4" />
             </button>
 
-            {/* Ícone Grande */}
-            <div className="mx-auto w-20 h-20 rounded-3xl bg-gradient-to-b from-white/15 to-white/5 border border-white/20 flex items-center justify-center text-4xl shadow-2xl relative">
+            {/* Insígnia Grande */}
+            <div className={`mx-auto w-20 h-20 rounded-3xl border flex items-center justify-center font-mono font-black text-2xl tracking-widest shadow-2xl relative ${getBadgeColor(
+              selectedAchievement.category,
+              selectedAchievement.isUnlocked
+            )}`}>
               {selectedAchievement.icon}
               {selectedAchievement.isUnlocked && (
-                <span className="absolute -bottom-2 -right-2 h-7 w-7 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-xs shadow-md">
-                  ✓
+                <span className="absolute -bottom-2 -right-2 h-7 w-7 rounded-full bg-emerald-400 text-black flex items-center justify-center shadow-md">
+                  <CheckCircle2 className="h-4 w-4 text-black stroke-[3]" />
                 </span>
               )}
             </div>

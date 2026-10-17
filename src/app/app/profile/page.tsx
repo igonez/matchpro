@@ -549,10 +549,10 @@ export default function StudentProfilePage() {
                   <span className="text-[10px] font-bold text-white line-clamp-1">
                     {item.missions?.title || 'Check-in'}
                   </span>
-                  <span className={`text-[8px] font-black uppercase font-mono ${
-                    item.status === 'approved' ? 'text-emerald-400' : item.status === 'rejected' ? 'text-red-400' : 'text-amber-300'
+                  <span className={`text-[8px] font-black uppercase font-mono tracking-wider ${
+                    item.status === 'approved' ? 'text-emerald-400' : item.status === 'rejected' ? 'text-rose-400' : 'text-amber-300'
                   }`}>
-                    {item.status === 'approved' ? '✓ Aprovada' : item.status === 'rejected' ? '✕ Recusada' : '⏳ Em Análise'}
+                    {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Em Análise'}
                   </span>
                 </div>
               </button>
@@ -590,19 +590,19 @@ export default function StudentProfilePage() {
                   : ''}
               </span>
               <Badge
-                className={`text-[10px] font-mono ${
+                className={`text-[10px] font-mono uppercase tracking-wider ${
                   selectedPhoto.status === 'approved'
                     ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
                     : selectedPhoto.status === 'rejected'
-                    ? 'bg-red-500/15 text-red-400 border-red-500/30'
+                    ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
                     : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                 }`}
               >
                 {selectedPhoto.status === 'approved'
-                  ? '✓ APROVADA'
+                  ? 'APROVADA'
                   : selectedPhoto.status === 'rejected'
-                  ? '✕ RECUSADA'
-                  : '⏳ EM ANÁLISE'}
+                  ? 'RECUSADA'
+                  : 'EM ANÁLISE'}
               </Badge>
             </div>
 

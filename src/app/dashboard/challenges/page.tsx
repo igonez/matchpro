@@ -671,7 +671,7 @@ export default function ChallengesManagementPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  `🏆 Venha participar do desafio "${inviteModalChallenge.title}" comigo no ArenaFitPro!\n\nGaranta sua vaga no link oficial:\n${
+                  `Venha participar do desafio "${inviteModalChallenge.title}" comigo no ArenaFitPro!\n\nGaranta sua vaga no link oficial:\n${
                     typeof window !== 'undefined'
                       ? `${window.location.origin}/join/${inviteModalChallenge.id}`
                       : ''

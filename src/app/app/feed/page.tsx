@@ -631,36 +631,27 @@ export default function StudentSocialFeedPage() {
       </div>
 
       {/* Abas Superiores: Feed de Fotos vs Mural da Turma */}
-      <div className="grid grid-cols-2 p-1 rounded-2xl bg-zinc-900/90 border border-white/10 relative z-10">
+      <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-white/10 relative z-10">
         <button
           onClick={() => setActiveTab('feed')}
-          className={`py-2 text-xs font-mono font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`py-2 text-xs font-mono tracking-wider transition-all cursor-pointer ${
             activeTab === 'feed'
-              ? 'bg-white text-black shadow-lg'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-white text-black font-black rounded-lg shadow-md'
+              : 'text-zinc-400 hover:text-white font-medium'
           }`}
         >
-          <Camera className="h-3.5 w-3.5" />
-          <span>Fotos ({posts.length})</span>
+          FOTOS ({posts.length})
         </button>
 
         <button
           onClick={() => setActiveTab('chat')}
-          className={`py-2 text-xs font-mono font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`py-2 text-xs font-mono tracking-wider transition-all cursor-pointer ${
             activeTab === 'chat'
-              ? 'bg-white text-black shadow-lg'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-white text-black font-black rounded-lg shadow-md'
+              : 'text-zinc-400 hover:text-white font-medium'
           }`}
         >
-          <MessageSquare className="h-3.5 w-3.5" />
-          <span>Mural / Chat</span>
-          {messages.length > 0 && (
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold font-mono ${
-              activeTab === 'chat' ? 'bg-black text-white' : 'bg-white/20 text-white'
-            }`}>
-              {messages.length}
-            </span>
-          )}
+          MURAL DA TURMA {messages.length > 0 && `(${messages.length})`}
         </button>
       </div>
 
@@ -748,11 +739,11 @@ export default function StudentSocialFeedPage() {
                         className="w-full h-full object-cover transition-transform duration-300 group-active:scale-[0.99]"
                       />
 
-                      {/* Burst Animation no Duplo Toque */}
+                      {/* Feedback Visual Sutil no Duplo Toque */}
                       {burstReaction && burstReaction.postId === post.id && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30 animate-in fade-in zoom-in duration-200">
-                          <span className="text-7xl animate-pulse select-none drop-shadow-[0_0_30px_rgba(251,146,60,0.9)]">
-                            {burstReaction.emoji}
+                          <span className="text-xs font-mono font-black tracking-widest text-black bg-white px-3.5 py-1.5 rounded-full uppercase shadow-2xl">
+                            RECONHECIDO
                           </span>
                         </div>
                       )}
@@ -762,54 +753,41 @@ export default function StudentSocialFeedPage() {
                       </div>
                     </div>
 
-                    {/* Ações Sociais (Multi-Reações & Comentários) */}
+                    {/* Ações Sociais Tipográficas */}
                     <div className="p-3.5 space-y-3">
-                      {/* Pílulas de Reações com Contagem Ativa */}
                       <div className="flex items-center justify-between gap-2">
-                        {/* Dock de Reação Rápida 4 Emojis */}
-                        <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/[0.08]">
-                          {REACTIONS.map((r) => {
-                            const isSelected = myReaction === r.key;
-                            const count = counts[r.key];
-                            return (
-                              <button
-                                key={r.key}
-                                onClick={() => handleToggleReaction(post.id, r.key)}
-                                className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
-                                  isSelected
-                                    ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
-                                    : 'text-zinc-400 hover:text-white hover:bg-white/10'
-                                }`}
-                                title={`Reagir com ${r.label}`}
-                              >
-                                <span>{r.emoji}</span>
-                                {count > 0 && <span className="text-[11px]">{count}</span>}
-                              </button>
-                            );
-                          })}
-                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleToggleReaction(post.id, 'fire')}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${
+                              myReaction
+                                ? 'bg-white text-black font-black'
+                                : 'bg-white/[0.04] text-zinc-400 hover:text-white border border-white/10 font-bold'
+                            }`}
+                          >
+                            <span>RECONHECER</span>
+                            {likes.length > 0 && <span className="ml-1.5 font-mono">{likes.length}</span>}
+                          </button>
 
-                        {/* Botões Secundários: Comentários e Denúncia */}
-                        <div className="flex items-center gap-1.5">
                           <button
                             onClick={() => handleOpenComments(post)}
-                            className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer bg-white/[0.04] hover:bg-white/[0.08] px-3 py-1.5 rounded-xl border border-white/[0.08]"
+                            className="px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider text-zinc-400 hover:text-white bg-white/[0.04] border border-white/10 transition-all cursor-pointer font-bold"
                           >
-                            <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
-                            <span>{commentsCount}</span>
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              if (!currentUser) return;
-                              setReportTargetPost(post);
-                            }}
-                            className="text-[10px] font-mono text-zinc-600 hover:text-rose-400 cursor-pointer p-1.5 rounded-lg hover:bg-white/5 transition-colors"
-                            title="Sinalizar foto suspeita"
-                          >
-                            <AlertTriangle className="h-3.5 w-3.5" />
+                            <span>COMENTÁRIOS</span>
+                            {commentsCount > 0 && <span className="ml-1.5 font-mono text-white">{commentsCount}</span>}
                           </button>
                         </div>
+
+                        <button
+                          onClick={() => {
+                            if (!currentUser) return;
+                            setReportTargetPost(post);
+                          }}
+                          className="text-[9px] font-mono tracking-wider text-zinc-600 hover:text-rose-400 cursor-pointer uppercase transition-colors px-2 py-1"
+                          title="Sinalizar foto suspeita"
+                        >
+                          SINALIZAR
+                        </button>
                       </div>
 
                       {post.caption && (

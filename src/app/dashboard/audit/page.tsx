@@ -4,26 +4,6 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import {
-  Sparkles,
-  Brain,
-  CheckCircle2,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-  CheckCheck,
-  Loader2,
-  Layers,
-  LayoutGrid,
-  X,
-  Check,
-  RotateCcw,
-  Flame,
-  ShieldAlert,
-  ArrowLeft,
-  ArrowRight
-} from 'lucide-react';
 
 export default function FiscalizacaoPage() {
   const supabase = createClient();
@@ -119,9 +99,8 @@ export default function FiscalizacaoPage() {
 
       let finalSubmissions: any[] = subsData || [];
 
-      // Fallback defensivo caso o join direto de submission_reports falhe
+      // Fallback defensivo
       if (subsError) {
-        console.warn('Fallback na consulta de submissões:', subsError.message);
         const { data: fallbackSubs } = await supabase
           .from('student_submissions')
           .select(`
@@ -152,7 +131,7 @@ export default function FiscalizacaoPage() {
         finalSubmissions = fallbackSubs || [];
       }
 
-      // 3. Garantir carregamento resiliente das denúncias de fotos da tabela submission_reports
+      // Carregamento resiliente das denúncias de fotos
       if (finalSubmissions.length > 0) {
         const subIds = finalSubmissions.map((s) => s.id);
         const { data: directReports } = await supabase
@@ -187,7 +166,7 @@ export default function FiscalizacaoPage() {
     fetchData();
   }, [selectedChallengeId]);
 
-  // Lista filtrada e ordenada (Denunciadas e Pendentes sempre no topo para revisão prioritária)
+  // Lista filtrada e ordenada (Denunciadas e Pendentes no topo)
   const filteredSubmissions = useMemo(() => {
     return submissions
       .filter((s) => {
@@ -216,7 +195,6 @@ export default function FiscalizacaoPage() {
     return submissions.filter((s) => s.status === 'pending').length;
   }, [submissions]);
 
-  // Ações de Auditoria
   const handleApprovePhoto = async (sub: any) => {
     setProcessingId(sub.id);
     const prevStatus = sub.status;
@@ -232,9 +210,9 @@ export default function FiscalizacaoPage() {
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'approved' } : item))
       );
       setSwipeHistory((prev) => [...prev, { id: sub.id, prevStatus }]);
-      showToast(`Foto de "${sub.students?.full_name}" aprovada!`);
+      showToast(`Submissão de ${sub.students?.full_name} aprovada.`);
     } catch (err: any) {
-      showToast('Erro ao aprovar foto: ' + err.message);
+      showToast('Erro ao aprovar: ' + err.message);
     } finally {
       setProcessingId(null);
     }
@@ -257,10 +235,10 @@ export default function FiscalizacaoPage() {
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'rejected' } : item))
       );
       setSwipeHistory((prev) => [...prev, { id: sub.id, prevStatus }]);
-      showToast(`Foto de "${sub.students?.full_name}" invalidada.`);
+      showToast(`Submissão de ${sub.students?.full_name} invalidada.`);
       setInvalidateTarget(null);
     } catch (err: any) {
-      showToast('Erro ao invalidar foto: ' + err.message);
+      showToast('Erro ao invalidar: ' + err.message);
     } finally {
       setProcessingId(null);
     }
@@ -283,7 +261,7 @@ export default function FiscalizacaoPage() {
       );
       setSwipeHistory((prev) => prev.slice(0, -1));
       setSwipeIndex((prev) => Math.max(0, prev - 1));
-      showToast('Ação desfeita com sucesso!');
+      showToast('Decisão anterior desfeita.');
     } catch (err: any) {
       showToast('Erro ao desfazer: ' + err.message);
     } finally {
@@ -327,7 +305,7 @@ export default function FiscalizacaoPage() {
       .map((s) => s.id);
 
     if (pendingIds.length === 0) {
-      showToast('Nenhuma submissão pendente para aprovar.');
+      showToast('Nenhuma submissão pendente.');
       return;
     }
 
@@ -343,7 +321,7 @@ export default function FiscalizacaoPage() {
       setSubmissions((prev) =>
         prev.map((s) => (pendingIds.includes(s.id) ? { ...s, status: 'approved' } : s))
       );
-      showToast(`${pendingIds.length} submissão(ões) aprovada(s) em lote!`);
+      showToast(`${pendingIds.length} submissões aprovadas em lote.`);
     } catch (err: any) {
       showToast('Erro ao aprovar em lote: ' + err.message);
     } finally {
@@ -351,7 +329,7 @@ export default function FiscalizacaoPage() {
     }
   };
 
-  // Atalhos de teclado no modo Swipe
+  // Teclado
   const currentSwipeSub = filteredSubmissions[swipeIndex];
 
   const handleKeyDown = useCallback(
@@ -379,67 +357,66 @@ export default function FiscalizacaoPage() {
   }, [handleKeyDown]);
 
   return (
-    <div className="space-y-6 relative pb-16">
-      {/* Background 3D Animado */}
+    <div className="space-y-8 relative pb-24 max-w-6xl mx-auto">
       <Monochrome3DBackground />
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
-              Fiscalização & IA
+      {/* Header Editorial */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 relative z-10 pt-2 border-b border-white/[0.08] pb-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+              AUDITORIA & INTEGRIDADE
             </span>
-            <span className="text-xs text-zinc-400 font-medium">Auditoria de Check-ins</span>
+            <span className="h-1 w-1 rounded-full bg-zinc-600" />
+            <span className="text-[10px] font-mono text-zinc-500 uppercase">
+              PAINEL DO TREINADOR
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Auditoria & Fiscalização de Fotos
+          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Fiscalização de Check-ins
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Revise fotos com visão computacional, averigue denúncias da comunidade e aprove via Swipe rápido.
+          <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
+            Aferição de registros fotográficos, verificação técnica por IA e validação de pontuação de atletas.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto flex-wrap">
-          {/* Seletor de Turma */}
+        <div className="flex items-center gap-3 flex-wrap">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl bg-black border border-white/15 text-white text-xs px-3 font-medium focus:outline-none focus:border-white/30"
+              className="h-10 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/30"
             >
-              <option value="all">Todas as Minhas Turmas ({challenges.length})</option>
+              <option value="all">TODAS AS TURMAS ({challenges.length})</option>
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.title}
+                  {c.title.toUpperCase()}
                 </option>
               ))}
             </select>
           )}
 
-          {/* Alternador de Modo: Swipe vs Grade */}
-          <div className="flex items-center p-1 rounded-xl bg-zinc-900 border border-white/10 shrink-0">
+          {/* Segmented Control Limpo (Swipe vs Grade) */}
+          <div className="flex items-center p-1 rounded-xl bg-zinc-950 border border-white/10">
             <button
               onClick={() => setViewMode('swipe')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
                 viewMode === 'swipe'
-                  ? 'bg-white text-black shadow-md'
-                  : 'text-zinc-400 hover:text-white'
+                  ? 'bg-white text-black font-black'
+                  : 'text-zinc-400 hover:text-white font-medium'
               }`}
             >
-              <Layers className="h-3.5 w-3.5" />
-              <span>Modo Swipe</span>
+              SWIPE
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-white text-black shadow-md'
-                  : 'text-zinc-400 hover:text-white'
+                  ? 'bg-white text-black font-black'
+                  : 'text-zinc-400 hover:text-white font-medium'
               }`}
             >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              <span>Grade</span>
+              GRADE
             </button>
           </div>
 
@@ -447,548 +424,290 @@ export default function FiscalizacaoPage() {
             <button
               onClick={handleBatchApprovePending}
               disabled={batchApproving || loading}
-              className="mono-button-primary px-3.5 py-2 text-xs font-semibold justify-center flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
+              className="px-4 py-2 text-xs font-mono tracking-wider bg-white text-black hover:bg-zinc-200 font-black rounded-xl transition-colors cursor-pointer"
             >
-              {batchApproving ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <CheckCheck className="h-3.5 w-3.5" />
-              )}
-              <span>Aprovar Fila ({pendingCount})</span>
+              {batchApproving ? 'PROCESSANDO...' : `APROVAR FILA (${pendingCount})`}
             </button>
           )}
 
           <button
             onClick={fetchData}
             disabled={loading}
-            className="mono-button-secondary px-3.5 py-2 text-xs font-semibold justify-center flex cursor-pointer"
+            className="px-3.5 py-2 text-xs font-mono text-zinc-400 hover:text-white border border-white/10 rounded-xl transition-colors cursor-pointer"
           >
-            {loading ? 'Atualizando...' : 'Recarregar'}
+            {loading ? 'ATUALIZANDO...' : 'RECARREGAR'}
           </button>
         </div>
       </div>
 
-      {/* Alerta Destacado de Denúncias da Turma */}
+      {/* Alerta Tipográfico de Sinalizações */}
       {reportedCount > 0 && (
-        <div className="mono-glass-card p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10 border-rose-500/40 bg-rose-950/30 shadow-[0_0_25px_rgba(244,63,94,0.15)]">
-          <div className="flex items-start sm:items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0">
-              <ShieldAlert className="h-5 w-5 animate-pulse" />
+        <div className="p-4 rounded-2xl bg-zinc-950 border border-rose-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+              <span className="text-[10px] font-mono tracking-widest text-rose-400 uppercase font-bold">
+                SINALIZAÇÃO PELA COMUNIDADE ({reportedCount})
+              </span>
             </div>
-            <div>
-              <p className="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-                {reportedCount} foto(s) sinalizada(s) pela comunidade por suspeita
-              </p>
-              <p className="text-xs text-zinc-300 mt-0.5">
-                Alunos relataram inconsistências nestas submissões. Elas aparecem priorizadas no topo da fila.
-              </p>
-            </div>
+            <p className="text-xs text-zinc-300">
+              Registros sinalizados por outros participantes aguardam sua conferência.
+            </p>
           </div>
           <button
             onClick={() => {
               setFilter('reported');
               setSwipeIndex(0);
             }}
-            className="mono-button-primary px-4 py-2 text-xs font-semibold shrink-0 bg-rose-500 hover:bg-rose-400 text-white cursor-pointer"
+            className="px-4 py-2 text-xs font-mono tracking-wider bg-rose-500/15 border border-rose-500/40 text-rose-300 hover:bg-rose-500/25 font-bold rounded-xl transition-colors shrink-0 cursor-pointer"
           >
-            Averiguar Denúncias Agora ({reportedCount})
+            FILTRAR SINALIZADAS
           </button>
         </div>
       )}
 
-      {/* Filtros em Abas */}
-      <div className="flex items-center gap-2 relative z-10 overflow-x-auto no-scrollbar pb-1">
-        <button
-          onClick={() => {
-            setFilter('all');
-            setSwipeIndex(0);
-          }}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all cursor-pointer ${
-            filter === 'all'
-              ? 'bg-zinc-800 text-white font-bold border border-white/20'
-              : 'bg-black/60 border border-white/10 text-zinc-400 hover:text-white'
-          }`}
-        >
-          Todas ({submissions.length})
-        </button>
-        <button
-          onClick={() => {
-            setFilter('pending');
-            setSwipeIndex(0);
-          }}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
-            filter === 'pending'
-              ? 'bg-amber-600 text-white font-bold border border-amber-400 shadow-md'
-              : 'bg-black/60 border border-amber-500/30 text-amber-400 hover:text-amber-300'
-          }`}
-        >
-          <span>⏳ Pendentes</span>
-          {pendingCount > 0 && (
-            <span className="px-1.5 py-0.5 bg-amber-900/80 text-amber-200 text-[10px] rounded-full font-mono font-bold">
-              {pendingCount}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => {
-            setFilter('reported');
-            setSwipeIndex(0);
-          }}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
-            filter === 'reported'
-              ? 'bg-rose-600 text-white font-bold border border-rose-400 shadow-md'
-              : 'bg-black/60 border border-rose-500/30 text-rose-400 hover:text-rose-300'
-          }`}
-        >
-          <span>🚨 Denunciadas</span>
-          {reportedCount > 0 && (
-            <span className="px-1.5 py-0.5 bg-rose-900/80 text-rose-200 text-[10px] rounded-full font-mono font-bold">
-              {reportedCount}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => {
-            setFilter('approved');
-            setSwipeIndex(0);
-          }}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all cursor-pointer ${
-            filter === 'approved'
-              ? 'bg-zinc-800 text-white font-bold border border-white/20'
-              : 'bg-black/60 border border-white/10 text-zinc-400 hover:text-white'
-          }`}
-        >
-          Aprovadas
-        </button>
-        <button
-          onClick={() => {
-            setFilter('rejected');
-            setSwipeIndex(0);
-          }}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-medium shrink-0 transition-all cursor-pointer ${
-            filter === 'rejected'
-              ? 'bg-zinc-800 text-white font-bold border border-white/20'
-              : 'bg-black/60 border border-white/10 text-zinc-400 hover:text-white'
-          }`}
-        >
-          Invalidadas
-        </button>
+      {/* Abas de Filtro Tipográficas */}
+      <div className="flex items-center gap-1 border-b border-white/[0.08] pb-3 relative z-10 overflow-x-auto no-scrollbar">
+        {[
+          { key: 'all', label: 'TODAS', count: submissions.length },
+          { key: 'pending', label: 'PENDENTES', count: pendingCount },
+          { key: 'reported', label: 'SINALIZADAS', count: reportedCount },
+          { key: 'approved', label: 'APROVADAS' },
+          { key: 'rejected', label: 'INVALIDADAS' },
+        ].map((tab) => {
+          const active = filter === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => {
+                setFilter(tab.key as any);
+                setSwipeIndex(0);
+              }}
+              className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${
+                active
+                  ? 'bg-white text-black font-black'
+                  : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              <span>{tab.label}</span>
+              {typeof tab.count === 'number' && (
+                <span className={`ml-2 text-[10px] ${active ? 'text-zinc-600' : 'text-zinc-600'}`}>
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* Conteúdo Principal */}
       {loading ? (
-        <div className="py-24 flex flex-col items-center justify-center gap-3 text-zinc-400 text-xs font-mono relative z-10">
-          <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          CARREGANDO SUBMISSÕES E DENÚNCIAS...
+        <div className="py-28 text-center text-xs font-mono text-zinc-500 tracking-widest uppercase relative z-10">
+          SINCRONIZANDO REGISTROS DE AUDITORIA...
         </div>
       ) : filteredSubmissions.length === 0 ? (
-        <div className="mono-glass-card p-14 text-center text-xs font-mono text-zinc-400 relative z-10 space-y-2">
-          <p className="text-white font-bold text-sm">Nenhuma submissão encontrada neste filtro.</p>
-          <p className="text-zinc-500">Alterne entre as abas acima para auditar outras submissões.</p>
+        <div className="p-16 rounded-3xl border border-white/5 bg-zinc-950/60 text-center space-y-2 relative z-10">
+          <p className="text-sm font-bold text-white">Nenhum registro encontrado neste filtro.</p>
+          <p className="text-xs text-zinc-500 font-mono">Alterne entre as opções acima para auditar outros status.</p>
         </div>
       ) : viewMode === 'swipe' ? (
-        /* ==================== MODO SWIPE (DECK TINDER) ==================== */
-        <div className="relative z-10 max-w-md mx-auto w-full pt-2">
-          {/* Instruções e Contador */}
-          <div className="flex items-center justify-between mb-3 px-1 text-xs font-mono text-zinc-400">
+        /* ==================== MODO SWIPE (MINIMALISTA) ==================== */
+        <div className="relative z-10 max-w-lg mx-auto w-full pt-2">
+          {/* Telemetria do Deck */}
+          <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-zinc-500">
             <span>
-              Foto <strong className="text-white">{Math.min(swipeIndex + 1, filteredSubmissions.length)}</strong> de{' '}
+              REGISTRO <strong className="text-white">{Math.min(swipeIndex + 1, filteredSubmissions.length)}</strong> DE{' '}
               <strong className="text-white">{filteredSubmissions.length}</strong>
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {swipeHistory.length > 0 && (
                 <button
                   onClick={handleUndoLastSwipe}
-                  className="flex items-center gap-1 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors cursor-pointer"
                 >
-                  <RotateCcw className="h-3 w-3" />
-                  <span>Desfazer</span>
+                  DESFAZER ANTERIOR
                 </button>
               )}
-              <span className="hidden sm:inline text-[10px] text-zinc-500">← Rejeitar | Aprovar →</span>
+              <span className="hidden sm:inline text-[10px] text-zinc-600 tracking-wider">
+                [ ← INVALIDAR / APROVAR → ]
+              </span>
             </div>
           </div>
 
           {swipeIndex >= filteredSubmissions.length ? (
-            /* Fim da Fila de Swipe */
-            <SpotlightCard3D className="p-8 text-center space-y-4">
-              <div className="h-16 w-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
-                <Check className="h-8 w-8" />
-              </div>
-              <h2 className="text-lg font-black text-white">Todas as Fotos Deste Filtro Foram Auditadas!</h2>
+            <div className="p-12 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-4">
+              <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block">
+                AUDITORIA CONCLUÍDA
+              </span>
+              <h2 className="text-xl font-black text-white">Todos os registros deste filtro foram revisados.</h2>
               <p className="text-xs text-zinc-400 max-w-xs mx-auto">
-                Excelente trabalho! Você revisou todas as submissões desta seção.
+                A fila está limpa. Você pode reiniciar a visualização ou retornar ao modo grade.
               </p>
-              <div className="flex gap-2 justify-center pt-2">
+              <div className="flex gap-3 justify-center pt-2">
                 <button
                   onClick={() => setSwipeIndex(0)}
-                  className="mono-button-secondary px-4 py-2 text-xs font-mono font-bold cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-white/10 text-xs font-mono font-bold text-zinc-300 hover:text-white cursor-pointer"
                 >
-                  Rever do Início
+                  REVER DO INÍCIO
                 </button>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className="mono-button-primary px-4 py-2 text-xs font-mono font-bold cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-white text-black text-xs font-mono font-black cursor-pointer"
                 >
-                  Ver em Grade
+                  VER EM GRADE
                 </button>
               </div>
-            </SpotlightCard3D>
-          ) : (
-            /* Card Ativo no Deck de Swipe */
-            <div className="space-y-4">
-              {(() => {
-                const sub = filteredSubmissions[swipeIndex];
-                const isReported = sub.submission_reports && sub.submission_reports.length > 0;
-                const isProcessing = processingId === sub.id;
-
-                return (
-                  <SpotlightCard3D
-                    key={sub.id}
-                    className={`p-4 flex flex-col justify-between transition-all relative ${
-                      isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.2)]' : ''
-                    }`}
-                  >
-                    {/* Alerta de Denúncia Flutuante */}
-                    {isReported && (
-                      <div className="mb-3 p-3 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="flex items-center gap-2 font-black text-xs text-white">
-                            <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-                            🚨 DENÚNCIA PELA TURMA ({sub.submission_reports.length}x)
-                          </span>
-                          <span className="text-[10px] font-mono text-rose-300 uppercase px-2 py-0.5 rounded-full bg-rose-900/60">
-                            Averiguar
-                          </span>
-                        </div>
-                        <p className="text-xs text-rose-200">
-                          Motivo: <strong>{sub.submission_reports[0]?.reason || 'Foto suspeita'}</strong>
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Cabeçalho do Aluno */}
-                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-xs font-mono font-bold text-white overflow-hidden">
-                          {sub.students?.avatar_url ? (
-                            <img src={sub.students.avatar_url} alt="aluno" className="w-full h-full object-cover" />
-                          ) : (
-                            sub.students?.full_name?.charAt(0) || 'A'
-                          )}
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold text-white block">
-                            {sub.students?.full_name}
-                          </span>
-                          <span className="text-[10px] text-zinc-400 block font-mono">
-                            {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })} • {new Date(sub.submitted_at).toLocaleDateString('pt-BR')}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <span className="text-[11px] font-mono font-bold text-white block">
-                          +{sub.missions?.points_rewarded || 10} PTS
-                        </span>
-                        <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full ${
-                          sub.status === 'approved'
-                            ? 'bg-emerald-500/20 text-emerald-300'
-                            : sub.status === 'rejected'
-                            ? 'bg-rose-500/20 text-rose-300'
-                            : 'bg-amber-500/20 text-amber-300'
-                        }`}>
-                          {sub.status === 'approved' ? 'Aprovada' : sub.status === 'rejected' ? 'Invalidada' : 'Pendente'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Foto da Submissão */}
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3 border border-white/10">
-                      <img
-                        src={sub.photo_url}
-                        alt="Submissão"
-                        className="w-full h-full object-cover"
-                      />
-                      {sub.status === 'rejected' && (
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center font-bold text-xs text-rose-400">
-                          Foto Invalidada
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Dados da Missão & Localização */}
-                    <div className="space-y-1.5 text-xs text-zinc-300">
-                      <p className="text-white font-bold text-sm">{sub.missions?.title}</p>
-                      {sub.location_name && (
-                        <p className="text-zinc-400 text-[11px] flex items-center gap-1">
-                          📍 Local: {sub.location_name}
-                        </p>
-                      )}
-                      {sub.caption && (
-                        <p className="text-zinc-300 italic text-xs bg-white/5 p-2 rounded-xl border border-white/5">
-                          "{sub.caption}"
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Botão de Disparo IA Gemini */}
-                    <div className="mt-3">
-                      <button
-                        type="button"
-                        onClick={() => handleAnalyzeWithAI(sub)}
-                        disabled={analyzingId === sub.id}
-                        className="w-full py-2 px-3 rounded-xl border border-white/10 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-medium flex items-center justify-between transition-colors cursor-pointer"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-white animate-pulse" />
-                          <span>
-                            {analyzingId === sub.id
-                              ? 'Analisando foto com Gemini IA...'
-                              : aiAnalysisMap[sub.id]
-                              ? 'Parecer Técnico da IA'
-                              : 'Analisar Calorias e Macros com IA'}
-                          </span>
-                        </div>
-                        {aiAnalysisMap[sub.id] ? (
-                          expandedAnalysis[sub.id] ? (
-                            <ChevronUp className="w-3.5 h-3.5 text-zinc-400" />
-                          ) : (
-                            <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
-                          )
-                        ) : (
-                          <span className="text-[10px] text-zinc-400 font-mono">Gemini Vision</span>
-                        )}
-                      </button>
-
-                      {/* Card de Análise da IA Expandido */}
-                      {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
-                        <div className="mt-2 p-3 rounded-2xl bg-black/90 border border-white/15 text-xs space-y-2 animate-in fade-in duration-200">
-                          <div className="flex items-center justify-between border-b border-white/[0.08] pb-1.5">
-                            <div className="flex items-center gap-1.5 text-white font-semibold">
-                              <Brain className="w-3.5 h-3.5 text-white" />
-                              <span>Parecer da IA</span>
-                            </div>
-                            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-white/10 text-white">
-                              Conformidade: {aiAnalysisMap[sub.id].complianceScore}%
-                            </span>
-                          </div>
-
-                          <p className="text-zinc-200 text-xs leading-relaxed">
-                            {aiAnalysisMap[sub.id].summary}
-                          </p>
-
-                          {/* Pílulas de Calorias e Macros */}
-                          {aiAnalysisMap[sub.id].estimatedMacros && (
-                            <div className="grid grid-cols-4 gap-1.5 pt-1">
-                              <div className="p-1.5 rounded-xl bg-zinc-900 border border-white/10 text-center">
-                                <span className="text-[9px] text-zinc-400 block font-medium">Calorias</span>
-                                <span className="text-white font-bold text-xs">
-                                  {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
-                                </span>
-                              </div>
-                              <div className="p-1.5 rounded-xl bg-zinc-900 border border-white/10 text-center">
-                                <span className="text-[9px] text-zinc-400 block font-medium">Proteína</span>
-                                <span className="text-white font-bold text-xs">
-                                  {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
-                                </span>
-                              </div>
-                              <div className="p-1.5 rounded-xl bg-zinc-900 border border-white/10 text-center">
-                                <span className="text-[9px] text-zinc-400 block font-medium">Carbos</span>
-                                <span className="text-white font-bold text-xs">
-                                  {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
-                                </span>
-                              </div>
-                              <div className="p-1.5 rounded-xl bg-zinc-900 border border-white/10 text-center">
-                                <span className="text-[9px] text-zinc-400 block font-medium">Gordura</span>
-                                <span className="text-white font-bold text-xs">
-                                  {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {aiAnalysisMap[sub.id].feedback && (
-                            <p className="text-zinc-400 italic text-xs pt-1 border-t border-white/[0.04]">
-                              "{aiAnalysisMap[sub.id].feedback}"
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Controles de Ação de Swipe */}
-                    <div className="pt-4 mt-4 border-t border-white/[0.08] flex items-center justify-between gap-3">
-                      <button
-                        onClick={() => setInvalidateTarget(sub)}
-                        disabled={isProcessing}
-                        className="flex-1 py-3 px-3 rounded-2xl bg-rose-600/15 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm"
-                        title="Atalho: Seta Esquerda (←)"
-                      >
-                        <X className="h-4 w-4 text-rose-400" />
-                        <span>Invalidar (←)</span>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          handleApprovePhoto(sub);
-                          setSwipeIndex((prev) => prev + 1);
-                        }}
-                        disabled={isProcessing}
-                        className="flex-1 py-3 px-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-md"
-                        title="Atalho: Seta Direita (→)"
-                      >
-                        <Check className="h-4 w-4" />
-                        <span>Aprovar (→)</span>
-                      </button>
-                    </div>
-                  </SpotlightCard3D>
-                );
-              })()}
             </div>
-          )}
-        </div>
-      ) : (
-        /* ==================== MODO GRADE ==================== */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
-          {filteredSubmissions.map((sub: any) => {
-            const isRejected = sub.status === 'rejected';
-            const isProcessing = processingId === sub.id;
-            const isReported = sub.submission_reports && sub.submission_reports.length > 0;
+          ) : (
+            (() => {
+              const sub = filteredSubmissions[swipeIndex];
+              const isReported = sub.submission_reports && sub.submission_reports.length > 0;
+              const isProcessing = processingId === sub.id;
 
-            return (
-              <SpotlightCard3D
-                key={sub.id}
-                className={`p-4 flex flex-col justify-between ${
-                  isReported ? 'border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.15)]' : ''
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-xs font-mono font-bold text-white overflow-hidden">
-                        {sub.students?.avatar_url ? (
-                          <img src={sub.students.avatar_url} alt="aluno" className="w-full h-full object-cover" />
-                        ) : (
-                          sub.students?.full_name?.charAt(0) || 'A'
-                        )}
+              return (
+                <div
+                  key={sub.id}
+                  className={`p-5 rounded-3xl bg-zinc-950 border transition-all ${
+                    isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'border-white/10'
+                  }`}
+                >
+                  {/* Tarja de Denúncia */}
+                  {isReported && (
+                    <div className="mb-4 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold tracking-wider text-rose-400 uppercase">
+                          SINALIZAÇÃO PELA COMUNIDADE ({sub.submission_reports.length})
+                        </span>
+                        <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-200">
+                          PRIORIDADE
+                        </span>
                       </div>
-                      <span className="text-xs font-bold text-white truncate max-w-[140px]">
+                      <p className="text-xs text-rose-200 font-sans">
+                        Motivo apontado: <strong>{sub.submission_reports[0]?.reason || 'Suspeita de imagem inadequada'}</strong>
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Header do Aluno */}
+                  <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-4">
+                    <div>
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+                        ATLETA
+                      </span>
+                      <span className="text-sm font-bold text-white block mt-0.5">
                         {sub.students?.full_name}
                       </span>
                     </div>
 
-                    <span className="text-[10px] font-mono text-zinc-400">
-                      +{sub.missions?.points_rewarded || 10} PTS
-                    </span>
-                  </div>
-
-                  {isReported && (
-                    <div className="mb-3 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] font-medium flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 font-bold">
-                        <span>🚨 Denunciada pela turma ({sub.submission_reports.length})</span>
+                    <div className="text-right">
+                      <span className="text-xs font-mono font-black text-white block">
+                        +{sub.missions?.points_rewarded || 10} PTS
                       </span>
-                      <span className="text-[10px] font-mono text-rose-200 truncate max-w-[120px]">
-                        {sub.submission_reports[0]?.reason || 'Foto suspeita'}
+                      <span className="text-[10px] font-mono text-zinc-500 block uppercase">
+                        {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })} • {new Date(sub.submitted_at).toLocaleDateString('pt-BR')}
                       </span>
                     </div>
-                  )}
+                  </div>
 
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3">
-                    <img src={sub.photo_url} alt="Submissão" className="w-full h-full object-cover" />
-                    {isRejected && (
-                      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center font-bold text-xs text-zinc-300">
-                        Foto Invalidada
+                  {/* Foto com proporção cinematográfica limpa */}
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-4 border border-white/5">
+                    <img
+                      src={sub.photo_url}
+                      alt="Registro do atleta"
+                      className="w-full h-full object-cover"
+                    />
+                    {sub.status === 'rejected' && (
+                      <div className="absolute inset-0 bg-black/80 flex items-center justify-center text-xs font-mono tracking-widest text-rose-400 uppercase">
+                        REGISTRO INVALIDADO
                       </div>
                     )}
                   </div>
 
-                  <div className="space-y-1 text-xs text-zinc-400">
-                    <p className="text-white font-bold text-sm font-sans">{sub.missions?.title}</p>
-                    <p>
-                      Horário:{' '}
-                      {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                    {sub.location_name && <p className="truncate">Local: {sub.location_name}</p>}
-                    {sub.caption && <p className="text-zinc-300 font-sans italic mt-1">"{sub.caption}"</p>}
+                  {/* Detalhes da Missão e Local */}
+                  <div className="space-y-2 text-xs">
+                    <div>
+                      <span className="text-[9px] font-mono text-zinc-500 tracking-wider uppercase block">
+                        MISSÃO
+                      </span>
+                      <p className="text-white font-bold text-sm mt-0.5">{sub.missions?.title}</p>
+                    </div>
+
+                    {sub.location_name && (
+                      <p className="text-[11px] font-mono text-zinc-400">
+                        LOCAL: {sub.location_name}
+                      </p>
+                    )}
+
+                    {sub.caption && (
+                      <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-zinc-300 italic text-xs leading-relaxed">
+                        "{sub.caption}"
+                      </div>
+                    )}
                   </div>
 
                   {/* Botão de Disparo IA Gemini */}
-                  <div className="mt-3">
+                  <div className="mt-4 pt-4 border-t border-white/[0.08]">
                     <button
                       type="button"
                       onClick={() => handleAnalyzeWithAI(sub)}
                       disabled={analyzingId === sub.id}
-                      className="w-full py-1.5 px-2.5 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-medium flex items-center justify-between transition-colors cursor-pointer"
+                      className="w-full py-2.5 px-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-zinc-300 hover:text-white text-xs font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
                     >
-                      <div className="flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
-                        <span>
-                          {analyzingId === sub.id
-                            ? 'Analisando com IA...'
-                            : aiAnalysisMap[sub.id]
-                            ? 'Parecer Técnico da IA'
-                            : 'Analisar com IA'}
-                        </span>
-                      </div>
-                      {aiAnalysisMap[sub.id] ? (
-                        expandedAnalysis[sub.id] ? (
-                          <ChevronUp className="w-3 h-3 text-zinc-400" />
-                        ) : (
-                          <ChevronDown className="w-3 h-3 text-zinc-400" />
-                        )
-                      ) : (
-                        <span className="text-[10px] text-zinc-500 font-normal">Visão Computacional</span>
-                      )}
+                      <span>
+                        {analyzingId === sub.id
+                          ? 'PROCESSANDO VISÃO COMPUTACIONAL...'
+                          : aiAnalysisMap[sub.id]
+                          ? 'PARECER TÉCNICO IA'
+                          : 'ANALISAR NUTRIÇÃO & CONFORMIDADE (IA)'}
+                      </span>
+                      <span className="text-[10px] text-zinc-500">
+                        {aiAnalysisMap[sub.id] ? (expandedAnalysis[sub.id] ? 'FECHAR' : 'EXPANDIR') : 'GEMINI'}
+                      </span>
                     </button>
 
-                    {/* Card de Análise da IA Expandido */}
+                    {/* Parecer IA Expandido */}
                     {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
-                      <div className="mt-2 p-2.5 rounded-xl bg-black/80 border border-white/10 text-xs space-y-2 animate-in fade-in duration-200">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
-                          <div className="flex items-center gap-1.5 text-white font-semibold">
-                            <Brain className="w-3.5 h-3.5 text-white" />
-                            <span>Parecer da IA</span>
-                          </div>
-                          <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-white/10 text-white">
-                            Conformidade: {aiAnalysisMap[sub.id].complianceScore}%
+                      <div className="mt-3 p-3.5 rounded-2xl bg-black border border-white/10 text-xs space-y-3">
+                        <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                          <span className="text-[10px] font-mono text-zinc-400 tracking-wider uppercase">
+                            DIAGNÓSTICO
+                          </span>
+                          <span className="text-[10px] font-mono text-white font-bold">
+                            CONFORMIDADE: {aiAnalysisMap[sub.id].complianceScore}%
                           </span>
                         </div>
 
-                        <p className="text-zinc-300 font-sans text-xs leading-relaxed">
+                        <p className="text-zinc-300 leading-relaxed text-xs">
                           {aiAnalysisMap[sub.id].summary}
                         </p>
 
+                        {/* Métricas Nutricionais Tipográficas */}
                         {aiAnalysisMap[sub.id].estimatedMacros && (
-                          <div className="grid grid-cols-4 gap-1.5 pt-1">
-                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[9px] text-zinc-400 block font-medium">Calorias</span>
-                              <span className="text-white font-bold text-xs">
+                          <div className="grid grid-cols-4 gap-2 pt-1 border-t border-white/[0.06]">
+                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">CALORIAS</span>
+                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
                               </span>
                             </div>
-                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[9px] text-zinc-400 block font-medium">Proteína</span>
-                              <span className="text-white font-bold text-xs">
+                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">PROTEÍNA</span>
+                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
                               </span>
                             </div>
-                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[9px] text-zinc-400 block font-medium">Carbos</span>
-                              <span className="text-white font-bold text-xs">
+                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">CARBOS</span>
+                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
                               </span>
                             </div>
-                            <div className="p-1 rounded-lg bg-zinc-900 border border-white/5 text-center">
-                              <span className="text-[9px] text-zinc-400 block font-medium">Gordura</span>
-                              <span className="text-white font-bold text-xs">
+                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">GORDURAS</span>
+                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
                               </span>
                             </div>
@@ -996,9 +715,167 @@ export default function FiscalizacaoPage() {
                         )}
 
                         {aiAnalysisMap[sub.id].feedback && (
-                          <p className="text-zinc-400 font-sans italic text-xs pt-1 border-t border-white/[0.04]">
+                          <p className="text-zinc-500 text-[11px] italic pt-1">
                             "{aiAnalysisMap[sub.id].feedback}"
                           </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Ações de Decisão de Swipe */}
+                  <div className="pt-5 mt-5 border-t border-white/[0.08] grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setInvalidateTarget(sub)}
+                      disabled={isProcessing}
+                      className="py-3.5 px-4 rounded-xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 font-mono text-xs tracking-wider font-bold transition-all cursor-pointer"
+                    >
+                      INVALIDAR (←)
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        handleApprovePhoto(sub);
+                        setSwipeIndex((prev) => prev + 1);
+                      }}
+                      disabled={isProcessing}
+                      className="py-3.5 px-4 rounded-xl bg-white text-black hover:bg-zinc-200 font-mono text-xs tracking-wider font-black transition-all cursor-pointer"
+                    >
+                      APROVAR (→)
+                    </button>
+                  </div>
+                </div>
+              );
+            })()
+          )}
+        </div>
+      ) : (
+        /* ==================== MODO GRADE (MINIMALISTA) ==================== */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10">
+          {filteredSubmissions.map((sub: any) => {
+            const isRejected = sub.status === 'rejected';
+            const isProcessing = processingId === sub.id;
+            const isReported = sub.submission_reports && sub.submission_reports.length > 0;
+
+            return (
+              <div
+                key={sub.id}
+                className={`p-5 rounded-3xl bg-zinc-950 border flex flex-col justify-between ${
+                  isReported ? 'border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.1)]' : 'border-white/10'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-3">
+                    <div>
+                      <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-wider block">
+                        ATLETA
+                      </span>
+                      <span className="text-xs font-bold text-white block mt-0.5 truncate max-w-[150px]">
+                        {sub.students?.full_name}
+                      </span>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="text-[11px] font-mono font-black text-white block">
+                        +{sub.missions?.points_rewarded || 10} PTS
+                      </span>
+                      <span className="text-[9px] font-mono text-zinc-500 block uppercase">
+                        {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  {isReported && (
+                    <div className="mb-3 p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-[11px] space-y-0.5">
+                      <span className="text-[9px] font-mono tracking-wider font-bold text-rose-400 uppercase block">
+                        SINALIZADA PELA COMUNIDADE ({sub.submission_reports.length})
+                      </span>
+                      <p className="truncate text-zinc-400">
+                        {sub.submission_reports[0]?.reason || 'Foto suspeita'}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3 border border-white/5">
+                    <img src={sub.photo_url} alt="Submissão" className="w-full h-full object-cover" />
+                    {isRejected && (
+                      <div className="absolute inset-0 bg-black/80 flex items-center justify-center font-mono text-[10px] tracking-widest text-rose-400 uppercase">
+                        INVALIDADA
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1.5 text-xs text-zinc-400">
+                    <p className="text-white font-bold text-sm">{sub.missions?.title}</p>
+                    {sub.location_name && (
+                      <p className="text-[10px] font-mono text-zinc-500">LOCAL: {sub.location_name}</p>
+                    )}
+                    {sub.caption && (
+                      <p className="text-zinc-300 italic text-[11px] p-2 bg-white/[0.02] border border-white/5 rounded-lg">
+                        "{sub.caption}"
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Disparo IA */}
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() => handleAnalyzeWithAI(sub)}
+                      disabled={analyzingId === sub.id}
+                      className="w-full py-2 px-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-zinc-300 hover:text-white text-[11px] font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span>
+                        {analyzingId === sub.id
+                          ? 'ANALISANDO...'
+                          : aiAnalysisMap[sub.id]
+                          ? 'PARECER TÉCNICO'
+                          : 'ANALISAR IA'}
+                      </span>
+                      <span className="text-[9px] text-zinc-500 font-mono">GEMINI</span>
+                    </button>
+
+                    {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
+                      <div className="mt-2 p-3 rounded-2xl bg-black border border-white/10 text-xs space-y-2">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
+                          <span className="text-[9px] font-mono text-zinc-500 uppercase">CONFORMIDADE</span>
+                          <span className="text-[10px] font-mono text-white font-bold">
+                            {aiAnalysisMap[sub.id].complianceScore}%
+                          </span>
+                        </div>
+                        <p className="text-zinc-300 text-xs leading-relaxed">
+                          {aiAnalysisMap[sub.id].summary}
+                        </p>
+                        {aiAnalysisMap[sub.id].estimatedMacros && (
+                          <div className="grid grid-cols-4 gap-1.5 pt-1 text-center font-mono">
+                            <div className="p-1 bg-zinc-900 rounded">
+                              <span className="text-[8px] text-zinc-500 block">KCAL</span>
+                              <span className="text-white text-xs font-bold">
+                                {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
+                              </span>
+                            </div>
+                            <div className="p-1 bg-zinc-900 rounded">
+                              <span className="text-[8px] text-zinc-500 block">PROT</span>
+                              <span className="text-white text-xs font-bold">
+                                {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
+                              </span>
+                            </div>
+                            <div className="p-1 bg-zinc-900 rounded">
+                              <span className="text-[8px] text-zinc-500 block">CARB</span>
+                              <span className="text-white text-xs font-bold">
+                                {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
+                              </span>
+                            </div>
+                            <div className="p-1 bg-zinc-900 rounded">
+                              <span className="text-[8px] text-zinc-500 block">GORD</span>
+                              <span className="text-white text-xs font-bold">
+                                {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
+                              </span>
+                            </div>
+                          </div>
                         )}
                       </div>
                     )}
@@ -1011,61 +888,59 @@ export default function FiscalizacaoPage() {
                       <button
                         onClick={() => handleApprovePhoto(sub)}
                         disabled={isProcessing}
-                        className="mono-button-primary w-full py-1.5 text-xs font-semibold flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
+                        className="w-full py-2 text-xs font-mono font-black tracking-wider bg-white text-black hover:bg-zinc-200 rounded-xl transition-colors cursor-pointer"
                       >
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        <span>{isProcessing ? 'Aprovando...' : 'Aprovar'}</span>
+                        {isProcessing ? '...' : 'APROVAR'}
                       </button>
                       <button
                         onClick={() => setInvalidateTarget(sub)}
                         disabled={isProcessing}
-                        className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 border-rose-500/30 cursor-pointer"
+                        className="w-full py-2 text-xs font-mono font-bold tracking-wider text-rose-400 hover:text-rose-300 border border-rose-500/30 rounded-xl transition-colors cursor-pointer"
                       >
-                        Recusar
+                        RECUSAR
                       </button>
                     </>
                   ) : isRejected ? (
                     <button
                       onClick={() => handleApprovePhoto(sub)}
                       disabled={isProcessing}
-                      className="mono-button-primary w-full py-1.5 text-xs font-semibold cursor-pointer"
+                      className="w-full py-2 text-xs font-mono font-bold tracking-wider text-zinc-300 hover:text-white border border-white/10 rounded-xl transition-colors cursor-pointer"
                     >
-                      {isProcessing ? 'Processando...' : 'Reabilitar Foto'}
+                      {isProcessing ? '...' : 'REABILITAR FOTO'}
                     </button>
                   ) : (
                     <button
                       onClick={() => setInvalidateTarget(sub)}
                       disabled={isProcessing}
-                      className="mono-button-secondary w-full py-1.5 text-xs font-semibold text-zinc-400 hover:text-white cursor-pointer"
+                      className="w-full py-2 text-xs font-mono font-medium tracking-wider text-zinc-400 hover:text-rose-400 border border-white/10 rounded-xl transition-colors cursor-pointer"
                     >
-                      {isProcessing ? 'Processando...' : 'Invalidar Foto (Deduzir Pontos)'}
+                      {isProcessing ? '...' : 'INVALIDAR'}
                     </button>
                   )}
                 </div>
-              </SpotlightCard3D>
+              </div>
             );
           })}
         </div>
       )}
 
-      {/* Toast Flutuante de Feedback */}
+      {/* Toast Flutuante Limpo */}
       {toastMessage && (
-        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-            <span>{toastMessage}</span>
+        <div className="fixed top-6 right-6 z-50">
+          <div className="px-4 py-2.5 rounded-xl border border-white/15 bg-black/95 text-xs font-mono text-white shadow-2xl">
+            {toastMessage}
           </div>
         </div>
       )}
 
-      {/* Modal Customizado de Confirmação de Invalidação */}
+      {/* Modal Customizado de Invalidação */}
       <CustomDialog
         isOpen={!!invalidateTarget}
         onClose={() => setInvalidateTarget(null)}
-        title="Invalidar Submissão de Foto"
-        description={`Deseja invalidar a foto de "${invalidateTarget?.students?.full_name}" na missão "${invalidateTarget?.missions?.title || 'Missão'}"? Isso deduzirá ${invalidateTarget?.missions?.points_rewarded || 10} pontos do ranking do aluno.`}
-        confirmLabel={processingId ? 'Invalidando...' : 'Sim, Invalidar e Deduzir Pontos'}
-        cancelLabel="Voltar"
+        title="Invalidar Registro de Foto"
+        description={`Confirmar a invalidação da foto de "${invalidateTarget?.students?.full_name}" na missão "${invalidateTarget?.missions?.title || 'Missão'}"? ${invalidateTarget?.missions?.points_rewarded || 10} pontos serão deduzidos do ranking do atleta.`}
+        confirmLabel={processingId ? 'INVALIDANDO...' : 'CONFIRMAR INVALIDAÇÃO'}
+        cancelLabel="VOLTAR"
         onConfirm={handleConfirmInvalidate}
         isLoading={!!processingId}
       />

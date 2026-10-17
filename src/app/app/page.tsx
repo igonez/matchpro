@@ -543,11 +543,11 @@ export default function StudentHomePage() {
             )}
           </button>
 
-          {/* Badge Streak Vibrante */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)] shrink-0">
-            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-xs font-bold text-amber-300 tracking-wide flex items-center gap-1 font-mono">
-              🔥 {currentStreak}d ofensiva
+          {/* Badge Streak Tipográfico */}
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-950 border border-white/10 shrink-0">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="text-xs font-mono font-bold text-white tracking-wider">
+              {currentStreak}D OFENSIVA
             </span>
           </div>
         </div>
@@ -621,23 +621,18 @@ export default function StudentHomePage() {
         <>
           {/* Alerta de Urgência de Streak (Proteção das 20h) */}
           {streakRisk.isAtRisk && (
-            <div className="relative z-10 p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/40 via-red-950/30 to-black border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.2)] flex items-center justify-between gap-3 animate-pulse">
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0">
-                  <Flame className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-amber-200">
-                    Ofensiva em Risco! ({currentStreak} dias ativos)
-                  </p>
-                  <p className="text-[11px] text-zinc-300">
-                    Faltam {streakRisk.hoursLeft}h para a meia-noite. Faça seu check-in hoje!
-                  </p>
-                </div>
+            <div className="relative z-10 p-4 rounded-2xl bg-zinc-950 border border-amber-500/40 flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
+                  OFENSIVA EM RISCO ({currentStreak} DIAS ATIVOS)
+                </p>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  Faltam {streakRisk.hoursLeft}h para a meia-noite. Registre seu check-in de hoje.
+                </p>
               </div>
               <Link href="/app/missions">
-                <button className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer shadow-sm">
-                  Salvar 🔥
+                <button className="px-3.5 py-2 rounded-xl bg-white text-black text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer">
+                  SALVAR
                 </button>
               </Link>
             </div>
@@ -646,27 +641,20 @@ export default function StudentHomePage() {
           {/* 1.5 Banner de Aviso em Destaque do Treinador */}
           {topAnnouncement && (
             <div className="relative z-10">
-              <div className="mono-glass-card p-3 rounded-2xl border border-white/15 bg-white/[0.03] space-y-1">
+              <div className="p-3.5 rounded-2xl border border-white/10 bg-zinc-950 space-y-1">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
-                    {topAnnouncement.is_pinned ? (
-                      <Pin className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-                    ) : (
-                      <Megaphone className="h-3.5 w-3.5 text-zinc-300 shrink-0" />
-                    )}
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300">
-                      {topAnnouncement.is_pinned ? 'Aviso Fixado' : 'Aviso do Treinador'}
-                    </span>
-                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
+                    {topAnnouncement.is_pinned ? 'AVISO FIXADO' : 'AVISO DO TREINADOR'}
+                  </span>
                   <Link
                     href="/app/materials?tab=avisos"
-                    className="text-[10px] font-mono text-zinc-400 hover:text-white"
+                    className="text-[10px] font-mono text-zinc-500 hover:text-white"
                   >
-                    Ver avisos ({announcements.length}) →
+                    VER TODOS ({announcements.length}) →
                   </Link>
                 </div>
                 <p className="text-xs font-bold text-white leading-tight">{topAnnouncement.title}</p>
-                <p className="text-[11px] text-zinc-300 leading-relaxed line-clamp-2">
+                <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">
                   {topAnnouncement.content}
                 </p>
               </div>
@@ -676,25 +664,24 @@ export default function StudentHomePage() {
           {/* 2. CARD DE AÇÃO FOCAL: O Próximo Passo de Hoje */}
           {focalTask ? (
             <div className="relative z-10">
-              <SpotlightCard3D className="p-5 relative overflow-hidden border-white/20 bg-gradient-to-b from-zinc-900/90 to-black/90 shadow-[0_12px_40px_rgba(0,0,0,0.85)]">
-                <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="p-5 rounded-3xl border border-white/15 bg-zinc-950 shadow-2xl space-y-3">
+                <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border bg-white/10 text-white border-white/20 flex items-center gap-1.5">
-                      <Sparkles className="w-3 h-3 text-amber-400" />
-                      Próxima Ação
+                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-white/15 bg-white/5 text-zinc-300">
+                      PRÓXIMA AÇÃO
                     </span>
                     {activeSession?.missionId === focalTask.id && (
-                      <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full animate-pulse">
-                        ● Em Andamento
+                      <span className="text-[9px] font-mono font-bold text-emerald-400 tracking-wider">
+                        EM ANDAMENTO
                       </span>
                     )}
                   </div>
-                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-full">
                     +{focalTask.points_rewarded} XP
                   </span>
                 </div>
 
-                <div className="space-y-1 mb-4">
+                <div className="space-y-1">
                   <h3 className="text-lg font-black text-white tracking-tight leading-snug">
                     {focalTask.title}
                   </h3>
@@ -705,130 +692,121 @@ export default function StudentHomePage() {
                       ? 'Ative a sessão de cardio para registrar tempo e intensidade na turma.'
                       : focalTask.category === 'refeicao'
                       ? 'Fotografe seu prato ao vivo para estimativa de macronutrientes e calorias por IA.'
-                      : 'Mantenha o foco nos seus hábitos diários para proteger seu streak e subir no ranking.'}
+                      : 'Mantenha a regularidade para proteger sua sequência e pontuar no ranking da turma.'}
                   </p>
                 </div>
 
-                {/* Botão de Ação Focal Largo e Ergonômico */}
-                <div>
+                {/* Botão de Ação Focal */}
+                <div className="pt-2">
                   {focalTask.category === 'treino' || focalTask.category === 'cardio' ? (
                     activeSession?.missionId === focalTask.id ? (
                       <button
                         onClick={() => router.push(`/app/camera/${focalTask.id}`)}
-                        className="mono-button-primary w-full py-3.5 text-xs font-mono font-black flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,255,255,0.2)] bg-emerald-400 text-black hover:bg-emerald-300"
+                        className="w-full py-3.5 text-xs font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors"
                       >
-                        <Camera className="h-4 w-4" />
-                        <span>FINALIZAR SESSÃO & REGISTRAR FOTO →</span>
+                        FINALIZAR SESSÃO & REGISTRAR FOTO →
                       </button>
                     ) : (
                       <button
                         onClick={() => startSession(focalTask.id, focalTask.title, focalTask.category)}
-                        className="mono-button-primary w-full py-3.5 text-xs font-mono font-black flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,255,255,0.25)]"
+                        className="w-full py-3.5 text-xs font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors"
                       >
-                        <Play className="h-4 w-4 fill-current" />
-                        <span>INICIAR {focalTask.category === 'treino' ? 'TREINO' : 'CARDIO'} AGORA →</span>
+                        INICIAR {focalTask.category === 'treino' ? 'TREINO' : 'CARDIO'} AGORA →
                       </button>
                     )
                   ) : (
                     <Link href={`/app/camera/${focalTask.id}`} className="block w-full">
-                      <button className="mono-button-primary w-full py-3.5 text-xs font-mono font-black flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,255,255,0.25)]">
-                        <Camera className="h-4 w-4" />
-                        <span>REGISTRAR FOTO AO VIVO →</span>
+                      <button className="w-full py-3.5 text-xs font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors">
+                        REGISTRAR FOTO AO VIVO →
                       </button>
                     </Link>
                   )}
                 </div>
-              </SpotlightCard3D>
+              </div>
             </div>
           ) : (
             <div className="relative z-10">
-              <SpotlightCard3D className="p-5 text-center border-emerald-500/30 bg-emerald-950/15 space-y-2">
-                <div className="h-10 w-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 mx-auto flex items-center justify-center text-emerald-400">
-                  <CheckCircle2 className="h-5 w-5" />
-                </div>
-                <h3 className="text-sm font-bold text-white font-mono">
-                  TODAS AS METAS DE HOJE CONCLUÍDAS!
-                </h3>
-                <p className="text-xs text-zinc-300 max-w-xs mx-auto">
-                  Disciplina exemplar. Seu streak está seguro e seus pontos foram somados ao ranking da turma.
+              <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-1.5">
+                <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase font-bold block">
+                  TODAS AS METAS DE HOJE CONCLUÍDAS
+                </span>
+                <p className="text-xs text-zinc-400 max-w-xs mx-auto">
+                  Excelente consistência. Seu streak está seguro e seus pontos foram computados.
                 </p>
-              </SpotlightCard3D>
+              </div>
             </div>
           )}
 
           {/* 3. RADAR DE PROGRESSO SEMANAL & PLACAR */}
           <div className="relative z-10">
-            <SpotlightCard3D className="p-4 space-y-3 bg-zinc-950/80 border-white/10">
+            <div className="p-4 rounded-3xl border border-white/10 bg-zinc-950 space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-[11px] font-mono text-zinc-400 block">Jornada Semanal</span>
-                  <span className="font-bold text-white">
+                  <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase block">JORNADA SEMANAL</span>
+                  <span className="font-bold text-white mt-0.5 block">
                     Semana {challengeTimeline.currentWeek} • Dia {challengeTimeline.currentDay}/{challengeTimeline.totalDays}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-lg font-black font-mono text-emerald-400">
+                  <span className="text-lg font-black font-mono text-white">
                     {weeklyPercentage}%
                   </span>
-                  <span className="text-[10px] text-zinc-400 block font-mono">
-                    {totalWeeklyDone}/{totalWeeklyGoals} metas
+                  <span className="text-[10px] text-zinc-500 block font-mono">
+                    {totalWeeklyDone}/{totalWeeklyGoals} METAS
                   </span>
                 </div>
               </div>
 
-              {/* Barra Esmeralda Fina */}
-              <div className="w-full h-1.5 rounded-full bg-zinc-900 overflow-hidden">
+              {/* Barra de Progresso Minimalista */}
+              <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-700 shadow-[0_0_10px_rgba(52,211,153,0.4)]"
+                  className="h-full rounded-full bg-white transition-all duration-700"
                   style={{ width: `${Math.max(4, weeklyPercentage)}%` }}
                 />
               </div>
 
-              {/* 3 Métricas Rápidas Tabulares */}
+              {/* 3 Métricas Rápidas */}
               <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
-                <div className="p-2 rounded-xl bg-black/40 border border-white/5 text-center">
-                  <span className="text-[9px] text-zinc-400 block uppercase font-mono">Pontos XP</span>
-                  <span className="text-sm font-black text-amber-400 font-mono block mt-0.5">
+                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-center">
+                  <span className="text-[9px] text-zinc-500 block uppercase font-mono tracking-wider">PONTOS</span>
+                  <span className="text-sm font-black text-white font-mono block mt-0.5">
                     {standing?.total_points || 0}
                   </span>
                 </div>
 
                 <Link
                   href="/app/leaderboard"
-                  className="p-2 rounded-xl bg-black/40 border border-white/5 text-center hover:border-amber-400/40 transition-colors block group"
+                  className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-center hover:border-white/20 transition-colors block group"
                   title="Ver Classificação Geral"
                 >
-                  <span className="text-[9px] text-zinc-400 block uppercase font-mono group-hover:text-amber-300">Posição</span>
-                  <span className="text-sm font-black text-white font-mono block mt-0.5 group-hover:text-amber-400">
-                    {rank} 🏆
+                  <span className="text-[9px] text-zinc-500 block uppercase font-mono tracking-wider group-hover:text-white">POSIÇÃO</span>
+                  <span className="text-sm font-black text-white font-mono block mt-0.5">
+                    {rank}
                   </span>
                 </Link>
 
                 <Link
                   href="/app/materials"
-                  className="p-2 rounded-xl bg-black/40 border border-white/5 text-center hover:border-cyan-400/40 transition-colors block group"
+                  className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-center hover:border-white/20 transition-colors block group"
                   title="Ver Arquivos do Treinador"
                 >
-                  <span className="text-[9px] text-zinc-400 block uppercase font-mono group-hover:text-cyan-300">Guia/PDF</span>
-                  <span className="text-sm font-black text-cyan-400 font-mono block mt-0.5">
-                    Acessar →
+                  <span className="text-[9px] text-zinc-500 block uppercase font-mono tracking-wider group-hover:text-white">GUIA/PDF</span>
+                  <span className="text-sm font-black text-zinc-300 font-mono block mt-0.5">
+                    ACESSAR →
                   </span>
                 </Link>
               </div>
-            </SpotlightCard3D>
+            </div>
           </div>
 
-          {/* 4. CHECKLIST DIÁRIO COM TOQUE NA LINHA INTEIRA */}
-          <div className="space-y-2 relative z-10">
+          {/* 4. CHECKLIST DIÁRIO */}
+          <div className="space-y-3 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-white font-mono">
-                  Checklist de Hoje
-                </span>
-              </div>
-              <Link href="/app/missions" className="text-[11px] text-zinc-400 hover:text-white transition-colors font-mono">
-                Cronograma completo →
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 font-mono">
+                CHECKLIST DE HOJE
+              </span>
+              <Link href="/app/missions" className="text-[10px] text-zinc-500 hover:text-white transition-colors font-mono tracking-wider">
+                CRONOGRAMA COMPLETO →
               </Link>
             </div>
 
@@ -840,17 +818,16 @@ export default function StudentHomePage() {
                 const isRunningThis = activeSession?.missionId === task.id;
 
                 const customList = task.list_id ? missionLists.find((l) => l.id === task.list_id) : null;
-                const catMeta: Record<string, { icon: string; label: string; color: string }> = {
-                  treino: { icon: '⚡', label: 'Treino', color: 'text-amber-300 border-amber-500/20 bg-amber-500/10' },
-                  cardio: { icon: '🏃', label: 'Cardio', color: 'text-cyan-300 border-cyan-500/20 bg-cyan-500/10' },
-                  refeicao: { icon: '🥗', label: 'Nutrição', color: 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10' },
-                  habito: { icon: '💧', label: 'Hábito', color: 'text-purple-300 border-purple-500/20 bg-purple-500/10' },
+                const catMeta: Record<string, { label: string; color: string }> = {
+                  treino: { label: 'TREINO', color: 'text-zinc-300 border-white/10 bg-white/5' },
+                  cardio: { label: 'CARDIO', color: 'text-zinc-300 border-white/10 bg-white/5' },
+                  refeicao: { label: 'NUTRIÇÃO', color: 'text-zinc-300 border-white/10 bg-white/5' },
+                  habito: { label: 'HÁBITO', color: 'text-zinc-300 border-white/10 bg-white/5' },
                 };
                 const defaultMeta = catMeta[task.category] || catMeta.habito;
                 const meta = customList
                   ? {
-                      icon: customList.icon || '🎯',
-                      label: customList.name,
+                      label: customList.name.toUpperCase(),
                       color: 'text-zinc-200 border-white/10 bg-white/5',
                     }
                   : defaultMeta;
@@ -859,60 +836,43 @@ export default function StudentHomePage() {
                   <div
                     key={task.id}
                     onClick={() => handleTaskClick(task)}
-                    className={`mono-glass-card p-3 rounded-2xl flex items-center justify-between gap-3 transition-all cursor-pointer group ${
+                    className={`p-3.5 rounded-2xl bg-zinc-950 border flex items-center justify-between gap-3 transition-all cursor-pointer ${
                       isDailyLocked
-                        ? 'opacity-60 bg-black/40 border-white/5 cursor-default'
+                        ? 'opacity-50 border-white/5'
                         : isRunningThis
-                        ? 'border-emerald-500/40 bg-emerald-950/20 shadow-[0_0_15px_rgba(52,211,153,0.15)]'
-                        : 'hover:border-white/30 hover:bg-white/[0.04] active:scale-[0.99]'
+                        ? 'border-white/40 shadow-lg'
+                        : 'border-white/10 hover:border-white/25'
                     }`}
                   >
-                    {/* Status Indicator Icon */}
-                    <div className="shrink-0">
-                      {isDailyLocked ? (
-                        <div className="h-6 w-6 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                        </div>
-                      ) : isRunningThis ? (
-                        <div className="h-6 w-6 rounded-full bg-white text-black flex items-center justify-center font-bold text-[10px] animate-pulse">
-                          ▶
-                        </div>
-                      ) : (
-                        <div className="h-6 w-6 rounded-full border border-white/20 group-hover:border-white/50 transition-colors flex items-center justify-center text-transparent group-hover:text-white/40">
-                          ●
-                        </div>
-                      )}
-                    </div>
-
                     {/* Mission Details */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${meta.color}`}>
-                          {meta.icon} {meta.label}
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-[9px] font-mono tracking-wider font-bold px-1.5 py-0.2 rounded border ${meta.color}`}>
+                          {meta.label}
                         </span>
-                        <span className="text-[10px] font-mono text-zinc-400">
+                        <span className="text-[10px] font-mono text-zinc-500">
                           +{task.points_rewarded} XP
                         </span>
                       </div>
-                      <p className={`text-xs font-bold truncate ${isDailyLocked ? 'line-through text-zinc-400' : 'text-white'}`}>
+                      <p className={`text-xs font-bold truncate ${isDailyLocked ? 'line-through text-zinc-500' : 'text-white'}`}>
                         {task.title}
                       </p>
                     </div>
 
-                    {/* Right Action Pill / Chevron */}
+                    {/* Right Status Action */}
                     <div className="shrink-0">
                       {isDailyLocked ? (
-                        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
-                          ✓ Feito
+                        <span className="text-[9px] font-mono text-zinc-500 tracking-wider uppercase">
+                          CONCLUÍDO
                         </span>
                       ) : isRunningThis ? (
-                        <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-1 rounded-lg border border-emerald-500/30 animate-pulse">
-                          Em andamento
+                        <span className="text-[9px] font-mono font-bold text-white tracking-wider uppercase">
+                          EM ANDAMENTO
                         </span>
                       ) : (
-                        <div className="h-7 w-7 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white group-hover:text-black transition-all flex items-center justify-center text-zinc-400">
-                          <ChevronRight className="h-3.5 w-3.5" />
-                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 group-hover:text-white">
+                          →
+                        </span>
                       )}
                     </div>
                   </div>
@@ -922,28 +882,27 @@ export default function StudentHomePage() {
           </div>
 
           {/* 5. PROGRESSO POR PILAR / LISTAS DE MISSÕES */}
-          <div className="space-y-2 relative z-10">
+          <div className="space-y-3 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
-                {missionLists.length > 0 ? 'Progresso por Lista' : 'Progresso por Pilar'}
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 font-mono">
+                {missionLists.length > 0 ? 'PROGRESSO POR LISTA' : 'PROGRESSO POR PILAR'}
               </span>
-              <Link href="/app/missions" className="text-[11px] text-zinc-400 hover:text-white transition-colors font-mono">
-                Ver todos →
+              <Link href="/app/missions" className="text-[10px] text-zinc-500 hover:text-white transition-colors font-mono tracking-wider">
+                VER TODOS →
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2.5">
               {missionLists.length > 0 ? (
                 missionLists.map((list) => {
                   const c = listCounts[list.id] || { done: 0, total: 0 };
                   const pct = c.total > 0 ? Math.min(100, Math.round((c.done / c.total) * 100)) : 0;
                   return (
                     <Link key={list.id} href={`/app/missions?list=${list.id}`}>
-                      <div className="mono-glass-card p-2.5 rounded-xl border border-white/5 hover:border-white/20 transition-all space-y-1.5">
+                      <div className="p-3 rounded-2xl bg-zinc-950 border border-white/10 hover:border-white/25 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-white text-[11px] truncate flex items-center gap-1.5">
-                            <span>{list.icon || '🎯'}</span>
-                            <span className="truncate">{list.name}</span>
+                          <span className="font-bold text-white text-[11px] truncate uppercase tracking-wider">
+                            {list.name}
                           </span>
                           <span className="text-[10px] font-mono text-zinc-400 font-bold shrink-0">
                             {c.done}/{c.total}
@@ -951,8 +910,8 @@ export default function StudentHomePage() {
                         </div>
                         <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
                           <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${pct}%`, backgroundColor: list.color || '#3b82f6' }}
+                            className="h-full rounded-full bg-white transition-all duration-500"
+                            style={{ width: `${pct}%` }}
                           />
                         </div>
                       </div>
@@ -961,24 +920,24 @@ export default function StudentHomePage() {
                 })
               ) : (
                 [
-                  { key: 'treino', title: '⚡ Treinos', done: categoryCounts.treinos.done, total: categoryCounts.treinos.total, barClass: 'bg-amber-400' },
-                  { key: 'cardio', title: '🏃 Cardios', done: categoryCounts.cardios.done, total: categoryCounts.cardios.total, barClass: 'bg-cyan-400' },
-                  { key: 'refeicao', title: '🥗 Nutrição', done: categoryCounts.refeicoes.done, total: categoryCounts.refeicoes.total, barClass: 'bg-emerald-400' },
-                  { key: 'habito', title: '💧 Hábitos', done: categoryCounts.habitos.done, total: categoryCounts.habitos.total, barClass: 'bg-purple-400' },
+                  { key: 'treino', title: 'TREINOS', done: categoryCounts.treinos.done, total: categoryCounts.treinos.total },
+                  { key: 'cardio', title: 'CARDIOS', done: categoryCounts.cardios.done, total: categoryCounts.cardios.total },
+                  { key: 'refeicao', title: 'NUTRIÇÃO', done: categoryCounts.refeicoes.done, total: categoryCounts.refeicoes.total },
+                  { key: 'habito', title: 'HÁBITOS', done: categoryCounts.habitos.done, total: categoryCounts.habitos.total },
                 ].map((cat) => {
                   const pct = cat.total > 0 ? Math.min(100, Math.round((cat.done / cat.total) * 100)) : 0;
                   return (
                     <Link key={cat.key} href={`/app/missions?cat=${cat.key}`}>
-                      <div className="mono-glass-card p-2.5 rounded-xl border border-white/5 hover:border-white/20 transition-all space-y-1.5">
+                      <div className="p-3 rounded-2xl bg-zinc-950 border border-white/10 hover:border-white/25 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-white text-[11px]">{cat.title}</span>
+                          <span className="font-bold text-white text-[11px] font-mono tracking-wider">{cat.title}</span>
                           <span className="text-[10px] font-mono text-zinc-400 font-bold">
                             {cat.done}/{cat.total}
                           </span>
                         </div>
                         <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
                           <div
-                            className={`h-full rounded-full ${cat.barClass} transition-all duration-500`}
+                            className="h-full rounded-full bg-white transition-all duration-500"
                             style={{ width: `${pct}%` }}
                           />
                         </div>

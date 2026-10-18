@@ -12,13 +12,17 @@ import {
   Users, 
   Smartphone, 
   Lock, 
-  DollarSign, 
   Flame, 
   MessageCircle,
   HelpCircle,
   BadgeCheck,
-  Percent
+  Percent,
+  Check,
+  ChevronRight
 } from 'lucide-react';
+import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
+import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { JsonLd } from '@/components/seo/json-ld';
 
 export default function VipCapturePage() {
@@ -50,14 +54,13 @@ export default function VipCapturePage() {
     setErrorMessage('');
 
     if (!name.trim() || !email.trim() || whatsapp.replace(/\D/g, '').length < 10) {
-      setErrorMessage('Por favor, preencha todos os campos obrigatórios com DDD.');
+      setErrorMessage('Preencha todos os campos obrigatórios com DDD.');
       return;
     }
 
     setLoading(true);
 
     try {
-      // Capturar parâmetros UTM da URL se existirem
       const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
       const utm_source = searchParams.get('utm_source') || undefined;
       const utm_medium = searchParams.get('utm_medium') || undefined;
@@ -88,7 +91,7 @@ export default function VipCapturePage() {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setSubmitted(true); // Manter conversão mesmo em falha offline
+      setSubmitted(true);
     } finally {
       setLoading(false);
     }
@@ -98,313 +101,340 @@ export default function VipCapturePage() {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: 'Lista VIP de Lançamento | ArenaFitPro para Treinadores',
-    description: 'Acesso antecipado ao sistema operacional de gamificação fitness e desafios com split bancário Pix D+0.',
+    description: 'Acesso prioritário ao sistema operacional de gamificação fitness e desafios esportivos com split bancário Pix D+0.',
     url: 'https://arenafitpro.com.br/vip',
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-black text-white relative selection:bg-white selection:text-black overflow-x-hidden font-sans">
       <JsonLd data={vipPageSchema} />
 
-      {/* Grid de Fundo & Glows de alta conversão */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(245,158,11,0.15),rgba(255,255,255,0))] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 blur-[120px] pointer-events-none rounded-full" />
+      {/* Background 3D com partículas de profundidade (o mesmo do App) */}
+      <Monochrome3DBackground />
 
-      {/* Top Bar Minimalista */}
-      <header className="border-b border-white/5 bg-black/40 backdrop-blur-md sticky top-0 z-50">
+      {/* Top Bar Minimalista Titanium */}
+      <header className="border-b border-white/[0.08] bg-black/60 backdrop-blur-2xl sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 font-black">
-              ⚡
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="relative h-9 w-9 rounded-xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-all">
+              <div className="h-full w-full bg-black rounded-[11px] flex items-center justify-center font-black text-white text-sm">
+                ⚡
+              </div>
             </div>
-            <span className="font-black text-lg tracking-tight text-white group-hover:text-amber-400 transition-colors">
-              Arena<span className="text-amber-400">Fit</span>Pro
+            <span className="font-black text-lg tracking-tight text-white">
+              Arena<span className="text-zinc-400">Fit</span>Pro
             </span>
           </Link>
 
-          <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Vagas Abertas para Lista VIP 2026
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950 border border-white/10 text-xs font-mono">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-zinc-300 font-bold uppercase tracking-wider">
+                Vagas Abertas • Lista VIP 2026
+              </span>
+            </div>
             <Link 
               href="/login" 
-              className="text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 transition-colors"
+              className="text-xs font-mono text-zinc-300 hover:text-white px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 active:scale-95 transition-all"
             >
-              Já tenho acesso
+              Área de Acesso
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section com Grid Duplo (Promessa + Formulário) */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+      {/* Conteúdo Principal */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-24 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-start">
           
-          {/* Lado Esquerdo: Copywriting e Proposta de Valor B2B */}
+          {/* Lado Esquerdo: Headline & Value Proposition Luxury Titanium */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-300 text-xs font-mono uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/15 text-zinc-300 text-[11px] font-mono uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-white" />
               Exclusivo para Treinadores, Nutris e Academias
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-[1.1] text-white">
-              Transforme seus alunos em uma turma engajada e fature{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
-                R$ 5.000 a R$ 25.000
-              </span>{' '}
-              por desafio.
-            </h1>
-
-            <p className="text-base sm:text-lg text-zinc-300 leading-relaxed max-w-xl">
-              Crie desafios esportivos gamificados com <strong>câmera ao vivo antifraude</strong>, IA nutricional e <strong>Split Pix D+0 direto na sua conta</strong>. Zero tempo perdido digitando fichas ou cardápios.
-            </p>
-
-            {/* Bullets com Ícones */}
-            <div className="space-y-3.5 pt-2">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/30 flex items-center justify-center shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white">Zero Prescrição Manual em App</h4>
-                  <p className="text-xs text-zinc-400">Continue prescrevendo em PDF ou planilha. O ArenaFitPro audita os hábitos e a disciplina diária.</p>
-                </div>
+            <div className="relative">
+              {/* Estrela 3D cromada flutuante sutil */}
+              <div className="absolute -top-10 -right-6 hidden sm:block opacity-40">
+                <Chrome3DStar size={70} delay={0.5} />
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/30 flex items-center justify-center shrink-0 mt-0.5">
-                  <DollarSign className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white">Split Bancário Pix D+0 (Sem Bitributação)</h4>
-                  <p className="text-xs text-zinc-400">Seu lucro cai direto na sua conta sem esperar 30 dias. Tributação apenas sobre o que é seu.</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/30 flex items-center justify-center shrink-0 mt-0.5">
-                  <Flame className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white">Squads, Pódio e Ranking Automático</h4>
-                  <p className="text-xs text-zinc-400">Pressão social positiva que faz os alunos terminarem o desafio sem desistir na segunda semana.</p>
-                </div>
-              </div>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] text-white text-balance">
+                Engaje sua turma e fature{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400">
+                  R$ 5.000 a R$ 25.000
+                </span>{' '}
+                por desafio.
+              </h1>
             </div>
 
-            {/* Badge de Bônus de Lançamento */}
-            <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-yellow-500/5 border border-amber-500/20 text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
-              <div className="text-2xl shrink-0">🎁</div>
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-xl text-pretty font-normal">
+              O sistema operacional de gamificação fitness e auditoria de hábitos. Validação com <strong>Câmera ao Vivo Antifraude</strong>, IA nutricional e <strong>Split Bancário Pix D+0 direto na sua conta</strong>.
+            </p>
+
+            {/* Cards de Pilares do Sistema - Estilo App */}
+            <div className="space-y-3 pt-2">
+              
+              <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-white">
+                  <Smartphone className="w-4 h-4 text-white" />
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-sm font-bold text-white tracking-tight">Zero Prescrição Manual em App</h4>
+                  <p className="text-xs text-zinc-400 leading-normal">
+                    Continue prescrevendo no seu PDF ou planilha habitual. O ArenaFitPro audita o cumprimento diário dos alunos.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-emerald-400">
+                  <Zap className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-sm font-bold text-white tracking-tight">Split Bancário Pix D+0 (Sem Bitributação)</h4>
+                  <p className="text-xs text-zinc-400 leading-normal">
+                    Seu lucro líquido cai direto na sua conta bancária após o pagamento do aluno, sem reter dinheiro em plataformas por 30 dias.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-amber-400">
+                  <Trophy className="w-4 h-4 text-amber-400" />
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-sm font-bold text-white tracking-tight">Pódio, Squads e Ranking Oficial</h4>
+                  <p className="text-xs text-zinc-400 leading-normal">
+                    Pressão social positiva e mecânicas de retenção que multiplicam o engajamento e evitam desistências na 2ª semana.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Bônus de Lançamento VIP */}
+            <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/10 text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-amber-400 shrink-0 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
               <div>
-                <strong className="text-white block font-mono">Bônus da Lista VIP:</strong>
+                <strong className="text-white font-mono uppercase text-xs block">Vantagem de Fundador:</strong>
                 Garantia de <strong>taxa de split reduzida</strong> para os primeiros 100 profissionais + Template de Desafio de 21 Dias validado.
               </div>
             </div>
+
           </div>
 
-          {/* Lado Direito: Formulário de Alta Conversão */}
+          {/* Lado Direito: SpotlightCard3D de Formulário */}
           <div className="lg:col-span-5">
-            <div className="relative">
-              {/* Efeito Glow atrás do card */}
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-amber-400/30 to-amber-600/5 blur-xl opacity-75" />
-
-              <div className="relative rounded-2xl bg-zinc-950/90 border border-white/15 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
-                
-                {!submitted ? (
-                  <>
-                    <div className="space-y-1.5 text-center sm:text-left">
-                      <div className="inline-flex items-center gap-1.5 text-xs font-mono uppercase text-amber-400 font-bold">
-                        <BadgeCheck className="w-4 h-4" /> Acesso Prioritário • Lista VIP
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-black text-white">
-                        Cadastre-se Gratuitamente
-                      </h3>
-                      <p className="text-xs text-zinc-400">
-                        Receba o convite de ativação e a aula prática de lançamento do seu primeiro desafio.
-                      </p>
-                    </div>
-
-                    {errorMessage && (
-                      <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-300">
-                        {errorMessage}
-                      </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      {/* Nome */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-mono uppercase text-zinc-400">Nome Completo</label>
-                        <input
-                          type="text"
-                          required
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="Ex: Treinador Lucas Silva"
-                          className="w-full bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all min-h-[48px]"
-                        />
-                      </div>
-
-                      {/* WhatsApp com máscara */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-mono uppercase text-zinc-400">WhatsApp (com DDD)</label>
-                        <input
-                          type="tel"
-                          required
-                          value={whatsapp}
-                          onChange={handleWhatsappChange}
-                          placeholder="(11) 99999-9999"
-                          className="w-full bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all min-h-[48px]"
-                        />
-                      </div>
-
-                      {/* E-mail */}
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-mono uppercase text-zinc-400">Seu Melhor E-mail</label>
-                        <input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="lucas@personal.com.br"
-                          className="w-full bg-zinc-900/90 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all min-h-[48px]"
-                        />
-                      </div>
-
-                      {/* Perfil Profissional */}
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-mono uppercase text-zinc-400">Sua Atuação</label>
-                          <select
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="w-full bg-zinc-900/90 border border-white/10 rounded-xl px-3 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-400 min-h-[48px]"
-                          >
-                            <option value="personal_trainer">Personal Trainer</option>
-                            <option value="nutricionista">Nutricionista</option>
-                            <option value="academia_box">Academia / Box</option>
-                            <option value="outro">Consultoria Online</option>
-                          </select>
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-mono uppercase text-zinc-400">Alunos Ativos</label>
-                          <select
-                            value={studentsRange}
-                            onChange={(e) => setStudentsRange(e.target.value)}
-                            className="w-full bg-zinc-900/90 border border-white/10 rounded-xl px-3 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-400 min-h-[48px]"
-                          >
-                            <option value="1_10">1 a 10 alunos</option>
-                            <option value="11_30">11 a 30 alunos</option>
-                            <option value="31_60">31 a 60 alunos</option>
-                            <option value="60_plus">Mais de 60 alunos</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Botão de Envio */}
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-black uppercase text-sm tracking-wider py-4 rounded-xl transition-all shadow-lg shadow-amber-500/20 active:scale-[0.99] flex items-center justify-center gap-2 min-h-[52px]"
-                      >
-                        {loading ? (
-                          <span className="flex items-center gap-2">
-                            <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                            Reservando Vaga...
-                          </span>
-                        ) : (
-                          <>
-                            Garantir Minha Vaga VIP <ArrowRight className="w-4 h-4" />
-                          </>
-                        )}
-                      </button>
-
-                      <div className="flex items-center justify-center gap-2 text-[11px] text-zinc-500 text-center pt-1 font-mono">
-                        <Lock className="w-3 h-3" /> Seus dados estão 100% seguros sob a LGPD. Sem spam.
-                      </div>
-                    </form>
-                  </>
-                ) : (
-                  /* Estado de Sucesso */
-                  <div className="py-8 text-center space-y-5 animate-in fade-in zoom-in duration-300">
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto">
-                      <CheckCircle2 className="w-8 h-8" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <span className="text-xs font-mono uppercase bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">
-                        Inscrição VIP Confirmada!
+            <SpotlightCard3D glowIntensity={0.16} className="p-6 sm:p-8">
+              
+              {!submitted ? (
+                <div className="space-y-6">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider bg-white/10 text-white px-2.5 py-1 rounded-full border border-white/15">
+                        LISTA VIP • ACESSO PRIORITÁRIO
                       </span>
-                      <h3 className="text-2xl font-black text-white">
-                        Parabéns, {name.split(' ')[0]}!
-                      </h3>
-                      <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto">
-                        Sua vaga prioritária com benefícios de taxa reduzida foi reservada com sucesso.
-                      </p>
                     </div>
-
-                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-zinc-300 space-y-2 text-left">
-                      <strong className="text-white block font-mono">Próximo Passo Recomendado:</strong>
-                      <p>
-                        Entre no nosso canal direto no WhatsApp para receber o tutorial de 10 minutos de como faturar R$ 5.000 no seu primeiro desafio com a ArenaFitPro:
-                      </p>
-                    </div>
-
-                    <a
-                      href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20acabei%20de%20me%20cadastrar%20na%20Lista%20VIP%20da%20ArenaFitPro!"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 w-full bg-emerald-500 hover:bg-emerald-400 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 min-h-[48px]"
-                    >
-                      <MessageCircle className="w-5 h-5" /> Entrar no Grupo VIP de Treinadores
-                    </a>
-
-                    <Link 
-                      href="/" 
-                      className="block text-xs font-mono text-zinc-400 hover:text-white transition-colors"
-                    >
-                      Explorar a página institucional →
-                    </Link>
+                    <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                      Cadastre-se Gratuitamente
+                    </h3>
+                    <p className="text-xs text-zinc-400">
+                      Receba o convite de ativação e o roteiro passo a passo para lançar seu desafio.
+                    </p>
                   </div>
-                )}
 
-              </div>
-            </div>
+                  {errorMessage && (
+                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/25 text-xs text-red-300">
+                      {errorMessage}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Nome */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">
+                        Nome Completo
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Ex: Treinador Lucas Silva"
+                        className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/40 transition-all min-h-[48px]"
+                      />
+                    </div>
+
+                    {/* WhatsApp */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">
+                        WhatsApp (com DDD)
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={whatsapp}
+                        onChange={handleWhatsappChange}
+                        placeholder="(11) 99999-9999"
+                        className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/40 transition-all min-h-[48px]"
+                      />
+                    </div>
+
+                    {/* E-mail */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">
+                        E-mail Profissional
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="lucas@personal.com.br"
+                        className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/40 transition-all min-h-[48px]"
+                      />
+                    </div>
+
+                    {/* Atuação e Volume de Alunos */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">
+                          Atuação
+                        </label>
+                        <select
+                          value={role}
+                          onChange={(e) => setRole(e.target.value)}
+                          className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-3 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-white/40 min-h-[48px]"
+                        >
+                          <option value="personal_trainer">Personal Trainer</option>
+                          <option value="nutricionista">Nutricionista</option>
+                          <option value="academia_box">Academia / Box</option>
+                          <option value="outro">Consultoria Online</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">
+                          Alunos Ativos
+                        </label>
+                        <select
+                          value={studentsRange}
+                          onChange={(e) => setStudentsRange(e.target.value)}
+                          className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-3 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-white/40 min-h-[48px]"
+                        >
+                          <option value="1_10">1 a 10 alunos</option>
+                          <option value="11_30">11 a 30 alunos</option>
+                          <option value="31_60">31 a 60 alunos</option>
+                          <option value="60_plus">Mais de 60 alunos</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Primary Button — Optical White Pill (Padrão DESIGN.md) */}
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px]"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                          Reservando Vaga...
+                        </span>
+                      ) : (
+                        <>
+                          Garantir Vaga na Lista VIP <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+
+                    <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-400 text-center pt-1 font-mono">
+                      <Lock className="w-3 h-3 text-zinc-400" /> Seus dados estão 100% seguros sob a LGPD. Zero spam.
+                    </div>
+                  </form>
+                </div>
+              ) : (
+                /* Estado de Sucesso */
+                <div className="py-8 text-center space-y-5 animate-in fade-in duration-300">
+                  <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/20 text-white flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+                    <Check className="w-8 h-8 text-emerald-400" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-mono uppercase bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/25">
+                      Inscrição VIP Confirmada
+                    </span>
+                    <h3 className="text-2xl font-black text-white tracking-tight">
+                      Parabéns, {name.split(' ')[0]}!
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
+                      Sua vaga prioritária com benefícios de fundador foi reservada com sucesso.
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-zinc-300 space-y-1.5 text-left">
+                    <strong className="text-white block font-mono uppercase text-[11px]">Canal Exclusivo de Treinadores:</strong>
+                    <p className="text-zinc-400">
+                      Entre no grupo silencioso de WhatsApp para receber a aula prática e o script de fechamento do desafio.
+                    </p>
+                  </div>
+
+                  <a
+                    href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20acabei%20de%20me%20cadastrar%20na%20Lista%20VIP%20da%20ArenaFitPro!"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] min-h-[48px]"
+                  >
+                    <MessageCircle className="w-4 h-4 text-emerald-600" /> Entrar no Grupo VIP de Treinadores
+                  </a>
+
+                  <Link 
+                    href="/" 
+                    className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors pt-2"
+                  >
+                    Conhecer a plataforma institucional <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              )}
+
+            </SpotlightCard3D>
           </div>
 
         </div>
 
-        {/* Prova Social & Métricas no Rodapé da Captura */}
-        <div className="mt-20 pt-10 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div className="space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-white">D+0</span>
-            <p className="text-xs text-zinc-400">Repasse Pix Instantâneo</p>
+        {/* Métricas e Prova de Conceito */}
+        <div className="mt-20 pt-10 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
+          <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
+            <span className="text-2xl sm:text-3xl font-black font-mono text-white block">D+0</span>
+            <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Repasse Pix Instantâneo</p>
           </div>
-          <div className="space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400">3.8x</span>
-            <p className="text-xs text-zinc-400">Mais adesão dos alunos</p>
+          <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
+            <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400 block">3.8x</span>
+            <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Mais adesão dos alunos</p>
           </div>
-          <div className="space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-white">100%</span>
-            <p className="text-xs text-zinc-400">Auditoria Antifraude ao vivo</p>
+          <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
+            <span className="text-2xl sm:text-3xl font-black font-mono text-white block">100%</span>
+            <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Auditoria ao Vivo Antifraude</p>
           </div>
-          <div className="space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-400">R$ 0</span>
-            <p className="text-xs text-zinc-400">Mensalidade no Starter</p>
+          <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
+            <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-400 block">R$ 0</span>
+            <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Mensalidade no Starter</p>
           </div>
         </div>
       </main>
 
-      {/* Footer Minimalista */}
-      <footer className="border-t border-white/5 py-8 text-center text-xs text-zinc-500 font-mono space-y-2">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. • Todos os direitos reservados.</div>
-        <div className="flex items-center justify-center gap-4 text-zinc-400">
-          <Link href="/termos" className="hover:text-white">Termos de Uso</Link>
+      {/* Rodapé Minimalista */}
+      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
+        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. • Luxury Monochrome & Titanium Gamification OS</div>
+        <div className="flex items-center justify-center gap-4 text-zinc-300">
+          <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
           <span>•</span>
-          <Link href="/privacidade" className="hover:text-white">Política de Privacidade & LGPD</Link>
+          <Link href="/privacidade" className="hover:text-white transition-colors">Política de Privacidade & LGPD</Link>
           <span>•</span>
-          <Link href="/ajuda" className="hover:text-white">Ajuda</Link>
+          <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
         </div>
       </footer>
     </div>

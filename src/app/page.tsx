@@ -1376,7 +1376,8 @@ export default function HomePage() {
             <a href="#gamificacao" className="hover:text-white transition-colors">Tecnologia</a>
             <a href="#planos" className="hover:text-white transition-colors">Planos</a>
             <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
-            <Link href="/termos" className="hover:text-white transition-colors">Termos & LGPD</Link>
+            <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
+            <Link href="/privacidade" className="hover:text-white transition-colors">Privacidade & LGPD</Link>
             <Link href="/login" className="text-white font-bold hover:underline transition-colors">Área de Acesso</Link>
           </div>
         </div>

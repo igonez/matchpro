@@ -168,8 +168,8 @@ export default function MasterLoginPage() {
                 )}
               </button>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 text-center pt-2 font-mono">
-                <Lock className="w-3 h-3 text-zinc-500" /> Acesso monitorado com criptografia e auditoria IP.
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-400 text-center pt-2 font-mono">
+                <Lock className="w-3 h-3 text-zinc-400" /> Acesso monitorado com criptografia e auditoria IP.
               </div>
             </form>
 
@@ -179,7 +179,7 @@ export default function MasterLoginPage() {
 
       {/* Rodapé Minimalista */}
       <div className="max-w-md w-full mx-auto text-center z-10 pb-2">
-        <span className="text-[11px] font-mono text-zinc-600">
+        <span className="text-[11px] font-mono text-zinc-400">
           ArenaFitPro • Internal Master Terminal
         </span>
       </div>

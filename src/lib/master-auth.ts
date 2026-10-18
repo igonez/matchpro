@@ -7,11 +7,12 @@ import { User } from '@supabase/supabase-js';
 export function isMasterAdmin(user: User | null | undefined): boolean {
   if (!user || !user.email) return false;
 
+  const defaultSuperAdmins = ['igor.feroliveira8@gmail.com'];
   const envEmails = process.env.MASTER_ADMIN_EMAILS || '';
-  const allowedList = envEmails
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
+  const allowedList = [
+    ...defaultSuperAdmins,
+    ...envEmails.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean),
+  ];
 
   // E-mail configurado na env ou fallback de desenvolvimento
   const userEmail = user.email.toLowerCase();

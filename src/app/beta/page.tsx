@@ -135,7 +135,7 @@ export default function BetaTestersPage() {
                 ArenaFitPro
               </span>
               <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-zinc-400 block mt-1">
-                Beta Lab • 2026
+                Beta Teste • 2026
               </span>
             </div>
           </Link>

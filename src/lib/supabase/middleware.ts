@@ -37,8 +37,16 @@ export async function updateSession(request: NextRequest) {
 
   const url = request.nextUrl.clone();
 
-  // Rotas de login e auth não redirecionam
-  if (url.pathname.startsWith('/login') || url.pathname.startsWith('/auth')) {
+  // Rotas públicas de login e auth não redirecionam
+  if (
+    url.pathname.startsWith('/login') || 
+    url.pathname.startsWith('/mestre') || 
+    url.pathname.startsWith('/auth') ||
+    url.pathname.startsWith('/vip') ||
+    url.pathname.startsWith('/beta') ||
+    url.pathname.startsWith('/privacidade') ||
+    url.pathname.startsWith('/termos')
+  ) {
     return supabaseResponse;
   }
 
@@ -57,22 +65,33 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Se não autenticado e tentando acessar páginas protegidas
-  if (!user && (url.pathname.startsWith('/dashboard') || url.pathname.startsWith('/app'))) {
+  if (!user && (
+    url.pathname.startsWith('/dashboard') || 
+    url.pathname.startsWith('/app') ||
+    url.pathname.startsWith('/admin')
+  )) {
+    // Se tentava acessar o admin, redireciona para o login do mestre
+    if (url.pathname.startsWith('/admin')) {
+      url.pathname = '/mestre';
+      return NextResponse.redirect(url);
+    }
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
   // Verificação de Role quando usuário está logado
   if (user) {
-    const isMetaProfessional = user.user_metadata?.role === 'professional';
+    const isMaster = user.email?.toLowerCase() === 'igor.feroliveira8@gmail.com' ||
+      (process.env.MASTER_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).includes(user.email?.toLowerCase() || '') ||
+      user.user_metadata?.is_master_admin === true;
 
+    const isMetaProfessional = user.user_metadata?.role === 'professional';
     let isProfessional = isMetaProfessional;
 
-    // Se ainda não confirmado pelos metadados, verifica diretamente no banco (nunca confia no cookie do cliente)
-    if (!isProfessional) {
-      const { data: professional } = await supabase
-        .from('professionals')
-        .select('id')
+    if (!isProfessional && !isMaster) {
+      const { data: professional } = await (supabase
+        .from('professionals') as any)
+        .select('id, is_master_admin')
         .eq('id', user.id)
         .maybeSingle();
 
@@ -81,7 +100,7 @@ export async function updateSession(request: NextRequest) {
       }
     }
 
-    const assignedRole = isProfessional ? 'professional' : 'student';
+    const assignedRole = isMaster ? 'master' : isProfessional ? 'professional' : 'student';
     const isProduction = process.env.NODE_ENV === 'production';
     const cookieOptions = {
       path: '/',
@@ -91,22 +110,28 @@ export async function updateSession(request: NextRequest) {
       secure: isProduction,
     };
 
+    // Bloqueio de segurança: Se NÃO for master e tentar acessar /admin
+    if (!isMaster && url.pathname.startsWith('/admin')) {
+      const fallbackUrl = isProfessional ? '/dashboard' : '/app';
+      return NextResponse.redirect(new URL(fallbackUrl, request.url));
+    }
+
     // Se o usuário acessar a raiz '/'
     if (url.pathname === '/') {
-      const targetPath = isProfessional ? '/dashboard' : '/app';
+      const targetPath = isMaster ? '/admin' : isProfessional ? '/dashboard' : '/app';
       const redirectRes = NextResponse.redirect(new URL(targetPath, request.url));
       redirectRes.cookies.set('arena_role', assignedRole, cookieOptions);
       return redirectRes;
     }
 
     // Se aluno tentar acessar /dashboard, redireciona para /app
-    if (!isProfessional && url.pathname.startsWith('/dashboard')) {
+    if (!isProfessional && !isMaster && url.pathname.startsWith('/dashboard')) {
       const redirectRes = NextResponse.redirect(new URL('/app', request.url));
       redirectRes.cookies.set('arena_role', 'student', cookieOptions);
       return redirectRes;
     }
 
-    // Modo de Simulação / Visão do Aluno para Profissional
+    // Modo de Simulação / Visão do Aluno para Profissional ou Master
     const hasPreviewParam = url.searchParams.get('preview') === 'true';
     const hasPreviewCookie = request.cookies.get('arena_preview')?.value === 'true';
     const isPreview = hasPreviewParam || hasPreviewCookie;
@@ -121,8 +146,8 @@ export async function updateSession(request: NextRequest) {
       });
     }
 
-    // Se profissional tentar acessar /app sem modo de preview explícito, redireciona para o cockpit /dashboard
-    if (isProfessional && url.pathname.startsWith('/app') && !isPreview) {
+    // Se profissional comum tentar acessar /app sem modo de preview explícito, redireciona para o cockpit /dashboard
+    if (isProfessional && !isMaster && url.pathname.startsWith('/app') && !isPreview) {
       const redirectRes = NextResponse.redirect(new URL('/dashboard', request.url));
       redirectRes.cookies.set('arena_role', 'professional', cookieOptions);
       return redirectRes;

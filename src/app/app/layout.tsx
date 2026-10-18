@@ -13,7 +13,7 @@ export default function StudentAppLayout({
   return (
     <WorkoutSessionProvider>
       <div className="min-h-screen bg-black text-zinc-100 flex justify-center selection:bg-white selection:text-black">
-        <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl min-h-screen flex flex-col pb-24 relative bg-zinc-950 sm:border-x border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.95),0_0_30px_rgba(255,255,255,0.04)]">
+        <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl min-h-screen flex flex-col pb-28 sm:pb-32 relative bg-zinc-950 sm:border-x border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.95),0_0_30px_rgba(255,255,255,0.04)]">
           <ReturnToCoachBanner />
           <PwaInstallPrompt />
           {children}

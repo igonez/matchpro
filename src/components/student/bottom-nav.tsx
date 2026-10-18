@@ -19,7 +19,9 @@ import {
   Award,
   Dumbbell,
   Utensils,
-  Droplets
+  Droplets,
+  Smartphone,
+  Download
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
@@ -293,6 +295,20 @@ export function StudentBottomNav() {
           active: pathname === '/app/profile',
         },
         {
+          title: 'Instalar Aplicativo no Celular',
+          subtitle: 'Acesso rápido com 1 toque sem barra',
+          href: '#install-pwa',
+          icon: Smartphone,
+          active: false,
+          isAction: true,
+          onClick: () => {
+            setShowVerticalMenu(false);
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('arena_open_pwa_prompt'));
+            }
+          },
+        },
+        {
           title: 'Conquistas & Medalhas',
           subtitle: 'Badges de mérito e ofensiva',
           href: '/app/profile',
@@ -305,20 +321,20 @@ export function StudentBottomNav() {
 
   return (
     <>
-      {/* 1. Menu Inferior Horizontal (Pílula Responsiva Mobile-First + Web com Touch Targets >= 44px) */}
-      <nav className="fixed bottom-3 sm:bottom-5 inset-x-0 mx-auto max-w-[430px] sm:max-w-lg w-[95%] z-40 transition-all">
-        <div className="mono-glass-pill rounded-full px-2.5 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/15">
+      {/* 1. Menu Inferior Horizontal (Pílula Responsiva Mobile-First + Web com Touch Targets generosos e Safe-Area) */}
+      <nav className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto max-w-[440px] sm:max-w-lg w-[94%] sm:w-[92%] z-40 transition-all pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="mono-glass-pill rounded-full px-3 sm:px-5 py-2 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/20">
           
           {/* Lado Esquerdo (Hoje, Missões) */}
-          <div className="flex items-center justify-around flex-1 gap-1">
+          <div className="flex items-center justify-around flex-1 gap-1.5">
             {leftTabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[44px] flex items-center justify-center px-3 sm:px-4 text-xs font-mono tracking-wider transition-all rounded-full ${
+                className={`min-h-[46px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-mono font-bold tracking-wider transition-all rounded-full ${
                   tab.active
-                    ? 'text-white font-black bg-white/15 shadow-inner'
-                    : 'text-zinc-300 hover:text-white'
+                    ? 'text-white font-black bg-white/20 shadow-inner'
+                    : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
                 }`}
               >
                 {tab.name}
@@ -327,29 +343,29 @@ export function StudentBottomNav() {
           </div>
 
           {/* Botão Central de Check-in em Cromo Puro */}
-          <div className="px-1.5 -my-2.5">
+          <div className="px-2 -my-3">
             <button
               onClick={() => setShowQuickSheet(true)}
               className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer"
               title={activeSession ? 'Sessão Ativa em Andamento' : 'Registrar Check-in'}
             >
               <div
-                className={`h-12 w-12 rounded-full p-px transition-all ${
+                className={`h-13 w-13 rounded-full p-px transition-all ${
                   activeSession
-                    ? 'bg-gradient-to-b from-emerald-300 via-emerald-500 to-emerald-800 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-105'
-                    : 'bg-gradient-to-b from-white via-zinc-300 to-zinc-800 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:scale-105 active:scale-95'
+                    ? 'bg-gradient-to-b from-emerald-300 via-emerald-500 to-emerald-800 shadow-[0_0_25px_rgba(52,211,153,0.6)] scale-105'
+                    : 'bg-gradient-to-b from-white via-zinc-300 to-zinc-800 shadow-[0_0_25px_rgba(255,255,255,0.35)] group-hover:scale-105 active:scale-95'
                 }`}
               >
                 <div className="h-full w-full bg-black rounded-full flex items-center justify-center text-white relative">
                   {activeSession ? (
-                    <span className="text-emerald-400 font-bold text-xs animate-pulse">▶</span>
+                    <span className="text-emerald-400 font-bold text-sm animate-pulse">▶</span>
                   ) : (
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <circle cx="12" cy="12" r="3" strokeWidth="2" />
+                    <svg className="w-5.5 h-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <circle cx="12" cy="12" r="3" strokeWidth="2.2" />
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth="2"
+                        strokeWidth="2.2"
                         d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
                       />
                     </svg>
@@ -360,15 +376,15 @@ export function StudentBottomNav() {
           </div>
 
           {/* Lado Direito (Ranking, Feed, Menu) */}
-          <div className="flex items-center justify-around flex-1 gap-1">
+          <div className="flex items-center justify-around flex-1 gap-1.5">
             {rightTabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[44px] flex items-center justify-center px-3 sm:px-4 text-xs font-mono tracking-wider transition-all rounded-full ${
+                className={`min-h-[46px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-mono font-bold tracking-wider transition-all rounded-full ${
                   tab.active
-                    ? 'text-white font-black bg-white/15 shadow-inner'
-                    : 'text-zinc-300 hover:text-white'
+                    ? 'text-white font-black bg-white/20 shadow-inner'
+                    : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
                 }`}
               >
                 {tab.name}
@@ -379,14 +395,14 @@ export function StudentBottomNav() {
             <button
               onClick={() => setShowVerticalMenu(true)}
               aria-label="Abrir Menu"
-              className={`min-h-[44px] min-w-[44px] flex items-center justify-center text-zinc-300 hover:text-white transition-all rounded-full hover:bg-white/10 cursor-pointer ${
+              className={`min-h-[46px] min-w-[46px] flex items-center justify-center text-zinc-300 hover:text-white transition-all rounded-full hover:bg-white/10 cursor-pointer ${
                 showVerticalMenu
-                  ? 'text-white font-black bg-white/15'
+                  ? 'text-white font-black bg-white/20'
                   : ''
               }`}
               title="Menu Geral"
             >
-              <Menu className="h-4 w-4 stroke-[2.2]" />
+              <Menu className="h-5 w-5 stroke-[2.2]" />
             </button>
           </div>
 
@@ -438,8 +454,34 @@ export function StudentBottomNav() {
                       {section.category}
                     </span>
                     <div className="space-y-1">
-                      {section.items.map((item) => {
+                      {section.items.map((item: any) => {
                         const Icon = item.icon;
+                        if (item.isAction) {
+                          return (
+                            <button
+                              key={item.title}
+                              type="button"
+                              onClick={item.onClick}
+                              className="w-full flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:text-white hover:bg-white/[0.08] transition-all text-left cursor-pointer"
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                                  <Icon className="w-3.5 h-3.5" />
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-semibold text-white leading-tight truncate">
+                                    {item.title}
+                                  </div>
+                                  <p className="text-[10px] text-zinc-400 leading-tight truncate mt-0.5">
+                                    {item.subtitle}
+                                  </p>
+                                </div>
+                              </div>
+                              <ChevronRight className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                            </button>
+                          );
+                        }
+
                         return (
                           <Link
                             key={item.title}

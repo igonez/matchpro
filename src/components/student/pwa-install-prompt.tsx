@@ -21,9 +21,13 @@ export function PwaInstallPrompt() {
     setIsIos(isIosDevice);
 
     const dismissed = localStorage.getItem('pwa_prompt_dismissed');
+    // Se foi descartado há mais de 5 dias, resetar para permitir rever
+    const dismissedTime = Number(localStorage.getItem('pwa_prompt_dismissed_time') || 0);
+    const isDismissedExpired = dismissedTime && Date.now() - dismissedTime > 5 * 24 * 60 * 60 * 1000;
+    const shouldShow = !dismissed || isDismissedExpired;
 
     if (isIosDevice) {
-      if (!dismissed) {
+      if (shouldShow) {
         setShowPrompt(true);
       }
     } else {
@@ -31,7 +35,7 @@ export function PwaInstallPrompt() {
       const handler = (e: any) => {
         e.preventDefault();
         setDeferredPrompt(e);
-        if (!dismissed) {
+        if (shouldShow) {
           setShowPrompt(true);
         }
       };
@@ -43,13 +47,35 @@ export function PwaInstallPrompt() {
     }
   }, []);
 
+  // Escutar disparo manual via menu vertical ou botão externo
+  useEffect(() => {
+    const handleManualOpen = () => {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+      if (isIosDevice) {
+        setShowIosGuide(true);
+      } else if (deferredPrompt) {
+        deferredPrompt.prompt();
+      } else {
+        setShowPrompt(true);
+      }
+    };
+
+    window.addEventListener('arena_open_pwa_prompt', handleManualOpen);
+    return () => window.removeEventListener('arena_open_pwa_prompt', handleManualOpen);
+  }, [deferredPrompt]);
+
   const handleInstallClick = async () => {
     if (isIos) {
       setShowIosGuide(true);
       return;
     }
 
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      // Fallback amigável caso o browser não tenha disparado beforeinstallprompt
+      setShowIosGuide(true);
+      return;
+    }
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
@@ -62,6 +88,7 @@ export function PwaInstallPrompt() {
     setShowPrompt(false);
     setShowIosGuide(false);
     localStorage.setItem('pwa_prompt_dismissed', 'true');
+    localStorage.setItem('pwa_prompt_dismissed_time', Date.now().toString());
   };
 
   if (!showPrompt) return null;

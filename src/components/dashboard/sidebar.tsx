@@ -16,7 +16,8 @@ import {
   Activity, 
   Target,
   LogOut,
-  Sparkles
+  Sparkles,
+  ChevronDown
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -85,6 +86,22 @@ export function DashboardSidebar() {
     },
   ];
 
+  const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(() => {
+    // Inicializar aberto para o grupo que contém o item ativo, e os demais abertos por padrão
+    const initial: Record<string, boolean> = {};
+    navGroups.forEach((g) => {
+      initial[g.title] = true;
+    });
+    return initial;
+  });
+
+  const toggleGroup = (title: string) => {
+    setOpenGroups((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
   return (
     <aside className="hidden md:flex w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex-col justify-between p-5 min-h-screen relative z-30 shrink-0">
       <div className="space-y-6">
@@ -107,62 +124,81 @@ export function DashboardSidebar() {
           </div>
         </Link>
 
-        {/* Navigation com Subgrupos */}
-        <nav className="space-y-4">
-          {navGroups.map((group) => (
-            <div key={group.title} className="space-y-1">
-              <div className="px-3 pb-1 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold select-none">
-                {group.title}
-              </div>
-              <div className="space-y-1">
-                {group.items.map((item) => {
-                  const Icon = item.icon;
-                  if (item.isCta) {
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
-                          item.active
-                            ? 'bg-white text-black font-black shadow-[0_0_20px_rgba(255,255,255,0.25)]'
-                            : 'bg-white/10 hover:bg-white text-white hover:text-black font-bold border border-white/20'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <Icon className="w-4 h-4 shrink-0" />
-                          <span className="truncate">{item.name}</span>
-                        </div>
-                        <Sparkles className="w-3.5 h-3.5 shrink-0 opacity-70" />
-                      </Link>
-                    );
-                  }
+        {/* Navigation com Subgrupos Expandíveis (Acordeão) */}
+        <nav className="space-y-3 overflow-y-auto max-h-[calc(100vh-190px)] pr-1">
+          {navGroups.map((group) => {
+            const isOpen = openGroups[group.title] ?? true;
+            const hasActiveChild = group.items.some((it) => it.active);
 
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
-                        item.active
-                          ? 'bg-white/10 text-white font-semibold border border-white/20 shadow-sm'
-                          : 'text-zinc-400 hover:text-white hover:bg-white/[0.04] font-medium'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-white' : 'text-zinc-400'}`} />
-                        <span className="truncate">{item.name}</span>
-                        {item.badge && (
-                          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/15 opacity-80 shrink-0">
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0 ml-1.5" />}
-                    </Link>
-                  );
-                })}
+            return (
+              <div key={group.title} className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(group.title)}
+                  className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-zinc-500 hover:text-zinc-300 font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.03] transition-colors"
+                >
+                  <span className={hasActiveChild ? 'text-zinc-300' : ''}>
+                    {group.title}
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-zinc-500 transition-transform duration-200 ${
+                      isOpen ? 'transform rotate-0' : '-rotate-90'
+                    }`}
+                  />
+                </button>
+
+                {isOpen && (
+                  <div className="space-y-1 pt-0.5">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      if (item.isCta) {
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
+                              item.active
+                                ? 'bg-white text-black font-black shadow-[0_0_20px_rgba(255,255,255,0.25)]'
+                                : 'bg-white/10 hover:bg-white text-white hover:text-black font-bold border border-white/20'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <Icon className="w-4 h-4 shrink-0" />
+                              <span className="truncate">{item.name}</span>
+                            </div>
+                            <Sparkles className="w-3.5 h-3.5 shrink-0 opacity-70" />
+                          </Link>
+                        );
+                      }
+
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
+                            item.active
+                              ? 'bg-white/10 text-white font-semibold border border-white/20 shadow-sm'
+                              : 'text-zinc-400 hover:text-white hover:bg-white/[0.04] font-medium'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-white' : 'text-zinc-400'}`} />
+                            <span className="truncate">{item.name}</span>
+                            {item.badge && (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/15 opacity-80 shrink-0">
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                          {item.active && <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0 ml-1.5" />}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </nav>
       </div>
 

@@ -54,10 +54,12 @@ export function ReturnToCoachBanner() {
     router.push('/dashboard');
   };
 
-  if (!isProfessional) return null;
+  if (!isProfessional) {
+    return <div className="w-full pt-[env(safe-area-inset-top,0px)] shrink-0" aria-hidden="true" />;
+  }
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-zinc-950/90 backdrop-blur-xl border-b border-white/15 px-3 py-2 flex items-center justify-between shadow-2xl">
+    <div className="sticky top-0 z-50 w-full bg-zinc-950/95 backdrop-blur-xl border-b border-white/15 px-3.5 pt-[max(0.625rem,env(safe-area-inset-top))] pb-2.5 flex items-center justify-between shadow-2xl">
       <div className="flex items-center gap-2">
         <div className="h-5 w-5 rounded-md bg-white/10 border border-white/20 flex items-center justify-center">
           <Shield className="h-3 w-3 text-white" />

@@ -126,7 +126,7 @@ export function DashboardHeader() {
 
   return (
     <>
-      <header className="h-20 border-b border-white/[0.08] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-black/85 backdrop-blur-2xl sticky top-0 z-40">
+      <header className="min-h-[5rem] h-auto border-b border-white/[0.08] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-black/85 backdrop-blur-2xl sticky top-0 z-40 pt-[env(safe-area-inset-top,0px)] pb-3">
         <div className="flex items-center gap-3.5">
           {/* Logo do App + Brand ArenaFitPro (sem botão hambúrguer) */}
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
@@ -188,7 +188,7 @@ export function DashboardHeader() {
           />
 
           {/* Drawer Content */}
-          <div className="relative w-4/5 max-w-xs bg-zinc-950/95 border-r border-white/10 p-5 flex flex-col justify-between h-full shadow-2xl z-10">
+          <div className="relative w-4/5 max-w-xs bg-zinc-950/95 border-r border-white/10 p-5 pt-[max(1.25rem,env(safe-area-inset-top))] flex flex-col justify-between h-full shadow-2xl z-10">
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2.5">

@@ -334,8 +334,8 @@ function CameraCaptureContent() {
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
-      {/* Top Bar Monocromático */}
-      <div className="flex items-center justify-between z-10 pt-1">
+      {/* Top Bar Monocromático com Safe Area */}
+      <div className="flex items-center justify-between z-10 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <Link href="/app" className="px-3.5 py-2 min-h-[44px] h-11 inline-flex items-center rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors">
           ← Voltar
         </Link>

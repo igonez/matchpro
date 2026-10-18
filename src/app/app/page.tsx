@@ -523,7 +523,7 @@ export default function StudentHomePage() {
       <Monochrome3DBackground />
 
       {/* 1. Header do Atleta */}
-      <div className="flex items-center justify-between pt-1 relative z-10">
+      <div className="flex items-center justify-between pt-2 sm:pt-3 relative z-10">
         <div className="flex items-center gap-3">
           <Link href="/app/profile">
             <div className="relative h-12 w-12 rounded-2xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] active:scale-95 transition-all cursor-pointer">

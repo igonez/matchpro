@@ -58,25 +58,25 @@ export function WorkoutActiveSessionHud() {
 
   return (
     <>
-      {/* 1. Barra Flutuante Minimizada (Acima do menu inferior ou topo) */}
+      {/* 1. Barra Flutuante Minimizada (Acima do menu inferior com Safe Area) */}
       {!isExpanded && (
-        <div className="fixed bottom-20 inset-x-0 mx-auto max-w-[430px] sm:max-w-lg w-[95%] z-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <div className="bg-zinc-950/95 border border-white/20 rounded-2xl p-3 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex items-center justify-between gap-3">
+        <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] inset-x-0 mx-auto max-w-[460px] sm:max-w-lg w-[95%] sm:w-[90%] z-40 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="bg-zinc-950/95 border border-white/20 rounded-2xl p-2.5 sm:p-3 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex items-center justify-between gap-3">
             <div 
               onClick={() => setIsExpanded(true)}
-              className="flex items-center gap-3 cursor-pointer flex-1 min-w-0"
+              className="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0"
             >
-              <div className="h-10 w-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center relative shrink-0">
-                <span className="h-2.5 w-2.5 rounded-full bg-white animate-ping absolute" />
+              <div className="h-9 w-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center relative shrink-0">
+                <span className="h-2 w-2 rounded-full bg-white animate-ping absolute" />
                 <span className="h-2 w-2 rounded-full bg-white relative z-10" />
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
-                    {activeSession.category === 'treino' ? 'TREINO ATIVO' : 'CARDIO ATIVO'}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-medium text-zinc-400">
+                    {activeSession.category === 'treino' ? 'Treino em andamento' : 'Cardio em andamento'}
                   </span>
                 </div>
-                <div className="text-base font-black font-mono text-white tracking-wider">
+                <div className="text-sm font-bold text-white tracking-tight">
                   {formattedTime}
                 </div>
               </div>
@@ -85,10 +85,10 @@ export function WorkoutActiveSessionHud() {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handleFinishAndTakePhoto}
-                className="mono-button-primary min-h-[44px] px-3.5 py-2 text-xs font-mono flex items-center gap-1.5 shadow-md"
+                className="mono-button-primary min-h-[40px] px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 shadow-md"
               >
                 <Camera className="h-3.5 w-3.5" />
-                <span>FINALIZAR</span>
+                <span>Finalizar</span>
               </button>
               <button
                 onClick={() => setIsExpanded(true)}

@@ -230,8 +230,8 @@ export default function HomePage() {
       {/* 1. Background 3D com Partículas Monocromáticas */}
       <Monochrome3DBackground />
 
-      {/* 2. Floating Navbar Monocromática (Mobile-First + Desktop) */}
-      <header className="sticky top-3 sm:top-5 z-50 px-3 sm:px-6">
+      {/* 2. Floating Navbar Monocromática (Mobile-First + Desktop com Safe Area iOS) */}
+      <header className="sticky top-0 z-50 px-3 sm:px-6 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="max-w-6xl mx-auto mono-glass-pill rounded-full px-4 sm:px-6 h-16 flex items-center justify-between shadow-2xl">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
             <div className="h-10 w-10 rounded-xl overflow-hidden border border-white/15 shadow-[0_0_15px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform bg-black shrink-0">

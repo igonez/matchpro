@@ -4,7 +4,18 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, whatsapp, role, students_range, utm_source, utm_medium, utm_campaign } = body;
+    const { 
+      name, 
+      email, 
+      whatsapp, 
+      role, 
+      students_range, 
+      instagram,
+      lead_type = 'vip',
+      utm_source, 
+      utm_medium, 
+      utm_campaign 
+    } = body;
 
     // Validações básicas
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
@@ -30,8 +41,8 @@ export async function POST(req: NextRequest) {
         whatsapp: cleanWhatsapp,
         role: role || 'personal_trainer',
         students_range: students_range || '11_30',
-        utm_source: utm_source || null,
-        utm_medium: utm_medium || null,
+        utm_source: utm_source || (instagram ? `ig:${instagram.trim()}` : null),
+        utm_medium: utm_medium || lead_type,
         utm_campaign: utm_campaign || null,
         status: 'new',
       })

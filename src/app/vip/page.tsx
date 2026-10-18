@@ -171,9 +171,9 @@ export default function VipCapturePage() {
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] text-white text-balance">
                 Engaje sua turma e fature{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400">
-                  R$ 5.000 a R$ 25.000
+                  R$ 1.500 a R$ 6.000 extras
                 </span>{' '}
-                por desafio.
+                a cada desafio.
               </h1>
             </div>
 

@@ -50,18 +50,29 @@ export default function PrivacyPage() {
       {/* Top Header */}
       <header className="border-b border-white/[0.08] bg-black/60 backdrop-blur-2xl sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-white transition-colors px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 active:scale-95 min-h-[44px]"
-          >
-            <ArrowLeft className="h-4 w-4" /> Voltar ao Início
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+            <div className="h-9 w-9 rounded-xl overflow-hidden border border-white/15 shadow-[0_0_15px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform bg-black shrink-0">
+              <img
+                src="/app-logo.png"
+                alt="ArenaFitPro Logo"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <span className="font-extrabold text-base tracking-tight text-white block leading-none">
+                ArenaFitPro
+              </span>
+              <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-400 block mt-1">
+                Privacidade & LGPD
+              </span>
+            </div>
           </Link>
 
           <Link 
             href="/termos" 
             className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
           >
-            Ver Termos de Uso <ChevronRight className="h-3.5 w-3.5" />
+            Termos de Uso <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </header>
@@ -200,7 +211,7 @@ export default function PrivacyPage() {
       </main>
 
       <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. • Luxury Monochrome & Titanium Gamification OS</div>
+        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</div>
         <div className="flex items-center justify-center gap-4 text-zinc-300">
           <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
           <span>•</span>

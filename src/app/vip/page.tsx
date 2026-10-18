@@ -115,15 +115,22 @@ export default function VipCapturePage() {
       {/* Top Bar Minimalista Titanium */}
       <header className="border-b border-white/[0.08] bg-black/60 backdrop-blur-2xl sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="relative h-9 w-9 rounded-xl bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-all">
-              <div className="h-full w-full bg-black rounded-[11px] flex items-center justify-center font-black text-white text-sm">
-                ⚡
-              </div>
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+            <div className="h-10 w-10 rounded-xl overflow-hidden border border-white/15 shadow-[0_0_15px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform bg-black shrink-0">
+              <img
+                src="/app-logo.png"
+                alt="ArenaFitPro Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <span className="font-black text-lg tracking-tight text-white">
-              Arena<span className="text-zinc-400">Fit</span>Pro
-            </span>
+            <div>
+              <span className="font-extrabold text-base sm:text-lg tracking-tight text-white block leading-none">
+                ArenaFitPro
+              </span>
+              <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-zinc-400 block mt-1">
+                Gamification OS
+              </span>
+            </div>
           </Link>
 
           <div className="flex items-center gap-3">
@@ -426,9 +433,9 @@ export default function VipCapturePage() {
         </div>
       </main>
 
-      {/* Rodapé Minimalista */}
+      {/* Rodapé Oficial */}
       <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. • Luxury Monochrome & Titanium Gamification OS</div>
+        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</div>
         <div className="flex items-center justify-center gap-4 text-zinc-300">
           <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
           <span>•</span>

@@ -17,14 +17,38 @@ import {
   Target,
   LogOut,
   Sparkles,
-  ChevronDown
+  ChevronDown,
+  Crown
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { isMasterAdmin } from '@/lib/master-auth';
 
 export function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [isMaster, setIsMaster] = React.useState(false);
+
+  React.useEffect(() => {
+    async function checkMaster() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (isMasterAdmin(user)) {
+        setIsMaster(true);
+        return;
+      }
+      if (user?.id) {
+        const { data: prof } = await supabase
+          .from('professionals')
+          .select('is_master_admin')
+          .eq('id', user.id)
+          .maybeSingle();
+        if (prof?.is_master_admin) {
+          setIsMaster(true);
+        }
+      }
+    }
+    checkMaster();
+  }, [supabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -84,6 +108,14 @@ export function DashboardSidebar() {
         { name: 'Meu Perfil & Fiscais', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
       ],
     },
+    ...(isMaster ? [
+      {
+        title: 'ADMINISTRAÇÃO MESTRE',
+        items: [
+          { name: 'Cockpit do Fundador', href: '/dashboard/master', icon: Crown, active: pathname === '/dashboard/master', badge: 'MESTRE' },
+        ],
+      }
+    ] : []),
   ];
 
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(() => {

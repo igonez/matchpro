@@ -47,6 +47,7 @@ export async function updateSession(request: NextRequest) {
     url.pathname.startsWith('/api/finance') ||
     url.pathname.startsWith('/api/ai') ||
     url.pathname.startsWith('/api/submissions') ||
+    url.pathname.startsWith('/api/master') ||
     url.pathname.startsWith('/api/admin')
   )) {
     return NextResponse.json(

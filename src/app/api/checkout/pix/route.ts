@@ -22,10 +22,10 @@ export async function POST(request: Request) {
         eventType: 'SUSPICIOUS_PAYLOAD',
         severity: 'WARN',
         resourcePath: '/api/checkout/pix',
-        details: { errors: parseResult.error.format() },
+        details: { errors: parseResult.error.issues },
       });
       return NextResponse.json(
-        { error: 'Dados inválidos.', details: parseResult.error.errors[0]?.message },
+        { error: 'Dados inválidos.', details: parseResult.error.issues[0]?.message },
         { status: 400 }
       );
     }

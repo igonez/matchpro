@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ASAAS_CONFIG } from '@/lib/asaas/config';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
+import { logSecurityEvent } from '@/lib/security/audit';
 
 function safeCompare(a: string, b: string): boolean {
   if (!a || !b) return false;
@@ -19,6 +20,12 @@ export async function POST(request: Request) {
     const expectedSecret = ASAAS_CONFIG.webhookSecret;
 
     if (!expectedSecret || !authToken || !safeCompare(authToken, expectedSecret)) {
+      await logSecurityEvent({
+        eventType: 'WEBHOOK_SIGNATURE_MISMATCH',
+        severity: 'HIGH',
+        resourcePath: '/api/webhooks/asaas',
+        details: { ip: request.headers.get('x-forwarded-for') || 'unknown' },
+      });
       console.warn('[Asaas Webhook] Tentativa de acesso não autorizada ao webhook.');
       return NextResponse.json({ error: 'Unauthorized webhook call' }, { status: 401 });
     }

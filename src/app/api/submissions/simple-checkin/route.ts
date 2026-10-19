@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { sanitizeString } from '@/lib/security/sanitize';
 
 export async function POST(request: Request) {
   try {
+    // 1. Rate limiting para submissões
+    const rateLimitResponse = enforceRateLimit(request, 'submissions');
+    if (rateLimitResponse) return rateLimitResponse;
+
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -16,6 +22,7 @@ export async function POST(request: Request) {
 
     const body = await request.json().catch(() => ({}));
     const { missionId, challengeId, caption } = body;
+    const sanitizedCaption = sanitizeString(caption || 'Check-in direto de hábito confirmado').slice(0, 300);
 
     if (!missionId) {
       return NextResponse.json(
@@ -88,7 +95,7 @@ export async function POST(request: Request) {
         student_id: user.id,
         status: 'approved',
         photo_url: 'simple_click',
-        caption: caption || 'Check-in direto de hábito confirmado',
+        caption: sanitizedCaption,
         submitted_at: nowIso,
         client_captured_at: nowIso,
       })

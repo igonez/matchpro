@@ -1,11 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { sanitizeString } from '@/lib/security/sanitize';
 
 export async function POST(request: Request) {
   try {
+    // 1. Rate limit para prevenir enumeração e força bruta de turmas
+    const rateLimitResponse = enforceRateLimit(request, 'default');
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await request.json();
-    let rawCode = (body.code || '').trim();
+    let rawCode = sanitizeString(body.code || '').slice(0, 100).trim();
 
     if (!rawCode) {
       return NextResponse.json(

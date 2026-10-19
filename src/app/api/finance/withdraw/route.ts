@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { validatePixKey } from '@/lib/validation/brazilian-banking';
 import { AsaasClient } from '@/lib/asaas/client';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { logSecurityEvent } from '@/lib/security/audit';
 
 export async function POST(request: Request) {
   try {
@@ -11,6 +13,28 @@ export async function POST(request: Request) {
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
+    }
+
+    // 1. Rate limiting estrito por usuário (prevenção de concorrência e spam de saque)
+    const rateLimitResponse = enforceRateLimit(request, 'checkout', `withdraw:${user.id}`);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // 2. Trava anti-concorrência (Prevenção de Race Condition / Double Spending - CWE-362)
+    // Se já existir um saque pendente criado há menos de 2 minutos, bloqueia requisições paralelas
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+    const { data: pendingWithdrawals } = await supabaseAdmin
+      .from('withdrawals')
+      .select('id')
+      .eq('professional_id', user.id)
+      .eq('status', 'PENDING')
+      .gte('created_at', twoMinutesAgo)
+      .limit(1);
+
+    if (pendingWithdrawals && pendingWithdrawals.length > 0) {
+      return NextResponse.json(
+        { error: 'Existe uma solicitação de saque em processamento para sua conta. Aguarde alguns instantes.' },
+        { status: 429 }
+      );
     }
 
     const { data: prof, error: profError } = await supabaseAdmin
@@ -37,7 +61,7 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
     const requestedAmount = Number(body.amount || 0);
 
-    if (requestedAmount < 5) {
+    if (isNaN(requestedAmount) || requestedAmount < 5) {
       return NextResponse.json(
         { error: 'O valor mínimo para solicitação de saque Pix é de R$ 5,00.' },
         { status: 400 }
@@ -123,6 +147,19 @@ export async function POST(request: Request) {
     if (insertErr) {
       console.error('[Withdraw API] Erro ao registrar saque no banco:', insertErr);
     }
+
+    await logSecurityEvent({
+      eventType: 'SENSITIVE_DATA_ACCESSED',
+      severity: 'INFO',
+      userId: user.id,
+      userEmail: user.email,
+      resourcePath: '/api/finance/withdraw',
+      details: {
+        amount: requestedAmount,
+        transferId: transferRes.id,
+        status: finalStatus,
+      },
+    });
 
     const newBalance = Math.max(0, Number((availableBalance - requestedAmount).toFixed(2)));
 

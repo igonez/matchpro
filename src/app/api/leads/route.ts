@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { sanitizeString, sanitizeEmail } from '@/lib/security/sanitize';
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Rate limiting para prevenir spam de formulário de leads
+    const rateLimitResponse = enforceRateLimit(req, 'default');
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await req.json();
     const { 
       name, 
@@ -17,12 +23,15 @@ export async function POST(req: NextRequest) {
       utm_campaign 
     } = body;
 
+    const sanitizedName = sanitizeString(name).slice(0, 100);
+    const sanitizedEmail = sanitizeEmail(email);
+
     // Validações básicas
-    if (!name || typeof name !== 'string' || name.trim().length < 2) {
+    if (!sanitizedName || sanitizedName.length < 2) {
       return NextResponse.json({ error: 'Nome inválido ou muito curto.' }, { status: 400 });
     }
 
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
+    if (!sanitizedEmail || !sanitizedEmail.includes('@')) {
       return NextResponse.json({ error: 'E-mail inválido.' }, { status: 400 });
     }
 
@@ -36,8 +45,8 @@ export async function POST(req: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('coach_leads')
       .insert({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
+        name: sanitizedName,
+        email: sanitizedEmail,
         whatsapp: cleanWhatsapp,
         role: role || 'personal_trainer',
         students_range: students_range || '11_30',

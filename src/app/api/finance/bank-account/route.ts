@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { validateCPF, validateCNPJ, validatePixKey, cleanDigits } from '@/lib/validation/brazilian-banking';
 import { AsaasClient } from '@/lib/asaas/client';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -12,6 +13,10 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
     }
+
+    // 1. Rate limiting estrito para proteção de consultas bancárias (10 req/min)
+    const rateLimitResponse = enforceRateLimit(request, 'checkout', `bank:${user.id}`);
+    if (rateLimitResponse) return rateLimitResponse;
 
     const body = await request.json();
     const { 

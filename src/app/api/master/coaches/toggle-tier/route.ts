@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { isMasterAdmin } from '@/lib/master-auth';
+import { logSecurityEvent } from '@/lib/security/audit';
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,6 +42,15 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: 'Falha ao atualizar plano do treinador.' }, { status: 500 });
     }
+
+    await logSecurityEvent({
+      eventType: 'ADMIN_TIER_CHANGED',
+      severity: 'WARN',
+      userId: user?.id,
+      userEmail: user?.email,
+      resourcePath: '/api/master/coaches/toggle-tier',
+      details: { coachId, targetTier },
+    });
 
     return NextResponse.json({ success: true, coach: data });
   } catch (err: any) {

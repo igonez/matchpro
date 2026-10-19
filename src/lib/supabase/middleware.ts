@@ -83,10 +83,10 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     const isMaster = user.email?.toLowerCase() === 'igor.feroliveira8@gmail.com' ||
       (process.env.MASTER_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).includes(user.email?.toLowerCase() || '') ||
-      user.user_metadata?.is_master_admin === true;
+      user.app_metadata?.is_master_admin === true;
 
-    const isMetaProfessional = user.user_metadata?.role === 'professional';
-    let isProfessional = isMetaProfessional;
+    // Apenas app_metadata (imutável pelo cliente) ou registro confirmado no banco
+    let isProfessional = user.app_metadata?.role === 'professional';
 
     if (!isProfessional && !isMaster) {
       const { data: professional } = await (supabase

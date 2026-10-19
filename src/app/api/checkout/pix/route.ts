@@ -3,21 +3,45 @@ import { AsaasClient } from '@/lib/asaas/client';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { checkoutPixSchema } from '@/lib/security/validation';
+import { logSecurityEvent } from '@/lib/security/audit';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { challengeId, studentName, studentEmail, studentCpf } = body;
+    // 1. Rate Limiting estrito (10 req/min por IP)
+    const rateLimitResponse = enforceRateLimit(request, 'checkout');
+    if (rateLimitResponse) return rateLimitResponse;
 
-    if (!challengeId) {
-      return NextResponse.json({ error: 'ID do desafio é obrigatório.' }, { status: 400 });
+    const rawBody = await request.json();
+    
+    // 2. Validação e Sanitização estrita do payload (Zod)
+    const parseResult = checkoutPixSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      await logSecurityEvent({
+        eventType: 'SUSPICIOUS_PAYLOAD',
+        severity: 'WARN',
+        resourcePath: '/api/checkout/pix',
+        details: { errors: parseResult.error.format() },
+      });
+      return NextResponse.json(
+        { error: 'Dados inválidos.', details: parseResult.error.errors[0]?.message },
+        { status: 400 }
+      );
     }
+
+    const { challengeId, studentName, studentEmail, studentCpf } = parseResult.data;
 
     const supabase = await createClient();
 
-    // 1. Obter usuário autenticado (aluno)
+    // 3. Obter usuário autenticado (aluno)
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
+      await logSecurityEvent({
+        eventType: 'UNAUTHORIZED_API_ACCESS',
+        severity: 'WARN',
+        resourcePath: '/api/checkout/pix',
+      });
       return NextResponse.json({ error: 'Usuário não autenticado.' }, { status: 401 });
     }
 

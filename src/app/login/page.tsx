@@ -199,7 +199,8 @@ function LoginContent() {
 
         if (authData.user) {
           if (typeof document !== 'undefined') {
-            document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+            const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+            document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isHttps ? '; Secure' : ''}`;
           }
           await supabase.auth.updateUser({ data: { role: 'student' } }).catch(() => {});
           router.push(redirectParam || '/app');
@@ -226,7 +227,8 @@ function LoginContent() {
 
           if (authData.user) {
             if (typeof document !== 'undefined') {
-              document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+              const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+              document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isHttps ? '; Secure' : ''}`;
             }
 
             await supabase.from('professionals').insert({
@@ -251,7 +253,8 @@ function LoginContent() {
 
           if (authData.user) {
             if (typeof document !== 'undefined') {
-              document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+              const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+              document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isHttps ? '; Secure' : ''}`;
             }
             await supabase.auth.updateUser({ data: { role: 'professional' } }).catch(() => {});
             router.push('/dashboard');

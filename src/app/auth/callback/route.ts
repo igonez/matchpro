@@ -6,7 +6,17 @@ export async function GET(request: Request) {
   const code = searchParams.get('code');
   const roleParam = searchParams.get('role'); // 'professional' | 'student'
   const next = searchParams.get('next');
-  const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : null;
+  let safeNext: string | null = null;
+  if (next && next.startsWith('/') && !next.startsWith('//') && !next.includes('\\')) {
+    try {
+      const parsed = new URL(next, origin);
+      if (parsed.origin === origin) {
+        safeNext = parsed.pathname + parsed.search + parsed.hash;
+      }
+    } catch {
+      safeNext = null;
+    }
+  }
 
   if (code) {
     const supabase = await createClient();

@@ -21,8 +21,9 @@ export function isMasterAdmin(user: User | null | undefined): boolean {
     return true;
   }
 
-  // Verifica metadados do usuário no Supabase Auth
-  if (user.user_metadata?.is_master_admin === true || user.app_metadata?.is_master_admin === true) {
+  // Somente app_metadata é confiável (gerenciado apenas pelo backend com Service Role)
+  // user_metadata é gravável pelo próprio usuário e NUNCA deve ser usado para elevação de privilégio
+  if (user.app_metadata?.is_master_admin === true) {
     return true;
   }
 

@@ -62,7 +62,8 @@ export default function MasterLoginPage() {
 
       // Configuração de cookies de sessão master
       if (typeof document !== 'undefined') {
-        document.cookie = `arena_role=master; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+        const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+        document.cookie = `arena_role=master; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isHttps ? '; Secure' : ''}`;
       }
 
       router.push('/admin');

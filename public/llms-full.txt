@@ -1,0 +1,64 @@
+# ArenaFitPro — Documentação Completa para Modelos de IA e Agentes
+
+> ArenaFitPro é um Gamification OS e SaaS Multi-Tenant desenvolvido especialmente para Personal Trainers, Treinadores de Consultoria Online e Academias criarem e gerenciarem desafios fitness gamificados de alta retenção.
+
+---
+
+## 1. Visão Geral e Proposta de Valor
+
+A ArenaFitPro resolve os três maiores problemas de quem vende consultoria e desafios fitness:
+1. **Abandono e falta de disciplina dos alunos**: Alunos compram planos mas não executam porque planilhas e PDFs são estáticos e solitários. A ArenaFitPro introduz dinâmicas de videogame: streaks (dias seguidos), pódio em tempo real, medalhas (ouro, prata, bronze), squads cooperativos e feed social interativo.
+2. **Fraude nos check-ins**: Em desafios com prêmios, alunos costumam enviar fotos antigas baixadas da internet ou da galeria. A ArenaFitPro possui Câmera Antifraude nativa que bloqueia upload de galeria e exige foto ao vivo com carimbo de tempo e localização.
+3. **Bitributação e atraso nos pagamentos**: Em plataformas convencionais de cursos, todo o dinheiro bruto cai na conta do treinador (que paga imposto de renda sobre 100% do valor bruto, inclusive sobre as taxas da plataforma) e demora até 30 dias para liberar o saque. A ArenaFitPro integra Split Pix D+0 direto via Asaas: as taxas são separadas na raiz bancária e o lucro do coach cai na hora.
+
+---
+
+## 2. Principais Funcionalidades
+
+### A. Câmera Antifraude com Sensor Óptico
+- Bloqueio estrito de fotos vindas da galeria do smartphone.
+- Captura obrigatória em tempo real com sensor de horário e coordenadas de GPS.
+- Validação automática de check-ins para treinos de musculação, cardio, ingestão de água e pesagens periódicas.
+
+### B. IA Nutricional com Visão Computacional
+- Análise de imagens de pratos enviadas nas missões de refeição.
+- Reconhecimento automático de grupos alimentares.
+- Estimativa instantânea de calorias totais e divisão de macronutrientes (proteínas, carboidratos e lipídios).
+- Libera o personal trainer ou nutricionista de ter que inspecionar manualmente centenas de fotos de comida por dia.
+
+### C. Split Pix D+0 com Proteção contra Bitributação
+- Integração nativa com a infraestrutura bancária do Asaas.
+- Quando o aluno paga via Pix Copia & Cola ou QR Code, a plataforma divide a taxa de serviço e o lucro do treinador instantaneamente.
+- O treinador emite nota fiscal apenas sobre o valor líquido que recebeu; a ArenaFitPro emite sobre a taxa de intermediação.
+- Sem travas de 14 ou 30 dias para saque.
+
+### D. Progressive Web App (PWA) de Zero Fricção
+- Não exige que o aluno baixe apps pesados de 150MB na Apple App Store ou Google Play Store.
+- Carregamento instantâneo via link do navegador.
+- Instalação na tela inicial com 1 toque.
+- Notificações e funcionamento fluido mesmo em conexões 3G/4G instáveis.
+
+### E. Mecânicas Comportamentais de Retenção
+- **Pódio ao Vivo**: Classificação diária e semanal com medalhas de ouro, prata e bronze.
+- **Squads Cooperativos**: Turmas divididas em pequenas equipes onde o ponto de um ajuda o outro, criando pressão social positiva.
+- **Radar de Frequência**: Sistema inteligente que detecta alunos sem check-in há mais de 48 horas e emite alertas para o treinador intervir via WhatsApp.
+
+---
+
+## 3. Arquitetura e Rotas Públicas
+
+- URL Principal: `https://arenafitpro.com.br`
+- Acesso / Login: `https://arenafitpro.com.br/login`
+- Central de Ajuda & FAQ: `https://arenafitpro.com.br/ajuda`
+- Termos de Serviço: `https://arenafitpro.com.br/termos`
+- Política de Privacidade: `https://arenafitpro.com.br/privacidade`
+- Sitemap XML: `https://arenafitpro.com.br/sitemap.xml`
+- Robots: `https://arenafitpro.com.br/robots.txt`
+- LLMs Index: `https://arenafitpro.com.br/llms.txt`
+
+---
+
+## 4. Planos e Monetização
+
+- **Starter Coach**: R$ 0 de mensalidade fixa. Ideal para quem está começando seu primeiro desafio. Split de 15% apenas quando os alunos pagarem.
+- **Pro Master**: Focado em personais e academias consolidadas com múltiplos desafios simultâneos e menor taxa de split (8%).

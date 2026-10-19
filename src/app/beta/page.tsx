@@ -28,6 +28,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { JsonLd } from '@/components/seo/json-ld';
+import { CONTACT_CONFIG } from '@/lib/constants';
 
 export default function BetaTestersPage() {
   const [name, setName] = useState('');
@@ -409,12 +410,12 @@ export default function BetaTestersPage() {
                   </div>
 
                   <a
-                    href={`https://wa.me/5511999999999?text=Ol%C3%A1%2C%20me%20candidatei%20ao%20Beta%20da%20ArenaFitPro%20(Nome%3A%20${encodeURIComponent(name)})!`}
+                    href={CONTACT_CONFIG.getDirectWhatsappUrl(`Olá, me candidatei ao Beta Fechado da ArenaFitPro! Meu nome é ${name}.`)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] min-h-[48px]"
                   >
-                    <MessageCircle className="w-4 h-4 text-emerald-600" /> Falar Direto com o Desenvolvedor
+                    <MessageCircle className="w-4 h-4 text-emerald-600" /> Falar Direto com o Fundador
                   </a>
 
                   <Link 

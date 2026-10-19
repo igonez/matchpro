@@ -3,23 +3,33 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://arenafitpro.com.br'),
-  title: 'ArenaFitPro — Gamification OS para Desafios Fitness & Split Pix D+0',
+  title: {
+    default: 'ArenaFitPro — Desafios Fitness Gamificados & Split Pix D+0',
+    template: '%s | ArenaFitPro',
+  },
   description:
-    'A plataforma definitiva para Personais, Consultorias e Academias criarem desafios fitness gamificados de alta retenção com Câmera Antifraude, IA Nutricional e Split Pix D+0 no Asaas.',
+    'Plataforma de gamificação para Personal Trainers e Academias criarem desafios fitness com Câmera Antifraude, IA Nutricional e Split Pix D+0 no Asaas.',
   keywords: [
     'desafio fitness',
+    'app para personal trainer',
     'gamificação fitness',
-    'personal trainer',
-    'consultoria online',
-    'split pix',
-    'ranking fitness',
-    'app academia',
-    'asaas split',
-    'nutrição esportiva',
+    'consultoria online fitness',
+    'plataforma de desafios fitness',
+    'split pix asaas',
+    'ranking fitness em grupo',
+    'câmera antifraude fitness',
+    'ia nutricional',
+    'retenção de alunos academia',
   ],
   authors: [{ name: 'ArenaFitPro Team' }],
   creator: 'ArenaFitPro',
   publisher: 'ArenaFitPro',
+  alternates: {
+    canonical: 'https://arenafitpro.com.br',
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
   robots: {
     index: true,
     follow: true,

@@ -1,0 +1,28 @@
+# ArenaFitPro
+
+> Gamification OS para Personal Trainers, Consultorias Online e Academias criarem desafios fitness de alta retenção com Câmera Antifraude, IA Nutricional e Split Pix D+0 no Asaas.
+
+## Principais Páginas e Recursos
+
+- [Plataforma ArenaFitPro](https://arenafitpro.com.br): Visão geral do Gamification OS, mecânicas de retenção comprovada (94.8%), calculadora interativa de lucros e planos.
+- [Acesso ao Painel](https://arenafitpro.com.br/login): Autenticação rápida para treinadores e alunos via Google ou Magic Link.
+- [Central de Ajuda e Suporte](https://arenafitpro.com.br/ajuda): FAQ completo com respostas sobre regras de desafios, auditoria de fotos, split e suporte técnico.
+- [Termos de Uso](https://arenafitpro.com.br/termos): Termos legais de contratação, intermediação financeira e conformidade com split de pagamento.
+- [Política de Privacidade](https://arenafitpro.com.br/privacidade): Diretrizes de segurança de dados em conformidade com a LGPD e proteção de dados de saúde.
+- [Documentação Detalhada para IAs](https://arenafitpro.com.br/llms-full.txt): Especificação técnica completa de arquitetura, segurança e modelo de dados.
+
+## Diferenciais e Capacidades da Plataforma
+
+- **Câmera Antifraude Nativa**: Bloqueia upload de fotos antigas da galeria; exige registro em tempo real com validação óptica para evitar fraudes em pesagens e treinos.
+- **IA Nutricional com Visão Computacional**: Análise automática de macronutrientes (proteínas, carboidratos, gorduras e calorias) direto da foto do prato enviada pelo aluno.
+- **Split Pix D+0 via Asaas**: Recebimento instantâneo das inscrições dos alunos com divisão bancária na raiz da transação, protegendo o treinador de bitributação.
+- **PWA Ultraleve (Zero Fricção)**: Funciona direto no navegador com instalação em 1 toque na tela inicial do celular, sem exigir download pesado de lojas de aplicativos.
+- **Squads Cooperativos e Pódio ao Vivo**: Mecânica de gamificação com ranking, streaks de frequência diária, medalhas (ouro, prata e bronze) e feed social auditado.
+- **Radar de Frequência**: Alertas automáticos para alunos em risco de desistência, permitindo intervenção antecipada via WhatsApp pelo treinador.
+
+## Público-Alvo
+
+- Personal Trainers autônomos e preparadores físicos
+- Treinadores de consultoria esportiva e fitness online
+- Boxes de CrossFit, estúdios de treinamento funcional e academias
+- Nutricionistas esportivos que realizam desafios de mudança de hábitos em grupo

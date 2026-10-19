@@ -24,6 +24,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { JsonLd } from '@/components/seo/json-ld';
+import { CONTACT_CONFIG } from '@/lib/constants';
 
 export default function VipCapturePage() {
   const [name, setName] = useState('');
@@ -385,18 +386,27 @@ export default function VipCapturePage() {
                   <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-zinc-300 space-y-1.5 text-left">
                     <strong className="text-white block font-mono uppercase text-[11px]">Canal Exclusivo de Treinadores:</strong>
                     <p className="text-zinc-400">
-                      Entre no grupo silencioso de WhatsApp para receber a aula prática e o script de fechamento do desafio.
+                      {CONTACT_CONFIG.vipWhatsappGroupUrl 
+                        ? 'Entre no grupo silencioso de WhatsApp para receber a aula prática e o script de fechamento do desafio.'
+                        : 'Entraremos em contato pelo seu WhatsApp cadastrado assim que liberarmos o lote de vagas com benefícios de fundador.'}
                     </p>
                   </div>
 
-                  <a
-                    href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20acabei%20de%20me%20cadastrar%20na%20Lista%20VIP%20da%20ArenaFitPro!"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] min-h-[48px]"
-                  >
-                    <MessageCircle className="w-4 h-4 text-emerald-600" /> Entrar no Grupo VIP de Treinadores
-                  </a>
+                  {CONTACT_CONFIG.vipWhatsappGroupUrl ? (
+                    <a
+                      href={CONTACT_CONFIG.vipWhatsappGroupUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] min-h-[48px]"
+                    >
+                      <MessageCircle className="w-4 h-4 text-emerald-600" /> Entrar no Grupo VIP de Treinadores
+                    </a>
+                  ) : (
+                    <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center justify-center gap-2 font-mono">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      Você será notificado prioritariamente no WhatsApp cadastrado.
+                    </div>
+                  )}
 
                   <Link 
                     href="/" 

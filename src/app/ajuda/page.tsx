@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, HelpCircle, ChevronDown, ChevronUp, Search, MessageCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { JsonLd } from '@/components/seo/json-ld';
+import { CONTACT_CONFIG } from '@/lib/constants';
 
 const FAQ_ITEMS = [
   {
@@ -156,7 +157,7 @@ export default function HelpFaqPage() {
             </p>
           </div>
           <a
-            href="https://wa.me/5511999999999?text=Ol%C3%A1%2C+preciso+de+ajuda+com+o+ArenaFitPro"
+            href={CONTACT_CONFIG.getDirectWhatsappUrl('Olá, preciso de suporte sobre o ArenaFitPro.')}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2.5 min-h-[44px] rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-zinc-200 transition-colors flex items-center gap-2 shrink-0"

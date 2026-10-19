@@ -5,8 +5,19 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/login', '/termos', '/ajuda', '/join/'],
-        disallow: ['/api/', '/dashboard/', '/app/', '/auth/'],
+        allow: [
+          '/',
+          '/login',
+          '/termos',
+          '/privacidade',
+          '/ajuda',
+          '/vip',
+          '/beta',
+          '/join/',
+          '/llms.txt',
+          '/llms-full.txt',
+        ],
+        disallow: ['/api/', '/dashboard/', '/app/', '/auth/', '/admin/', '/mestre/'],
       },
     ],
     sitemap: 'https://arenafitpro.com.br/sitemap.xml',

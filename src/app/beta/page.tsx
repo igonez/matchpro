@@ -142,18 +142,12 @@ export default function BetaTestersPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950 border border-white/10 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950 border border-white/10 text-xs font-mono">
               <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
               <span className="text-zinc-300 font-bold uppercase tracking-wider">
-                Vagas Limitadas: 15 Selecionados
+                Piloto Fechado • 15 Vagas
               </span>
             </div>
-            <Link 
-              href="/login" 
-              className="text-xs font-mono text-zinc-300 hover:text-white px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 active:scale-95 transition-all"
-            >
-              Área de Acesso
-            </Link>
           </div>
         </div>
       </header>

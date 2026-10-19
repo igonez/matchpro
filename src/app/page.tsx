@@ -51,9 +51,6 @@ export default function HomePage() {
   // Modal de Aviso de Fase de Testes Fechada (Bloqueio de Aluno / Plataforma)
   const [isBetaClosedModalOpen, setIsBetaClosedModalOpen] = useState(false);
 
-  // Input de Código de Aluno no Hero
-  const [heroStudentCode, setHeroStudentCode] = useState('');
-
   // Cálculos da Calculadora
   const grossRevenue = studentsCount * ticketPrice;
   const netStarter = grossRevenue * 0.85; // 15% taxa
@@ -64,18 +61,7 @@ export default function HomePage() {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-  const handleHeroCodeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    let code = heroStudentCode.trim();
-    if (code) {
-      if (code.includes('/join/')) {
-        code = code.split('/join/')[1].split('?')[0].split('/')[0];
-      }
-      router.push(`/join/${code}`);
-    } else {
-      setIsBetaClosedModalOpen(true);
-    }
-  };
+
 
   const faqItems = [
     {
@@ -386,32 +372,6 @@ export default function HomePage() {
               </a>
             </div>
 
-            {/* Barra de Acesso Rápido para Alunos (Mobile-First sem truncamento) */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setIsBetaClosedModalOpen(true);
-              }}
-              className="max-w-lg mx-auto mb-10 p-2 rounded-2xl bg-zinc-950/90 border border-white/15 backdrop-blur-xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shadow-2xl"
-            >
-              <div className="flex items-center gap-2.5 px-3 py-1.5 sm:py-0 flex-1 min-w-0">
-                <KeyRound className="w-4 h-4 text-zinc-300 shrink-0" />
-                <input
-                  type="text"
-                  placeholder="É aluno? Digite o código da turma (ex: FIT-2026)..."
-                  value={heroStudentCode}
-                  onChange={(e) => setHeroStudentCode(e.target.value)}
-                  className="flex-1 bg-transparent border-none text-sm text-white placeholder:text-zinc-400 focus:outline-none font-mono min-h-[40px] w-full"
-                />
-              </div>
-              <button
-                type="submit"
-                className="min-h-[44px] px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs sm:text-sm hover:bg-zinc-200 transition-colors shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Lock className="w-3.5 h-3.5 text-black" />
-                <span>Entrar na Turma</span>
-              </button>
-            </form>
 
             {/* Badges de Confiança */}
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-zinc-200 font-mono">
@@ -1358,13 +1318,12 @@ export default function HomePage() {
                 <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
             </Link>
-            <button
-              onClick={() => setIsBetaClosedModalOpen(true)}
-              className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Lock className="w-4 h-4 text-zinc-400" />
-              <span>Entrar com Código de Aluno</span>
-            </button>
+            <a href="#mockup" className="w-full sm:w-auto">
+              <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                <Smartphone className="w-4 h-4 text-zinc-300" />
+                <span>Ver App & Cockpit ao Vivo</span>
+              </button>
+            </a>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-mono text-zinc-400">

@@ -12,7 +12,9 @@ import {
   LogOut, 
   ExternalLink,
   ShieldCheck,
-  Activity
+  Activity,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -39,6 +41,7 @@ export function AdminSidebar() {
       icon: TrendingUp,
       active: pathname === '/admin' && (currentTab === 'overview' || !currentTab),
       badge: 'AO VIVO',
+      badgeColor: 'emerald',
     },
     {
       tabId: 'financial',
@@ -47,6 +50,7 @@ export function AdminSidebar() {
       icon: DollarSign,
       active: pathname.startsWith('/admin') && currentTab === 'financial',
       badge: 'ROI / CAC',
+      badgeColor: 'amber',
     },
     {
       tabId: 'coaches',
@@ -62,109 +66,136 @@ export function AdminSidebar() {
       icon: Target,
       active: pathname.startsWith('/admin') && currentTab === 'leads',
       badge: 'WHATSAPP',
+      badgeColor: 'cyan',
     },
   ];
 
   return (
-    <aside className="hidden md:flex w-64 border-r border-white/[0.08] bg-black/95 backdrop-blur-2xl flex-col justify-between p-5 min-h-screen relative z-30 shrink-0">
-      <div className="space-y-6">
+    <aside className="hidden md:flex w-72 border-r border-white/[0.08] bg-black/95 backdrop-blur-3xl flex-col justify-between p-6 min-h-screen relative z-30 shrink-0 select-none">
+      <div className="space-y-7">
         
-        {/* Brand Mestre */}
-        <div className="px-1 py-1">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl overflow-hidden border border-amber-400/40 shadow-[0_0_20px_rgba(251,191,36,0.2)] bg-zinc-950 shrink-0 flex items-center justify-center text-amber-400">
-              <Crown className="w-5 h-5" />
+        {/* Brand Oficial com Logo Real */}
+        <Link href="/admin" className="flex items-center gap-3.5 group px-1">
+          <div className="relative">
+            <div className="h-11 w-11 rounded-2xl overflow-hidden border border-white/20 bg-zinc-950 p-1 shadow-[0_0_25px_rgba(255,255,255,0.12)] group-hover:scale-105 group-hover:border-amber-400/50 transition-all duration-300">
+              <img
+                src="/app-logo.png"
+                alt="ArenaFitPro"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <div>
-              <span className="font-extrabold text-base tracking-tight text-white block leading-none">
+            {/* Crown Pill Overlay */}
+            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-black border border-amber-400/60 flex items-center justify-center text-amber-400 shadow-md">
+              <Crown className="w-3 h-3" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-black text-lg tracking-tight text-white leading-tight">
                 ArenaFitPro
               </span>
-              <span className="text-[10px] uppercase font-mono tracking-widest text-amber-400 font-bold block mt-1">
-                Super Admin Mestre
-              </span>
             </div>
+            <span className="text-[11px] uppercase font-mono tracking-widest text-amber-400 font-bold block mt-0.5">
+              Super Admin Mestre
+            </span>
           </div>
-        </div>
+        </Link>
 
-        {/* Status Badge */}
-        <div className="p-3.5 rounded-2xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 text-xs text-zinc-300 space-y-1.5 shadow-sm">
-          <div className="flex items-center gap-1.5 text-amber-300 font-mono text-[10px] uppercase font-bold tracking-wider">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            Terminal de Operações
+        {/* Status Badge de Alta Fidelidade */}
+        <div className="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 text-xs text-zinc-300 space-y-1.5 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-300 font-mono text-[11px] uppercase font-bold tracking-wider">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              Terminal de Operações
+            </div>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 font-bold">
+              ROOT
+            </span>
           </div>
-          <p className="text-[11px] text-zinc-400 leading-relaxed">
-            Acesso irrestrito a banco multi-tenant, splits Asaas, métricas e usuários.
+          <p className="text-xs text-zinc-400 leading-relaxed pt-1">
+            Acesso irrestrito a banco multi-tenant, splits Asaas, assinaturas e diretório global.
           </p>
         </div>
 
-        {/* Menu Executivo */}
-        <nav className="space-y-1.5">
-          <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-bold px-3 block">
-            Módulos de Controle
+        {/* Menu Executivo de Navegação */}
+        <nav className="space-y-2">
+          <span className="text-xs uppercase font-bold text-zinc-400 tracking-wider px-3 block">
+            Módulos do Sistema
           </span>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.tabId}
-                href={item.href}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono tracking-wide transition-all ${
-                  item.active
-                    ? 'bg-white text-black font-black shadow-lg shadow-white/10'
-                    : 'text-zinc-300 hover:text-white hover:bg-white/[0.05]'
-                }`}
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-black' : 'text-zinc-400'}`} />
-                  <span className="truncate">{item.name}</span>
-                </div>
-                {item.badge && (
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
+          <div className="space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.tabId}
+                  href={item.href}
+                  className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 ${
                     item.active
-                      ? 'bg-black/10 text-black'
-                      : 'bg-white/[0.08] text-zinc-300 border border-white/10'
-                  }`}>
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
+                      ? 'bg-white text-black font-bold shadow-[0_4px_20px_rgba(255,255,255,0.18)] scale-[1.01]'
+                      : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-black' : 'text-zinc-400'}`} />
+                    <span className="truncate">{item.name}</span>
+                  </div>
+                  {item.badge && (
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                      item.active
+                        ? 'bg-black/10 text-black'
+                        : item.badgeColor === 'emerald'
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                        : item.badgeColor === 'amber'
+                        ? 'bg-amber-500/10 text-amber-300 border border-amber-500/25'
+                        : 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/25'
+                    }`}>
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </nav>
 
-        {/* Atalhos para Visão de Usuários */}
-        <div className="pt-3 border-t border-white/[0.08] space-y-2">
-          <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-bold px-3 block">
+        {/* Atalhos para Visualização de Usuários */}
+        <div className="pt-4 border-t border-white/[0.08] space-y-2.5">
+          <span className="text-xs uppercase font-bold text-zinc-400 tracking-wider px-3 block">
             Modos de Inspeção
           </span>
-          <Link
-            href="/dashboard"
-            target="_blank"
-            className="flex items-center justify-between px-3.5 py-2 rounded-xl text-xs text-zinc-300 hover:text-white hover:bg-white/[0.05] transition-colors font-mono"
-          >
-            <span>Ver Painel Treinador</span>
-            <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
-          </Link>
-          <Link
-            href="/app"
-            target="_blank"
-            className="flex items-center justify-between px-3.5 py-2 rounded-xl text-xs text-zinc-300 hover:text-white hover:bg-white/[0.05] transition-colors font-mono"
-          >
-            <span>Ver App do Aluno</span>
-            <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
-          </Link>
+          <div className="space-y-1">
+            <Link
+              href="/dashboard"
+              target="_blank"
+              className="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.05] transition-colors group"
+            >
+              <span>Ver Painel do Treinador</span>
+              <ExternalLink className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+            </Link>
+            <Link
+              href="/app"
+              target="_blank"
+              className="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.05] transition-colors group"
+            >
+              <span>Ver App do Aluno</span>
+              <ExternalLink className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+            </Link>
+          </div>
         </div>
 
       </div>
 
-      {/* Footer / Logout Mestre */}
+      {/* Footer / Encerrar Sessão */}
       <div className="pt-4 border-t border-white/[0.08]">
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-2 px-3.5 py-2.5 text-xs font-mono text-zinc-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+          className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-zinc-400 hover:text-red-400 hover:bg-red-500/10 rounded-2xl transition-all cursor-pointer group"
         >
-          <LogOut className="w-4 h-4 text-zinc-400" />
-          <span>Encerrar Sessão Mestre</span>
+          <div className="flex items-center gap-2.5">
+            <LogOut className="w-4 h-4 text-zinc-400 group-hover:text-red-400 transition-colors" />
+            <span>Encerrar Sessão Mestre</span>
+          </div>
+          <span className="text-[10px] font-mono text-zinc-500 group-hover:text-red-400">SAIR</span>
         </button>
       </div>
     </aside>

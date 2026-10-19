@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useTransition, Suspense } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
@@ -27,15 +27,17 @@ import {
   ArrowUpRight,
   Flame,
   Check,
-  UserCheck,
-  UserX,
-  CreditCard
+  CreditCard,
+  BarChart3,
+  Calendar,
+  Layers,
+  ArrowRight
 } from 'lucide-react';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-function InstagramIcon({ className = 'w-3 h-3' }: { className?: string }) {
+function InstagramIcon({ className = 'w-3.5 h-3.5' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -170,12 +172,12 @@ function MasterDashboardContent() {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-24 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+        <div className="h-28 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="h-36 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
-          <div className="h-36 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
-          <div className="h-36 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
-          <div className="h-36 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+          <div className="h-40 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+          <div className="h-40 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+          <div className="h-40 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+          <div className="h-40 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
         </div>
         <div className="h-96 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
       </div>
@@ -184,15 +186,17 @@ function MasterDashboardContent() {
 
   if (error) {
     return (
-      <div className="p-8 rounded-3xl bg-zinc-950 border border-red-500/30 text-center space-y-4 max-w-lg mx-auto mt-12 shadow-[0_0_50px_rgba(239,68,68,0.1)]">
-        <AlertTriangle className="w-12 h-12 text-red-400 mx-auto" />
-        <h2 className="text-xl font-black text-white">Acesso Exclusivo Super Admin</h2>
-        <p className="text-sm text-zinc-300 leading-relaxed">
+      <div className="p-8 sm:p-10 rounded-[32px] bg-zinc-950 border border-red-500/30 text-center space-y-5 max-w-lg mx-auto mt-12 shadow-[0_0_60px_rgba(239,68,68,0.15)]">
+        <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto text-red-400">
+          <AlertTriangle className="w-7 h-7" />
+        </div>
+        <h2 className="text-2xl font-black text-white">Acesso Exclusivo Super Admin</h2>
+        <p className="text-sm text-zinc-300 leading-relaxed font-sans">
           {error}
         </p>
         <Link 
           href="/mestre"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-xs font-black uppercase tracking-wider hover:bg-zinc-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-black text-xs font-black uppercase tracking-wider hover:bg-zinc-200 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.2)]"
         >
           Entrar via Terminal Mestre
         </Link>
@@ -227,46 +231,60 @@ function MasterDashboardContent() {
   );
 
   return (
-    <div className="space-y-8 pb-16 font-sans">
+    <div className="space-y-8 pb-20 font-sans antialiased">
       
-      {/* 1. Header do Cockpit Mestre — Luxury Titanium */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 border-b border-white/[0.08] pb-6">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2.5">
-            <div className="h-7 w-7 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400">
-              <Crown className="w-4 h-4" />
+      {/* 1. Header do Cockpit Mestre — Luxury Titanium & Brand Logo */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-white/[0.08] pb-8">
+        <div className="flex items-start gap-4 sm:gap-5">
+          {/* Logo Oficial com Halo Suave */}
+          <div className="relative shrink-0">
+            <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-3xl overflow-hidden border border-white/20 bg-zinc-950 p-1.5 shadow-[0_0_30px_rgba(255,255,255,0.15)] flex items-center justify-center">
+              <img
+                src="/app-logo.png"
+                alt="ArenaFitPro"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400">
-              Super Admin • Cockpit do Fundador
-            </span>
+            <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-black border border-amber-400/80 flex items-center justify-center text-amber-400 shadow-md">
+              <Crown className="w-3.5 h-3.5" />
+            </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white text-balance">
-            ArenaFitPro • Operações Globais
-          </h1>
-          <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl text-pretty">
-            Métricas de tração SaaS, unit economics, contas ativas, assinaturas Pro (R$ 49,90) e moderação em tempo real.
-          </p>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2.5">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/25 px-2.5 py-0.5 rounded-full">
+                Super Admin • Cockpit do Fundador
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
+              ArenaFitPro • Operações Globais
+            </h1>
+            <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl font-normal leading-relaxed">
+              Visão macro de tração SaaS, unit economics, assinaturas Pro (R$ 49,90/mês) e diretório de contas ativas.
+            </p>
+          </div>
         </div>
 
+        {/* Botões de Ação de Topo */}
         <div className="flex items-center gap-3 shrink-0">
           <Button
             onClick={fetchMetrics}
             variant="outline"
-            className="rounded-full border-white/10 bg-zinc-900/60 hover:bg-white/10 text-xs font-mono text-zinc-300 flex items-center gap-2 transition-all"
+            className="rounded-full border-white/10 bg-zinc-900/80 hover:bg-white/10 text-xs font-semibold text-zinc-200 flex items-center gap-2 px-4 py-2.5 transition-all cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5" /> Atualizar
+            <RefreshCw className="w-3.5 h-3.5" /> Atualizar Dados
           </Button>
 
           <Button
             onClick={() => setIsAdModalOpen(true)}
-            className="rounded-full bg-white hover:bg-zinc-200 text-black text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] transition-all"
+            className="rounded-full bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider flex items-center gap-2 px-5 py-2.5 shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" /> Registrar Gasto Ads
           </Button>
         </div>
       </div>
 
-      {/* 2. Navegação por Abas Executivas */}
+      {/* 2. Navegação por Abas Executivas — Estilo Pill */}
       <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto no-scrollbar">
         {[
           { id: 'overview', label: 'Visão Geral & Tração', icon: TrendingUp },
@@ -280,14 +298,14 @@ function MasterDashboardContent() {
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-2.5 px-5 py-3 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
                 isActive
-                  ? 'bg-white text-black font-black shadow-lg shadow-white/10'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
+                  ? 'bg-white text-black font-bold shadow-[0_4px_20px_rgba(255,255,255,0.18)] scale-[1.02]'
+                  : 'text-zinc-400 hover:text-white hover:bg-white/[0.06] border border-white/[0.06]'
               }`}
             >
               <Icon className="w-4 h-4" />
-              {tab.label}
+              <span>{tab.label}</span>
             </button>
           );
         })}
@@ -297,34 +315,35 @@ function MasterDashboardContent() {
       {/* ABA 1: VISÃO GERAL & TRAÇÃO SAAS */}
       {/* ========================================================================= */}
       {activeTab === 'overview' && (
-        <div className="space-y-6">
-          {/* Grid de Big Numbers — Precisão Contas Ativas & Preços Oficiais */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="space-y-8">
+          
+          {/* Grid Bento de Big Numbers — Precisão Contas Ativas & Preços Oficiais */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             
             {/* Card 1: Treinadores (Cadastrados vs Ativos) */}
-            <SpotlightCard3D glowIntensity={0.12} className="p-5 sm:p-6 space-y-3.5 bg-zinc-950/80 border border-white/[0.08] border-t-white/20 rounded-3xl">
+            <SpotlightCard3D glowIntensity={0.15} className="p-6 space-y-4 bg-zinc-950/85 border border-white/[0.08] border-t-white/20 rounded-[28px] shadow-xl">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Treinadores na Base</span>
-                <div className="h-8 w-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-                  <Users className="w-4 h-4" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Treinadores na Base</span>
+                <div className="h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shadow-sm">
+                  <Users className="w-5 h-5" />
                 </div>
               </div>
               <div>
-                <div className="flex items-baseline gap-2">
+                <div className="flex items-baseline gap-2.5">
                   <span className="text-3xl sm:text-4xl font-black font-mono text-white tracking-tight">
                     {overview.totalCoaches}
                   </span>
-                  <span className="text-xs font-mono font-bold text-emerald-400">
+                  <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
                     {overview.activeCoaches} ativos
                   </span>
                 </div>
-                <div className="mt-2 pt-2 border-t border-white/[0.06] space-y-1 text-xs">
+                <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-zinc-300">
                     <span>Taxa de Ativação:</span>
                     <span className="font-mono font-bold text-white">{overview.coachActivationRate}%</span>
                   </div>
                   <div className="flex items-center justify-between text-zinc-400">
-                    <span>Assinantes Pro (R$ 49,90):</span>
+                    <span>Assinantes PRO (R$ 49,90):</span>
                     <span className="font-mono font-bold text-amber-400">{overview.proCoaches}</span>
                   </div>
                 </div>
@@ -332,23 +351,23 @@ function MasterDashboardContent() {
             </SpotlightCard3D>
 
             {/* Card 2: Alunos & Atletas (Total vs Em Desafio Ativo) */}
-            <SpotlightCard3D glowIntensity={0.12} className="p-5 sm:p-6 space-y-3.5 bg-zinc-950/80 border border-white/[0.08] border-t-white/20 rounded-3xl">
+            <SpotlightCard3D glowIntensity={0.15} className="p-6 space-y-4 bg-zinc-950/85 border border-white/[0.08] border-t-white/20 rounded-[28px] shadow-xl">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Alunos & Atletas</span>
-                <div className="h-8 w-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                  <Award className="w-4 h-4" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Alunos & Atletas</span>
+                <div className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-sm">
+                  <Award className="w-5 h-5" />
                 </div>
               </div>
               <div>
-                <div className="flex items-baseline gap-2">
+                <div className="flex items-baseline gap-2.5">
                   <span className="text-3xl sm:text-4xl font-black font-mono text-white tracking-tight">
                     {overview.activeStudents}
                   </span>
-                  <span className="text-xs font-mono text-zinc-400">
+                  <span className="text-xs font-sans text-zinc-400">
                     em turmas ativas
                   </span>
                 </div>
-                <div className="mt-2 pt-2 border-t border-white/[0.06] space-y-1 text-xs">
+                <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-zinc-300">
                     <span>Total Cadastrados:</span>
                     <span className="font-mono font-bold text-white">{overview.totalStudents}</span>
@@ -362,18 +381,18 @@ function MasterDashboardContent() {
             </SpotlightCard3D>
 
             {/* Card 3: Receita da Plataforma (Splits + MRR Pro) */}
-            <SpotlightCard3D glowIntensity={0.12} className="p-5 sm:p-6 space-y-3.5 bg-zinc-950/80 border border-white/[0.08] border-t-white/20 rounded-3xl">
+            <SpotlightCard3D glowIntensity={0.15} className="p-6 space-y-4 bg-zinc-950/85 border border-white/[0.08] border-t-white/20 rounded-[28px] shadow-xl">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Receita Retida (SaaS)</span>
-                <div className="h-8 w-8 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400">
-                  <Zap className="w-4 h-4" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Receita Retida (SaaS)</span>
+                <div className="h-10 w-10 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 shadow-sm">
+                  <Zap className="w-5 h-5" />
                 </div>
               </div>
               <div>
-                <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400 tracking-tight block">
+                <span className="text-3xl sm:text-4xl font-black font-mono text-amber-400 tracking-tight block">
                   R$ {Number(financial.totalPlatformRevenue).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
-                <div className="mt-2 pt-2 border-t border-white/[0.06] space-y-1 text-xs">
+                <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-zinc-300">
                     <span>MRR Pro (R$ 49,90):</span>
                     <span className="font-mono font-bold text-white">
@@ -381,7 +400,7 @@ function MasterDashboardContent() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-zinc-400">
-                    <span>Taxas Retidas (Split):</span>
+                    <span>Taxas de Split:</span>
                     <span className="font-mono font-bold text-emerald-400">
                       R$ {Number(financial.totalPlatformFees).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
@@ -391,24 +410,24 @@ function MasterDashboardContent() {
             </SpotlightCard3D>
 
             {/* Card 4: Volume Bruto Transacionado (GMV) */}
-            <SpotlightCard3D glowIntensity={0.12} className="p-5 sm:p-6 space-y-3.5 bg-zinc-950/80 border border-white/[0.08] border-t-white/20 rounded-3xl">
+            <SpotlightCard3D glowIntensity={0.15} className="p-6 space-y-4 bg-zinc-950/85 border border-white/[0.08] border-t-white/20 rounded-[28px] shadow-xl">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Volume Bruto (GMV)</span>
-                <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white">
-                  <DollarSign className="w-4 h-4" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Volume Bruto (GMV)</span>
+                <div className="h-10 w-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-sm">
+                  <DollarSign className="w-5 h-5" />
                 </div>
               </div>
               <div>
-                <span className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight block">
+                <span className="text-3xl sm:text-4xl font-black font-mono text-white tracking-tight block">
                   R$ {Number(financial.totalGMV).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
-                <div className="mt-2 pt-2 border-t border-white/[0.06] space-y-1 text-xs">
+                <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-zinc-300">
-                    <span>Transações Confirmadas:</span>
+                    <span>Inscrições Confirmadas:</span>
                     <span className="font-mono font-bold text-white">{financial.transactionsCount}</span>
                   </div>
                   <div className="flex items-center justify-between text-zinc-400">
-                    <span>Repasses a Treinadores:</span>
+                    <span>Repasses a Coaches:</span>
                     <span className="font-mono font-bold text-zinc-300">
                       R$ {Number(financial.totalCoachDisbursed).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
@@ -423,34 +442,40 @@ function MasterDashboardContent() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Box 1: Economia SaaS & Taxas */}
-            <div className="p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 backdrop-blur-xl space-y-4">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-emerald-400" /> Estrutura de Monetização
-              </h3>
-              <div className="space-y-3 text-xs">
-                <div className="p-3.5 rounded-2xl bg-zinc-900/50 border border-white/5 space-y-1.5">
+            <div className="p-6 sm:p-7 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 backdrop-blur-2xl space-y-5 shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-sans">
+                  Estrutura de Monetização
+                </h3>
+              </div>
+              
+              <div className="space-y-3.5 text-xs">
+                <div className="p-4 rounded-2xl bg-zinc-900/60 border border-white/5 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-300 font-medium">Plano Pro Coach:</span>
-                    <span className="font-mono font-bold text-amber-400">R$ 49,90/mês</span>
+                    <span className="text-white font-bold text-sm">Plano Pro Coach</span>
+                    <span className="font-mono font-bold text-amber-400 text-sm">R$ 49,90/mês</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">
-                    Taxa reduzida de 8% de split, até 5 desafios simultâneos e 100 alunos por turma.
+                  <p className="text-xs text-zinc-400 leading-relaxed font-normal">
+                    Taxa ultra-reduzida de <strong>8% de split</strong> por inscrição, até 5 desafios simultâneos e 100 alunos por turma.
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-zinc-900/50 border border-white/5 space-y-1.5">
+                <div className="p-4 rounded-2xl bg-zinc-900/60 border border-white/5 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-300 font-medium">Plano Starter Coach:</span>
-                    <span className="font-mono font-bold text-zinc-300">Grátis (0 R$)</span>
+                    <span className="text-white font-bold text-sm">Plano Starter Coach</span>
+                    <span className="font-mono font-bold text-zinc-300 text-sm">Grátis (0 R$)</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">
-                    Taxa padrão de 15% de split retido por inscrição, 1 desafio e até 10 alunos.
+                  <p className="text-xs text-zinc-400 leading-relaxed font-normal">
+                    Taxa padrão de <strong>15% de split</strong> retido por inscrição na plataforma, 1 desafio e até 10 alunos.
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <span className="text-zinc-400">Lucro Operacional Líquido:</span>
-                  <span className={`font-mono font-bold ${financial.netProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <span className="text-zinc-300 font-medium">Lucro Operacional Líquido:</span>
+                  <span className={`font-mono font-bold text-sm ${financial.netProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     R$ {Number(financial.netProfit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -458,62 +483,85 @@ function MasterDashboardContent() {
             </div>
 
             {/* Box 2: Aquisição & Tráfego */}
-            <div className="p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 backdrop-blur-xl space-y-4">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <Megaphone className="w-4 h-4 text-cyan-400" /> Aquisição & Unit Economics
-              </h3>
+            <div className="p-6 sm:p-7 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 backdrop-blur-2xl space-y-5 shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                  <Megaphone className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-sans">
+                  Aquisição & Unit Economics
+                </h3>
+              </div>
+
               <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <span className="text-zinc-400">Total Investido em Mídia:</span>
-                  <span className="font-mono font-bold text-white">
+                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <span className="text-zinc-300">Total Investido em Mídia:</span>
+                  <span className="font-mono font-bold text-white text-sm">
                     R$ {Number(financial.totalAdSpend).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <span className="text-zinc-400">CAC por Treinador Cadastrado:</span>
-                  <span className="font-mono font-bold text-emerald-400">
+                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <span className="text-zinc-300">CAC por Treinador Cadastrado:</span>
+                  <span className="font-mono font-bold text-emerald-400 text-sm">
                     R$ {Number(financial.cac).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <span className="text-zinc-400">ROI Geral do Negócio:</span>
-                  <span className={`font-mono font-bold ${financial.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <span className="text-zinc-300">ROI Geral do Negócio:</span>
+                  <span className={`font-mono font-bold text-sm ${financial.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     {Number(financial.roi).toFixed(1)}%
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <span className="text-zinc-400">ROAS Multiplicador:</span>
-                  <span className="font-mono font-bold text-amber-400">{Number(financial.roas).toFixed(2)}x</span>
+                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <span className="text-zinc-300">ROAS Multiplicador:</span>
+                  <span className="font-mono font-bold text-amber-400 text-sm">{Number(financial.roas).toFixed(2)}x</span>
                 </div>
               </div>
             </div>
 
             {/* Box 3: Atalhos do Fundador */}
-            <div className="p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 backdrop-blur-xl space-y-4">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-400" /> Ações Rápidas do Fundador
-              </h3>
-              <div className="space-y-2.5">
+            <div className="p-6 sm:p-7 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 backdrop-blur-2xl space-y-5 shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-sans">
+                  Ações Rápidas do Fundador
+                </h3>
+              </div>
+
+              <div className="space-y-3">
                 <button
                   onClick={() => handleTabChange('coaches')}
-                  className="w-full text-left p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-xs text-zinc-300 flex items-center justify-between transition-all cursor-pointer group"
+                  className="w-full text-left p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-xs text-zinc-200 flex items-center justify-between transition-all cursor-pointer group"
                 >
-                  <span className="group-hover:text-white">Gerenciar Treinadores & Ativar PRO</span>
-                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  <div className="space-y-0.5">
+                    <span className="font-semibold block text-white group-hover:text-amber-400 transition-colors">Gerenciar Treinadores & Ativar PRO</span>
+                    <span className="text-xs text-zinc-400 block">{overview.totalCoaches} treinadores cadastrados</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </button>
+
                 <button
                   onClick={() => handleTabChange('leads')}
-                  className="w-full text-left p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-xs text-zinc-300 flex items-center justify-between transition-all cursor-pointer group"
+                  className="w-full text-left p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-xs text-zinc-200 flex items-center justify-between transition-all cursor-pointer group"
                 >
-                  <span className="group-hover:text-white">Acessar Leads Beta & WhatsApp ({recentLeads.length})</span>
-                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  <div className="space-y-0.5">
+                    <span className="font-semibold block text-white group-hover:text-cyan-400 transition-colors">Pipeline de Leads Beta</span>
+                    <span className="text-xs text-zinc-400 block">{recentLeads.length} leads prontos para WhatsApp</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </button>
+
                 <button
                   onClick={() => setIsAdModalOpen(true)}
-                  className="w-full text-left p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-xs text-zinc-300 flex items-center justify-between transition-all cursor-pointer group"
+                  className="w-full text-left p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-xs text-zinc-200 flex items-center justify-between transition-all cursor-pointer group"
                 >
-                  <span className="group-hover:text-white">Lançar Novo Gasto de Mídia</span>
-                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  <div className="space-y-0.5">
+                    <span className="font-semibold block text-white group-hover:text-emerald-400 transition-colors">Lançar Novo Gasto de Mídia</span>
+                    <span className="text-xs text-zinc-400 block">Atualiza CAC e ROI automaticamente</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </button>
               </div>
             </div>
@@ -526,37 +574,37 @@ function MasterDashboardContent() {
       {/* ABA 2: FINANCEIRO, TRÁFEGO PAGO & ROI */}
       {/* ========================================================================= */}
       {activeTab === 'financial' && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Unit Economics Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             
-            <div className="p-5 sm:p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 space-y-2">
-              <span className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">Total Investido em Mídia</span>
-              <span className="text-2xl sm:text-3xl font-black font-mono text-white">
+            <div className="p-6 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 space-y-2 shadow-lg">
+              <span className="text-xs font-semibold uppercase text-zinc-400 block tracking-wider">Total Investido em Mídia</span>
+              <span className="text-3xl sm:text-4xl font-black font-mono text-white block">
                 R$ {Number(financial.totalAdSpend).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
-              <p className="text-xs text-zinc-400">Meta Ads, Google e Tráfego</p>
+              <p className="text-xs text-zinc-400">Meta Ads, Google e Mídia Paga</p>
             </div>
 
-            <div className="p-5 sm:p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 space-y-2">
-              <span className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">CAC Real por Coach</span>
-              <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-400">
+            <div className="p-6 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 space-y-2 shadow-lg">
+              <span className="text-xs font-semibold uppercase text-zinc-400 block tracking-wider">CAC Real por Coach</span>
+              <span className="text-3xl sm:text-4xl font-black font-mono text-emerald-400 block">
                 R$ {Number(financial.cac).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
               <p className="text-xs text-zinc-400">Custo para atrair 1 treinador</p>
             </div>
 
-            <div className="p-5 sm:p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 space-y-2">
-              <span className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">ROI Geral</span>
-              <span className={`text-2xl sm:text-3xl font-black font-mono ${financial.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <div className="p-6 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 space-y-2 shadow-lg">
+              <span className="text-xs font-semibold uppercase text-zinc-400 block tracking-wider">ROI Geral</span>
+              <span className={`text-3xl sm:text-4xl font-black font-mono block ${financial.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 {Number(financial.roi).toFixed(1)}%
               </span>
               <p className="text-xs text-zinc-400">Retorno sobre investimento</p>
             </div>
 
-            <div className="p-5 sm:p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 space-y-2">
-              <span className="text-[11px] font-mono uppercase text-zinc-400 block tracking-wider">ROAS Multiplicador</span>
-              <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400">
+            <div className="p-6 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 space-y-2 shadow-lg">
+              <span className="text-xs font-semibold uppercase text-zinc-400 block tracking-wider">ROAS Multiplicador</span>
+              <span className="text-3xl sm:text-4xl font-black font-mono text-amber-400 block">
                 {Number(financial.roas).toFixed(2)}x
               </span>
               <p className="text-xs text-zinc-400">Receita gerada por R$ 1 investido</p>
@@ -565,57 +613,57 @@ function MasterDashboardContent() {
           </div>
 
           {/* Histórico de Gastos com Anúncios */}
-          <div className="p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 backdrop-blur-xl space-y-4">
+          <div className="p-6 sm:p-8 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 backdrop-blur-2xl space-y-5 shadow-xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-white font-mono uppercase tracking-wider">
+                <h3 className="text-base font-bold text-white font-sans uppercase tracking-wider">
                   Histórico de Gastos com Anúncios
                 </h3>
-                <p className="text-xs text-zinc-400">Lançamentos manuais para apuração de ROI e CAC.</p>
+                <p className="text-xs text-zinc-400">Lançamentos manuais para apuração contínua de ROI e CAC.</p>
               </div>
               <Button
                 onClick={() => setIsAdModalOpen(true)}
-                className="rounded-full bg-white text-black hover:bg-zinc-200 text-xs font-bold px-5"
+                className="rounded-full bg-white text-black hover:bg-zinc-200 text-xs font-bold px-6 py-2.5 shadow-md cursor-pointer"
               >
                 + Adicionar Gasto
               </Button>
             </div>
 
             {recentAdSpends.length === 0 ? (
-              <div className="py-12 text-center text-zinc-400 text-xs font-mono">
+              <div className="py-14 text-center text-zinc-400 text-xs font-mono">
                 Nenhum gasto com anúncios lançado ainda. Clique no botão acima para registrar.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-white/10 text-zinc-400 font-mono uppercase">
-                      <th className="py-3 px-3">Data</th>
-                      <th className="py-3 px-3">Plataforma</th>
-                      <th className="py-3 px-3">Campanha</th>
-                      <th className="py-3 px-3">Valor (R$)</th>
-                      <th className="py-3 px-3">Notas</th>
-                      <th className="py-3 px-3 text-right">Ações</th>
+                    <tr className="border-b border-white/10 text-zinc-400 uppercase font-semibold">
+                      <th className="py-3.5 px-4">Data</th>
+                      <th className="py-3.5 px-4">Plataforma</th>
+                      <th className="py-3.5 px-4">Campanha</th>
+                      <th className="py-3.5 px-4">Valor (R$)</th>
+                      <th className="py-3.5 px-4">Notas</th>
+                      <th className="py-3.5 px-4 text-right">Ações</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {recentAdSpends.map((spend: any) => (
-                      <tr key={spend.id} className="hover:bg-white/[0.02]">
-                        <td className="py-3 px-3 font-mono text-zinc-300">{spend.spend_date}</td>
-                        <td className="py-3 px-3">
-                          <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase font-mono text-zinc-300">
+                      <tr key={spend.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="py-4 px-4 font-mono text-zinc-300">{spend.spend_date}</td>
+                        <td className="py-4 px-4">
+                          <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase font-mono text-zinc-300">
                             {spend.platform}
                           </span>
                         </td>
-                        <td className="py-3 px-3 text-white font-medium">{spend.campaign_name || 'Geral'}</td>
-                        <td className="py-3 px-3 font-mono font-bold text-emerald-400">
+                        <td className="py-4 px-4 text-white font-medium">{spend.campaign_name || 'Geral'}</td>
+                        <td className="py-4 px-4 font-mono font-bold text-emerald-400 text-sm">
                           R$ {Number(spend.amount).toFixed(2)}
                         </td>
-                        <td className="py-3 px-3 text-zinc-400 max-w-xs truncate">{spend.notes || '-'}</td>
-                        <td className="py-3 px-3 text-right">
+                        <td className="py-4 px-4 text-zinc-400 max-w-xs truncate">{spend.notes || '-'}</td>
+                        <td className="py-4 px-4 text-right">
                           <button
                             onClick={() => handleDeleteAdSpend(spend.id)}
-                            className="text-zinc-400 hover:text-red-400 transition-colors p-1 cursor-pointer"
+                            className="text-zinc-400 hover:text-red-400 transition-colors p-1.5 cursor-pointer rounded-lg hover:bg-white/5"
                             title="Excluir Registro"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -635,27 +683,27 @@ function MasterDashboardContent() {
       {/* ABA 3: GESTÃO DE TREINADORES & TENANTS */}
       {/* ========================================================================= */}
       {activeTab === 'coaches' && (
-        <div className="space-y-6">
-          <div className="p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 backdrop-blur-xl space-y-5">
+        <div className="space-y-8">
+          <div className="p-6 sm:p-8 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 backdrop-blur-2xl space-y-6 shadow-xl">
             
             {/* Header & Filtros do Diretório */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-white font-mono uppercase tracking-wider">
+                <h3 className="text-base font-bold text-white uppercase tracking-wider font-sans">
                   Diretório Global de Treinadores
                 </h3>
                 <p className="text-xs text-zinc-400">
-                  Visão de contas ativas, turmas em andamento, splits e concessão de plano PRO (R$ 49,90).
+                  Visão executiva de contas ativas, turmas em andamento, splits e concessão de plano PRO (R$ 49,90).
                 </p>
               </div>
 
               {/* Filtros */}
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-3">
                 {/* Filtro Status da Conta */}
                 <select
                   value={coachStatusFilter}
                   onChange={(e) => setCoachStatusFilter(e.target.value as any)}
-                  className="bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-white/30 font-mono"
+                  className="bg-zinc-900 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-white/30 font-medium cursor-pointer"
                 >
                   <option value="all">Todas as Contas</option>
                   <option value="active">Com Turma Ativa</option>
@@ -666,7 +714,7 @@ function MasterDashboardContent() {
                 <select
                   value={coachTierFilter}
                   onChange={(e) => setCoachTierFilter(e.target.value as any)}
-                  className="bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-white/30 font-mono"
+                  className="bg-zinc-900 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-white/30 font-medium cursor-pointer"
                 >
                   <option value="all">Todos os Planos</option>
                   <option value="pro">Apenas PRO (R$ 49,90)</option>
@@ -675,12 +723,12 @@ function MasterDashboardContent() {
 
                 {/* Campo de Busca */}
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
                   <Input
                     value={coachSearch}
                     onChange={(e) => setCoachSearch(e.target.value)}
                     placeholder="Buscar nome ou telefone..."
-                    className="pl-9 bg-zinc-900 border-white/10 rounded-xl text-xs text-white placeholder-zinc-500"
+                    className="pl-10 bg-zinc-900 border-white/10 rounded-2xl text-xs text-white placeholder-zinc-500 py-2.5"
                   />
                 </div>
               </div>
@@ -690,20 +738,20 @@ function MasterDashboardContent() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-white/10 text-zinc-400 font-mono uppercase">
-                    <th className="py-3 px-3">Treinador & Contato</th>
-                    <th className="py-3 px-3">Status da Conta</th>
-                    <th className="py-3 px-3">Desafios / Alunos</th>
-                    <th className="py-3 px-3">Plano Atual</th>
-                    <th className="py-3 px-3">Subconta Asaas</th>
-                    <th className="py-3 px-3">Cadastro</th>
-                    <th className="py-3 px-3 text-right">Ação Master</th>
+                  <tr className="border-b border-white/10 text-zinc-400 uppercase font-semibold">
+                    <th className="py-4 px-4">Treinador & Contato</th>
+                    <th className="py-4 px-4">Status da Conta</th>
+                    <th className="py-4 px-4">Desafios / Alunos</th>
+                    <th className="py-4 px-4">Plano Atual</th>
+                    <th className="py-4 px-4">Subconta Asaas</th>
+                    <th className="py-4 px-4">Cadastro</th>
+                    <th className="py-4 px-4 text-right">Ação Master</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {filteredCoaches.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-zinc-400 font-mono">
+                      <td colSpan={7} className="py-14 text-center text-zinc-400 font-sans">
                         Nenhum treinador encontrado com os filtros aplicados.
                       </td>
                     </tr>
@@ -714,100 +762,109 @@ function MasterDashboardContent() {
                         <tr key={coach.id} className="hover:bg-white/[0.02] transition-colors">
                           
                           {/* Coluna 1: Nome e Contato */}
-                          <td className="py-3.5 px-3">
-                            <div className="font-bold text-white text-sm flex items-center gap-1.5">
-                              {coach.full_name}
-                              {coach.plan_tier === 'pro' && (
-                                <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                              )}
-                            </div>
-                            <div className="text-[11px] text-zinc-400 flex items-center gap-2 mt-0.5">
-                              <span>{coach.specialty}</span>
-                              {cleanPhone && (
-                                <a
-                                  href={`https://wa.me/55${cleanPhone}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-emerald-400 hover:underline flex items-center gap-1 font-mono text-[10px]"
-                                >
-                                  <MessageCircle className="w-3 h-3" /> Zap
-                                </a>
-                              )}
-                              {coach.instagram && (
-                                <a
-                                  href={`https://instagram.com/${coach.instagram.replace('@', '')}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-pink-400 hover:underline flex items-center gap-1 font-mono text-[10px]"
-                                >
-                                  <InstagramIcon className="w-3 h-3" /> {coach.instagram}
-                                </a>
-                              )}
+                          <td className="py-4 px-4">
+                            <div className="flex items-center gap-3">
+                              {/* Avatar Inicial */}
+                              <div className="h-10 w-10 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center font-black text-sm text-white shrink-0">
+                                {coach.full_name?.charAt(0)?.toUpperCase() || 'T'}
+                              </div>
+
+                              <div>
+                                <div className="font-bold text-white text-sm flex items-center gap-1.5">
+                                  {coach.full_name}
+                                  {coach.plan_tier === 'pro' && (
+                                    <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                  )}
+                                </div>
+                                <div className="text-xs text-zinc-400 flex items-center gap-2 mt-0.5">
+                                  <span>{coach.specialty}</span>
+                                  {cleanPhone && (
+                                    <a
+                                      href={`https://wa.me/55${cleanPhone}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-emerald-400 hover:underline flex items-center gap-1 font-mono text-xs"
+                                    >
+                                      <MessageCircle className="w-3.5 h-3.5" /> Zap
+                                    </a>
+                                  )}
+                                  {coach.instagram && (
+                                    <a
+                                      href={`https://instagram.com/${coach.instagram.replace('@', '')}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-pink-400 hover:underline flex items-center gap-1 font-mono text-xs"
+                                    >
+                                      <InstagramIcon className="w-3 h-3" /> {coach.instagram}
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
                             </div>
                           </td>
 
                           {/* Coluna 2: Status da Conta (Ativa com Desafio vs Onboarding) */}
-                          <td className="py-3.5 px-3">
+                          <td className="py-4 px-4">
                             {coach.has_active_challenges ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold uppercase tracking-wider">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
                                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                                 Ativo ({coach.active_challenges_count} turmas)
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-[10px] font-mono uppercase tracking-wider">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-xs font-medium">
                                 Em Onboarding
                               </span>
                             )}
                           </td>
 
                           {/* Coluna 3: Desafios e Alunos */}
-                          <td className="py-3.5 px-3 font-mono">
-                            <div className="text-white font-bold">
+                          <td className="py-4 px-4 font-mono">
+                            <div className="text-white font-bold text-xs">
                               {coach.total_challenges_count} desafio(s)
                             </div>
-                            <div className="text-[11px] text-zinc-400">
+                            <div className="text-xs text-zinc-400">
                               {coach.total_students_count} aluno(s)
                             </div>
                           </td>
 
                           {/* Coluna 4: Plano e Taxa Oficial */}
-                          <td className="py-3.5 px-3">
-                            <span className={`inline-flex flex-col px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider border ${
+                          <td className="py-4 px-4">
+                            <span className={`inline-flex flex-col px-3 py-1.5 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider border ${
                               coach.plan_tier === 'pro' 
                                 ? 'bg-amber-400/10 text-amber-300 border-amber-400/30' 
-                                : 'bg-white/5 text-zinc-400 border-white/10'
+                                : 'bg-white/5 text-zinc-300 border-white/10'
                             }`}>
                               <span>{coach.plan_tier === 'pro' ? '★ PRO (R$ 49,90/mês)' : 'Starter (Grátis)'}</span>
-                              <span className="text-[9px] font-normal text-zinc-400">Split: {coach.platform_fee_percent}%</span>
+                              <span className="text-[10px] font-normal text-zinc-400">Split da Plataforma: {coach.platform_fee_percent}%</span>
                             </span>
                           </td>
 
                           {/* Coluna 5: Subconta Asaas */}
-                          <td className="py-3.5 px-3 font-mono">
+                          <td className="py-4 px-4 font-mono">
                             {coach.asaas_wallet_id ? (
-                              <span className="text-emerald-400 flex items-center gap-1 text-[11px]">
-                                <CheckCircle2 className="w-3.5 h-3.5" /> Vinculada
+                              <span className="text-emerald-400 flex items-center gap-1.5 text-xs font-semibold">
+                                <CheckCircle2 className="w-4 h-4" /> Vinculada
                               </span>
                             ) : (
-                              <span className="text-amber-400/90 text-[11px] flex items-center gap-1">
-                                <Clock className="w-3.5 h-3.5" /> Pendente
+                              <span className="text-amber-400 text-xs flex items-center gap-1.5">
+                                <Clock className="w-4 h-4" /> Pendente
                               </span>
                             )}
                           </td>
 
                           {/* Coluna 6: Data Cadastro */}
-                          <td className="py-3.5 px-3 font-mono text-zinc-400">
+                          <td className="py-4 px-4 font-mono text-zinc-400">
                             {new Date(coach.created_at).toLocaleDateString('pt-BR')}
                           </td>
 
                           {/* Coluna 7: Ação Super Admin */}
-                          <td className="py-3.5 px-3 text-right">
+                          <td className="py-4 px-4 text-right">
                             <Button
                               size="sm"
                               variant="outline"
                               disabled={updatingCoachId === coach.id}
                               onClick={() => handleToggleCoachTier(coach.id, coach.plan_tier)}
-                              className="rounded-full text-[11px] font-mono border-white/10 hover:bg-white/10 text-zinc-200 transition-all cursor-pointer"
+                              className="rounded-full text-xs font-semibold border-white/15 hover:bg-white hover:text-black text-zinc-200 transition-all cursor-pointer px-4"
                             >
                               {coach.plan_tier === 'pro' ? 'Rebaixar p/ Starter' : 'Conceder PRO'}
                             </Button>
@@ -829,43 +886,43 @@ function MasterDashboardContent() {
       {/* ABA 4: PIPELINE DE LEADS & BETA TESTERS */}
       {/* ========================================================================= */}
       {activeTab === 'leads' && (
-        <div className="space-y-6">
-          <div className="p-6 rounded-3xl bg-zinc-950/80 border border-white/[0.08] border-t-white/20 backdrop-blur-xl space-y-4">
+        <div className="space-y-8">
+          <div className="p-6 sm:p-8 rounded-[28px] bg-zinc-950/85 border border-white/[0.08] border-t-white/20 backdrop-blur-2xl space-y-6 shadow-xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-white font-mono uppercase tracking-wider">
+                <h3 className="text-base font-bold text-white uppercase tracking-wider font-sans">
                   Candidatos do Beta Fechado & Lista VIP
                 </h3>
-                <p className="text-xs text-zinc-400">Leads capturados via /beta e /vip prontos para ativação no WhatsApp.</p>
+                <p className="text-xs text-zinc-400">Leads capturados via /beta e /vip prontos para ativação direta no WhatsApp.</p>
               </div>
 
               <div className="relative w-full sm:w-72">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
                 <Input
                   value={leadSearch}
                   onChange={(e) => setLeadSearch(e.target.value)}
                   placeholder="Buscar por nome, zap ou e-mail..."
-                  className="pl-9 bg-zinc-900 border-white/10 rounded-xl text-xs text-white placeholder-zinc-500"
+                  className="pl-10 bg-zinc-900 border-white/10 rounded-2xl text-xs text-white placeholder-zinc-500 py-2.5"
                 />
               </div>
             </div>
 
             {filteredLeads.length === 0 ? (
-              <div className="py-12 text-center text-zinc-400 text-xs font-mono">
+              <div className="py-14 text-center text-zinc-400 text-xs font-mono">
                 Nenhum lead encontrado com os filtros atuais.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-white/10 text-zinc-400 font-mono uppercase">
-                      <th className="py-3 px-3">Nome / Perfil</th>
-                      <th className="py-3 px-3">WhatsApp</th>
-                      <th className="py-3 px-3">E-mail</th>
-                      <th className="py-3 px-3">Alunos Previstos</th>
-                      <th className="py-3 px-3">Origem</th>
-                      <th className="py-3 px-3">Data</th>
-                      <th className="py-3 px-3 text-right">Ação Direta</th>
+                    <tr className="border-b border-white/10 text-zinc-400 uppercase font-semibold">
+                      <th className="py-4 px-4">Nome / Perfil</th>
+                      <th className="py-4 px-4">WhatsApp</th>
+                      <th className="py-4 px-4">E-mail</th>
+                      <th className="py-4 px-4">Alunos Previstos</th>
+                      <th className="py-4 px-4">Origem</th>
+                      <th className="py-4 px-4">Data</th>
+                      <th className="py-4 px-4 text-right">Ação Direta</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
@@ -873,25 +930,25 @@ function MasterDashboardContent() {
                       const cleanPhone = lead.whatsapp?.replace(/\D/g, '');
                       return (
                         <tr key={lead.id} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="py-3 px-3">
-                            <div className="font-bold text-white">{lead.name}</div>
+                          <td className="py-4 px-4">
+                            <div className="font-bold text-white text-sm">{lead.name}</div>
                             {lead.utm_source?.startsWith('ig:') && (
-                              <div className="text-[11px] text-amber-400 font-mono">
+                              <div className="text-xs text-amber-400 font-mono mt-0.5">
                                 {lead.utm_source.replace('ig:', '@')}
                               </div>
                             )}
                           </td>
-                          <td className="py-3 px-3 font-mono text-zinc-300">
+                          <td className="py-4 px-4 font-mono text-zinc-300">
                             {lead.whatsapp}
                           </td>
-                          <td className="py-3 px-3 text-zinc-300">{lead.email}</td>
-                          <td className="py-3 px-3 font-mono">
-                            <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-zinc-300">
+                          <td className="py-4 px-4 text-zinc-300">{lead.email}</td>
+                          <td className="py-4 px-4 font-mono">
+                            <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-zinc-200">
                               {lead.students_range || 'N/A'} alunos
                             </span>
                           </td>
-                          <td className="py-3 px-3">
-                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase border ${
+                          <td className="py-4 px-4">
+                            <span className={`px-3 py-1 rounded-full text-[11px] font-mono uppercase font-bold border ${
                               lead.utm_medium === 'beta_tester'
                                 ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
                                 : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
@@ -899,17 +956,17 @@ function MasterDashboardContent() {
                               {lead.utm_medium === 'beta_tester' ? 'Beta Tester' : 'Lista VIP'}
                             </span>
                           </td>
-                          <td className="py-3 px-3 font-mono text-zinc-400">
+                          <td className="py-4 px-4 font-mono text-zinc-400">
                             {new Date(lead.created_at).toLocaleDateString('pt-BR')}
                           </td>
-                          <td className="py-3 px-3 text-right">
+                          <td className="py-4 px-4 text-right">
                             <a
                               href={`https://wa.me/55${cleanPhone}?text=Ol%C3%A1%20${encodeURIComponent(lead.name.split(' ')[0])}%2C%20aqui%20%C3%A9%20o%20Igor%20da%20ArenaFitPro!%20Vi%20sua%20inscri%C3%A7%C3%A3o%20para%20o%20Beta.`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold transition-all shadow-[0_0_15px_rgba(52,211,153,0.1)]"
+                              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-400 text-xs font-semibold transition-all shadow-[0_0_20px_rgba(52,211,153,0.15)]"
                             >
-                              <MessageCircle className="w-3.5 h-3.5" /> Chamar WhatsApp
+                              <MessageCircle className="w-4 h-4" /> Chamar WhatsApp
                             </a>
                           </td>
                         </tr>
@@ -928,36 +985,36 @@ function MasterDashboardContent() {
       {/* ========================================================================= */}
       {isAdModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-zinc-950 border border-white/15 border-t-white/30 rounded-3xl p-6 sm:p-7 space-y-5 shadow-2xl animate-in fade-in zoom-in duration-200">
-            <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 block font-bold">
+          <div className="w-full max-w-md bg-zinc-950 border border-white/15 border-t-white/30 rounded-[32px] p-7 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div className="space-y-1.5">
+              <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 block font-bold">
                 Tráfego Pago & Performance
               </span>
-              <h3 className="text-xl font-black text-white">Registrar Gasto de Anúncios</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <h3 className="text-2xl font-black text-white">Registrar Gasto de Anúncios</h3>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
                 Alimenta a apuração automática do CAC e ROI da plataforma.
               </p>
             </div>
 
             <form onSubmit={handleSaveAdSpend} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[11px] font-mono uppercase text-zinc-400 block">Data do Gasto</label>
+                <label className="text-xs font-semibold uppercase text-zinc-300 block">Data do Gasto</label>
                 <input
                   type="date"
                   required
                   value={adSpendDate}
                   onChange={(e) => setAdSpendDate(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-white/40"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-white/40"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-mono uppercase text-zinc-400 block">Plataforma</label>
+                  <label className="text-xs font-semibold uppercase text-zinc-300 block">Plataforma</label>
                   <select
                     value={adPlatform}
                     onChange={(e) => setAdPlatform(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-white/40"
+                    className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-3.5 py-3 text-xs text-white focus:outline-none focus:border-white/40"
                   >
                     <option value="meta_ads">Meta Ads (Instagram/FB)</option>
                     <option value="google_ads">Google Ads</option>
@@ -968,7 +1025,7 @@ function MasterDashboardContent() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-mono uppercase text-zinc-400 block">Valor Investido (R$)</label>
+                  <label className="text-xs font-semibold uppercase text-zinc-300 block">Valor Investido (R$)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -976,46 +1033,46 @@ function MasterDashboardContent() {
                     placeholder="Ex: 250.00"
                     value={adAmount}
                     onChange={(e) => setAdAmount(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-white/40 font-mono"
+                    className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-white/40 font-mono"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-mono uppercase text-zinc-400 block">Nome da Campanha (Opcional)</label>
+                <label className="text-xs font-semibold uppercase text-zinc-300 block">Nome da Campanha (Opcional)</label>
                 <input
                   type="text"
                   placeholder="Ex: Campanha /beta Personais SP"
                   value={adCampaign}
                   onChange={(e) => setAdCampaign(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-white/40"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-white/40"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-mono uppercase text-zinc-400 block">Notas / Observações</label>
+                <label className="text-xs font-semibold uppercase text-zinc-300 block">Notas / Observações</label>
                 <textarea
                   rows={2}
                   placeholder="Ex: Criativo em vídeo destacando ranking e split automático"
                   value={adNotes}
                   onChange={(e) => setAdNotes(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-white/40 resize-none"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-white/40 resize-none font-sans"
                 />
               </div>
 
-              <div className="flex items-center gap-3 pt-2">
+              <div className="flex items-center gap-3 pt-3">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setIsAdModalOpen(false)}
-                  className="flex-1 rounded-full border-white/10 text-xs font-mono"
+                  className="flex-1 rounded-full border-white/10 text-xs font-semibold py-3"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
                   disabled={savingAd}
-                  className="flex-1 rounded-full bg-white text-black hover:bg-zinc-200 text-xs font-black uppercase tracking-wider shadow-[0_5px_15px_rgba(255,255,255,0.15)]"
+                  className="flex-1 rounded-full bg-white text-black hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider py-3 shadow-[0_5px_20px_rgba(255,255,255,0.2)] cursor-pointer"
                 >
                   {savingAd ? 'Salvando...' : 'Confirmar Gasto'}
                 </Button>
@@ -1033,10 +1090,10 @@ export default function MasterDashboardPage() {
   return (
     <Suspense fallback={
       <div className="space-y-6 animate-pulse">
-        <div className="h-24 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+        <div className="h-28 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="h-36 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
-          <div className="h-36 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+          <div className="h-40 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
+          <div className="h-40 rounded-3xl bg-zinc-950 border border-white/[0.08]" />
         </div>
       </div>
     }>

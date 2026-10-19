@@ -7,8 +7,9 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
-import { Crown, Lock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Lock } from 'lucide-react';
 import { isMasterAdmin } from '@/lib/master-auth';
+import { Input } from '@/components/ui/input';
 
 export default function MasterLoginPage() {
   const router = useRouter();
@@ -39,11 +40,10 @@ export default function MasterLoginPage() {
         throw new Error('Falha ao autenticar.');
       }
 
-      // Validação Estrita de Super Admin
+      // Validação de Super Admin
       let authorized = isMasterAdmin(authData.user);
 
       if (!authorized) {
-        // Checagem de fallback no banco
         const { data: prof } = await supabase
           .from('professionals')
           .select('is_master_admin')
@@ -56,9 +56,8 @@ export default function MasterLoginPage() {
       }
 
       if (!authorized) {
-        // Se a conta não for master, desconecta imediatamente
         await supabase.auth.signOut();
-        throw new Error('Acesso restrito. Este portal é exclusivo para o Super Admin fundador da ArenaFitPro.');
+        throw new Error('Acesso restrito. Este portal é exclusivo para o administrador da plataforma.');
       }
 
       // Configuração de cookies de sessão master
@@ -68,136 +67,114 @@ export default function MasterLoginPage() {
 
       router.push('/admin');
     } catch (err: any) {
-      setErrorMessage(err.message || 'Erro ao realizar login mestre.');
+      setErrorMessage(err.message || 'Erro ao realizar login.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between p-4 sm:p-6 md:p-8 relative overflow-hidden antialiased">
-      {/* Background 3D Monocromático */}
+    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden">
+      {/* Background 3D Animado igual à área de login de treinador/aluno */}
       <Monochrome3DBackground />
 
-      {/* Topo Minimalista com Logo Oficial */}
-      <header className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
-        <Link href="/" className="flex items-center gap-3 group min-h-[44px]">
-          <div className="h-9 w-9 rounded-2xl overflow-hidden border border-white/20 bg-zinc-950 p-1 shadow-[0_0_20px_rgba(255,255,255,0.1)] group-hover:scale-105 group-hover:border-amber-400/50 transition-all shrink-0">
-            <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-contain" />
+      {/* Top Bar Minimalista */}
+      <div className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
+        <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
+          <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
-          <div>
-            <span className="font-black text-lg tracking-tight text-white block leading-tight">
-              ArenaFitPro
-            </span>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 font-bold block">
-              SaaS Multi-Tenant
-            </span>
-          </div>
+          <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
         </Link>
 
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm">
-          <Crown className="w-3.5 h-3.5 text-amber-400" /> Portal Mestre
-        </div>
-      </header>
+        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+          ← Início
+        </Link>
+      </div>
 
-      {/* Card Central de Login Mestre */}
-      <main className="max-w-md w-full mx-auto z-10 my-auto py-8">
-        <div className="relative">
-          {/* Estrela 3D cromada decorativa */}
-          <div className="absolute -top-12 -right-6 hidden sm:block opacity-35 pointer-events-none">
-            <Chrome3DStar size={64} delay={0.2} />
+      {/* Card Central com 3D Spotlight */}
+      <div className="max-w-md w-full mx-auto my-auto py-6 z-10 relative">
+        <div className="absolute -top-7 -right-3 hidden sm:block opacity-40 hover:opacity-80 transition-opacity">
+          <Chrome3DStar size={50} />
+        </div>
+
+        <SpotlightCard3D className="p-6 sm:p-7">
+          {/* Header do Card */}
+          <div className="text-center mb-5">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-1">
+              PAINEL ADMINISTRATIVO
+            </span>
+            <h1 className="text-2xl font-black text-white tracking-tight">
+              Acesso Mestre
+            </h1>
+            <p className="text-xs text-zinc-400 mt-1">
+              Cockpit de gestão e operações globais da plataforma
+            </p>
           </div>
 
-          <SpotlightCard3D glowIntensity={0.2} className="p-7 sm:p-10 space-y-7 bg-zinc-950/85 border border-white/[0.1] border-t-white/25 rounded-[32px] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
-            
-            <div className="space-y-3 text-center">
-              <div className="relative inline-block">
-                <div className="w-14 h-14 rounded-3xl bg-zinc-900 border border-amber-400/40 p-2 text-amber-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(251,191,36,0.25)]">
-                  <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-contain" />
-                </div>
-                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-black border border-amber-400/80 flex items-center justify-center text-amber-400">
-                  <Crown className="w-3 h-3" />
-                </div>
-              </div>
+          {errorMessage && (
+            <div className="p-3 mb-4 rounded-xl border border-rose-500/30 bg-rose-950/20 text-xs font-mono text-rose-300 animate-in fade-in">
+              {errorMessage}
+            </div>
+          )}
 
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                  Cockpit do Fundador
-                </h1>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed mt-1 font-sans">
-                  Terminal de Operações Globais & Moderação Mestre
-                </p>
-              </div>
+          <form onSubmit={handleMasterSignIn} className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                E-mail de Administrador
+              </label>
+              <Input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="seu.email@arenafitpro.com.br"
+                className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+              />
             </div>
 
-            {errorMessage && (
-              <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 flex items-start gap-3">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-400" />
-                <span className="leading-relaxed font-medium">{errorMessage}</span>
-              </div>
-            )}
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                Senha de Acesso
+              </label>
+              <Input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+              />
+            </div>
 
-            <form onSubmit={handleMasterSignIn} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider block">
-                  E-mail do Administrador
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu.email@dominio.com"
-                  className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/70 transition-all min-h-[48px]"
-                />
-              </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="mono-button-primary w-full h-11 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer mt-2"
+            >
+              {loading ? (
+                <div className="h-4 w-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>Entrar no Cockpit</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </>
+              )}
+            </button>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider block">
-                  Chave de Acesso / Senha
-                </label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full bg-zinc-900/90 border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/70 transition-all min-h-[48px]"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.2)] active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px] cursor-pointer mt-2"
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                    Validando Credenciais Mestre...
-                  </span>
-                ) : (
-                  <>
-                    Acessar Terminal Mestre <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-400 text-center pt-2 font-mono">
-                <Lock className="w-3.5 h-3.5 text-zinc-400" /> Acesso seguro com criptografia e auditoria IP.
-              </div>
-            </form>
-
-          </SpotlightCard3D>
-        </div>
-      </main>
+            <p className="text-[11px] text-zinc-500 text-center flex items-center justify-center gap-1.5 pt-1">
+              <Lock className="w-3 h-3 text-zinc-500" /> Acesso restrito ao administrador fundador
+            </p>
+          </form>
+        </SpotlightCard3D>
+      </div>
 
       {/* Rodapé Minimalista */}
-      <footer className="max-w-md w-full mx-auto text-center z-10 pb-2">
-        <span className="text-xs font-mono text-zinc-400">
-          ArenaFitPro • Internal Master Terminal
+      <div className="max-w-md w-full mx-auto text-center z-10 pb-2">
+        <span className="text-[11px] text-zinc-600 font-mono">
+          ArenaFitPro • Painel Mestre
         </span>
-      </footer>
+      </div>
     </div>
   );
 }

@@ -48,6 +48,9 @@ export default function HomePage() {
   // FAQ Accordion
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+  // Modal de Aviso de Fase de Testes Fechada (Bloqueio de Aluno / Plataforma)
+  const [isBetaClosedModalOpen, setIsBetaClosedModalOpen] = useState(false);
+
   // Input de Código de Aluno no Hero
   const [heroStudentCode, setHeroStudentCode] = useState('');
 
@@ -64,11 +67,14 @@ export default function HomePage() {
   const handleHeroCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     let code = heroStudentCode.trim();
-    if (!code) return;
-    if (code.includes('/join/')) {
-      code = code.split('/join/')[1].split('?')[0].split('/')[0];
+    if (code) {
+      if (code.includes('/join/')) {
+        code = code.split('/join/')[1].split('?')[0].split('/')[0];
+      }
+      router.push(`/join/${code}`);
+    } else {
+      setIsBetaClosedModalOpen(true);
     }
-    router.push(`/join/${code}`);
   };
 
   const faqItems = [
@@ -266,14 +272,16 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link href="/login" className="hidden sm:block">
-              <button className="min-h-[44px] text-xs sm:text-sm font-semibold text-zinc-200 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition-colors cursor-pointer">
-                Sou Aluno
-              </button>
-            </Link>
-            <Link href="/login">
+            <button
+              onClick={() => setIsBetaClosedModalOpen(true)}
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5 text-zinc-500" />
+              <span>Sou Aluno</span>
+            </button>
+            <Link href="/beta">
               <button className="mono-button-primary min-h-[44px] px-4 sm:px-5 py-2 text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer">
-                <span>Criar Desafio</span>
+                <span>Participe da Fase de Testes</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
@@ -305,16 +313,20 @@ export default function HomePage() {
               ))}
             </div>
             <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
-              <Link href="/login" onClick={() => setMobileNavOpen(false)} className="flex-1">
-                <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2">
-                  <KeyRound className="w-4 h-4" />
-                  <span>Entrar como Aluno</span>
-                </button>
-              </Link>
-              <Link href="/login" onClick={() => setMobileNavOpen(false)} className="flex-1">
-                <button className="mono-button-primary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2">
+              <button
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  setIsBetaClosedModalOpen(true);
+                }}
+                className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer text-zinc-400"
+              >
+                <Lock className="w-4 h-4 text-zinc-500" />
+                <span>Acesso Aluno (Fase Fechada)</span>
+              </button>
+              <Link href="/beta" onClick={() => setMobileNavOpen(false)} className="flex-1">
+                <button className="mono-button-primary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4" />
-                  <span>Painel do Treinador</span>
+                  <span>Participe da Fase de Testes</span>
                 </button>
               </Link>
             </div>
@@ -358,10 +370,10 @@ export default function HomePage() {
 
             {/* CTAs Principais com Touch Targets Confortáveis (>= 52px) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-8">
-              <Link href="/login" className="w-full sm:w-auto">
+              <Link href="/beta" className="w-full sm:w-auto">
                 <button className="mono-button-primary w-full sm:w-auto min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 cursor-pointer">
                   <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>Criar Meu Desafio Grátis</span>
+                  <span>Participe da Fase de Testes</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
                 </button>
               </Link>
@@ -376,7 +388,10 @@ export default function HomePage() {
 
             {/* Barra de Acesso Rápido para Alunos (Mobile-First sem truncamento) */}
             <form
-              onSubmit={handleHeroCodeSubmit}
+              onSubmit={(e) => {
+                e.preventDefault();
+                setIsBetaClosedModalOpen(true);
+              }}
               className="max-w-lg mx-auto mb-10 p-2 rounded-2xl bg-zinc-950/90 border border-white/15 backdrop-blur-xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shadow-2xl"
             >
               <div className="flex items-center gap-2.5 px-3 py-1.5 sm:py-0 flex-1 min-w-0">
@@ -393,8 +408,8 @@ export default function HomePage() {
                 type="submit"
                 className="min-h-[44px] px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs sm:text-sm hover:bg-zinc-200 transition-colors shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
               >
+                <Lock className="w-3.5 h-3.5 text-black" />
                 <span>Entrar na Turma</span>
-                <ArrowRight className="w-4 h-4" />
               </button>
             </form>
 
@@ -1068,9 +1083,11 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <Link href="/login" className="block w-full">
-                <button className="mono-button-secondary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer">
-                  Começar Grátis Sem Cartão
+              <Link href="/beta" className="block w-full">
+                <button className="mono-button-secondary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2">
+                  <Sparkles className="w-4 h-4 text-zinc-300" />
+                  <span>Participe da Fase de Testes</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
             </SpotlightCard3D>
@@ -1151,10 +1168,11 @@ export default function HomePage() {
 
               </div>
 
-              <Link href="/login" className="block w-full">
+              <Link href="/beta" className="block w-full">
                 <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-black shadow-[0_0_25px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2 cursor-pointer">
-                  <span>Assinar Pro Coach</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 text-black" />
+                  <span>Participe da Fase de Testes</span>
+                  <ArrowRight className="w-4 h-4 text-black" />
                 </button>
               </Link>
             </SpotlightCard3D>
@@ -1333,18 +1351,20 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/login" className="w-full sm:w-auto">
+            <Link href="/beta" className="w-full sm:w-auto">
               <button className="mono-button-primary w-full sm:w-auto min-h-[54px] px-10 py-4 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 shadow-[0_0_35px_rgba(255,255,255,0.3)] cursor-pointer">
-                <span>Criar Meu Desafio Grátis</span>
-                <ArrowRight className="w-4 h-4" />
+                <Sparkles className="w-4 h-4 shrink-0" />
+                <span>Participe da Fase de Testes</span>
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
             </Link>
-            <Link href="/login" className="w-full sm:w-auto">
-              <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
-                <KeyRound className="w-4 h-4 text-zinc-300" />
-                <span>Entrar com Código de Aluno</span>
-              </button>
-            </Link>
+            <button
+              onClick={() => setIsBetaClosedModalOpen(true)}
+              className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Lock className="w-4 h-4 text-zinc-400" />
+              <span>Entrar com Código de Aluno</span>
+            </button>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-mono text-zinc-400">
@@ -1378,10 +1398,68 @@ export default function HomePage() {
             <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
             <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
             <Link href="/privacidade" className="hover:text-white transition-colors">Privacidade & LGPD</Link>
-            <Link href="/login" className="text-white font-bold hover:underline transition-colors">Área de Acesso</Link>
+            <button
+              onClick={() => setIsBetaClosedModalOpen(true)}
+              className="text-white font-bold hover:underline transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Área de Acesso</span>
+            </button>
           </div>
         </div>
       </footer>
+
+      {/* Modal de Aviso de Fase de Testes Fechada */}
+      {isBetaClosedModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md rounded-3xl bg-zinc-950 border border-white/20 p-6 sm:p-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setIsBetaClosedModalOpen(false)}
+              className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Fechar"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-center mx-auto mb-4 text-white shadow-inner">
+              <Lock className="w-6 h-6 text-zinc-200" />
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-zinc-300 font-mono text-[11px] uppercase tracking-wider mb-3">
+              <span>Piloto Exclusivo</span>
+            </div>
+
+            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+              Fase de Testes Fechada
+            </h3>
+
+            <p className="text-sm text-zinc-300 leading-relaxed mb-6 font-normal">
+              O acesso aos desafios e ao cockpit está restrito aos treinadores e turmas pioneiras do programa piloto. Novas vagas e turmas de alunos são liberadas por ordem de inscrição.
+            </p>
+
+            <div className="space-y-3">
+              <Link
+                href="/beta"
+                onClick={() => setIsBetaClosedModalOpen(false)}
+                className="block w-full"
+              >
+                <button className="mono-button-primary w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_25px_rgba(255,255,255,0.2)]">
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span>Participar da Fase de Testes</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" />
+                </button>
+              </Link>
+
+              <button
+                onClick={() => setIsBetaClosedModalOpen(false)}
+                className="w-full py-2.5 text-xs font-mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Voltar à Página Principal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

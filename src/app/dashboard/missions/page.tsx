@@ -128,6 +128,7 @@ function MissionsManagerContent() {
   const [formRequiresCooldown, setFormRequiresCooldown] = useState(false);
   const [formCooldownHours, setFormCooldownHours] = useState('4');
   const [formIsBonus, setFormIsBonus] = useState(false);
+  const [formIsDailyReset, setFormIsDailyReset] = useState(false);
   const [submittingMission, setSubmittingMission] = useState(false);
 
   // Modais de Confirmação & Toasts
@@ -613,6 +614,7 @@ function MissionsManagerContent() {
             validation_type: 'photo',
             daily_limit: 1,
             target_frequency: 7,
+            is_daily_reset: true,
             points_rewarded: 10,
             requires_cooldown: false,
             order_index: idx + 1,
@@ -620,13 +622,39 @@ function MissionsManagerContent() {
           });
         });
 
+        // 3 Hábitos Diários Recorrentes (reset diário às 00:00)
+        const dailyHabits = [
+          { title: 'Hidratação: 500ml de Água ao Acordar', val: 'simple_click', pts: 10 },
+          { title: 'Rotina Matinal: Vácuo em Jejum', val: 'photo', pts: 10 },
+          { title: 'Foco & Disciplina: 30min de Leitura Diária', val: 'simple_click', pts: 10 },
+        ];
+
+        dailyHabits.forEach((hab, hIdx) => {
+          allMissionsToInsert.push({
+            challenge_id: selectedChallengeId,
+            week_id: week.id,
+            title: `${hab.title} • Semana ${week.week_number}`,
+            category: 'habito',
+            validation_type: hab.val,
+            daily_limit: 1,
+            target_frequency: 7,
+            is_daily_reset: true,
+            points_rewarded: hab.pts,
+            requires_cooldown: true,
+            order_index: 20 + hIdx,
+            is_bonus: false,
+          });
+        });
+
         allMissionsToInsert.push({
           challenge_id: selectedChallengeId,
           week_id: week.id,
-          title: `Meta Bônus: 3L Água + Mobilidade • Semana ${week.week_number}`,
+          title: `Meta Bônus Semanal: 3L Água + Mobilidade • Semana ${week.week_number}`,
           category: 'habito',
           validation_type: 'simple_click',
           daily_limit: 0,
+          target_frequency: 1,
+          is_daily_reset: false,
           points_rewarded: 25,
           requires_cooldown: false,
           order_index: 99,
@@ -673,6 +701,7 @@ function MissionsManagerContent() {
     setFormRequiresCooldown(list?.daily_limit === 1);
     setFormCooldownHours('4');
     setFormIsBonus(false);
+    setFormIsDailyReset(list?.key === 'refeicao' || list?.is_daily_reset === true);
     setIsModalOpen(true);
   };
 
@@ -698,6 +727,7 @@ function MissionsManagerContent() {
     setFormRequiresCooldown(mission.requires_cooldown ?? false);
     setFormCooldownHours(mission.cooldown_hours?.toString() || '4');
     setFormIsBonus(mission.is_bonus ?? false);
+    setFormIsDailyReset(mission.is_daily_reset ?? (mission.category === 'refeicao'));
     setIsModalOpen(true);
   };
 
@@ -711,6 +741,7 @@ function MissionsManagerContent() {
       const realWeek = await ensureRealWeek(selectedWeek);
       const selectedListObj = missionLists.find((l) => l.id === formListId);
       const resolvedCategory = selectedListObj?.key || formCategory || 'treino';
+      const isDaily = formIsDailyReset || resolvedCategory === 'refeicao';
 
       const payload: any = {
         challenge_id: selectedChallengeId,
@@ -719,9 +750,11 @@ function MissionsManagerContent() {
         category: resolvedCategory,
         list_id: formListId && !formListId.startsWith('preset-') ? formListId : null,
         validation_type: formValidationType,
-        daily_limit: parseInt(formDailyLimit, 10) || 1,
+        daily_limit: 1,
+        target_frequency: isDaily ? 7 : 1,
+        is_daily_reset: isDaily,
         points_rewarded: parseInt(formPoints, 10) || 10,
-        requires_cooldown: formRequiresCooldown,
+        requires_cooldown: formRequiresCooldown || isDaily,
         cooldown_hours: parseInt(formCooldownHours, 10) || 4,
         is_bonus: formIsBonus,
       };
@@ -1458,6 +1491,11 @@ function MissionsManagerContent() {
                                         BÔNUS
                                       </Badge>
                                     )}
+                                    {(m.is_daily_reset || m.category === 'refeicao') && (
+                                      <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 text-[9px] font-mono uppercase">
+                                        RESET DIÁRIO (7X)
+                                      </Badge>
+                                    )}
                                   </div>
                                   <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-zinc-400">
                                     <span className="text-amber-300 font-bold">+{m.points_rewarded} XP</span>
@@ -1694,8 +1732,30 @@ function MissionsManagerContent() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 space-y-2">
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200">
+          <div className="p-3.5 rounded-2xl bg-zinc-900/80 border border-white/10 space-y-3">
+            <label className="flex items-start gap-2.5 cursor-pointer text-xs font-bold text-zinc-200">
+              <input
+                type="checkbox"
+                checked={formIsDailyReset}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setFormIsDailyReset(checked);
+                  if (checked) {
+                    setFormDailyLimit('1');
+                    setFormRequiresCooldown(true);
+                  }
+                }}
+                className="mt-0.5 rounded bg-zinc-950 border-white/20 text-white focus:ring-white h-4 w-4"
+              />
+              <div className="space-y-0.5">
+                <span className="text-white block font-black">Reset Diário (Meta Recorrente todos os dias)</span>
+                <span className="text-[11px] font-normal text-zinc-400 block leading-relaxed">
+                  O aluno poderá cumprir e pontuar 1 vez por dia durante toda a semana, resetando às 00:00 (Meta semanal calculada para 7 dias). Ideal para hábitos diários (água, leitura, vácuo) e refeições.
+                </span>
+              </div>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-2 border-t border-white/5">
               <input
                 type="checkbox"
                 checked={formRequiresCooldown}
@@ -1705,7 +1765,7 @@ function MissionsManagerContent() {
               <span>Bloquear após o check-in até a virada de meia-noite</span>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1 border-t border-white/5">
               <input
                 type="checkbox"
                 checked={formIsBonus}

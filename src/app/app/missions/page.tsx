@@ -387,7 +387,8 @@ function StudentMissionsContent() {
   const isCardioDailyLocked = todayCardioCount >= 1;
 
   const completedMissionsCount = missions.filter((m) => {
-    if (m.category === 'refeicao') {
+    const isDaily = m.is_daily_reset || m.category === 'refeicao';
+    if (isDaily) {
       return todaySubmissionsMap[m.id]?.status === 'approved';
     }
     return submissions[m.id]?.status === 'approved';
@@ -400,10 +401,10 @@ function StudentMissionsContent() {
     const isFutureWeek = Boolean(selectedWeekMeta?.isFuture);
 
     return missions.map((mission) => {
-      const isMeal = mission.category === 'refeicao';
+      const isDaily = mission.is_daily_reset || mission.category === 'refeicao';
 
-      // Para refeições, o slot diário verifica estritamente se foi enviado HOJE
-      const sub = isMeal ? todaySubmissionsMap[mission.id] : submissions[mission.id];
+      // Para missões de reset diário, o slot verifica estritamente se foi enviado HOJE
+      const sub = isDaily ? todaySubmissionsMap[mission.id] : submissions[mission.id];
       const isApproved = sub?.status === 'approved';
       const isPending = sub?.status === 'pending';
 
@@ -440,7 +441,7 @@ function StudentMissionsContent() {
         isDailyLocked,
         isPreviousUnfinished: hadPreviousUnfinished,
         isLocked,
-        isMeal,
+        isDaily,
       };
     });
   }, [missions, submissions, todaySubmissionsMap, isWorkoutDailyLocked, isCardioDailyLocked, selectedWeekMeta]);
@@ -461,20 +462,24 @@ function StudentMissionsContent() {
   const pillarStats = useMemo(() => {
     const calc = (cat: string) => {
       const all = processedMissions.filter((m) => m.category === cat);
-      if (cat === 'refeicao') {
-        const slotsCount = all.length || 4;
-        const total = slotsCount * 7; // 4 refeições/dia * 7 dias = 28 refeições
-        // Total de refeições aprovadas enviadas na semana atual
-        const done = rawSubmissions.filter(
-          (s: any) => s.missions?.category === 'refeicao' && s.status === 'approved'
-        ).length;
-        const todayDone = all.filter((m) => m.isApproved).length;
-        const totalXp = done * 10;
-        return { total, done, todayDone, totalXp, slotsCount };
-      }
-      const done = all.filter((m) => m.isApproved).length;
-      const totalXp = all.reduce((acc, m) => acc + Number(m.points_rewarded || 0), 0);
-      return { total: all.length, done, todayDone: done, totalXp, slotsCount: all.length };
+      const dailyMissions = all.filter((m) => m.isDaily);
+      const nonDailyMissions = all.filter((m) => !m.isDaily);
+
+      // Metas da semana: missões diárias valem 7 check-ins (1 por dia da semana)
+      const total = dailyMissions.length * 7 + nonDailyMissions.length;
+
+      // Submissões aprovadas registradas na categoria
+      const done = rawSubmissions.filter(
+        (s: any) => s.missions?.category === cat && s.status === 'approved'
+      ).length;
+
+      const todayDone = all.filter((m) => m.isApproved).length;
+      const totalXp = all.reduce((acc, m) => {
+        const mult = m.isDaily ? 7 : 1;
+        return acc + Number(m.points_rewarded || 10) * mult;
+      }, 0);
+
+      return { total, done, todayDone, totalXp, slotsCount: all.length, dailyCount: dailyMissions.length };
     };
     return {
       treino: calc('treino'),
@@ -593,14 +598,14 @@ function StudentMissionsContent() {
       return;
     }
     if (mission.isApproved) {
-      if (mission.category === 'refeicao') {
-        showToast(`Você já registrou o seu "${mission.title}" hoje! O próximo registro deste tipo estará liberado amanhã.`);
+      if (mission.isDaily) {
+        showToast(`Você já realizou "${mission.title}" hoje! O próximo registro deste tipo estará liberado amanhã.`);
       }
       return;
     }
     if (mission.isPending) {
-      if (mission.category === 'refeicao') {
-        showToast(`O seu "${mission.title}" de hoje está aguardando auditoria do treinador.`);
+      if (mission.isDaily) {
+        showToast(`O seu registro de "${mission.title}" de hoje está aguardando auditoria do treinador.`);
       }
       return;
     }
@@ -698,13 +703,13 @@ function StudentMissionsContent() {
         <div className="shrink-0 flex items-center gap-2">
           {mission.isApproved && (
             <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              {mission.category === 'refeicao' ? 'Concluída hoje' : 'Concluída'}
+              {mission.isDaily ? 'Concluída hoje' : 'Concluída'}
             </span>
           )}
 
           {mission.isPending && (
             <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/20">
-              {mission.category === 'refeicao' ? 'Pendente hoje' : 'Auditoria'}
+              {mission.isDaily ? 'Pendente hoje' : 'Auditoria'}
             </span>
           )}
 
@@ -789,12 +794,15 @@ function StudentMissionsContent() {
     {
       key: 'habito',
       title: 'Bloco de Hábitos & Metas',
-      subtitle: 'Hidratação, sono e disciplina diária da turma',
+      subtitle: 'Hidratação, rotina e disciplina diária da turma',
       Icon: Droplets,
       accentBorder: 'border-purple-500/25',
       accentBg: 'from-purple-500/[0.08] via-zinc-950 to-zinc-950',
       badgeColor: 'text-purple-300 bg-purple-500/15 border-purple-500/30',
-      ruleLabel: 'Check-in Diário',
+      ruleLabel:
+        pillarStats.habito.dailyCount > 0
+          ? `${pillarStats.habito.todayDone || 0}/${pillarStats.habito.dailyCount} concluídos hoje • Reset diário`
+          : 'Check-in Diário',
     },
   ];
 

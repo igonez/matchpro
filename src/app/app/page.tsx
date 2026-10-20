@@ -243,7 +243,7 @@ export default function StudentHomePage() {
         const { data: rawMissions } = challengeData?.id
           ? await supabase
               .from('missions')
-              .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus')
+              .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus, is_daily_reset')
               .eq('challenge_id', challengeData.id)
               .order('order_index', { ascending: true })
           : { data: [] };
@@ -310,41 +310,42 @@ export default function StudentHomePage() {
         let hDone = 0, hTot = 0;
         const lCounts: Record<string, { done: number; total: number }> = {};
 
-        // Contagem de refeições aprovadas acumuladas
-        const approvedMealSubsCount = (userSubmissions || []).filter(
-          (s: any) => s.status === 'approved' && s.missions?.category === 'refeicao'
-        ).length;
-
         allMissions?.forEach((m: any) => {
-          const isMeal = m.category === 'refeicao';
-          const freq = isMeal ? (m.target_frequency || 7) : (m.target_frequency || 1);
-          const isDone = isMeal ? false : approvedMissionIds.has(m.id);
+          const isDaily = m.is_daily_reset || m.category === 'refeicao';
+          const freq = isDaily ? (m.target_frequency || 7) : (m.target_frequency || 1);
+          
+          // Se a missão for de reset diário, conta todas as submissões aprovadas dela nesta semana
+          let doneForThis = 0;
+          if (isDaily) {
+            const countApproved = (userSubmissions || []).filter(
+              (s: any) => s.status === 'approved' && s.mission_id === m.id
+            ).length;
+            doneForThis = Math.min(freq, countApproved);
+          } else {
+            doneForThis = approvedMissionIds.has(m.id) ? freq : 0;
+          }
+
           const listKey = m.list_id || m.category;
           if (!lCounts[listKey]) {
             lCounts[listKey] = { done: 0, total: 0 };
           }
           lCounts[listKey].total += freq;
-          if (!isMeal && isDone) lCounts[listKey].done += freq;
+          lCounts[listKey].done += doneForThis;
 
           if (m.category === 'treino') {
             tTot += freq;
-            if (isDone) tDone += freq;
+            tDone += doneForThis;
           } else if (m.category === 'cardio') {
             cTot += freq;
-            if (isDone) cDone += freq;
+            cDone += doneForThis;
           } else if (m.category === 'refeicao') {
             rTot += freq;
+            rDone += doneForThis;
           } else {
             hTot += freq;
-            if (isDone) hDone += freq;
+            hDone += doneForThis;
           }
         });
-
-        // Refeições: meta total semanal (ex: 4 refeições * 7 dias = 28) e refeições concluídas
-        rDone = Math.min(rTot, approvedMealSubsCount);
-        if (lCounts['refeicao']) {
-          lCounts['refeicao'].done = rDone;
-        }
 
         setCategoryCounts({
           treinos: { done: tDone, total: tTot },
@@ -355,15 +356,16 @@ export default function StudentHomePage() {
         setListCounts(lCounts);
 
         // Selecionar tarefas de hoje:
-        // - Para refeições: incluir cada um dos slots de refeição ainda pendentes HOJE (reset diário às 00:00)
-        // - Para demais categorias: próxima missão disponível do grupo
+        // - Para missões com reset diário (refeições, hábitos diários, etc.): incluir as ainda NÃO concluídas HOJE
+        // - Para missões semanais pontuais: próxima missão pendente de cada lista/categoria
         const nextByCat: Record<string, any> = {};
-        const availableMealTasks: any[] = [];
+        const availableDailyTasks: any[] = [];
 
         (allMissions || []).forEach((m: any) => {
-          if (m.category === 'refeicao') {
+          const isDaily = m.is_daily_reset || m.category === 'refeicao';
+          if (isDaily) {
             if (!todaySubmittedMissionIds.has(m.id)) {
-              availableMealTasks.push(m);
+              availableDailyTasks.push(m);
             }
           } else {
             const groupKey = m.list_id || m.category;
@@ -373,7 +375,7 @@ export default function StudentHomePage() {
           }
         });
 
-        setTodayTasks([...Object.values(nextByCat), ...availableMealTasks]);
+        setTodayTasks([...Object.values(nextByCat), ...availableDailyTasks]);
       } catch (err) {
         console.error('Erro na tela de início:', err);
       } finally {

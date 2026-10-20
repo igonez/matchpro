@@ -93,7 +93,7 @@ export function StudentBottomNav() {
 
     const { data: rawMData } = await supabase
       .from('missions')
-      .select('id, challenge_id, week_id, title, category, list_id, validation_type, daily_limit, points_rewarded, order_index')
+      .select('id, challenge_id, week_id, title, category, list_id, validation_type, daily_limit, points_rewarded, order_index, is_daily_reset')
       .eq('challenge_id', part.challenge_id)
       .order('order_index', { ascending: true });
 
@@ -129,7 +129,7 @@ export function StudentBottomNav() {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
 
-    const mealDoneTodayIds = new Set<string>();
+    const dailyDoneTodayIds = new Set<string>();
     let treinoLockedToday = false;
     let cardioLockedToday = false;
 
@@ -137,7 +137,7 @@ export function StudentBottomNav() {
       const dt = new Date(s.submitted_at || s.client_captured_at);
       if (dt >= startOfToday) {
         if (s.status === 'approved' || s.status === 'pending') {
-          mealDoneTodayIds.add(s.mission_id);
+          dailyDoneTodayIds.add(s.mission_id);
         }
         if (s.missions?.category === 'treino') treinoLockedToday = true;
         if (s.missions?.category === 'cardio') cardioLockedToday = true;
@@ -149,12 +149,13 @@ export function StudentBottomNav() {
     );
 
     // Filtrar missões disponíveis para hoje:
-    // - Para refeições: liberar cada refeição ainda não submetida HOJE (reset diário às 00:00)
+    // - Para missões com reset diário (refeição, hábitos diários, etc.): libera se NÃO submetida HOJE
     // - Para treino/cardio/outros: 1 de cada grupo, respeitando os bloqueios do dia
     const seenGroups = new Set<string>();
     const available = (mData || []).filter((m: any) => {
-      if (m.category === 'refeicao') {
-        if (mealDoneTodayIds.has(m.id)) return false;
+      const isDaily = m.is_daily_reset || m.category === 'refeicao';
+      if (isDaily) {
+        if (dailyDoneTodayIds.has(m.id)) return false;
         return true;
       }
 

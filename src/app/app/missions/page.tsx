@@ -65,6 +65,8 @@ function StudentMissionsContent() {
   const [missions, setMissions] = useState<any[]>([]);
   const [submissions, setSubmissions] = useState<Record<string, any>>({});
   const [todaySubmissions, setTodaySubmissions] = useState<any[]>([]);
+  const [todaySubmissionsMap, setTodaySubmissionsMap] = useState<Record<string, any>>({});
+  const [rawSubmissions, setRawSubmissions] = useState<any[]>([]);
   const [showCompletedSection, setShowCompletedSection] = useState(true);
   const [previewFutureMissions, setPreviewFutureMissions] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -290,20 +292,27 @@ function StudentMissionsContent() {
 
         if (allSubmissionsData) {
           const map: Record<string, any> = {};
+          const todayMap: Record<string, any> = {};
           const todayList: any[] = [];
           const startOfToday = new Date();
           startOfToday.setHours(0, 0, 0, 0);
 
           allSubmissionsData.forEach((s: any) => {
-            map[s.mission_id] = s;
+            // Guarda a submissão mais recente no mapa geral
+            if (!map[s.mission_id] || new Date(s.submitted_at || 0) > new Date(map[s.mission_id].submitted_at || 0)) {
+              map[s.mission_id] = s;
+            }
             const subTime = new Date(s.submitted_at || s.client_captured_at);
             if (subTime >= startOfToday) {
               todayList.push(s);
+              todayMap[s.mission_id] = s;
             }
           });
 
           setSubmissions(map);
           setTodaySubmissions(todayList);
+          setTodaySubmissionsMap(todayMap);
+          setRawSubmissions(allSubmissionsData);
         }
       } catch (err) {
         console.error('Erro ao carregar semanas do aluno:', err);
@@ -377,7 +386,12 @@ function StudentMissionsContent() {
   const isWorkoutDailyLocked = todayWorkoutCount >= 1;
   const isCardioDailyLocked = todayCardioCount >= 1;
 
-  const completedMissionsCount = missions.filter((m) => submissions[m.id]?.status === 'approved').length;
+  const completedMissionsCount = missions.filter((m) => {
+    if (m.category === 'refeicao') {
+      return todaySubmissionsMap[m.id]?.status === 'approved';
+    }
+    return submissions[m.id]?.status === 'approved';
+  }).length;
   const isWeekComplete = missions.length > 0 && completedMissionsCount === missions.length;
 
   // Enriquecer missões com status de bloqueio (incluindo bloqueio quando a semana é futura)
@@ -386,7 +400,10 @@ function StudentMissionsContent() {
     const isFutureWeek = Boolean(selectedWeekMeta?.isFuture);
 
     return missions.map((mission) => {
-      const sub = submissions[mission.id];
+      const isMeal = mission.category === 'refeicao';
+
+      // Para refeições, o slot diário verifica estritamente se foi enviado HOJE
+      const sub = isMeal ? todaySubmissionsMap[mission.id] : submissions[mission.id];
       const isApproved = sub?.status === 'approved';
       const isPending = sub?.status === 'pending';
 
@@ -423,9 +440,10 @@ function StudentMissionsContent() {
         isDailyLocked,
         isPreviousUnfinished: hadPreviousUnfinished,
         isLocked,
+        isMeal,
       };
     });
-  }, [missions, submissions, isWorkoutDailyLocked, isCardioDailyLocked, selectedWeekMeta]);
+  }, [missions, submissions, todaySubmissionsMap, isWorkoutDailyLocked, isCardioDailyLocked, selectedWeekMeta]);
 
   const filteredMissions = useMemo(() => {
     if (selectedListId !== 'all') {
@@ -443,9 +461,20 @@ function StudentMissionsContent() {
   const pillarStats = useMemo(() => {
     const calc = (cat: string) => {
       const all = processedMissions.filter((m) => m.category === cat);
+      if (cat === 'refeicao') {
+        const slotsCount = all.length || 4;
+        const total = slotsCount * 7; // 4 refeições/dia * 7 dias = 28 refeições
+        // Total de refeições aprovadas enviadas na semana atual
+        const done = rawSubmissions.filter(
+          (s: any) => s.missions?.category === 'refeicao' && s.status === 'approved'
+        ).length;
+        const todayDone = all.filter((m) => m.isApproved).length;
+        const totalXp = done * 10;
+        return { total, done, todayDone, totalXp, slotsCount };
+      }
       const done = all.filter((m) => m.isApproved).length;
       const totalXp = all.reduce((acc, m) => acc + Number(m.points_rewarded || 0), 0);
-      return { total: all.length, done, totalXp };
+      return { total: all.length, done, todayDone: done, totalXp, slotsCount: all.length };
     };
     return {
       treino: calc('treino'),
@@ -453,7 +482,7 @@ function StudentMissionsContent() {
       refeicao: calc('refeicao'),
       habito: calc('habito'),
     };
-  }, [processedMissions]);
+  }, [processedMissions, rawSubmissions]);
 
   const getCategoryIcon = (category: string, className = 'w-4 h-4') => {
     switch (category) {
@@ -563,7 +592,19 @@ function StudentMissionsContent() {
       );
       return;
     }
-    if (mission.isApproved || mission.isPending || mission.isLocked) return;
+    if (mission.isApproved) {
+      if (mission.category === 'refeicao') {
+        showToast(`Você já registrou o seu "${mission.title}" hoje! O próximo registro deste tipo estará liberado amanhã.`);
+      }
+      return;
+    }
+    if (mission.isPending) {
+      if (mission.category === 'refeicao') {
+        showToast(`O seu "${mission.title}" de hoje está aguardando auditoria do treinador.`);
+      }
+      return;
+    }
+    if (mission.isLocked) return;
 
     const valType =
       mission.validation_type ||
@@ -657,13 +698,13 @@ function StudentMissionsContent() {
         <div className="shrink-0 flex items-center gap-2">
           {mission.isApproved && (
             <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              Concluída
+              {mission.category === 'refeicao' ? 'Concluída hoje' : 'Concluída'}
             </span>
           )}
 
           {mission.isPending && (
             <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/20">
-              Auditoria
+              {mission.category === 'refeicao' ? 'Pendente hoje' : 'Auditoria'}
             </span>
           )}
 
@@ -738,12 +779,12 @@ function StudentMissionsContent() {
     {
       key: 'refeicao',
       title: 'Bloco de Nutrição & Dieta',
-      subtitle: 'Auditoria visual de pratos e macronutrientes por IA',
+      subtitle: '4 refeições diárias auditadas por IA • Reseta diariamente',
       Icon: Utensils,
       accentBorder: 'border-emerald-500/25',
       accentBg: 'from-emerald-500/[0.08] via-zinc-950 to-zinc-950',
       badgeColor: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/30',
-      ruleLabel: 'Validação por Câmera',
+      ruleLabel: `${pillarStats.refeicao.todayDone || 0}/4 concluídas hoje`,
     },
     {
       key: 'habito',

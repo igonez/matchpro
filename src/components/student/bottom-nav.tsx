@@ -126,27 +126,39 @@ export function StudentBottomNav() {
       .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
       .eq('student_id', user.id);
 
-    const doneIds = new Set(
-      (userSubs || []).filter((s: any) => s.status === 'approved' || s.status === 'pending').map((s: any) => s.mission_id)
-    );
-
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
+
+    const mealDoneTodayIds = new Set<string>();
     let treinoLockedToday = false;
     let cardioLockedToday = false;
 
     (userSubs || []).forEach((s: any) => {
       const dt = new Date(s.submitted_at || s.client_captured_at);
       if (dt >= startOfToday) {
+        if (s.status === 'approved' || s.status === 'pending') {
+          mealDoneTodayIds.add(s.mission_id);
+        }
         if (s.missions?.category === 'treino') treinoLockedToday = true;
         if (s.missions?.category === 'cardio') cardioLockedToday = true;
       }
     });
 
-    // Filtrar apenas missões disponíveis para hoje (1 de cada lista/categoria)
+    const generalDoneIds = new Set(
+      (userSubs || []).filter((s: any) => s.status === 'approved' || s.status === 'pending').map((s: any) => s.mission_id)
+    );
+
+    // Filtrar missões disponíveis para hoje:
+    // - Para refeições: liberar cada refeição ainda não submetida HOJE (reset diário às 00:00)
+    // - Para treino/cardio/outros: 1 de cada grupo, respeitando os bloqueios do dia
     const seenGroups = new Set<string>();
     const available = (mData || []).filter((m: any) => {
-      if (doneIds.has(m.id)) return false;
+      if (m.category === 'refeicao') {
+        if (mealDoneTodayIds.has(m.id)) return false;
+        return true;
+      }
+
+      if (generalDoneIds.has(m.id)) return false;
       const groupKey = m.list_id || m.category;
       if (m.category === 'treino') {
         if (treinoLockedToday || seenGroups.has(groupKey)) return false;

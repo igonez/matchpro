@@ -29,7 +29,7 @@ export interface ReactionDef {
   activeBorder: string;
 }
 
-export const REACTIONS: ReactionDef[] = [
+const REACTIONS: ReactionDef[] = [
   {
     key: 'fire',
     emoji: '🔥',

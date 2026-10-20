@@ -277,21 +277,19 @@ export default function StudentHomePage() {
           .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
           .eq('student_id', user.id);
 
-        const approvedMissionIds = new Set(
-          (userSubmissions || []).filter((s: any) => s.status === 'approved').map((s: any) => s.mission_id)
-        );
-        const submittedMissionIds = new Set(
-          (userSubmissions || []).filter((s: any) => s.status === 'approved' || s.status === 'pending').map((s: any) => s.mission_id)
-        );
-
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
+
+        const todayApprovedMissionIds = new Set<string>();
+        const todaySubmittedMissionIds = new Set<string>();
         let todayTreinoDone = false;
         let todayCardioDone = false;
 
         (userSubmissions || []).forEach((s: any) => {
           const dt = new Date(s.submitted_at || s.client_captured_at);
           if (dt >= startOfToday) {
+            if (s.status === 'approved') todayApprovedMissionIds.add(s.mission_id);
+            if (s.status === 'approved' || s.status === 'pending') todaySubmittedMissionIds.add(s.mission_id);
             if (s.missions?.category === 'treino') todayTreinoDone = true;
             if (s.missions?.category === 'cardio') todayCardioDone = true;
           }
@@ -299,21 +297,34 @@ export default function StudentHomePage() {
 
         setTodayLockedCategories({ treino: todayTreinoDone, cardio: todayCardioDone });
 
+        const approvedMissionIds = new Set(
+          (userSubmissions || []).filter((s: any) => s.status === 'approved').map((s: any) => s.mission_id)
+        );
+        const submittedMissionIds = new Set(
+          (userSubmissions || []).filter((s: any) => s.status === 'approved' || s.status === 'pending').map((s: any) => s.mission_id)
+        );
+
         let tDone = 0, tTot = 0;
         let cDone = 0, cTot = 0;
         let rDone = 0, rTot = 0;
         let hDone = 0, hTot = 0;
         const lCounts: Record<string, { done: number; total: number }> = {};
 
+        // Contagem de refeições aprovadas acumuladas
+        const approvedMealSubsCount = (userSubmissions || []).filter(
+          (s: any) => s.status === 'approved' && s.missions?.category === 'refeicao'
+        ).length;
+
         allMissions?.forEach((m: any) => {
-          const freq = m.target_frequency || 1;
-          const isDone = approvedMissionIds.has(m.id);
+          const isMeal = m.category === 'refeicao';
+          const freq = isMeal ? (m.target_frequency || 7) : (m.target_frequency || 1);
+          const isDone = isMeal ? false : approvedMissionIds.has(m.id);
           const listKey = m.list_id || m.category;
           if (!lCounts[listKey]) {
             lCounts[listKey] = { done: 0, total: 0 };
           }
           lCounts[listKey].total += freq;
-          if (isDone) lCounts[listKey].done += freq;
+          if (!isMeal && isDone) lCounts[listKey].done += freq;
 
           if (m.category === 'treino') {
             tTot += freq;
@@ -323,12 +334,17 @@ export default function StudentHomePage() {
             if (isDone) cDone += freq;
           } else if (m.category === 'refeicao') {
             rTot += freq;
-            if (isDone) rDone += freq;
           } else {
             hTot += freq;
             if (isDone) hDone += freq;
           }
         });
+
+        // Refeições: meta total semanal (ex: 4 refeições * 7 dias = 28) e refeições concluídas
+        rDone = Math.min(rTot, approvedMealSubsCount);
+        if (lCounts['refeicao']) {
+          lCounts['refeicao'].done = rDone;
+        }
 
         setCategoryCounts({
           treinos: { done: tDone, total: tTot },
@@ -338,15 +354,26 @@ export default function StudentHomePage() {
         });
         setListCounts(lCounts);
 
-        // Selecionar a próxima missão disponível de cada lista/categoria para o Checklist de Hoje
+        // Selecionar tarefas de hoje:
+        // - Para refeições: incluir cada um dos slots de refeição ainda pendentes HOJE (reset diário às 00:00)
+        // - Para demais categorias: próxima missão disponível do grupo
         const nextByCat: Record<string, any> = {};
+        const availableMealTasks: any[] = [];
+
         (allMissions || []).forEach((m: any) => {
-          const groupKey = m.list_id || m.category;
-          if (!submittedMissionIds.has(m.id) && !nextByCat[groupKey]) {
-            nextByCat[groupKey] = m;
+          if (m.category === 'refeicao') {
+            if (!todaySubmittedMissionIds.has(m.id)) {
+              availableMealTasks.push(m);
+            }
+          } else {
+            const groupKey = m.list_id || m.category;
+            if (!submittedMissionIds.has(m.id) && !nextByCat[groupKey]) {
+              nextByCat[groupKey] = m;
+            }
           }
         });
-        setTodayTasks(Object.values(nextByCat));
+
+        setTodayTasks([...Object.values(nextByCat), ...availableMealTasks]);
       } catch (err) {
         console.error('Erro na tela de início:', err);
       } finally {

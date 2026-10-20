@@ -19,9 +19,9 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Input } from '@/components/ui/input';
 
-export type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
+type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
 
-export interface ReactionDef {
+interface ReactionDef {
   key: ReactionType;
   emoji: string;
   label: string;
@@ -29,7 +29,7 @@ export interface ReactionDef {
   activeBorder: string;
 }
 
-export const REACTIONS: ReactionDef[] = [
+const REACTIONS: ReactionDef[] = [
   {
     key: 'fire',
     emoji: '🔥',

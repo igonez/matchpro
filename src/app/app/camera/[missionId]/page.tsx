@@ -240,6 +240,23 @@ function CameraCaptureContent() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado.');
 
+      // Validação anti-duplicação diária: prevenir envios repetidos da mesma missão no mesmo dia civil
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0);
+
+      const { data: existingToday } = await supabase
+        .from('student_submissions')
+        .select('id, submitted_at, client_captured_at')
+        .eq('student_id', user.id)
+        .eq('mission_id', missionId)
+        .gte('submitted_at', startOfToday.toISOString())
+        .limit(1)
+        .maybeSingle();
+
+      if (existingToday) {
+        throw new Error('Você já realizou o check-in desta missão hoje! O próximo registro estará liberado amanhã.');
+      }
+
       // 1. Comprimir imagem no navegador para upload ultra-rápido (< 300KB)
       const compressedBlob = await compressImage(selectedFile);
       const fileName = `${user.id}/${missionId}-${Date.now()}.jpg`;

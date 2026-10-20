@@ -8,6 +8,7 @@ import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Input } from '@/components/ui/input';
 import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
+import { Copy } from 'lucide-react';
 
 export default function DashboardOverviewPage() {
   const supabase = createClient();

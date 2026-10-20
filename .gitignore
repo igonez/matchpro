@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local leads backup & temp files
+data/leads_backup.json*
+*.tmp
+.temp-puppeteer*

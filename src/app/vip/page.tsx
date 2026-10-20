@@ -83,8 +83,8 @@ export default function VipCapturePage() {
       });
 
       const data = await res.json();
-      if (!res.ok && data.error) {
-        setErrorMessage(data.error);
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || 'Erro ao processar sua inscrição. Tente novamente ou chame no WhatsApp.');
         setLoading(false);
         return;
       }
@@ -92,7 +92,7 @@ export default function VipCapturePage() {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setSubmitted(true);
+      setErrorMessage('Erro de conexão ao enviar o formulário. Por favor, tente novamente ou fale conosco pelo WhatsApp.');
     } finally {
       setLoading(false);
     }

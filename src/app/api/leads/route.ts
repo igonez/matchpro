@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { enforceRateLimit } from '@/lib/security/rate-limit';
 import { sanitizeString, sanitizeEmail } from '@/lib/security/sanitize';
+import { saveLeadToBackup, syncPendingLeadsToSupabase } from '@/lib/leads-backup';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
       role, 
       students_range, 
       instagram,
-      lead_type = 'vip',
+      lead_type = 'beta_tester',
       utm_source, 
       utm_medium, 
       utm_campaign 
@@ -40,44 +41,89 @@ export async function POST(req: NextRequest) {
     }
 
     const cleanWhatsapp = whatsapp.replace(/\D/g, '');
+    const cleanInstagram = instagram ? sanitizeString(instagram).trim().replace(/^@/, '') : null;
 
-    // Inserir lead via supabaseAdmin
-    const { data, error } = await supabaseAdmin
-      .from('coach_leads')
-      .insert({
-        name: sanitizedName,
-        email: sanitizedEmail,
-        whatsapp: cleanWhatsapp,
-        role: role || 'personal_trainer',
-        students_range: students_range || '11_30',
-        utm_source: utm_source || (instagram ? `ig:${instagram.trim()}` : null),
-        utm_medium: utm_medium || lead_type,
-        utm_campaign: utm_campaign || null,
-        status: 'new',
-      })
-      .select('id')
-      .single();
+    const leadPayload = {
+      name: sanitizedName,
+      email: sanitizedEmail,
+      whatsapp: cleanWhatsapp,
+      role: role || 'personal_trainer',
+      students_range: students_range || '11_30',
+      instagram: cleanInstagram,
+      lead_type: lead_type || 'beta_tester',
+      utm_source: utm_source || (cleanInstagram ? `ig:${cleanInstagram}` : null),
+      utm_medium: utm_medium || lead_type,
+      utm_campaign: utm_campaign || null,
+      status: 'new',
+    };
 
-    if (error) {
-      console.error('[API Leads] Erro ao salvar lead:', error);
-      // Se a tabela ainda não existir no Supabase remoto do usuário, não quebramos a experiência do visitante:
-      // logamos e retornamos sucesso para garantir a continuidade da conversão
+    // 2. Tentar inserir no Supabase
+    let dbSuccess = false;
+    let savedLeadId: string | null = null;
+
+    try {
+      // Tentativa 1: Inserção completa com colunas novas (instagram e lead_type)
+      const res1 = await supabaseAdmin
+        .from('coach_leads')
+        .insert(leadPayload)
+        .select('id')
+        .single();
+
+      if (!res1.error && res1.data?.id) {
+        dbSuccess = true;
+        savedLeadId = res1.data.id;
+      } else if (res1.error?.message?.includes('column "instagram"') || res1.error?.message?.includes('column "lead_type"')) {
+        // Fallback caso a tabela tenha sido criada com o schema antigo sem essas colunas
+        const { instagram: _ig, lead_type: _lt, ...legacyPayload } = leadPayload;
+        const res2 = await supabaseAdmin
+          .from('coach_leads')
+          .insert(legacyPayload)
+          .select('id')
+          .single();
+
+        if (!res2.error && res2.data?.id) {
+          dbSuccess = true;
+          savedLeadId = res2.data.id;
+        } else {
+          console.warn('[API Leads] Erro no Supabase (legacy fallback):', res2.error);
+        }
+      } else {
+        console.warn('[API Leads] Erro no Supabase:', res1.error?.message || res1.error);
+      }
+    } catch (dbErr) {
+      console.error('[API Leads] Exceção ao conectar no Supabase:', dbErr);
+    }
+
+    // 3. Se gravou no banco com sucesso, aciona sincronização em background de leads pendentes do buffer
+    if (dbSuccess && savedLeadId) {
+      // Dispara sync não bloqueante de pendentes
+      syncPendingLeadsToSupabase(supabaseAdmin).catch((err) => {
+        console.warn('[API Leads] Background sync falhou:', err);
+      });
+
       return NextResponse.json({
         success: true,
-        message: 'Lead recebido com sucesso!',
-        warning: 'Saved in fallback mode if table pending migration',
+        message: 'Candidatura confirmada com sucesso!',
+        leadId: savedLeadId,
+        storage: 'database',
       });
     }
 
+    // 4. Se o Supabase falhou (tabela inexistente, timeout, etc), salva no buffer de contingência local
+    console.log('[API Leads] Salvando no buffer de contingência local para garantir zero perda de leads...');
+    const backupLead = await saveLeadToBackup(leadPayload);
+
     return NextResponse.json({
       success: true,
-      message: 'Inscrição VIP confirmada!',
-      leadId: data?.id,
+      message: 'Candidatura recebida e registrada com sucesso!',
+      leadId: backupLead.id,
+      storage: 'backup_local',
     });
+
   } catch (err: any) {
-    console.error('[API Leads] Exceção inesperada:', err);
+    console.error('[API Leads] Exceção crítica inesperada:', err);
     return NextResponse.json(
-      { error: 'Falha interna ao processar inscrição.' },
+      { error: 'Falha temporária ao registrar candidatura. Por favor, tente novamente ou fale conosco pelo WhatsApp.' },
       { status: 500 }
     );
   }

@@ -390,9 +390,9 @@ export default function StudentHomePage() {
     let code = inviteCodeInput.trim();
     if (!code) return;
     if (code.includes('/join/')) {
-      code = code.split('/join/')[1].split('?')[0].split('/')[0];
+      code = code.split('/join/')[1].split('?')[0].split('/')[0].trim();
     }
-    router.push(`/join/${code}`);
+    router.push(`/join/${encodeURIComponent(code)}`);
   };
 
   // Cálculo dinâmico do Dia e Semana reais da turma

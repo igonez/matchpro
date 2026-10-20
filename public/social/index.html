@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArenaFitPro — Hub de Mídia & Posts Instagram</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000000;
+      color: #f4f4f5;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 24px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: #000;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-info h1 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-info p {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #71717a;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .top-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f4f4f5;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 8px #ffffff;
+    }
+
+    /* Hero Banner */
+    .hero-box {
+      background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 60%), #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-bottom: 40px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #a1a1aa;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      max-width: 800px;
+    }
+
+    /* Grid */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 28px;
+      margin-bottom: 48px;
+    }
+
+    .post-card {
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+    }
+
+    .post-card:hover {
+      border-color: rgba(255, 255, 255, 0.28);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+    }
+
+    .card-preview {
+      position: relative;
+      width: 100%;
+      padding-top: 60%; /* 16:9ish preview aspect */
+      background: #18181b;
+      overflow: hidden;
+    }
+
+    .card-preview img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.75) contrast(1.1);
+      transition: transform 0.4s ease;
+    }
+
+    .post-card:hover .card-preview img {
+      transform: scale(1.04);
+      filter: brightness(0.9);
+    }
+
+    .card-preview-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .card-tag {
+      align-self: flex-start;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-slides-count {
+      align-self: flex-end;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #d4d4d8;
+    }
+
+    .card-body {
+      padding: 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .card-content h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .card-content p {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.55;
+    }
+
+    .card-specs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .spec-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #a1a1aa;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: #ffffff;
+      color: #000000;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: #18181b;
+      color: #f4f4f5;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #27272a;
+    }
+
+    /* Modal / Drawer for Copy */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 18px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .modal-close {
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f4f4f5;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    .modal-body pre {
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 18px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #e4e4e7;
+    }
+
+    .copy-btn {
+      margin-top: 14px;
+      background: #ffffff;
+      color: #000000;
+      font-weight: 800;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #71717a;
+    }
+
+    footer a {
+      color: #a1a1aa;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="./app-logo.png" alt="ArenaFitPro">
+        </div>
+        <div class="brand-info">
+          <h1>ArenaFitPro</h1>
+          <p>Mídia & Hub de Carrosséis Instagram</p>
+        </div>
+      </div>
+      <div class="top-badges">
+        <span class="status-badge">
+          <span class="status-dot"></span>
+          Modo Local 100% Funcional
+        </span>
+        <span class="status-badge">
+          arenafitpro.app
+        </span>
+      </div>
+    </header>
+
+    <!-- Hero Box -->
+    <section class="hero-box">
+      <div class="hero-eyebrow">Visualizador de Ativos Sociais • Luxury Monochromatic Titanium</div>
+      <h2 class="hero-title">Posts Oficiais de Lançamento no Instagram</h2>
+      <p class="hero-subtitle">
+        Todos os slides foram desenhados na proporção oficial 4:5 (1080x1350px) para máxima retenção de tela.
+        Clique em <strong>"Abrir Carrossel"</strong> para navegar slide a slide em tela cheia ou salvar as imagens para publicação.
+      </p>
+    </section>
+
+    <!-- Posts Grid -->
+    <div class="posts-grid">
+      <!-- POST 1 -->
+      <article class="post-card">
+        <div class="card-preview">
+          <img src="./hero-post-1.jpg" alt="Post 1 - Manifesto">
+          <div class="card-preview-overlay">
+            <span class="card-tag">Post 01 • Manifesto</span>
+            <span class="card-slides-count">5 Slides (4:5)</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <h3>O Fim da Era das Planilhas de WhatsApp no Fitness</h3>
+            <p>Carrossel manifesto e visceral mostrando o problema do caos operacional dos treinadores e a introdução da ArenaFitPro.</p>
+            <div class="card-specs">
+              <span class="spec-item">Formato: 1080x1350</span>
+              <span class="spec-item">Foco: Dor & Autoridade</span>
+              <span class="spec-item">Estilo: OLED Preto & Titânio</span>
+            </div>
+          </div>
+          <div class="card-actions" style="flex-wrap: wrap;">
+            <a href="./post-1-manifesto.html" class="btn-primary" target="_blank" style="flex: 1 1 45%;">
+              Abrir Carrossel ↗
+            </a>
+            <a href="./Postagens Instagram/Post 1/slide-1.jpg" class="btn-secondary" target="_blank" style="flex: 1 1 45%;">
+              Ver JPGs (1080x1350)
+            </a>
+            <button class="btn-secondary" onclick="openCopyModal('copy1')" style="width: 100%;">
+              Copiar Legenda
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 2 -->
+      <article class="post-card">
+        <div class="card-preview">
+          <img src="./hero-post-2.jpg" alt="Post 2 - Demonstração">
+          <div class="card-preview-overlay">
+            <span class="card-tag">Post 02 • Demonstração</span>
+            <span class="card-slides-count">5 Slides (4:5)</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <h3>App & Cockpit em Ação: Câmera Antifraude e Ranking Oficial</h3>
+            <p>Carrossel técnico-visual com a foto real do Leaderboard oficial (Desafio Verão 2026), câmera antifraude e Split Pix D+0.</p>
+            <div class="card-specs">
+              <span class="spec-item">Formato: 1080x1350</span>
+              <span class="spec-item">Foto Real do Ranking</span>
+              <span class="spec-item">Foco: Produto & Desejo</span>
+            </div>
+          </div>
+          <div class="card-actions" style="flex-wrap: wrap;">
+            <a href="./post-2-app-demonstracao.html" class="btn-primary" target="_blank" style="flex: 1 1 45%;">
+              Abrir Carrossel ↗
+            </a>
+            <a href="./Postagens Instagram/Post 2/slide-1.jpg" class="btn-secondary" target="_blank" style="flex: 1 1 45%;">
+              Ver JPGs (1080x1350)
+            </a>
+            <button class="btn-secondary" onclick="openCopyModal('copy2')" style="width: 100%;">
+              Copiar Legenda
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 3 -->
+      <article class="post-card">
+        <div class="card-preview">
+          <img src="./Postagens Instagram/Post 3/slide-1.jpg" alt="Post 3 - Convocação Fundadores">
+          <div class="card-preview-overlay">
+            <span class="card-tag">Post 03 • Convocação</span>
+            <span class="card-slides-count">5 Slides (4:5)</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <h3>Convocação dos 15 Treinadores Fundadores (Beta Fechado)</h3>
+            <p>Carrossel oficial de abertura das 15 vagas de fundadores: benefícios perpétuos, isenção vitalícia de mensalidade Starter e critérios de seleção.</p>
+            <div class="card-specs">
+              <span class="spec-item">Formato: 1080x1350</span>
+              <span class="spec-item">15 Vagas Fundadores</span>
+              <span class="spec-item">Foco: Escassez & Conversão</span>
+            </div>
+          </div>
+          <div class="card-actions" style="flex-wrap: wrap;">
+            <a href="./post-3-convocacao-fundadores.html" class="btn-primary" target="_blank" style="flex: 1 1 45%;">
+              Abrir Carrossel ↗
+            </a>
+            <a href="./Postagens Instagram/Post 3/slide-1.jpg" class="btn-secondary" target="_blank" style="flex: 1 1 45%;">
+              Ver JPGs (1080x1350)
+            </a>
+            <button class="btn-secondary" onclick="openCopyModal('copy3')" style="width: 100%;">
+              Copiar Legenda
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- STORY: ABERTURA DO BETA -->
+      <article class="post-card">
+        <div class="card-preview" style="padding-top: 80%;">
+          <img src="./Postagens Instagram/Story Abertura Beta/story-abertura-beta.jpg" alt="Story Abertura Beta" style="object-position: top;">
+          <div class="card-preview-overlay">
+            <span class="card-tag" style="border-color: #ffffff;">Story • Abertura Beta</span>
+            <span class="card-slides-count">Vertical 9:16 (1080x1920)</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <h3>Story Final: Abertura Oficial do Beta Teste</h3>
+            <p>Slide único vertical de fechamento da sequência dos Stories, com zona dedicada para figurinha de link e safe zones respeitadas.</p>
+            <div class="card-specs">
+              <span class="spec-item">Formato: 1080x1920</span>
+              <span class="spec-item">Slot de Figurinha de Link</span>
+              <span class="spec-item">Foco: Conversão & Fechamento</span>
+            </div>
+          </div>
+          <div class="card-actions" style="flex-wrap: wrap;">
+            <a href="./Postagens Instagram/Story Abertura Beta/story-abertura-beta.jpg" class="btn-primary" target="_blank" style="flex: 1 1 100%;">
+              Abrir Imagem em Alta Resolução ↗
+            </a>
+            <a href="./story-abertura-beta.html" class="btn-secondary" target="_blank" style="flex: 1 1 100%;">
+              Ver Template HTML ↗
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Instructions / Guide -->
+    <section class="hero-box" style="margin-bottom: 40px; background: #0c0c0e;">
+      <div class="hero-eyebrow">Como Salvar os Slides para o Instagram</div>
+      <h3 style="font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 12px;">Instruções de Captura em Alta Resolução (1080x1350)</h3>
+      <ol style="font-size: 13px; color: #a1a1aa; line-height: 1.8; padding-left: 20px;">
+        <li>Abra o post desejado clicando em <strong>"Abrir Carrossel"</strong>.</li>
+        <li>No navegador (Chrome/Edge), pressione <code style="background: #18181b; padding: 2px 6px; border-radius: 4px; color: #fff;">F12</code> para abrir as Ferramentas de Desenvolvedor.</li>
+        <li>Pressione <code style="background: #18181b; padding: 2px 6px; border-radius: 4px; color: #fff;">Ctrl + Shift + M</code> para ativar a visualização responsiva e defina o tamanho para <strong>1080 x 1350</strong> (DPR 1 ou 2).</li>
+        <li>Pressione <code style="background: #18181b; padding: 2px 6px; border-radius: 4px; color: #fff;">Ctrl + Shift + P</code>, digite <em>"Capture screenshot"</em> ou <em>"Capture node screenshot"</em> selecionando a div <code style="background: #18181b; padding: 2px 6px; border-radius: 4px; color: #fff;">.slide</code>.</li>
+        <li>Ou capture diretamente pelo botão PrintScreen/Ferramenta de Captura do Windows.</li>
+      </ol>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div>© 2026 ArenaFitPro Ltda. Todos os direitos reservados.</div>
+      <div>
+        <a href="https://arenafitpro.app" target="_blank">arenafitpro.app</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal Copywriting -->
+  <div class="modal-overlay" id="copyModal" onclick="closeCopyModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modalTitle">Legenda do Post</h3>
+        <button class="modal-close" onclick="closeCopyModal()">FECHAR ✕</button>
+      </div>
+      <div class="modal-body">
+        <pre id="modalContent"></pre>
+        <button class="copy-btn" onclick="copyToClipboard()">
+          📋 Copiar Texto Completo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const copies = {
+      copy1: `Planilha no Excel, grupo no WhatsApp com 40 pessoas mandando foto de prato misturada com bom dia, e você até as 23h contando pontos no bloco de notas.
+
+Essa é a realidade de 9 em cada 10 personais e coaches que tentam rodar desafios fitness em 2026.
+
+O resultado?
+1. Alunos desistem na segunda semana (perdem o engajamento).
+2. O grupo vira um caos e você perde horas preciosas.
+3. Não há percepção de alto valor, limitando o quanto você pode cobrar.
+
+A ArenaFitPro nasceu para enterrar esse modelo amador.
+
+Transformamos seus desafios em um campeonato profissional com:
+- Feed de missões diárias com validação por câmera ao vivo.
+- Leaderboard em tempo real que vicia a turma na disputa pelo pódio.
+- Split Pix D+0 direto na sua conta bancária a cada inscrição.
+
+Estamos selecionando os 15 Primeiros Treinadores Fundadores para o Programa Beta Fechado.
+
+Comente "BETA" ou acesse o link na bio para garantir acesso prioritário.
+
+#personaltrainer #consultoriafitness #desafiofitness #gamificacao #treinador #arenafitpro`,
+
+      copy2: `Como seus alunos realmente vivem a experiência da ArenaFitPro no dia a dia.
+
+Chega de prints duvidosos de fotos tiradas há três dias:
+
+1. FEED DE MISSÕES DIÁRIAS
+Seus alunos abrem o app e veem exatamente o que pontua hoje (refeição limpa, água, treino de força).
+
+2. CÂMERA ANTIFRAUDE AO VIVO
+O aluno fotografa na hora pelo app. Zero fotos salvas da galeria. Integridade e respeito com quem realmente está se esforçando.
+
+3. LEADERBOARD EM TEMPO REAL
+O ranking atualiza instantaneamente. Carlos em 1º, Mariana colada em 2º e a turma toda disputando cada ponto. O engajamento quadruplica.
+
+4. COCKPIT DO TREINADOR & SPLIT PIX
+Você aprova submissões em segundos com um toque. E a taxa da inscrição cai direto no seu Pix, sem intermediários.
+
+O link para entrar no grupo de Treinadores Fundadores (apenas 15 vagas com isenção eterna de mensalidade) está no link da bio.
+
+Ou comente "APP" abaixo para receber o link no direct.
+
+#personaltrainer #tecnologiafitness #desafiofitness #consultoriafitness #arenafitpro`,
+
+      copy3: `Antes de abrirmos a plataforma globalmente, decidimos rodar um piloto exclusivo com apenas 15 treinadores e nutricionistas comprometidos.
+
+O QUE É O PROGRAMA DE FUNDADORES:
+Você vai rodar um desafio real com seus alunos (turmas de 5 a 30 pessoas) com acompanhamento direto do nosso time de desenvolvimento.
+
+O QUE VOCÊ GANHA COMO FUNDADOR:
+1. Isenção Permanente de Mensalidade: Acesso vitalício gratuito ao plano Starter mesmo após o lançamento global.
+2. Taxa de Split Reduzida para Sempre: A menor taxa da plataforma congelada na sua conta.
+3. Canal Direto de WhatsApp com os Devs: Suas sugestões viram melhorias no app em tempo recorde.
+4. Template Validado de Desafio de 21 Dias: Estrutura completa pronta para aplicar na sua turma de imediato.
+
+O QUE PEDIMOS EM TROCA:
+Apenas o seu feedback sincero sobre o engajamento e a adesão dos seus alunos.
+
+As candidaturas estão abertas e avaliaremos cada perfil manualmente.
+
+Como garantir sua vaga:
+- Toque no link da bio: arenafitpro.app/beta
+- Ou comente "BETA" aqui embaixo que te enviamos o link no direct.
+
+#personaltrainer #consultoriafitness #desafiofitness #gamificacao #treinador #arenafitpro #nutricaoesportiva`
+    };
+
+    function openCopyModal(key) {
+      const modal = document.getElementById('copyModal');
+      const content = document.getElementById('modalContent');
+      const title = document.getElementById('modalTitle');
+      
+      const titles = {
+        copy1: 'Legenda do Post 01 (Manifesto)',
+        copy2: 'Legenda do Post 02 (Demonstração do App)',
+        copy3: 'Legenda do Post 03 (Convocação Fundadores)'
+      };
+      title.innerText = titles[key] || 'Legenda do Post';
+      content.innerText = copies[key];
+      modal.classList.add('active');
+    }
+
+    function closeCopyModal(event) {
+      const modal = document.getElementById('copyModal');
+      modal.classList.remove('active');
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('modalContent').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Legenda copiada para a área de transferência!');
+      });
+    }
+  </script>
+</body>
+</html>

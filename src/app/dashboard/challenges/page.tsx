@@ -665,6 +665,26 @@ export default function ChallengesManagementPage() {
               </div>
             </div>
 
+            <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono">
+              <span className="text-zinc-400">Código de Acesso Rápido:</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white tracking-widest uppercase bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+                  {inviteModalChallenge.id.slice(0, 8).toUpperCase()}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(inviteModalChallenge.id.slice(0, 8).toUpperCase());
+                    showToast('Código rápido copiado!');
+                  }}
+                  className="text-zinc-400 hover:text-white p-1 transition-colors cursor-pointer"
+                  title="Copiar código curto"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+
             {/* Ações Rápidas: WhatsApp & QR Code */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
               <a

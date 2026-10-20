@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArenaFitPro • Post 2 Carrossel (Cockpit & Demonstração do App)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header-bar {
+      text-align: center;
+      max-width: 840px;
+    }
+
+    .header-bar h1 {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-bar p {
+      font-size: 13px;
+      color: #71717a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .carousel-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      max-width: 1400px;
+    }
+
+    .slide-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #52525b;
+    }
+
+    /* 
+      Dimensões Oficiais do Instagram Portrait 4:5 
+      1080px x 1350px (renderizado em escala 540px x 675px para visualização nítida em desktop)
+    */
+    .slide {
+      width: 540px;
+      height: 675px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    /* Fundo de Capa Slide 1 com foto low-key de atleta sob sombras */
+    .slide.hero-bg {
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.92) 75%, #000000 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.85) 50%, #000000 100%),
+        url('./hero-post-2.jpg');
+      background-size: cover;
+      background-position: center 30%;
+    }
+
+    /* Glow de profundidade titânio */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    /* Grid sutil monocromático de fundo */
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    .slide-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #e4e4e7;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .slide-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #71717a;
+      letter-spacing: 0.05em;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .badge-sub {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .title-display {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      color: #ffffff;
+    }
+
+    .title-display span.highlight {
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Cards e Containers Titanium Glass */
+    .ui-panel {
+      background: rgba(20, 20, 24, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-top: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 20px;
+      padding: 18px 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ui-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .ui-title {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #a1a1aa;
+      font-weight: 700;
+    }
+
+    .ui-status {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 3px 8px;
+      border-radius: 9999px;
+    }
+
+    /* Fileiras de Leaderboard / Pódio */
+    .podium-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+    }
+
+    .podium-row.gold {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-left: 3px solid #ffffff;
+    }
+
+    .podium-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .podium-pos {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: #71717a;
+      width: 18px;
+    }
+
+    .podium-row.gold .podium-pos {
+      color: #ffffff;
+    }
+
+    .podium-points {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Ranking Oficial Imagem */
+    .ranking-showcase {
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px;
+    }
+
+    .ranking-official-image {
+      width: 100%;
+      max-height: 310px;
+      object-fit: contain;
+      border-radius: 16px;
+      display: block;
+    }
+
+    /* Swipe Audit Mockup */
+    .swipe-card {
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .swipe-photo-frame {
+      height: 110px;
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .swipe-photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.8) 100%);
+    }
+
+    .swipe-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .swipe-meta {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      z-index: 2;
+    }
+
+    .swipe-controls {
+      display: grid;
+      grid-cols: 2;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .swipe-btn {
+      padding: 10px;
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+    }
+
+    .swipe-btn.approve {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+    }
+
+    /* PWA Feed Features */
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(20, 20, 24, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+    }
+
+    .feature-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffffff;
+      margin-top: 6px;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      flex-shrink: 0;
+    }
+
+    .feature-text h4 {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .feature-text p {
+      font-size: 11px;
+      color: #a1a1aa;
+      line-height: 1.4;
+    }
+
+    /* Rodapé */
+    .slide-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .footer-domain {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .swipe-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 6px 14px;
+      border-radius: 9999px;
+    }
+
+    /* Slide 5 CTA especial Titanium */
+    .cta-card {
+      background: rgba(15, 15, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid rgba(255, 255, 255, 0.30);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(24px);
+    }
+
+    .cta-button {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 15px 22px;
+      border-radius: 9999px;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>ArenaFitPro • Carrossel Post 2 (Cockpit & App em Ação)</h1>
+    <p>Midnight Luxury Titanium • Interface Real PWA & Treinador • Rodapé: arenafitpro.app</p>
+  </div>
+
+  <div class="carousel-container">
+
+    <!-- ==========================================
+         SLIDE 1: A CAPA (O PRODUTO EM AÇÃO)
+         ========================================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 01 • Capa / Hook</span>
+      <div class="slide hero-bg">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Arquitetura • ArenaFitPro
+          </div>
+          <span class="slide-number">01 / 05</span>
+        </div>
+
+        <div class="slide-content">
+          <div class="badge-sub">Demonstração de Interface</div>
+          <h2 class="title-display">
+            Por dentro do sistema que transformou <span class="highlight">desafios em rotina</span>.
+          </h2>
+          <div class="ui-panel" style="padding: 16px 18px; gap: 8px;">
+            <div style="font-size: 12px; font-weight: 700; color: #ffffff;">Dois ecossistemas perfeitamente integrados:</div>
+            <div style="font-size: 11.5px; color: #a1a1aa; line-height: 1.45;">
+              O Cockpit Desktop para você liderar e o Mobile-First PWA onde o seu aluno vive a experiência sem baixar apps pesados.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SLIDE 2: O PWA DO ALUNO (ZERO DOWNLOAD)
+         ========================================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 02 • Experiência do Aluno</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">Mobile-First PWA</div>
+          <span class="slide-number">02 / 05</span>
+        </div>
+
+        <div class="slide-content">
+          <h2 class="title-display" style="font-size: 26px;">
+            Zero atrito: seu aluno entra em 10 segundos.
+          </h2>
+
+          <div class="ui-panel">
+            <div class="ui-header">
+              <span class="ui-title">Fluxo de Entrada</span>
+              <span class="ui-status">Link Direto</span>
+            </div>
+            <div class="feature-list">
+              <div class="feature-item">
+                <span class="feature-indicator"></span>
+                <div class="feature-text">
+                  <h4>Sem Baixar Nada na App Store</h4>
+                  <p>Abre diretamente pelo navegador de qualquer celular através do link exclusivo do WhatsApp.</p>
+                </div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-indicator"></span>
+                <div class="feature-text">
+                  <h4>Feed Diário de Missões</h4>
+                  <p>Check-ins de treino, refeições e água organizados por horários e faixas de pontos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SLIDE 3: O PÓDIO E RANKING EM TEMPO REAL
+         ========================================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 03 • Gamificação & Pódio</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">Tempo Real • WebSockets</div>
+          <span class="slide-number">03 / 05</span>
+        </div>
+
+        <div class="slide-content">
+          <h2 class="title-display" style="font-size: 25px;">
+            O Pódio Oficial que acende a disputa na turma.
+          </h2>
+
+          <div class="ranking-showcase">
+            <img src="./ranking-oficial.png" alt="Leaderboard Oficial da Turma - Desafio Verão 2026 ArenaFitPro" class="ranking-official-image" />
+          </div>
+
+          <p style="font-size: 11px; color: #a1a1aa; line-height: 1.4; font-family: 'JetBrains Mono', monospace;">
+            Desafio Verão 2026 • 1º Carlos E. (2.140 pts) | 2º Mariana (1.820 pts) | 3º Rodrigo (1.690 pts). Atualização instantânea ao vivo.
+          </p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SLIDE 4: AUDITORIA SWIPE DO TREINADOR
+         ========================================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 04 • Central de Auditoria</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">Cockpit do Treinador</div>
+          <span class="slide-number">04 / 05</span>
+        </div>
+
+        <div class="slide-content">
+          <h2 class="title-display" style="font-size: 26px;">
+            Auditoria em Swipe: 30 check-ins em 2 minutos.
+          </h2>
+
+          <div class="swipe-card">
+            <div class="swipe-photo-frame">
+              <span class="swipe-tag">Câmera ao Vivo • IA Scanner</span>
+              <span class="swipe-meta">Refeição Auditada • Juliana R.</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 10px; text-align: center;">
+              <div>Prot: <strong style="color: #fff;">38g</strong></div>
+              <div>Carb: <strong style="color: #fff;">42g</strong></div>
+              <div>Kcal: <strong style="color: #fff;">460</strong></div>
+            </div>
+            <div class="swipe-controls">
+              <div class="swipe-btn">Rejeitar</div>
+              <div class="swipe-btn approve">Aprovar (+50 XP) →</div>
+            </div>
+          </div>
+
+          <p style="font-size: 11px; color: #a1a1aa; line-height: 1.4; font-family: 'JetBrains Mono', monospace;">
+            Bloqueio de Galeria Ativo • GPS Confirmado • IA Nutricional instantânea. 30 check-ins em 2 minutos sem lotar seu WhatsApp.
+          </p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SLIDE 5: CTA CONVOCAÇÃO DOS 15 FUNDADORES
+         ========================================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 05 • Chamada para Ação</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Beta Fechado 2026
+          </div>
+          <span class="slide-number">05 / 05</span>
+        </div>
+
+        <div class="slide-content">
+          <h2 class="title-display" style="font-size: 26px;">
+            Coloque essa tecnologia para rodar com seus alunos.
+          </h2>
+
+          <div class="cta-card">
+            <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; color: #a1a1aa; letter-spacing: 0.12em;">
+              Programa de Treinadores Fundadores
+            </div>
+            <p style="font-size: 12.5px; color: #e4e4e7; line-height: 1.55;">
+              Rode um desafio com seus alunos na ArenaFitPro com <strong>acesso 100% gratuito</strong> e benefícios permanentes de fundador.
+            </p>
+            <div class="cta-button">
+              Candidatar Minha Turma →
+            </div>
+            <div style="font-size: 10px; color: #71717a; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">
+              Link direto na bio: arenafitpro.app/beta
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="brand-pill" style="font-size: 9px;">15 Vagas Abertas</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

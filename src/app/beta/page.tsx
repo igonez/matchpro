@@ -90,8 +90,8 @@ export default function BetaTestersPage() {
       });
 
       const data = await res.json();
-      if (!res.ok && data.error) {
-        setErrorMessage(data.error);
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || 'Erro ao registrar sua candidatura. Tente novamente ou chame no WhatsApp.');
         setLoading(false);
         return;
       }
@@ -99,7 +99,7 @@ export default function BetaTestersPage() {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setSubmitted(true);
+      setErrorMessage('Erro de conexão ao enviar o formulário. Por favor, tente novamente ou fale conosco pelo WhatsApp.');
     } finally {
       setLoading(false);
     }
@@ -254,8 +254,16 @@ export default function BetaTestersPage() {
                   </div>
 
                   {errorMessage && (
-                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/25 text-xs text-red-300">
-                      {errorMessage}
+                    <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/25 text-xs text-red-300 space-y-2">
+                      <p>{errorMessage}</p>
+                      <a
+                        href={CONTACT_CONFIG.getDirectWhatsappUrl(`Olá, tentei me candidatar ao Beta Fechado da ArenaFitPro mas tive uma falha. Meu nome é ${name || ''}.`)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold hover:underline"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 text-emerald-400" /> Falar direto com o fundador no WhatsApp
+                      </a>
                     </div>
                   )}
 

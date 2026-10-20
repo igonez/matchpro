@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { isMasterAdmin } from '@/lib/master-auth';
 import { PLAN_CONFIG } from '@/lib/permissions';
+import { getBackupLeads, syncPendingLeadsToSupabase } from '@/lib/leads-backup';
 
 export async function GET(req: NextRequest) {
   try {
@@ -143,17 +144,42 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    // 6. Lista de Leads Recentes (Beta Testers & Lista VIP)
+    // 6. Lista de Leads Recentes (Beta Testers & Lista VIP) com buffer de contingência
     let recentLeads: any[] = [];
     try {
-      const { data: leadsData } = await supabaseAdmin
+      const { data: leadsData, error: leadsErr } = await supabaseAdmin
         .from('coach_leads')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(50);
-      if (leadsData) recentLeads = leadsData;
+
+      if (leadsData && !leadsErr) {
+        recentLeads = leadsData;
+        // Se a tabela existe e está respondendo, sincroniza em background pendentes
+        syncPendingLeadsToSupabase(supabaseAdmin).catch(() => {});
+      }
     } catch (e) {
-      // Caso pendente
+      // Tabela pendente de migração no Supabase
+    }
+
+    // Carregar leads locais (contingência / backup)
+    try {
+      const backupLeads = await getBackupLeads();
+      if (backupLeads.length > 0) {
+        const existingEmails = new Set(recentLeads.map((l: any) => l.email?.toLowerCase()));
+        for (const backup of backupLeads) {
+          if (!existingEmails.has(backup.email?.toLowerCase())) {
+            recentLeads.push({
+              ...backup,
+              status: backup.synced ? 'new' : 'backup_local',
+            });
+          }
+        }
+        // Reordenar por data decrescente
+        recentLeads.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      }
+    } catch (bErr) {
+      console.warn('[Master Metrics] Erro ao carregar backup de leads:', bErr);
     }
 
     return NextResponse.json({

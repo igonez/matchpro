@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post 03 — Convocação dos 15 Treinadores Fundadores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #050505;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #f4f4f5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header-bar {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .header-bar h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-bar p {
+      font-size: 13px;
+      color: #71717a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .carousel-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      max-width: 1400px;
+    }
+
+    .slide-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #52525b;
+    }
+
+    /* 
+      Dimensões Oficiais do Instagram Portrait 4:5 
+      1080px x 1350px (renderizado em escala 540px x 675px para visualização nítida em desktop)
+    */
+    .slide {
+      width: 540px;
+      height: 675px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      padding: 44px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    /* Fundo cinematográfico com foto atleta low-key e overlay preto OLED */
+    .slide.hero-bg {
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.94) 75%, #000000 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.88) 50%, #000000 100%),
+        url('./hero-post-3.jpg');
+      background-size: cover;
+      background-position: center 30%;
+    }
+
+    /* Glow de profundidade titânio */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    /* Grid sutil monocromático de fundo */
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .slide-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #e4e4e7;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .slide-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: #71717a;
+      letter-spacing: 0.1em;
+    }
+
+    .slide-body {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tag-category {
+      display: inline-flex;
+      align-self: flex-start;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a1a1aa;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .headline-xl {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      color: #ffffff;
+    }
+
+    .headline-xl span {
+      background: linear-gradient(180deg, #ffffff 30%, #71717a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+
+    .headline-lg {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+    }
+
+    .text-body {
+      font-size: 14px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* Cards e Blocos Titanium */
+    .bento-card {
+      background: rgba(18, 18, 20, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      backdrop-filter: blur(16px);
+    }
+
+    .bento-card-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .bento-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 800;
+      color: #71717a;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bento-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    .bento-card-desc {
+      font-size: 12px;
+      color: #a1a1aa;
+      line-height: 1.5;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Checklist */
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(18, 18, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+
+    .check-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .check-text strong {
+      font-size: 13px;
+      color: #ffffff;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .check-text p {
+      font-size: 11px;
+      color: #a1a1aa;
+      line-height: 1.45;
+    }
+
+    /* Big Highlight Box */
+    .highlight-box {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%), #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .highlight-metric {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 42px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .highlight-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #a1a1aa;
+    }
+
+    /* Footer oficial */
+    .slide-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: #000;
+    }
+
+    .footer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .footer-domain {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #71717a;
+      letter-spacing: 0.05em;
+    }
+
+    .swipe-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #f4f4f5;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 6px 14px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>POST 03 • CONVOCAÇÃO DOS 15 TREINADORES FUNDADORES</h1>
+    <p>Carrossel Instagram (1080x1350 • 4:5 Portrait) • Padrão Luxury Titanium Monocromático</p>
+  </div>
+
+  <div class="carousel-container">
+
+    <!-- ==================== SLIDE 1: CAPA ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 01 • Capa de Impacto</span>
+      <div class="slide hero-bg">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            ArenaFitPro • Piloto
+          </div>
+          <span class="slide-index">01 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Programa de Fundadores</span>
+          <h2 class="headline-xl">
+            Buscamos 15
+            <span>Treinadores.</span>
+          </h2>
+          <p class="text-body" style="font-size: 15px; color: #d4d4d8;">
+            Para testar em primeira mão a plataforma que transformou desafios fitness em campeonatos de engajamento diário.
+          </p>
+          <div class="highlight-box" style="margin-top: 6px; padding: 16px 20px;">
+            <div class="highlight-metric">15 VAGAS</div>
+            <div class="highlight-label">PLANO PRO GRATUITO VITALÍCIO • APENAS 8% DE SPLIT</div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 2: O QUE É O PROGRAMA ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 02 • O Programa</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Fase Piloto Fechada
+          </div>
+          <span class="slide-index">02 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Validação em Campo</span>
+          <h2 class="headline-lg">
+            O que é o Programa de Fundadores?
+          </h2>
+          <p class="text-body">
+            Antes de abrirmos a plataforma globalmente, selecionaremos um grupo exclusivo de 15 treinadores e nutricionistas para rodarem desafios com turmas reais.
+          </p>
+
+          <div class="bento-card">
+            <div class="bento-card-row">
+              <div class="bento-num">01</div>
+              <div>
+                <div class="bento-card-title">Turma Real (5 a 30 Alunos)</div>
+                <div class="bento-card-desc">Você roda seu próximo desafio de 21 dias sem mudar uma vírgula na sua prescrição de costume.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div class="bento-card-row">
+              <div class="bento-num">02</div>
+              <div>
+                <div class="bento-card-title">Acompanhamento Direto</div>
+                <div class="bento-card-desc">Nosso time técnico acompanha seu desafio de ponta a ponta para calibrar a experiência.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 3: O QUE VOCÊ GANHA ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 03 • Benefícios</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Benefícios Vitalícios
+          </div>
+          <span class="slide-index">03 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Condição Especial</span>
+          <h2 class="headline-lg">
+            O que você ganha como Fundador:
+          </h2>
+
+          <div class="grid-2">
+            <div class="bento-card">
+              <div class="bento-num">01</div>
+              <div class="bento-card-title" style="margin-top: 6px;">Plano PRO Gratuito</div>
+              <div class="bento-card-desc">Isenção vitalícia da mensalidade do PRO para sempre na sua conta.</div>
+            </div>
+
+            <div class="bento-card">
+              <div class="bento-num">02</div>
+              <div class="bento-card-title" style="margin-top: 6px;">Apenas 8% de Split</div>
+              <div class="bento-card-desc">A menor taxa congelada. Você só paga quando seus alunos pagarem.</div>
+            </div>
+
+            <div class="bento-card">
+              <div class="bento-num">03</div>
+              <div class="bento-card-title" style="margin-top: 6px;">Canal VIP WhatsApp</div>
+              <div class="bento-card-desc">Contato direto com os fundadores para sugerir recursos sob medida.</div>
+            </div>
+
+            <div class="bento-card">
+              <div class="bento-num">04</div>
+              <div class="bento-card-title" style="margin-top: 6px;">Template 21 Dias</div>
+              <div class="bento-card-desc">Estrutura pronta e validada de missões diárias para aplicar de imediato.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 4: QUEM PODE PARTICIPAR ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 04 • Pré-Requisitos</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Critérios de Seleção
+          </div>
+          <span class="slide-index">04 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Perfil Buscado</span>
+          <h2 class="headline-lg">
+            Quem pode se candidatar?
+          </h2>
+
+          <div class="check-list">
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-text">
+                <strong>Personais, Nutris ou Coaches</strong>
+                <p>Profissionais comprometidos que já rodam ou querem rodar desafios em grupo.</p>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-text">
+                <strong>Ao Menos 5 Alunos no Piloto</strong>
+                <p>Capacidade de rodar uma turma entre 5 e 30 pessoas nas próximas semanas.</p>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-text">
+                <strong>Compromisso de Feedback Honesto</strong>
+                <p>Disponibilidade para relatar o que funcionou e o que precisa ser ajustado.</p>
+              </div>
+            </div>
+          </div>
+
+          <p style="font-size: 11px; color: #71717a; font-family: 'JetBrains Mono', monospace; text-align: center;">
+            Não exigimos milhares de seguidores. Exigimos comprometimento profissional.
+          </p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 5: CTA CONVOCAÇÃO ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 05 • Candidatura</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Candidaturas Abertas
+          </div>
+          <span class="slide-index">05 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Apenas 15 Vagas</span>
+          <h2 class="headline-lg">
+            Como garantir sua vaga no Beta:
+          </h2>
+
+          <div class="check-list">
+            <div class="check-item" style="padding: 12px 14px;">
+              <div class="check-icon" style="font-size: 11px;">01</div>
+              <div class="check-text">
+                <strong>Toque no link da bio</strong>
+                <p>Acesse <code style="color: #fff; background: rgba(255,255,255,0.08); padding: 1px 4px; border-radius: 4px;">arenafitpro.app/beta</code>.</p>
+              </div>
+            </div>
+
+            <div class="check-item" style="padding: 12px 14px;">
+              <div class="check-icon" style="font-size: 11px;">02</div>
+              <div class="check-text">
+                <strong>Preencha em 60 segundos</strong>
+                <p>Informe sua especialidade e o tamanho estimado da sua turma.</p>
+              </div>
+            </div>
+
+            <div class="check-item" style="padding: 12px 14px;">
+              <div class="check-icon" style="font-size: 11px;">03</div>
+              <div class="check-text">
+                <strong>Receba o acesso direto</strong>
+                <p>Nossa equipe entrará em contato via WhatsApp com os selecionados.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box" style="padding: 14px 18px; margin-top: 4px;">
+            <div style="font-size: 13px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">
+              Ou comente "BETA" abaixo
+            </div>
+            <div style="font-size: 11px; color: #a1a1aa; font-family: 'JetBrains Mono', monospace;">
+              Enviaremos o link de candidatura direto no seu direct
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="brand-pill" style="font-size: 9px;">15 Vagas Disponíveis</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

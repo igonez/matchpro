@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 import { enforceRateLimit } from '@/lib/security/rate-limit';
 import { sanitizeString } from '@/lib/security/sanitize';
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     if (rateLimitResponse) return rateLimitResponse;
 
     const body = await request.json();
-    let rawCode = sanitizeString(body.code || '').slice(0, 100).trim();
+    let rawCode = sanitizeString(body.code || '').slice(0, 150).trim();
 
     if (!rawCode) {
       return NextResponse.json(
@@ -20,51 +20,73 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Se o aluno colou o link completo (ex: https://.../join/uuid ou /join/uuid)
+    // Se o usuário colou um link completo (ex: https://.../join/uuid ou /join/uuid)
+    if (rawCode.includes('/join/')) {
+      rawCode = rawCode.split('/join/')[1].split('?')[0].split('/')[0].trim();
+    }
+
     const urlMatch = rawCode.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
     if (urlMatch) {
       rawCode = urlMatch[0];
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
     const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawCode);
 
-    let query = supabase
-      .from('challenges')
-      .select(`
+    const baseSelect = `
+      id,
+      title,
+      price,
+      start_date,
+      end_date,
+      is_active,
+      professional_id,
+      professionals (
         id,
-        title,
-        price,
-        start_date,
-        end_date,
-        is_active,
-        professional_id,
-        professionals (
-          full_name,
-          specialty,
-          plan_tier
-        )
-      `);
+        full_name,
+        specialty,
+        plan_tier
+      )
+    `;
 
     let challengeData: any = null;
 
     if (isUUID) {
-      const { data, error } = await query.eq('id', rawCode).maybeSingle();
+      const { data, error } = await supabaseAdmin
+        .from('challenges')
+        .select(baseSelect)
+        .eq('id', rawCode)
+        .maybeSingle();
+
       if (!error && data) {
         challengeData = data;
       }
     } else {
-      // Se digitou código curto ou título do desafio
-      const { data: list, error } = await query
+      // 1. Tentar busca por título (ativo)
+      const { data: listByTitle } = await supabaseAdmin
+        .from('challenges')
+        .select(baseSelect)
         .ilike('title', `%${rawCode}%`)
-        .eq('is_active', true)
+        .order('is_active', { ascending: false })
         .limit(1);
 
-      if (!error && list && list.length > 0) {
-        challengeData = list[0];
+      if (listByTitle && listByTitle.length > 0) {
+        challengeData = listByTitle[0];
+      } else {
+        // 2. Se for um prefixo de UUID (ex: primeiros 8 caracteres)
+        const cleanHex = rawCode.replace(/[^0-9a-fA-F]/g, '');
+        if (cleanHex.length >= 6) {
+          const { data: allActive } = await supabaseAdmin
+            .from('challenges')
+            .select(baseSelect)
+            .limit(50);
+
+          const matched = (allActive || []).find((c: any) =>
+            c.id.replace(/-/g, '').toLowerCase().startsWith(cleanHex.toLowerCase())
+          );
+          if (matched) {
+            challengeData = matched;
+          }
+        }
       }
     }
 
@@ -72,14 +94,39 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           valid: false,
-          message: 'Código de turma não encontrado ou o desafio já foi encerrado pelo treinador.',
+          message: 'Código de turma ou link de convite não encontrado. Peça o link atualizado ao seu treinador.',
         },
         { status: 404 }
       );
     }
 
+    // Se o desafio foi explicitamente desativado pelo treinador
+    if (challengeData.is_active === false) {
+      return NextResponse.json(
+        {
+          valid: false,
+          message: 'Esta turma foi pausada ou encerrada pelo treinador.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Se o desafio já expirou
+    if (challengeData.end_date) {
+      const endDate = new Date(challengeData.end_date + 'T23:59:59');
+      if (endDate < new Date()) {
+        return NextResponse.json(
+          {
+            valid: false,
+            message: `Este desafio terminou em ${new Date(challengeData.end_date).toLocaleDateString('pt-BR')}. Converse com seu treinador sobre novas turmas.`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Validar capacidade de alunos de acordo com o plano do treinador (apenas inscritos confirmados)
-    const { count: studentCount } = await supabase
+    const { count: studentCount } = await supabaseAdmin
       .from('challenge_participants')
       .select('*', { count: 'exact', head: true })
       .eq('challenge_id', challengeData.id)
@@ -92,7 +139,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           valid: false,
-          message: `Esta turma já atingiu a capacidade máxima de ${planLimits.maxStudentsPerChallenge} alunos. Converse com o treinador para verificar novas vagas.`,
+          message: `Esta turma já atingiu a capacidade máxima de ${planLimits.maxStudentsPerChallenge} alunos permitida pelo plano do treinador.`,
         },
         { status: 400 }
       );
@@ -116,7 +163,7 @@ export async function POST(request: Request) {
   } catch (err: any) {
     console.error('Erro ao validar código da turma:', err);
     return NextResponse.json(
-      { valid: false, message: 'Erro interno ao validar código.' },
+      { valid: false, message: 'Erro interno ao validar convite da turma.' },
       { status: 500 }
     );
   }

@@ -10,13 +10,13 @@ import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Copy, Check, QrCode, Sparkles, User, ArrowRight } from 'lucide-react';
+import { Copy, Check, QrCode, Sparkles, User, ArrowRight, AlertCircle, RefreshCw } from 'lucide-react';
 
 function JoinChallengeContent() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const challengeId = params?.challengeId as string;
+  const challengeIdParam = (params?.challengeId as string) || '';
   const autoJoinParam = searchParams?.get('autojoin') === '1';
   const supabase = createClient();
 
@@ -26,12 +26,18 @@ function JoinChallengeContent() {
   const [user, setUser] = useState<any>(null);
   const [alreadyJoined, setAlreadyJoined] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // Erro de carregamento da página (turma não existe ou encerrada)
+  const [pageError, setPageError] = useState<string | null>(null);
+
+  // Erro de ação de formulário (credenciais, validação de CPF, pagamento)
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Estados de Cadastro / Login Direto na página do convite
   const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
+  const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -42,23 +48,32 @@ function JoinChallengeContent() {
   const [checkingPixStatus, setCheckingPixStatus] = useState(false);
   const [pixFeedback, setPixFeedback] = useState<string | null>(null);
 
+  const formatCpf = (val: string) => {
+    const digits = val.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`;
+  };
+
+  const formatWhatsapp = (val: string) => {
+    const digits = val.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+  };
+
   const enrollAuthenticatedStudent = async (activeUser: any, loadedChallenge: any) => {
     const targetChallenge = loadedChallenge || challenge;
     if (!targetChallenge || !activeUser) return;
 
-    setError(null);
+    setActionError(null);
     setJoining(true);
 
     try {
       if (typeof document !== 'undefined') {
         document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
       }
-
-      const { data: studentRecord } = await supabase
-        .from('students')
-        .select('id')
-        .eq('id', activeUser.id)
-        .maybeSingle();
 
       const studentDisplayName =
         fullName.trim() ||
@@ -67,18 +82,17 @@ function JoinChallengeContent() {
         activeUser.email?.split('@')[0] ||
         'Aluno';
 
-      if (!studentRecord) {
-        await supabase.from('students').insert({
-          id: activeUser.id,
-          full_name: studentDisplayName,
-          phone: phone.trim() || activeUser.user_metadata?.phone || null,
-        });
-      }
-
       const isFree = Number(targetChallenge?.price || 0) === 0;
 
-      // Se for pago, chamamos o Asaas para gerar o Pix com Split
+      // 1. Se for desafio pago, gera cobrança Pix com Split
       if (!isFree) {
+        const cleanCpf = cpf.replace(/\D/g, '');
+        if (!cleanCpf || cleanCpf.length !== 11) {
+          setActionError('Informe seu CPF completo (11 dígitos) para a emissão da cobrança Pix regulamentada.');
+          setJoining(false);
+          return;
+        }
+
         const response = await fetch('/api/checkout/pix', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -86,6 +100,7 @@ function JoinChallengeContent() {
             challengeId: targetChallenge.id,
             studentName: studentDisplayName,
             studentEmail: activeUser.email || email.trim(),
+            studentCpf: cleanCpf,
           }),
         });
 
@@ -100,7 +115,7 @@ function JoinChallengeContent() {
           qrBase64: data.pixQrBase64,
         });
 
-        // Inscreve com status pending
+        // Registrar inscrição pending no client
         await supabase
           .from('challenge_participants')
           .upsert({
@@ -114,47 +129,27 @@ function JoinChallengeContent() {
         return;
       }
 
-      // Se for gratuito, validar capacidade antes de liberar
-      const { count: currentStudents } = await supabase
-        .from('challenge_participants')
-        .select('*', { count: 'exact', head: true })
-        .eq('challenge_id', targetChallenge.id);
+      // 2. Se for desafio gratuito, faz matrícula segura via API server-side
+      const response = await fetch('/api/challenges/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId: targetChallenge.id,
+          fullName: studentDisplayName,
+          phone: phone.trim() || activeUser.user_metadata?.phone || null,
+        }),
+      });
 
-      const coachTier = targetChallenge?.professionals?.plan_tier || 'starter';
-      const maxAllowed = coachTier === 'pro' ? 100 : 10;
-      if ((currentStudents || 0) >= maxAllowed) {
-        throw new Error(`Esta turma atingiu a capacidade máxima de ${maxAllowed} alunos.`);
-      }
-
-      const { error: joinError } = await supabase
-        .from('challenge_participants')
-        .insert({
-          challenge_id: targetChallenge.id,
-          student_id: activeUser.id,
-          payment_status: 'paid',
-        });
-
-      if (joinError && !joinError.message.includes('unique')) {
-        throw joinError;
-      }
-
-      try {
-        await supabase
-          .from('leaderboard_standings')
-          .insert({
-            challenge_id: targetChallenge.id,
-            student_id: activeUser.id,
-            total_points: 0,
-          });
-      } catch (leadErr) {
-        console.warn('Leaderboard já inicializado:', leadErr);
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Falha ao ingressar no desafio.');
       }
 
       setAlreadyJoined(true);
       router.push('/app');
     } catch (err: any) {
-      console.error('Erro ao ingressar:', err);
-      setError(err.message || 'Erro ao ingressar no desafio.');
+      console.error('[Join Page] Erro ao ingressar:', err);
+      setActionError(err.message || 'Erro ao ingressar no desafio. Tente novamente.');
     } finally {
       setJoining(false);
     }
@@ -162,25 +157,32 @@ function JoinChallengeContent() {
 
   useEffect(() => {
     async function loadChallenge() {
-      if (!challengeId) return;
+      if (!challengeIdParam) return;
       setLoading(true);
+      setPageError(null);
 
       try {
-        let resolvedId = challengeId;
-        const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(challengeId);
+        let cleanId = decodeURIComponent(challengeIdParam).trim();
+        if (cleanId.includes('/join/')) {
+          cleanId = cleanId.split('/join/')[1].split('?')[0].split('/')[0].trim();
+        }
 
+        let resolvedId = cleanId;
+        const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(cleanId);
+
+        // Se não for UUID completo, resolve via validate-code
         if (!isUUID) {
           try {
             const valRes = await fetch('/api/challenges/validate-code', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ code: challengeId }),
+              body: JSON.stringify({ code: cleanId }),
             });
             const valData = await valRes.json();
             if (valData.valid && valData.challenge?.id) {
               resolvedId = valData.challenge.id;
             } else {
-              throw new Error(valData.message || 'Código de turma não encontrado.');
+              throw new Error(valData.message || 'Código de turma ou link de convite inválido.');
             }
           } catch (codeErr: any) {
             throw new Error(codeErr.message || 'Código de turma ou link de convite inválido.');
@@ -205,7 +207,21 @@ function JoinChallengeContent() {
           .eq('id', resolvedId)
           .single();
 
-        if (challengeError) throw challengeError;
+        if (challengeError) {
+          throw new Error('Turma não encontrada. Verifique se o link ou código foi digitado corretamente.');
+        }
+
+        if (challengeData.is_active === false) {
+          throw new Error('Esta turma foi pausada ou encerrada pelo treinador.');
+        }
+
+        if (challengeData.end_date) {
+          const endDate = new Date(challengeData.end_date + 'T23:59:59');
+          if (endDate < new Date()) {
+            throw new Error(`Este desafio terminou em ${new Date(challengeData.end_date).toLocaleDateString('pt-BR')}.`);
+          }
+        }
+
         setChallenge(challengeData);
 
         const { data: { user: currentUser } } = await supabase.auth.getUser();
@@ -219,27 +235,30 @@ function JoinChallengeContent() {
             .eq('student_id', currentUser.id)
             .maybeSingle();
 
-          if (participant && participant.payment_status === 'paid') {
+          if (participant && ['paid', 'complimentary'].includes(participant.payment_status)) {
             setAlreadyJoined(true);
           } else if (autoJoinParam) {
-            // Se voltou do login Google com autojoin=1, já inicia a matrícula/checkout!
-            await enrollAuthenticatedStudent(currentUser, challengeData);
+            // Se voltou do login OAuth com autojoin=1 e for gratuito, já matricula!
+            // Se for pago, aguardará confirmação com CPF
+            if (Number(challengeData.price || 0) === 0) {
+              await enrollAuthenticatedStudent(currentUser, challengeData);
+            }
           }
         }
       } catch (err: any) {
-        console.error('Erro ao buscar desafio:', err);
-        setError('Desafio não encontrado ou encerrado.');
+        console.error('[Join Page] Erro ao buscar desafio:', err);
+        setPageError(err.message || 'Desafio não encontrado ou encerrado.');
       } finally {
         setLoading(false);
       }
     }
 
     loadChallenge();
-  }, [challengeId, supabase]);
+  }, [challengeIdParam, supabase]);
 
   // Escutar liberação do pagamento via Supabase Realtime
   useEffect(() => {
-    const targetChallengeId = challenge?.id || challengeId;
+    const targetChallengeId = challenge?.id;
     if (!targetChallengeId || !user?.id) return;
 
     const channel = supabase
@@ -280,18 +299,22 @@ function JoinChallengeContent() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [challenge?.id, challengeId, user?.id, supabase, router]);
+  }, [challenge?.id, user?.id, supabase, router]);
 
   const handleJoin = async () => {
     if (!user) return;
+    if (Number(challenge?.price || 0) > 0 && !cpf.trim()) {
+      setActionError('Por favor, informe seu CPF abaixo para gerar a chave Pix com split bancário.');
+      return;
+    }
     await enrollAuthenticatedStudent(user, challenge);
   };
 
   const handleGoogleQuickJoin = async () => {
-    setError(null);
+    setActionError(null);
     setJoining(true);
     try {
-      const targetId = challenge?.id || challengeId;
+      const targetId = challenge?.id || challengeIdParam;
       const nextUrl = encodeURIComponent(`/join/${targetId}?autojoin=1`);
       const redirectUrl = `${window.location.origin}/auth/callback?role=student&next=${nextUrl}`;
 
@@ -299,10 +322,6 @@ function JoinChallengeContent() {
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
         },
       });
 
@@ -311,14 +330,21 @@ function JoinChallengeContent() {
         window.location.href = data.url;
       }
     } catch (err: any) {
-      setError(err.message || 'Erro ao conectar com Google.');
+      setActionError(err.message || 'Erro ao conectar com Google.');
       setJoining(false);
     }
   };
 
   const handleDirectAuthAndJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setActionError(null);
+
+    const isPaid = Number(challenge?.price || 0) > 0;
+    if (isPaid && cpf.replace(/\D/g, '').length !== 11) {
+      setActionError('Informe seu CPF completo (11 dígitos) para a emissão do Pix.');
+      return;
+    }
+
     setJoining(true);
 
     try {
@@ -353,16 +379,18 @@ function JoinChallengeContent() {
         await enrollAuthenticatedStudent(authData.user, challenge);
       }
     } catch (err: any) {
-      console.error('Erro na autenticação direta:', err);
-      setError(err.message || 'Erro ao autenticar e entrar na turma.');
+      console.error('[Join Page] Erro na autenticação direta:', err);
+      setActionError(err.message || 'Erro ao autenticar e entrar na turma.');
       setJoining(false);
     }
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (loading) {
@@ -374,25 +402,41 @@ function JoinChallengeContent() {
     );
   }
 
-  if (error || !challenge) {
+  // Se o desafio falhou ao carregar (código inexistente ou encerrado)
+  if (pageError || !challenge) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-        <div className="mono-glass-card max-w-md w-full p-8 text-center rounded-3xl">
-          <p className="font-bold text-sm text-white font-mono uppercase mb-2">CONVITE EXPIRADO OU INATIVO</p>
-          <p className="text-xs text-zinc-400 mb-6 font-sans">
-            O desafio foi arquivado pelo organizador ou o link foi desativado.
-          </p>
-          <Link href="/login">
-            <button className="mono-button-primary px-5 py-2 text-xs font-mono">
-              Ir para o Login
-            </button>
-          </Link>
+        <div className="mono-glass-card max-w-md w-full p-8 text-center rounded-3xl space-y-4 border border-white/10 shadow-2xl">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <div className="space-y-1.5">
+            <p className="font-bold text-sm text-white font-mono uppercase tracking-wider">
+              Convite Indisponível
+            </p>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+              {pageError || 'O link pode estar incompleto, com código expirado ou a turma foi arquivada pelo treinador.'}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 pt-2">
+            <Link href="/app" className="flex-1">
+              <button className="mono-button-primary w-full py-2.5 text-xs font-mono">
+                Acessar Arena
+              </button>
+            </Link>
+            <Link href="/login" className="flex-1">
+              <button className="mono-button-secondary w-full py-2.5 text-xs font-mono">
+                Fazer Login
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   const missionsList = challenge.missions || [];
+  const isPaidChallenge = Number(challenge.price) > 0;
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col justify-between selection:bg-white selection:text-black font-sans relative overflow-x-hidden">
@@ -413,7 +457,7 @@ function JoinChallengeContent() {
 
           <button
             onClick={copyLink}
-            className="text-xs font-medium text-zinc-400 hover:text-white transition-colors"
+            className="text-xs font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
           >
             {copied ? 'Link copiado!' : 'Copiar link'}
           </button>
@@ -432,8 +476,8 @@ function JoinChallengeContent() {
               <span className="text-xs font-semibold text-zinc-400">
                 Convite Oficial
               </span>
-              <span className="text-xs font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
-                {Number(challenge.price) > 0 ? `R$ ${Number(challenge.price).toFixed(2)}` : 'Gratuito'}
+              <span className="text-xs font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 font-mono">
+                {isPaidChallenge ? `R$ ${Number(challenge.price).toFixed(2)}` : 'Gratuito'}
               </span>
             </div>
 
@@ -453,11 +497,15 @@ function JoinChallengeContent() {
           <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-black/60 border border-white/[0.08] text-xs">
             <div>
               <span className="text-xs text-zinc-400 block font-medium">Início Oficial</span>
-              <span className="font-bold text-white">{new Date(challenge.start_date).toLocaleDateString('pt-BR')}</span>
+              <span className="font-bold text-white font-mono">
+                {challenge.start_date ? new Date(challenge.start_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
+              </span>
             </div>
             <div>
               <span className="text-xs text-zinc-400 block font-medium">Término</span>
-              <span className="font-bold text-white">{new Date(challenge.end_date).toLocaleDateString('pt-BR')}</span>
+              <span className="font-bold text-white font-mono">
+                {challenge.end_date ? new Date(challenge.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
+              </span>
             </div>
           </div>
 
@@ -467,7 +515,7 @@ function JoinChallengeContent() {
               <span className="text-xs font-semibold tracking-wide text-zinc-400 block">
                 Grade de Missões ({missionsList.length})
               </span>
-              <div className="space-y-1.5 max-h-48 overflow-y-auto">
+              <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {missionsList.map((m: any) => (
                   <div key={m.id} className="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-xs">
                     <span className="text-zinc-300 font-medium">{m.title}</span>
@@ -478,32 +526,51 @@ function JoinChallengeContent() {
             </div>
           )}
 
-          {error && (
-            <div className="p-3 rounded-xl border border-rose-500/30 bg-rose-950/20 text-xs font-mono text-rose-300">
-              {error}
+          {/* Banner de Erro de Ação no Formulário */}
+          {actionError && (
+            <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-950/20 text-xs font-mono text-rose-300 flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <span>{actionError}</span>
             </div>
           )}
 
-          {/* Área de Ação / Cadastro Direto sem sair da tela */}
+          {/* Área de Ação / Cadastro Direto */}
           <div className="pt-4 border-t border-white/[0.08]">
             {alreadyJoined ? (
               <Link href="/app" className="block">
-                <button className="mono-button-primary w-full h-12 text-xs font-semibold">
+                <button className="mono-button-primary w-full h-12 text-xs font-semibold cursor-pointer">
                   Você já está inscrito • Acessar App →
                 </button>
               </Link>
             ) : user ? (
-              <button
-                onClick={handleJoin}
-                disabled={joining}
-                className="mono-button-primary w-full h-12 min-h-[48px] text-xs font-semibold"
-              >
-                {joining
-                  ? 'Processando inscrição...'
-                  : Number(challenge.price) > 0
-                  ? `Confirmar Vaga (R$ ${Number(challenge.price).toFixed(2)}) →`
-                  : 'Confirmar Minha Inscrição →'}
-              </button>
+              <div className="space-y-3">
+                {isPaidChallenge && (
+                  <div className="text-left space-y-1">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
+                      CPF do Pagador (Obrigatório para emissão do Pix)
+                    </label>
+                    <Input
+                      type="tel"
+                      placeholder="000.000.000-00"
+                      value={cpf}
+                      onChange={(e) => setCpf(formatCpf(e.target.value))}
+                      required
+                      className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs font-mono"
+                    />
+                  </div>
+                )}
+                <button
+                  onClick={handleJoin}
+                  disabled={joining}
+                  className="mono-button-primary w-full h-12 min-h-[48px] text-xs font-semibold cursor-pointer"
+                >
+                  {joining
+                    ? 'Processando inscrição...'
+                    : isPaidChallenge
+                    ? `Confirmar Vaga e Ir para o Pix (R$ ${Number(challenge.price).toFixed(2)}) →`
+                    : 'Confirmar Minha Inscrição Gratuita →'}
+                </button>
+              </div>
             ) : (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -518,9 +585,9 @@ function JoinChallengeContent() {
                     type="button"
                     onClick={() => {
                       setAuthMode('signup');
-                      setError(null);
+                      setActionError(null);
                     }}
-                    className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signup'
                         ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
@@ -533,9 +600,9 @@ function JoinChallengeContent() {
                     type="button"
                     onClick={() => {
                       setAuthMode('signin');
-                      setError(null);
+                      setActionError(null);
                     }}
-                    className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signin'
                         ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
@@ -551,7 +618,7 @@ function JoinChallengeContent() {
                   type="button"
                   disabled={joining}
                   onClick={handleGoogleQuickJoin}
-                  className="w-full h-11 min-h-[44px] rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm group"
+                  className="w-full h-11 min-h-[44px] rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm group cursor-pointer"
                 >
                   <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -594,11 +661,28 @@ function JoinChallengeContent() {
                           type="tel"
                           placeholder="(11) 99999-9999"
                           value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
+                          onChange={(e) => setPhone(formatWhatsapp(e.target.value))}
                           required
                           className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
                         />
                       </div>
+                    </div>
+                  )}
+
+                  {/* Campo CPF quando o desafio é pago */}
+                  {isPaidChallenge && (
+                    <div>
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                        CPF do Pagador (Obrigatório para emissão do Pix)
+                      </label>
+                      <Input
+                        type="tel"
+                        placeholder="000.000.000-00"
+                        value={cpf}
+                        onChange={(e) => setCpf(formatCpf(e.target.value))}
+                        required
+                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs font-mono"
+                      />
                     </div>
                   )}
 
@@ -635,21 +719,21 @@ function JoinChallengeContent() {
                   <button
                     type="submit"
                     disabled={joining}
-                    className="mono-button-primary w-full h-12 text-xs font-bold flex items-center justify-center gap-2 mt-2"
+                    className="mono-button-primary w-full h-12 text-xs font-bold flex items-center justify-center gap-2 mt-2 cursor-pointer"
                   >
                     {joining ? (
                       <>
                         <div className="h-4 w-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                        <span>Entrando na turma...</span>
+                        <span>Processando sua entrada...</span>
                       </>
                     ) : (
                       <>
                         <span>
                           {authMode === 'signup'
-                            ? Number(challenge.price) > 0
+                            ? isPaidChallenge
                               ? `Criar Conta e Ir para o Pix (R$ ${Number(challenge.price).toFixed(2)})`
                               : 'Criar Conta e Entrar na Turma'
-                            : Number(challenge.price) > 0
+                            : isPaidChallenge
                             ? `Entrar e Ir para o Pix (R$ ${Number(challenge.price).toFixed(2)})`
                             : 'Entrar na Turma Agora'}
                         </span>
@@ -703,7 +787,7 @@ function JoinChallengeContent() {
                     setTimeout(() => setCopiedPix(false), 2000);
                   }
                 }}
-                className="bg-white text-black hover:bg-zinc-200 font-bold px-3 shrink-0"
+                className="bg-white text-black hover:bg-zinc-200 font-bold px-3 shrink-0 cursor-pointer"
               >
                 {copiedPix ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </Button>
@@ -757,9 +841,16 @@ function JoinChallengeContent() {
                   setCheckingPixStatus(false);
                 }
               }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold h-11 text-xs"
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold h-11 text-xs cursor-pointer"
             >
-              {checkingPixStatus ? 'Verificando com o Banco...' : 'Já Realizei o Pagamento • Verificar Liberação'}
+              {checkingPixStatus ? (
+                <span className="flex items-center justify-center gap-2">
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  Verificando com o Banco...
+                </span>
+              ) : (
+                'Já Realizei o Pagamento • Verificar Liberação'
+              )}
             </Button>
           </div>
         </div>

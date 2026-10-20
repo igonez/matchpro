@@ -332,6 +332,53 @@ export interface Database {
           created_at?: string
         }
       }
+      coach_leads: {
+        Row: {
+          id: string
+          created_at: string
+          name: string
+          email: string
+          whatsapp: string
+          role: string
+          students_range: string
+          instagram: string | null
+          lead_type: string
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
+          status: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          name: string
+          email: string
+          whatsapp: string
+          role?: string
+          students_range: string
+          instagram?: string | null
+          lead_type?: string
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          status?: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          name?: string
+          email?: string
+          whatsapp?: string
+          role?: string
+          students_range?: string
+          instagram?: string | null
+          lead_type?: string
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          status?: string
+        }
+      }
     }
   }
 }

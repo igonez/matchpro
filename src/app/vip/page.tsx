@@ -23,6 +23,7 @@ import {
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
+import { CorporateFooter } from '@/components/layout/corporate-footer';
 import { JsonLd } from '@/components/seo/json-ld';
 import { CONTACT_CONFIG } from '@/lib/constants';
 
@@ -429,8 +430,8 @@ export default function VipCapturePage() {
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Repasse Pix Instantâneo</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400 block">3.8x</span>
-            <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Mais adesão dos alunos</p>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400 block">Alta</span>
+            <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Adesão com Gamificação</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
             <span className="text-2xl sm:text-3xl font-black font-mono text-white block">100%</span>
@@ -443,17 +444,8 @@ export default function VipCapturePage() {
         </div>
       </main>
 
-      {/* Rodapé Oficial */}
-      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</div>
-        <div className="flex items-center justify-center gap-4 text-zinc-300">
-          <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
-          <span>•</span>
-          <Link href="/privacidade" className="hover:text-white transition-colors">Política de Privacidade & LGPD</Link>
-          <span>•</span>
-          <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
-        </div>
-      </footer>
+      {/* Rodapé Oficial Padronizado */}
+      <CorporateFooter />
     </div>
   );
 }

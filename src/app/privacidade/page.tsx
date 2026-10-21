@@ -19,6 +19,8 @@ import {
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { JsonLd } from '@/components/seo/json-ld';
+import { CorporateFooter } from '@/components/layout/corporate-footer';
+import { CORPORATE_CONFIG } from '@/lib/corporate-config';
 
 const privacyBreadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -181,28 +183,49 @@ export default function PrivacyPage() {
           {/* Seção 4 */}
           <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
-              <Trash2 className="h-4 w-4 text-red-400" /> 4. Direitos do Titular e Exclusão Total de Conta
+              <Trash2 className="h-4 w-4 text-red-400" /> 4. Direitos do Titular e Canal Interativo LGPD (Art. 18)
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-300">
-              Em cumprimento ao Art. 18 da LGPD e às diretrizes da Apple App Store e Google Play Store, você pode solicitar a qualquer momento a exclusão permanente de seus dados e conta.
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
+              Em cumprimento ao Art. 18 da LGPD e às diretrizes da Apple App Store e Google Play Store, você pode solicitar a qualquer momento a confirmação de tratamento, acesso, correção, anonimização, portabilidade ou a exclusão permanente de seus dados e conta.
             </p>
-            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-xs sm:text-sm space-y-2">
-              <strong className="text-red-300 block font-mono uppercase text-xs">Procedimento para Exclusão:</strong>
-              <p className="text-zinc-300 leading-relaxed">
-                Envie um e-mail para <a href="mailto:privacidade@arenafitpro.com.br" className="text-white underline font-mono">privacidade@arenafitpro.com.br</a> com o assunto <strong>"Exclusão de Conta e Dados"</strong> a partir do e-mail cadastrado na plataforma, ou solicite diretamente na aba de perfil do aplicativo. A solicitação é processada em até 15 dias úteis.
-              </p>
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <strong className="text-white text-xs sm:text-sm block">Canal Oficial do Titular:</strong>
+                <p className="text-xs text-zinc-400">Exerça seus direitos em menos de 1 minuto e receba um número de protocolo com resposta em até 15 dias úteis.</p>
+              </div>
+              <Link href="/lgpd" className="shrink-0 w-full sm:w-auto">
+                <button className="px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-zinc-200 transition-colors w-full sm:w-auto cursor-pointer">
+                  Acessar Formulário LGPD
+                </button>
+              </Link>
             </div>
           </div>
 
           {/* Seção 5 */}
           <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
-              <Mail className="h-4 w-4 text-white" /> 5. Canal de Contato do Encarregado de Dados (DPO)
+              <Lock className="h-4 w-4 text-amber-400" /> 5. Cookies e Tecnologias de Sessão
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
+              O ArenaFitPro não utiliza cookies para rastreamento de anúncios de terceiros ou perfilamento comercial. Nossos cookies dividem-se em:
+            </p>
+            <ul className="list-disc list-inside space-y-1.5 pl-2 text-xs text-zinc-400">
+              <li><strong className="text-white">Estritamente Essenciais:</strong> Tokens de autenticação Supabase (JWT), cookies seguros com flag <code>HttpOnly</code> e <code>SameSite=Lax</code> e proteção anti-CSRF.</li>
+              <li><strong className="text-white">Funcionais:</strong> Preferências de exibição da interface e status do banner de consentimento.</li>
+            </ul>
+          </div>
+
+          {/* Seção 6 */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
+            <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
+              <Mail className="h-4 w-4 text-white" /> 6. Dados da Controladora e Contato do Encarregado (DPO)
             </h2>
             <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5 font-mono text-xs sm:text-sm">
-              <p><span className="text-zinc-400">Controlador:</span> ArenaFitPro Tecnologia Ltda.</p>
-              <p><span className="text-zinc-400">Encarregado (DPO):</span> Igor Telmo / Segurança e Privacidade</p>
-              <p><span className="text-zinc-400">E-mail:</span> <a href="mailto:privacidade@arenafitpro.com.br" className="text-white underline">privacidade@arenafitpro.com.br</a></p>
+              <p><span className="text-zinc-400">Controladora:</span> {CORPORATE_CONFIG.legalName}</p>
+              <p><span className="text-zinc-400">CNPJ:</span> {CORPORATE_CONFIG.cnpj}</p>
+              <p><span className="text-zinc-400">Sede:</span> {CORPORATE_CONFIG.address.formatted}</p>
+              <p><span className="text-zinc-400">Encarregado (DPO):</span> {CORPORATE_CONFIG.contacts.dpoName}</p>
+              <p><span className="text-zinc-400">E-mail DPO:</span> <a href={`mailto:${CORPORATE_CONFIG.contacts.dpoEmail}`} className="text-white underline">{CORPORATE_CONFIG.contacts.dpoEmail}</a></p>
             </div>
           </div>
 
@@ -210,16 +233,7 @@ export default function PrivacyPage() {
 
       </main>
 
-      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</div>
-        <div className="flex items-center justify-center gap-4 text-zinc-300">
-          <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
-          <span>•</span>
-          <Link href="/vip" className="hover:text-white transition-colors">Lista VIP</Link>
-          <span>•</span>
-          <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
-        </div>
-      </footer>
+      <CorporateFooter />
     </div>
   );
 }

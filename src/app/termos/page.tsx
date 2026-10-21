@@ -18,6 +18,8 @@ import {
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { JsonLd } from '@/components/seo/json-ld';
+import { CorporateFooter } from '@/components/layout/corporate-footer';
+import { CORPORATE_CONFIG } from '@/lib/corporate-config';
 
 const termsBreadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -165,14 +167,29 @@ export default function TermsPage() {
           {/* Seção 4 */}
           <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
-              <Scale className="h-4 w-4 text-white" /> 4. Foro e Legislação Aplicável
+              <Lock className="h-4 w-4 text-white" /> 4. Propriedade Intelectual, Marcas e Direitos Autorais
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+              Todos os elementos da plataforma — incluindo código-fonte, algoritmos de inteligência artificial, interfaces, marcas, logotipo ArenaFitPro, textos e identidade visual — são de propriedade exclusiva da {CORPORATE_CONFIG.legalName} ou licenciados sob estrita conformidade de software livre (MIT para ícones Lucide). É estritamente vedada a engenharia reversa, cópia ou reprodução não autorizada.
+            </p>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              <strong>Conteúdo Enviado pelo Usuário:</strong> As fotos de treinos, refeições e composição corporal pertencem aos respectivos usuários. Ao submetê-las, o usuário concede à plataforma e ao seu treinador contratado uma licença não-exclusiva, estritamente limitada ao período de vigência do desafio e necessária para a validação desportiva e auditoria do ranking da turma.
+            </p>
+          </div>
+
+          {/* Seção 5 */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
+            <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
+              <Scale className="h-4 w-4 text-white" /> 5. Foro e Legislação Aplicável
             </h2>
             <p className="text-xs sm:text-sm text-zinc-300">
-              Estes Termos são regidos pelas leis da República Federativa do Brasil. Para dirimir quaisquer litígios oriundos deste instrumento, fica eleito o Foro da Comarca da sede da empresa administradora.
+              Estes Termos são regidos integralmente pelas leis da República Federativa do Brasil, especialmente pelo Código de Defesa do Consumidor (Lei 8.078/1990), Marco Civil da Internet (Lei 12.965/2014) e LGPD (Lei 13.709/2018). Para dirimir quaisquer controvérsias oriundas deste instrumento, fica eleito o {CORPORATE_CONFIG.legal.disputeForum}.
             </p>
             <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 font-mono text-xs sm:text-sm text-zinc-400 space-y-1">
-              <p>Canal Jurídico: <a href="mailto:juridico@arenafitpro.com.br" className="text-white underline">juridico@arenafitpro.com.br</a></p>
-              <p>Dúvidas Operacionais: <Link href="/ajuda" className="text-white underline">Central de Ajuda</Link></p>
+              <p><span className="text-zinc-500">Razão Social:</span> {CORPORATE_CONFIG.legalName}</p>
+              <p><span className="text-zinc-500">CNPJ:</span> {CORPORATE_CONFIG.cnpj}</p>
+              <p><span className="text-zinc-500">Endereço:</span> {CORPORATE_CONFIG.address.formatted}</p>
+              <p><span className="text-zinc-500">Canal Jurídico:</span> <a href={`mailto:${CORPORATE_CONFIG.contacts.legalEmail}`} className="text-white underline">{CORPORATE_CONFIG.contacts.legalEmail}</a></p>
             </div>
           </div>
 
@@ -180,16 +197,7 @@ export default function TermsPage() {
 
       </main>
 
-      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</div>
-        <div className="flex items-center justify-center gap-4 text-zinc-300">
-          <Link href="/privacidade" className="hover:text-white transition-colors">Política de Privacidade & LGPD</Link>
-          <span>•</span>
-          <Link href="/vip" className="hover:text-white transition-colors">Lista VIP</Link>
-          <span>•</span>
-          <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
-        </div>
-      </footer>
+      <CorporateFooter />
     </div>
   );
 }

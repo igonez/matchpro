@@ -32,7 +32,7 @@ export function SocialProofTestimonials() {
     {
       title: 'Engajamento & Retenção',
       icon: Trophy,
-      badge: '94.8% de Conclusão',
+      badge: 'Foco em Conclusão',
       whatsapp: {
         label: 'No WhatsApp Comum',
         text: 'Metade da turma silencia o grupo no 10º dia. Sem metas visuais, os alunos desistem calados e não voltam para a próxima edição.',

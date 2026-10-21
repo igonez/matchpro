@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { CorporateFooter } from '@/components/layout/corporate-footer';
 import { 
   Zap, 
   ShieldCheck, 
@@ -479,17 +480,8 @@ export default function BetaTestersPage() {
         </div>
       </main>
 
-      {/* Rodapé Oficial */}
-      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-zinc-400 font-mono space-y-2 relative z-10">
-        <div>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</div>
-        <div className="flex items-center justify-center gap-4 text-zinc-300">
-          <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
-          <span>•</span>
-          <Link href="/privacidade" className="hover:text-white transition-colors">Política de Privacidade & LGPD</Link>
-          <span>•</span>
-          <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
-        </div>
-      </footer>
+      {/* Rodapé Oficial Padronizado */}
+      <CorporateFooter />
     </div>
   );
 }

@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     siteName: 'ArenaFitPro',
     title: 'ArenaFitPro — Gamification OS para Desafios Fitness & Split Pix D+0',
     description:
-      'Retenção comprovada de 94.8%. Câmera com IA Nutricional, Pódio ao Vivo e Split Pix D+0 sem bitributação.',
+      'Infraestrutura de gamificação fitness para Personal Trainers e Nutricionistas. Câmera com IA Nutricional, Pódio ao Vivo e Split Pix D+0 no Asaas sem bitributação.',
     images: [
       {
         url: '/app-logo.png',
@@ -84,6 +84,7 @@ export const metadata: Metadata = {
 };
 
 import { JsonLd } from '@/components/seo/json-ld';
+import { CookieConsentBanner } from '@/components/legal/cookie-consent-banner';
 
 export const viewport: Viewport = {
   themeColor: '#000000',
@@ -121,6 +122,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans text-base leading-relaxed">
         <JsonLd data={organizationSchema} />
         {children}
+        <CookieConsentBanner />
       </body>
     </html>
   );

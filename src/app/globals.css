@@ -154,4 +154,33 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* ==========================================================================
+   Acessibilidade & Navegação por Teclado (WCAG 2.2 AA)
+   ========================================================================== */
+
+/* Anel de foco universal de alto contraste para navegação por teclado */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Respeito a usuários com sensibilidade a movimento (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
 

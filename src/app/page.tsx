@@ -10,6 +10,7 @@ import { HeroInteractiveMockup } from '@/components/ui/hero-interactive-mockup';
 import { SocialProofTestimonials } from '@/components/ui/social-proof-testimonials';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import { JsonLd } from '@/components/seo/json-ld';
+import { CorporateFooter } from '@/components/layout/corporate-footer';
 import {
   Check,
   X,
@@ -136,13 +137,6 @@ export default function HomePage() {
       highPrice: '49.90',
       offerCount: 2,
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: '312',
-      bestRating: '5',
-      worstRating: '1',
-    },
     featureList: [
       'Pódio e Ranking de Turmas em Tempo Real',
       'Câmera Antifraude com Bloqueio de Galeria',
@@ -218,6 +212,14 @@ export default function HomePage() {
       <JsonLd data={softwareApplicationSchema} />
       <JsonLd data={howToSchema} />
       <JsonLd data={faqSchema} />
+
+      {/* Link de Pulo para Acessibilidade por Teclado (WCAG 2.4.1) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-[100] px-4 py-2 bg-white text-black font-bold text-xs uppercase font-mono rounded-xl shadow-2xl focus:outline-none"
+      >
+        Pular para o conteúdo principal
+      </a>
 
       {/* 1. Background 3D com Partículas Monocromáticas */}
       <Monochrome3DBackground />
@@ -321,7 +323,7 @@ export default function HomePage() {
       </header>
 
       {/* 3. Hero Section de Alta Conversão com Duplo Foco e Mockup Interativo */}
-      <section className="relative pt-10 sm:pt-16 md:pt-20 pb-14 sm:pb-20 px-4 sm:px-6 perspective-container">
+      <main id="main-content" className="relative pt-10 sm:pt-16 md:pt-20 pb-14 sm:pb-20 px-4 sm:px-6 perspective-container">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center relative z-10">
           
           {/* Estrelas Cromadas 3D Flutuantes */}
@@ -338,7 +340,7 @@ export default function HomePage() {
           <div className="max-w-4xl w-full">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6 shadow-lg">
               <Flame className="w-4 h-4 text-amber-400 animate-pulse shrink-0" />
-              <span>Retenção de 94.8% • Compatível com Qualquer Método</span>
+              <span>Gamificação & Disciplina • Compatível com Qualquer Método</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.08] mb-6 text-balance">
@@ -396,13 +398,13 @@ export default function HomePage() {
           </div>
 
         </div>
-      </section>
+      </main>
 
       {/* 4. Metrics & Social Proof Bar (Grid 2x2 Simétrico no Mobile e 4 Colunas no Desktop) */}
       <section className="px-4 sm:px-6 py-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-white mb-1.5">94.8%</div>
+            <div className="text-3xl sm:text-4xl font-black text-white mb-1.5">Alta</div>
             <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Conclusão de Desafios</div>
           </div>
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
@@ -901,6 +903,10 @@ export default function HomePage() {
               </div>
 
             </div>
+
+            <p className="text-[11px] font-mono text-zinc-400 text-center mt-6 max-w-2xl mx-auto leading-relaxed">
+              * Nota de Transparência: Os valores acima são simulações matemáticas estimadas com base nos parâmetros inseridos. A ArenaFitPro é uma plataforma de tecnologia e não assegura metas financeiras ou resultados comerciais mínimos.
+            </p>
           </div>
         </div>
       </section>
@@ -1334,39 +1340,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 13. Rodapé Institucional Monocromático de Alta Fidelidade */}
-      <footer className="border-t border-white/[0.08] bg-black py-14 sm:py-16 px-4 sm:px-6 relative z-10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 text-xs sm:text-sm text-zinc-400 font-mono">
-          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-            <div className="flex items-center gap-2.5">
-              <div className="h-7 w-7 rounded-lg bg-white/10 flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
-                </svg>
-              </div>
-              <span className="font-extrabold text-white text-base">ArenaFitPro</span>
-            </div>
-            <span>© {new Date().getFullYear()} ArenaFitPro Ltda. Todos os direitos reservados.</span>
-          </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-            <a href="#fluxo" className="hover:text-white transition-colors">Como Funciona</a>
-            <a href="#mockup" className="hover:text-white transition-colors">O App</a>
-            <a href="#gamificacao" className="hover:text-white transition-colors">Tecnologia</a>
-            <a href="#planos" className="hover:text-white transition-colors">Planos</a>
-            <Link href="/ajuda" className="hover:text-white transition-colors">Central de Ajuda</Link>
-            <Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link>
-            <Link href="/privacidade" className="hover:text-white transition-colors">Privacidade & LGPD</Link>
-            <button
-              onClick={() => setIsBetaClosedModalOpen(true)}
-              className="text-white font-bold hover:underline transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <Lock className="w-3.5 h-3.5 text-zinc-400" />
-              <span>Área de Acesso</span>
-            </button>
-          </div>
-        </div>
-      </footer>
+      {/* 13. Rodapé Institucional e Legal Completo */}
+      <CorporateFooter />
 
       {/* Modal de Aviso de Fase de Testes Fechada */}
       {isBetaClosedModalOpen && (

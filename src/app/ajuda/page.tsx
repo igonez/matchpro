@@ -6,6 +6,7 @@ import { ArrowLeft, HelpCircle, ChevronDown, ChevronUp, Search, MessageCircle } 
 import { Input } from '@/components/ui/input';
 import { JsonLd } from '@/components/seo/json-ld';
 import { CONTACT_CONFIG } from '@/lib/constants';
+import { CorporateFooter } from '@/components/layout/corporate-footer';
 
 const FAQ_ITEMS = [
   {
@@ -165,6 +166,9 @@ export default function HelpFaqPage() {
             <MessageCircle className="h-4 w-4" /> Suporte WhatsApp
           </a>
         </div>
+      </div>
+      <div className="mt-16 -mx-6 sm:-mx-12">
+        <CorporateFooter />
       </div>
     </div>
   );

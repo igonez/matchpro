@@ -56,23 +56,51 @@ export async function analyzeSubmissionPhoto({
   caption?: string;
 }) {
   try {
-    const prompt = `Você é o sistema de Inteligência Artificial do ArenaFitPro, especializado em nutrição e alta performance esportiva.
-Analise a imagem da submissão do aluno e retorne um parecer técnico em português em formato JSON puro.
-Categoria informada pelo aluno: ${category}
+    const isMealCategory = category === 'refeicao' || String(category).toLowerCase().includes('refei');
+
+    const prompt = `Você é o sistema de Inteligência Artificial do ArenaFitPro, especializado em nutrição esportiva e análise visual de refeições e treinos.
+Analise a imagem da submissão do aluno e retorne um parecer técnico estritamente em português em formato JSON puro, sem blocos de markdown adicionais.
+
+Categoria esperada da missão: ${category}
 Legenda enviada pelo aluno: "${caption || 'Sem legenda'}"
 
-Retorne estritamente um objeto JSON com esta estrutura:
+DIRETRIZES PARA FOTOS DE REFEIÇÃO / NUTRIÇÃO:
+1. Primeiro verifique com rigor se a imagem contém DE FATO alimentos, prato de comida, lanche, shake ou bebida nutricional.
+2. Se a imagem NÃO for comida (ex: foto de celular, tela de computador, espelho, pessoa, academia, parede, animal ou objeto não alimentar):
+   - "isValid": false
+   - "isFood": false
+   - "summary": "Nenhum alimento identificado nesta imagem."
+   - "estimatedMacros": null
+   - "feedback": "A foto capturada não contém alimentos. Aponte a câmera para o seu prato para calcular os nutrientes."
+   - "complianceScore": 0
+3. Se a imagem FOR comida ou refeição real:
+   - "isValid": true
+   - "isFood": true
+   - "summary": descreva brevemente os alimentos identificados de forma factual
+   - "estimatedMacros": calcule a estimativa calórica e de macronutrientes com base estritamente no volume visível no prato:
+     - "calories": valor calculado em kcal (ex: "520 kcal")
+     - "protein": valor calculado em gramas (ex: "38g proteico")
+     - "carbs": valor calculado em gramas (ex: "45g carbo")
+     - "fats": valor calculado em gramas (ex: "14g gordura")
+   - "feedback": breve feedback motivacional e técnico sobre a qualidade do prato
+   - "complianceScore": nota de 60 a 100 baseada no equilíbrio nutricional
+
+DIRETRIZES PARA TREINO / CARDIO / HÁBITOS:
+- Verifique se a foto mostra exercício, aparelho, ambiente esportivo ou comprovante. Se não for refeição, "estimatedMacros" deve ser null.
+
+Retorne estritamente este JSON:
 {
-  "isValid": true ou false (se a imagem corresponde de fato a um treino, cardio, prato saudável ou hábito físico),
-  "summary": "Resumo do que foi identificado na foto em 1 frase curta",
+  "isValid": true ou false,
+  "isFood": true ou false,
+  "summary": "Descrição clara do que está na imagem",
   "estimatedMacros": {
-    "calories": "ex: 450 kcal ou N/A para treinos",
-    "protein": "ex: 35g ou N/A",
-    "carbs": "ex: 40g ou N/A",
-    "fats": "ex: 12g ou N/A"
-  },
-  "feedback": "Mensagem motivacional curta e direta ao atleta (máximo 2 linhas)",
-  "complianceScore": número de 0 a 100 indicando o nível de adequação ao desafio
+    "calories": "X kcal",
+    "protein": "Xg proteico",
+    "carbs": "Xg carbo",
+    "fats": "Xg gordura"
+  } ou null,
+  "feedback": "Comentário curto",
+  "complianceScore": número de 0 a 100
 }`;
 
     let base64Data: string;
@@ -171,8 +199,9 @@ Retorne estritamente um objeto JSON com esta estrutura:
     console.error('Erro na análise com Gemini:', error?.message || error);
     return {
       isValid: false,
+      isFood: false,
       summary: 'Não foi possível analisar a imagem automaticamente.',
-      estimatedMacros: { calories: 'N/A', protein: 'N/A', carbs: 'N/A', fats: 'N/A' },
+      estimatedMacros: null,
       feedback: 'A imagem foi registrada e aguarda validação do treinador.',
       complianceScore: 0,
       requiresManualReview: true,

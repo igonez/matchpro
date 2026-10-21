@@ -198,31 +198,52 @@ function CameraCaptureContent() {
           });
           const data = await res.json();
           if (data?.analysis) {
+            const isValidFood = Boolean(
+              data.analysis.isValid && 
+              data.analysis.isFood !== false && 
+              data.analysis.estimatedMacros &&
+              data.analysis.estimatedMacros.calories &&
+              data.analysis.estimatedMacros.calories !== 'N/A'
+            );
+
             setAiAnalysisResult({
-              isValid: data.analysis.isValid !== false,
-              complianceScore: data.analysis.complianceScore ?? 100,
+              isValid: isValidFood,
+              complianceScore: data.analysis.complianceScore ?? (isValidFood ? 100 : 0),
             });
-            if (data.analysis.estimatedMacros) {
-              const rawCal = data.analysis.estimatedMacros.calories;
-              const hasCal = rawCal && rawCal !== 'N/A';
+
+            if (isValidFood) {
               setAiMacros({
-                calories: hasCal ? rawCal : '~450 kcal',
-                protein: (data.analysis.estimatedMacros.protein && data.analysis.estimatedMacros.protein !== 'N/A') ? data.analysis.estimatedMacros.protein : '~32g proteico',
-                carbs: (data.analysis.estimatedMacros.carbs && data.analysis.estimatedMacros.carbs !== 'N/A') ? data.analysis.estimatedMacros.carbs : '~42g carbo',
-                fats: (data.analysis.estimatedMacros.fats && data.analysis.estimatedMacros.fats !== 'N/A') ? data.analysis.estimatedMacros.fats : '~12g lipídios',
-                summary: data.analysis.summary || 'Prato balanceado analisado pela IA.',
-                feedback: data.analysis.feedback,
+                calories: data.analysis.estimatedMacros.calories,
+                protein: data.analysis.estimatedMacros.protein || '-',
+                carbs: data.analysis.estimatedMacros.carbs || '-',
+                fats: data.analysis.estimatedMacros.fats || '-',
+                summary: data.analysis.summary || 'Prato balanceado identificado pela IA.',
+                feedback: data.analysis.feedback || 'Excelente refeição para sua meta.',
+              });
+            } else {
+              setAiMacros({
+                calories: 'Não identificado',
+                protein: '-',
+                carbs: '-',
+                fats: '-',
+                summary: data.analysis.summary || 'A foto capturada não contém alimentos identificáveis.',
+                feedback: data.analysis.feedback || 'Aponte a câmera diretamente para o prato da sua refeição.',
               });
             }
           }
         } catch (aiErr) {
-          console.warn('Estimativa de calorias IA em fallback local:', aiErr);
+          console.warn('Erro na análise multimodal de imagem:', aiErr);
+          setAiAnalysisResult({
+            isValid: false,
+            complianceScore: 0,
+          });
           setAiMacros({
-            calories: '~450 kcal',
-            protein: '~32g proteico',
-            carbs: '~42g carboidratos',
-            fats: '~12g lipídios',
-            summary: 'Prato de refeição saudável identificado pela IA.',
+            calories: 'Não identificado',
+            protein: '-',
+            carbs: '-',
+            fats: '-',
+            summary: 'Não foi possível analisar os alimentos nesta foto.',
+            feedback: 'Você pode enviar o registro para avaliação do seu treinador.',
           });
         } finally {
           setAnalyzingAi(false);
@@ -277,7 +298,7 @@ function CameraCaptureContent() {
 
       // Formatar legenda com tempo, macros de IA e timestamp
       let finalCaption = caption.trim() || '';
-      if (aiMacros && aiMacros.calories !== 'N/A') {
+      if (aiMacros && aiAnalysisResult?.isValid && aiMacros.calories && aiMacros.calories !== 'Não identificado' && aiMacros.calories !== 'N/A') {
         const macroTag = `[IA: ${aiMacros.calories} • P:${aiMacros.protein} C:${aiMacros.carbs} G:${aiMacros.fats}]`;
         finalCaption = finalCaption ? `${macroTag} ${finalCaption}` : macroTag;
       }
@@ -401,17 +422,24 @@ function CameraCaptureContent() {
 
             {/* Banner Superior da IA Nutricional (Item 13) */}
             {(analyzingAi || aiMacros) && (
-              <div className="absolute top-3 inset-x-3 p-3 rounded-2xl bg-zinc-950/90 backdrop-blur-xl border border-white/20 text-xs font-mono space-y-1 z-20">
+              <div
+                className={`absolute top-3 inset-x-3 p-3 rounded-2xl backdrop-blur-xl border text-xs font-mono space-y-1.5 z-20 ${
+                  aiAnalysisResult && !aiAnalysisResult.isValid
+                    ? 'bg-zinc-950/95 border-amber-500/30'
+                    : 'bg-zinc-950/90 border-white/20'
+                }`}
+              >
                 {analyzingAi ? (
                   <div className="flex items-center gap-2 text-zinc-300">
                     <span className="h-2 w-2 rounded-full bg-white animate-ping" />
                     <span className="text-[11px] font-bold">IA MULTIMODAL ESCANEANDO PRATO...</span>
                   </div>
-                ) : aiMacros ? (
+                ) : aiMacros && aiAnalysisResult?.isValid ? (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                        MEDIÇÃO CALÓRICA IA
+                      <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                        REFEIÇÃO IDENTIFICADA
                       </span>
                       <span className="text-xs font-black text-white bg-white/10 px-2 py-0.5 rounded-md">
                         {aiMacros.calories}
@@ -436,6 +464,15 @@ function CameraCaptureContent() {
                         {aiMacros.summary}
                       </p>
                     )}
+                  </div>
+                ) : aiMacros ? (
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-amber-300 font-bold text-[11px]">
+                      <span>⚠️ NENHUM ALIMENTO IDENTIFICADO</span>
+                    </div>
+                    <p className="text-[10px] text-zinc-300 font-sans leading-relaxed">
+                      {aiMacros.summary || 'Aponte a câmera diretamente para o prato de comida para estimar calorias e macros.'}
+                    </p>
                   </div>
                 ) : null}
               </div>

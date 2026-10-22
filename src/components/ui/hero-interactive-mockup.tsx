@@ -248,7 +248,7 @@ export function HeroInteractiveMockup() {
                         <span>Divisão no Nível Bancário</span>
                       </div>
                       <p className="text-xs text-zinc-300 leading-relaxed">
-                        No plano Pro, 100% do valor da inscrição vai para a sua conta. Sem retenções na plataforma.
+                        No plano Pro, 100% da inscrição vai para sua conta via Pix D+0 (deduzida apenas a tarifa bancária Asaas, a partir de R$ 0,99 fixo). Sem riscos de chargeback.
                       </p>
                     </div>
 

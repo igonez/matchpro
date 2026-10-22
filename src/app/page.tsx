@@ -87,7 +87,15 @@ export default function HomePage() {
     },
     {
       q: 'Como funciona o recebimento das inscrições dos alunos e o Split Pix D+0?',
-      a: 'A ArenaFitPro é integrada nativamente à infraestrutura bancária do Asaas. Quando seu aluno paga a inscrição por Pix Copia e Cola ou QR Code, o dinheiro é liberado imediatamente (D+0) com divisão automática no nível bancário: a taxa da plataforma é separada na hora e o seu lucro líquido cai direto na sua conta bancária sem intermediários e com proteção total contra bitributação.',
+      a: 'A ArenaFitPro é integrada nativamente à infraestrutura bancária do Asaas. Quando seu aluno paga a inscrição por Pix Copia e Cola ou QR Code, o dinheiro é liberado imediatamente (D+0) com divisão automática no nível bancário: a comissão da plataforma (0% no Pro ou 15% no Starter) é separada na hora e o seu lucro líquido cai direto na sua carteira sem travas de 14 ou 30 dias.',
+    },
+    {
+      q: 'Por que o aluno paga exclusivamente via Pix? Existe risco de estorno (chargeback)?',
+      a: 'O Pix exclusivo é uma decisão de segurança máxima para o Personal Trainer. No cartão de crédito, o aluno pode participar do desafio, consumir seus treinos e depois solicitar estorno no banco (chargeback), deixando o treinador no prejuízo com multas financeiras. No Pix, o pagamento é 100% à vista, irreversível, sem risco de golpe de chargeback, com liberação em 3 segundos e taxa fixa muito mais baixa do que as porcentagens abusivas de maquininhas e operadoras de cartão.',
+    },
+    {
+      q: 'Quais são as taxas bancárias exatas envolvidas no Pix e no Cartão?',
+      a: 'Transparência radical: no Plano Pro, a taxa da ArenaFitPro é ZERO (0%). A única dedução na venda de um desafio é a tarifa bancária de liquidação Pix do Asaas (a partir de R$ 0,99 fixo promocional nos primeiros meses e R$ 1,99 fixo padrão, sem percentuais abusivos e sem taxa de antecipação). Já a assinatura mensal do personal para uso da plataforma (R$ 49,90/mês no Pro) pode ser paga tanto via Pix quanto no Cartão de Crédito com renovação automática.',
     },
     {
       q: 'O que é a proteção contra bitributação no Split bancário?',
@@ -572,18 +580,24 @@ export default function HomePage() {
                   Checkout Pix com Split Automático
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Sem intermediários. Quando o aluno se inscreve, sua comissão vai direto para a sua subconta. Zero bitributação e saque instantâneo para sua chave Pix.
+                  Sem intermediários e sem riscos de estorno. O aluno paga via Pix Copia e Cola ou QR Code, e a sua comissão cai na hora na sua subconta. Zero bitributação, zero chargebacks de cartão e saque imediato D+0.
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-black/60 border border-white/10 mt-6 flex items-center justify-between gap-2">
-                <div className="text-xs sm:text-sm">
-                  <span className="text-zinc-400 block text-xs">Inscrição recebida</span>
-                  <span className="text-white font-bold font-mono">R$ 97,00 (Pix)</span>
+              <div className="p-4 rounded-2xl bg-black/60 border border-white/10 mt-6 space-y-2">
+                <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
+                  <div>
+                    <span className="text-zinc-400 block text-xs">Inscrição de aluno</span>
+                    <span className="text-white font-bold font-mono">R$ 97,00 (Pix D+0)</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-zinc-400 block text-xs">Seu líquido (Plano Pro)</span>
+                    <span className="text-emerald-400 font-bold font-mono">R$ 96,01 (100% seu)</span>
+                  </div>
                 </div>
-                <div className="text-right text-xs sm:text-sm">
-                  <span className="text-zinc-400 block text-xs">Seu líquido</span>
-                  <span className="text-emerald-400 font-bold font-mono">R$ 89,24 (Livre)</span>
+                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                  <span>Tarifa bancária Asaas: a partir de R$ 0,99 fixo</span>
+                  <span className="text-emerald-400">Taxa Plataforma: 0%</span>
                 </div>
               </div>
             </SpotlightCard3D>
@@ -904,9 +918,19 @@ export default function HomePage() {
 
             </div>
 
-            <p className="text-[11px] font-mono text-zinc-400 text-center mt-6 max-w-2xl mx-auto leading-relaxed">
-              * Nota de Transparência: Os valores acima são simulações matemáticas estimadas com base nos parâmetros inseridos. A ArenaFitPro é uma plataforma de tecnologia e não assegura metas financeiras ou resultados comerciais mínimos.
-            </p>
+            <div className="mt-6 pt-4 border-t border-white/10 max-w-3xl mx-auto space-y-2 text-center font-mono">
+              <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-zinc-300">
+                <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">
+                  <Zap className="w-3.5 h-3.5" /> Pix Instantâneo D+0 (Sem Risco de Chargeback)
+                </span>
+                <span className="inline-flex items-center gap-1.5 bg-white/5 text-zinc-300 px-3 py-1 rounded-full border border-white/10">
+                  <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" /> Tarifa Bancária Asaas: a partir de R$ 0,99 fixo
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
+                * Transparência Financeira: No plano Pro, a taxa da ArenaFitPro é 0% (você retém 100% do valor da inscrição deduzida apenas a tarifa bancária fixa do gateway de pagamento Asaas). Os alunos pagam via Pix à vista, eliminando estornos e inadimplência.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -983,6 +1007,9 @@ export default function HomePage() {
                   <div className="text-xs sm:text-sm font-mono text-zinc-300 mt-2.5 flex items-center gap-1.5">
                     <Percent className="w-4 h-4 text-zinc-300 shrink-0" />
                     <span>Taxa de split: <strong className="text-white">15% sobre inscrições</strong></span>
+                  </div>
+                  <div className="text-[11px] font-mono text-zinc-400 mt-1">
+                    + tarifa bancária Asaas por Pix recebido D+0
                   </div>
                 </div>
 
@@ -1096,6 +1123,9 @@ export default function HomePage() {
                   <div className="text-xs sm:text-sm font-mono text-emerald-400 mt-2.5 flex items-center gap-1.5 font-bold">
                     <Percent className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>Taxa ZERO da plataforma: 0% (100% do lucro é seu!)</span>
+                  </div>
+                  <div className="text-[11px] font-mono text-zinc-400 mt-1">
+                    Deduzida apenas a tarifa bancária Asaas (a partir de R$ 0,99 fixo/Pix D+0)
                   </div>
                 </div>
 
@@ -1212,8 +1242,23 @@ export default function HomePage() {
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Saque Pix D+0 no Asaas</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓ Imediato</td>
+                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Imediato</td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Cobrança de Alunos em Desafios</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono">Pix D+0 (Anti-Chargeback)</td>
+                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">Pix D+0 (Anti-Chargeback)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Tarifa Bancária do Gateway (Asaas)</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-400 font-mono text-xs">Tarifa fixa Asaas (a partir de R$ 0,99/Pix)</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono text-xs bg-white/5">Tarifa fixa Asaas (a partir de R$ 0,99/Pix)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Forma de Pagamento da Assinatura Pro</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-500">Gratuito (R$ 0)</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">Pix ou Cartão de Crédito</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Squads & Times Cooperativos</td>

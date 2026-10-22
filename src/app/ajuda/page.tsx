@@ -18,6 +18,14 @@ const FAQ_ITEMS = [
     a: 'Os pagamentos feitos pelos alunos via Pix são processados com split automático na API do Asaas. O saldo líquido fica disponível imediatamente na Central Financeira para saque via Pix D+0 direto na conta bancária cadastrada.',
   },
   {
+    q: 'Por que as inscrições de alunos são cobradas apenas via Pix?',
+    a: 'O Pix exclusivo é uma proteção essencial para o Personal Trainer: o aluno recebe aprovação instantânea em 3 segundos e o treinador fica 100% livre do risco de chargeback (o golpe em que um aluno consome o desafio no cartão de crédito e depois contesta a compra no banco, gerando prejuízo e multas). No Pix, a liquidação é definitiva, segura e imediata.',
+  },
+  {
+    q: 'Quais são as taxas da plataforma e a tarifa bancária do Pix?',
+    a: 'No Plano Pro, a ArenaFitPro tem taxa ZERO (0% de comissão da plataforma). No Starter, a taxa é de 15%. Em ambos os planos, a única dedução na venda do desafio é a tarifa bancária de liquidação Pix do Asaas (a partir de R$ 0,99 fixo promocional nos primeiros meses e R$ 1,99 fixo padrão, sem percentuais abusivos e sem taxa de antecipação). Já a mensalidade Pro do treinador pode ser paga via Pix ou Cartão de Crédito.',
+  },
+  {
     q: 'O que é a medição calórica por Inteligência Artificial?',
     a: 'Ao fotografar o seu prato na missão de refeição, a IA multimodal analisa os alimentos visíveis e calcula uma estimativa imediata de calorias (kcal) e distribuição aproximada de macronutrientes (proteínas, carboidratos e gorduras).',
   },

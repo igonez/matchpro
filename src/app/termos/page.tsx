@@ -158,8 +158,8 @@ export default function TermsPage() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
-                <strong className="text-white text-xs sm:text-sm block">Repasse D+0 a Treinadores:</strong>
-                <p className="text-xs text-zinc-400">Os valores líquidos arrecadados são repassados ao treinador através do split bancário automático via Asaas, com retenção exclusiva da taxa tecnológica acordada no plano.</p>
+                <strong className="text-white text-xs sm:text-sm block">Repasse D+0 a Treinadores & Meios de Pagamento:</strong>
+                <p className="text-xs text-zinc-400">As inscrições dos alunos em desafios são processadas à vista via Pix Copia & Cola ou QR Code dinâmico com liquidação bancária instantânea (D+0), eliminando riscos de inadimplência e contestações (chargebacks). Os valores líquidos são transferidos automaticamente à subconta do treinador no Asaas, deduzida a taxa da plataforma (0% no Pro e 15% no Starter) e a tarifa bancária de liquidação Pix fixada pelo Asaas. A assinatura de planos por parte do treinador pode ser realizada via Pix ou Cartão de Crédito.</p>
               </div>
             </div>
           </div>

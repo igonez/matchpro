@@ -561,16 +561,31 @@ export default function FinanceDashboardPage() {
             </div>
           </div>
 
-          {/* Dica importante esclarecendo a necessidade de conta no Asaas */}
+          {/* Dica importante esclarecendo a necessidade de conta no Asaas e regras de pagamento */}
           <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start gap-3">
-            <Info className="w-5 h-5 text-zinc-300 shrink-0 mt-0.5" />
-            <div className="text-xs text-zinc-300 space-y-1">
-              <p className="font-semibold text-white">
-                Como funciona o Split e a Subconta do Personal?
+            <Info className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="text-xs text-zinc-300 space-y-2">
+              <p className="font-semibold text-white flex items-center gap-2">
+                <span>Como funciona o Split, Subconta e Liquidação Pix?</span>
+                <Badge className="bg-emerald-500/15 text-emerald-400 border-0 text-[10px] font-mono">D+0 IMEDIATO</Badge>
               </p>
               <p className="text-zinc-400 leading-relaxed">
-                Ao preencher seus dados fiscais e de endereço abaixo, nossa integração cria automaticamente a sua subconta no Asaas. Quando um aluno compra seu desafio, o valor é dividido (Split) automaticamente e cai diretamente na sua carteira. Você não precisa criar conta manualmente no site do Asaas!
+                Ao preencher seus dados abaixo, nossa integração cria automaticamente a sua subconta no Asaas. Quando um aluno adquire seu desafio, o valor é dividido (Split) instantaneamente no nível bancário e cai na sua carteira. Você não precisa criar conta manualmente no site do Asaas!
               </p>
+              <div className="pt-2 border-t border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+                <div className="p-2.5 rounded-lg bg-black/50 border border-white/5 space-y-0.5">
+                  <span className="text-white font-bold block">Inscrições de Alunos (Pix D+0)</span>
+                  <span className="text-zinc-400 block">
+                    Alunos pagam exclusivamente via Pix. O valor é liquidado em segundos e você fica 100% protegido contra fraudes e contestações (chargebacks) de cartão.
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-black/50 border border-white/5 space-y-0.5">
+                  <span className="text-white font-bold block">Tarifa Bancária Asaas Transparente</span>
+                  <span className="text-zinc-400 block">
+                    No Pro, a ArenaFitPro cobra 0% de taxa. É deduzida apenas a tarifa bancária fixa do gateway Asaas (a partir de R$ 0,99 fixo/Pix liquidado), sem taxas de antecipação.
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 

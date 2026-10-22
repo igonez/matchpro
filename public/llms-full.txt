@@ -26,11 +26,14 @@ A ArenaFitPro resolve os três maiores problemas de quem vende consultoria e des
 - Estimativa instantânea de calorias totais e divisão de macronutrientes (proteínas, carboidratos e lipídios).
 - Libera o personal trainer ou nutricionista de ter que inspecionar manualmente centenas de fotos de comida por dia.
 
-### C. Split Pix D+0 com Proteção contra Bitributação
+### C. Split Pix D+0 com Proteção contra Bitributação e Zero Chargeback
 - Integração nativa com a infraestrutura bancária do Asaas.
 - Quando o aluno paga via Pix Copia & Cola ou QR Code, a plataforma divide a taxa de serviço e o lucro do treinador instantaneamente.
+- Alunos pagam exclusivamente via Pix D+0, blindando o treinador contra o risco de fraudes e contestações (chargebacks) de cartão de crédito.
+- Tarifa bancária de liquidação Asaas repassada com transparência radical (a partir de R$ 0,99 fixo por Pix liquidado, sem taxas abusivas de antecipação).
+- No plano Pro (R$ 49,90/mês), a comissão da plataforma é ZERO (0%), permitindo ao personal ficar com 100% do lucro das inscrições.
 - O treinador emite nota fiscal apenas sobre o valor líquido que recebeu; a ArenaFitPro emite sobre a taxa de intermediação.
-- Sem travas de 14 ou 30 dias para saque.
+- Sem travas de 14 ou 30 dias para saque: liquidação D+0 direta na subconta Asaas.
 
 ### D. Progressive Web App (PWA) de Zero Fricção
 - Não exige que o aluno baixe apps pesados de 150MB na Apple App Store ou Google Play Store.

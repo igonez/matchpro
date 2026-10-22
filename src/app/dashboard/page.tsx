@@ -251,7 +251,10 @@ export default function DashboardOverviewPage() {
       )}
 
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+      <div 
+        data-tour="coach-welcome-header"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10"
+      >
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
@@ -268,7 +271,10 @@ export default function DashboardOverviewPage() {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
           {/* 1. Botão + Novo Desafio em PRIMEIRO, fundo claro, MAIOR que os outros 2, com hover destacado */}
           <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-white text-black hover:bg-zinc-100 rounded-2xl shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-white">
+            <button 
+              data-tour="create-challenge-cta"
+              className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-white text-black hover:bg-zinc-100 rounded-2xl shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-white"
+            >
               <span className="text-base leading-none font-black text-black group-hover:rotate-90 transition-transform duration-200">+</span>
               <span>Novo Desafio</span>
             </button>

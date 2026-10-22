@@ -513,7 +513,10 @@ export default function FiscalizacaoPage() {
         </div>
       ) : viewMode === 'swipe' ? (
         /* ==================== MODO SWIPE (MINIMALISTA) ==================== */
-        <div className="relative z-10 max-w-lg mx-auto w-full pt-2">
+        <div 
+          data-tour="audit-swipe-container"
+          className="relative z-10 max-w-lg mx-auto w-full pt-2"
+        >
           {/* Telemetria do Deck */}
           <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-zinc-500">
             <span>

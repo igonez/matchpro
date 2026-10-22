@@ -737,7 +737,10 @@ function StudentMissionsContent() {
                 Em andamento
               </span>
             ) : (
-              <span className="px-3 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-xs group-hover:bg-zinc-200 transition-colors shadow-sm flex items-center gap-1">
+              <span 
+                data-tour="student-checkin-btn"
+                className="px-3 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-xs group-hover:bg-zinc-200 transition-colors shadow-sm flex items-center gap-1"
+              >
                 {isSimpleClick ? (
                   <>
                     <Check className="w-3 h-3" /> Check-in
@@ -1175,7 +1178,10 @@ function StudentMissionsContent() {
           </p>
         </div>
       ) : (
-        <div className="space-y-5 relative z-10">
+        <div 
+          data-tour="student-missions-list"
+          className="space-y-5 relative z-10"
+        >
           {categoryBlocks.map((block) => {
             if (selectedCategory !== 'all' && selectedCategory !== block.key) return null;
 

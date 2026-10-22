@@ -242,7 +242,10 @@ export default function NewChallengePage() {
         </div>
       </div>
 
-      <Card className="border-zinc-800 bg-zinc-900/40">
+      <Card 
+        data-tour="challenge-form-card"
+        className="border-zinc-800 bg-zinc-900/40"
+      >
         <CardHeader>
           <CardTitle className="text-lg">Dados do Desafio</CardTitle>
           <CardDescription className="text-xs">

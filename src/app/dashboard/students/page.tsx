@@ -260,9 +260,10 @@ export default function DashboardFinanceAndStudentsPage() {
           </Link>
 
           <Button
+            data-tour="students-invite-card"
             size="sm"
             onClick={handleCopyInviteLink}
-            className="rounded-xl h-10 px-4 text-xs font-semibold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5"
+            className="rounded-xl h-10 px-4 text-xs font-semibold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 cursor-pointer"
             title="Copiar link de convite para matrícula via app"
           >
             <Copy className="h-4 w-4 mr-1.5" /> Copiar Link de Convite

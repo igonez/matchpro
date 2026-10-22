@@ -293,7 +293,10 @@ function CoachLeaderboardContent() {
       </div>
 
       {/* BLOCO 1: 4 Cards de Telemetria da Turma */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 relative z-10">
+      <div 
+        data-tour="leaderboard-podium-card"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 relative z-10"
+      >
         <SpotlightCard3D className="p-4">
           <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
             <span>COMPETIDORES</span>
@@ -346,7 +349,10 @@ function CoachLeaderboardContent() {
 
       {/* BLOCO 2: PÓDIO OLÍMPICO 3D TOP 3 */}
       {standings.length > 0 && (
-        <div className="relative z-10 p-6 sm:p-8 rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-950 to-zinc-950 overflow-hidden shadow-2xl">
+        <div 
+          data-tour="leaderboard-podium-card"
+          className="relative z-10 p-6 sm:p-8 rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-950 to-zinc-950 overflow-hidden shadow-2xl"
+        >
           <div className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-6 border-b border-white/[0.08] relative z-10">

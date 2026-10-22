@@ -24,12 +24,15 @@ import {
   Sparkles
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { triggerCoachTour } from '@/components/dashboard/coach-onboarding-tour';
+import { useWalkthrough } from '@/components/ui/walkthrough-spotlight';
+import { COACH_WALKTHROUGH_STEPS } from '@/lib/walkthrough/coach-tour-steps';
+import { COACH_TOUR_STORAGE_KEY } from '@/components/dashboard/coach-tour-trigger';
 
 export function DashboardHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { startTour } = useWalkthrough();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coachProfile, setCoachProfile] = useState<{ fullName: string; avatarUrl: string | null } | null>(null);
 
@@ -158,7 +161,7 @@ export function DashboardHeader() {
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
-            onClick={triggerCoachTour}
+            onClick={() => startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY)}
             className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-300 hover:text-white hover:bg-emerald-500/20 transition-all cursor-pointer"
             title="Abrir o tour guiado do app"
           >
@@ -316,7 +319,7 @@ export function DashboardHeader() {
                 type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  triggerCoachTour();
+                  startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY);
                 }}
                 className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-emerald-300 hover:text-white bg-emerald-500/10 border border-emerald-500/20 active:scale-[0.98] transition-all cursor-pointer"
               >

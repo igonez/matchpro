@@ -1,7 +1,8 @@
 import React from 'react';
 import { DashboardSidebar } from '@/components/dashboard/sidebar';
 import { DashboardHeader } from '@/components/dashboard/header';
-import { CoachOnboardingTour } from '@/components/dashboard/coach-onboarding-tour';
+import { WalkthroughProvider } from '@/components/ui/walkthrough-spotlight';
+import { CoachTourTrigger } from '@/components/dashboard/coach-tour-trigger';
 
 export default function DashboardLayout({
   children,
@@ -9,15 +10,17 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-zinc-950 text-zinc-100 selection:bg-white selection:text-black">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <DashboardHeader />
-        <main className="flex-1 p-4 sm:p-6 md:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto">
-          {children}
-        </main>
+    <WalkthroughProvider>
+      <div className="flex min-h-screen bg-zinc-950 text-zinc-100 selection:bg-white selection:text-black">
+        <DashboardSidebar />
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+          <DashboardHeader />
+          <main className="flex-1 p-4 sm:p-6 md:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto">
+            {children}
+          </main>
+        </div>
+        <CoachTourTrigger />
       </div>
-      <CoachOnboardingTour />
-    </div>
+    </WalkthroughProvider>
   );
 }

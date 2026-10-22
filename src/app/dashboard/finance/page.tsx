@@ -472,6 +472,7 @@ export default function FinanceDashboardPage() {
             <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
               <span className="text-[11px] text-zinc-500 font-mono">Pix Imediato (D+0)</span>
               <Button 
+                data-tour="finance-withdraw-btn"
                 size="sm" 
                 onClick={() => setWithdrawModalOpen(true)}
                 className="h-7 text-xs bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-3"
@@ -532,7 +533,10 @@ export default function FinanceDashboardPage() {
         </div>
 
         {/* Bloco de Configuração de Recebimento (CPF/CNPJ e Chave Pix) */}
-        <SpotlightCard3D className="p-6 md:p-8 border-white/[0.1] bg-zinc-950/70 backdrop-blur-xl">
+        <SpotlightCard3D 
+          data-tour="finance-account-card"
+          className="p-6 md:p-8 border-white/[0.1] bg-zinc-950/70 backdrop-blur-xl"
+        >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
             <div>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">

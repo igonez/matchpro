@@ -22,12 +22,15 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { isMasterAdmin } from '@/lib/master-auth';
-import { triggerCoachTour } from '@/components/dashboard/coach-onboarding-tour';
+import { useWalkthrough } from '@/components/ui/walkthrough-spotlight';
+import { COACH_WALKTHROUGH_STEPS } from '@/lib/walkthrough/coach-tour-steps';
+import { COACH_TOUR_STORAGE_KEY } from '@/components/dashboard/coach-tour-trigger';
 
 export function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { startTour } = useWalkthrough();
   const [isMaster, setIsMaster] = React.useState(false);
 
   React.useEffect(() => {
@@ -241,7 +244,7 @@ export function DashboardSidebar() {
       <div className="p-5 pt-3 border-t border-white/[0.06] bg-black/40 backdrop-blur-md space-y-1.5 shrink-0">
         <button
           type="button"
-          onClick={triggerCoachTour}
+          onClick={() => startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY)}
           className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl transition-all cursor-pointer"
         >
           <div className="flex items-center gap-2">

@@ -1299,7 +1299,10 @@ function MissionsManagerContent() {
 
                 {/* Edição Rápida de Bônus 100% da Semana */}
                 {editingWeekBonus ? (
-                  <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900 border border-emerald-500/40 shadow-sm animate-in fade-in duration-150">
+                  <div 
+                    data-tour="missions-bonus-card"
+                    className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900 border border-emerald-500/40 shadow-sm animate-in fade-in duration-150"
+                  >
                     <Input
                       type="number"
                       min="0"
@@ -1337,6 +1340,7 @@ function MissionsManagerContent() {
                   </div>
                 ) : (
                   <Button
+                    data-tour="missions-bonus-card"
                     size="sm"
                     variant="outline"
                     onClick={() => {
@@ -1434,7 +1438,10 @@ function MissionsManagerContent() {
           CARREGANDO BLOCOS DA SEMANA {selectedWeekNumber}...
         </div>
       ) : missions.length === 0 ? (
-        <Card className="border-white/10 bg-zinc-950/90 rounded-3xl p-8 text-center space-y-4">
+        <Card 
+          data-tour="missions-list-card"
+          className="border-white/10 bg-zinc-950/90 rounded-3xl p-8 text-center space-y-4"
+        >
           <div className="h-14 w-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-amber-300 flex items-center justify-center mx-auto">
             <Calendar className="w-7 h-7" />
           </div>
@@ -1486,7 +1493,10 @@ function MissionsManagerContent() {
           </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div 
+          data-tour="missions-list-card"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-5"
+        >
           {visualBlocks
             .filter((b) => selectedBlockFilter === 'all' || b.key === selectedBlockFilter)
             .map((block) => {

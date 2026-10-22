@@ -326,7 +326,10 @@ export default function LeaderboardPage() {
       <Monochrome3DBackground />
 
       {/* Header Editorial com Status Ao Vivo */}
-      <div className="flex items-start justify-between pt-2 relative z-10 border-b border-white/[0.08] pb-4">
+      <div 
+        data-tour="student-ranking-card"
+        className="flex items-start justify-between pt-2 relative z-10 border-b border-white/[0.08] pb-4"
+      >
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest text-amber-300 uppercase">
@@ -460,7 +463,10 @@ export default function LeaderboardPage() {
       )}
 
       {/* Seletor Segmented: Individual vs Squads */}
-      <div className="grid grid-cols-2 p-1.5 rounded-2xl bg-zinc-950 border border-white/10 relative z-10">
+      <div 
+        data-tour="student-squad-card"
+        className="grid grid-cols-2 p-1.5 rounded-2xl bg-zinc-950 border border-white/10 relative z-10"
+      >
         <button
           onClick={() => setActiveTab('individual')}
           className={`py-2.5 min-h-[44px] text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${

@@ -24,6 +24,7 @@ import {
   MousePointerClick,
   FileText,
   Target,
+  Trophy,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -138,6 +139,10 @@ function MissionsManagerContent() {
   const [deletingWeek, setDeletingWeek] = useState(false);
   const [editingWeekTitle, setEditingWeekTitle] = useState(false);
   const [newWeekTitle, setNewWeekTitle] = useState('');
+  const [editingWeekBonus, setEditingWeekBonus] = useState(false);
+  const [newWeekBonus, setNewWeekBonus] = useState('20');
+  const [applyBonusToAll, setApplyBonusToAll] = useState(false);
+  const [savingWeekBonus, setSavingWeekBonus] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -864,6 +869,61 @@ function MissionsManagerContent() {
     }
   };
 
+  // Editar Bônus de 100% da Semana
+  const handleSaveWeekBonus = async () => {
+    if (!selectedWeek) {
+      setEditingWeekBonus(false);
+      return;
+    }
+    const parsedBonus = parseInt(newWeekBonus, 10);
+    if (isNaN(parsedBonus) || parsedBonus < 0) {
+      showToast('Informe uma pontuação de bônus válida (0 ou mais XP).');
+      return;
+    }
+
+    setSavingWeekBonus(true);
+    try {
+      const realWeek = await ensureRealWeek(selectedWeek);
+
+      if (applyBonusToAll && selectedChallengeId) {
+        // Atualizar todas as semanas no banco para este desafio
+        const { error } = await supabase
+          .from('challenge_weeks')
+          .update({ bonus_points: parsedBonus })
+          .eq('challenge_id', selectedChallengeId);
+
+        if (error) throw error;
+
+        setWeeks((prev) =>
+          prev.map((w) => ({ ...w, bonus_points: parsedBonus }))
+        );
+        showToast(`Bônus de +${parsedBonus} XP aplicado a TODAS as semanas!`);
+      } else {
+        // Atualizar apenas a semana selecionada
+        const { error } = await supabase
+          .from('challenge_weeks')
+          .update({ bonus_points: parsedBonus })
+          .eq('id', realWeek.id);
+
+        if (error) throw error;
+
+        setWeeks((prev) =>
+          prev.map((w) =>
+            Number(w.week_number) === selectedWeekNumber
+              ? { ...w, bonus_points: parsedBonus }
+              : w
+          )
+        );
+        showToast(`Bônus da Semana ${selectedWeekNumber} atualizado para +${parsedBonus} XP!`);
+      }
+    } catch (err: any) {
+      showToast('Erro ao atualizar bônus da semana: ' + err.message);
+    } finally {
+      setSavingWeekBonus(false);
+      setEditingWeekBonus(false);
+    }
+  };
+
   // Adicionar Nova Semana Extra
   const handleCreateNewWeek = async () => {
     if (!selectedChallengeId) {
@@ -1234,6 +1294,62 @@ function MissionsManagerContent() {
                   >
                     <Edit3 className="w-3.5 h-3.5 mr-1.5" />
                     Renomear
+                  </Button>
+                )}
+
+                {/* Edição Rápida de Bônus 100% da Semana */}
+                {editingWeekBonus ? (
+                  <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900 border border-emerald-500/40 shadow-sm animate-in fade-in duration-150">
+                    <Input
+                      type="number"
+                      min="0"
+                      step="5"
+                      value={newWeekBonus}
+                      onChange={(e) => setNewWeekBonus(e.target.value)}
+                      placeholder="XP"
+                      className="h-8 w-20 text-xs bg-black border-white/20 text-emerald-400 font-mono font-bold rounded-lg px-2"
+                    />
+                    <label className="flex items-center gap-1 text-[10px] font-mono text-zinc-300 pr-1 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={applyBonusToAll}
+                        onChange={(e) => setApplyBonusToAll(e.target.checked)}
+                        className="rounded accent-emerald-400 cursor-pointer"
+                      />
+                      <span>Todas</span>
+                    </label>
+                    <Button
+                      size="sm"
+                      onClick={handleSaveWeekBonus}
+                      disabled={savingWeekBonus}
+                      className="h-8 px-2.5 text-xs bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg cursor-pointer"
+                    >
+                      {savingWeekBonus ? '...' : 'Salvar'}
+                    </Button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingWeekBonus(false)}
+                      className="text-zinc-400 hover:text-white p-1 text-xs cursor-pointer"
+                      title="Cancelar"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setNewWeekBonus(String(selectedWeek?.bonus_points ?? 20));
+                      setApplyBonusToAll(false);
+                      setEditingWeekBonus(true);
+                    }}
+                    className="h-9 px-3 rounded-xl text-xs border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                    title="Editar a quantidade de XP concedida aos alunos que completarem 100% das missões desta semana"
+                  >
+                    <Trophy className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Bônus 100%: +{selectedWeek?.bonus_points || 20} XP</span>
+                    <Edit3 className="w-3 h-3 text-emerald-400 opacity-70" />
                   </Button>
                 )}
 

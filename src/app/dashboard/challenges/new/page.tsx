@@ -17,6 +17,7 @@ export default function NewChallengePage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [price, setPrice] = useState('49.90');
+  const [weeklyBonusPoints, setWeeklyBonusPoints] = useState('20');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -107,11 +108,12 @@ export default function NewChallengePage() {
 
       // Auto-provisionar as 4 semanas padrão e todas as missões ativas do desafio
       try {
+        const bonusVal = Math.max(0, parseInt(weeklyBonusPoints, 10) || 20);
         const defaultWeeks = [
-          { challenge_id: challenge.id, week_number: 1, title: 'Semana 1 • Sprint 1 (Ativação)', bonus_points: 20 },
-          { challenge_id: challenge.id, week_number: 2, title: 'Semana 2 • Sprint 2 (Intensidade)', bonus_points: 20 },
-          { challenge_id: challenge.id, week_number: 3, title: 'Semana 3 • Sprint 3 (Consistência)', bonus_points: 20 },
-          { challenge_id: challenge.id, week_number: 4, title: 'Semana 4 • Sprint 4 (Sprint Final)', bonus_points: 20 },
+          { challenge_id: challenge.id, week_number: 1, title: 'Semana 1 • Sprint 1 (Ativação)', bonus_points: bonusVal },
+          { challenge_id: challenge.id, week_number: 2, title: 'Semana 2 • Sprint 2 (Intensidade)', bonus_points: bonusVal },
+          { challenge_id: challenge.id, week_number: 3, title: 'Semana 3 • Sprint 3 (Consistência)', bonus_points: bonusVal },
+          { challenge_id: challenge.id, week_number: 4, title: 'Semana 4 • Sprint 4 (Sprint Final)', bonus_points: bonusVal },
         ];
         
         const { data: createdWeeks, error: wErr } = await supabase
@@ -307,6 +309,33 @@ export default function NewChallengePage() {
               <p className="text-[11px] text-zinc-500 mt-1">
                 Digite 0.00 para desafio gratuito entre seus alunos.
               </p>
+            </div>
+
+            {/* Gamificação: Bônus por Semana 100% Concluída */}
+            <div className="p-3.5 rounded-2xl border border-white/10 bg-zinc-950/60 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <Trophy className="w-4 h-4 text-emerald-400" />
+                  Bônus por Semana 100% Concluída
+                </label>
+                <span className="text-xs font-mono text-emerald-400 font-bold">
+                  +{weeklyBonusPoints || 0} XP por semana
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
+                Pontuação extra que o aluno conquista ao completar 100% das missões da semana. Você também poderá calibrar cada semana individualmente na tela de Missões.
+              </p>
+              <div className="relative">
+                <Input
+                  type="number"
+                  min="0"
+                  step="5"
+                  placeholder="20"
+                  value={weeklyBonusPoints}
+                  onChange={(e) => setWeeklyBonusPoints(e.target.value)}
+                  className="font-mono text-sm"
+                />
+              </div>
             </div>
 
             {/* Split / Subconta Warning ou Confirmation */}

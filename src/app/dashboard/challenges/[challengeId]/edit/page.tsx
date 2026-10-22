@@ -382,9 +382,14 @@ export default function EditChallengePage({
                           {week.title}
                         </h3>
                       </div>
-                      <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                        {weekMissions.length} {weekMissions.length === 1 ? 'missão ativa' : 'missões ativas'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">
+                          +{week.bonus_points || 20} XP Bônus
+                        </span>
+                        <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                          {weekMissions.length} {weekMissions.length === 1 ? 'missão ativa' : 'missões ativas'}
+                        </span>
+                      </div>
                     </div>
 
                     {weekMissions.length === 0 ? (

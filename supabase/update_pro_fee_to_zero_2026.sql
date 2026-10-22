@@ -1,37 +1,29 @@
 -- ==============================================================================
--- ArenaFitPro: Migração para Taxa Zero no Plano Pro (0.00 / 0%)
--- Data: Outubro 2026
+-- ArenaFitPro: Atualização de Taxas de Split e Planos (Starter 15% e Pro 0% Taxa Zero)
+-- Execute este script no SQL Editor do seu Supabase Dashboard (https://supabase.com/dashboard)
 -- ==============================================================================
 
--- 1. Atualizar a taxa padrão e atual de todos os profissionais no plano 'pro' para 0.00 (0%)
-UPDATE public.professionals
-SET 
-  platform_fee_percent = 0.00,
-  updated_at = NOW()
-WHERE 
-  subscription_tier = 'pro';
+-- 1. Desativar temporariamente os triggers de usuário para evitar erros de auditoria/sync
+ALTER TABLE public.professionals DISABLE TRIGGER USER;
 
--- 2. Garantir que profissionais no plano 'starter' estejam com 15.00 (15%)
-UPDATE public.professionals
-SET 
-  platform_fee_percent = 15.00,
-  updated_at = NOW()
-WHERE 
-  subscription_tier = 'starter' OR subscription_tier IS NULL;
+-- 2. Garantir o valor padrão da taxa de split para 15% (Starter) para novos cadastros
+ALTER TABLE public.professionals 
+ALTER COLUMN platform_fee_percent SET DEFAULT 15;
 
--- 3. Atualizar a trigger de criação de novos profissionais para atribuir 0% para pro e 15% para starter
-CREATE OR REPLACE FUNCTION public.handle_new_professional_tier()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF NEW.subscription_tier = 'pro' THEN
-    NEW.platform_fee_percent := 0.00;
-  ELSE
-    NEW.subscription_tier := 'starter';
-    NEW.platform_fee_percent := 15.00;
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- 3. Atualizar profissionais no plano Starter para 15%
+UPDATE public.professionals 
+SET platform_fee_percent = 15 
+WHERE plan_tier = 'starter' OR plan_tier IS NULL;
 
--- 4. Notificar conclusão
-COMMENT ON COLUMN public.professionals.platform_fee_percent IS 'Taxa de intermediação da plataforma: 15% no Starter, 0% no Pro (Taxa Zero)';
+-- 4. Atualizar profissionais no plano Pro para Taxa Zero (0%)
+UPDATE public.professionals 
+SET platform_fee_percent = 0 
+WHERE plan_tier = 'pro';
+
+-- 5. Migrar qualquer cadastro residual de 'studio' para 'pro' com Taxa Zero (0%)
+UPDATE public.professionals 
+SET plan_tier = 'pro', platform_fee_percent = 0 
+WHERE plan_tier = 'studio';
+
+-- 6. Reativar os triggers de usuário
+ALTER TABLE public.professionals ENABLE TRIGGER USER;

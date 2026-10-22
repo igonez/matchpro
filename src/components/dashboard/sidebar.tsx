@@ -136,9 +136,9 @@ export function DashboardSidebar() {
   };
 
   return (
-    <aside className="hidden md:flex w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex-col justify-between p-5 min-h-screen relative z-30 shrink-0">
-      <div className="space-y-6">
-        {/* Brand */}
+    <aside className="hidden md:flex w-64 border-r border-white/[0.06] bg-black/90 backdrop-blur-2xl flex-col h-screen sticky top-0 z-30 shrink-0">
+      {/* Top Header & Brand */}
+      <div className="p-5 pb-3 shrink-0">
         <Link href="/dashboard" className="flex items-center gap-3 px-1 py-1 group">
           <div className="h-9 w-9 rounded-xl overflow-hidden border border-white/15 shadow-[0_0_15px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform bg-black shrink-0">
             <img
@@ -156,9 +156,11 @@ export function DashboardSidebar() {
             </span>
           </div>
         </Link>
+      </div>
 
-        {/* Navigation com Subgrupos Expandíveis (Acordeão) */}
-        <nav className="space-y-3 overflow-y-auto max-h-[calc(100vh-190px)] pr-1">
+      {/* Navigation com Subgrupos Expandíveis (Scrollável de forma independente) */}
+      <div className="flex-1 overflow-y-auto px-5 py-2 space-y-3 custom-scrollbar">
+        <nav className="space-y-3 pr-1">
           {navGroups.map((group) => {
             const isOpen = openGroups[group.title] ?? true;
             const hasActiveChild = group.items.some((it) => it.active);
@@ -235,8 +237,8 @@ export function DashboardSidebar() {
         </nav>
       </div>
 
-      {/* Footer / Tour & Logout */}
-      <div className="pt-3 border-t border-white/[0.06] space-y-1">
+      {/* Footer / Tour, Visão do Aluno & Logout (FIXO NO RODAPÉ) */}
+      <div className="p-5 pt-3 border-t border-white/[0.06] bg-black/40 backdrop-blur-md space-y-1.5 shrink-0">
         <button
           type="button"
           onClick={triggerCoachTour}
@@ -250,6 +252,14 @@ export function DashboardSidebar() {
             TOUR
           </span>
         </button>
+
+        <Link
+          href="/app?preview=true"
+          className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
+        >
+          <span>Visão do Aluno</span>
+          <span className="text-[10px] text-zinc-500">↗</span>
+        </Link>
 
         <button
           onClick={handleSignOut}

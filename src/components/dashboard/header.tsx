@@ -201,9 +201,10 @@ export function DashboardHeader() {
           />
 
           {/* Drawer Content */}
-          <div className="relative w-4/5 max-w-xs bg-zinc-950/95 border-r border-white/10 p-5 pt-[max(1.25rem,env(safe-area-inset-top))] flex flex-col justify-between h-full shadow-2xl z-10">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <div className="relative w-4/5 max-w-xs bg-zinc-950/95 border-r border-white/10 flex flex-col h-full shadow-2xl z-10">
+            {/* Header / Brand Mobile */}
+            <div className="p-5 pb-3 pt-[max(1.25rem,env(safe-area-inset-top))] border-b border-white/[0.08] shrink-0">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center shrink-0">
                     <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
@@ -222,9 +223,11 @@ export function DashboardHeader() {
                   <X className="h-4 w-4" />
                 </button>
               </div>
+            </div>
 
-              {/* Links de Navegação Mobile Agrupados e Expansíveis */}
-              <nav className="space-y-3 overflow-y-auto max-h-[calc(100vh-210px)] pr-1">
+            {/* Links de Navegação Mobile Agrupados e Expansíveis (Scroll Independente) */}
+            <div className="flex-1 overflow-y-auto p-5 py-3 custom-scrollbar">
+              <nav className="space-y-3 pr-1">
                 {navGroups.map((group) => {
                   const isOpen = openMobileGroups[group.title] ?? true;
                   const hasActiveChild = group.items.some((it) => it.active);
@@ -307,8 +310,8 @@ export function DashboardHeader() {
               </nav>
             </div>
 
-            {/* Ações Rápidas Mobile */}
-            <div className="pt-4 border-t border-white/[0.08] space-y-2">
+            {/* Ações Rápidas Mobile (FIXO NO RODAPÉ DO DRAWER) */}
+            <div className="p-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] border-t border-white/[0.08] bg-black/40 backdrop-blur-md space-y-2 shrink-0">
               <button
                 type="button"
                 onClick={() => {
@@ -334,7 +337,7 @@ export function DashboardHeader() {
               </Link>
               <button
                 onClick={handleSignOut}
-                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors"
+                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sair da Conta</span>

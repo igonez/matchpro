@@ -4,6 +4,7 @@ import { PwaInstallPrompt } from '@/components/student/pwa-install-prompt';
 import { ReturnToCoachBanner } from '@/components/student/return-to-coach-banner';
 import { WorkoutSessionProvider } from '@/lib/workout-session-context';
 import { WorkoutActiveSessionHud } from '@/components/student/workout-active-session-hud';
+import { StudentOnboardingTour } from '@/components/student/student-onboarding-tour';
 
 export default function StudentAppLayout({
   children,
@@ -19,6 +20,7 @@ export default function StudentAppLayout({
           {children}
           <WorkoutActiveSessionHud />
           <StudentBottomNav />
+          <StudentOnboardingTour />
         </div>
       </div>
     </WorkoutSessionProvider>

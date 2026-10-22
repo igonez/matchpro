@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
+import { triggerStudentTour } from '@/components/student/student-onboarding-tour';
 
 export function StudentBottomNav() {
   const pathname = usePathname();
@@ -300,6 +301,18 @@ export function StudentBottomNav() {
     {
       category: 'CONTA',
       items: [
+        {
+          title: 'Guia / Tour do Aluno',
+          subtitle: 'Rever como funcionam câmera, IA e pontos',
+          href: '#tour',
+          icon: Sparkles,
+          active: false,
+          isAction: true,
+          onClick: () => {
+            setShowVerticalMenu(false);
+            triggerStudentTour();
+          },
+        },
         {
           title: 'Meu Perfil & Inscrição',
           subtitle: 'Histórico, streak e comprovantes',

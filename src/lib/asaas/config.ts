@@ -15,6 +15,7 @@ export interface AsaasCustomerInput {
   cpfCnpj: string;
   phone?: string;
   externalReference?: string;
+  notificationDisabled?: boolean;
 }
 
 export interface AsaasPixChargeInput {

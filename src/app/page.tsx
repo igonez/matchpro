@@ -55,7 +55,7 @@ export default function HomePage() {
   // Cálculos da Calculadora
   const grossRevenue = studentsCount * ticketPrice;
   const netStarter = grossRevenue * 0.85; // 15% taxa
-  const netPro = grossRevenue * 0.92; // 8% taxa
+  const netPro = grossRevenue; // 0% taxa da plataforma!
   const proAdvantage = netPro - netStarter;
 
   const toggleFaq = (index: number) => {
@@ -849,11 +849,11 @@ export default function HomePage() {
 
                 <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-zinc-300 leading-relaxed">
                   <p>
-                    <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa cai de 15% para apenas 8%. Com {studentsCount} alunos a R$ {ticketPrice}, você ganha{' '}
+                    <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa da plataforma cai de 15% para <strong className="text-emerald-400">ZERO (0%)</strong>. Com {studentsCount} alunos a R$ {ticketPrice}, você ganha{' '}
                     <strong className="text-emerald-400">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>{' '}
-                    extras a mais — o plano de R$ 49,90 se paga sozinho no primeiro desafio!
+                    a mais no seu bolso — o plano de R$ 49,90 se paga sozinho no primeiro desafio!
                   </p>
                 </div>
               </div>
@@ -883,7 +883,7 @@ export default function HomePage() {
                   <div className="flex justify-between items-center p-3 rounded-xl bg-white/10 border border-white/20">
                     <div>
                       <span className="text-white font-sans text-xs sm:text-sm font-bold flex flex-wrap items-center gap-1.5">
-                        Plano Pro (Taxa 8%)
+                        Plano Pro (Taxa ZERO • 0%)
                         <span className="text-[11px] bg-white text-black px-2 py-0.5 rounded font-bold">RECOMENDADO</span>
                       </span>
                       <span className="text-xs text-zinc-300">R$ 49,90/mês</span>
@@ -1095,7 +1095,7 @@ export default function HomePage() {
                   )}
                   <div className="text-xs sm:text-sm font-mono text-emerald-400 mt-2.5 flex items-center gap-1.5 font-bold">
                     <Percent className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Taxa reduzida: 8% (Economize quase 50%!)</span>
+                    <span>Taxa ZERO da plataforma: 0% (100% do lucro é seu!)</span>
                   </div>
                 </div>
 
@@ -1173,7 +1173,7 @@ export default function HomePage() {
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Taxa de Split da Plataforma</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono">15%</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">8%</td>
+                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">0% (Taxa ZERO)</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Entrada por Código de Convite & Link</td>

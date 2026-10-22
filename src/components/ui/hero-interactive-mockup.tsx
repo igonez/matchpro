@@ -234,11 +234,11 @@ export function HeroInteractiveMockup() {
                         <span className="text-xs font-mono text-zinc-300">Agora</span>
                       </div>
                       <div className="text-2xl font-black font-mono text-emerald-400">
-                        + R$ 89,24
+                        + R$ 97,00
                       </div>
                       <div className="text-xs text-zinc-300 flex items-center justify-between border-t border-white/10 pt-2 font-mono">
                         <span>Inscrição: R$ 97,00</span>
-                        <span className="text-white font-bold">Taxa: 8% (D+0)</span>
+                        <span className="text-emerald-400 font-bold">Taxa Plataforma: 0% (Pro)</span>
                       </div>
                     </div>
 
@@ -248,7 +248,7 @@ export function HeroInteractiveMockup() {
                         <span>Divisão no Nível Bancário</span>
                       </div>
                       <p className="text-xs text-zinc-300 leading-relaxed">
-                        Você emite nota fiscal apenas sobre o seu lucro líquido, sem bitributação sobre a taxa da plataforma.
+                        No plano Pro, 100% do valor da inscrição vai para a sua conta. Sem retenções na plataforma.
                       </p>
                     </div>
 
@@ -259,7 +259,7 @@ export function HeroInteractiveMockup() {
                       </div>
                       <div className="p-3 rounded-xl bg-zinc-950 border border-white/10">
                         <span className="text-[11px] text-zinc-400 block">Seu Líquido</span>
-                        <span className="text-sm sm:text-base font-bold text-emerald-400">R$ 4.283,52</span>
+                        <span className="text-sm sm:text-base font-bold text-emerald-400">R$ 4.656,00</span>
                       </div>
                     </div>
                   </div>

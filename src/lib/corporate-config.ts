@@ -6,31 +6,31 @@
 
 export const CORPORATE_CONFIG = {
   companyName: 'ArenaFitPro',
-  legalName: 'ArenaFitPro Tecnologia e Serviços Digitais Ltda.',
-  cnpj: '54.892.103/0001-42',
+  legalName: '47.998.772 IGOR FERNANDO DE OLIVEIRA',
+  cnpj: '47.998.772/0001-28',
   address: {
-    street: 'Av. Paulista, 1106, Sala 01',
-    neighborhood: 'Bela Vista',
-    city: 'São Paulo',
+    street: 'Jardim das Indústrias',
+    neighborhood: 'Jardim das Indústrias',
+    city: 'São José dos Campos',
     state: 'SP',
-    zipCode: '01310-914',
+    zipCode: '12240-000',
     country: 'Brasil',
-    formatted: 'Av. Paulista, 1106, Sala 01 - Bela Vista, São Paulo - SP, CEP 01310-914',
+    formatted: 'São José dos Campos - SP, CEP 12240-000, Brasil',
   },
   contacts: {
     supportEmail: 'contato@arenafitpro.com.br',
     privacyEmail: 'privacidade@arenafitpro.com.br',
     legalEmail: 'juridico@arenafitpro.com.br',
     dpoEmail: 'dpo@arenafitpro.com.br',
-    dpoName: 'Igor Telmo / Encarregado de Proteção de Dados',
-    phone: '+55 (12) 99164-7211',
+    dpoName: 'Igor Fernando de Oliveira / Encarregado de Proteção de Dados',
+    phone: '',
     businessHours: 'Segunda a Sexta, das 09h às 18h (Horário de Brasília)',
   },
   legal: {
     version: '2.5',
     lastUpdated: '21 de Outubro de 2026',
     applicableLaw: 'Legislação da República Federativa do Brasil',
-    disputeForum: 'Foro da Comarca de São Paulo / SP',
+    disputeForum: 'Foro da Comarca de São José dos Campos / SP',
     refundDays: 7, // Art. 49 CDC
     dpoResponseDays: 15, // Art. 19, II LGPD (15 dias)
   },

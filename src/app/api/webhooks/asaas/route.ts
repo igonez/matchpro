@@ -59,13 +59,26 @@ export async function POST(request: Request) {
 
     // 3. Eventos de Pagamento Aprovado / Confirmado
     if (event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED') {
-      // 3.1. Atualizar transação na tabela de pagamentos via admin
+      // 3.1. Atualizar transação na tabela de pagamentos via admin com reconciliação real de centavos
+      const updateData: any = {
+        status: 'RECEIVED',
+        paid_at: new Date().toISOString(),
+      };
+
+      if (payment?.split && Array.isArray(payment.split) && payment.split.length > 0) {
+        const splitItem = payment.split[0];
+        const realCoachValue = Number(splitItem.totalValue ?? splitItem.value ?? 0);
+        if (realCoachValue > 0) {
+          updateData.net_coach_value = realCoachValue;
+          if (typeof payment.netValue === 'number') {
+            updateData.fee_platform_value = Number(Math.max(0, payment.netValue - realCoachValue).toFixed(2));
+          }
+        }
+      }
+
       const { data: updatedPayment, error: paymentUpdateError } = await supabaseAdmin
         .from('payments')
-        .update({
-          status: 'RECEIVED',
-          paid_at: new Date().toISOString(),
-        })
+        .update(updateData)
         .eq('asaas_payment_id', payment.id)
         .select('challenge_id, student_id, professional_id')
         .single();
@@ -114,7 +127,9 @@ export async function POST(request: Request) {
           .eq('asaas_subscription_id', subId)
           .maybeSingle();
 
-        if (coachSub?.id) {
+        // Validar se o valor pago é compatível com o plano Pro (evita adulteração de valor)
+        const paymentValue = Number(payment.value || 0);
+        if (coachSub?.id && paymentValue >= 40) {
           const nextMonth = new Date(Date.now() + 32 * 24 * 60 * 60 * 1000).toISOString();
           await supabaseAdmin
             .from('professionals')
@@ -128,21 +143,23 @@ export async function POST(request: Request) {
           console.log(`[Asaas Webhook] Assinatura recorrente ${subId} confirmada/renovada para treinador ${coachSub.id}`);
         }
       } else if (payment.externalReference && payment.externalReference.startsWith('coach_plan_')) {
-        // Fallback para cobrança com externalReference
+        // Fallback seguro para cobrança avulsa com externalReference e checagem de valor
         const parts = payment.externalReference.split('_');
         const planTier = parts[2] as PlanTier;
         const coachId = parts[3];
-        if (coachId && ['starter', 'pro'].includes(planTier)) {
-          const tierConfig = PLAN_CONFIG[planTier] || PLAN_CONFIG.starter;
+        const paymentValue = Number(payment.value || 0);
+        if (coachId && planTier === 'pro' && paymentValue >= 40) {
+          const nextMonth = new Date(Date.now() + 32 * 24 * 60 * 60 * 1000).toISOString();
           await supabaseAdmin
             .from('professionals')
             .update({
-              plan_tier: planTier,
+              plan_tier: 'pro',
               plan_status: 'active',
-              platform_fee_percent: tierConfig.platformFeePercent,
+              platform_fee_percent: PLAN_CONFIG.pro.platformFeePercent,
+              current_period_end: nextMonth,
             })
             .eq('id', coachId);
-          console.log(`[Asaas Webhook] Plano do treinador ${coachId} atualizado para ${planTier}`);
+          console.log(`[Asaas Webhook] Plano do treinador ${coachId} atualizado para pro`);
         }
       }
     }

@@ -138,6 +138,15 @@ export async function POST(request: Request) {
     // 6. Gerar QR Code e Copia e Cola
     const pixData = await AsaasClient.getPixQrCode(charge.id);
 
+    // Calcular valores líquidos reais considerando a tarifa bancária do Asaas (charge.netValue)
+    const coachShareRatio = (100 - feePercent) / 100;
+    const realNetCoach = typeof charge.netValue === 'number'
+      ? Number((charge.netValue * coachShareRatio).toFixed(2))
+      : netCoach;
+    const realFeePlatform = typeof charge.netValue === 'number'
+      ? Number(Math.max(0, charge.netValue - realNetCoach).toFixed(2))
+      : feePlatform;
+
     // 7. Registrar a transação pendente no Supabase de forma segura com Service Role
     await supabaseAdmin.from('payments').insert({
       challenge_id: challengeId,
@@ -146,8 +155,8 @@ export async function POST(request: Request) {
       asaas_payment_id: charge.id,
       billing_type: 'PIX',
       gross_value: price,
-      net_coach_value: netCoach,
-      fee_platform_value: feePlatform,
+      net_coach_value: realNetCoach,
+      fee_platform_value: realFeePlatform,
       status: 'PENDING',
       pix_code: pixData.payload,
       pix_qr_url: pixData.encodedImage,
@@ -160,8 +169,8 @@ export async function POST(request: Request) {
       pixQrBase64: pixData.encodedImage,
       expirationDate: pixData.expirationDate,
       grossValue: price,
-      netCoach,
-      feePlatform,
+      netCoach: realNetCoach,
+      feePlatform: realFeePlatform,
     });
   } catch (err: any) {
     console.error('Erro ao gerar cobrança Pix:', err);

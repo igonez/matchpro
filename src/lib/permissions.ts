@@ -29,8 +29,8 @@ export const PLAN_CONFIG: Record<PlanTier, PlanLimits> = {
     maxActiveChallenges: 5,
     maxStudentsPerChallenge: 100,
     hasSquads: true,
-    platformFeePercent: 8,
-    description: 'Gamificação completa com Squads e taxa ultra-reduzida de 8%.',
+    platformFeePercent: 0,
+    description: 'Gamificação completa com Squads e taxa ZERO (100% do lucro dos desafios é seu).',
   },
 };
 

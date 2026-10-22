@@ -61,4 +61,4 @@ A ArenaFitPro resolve os três maiores problemas de quem vende consultoria e des
 ## 4. Planos e Monetização
 
 - **Starter Coach**: R$ 0 de mensalidade fixa. Ideal para quem está começando seu primeiro desafio. Split de 15% apenas quando os alunos pagarem.
-- **Pro Master**: Focado em personais e academias consolidadas com múltiplos desafios simultâneos e menor taxa de split (8%).
+- **Pro Master**: R$ 49,90/mês. Ideal para coaches e assessorias consolidadas: Taxa Zero (0% de comissão da plataforma), ficando com 100% do valor das inscrições.

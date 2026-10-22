@@ -88,11 +88,15 @@ export class AsaasClient {
 
   /**
    * Cria ou busca um cliente pagador no Asaas
+   * Força notificationDisabled: true para evitar tarifas de WhatsApp/SMS (R$ 0,99 por disparo)
    */
   static async createCustomer(input: AsaasCustomerInput): Promise<{ id: string; name: string }> {
     return this.request<{ id: string; name: string }>('/customers', {
       method: 'POST',
-      body: JSON.stringify(input),
+      body: JSON.stringify({
+        ...input,
+        notificationDisabled: input.notificationDisabled !== undefined ? input.notificationDisabled : true,
+      }),
     });
   }
 
@@ -116,6 +120,7 @@ export class AsaasClient {
       dueDate,
       description: input.description,
       externalReference: input.externalReference,
+      postalService: false,
     };
 
     if (input.split && input.split.length > 0) {
@@ -153,6 +158,7 @@ export class AsaasClient {
       nextDueDate: input.nextDueDate,
       cycle: input.cycle,
       description: input.description,
+      postalService: false,
     };
 
     if (input.creditCard) {

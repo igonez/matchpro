@@ -347,7 +347,7 @@ function MasterDashboardContent() {
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
                   <div>
                     <span className="font-semibold text-white block">Plano Pro Coach</span>
-                    <span className="text-zinc-400 text-[11px]">8% de split • até 5 desafios • 100 alunos/turma</span>
+                    <span className="text-zinc-400 text-[11px]">Taxa ZERO (0%) da plataforma • até 5 desafios • 100 alunos/turma</span>
                   </div>
                   <span className="font-mono font-bold text-white">R$ 49,90/mês</span>
                 </div>

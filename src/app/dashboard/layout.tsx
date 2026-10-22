@@ -1,6 +1,7 @@
 import React from 'react';
 import { DashboardSidebar } from '@/components/dashboard/sidebar';
 import { DashboardHeader } from '@/components/dashboard/header';
+import { CoachOnboardingTour } from '@/components/dashboard/coach-onboarding-tour';
 
 export default function DashboardLayout({
   children,
@@ -16,6 +17,7 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      <CoachOnboardingTour />
     </div>
   );
 }

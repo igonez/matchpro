@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { isMasterAdmin } from '@/lib/master-auth';
+import { triggerCoachTour } from '@/components/dashboard/coach-onboarding-tour';
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -234,11 +235,25 @@ export function DashboardSidebar() {
         </nav>
       </div>
 
-      {/* Footer / Logout */}
-      <div className="pt-4 border-t border-white/[0.06]">
+      {/* Footer / Tour & Logout */}
+      <div className="pt-3 border-t border-white/[0.06] space-y-1">
+        <button
+          type="button"
+          onClick={triggerCoachTour}
+          className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl transition-all cursor-pointer"
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Guia / Tour do App</span>
+          </div>
+          <span className="text-[10px] font-mono bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300">
+            TOUR
+          </span>
+        </button>
+
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
+          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors cursor-pointer"
         >
           <LogOut className="w-4 h-4 text-zinc-400" />
           <span>Sair da Conta</span>

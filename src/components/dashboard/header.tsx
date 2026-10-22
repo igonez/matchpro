@@ -19,9 +19,12 @@ import {
   Wallet,
   Activity,
   Target,
-  ChevronDown
+  ChevronDown,
+  ChevronRight,
+  Sparkles
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { triggerCoachTour } from '@/components/dashboard/coach-onboarding-tour';
 
 export function DashboardHeader() {
   const pathname = usePathname();
@@ -152,7 +155,17 @@ export function DashboardHeader() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={triggerCoachTour}
+            className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-300 hover:text-white hover:bg-emerald-500/20 transition-all cursor-pointer"
+            title="Abrir o tour guiado do app"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+            <span className="font-bold">Tour do App</span>
+          </button>
+
           <Link
             href="/app?preview=true"
             target="_blank"
@@ -294,8 +307,23 @@ export function DashboardHeader() {
               </nav>
             </div>
 
-            {/* Logout Mobile */}
+            {/* Ações Rápidas Mobile */}
             <div className="pt-4 border-t border-white/[0.08] space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  triggerCoachTour();
+                }}
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-emerald-300 hover:text-white bg-emerald-500/10 border border-emerald-500/20 active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-emerald-400" />
+                  <span>Guia / Tour do App</span>
+                </div>
+                <ChevronRight className="h-4 w-4 text-emerald-400" />
+              </button>
+
               <Link
                 href="/app?preview=true"
                 onClick={() => setMobileMenuOpen(false)}

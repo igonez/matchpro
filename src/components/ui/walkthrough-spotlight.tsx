@@ -70,7 +70,7 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
     if (element) {
       const rect = element.getBoundingClientRect();
       setTargetRect(rect);
-      // Rolar suavemente até o elemento se estiver fora da visão
+      // Rolar suavemente até o elemento se estiver fora da visão com margem confortável
       element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       setIsSearchingTarget(false);
     } else {
@@ -83,14 +83,22 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (!isActive) return;
 
-    window.addEventListener('resize', updateTargetPosition);
-    window.addEventListener('scroll', updateTargetPosition, true);
+    const handleUpdate = () => {
+      if (!currentStep) return;
+      const element = document.querySelector(currentStep.targetSelector);
+      if (element) {
+        setTargetRect(element.getBoundingClientRect());
+      }
+    };
+
+    window.addEventListener('resize', handleUpdate);
+    window.addEventListener('scroll', handleUpdate, true);
 
     return () => {
-      window.removeEventListener('resize', updateTargetPosition);
-      window.removeEventListener('scroll', updateTargetPosition, true);
+      window.removeEventListener('resize', handleUpdate);
+      window.removeEventListener('scroll', handleUpdate, true);
     };
-  }, [isActive, updateTargetPosition]);
+  }, [isActive, currentStep]);
 
   // Quando mudar de passo ou rota, sincronizar elemento
   useEffect(() => {
@@ -201,12 +209,16 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
 
     const margin = 16;
     const popoverWidth = 380;
-    const popoverHeight = 260;
+    const estimatedHeight = 280;
+
+    // Verificar se cabe abaixo do elemento destacado
+    const spaceBelow = window.innerHeight - targetRect.bottom;
+    const spaceAbove = targetRect.top;
 
     let top = targetRect.bottom + margin;
     let left = targetRect.left + (targetRect.width / 2) - (popoverWidth / 2);
 
-    // Ajustar se vazar na direita ou esquerda
+    // Ajustar se vazar na horizontal
     if (left + popoverWidth > window.innerWidth - margin) {
       left = window.innerWidth - popoverWidth - margin;
     }
@@ -214,18 +226,38 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
       left = margin;
     }
 
-    // Se vazar embaixo da tela, posiciona em cima do elemento
-    if (top + popoverHeight > window.innerHeight - margin) {
-      top = targetRect.top - popoverHeight - margin;
-      if (top < margin) {
-        top = margin;
+    // Se o elemento for muito alto (ex: card de swipe ou lista) ou não couber embaixo:
+    if (spaceBelow < estimatedHeight && spaceAbove > spaceBelow) {
+      // Posiciona acima do elemento
+      top = Math.max(margin, targetRect.top - estimatedHeight - margin);
+    } else if (spaceBelow < estimatedHeight && spaceAbove < estimatedHeight) {
+      // Se não couber com folga nem em cima nem embaixo, ancora fixo na lateral ou no rodapé
+      if (targetRect.left > popoverWidth + margin * 2) {
+        // Coloca à esquerda
+        left = targetRect.left - popoverWidth - margin;
+        top = Math.min(Math.max(margin, targetRect.top), window.innerHeight - estimatedHeight - margin);
+      } else if (window.innerWidth - targetRect.right > popoverWidth + margin * 2) {
+        // Coloca à direita
+        left = targetRect.right + margin;
+        top = Math.min(Math.max(margin, targetRect.top), window.innerHeight - estimatedHeight - margin);
+      } else {
+        // Se a tela for estreita, mantém fixo no canto inferior com backdrop blur
+        return {
+          position: 'fixed',
+          bottom: '24px',
+          left: '16px',
+          right: '16px',
+          maxWidth: '400px',
+          margin: '0 auto',
+          zIndex: 10000,
+        };
       }
     }
 
     return {
       position: 'fixed',
-      top: `${Math.max(10, top)}px`,
-      left: `${Math.max(10, left)}px`,
+      top: `${Math.round(top)}px`,
+      left: `${Math.round(left)}px`,
       width: `${popoverWidth}px`,
       zIndex: 10000,
     };

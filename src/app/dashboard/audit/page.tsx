@@ -513,10 +513,7 @@ export default function FiscalizacaoPage() {
         </div>
       ) : viewMode === 'swipe' ? (
         /* ==================== MODO SWIPE (MINIMALISTA) ==================== */
-        <div 
-          data-tour="audit-swipe-container"
-          className="relative z-10 max-w-lg mx-auto w-full pt-2"
-        >
+        <div className="relative z-10 max-w-lg mx-auto w-full pt-2">
           {/* Telemetria do Deck */}
           <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-zinc-500">
             <span>
@@ -539,7 +536,10 @@ export default function FiscalizacaoPage() {
           </div>
 
           {swipeIndex >= filteredSubmissions.length ? (
-            <div className="p-12 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-4">
+            <div 
+              data-tour="audit-swipe-container"
+              className="p-12 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-4"
+            >
               <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block">
                 AUDITORIA CONCLUÍDA
               </span>
@@ -571,6 +571,7 @@ export default function FiscalizacaoPage() {
               return (
                 <div
                   key={sub.id}
+                  data-tour="audit-swipe-container"
                   className={`p-5 rounded-3xl bg-zinc-950 border transition-all ${
                     isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'border-white/10'
                   }`}

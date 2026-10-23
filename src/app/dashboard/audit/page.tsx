@@ -11,7 +11,7 @@ export default function FiscalizacaoPage() {
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('all');
   const [submissions, setSubmissions] = useState<any[]>([]);
-  const [filter, setFilter] = useState<'all' | 'pending' | 'reported' | 'approved' | 'rejected'>('all');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'reported' | 'approved' | 'rejected'>('pending');
   const [viewMode, setViewMode] = useState<'swipe' | 'grid'>('swipe');
   const [swipeIndex, setSwipeIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -200,12 +200,19 @@ export default function FiscalizacaoPage() {
     setProcessingId(sub.id);
     const prevStatus = sub.status;
     try {
-      const { error } = await supabase
-        .from('student_submissions')
-        .update({ status: 'approved' })
-        .eq('id', sub.id);
+      const res = await fetch('/api/audit/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionId: sub.id,
+          status: 'approved',
+        }),
+      });
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Falha ao aprovar no servidor.');
+      }
 
       setSubmissions((prev) =>
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'approved' } : item))
@@ -225,12 +232,19 @@ export default function FiscalizacaoPage() {
     setProcessingId(sub.id);
     const prevStatus = sub.status;
     try {
-      const { error } = await supabase
-        .from('student_submissions')
-        .update({ status: 'rejected' })
-        .eq('id', sub.id);
+      const res = await fetch('/api/audit/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionId: sub.id,
+          status: 'rejected',
+        }),
+      });
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Falha ao invalidar no servidor.');
+      }
 
       setSubmissions((prev) =>
         prev.map((item) => (item.id === sub.id ? { ...item, status: 'rejected' } : item))
@@ -250,12 +264,19 @@ export default function FiscalizacaoPage() {
     const lastAction = swipeHistory[swipeHistory.length - 1];
     setProcessingId(lastAction.id);
     try {
-      const { error } = await supabase
-        .from('student_submissions')
-        .update({ status: lastAction.prevStatus })
-        .eq('id', lastAction.id);
+      const res = await fetch('/api/audit/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionId: lastAction.id,
+          status: lastAction.prevStatus,
+        }),
+      });
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Falha ao desfazer no servidor.');
+      }
 
       setSubmissions((prev) =>
         prev.map((item) => (item.id === lastAction.id ? { ...item, status: lastAction.prevStatus } : item))
@@ -312,12 +333,19 @@ export default function FiscalizacaoPage() {
 
     setBatchApproving(true);
     try {
-      const { error } = await supabase
-        .from('student_submissions')
-        .update({ status: 'approved' })
-        .in('id', pendingIds);
+      const res = await fetch('/api/audit/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionIds: pendingIds,
+          status: 'approved',
+        }),
+      });
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Falha ao aprovar em lote no servidor.');
+      }
 
       setSubmissions((prev) =>
         prev.map((s) => (pendingIds.includes(s.id) ? { ...s, status: 'approved' } : s))

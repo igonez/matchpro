@@ -27,6 +27,26 @@ import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
 import { triggerStudentTour } from '@/components/student/student-onboarding-tour';
 
+export function openStudentMenu() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('arena_open_student_menu'));
+  }
+}
+
+export function StudentMenuTrigger({ className = '' }: { className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={openStudentMenu}
+      aria-label="Abrir Menu"
+      title="Menu Geral"
+      className={`h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0 ${className}`}
+    >
+      <Menu className="h-5 w-5 stroke-[2]" />
+    </button>
+  );
+}
+
 export function StudentBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
@@ -181,6 +201,12 @@ export function StudentBottomNav() {
   useEffect(() => {
     loadQuickMissions();
   }, [supabase, showQuickSheet]);
+
+  useEffect(() => {
+    const handleOpenMenu = () => setShowVerticalMenu(true);
+    window.addEventListener('arena_open_student_menu', handleOpenMenu);
+    return () => window.removeEventListener('arena_open_student_menu', handleOpenMenu);
+  }, []);
 
   const handleSimpleCheckin = async (mission: any) => {
     try {
@@ -347,9 +373,9 @@ export function StudentBottomNav() {
 
   return (
     <>
-      {/* 1. Menu Inferior Horizontal (Pílula Responsiva Mobile-First + Web com Tipografia Alinhada ao Painel) */}
-      <nav className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto max-w-[460px] sm:max-w-lg w-[95%] sm:w-[90%] z-40 transition-all pb-[env(safe-area-inset-bottom,0px)]">
-        <div className="mono-glass-pill rounded-full px-2 sm:px-3 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/20">
+      {/* 1. Menu Inferior Horizontal 100% Simétrico (Hoje, Missões | Check-in | Ranking, Feed) */}
+      <nav className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-40 transition-all pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="mono-glass-pill rounded-full px-3 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/20">
           
           {/* Lado Esquerdo (Hoje, Missões) */}
           <div className="flex items-center justify-around flex-1 gap-1">
@@ -357,7 +383,7 @@ export function StudentBottomNav() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium transition-all rounded-full whitespace-nowrap ${
+                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all rounded-full whitespace-nowrap ${
                   tab.active
                     ? 'text-white font-semibold bg-white/20 shadow-inner'
                     : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
@@ -369,7 +395,7 @@ export function StudentBottomNav() {
           </div>
 
           {/* Botão Central de Check-in em Cromo Puro */}
-          <div className="px-1 shrink-0 -my-2.5">
+          <div className="px-2 shrink-0 -my-2.5">
             <button
               onClick={() => setShowQuickSheet(true)}
               className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer"
@@ -401,13 +427,13 @@ export function StudentBottomNav() {
             </button>
           </div>
 
-          {/* Lado Direito (Ranking, Feed, Menu) */}
+          {/* Lado Direito (Ranking, Feed) */}
           <div className="flex items-center justify-around flex-1 gap-1">
             {rightTabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium transition-all rounded-full whitespace-nowrap ${
+                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all rounded-full whitespace-nowrap ${
                   tab.active
                     ? 'text-white font-semibold bg-white/20 shadow-inner'
                     : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
@@ -416,29 +442,21 @@ export function StudentBottomNav() {
                 {tab.name}
               </Link>
             ))}
-
-            {/* Botão para Acionar o Menu Vertical */}
-            <button
-              onClick={() => setShowVerticalMenu(true)}
-              aria-label="Abrir Menu"
-              className={`min-h-[42px] min-w-[42px] h-10 w-10 flex items-center justify-center text-zinc-400 hover:text-white transition-all rounded-full hover:bg-white/10 cursor-pointer shrink-0 ${
-                showVerticalMenu
-                  ? 'text-white font-semibold bg-white/20'
-                  : ''
-              }`}
-              title="Menu Geral"
-            >
-              <Menu className="h-4.5 w-4.5 stroke-[2]" />
-            </button>
           </div>
 
         </div>
       </nav>
 
-      {/* 2. Menu Vertical Completo (Side Drawer Deslizante em Vidro Escuro com Safe Area) */}
+      {/* 2. Menu Vertical Completo na Esquerda (Side Drawer Deslizante Padrão Universal) */}
       {showVerticalMenu && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-md transition-all">
-          <div className="w-full max-w-xs h-full bg-black/95 border-l border-white/15 p-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-200">
+        <div
+          onClick={() => setShowVerticalMenu(false)}
+          className="fixed inset-0 z-50 flex justify-start bg-black/80 backdrop-blur-md transition-all"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-xs h-full bg-black/95 border-r border-white/15 p-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-200"
+          >
             
             {/* Topo do Menu Vertical */}
             <div className="space-y-6">

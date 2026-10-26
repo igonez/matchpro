@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 function StudentMaterialsContent() {
   const supabase = createClient();
@@ -204,13 +205,7 @@ function StudentMaterialsContent() {
       {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-center gap-2.5">
-          <Link
-            href="/app"
-            className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
-            title="Voltar ao Início"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
+          <StudentMenuTrigger />
           <div>
             <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block">
               {activeChallenge?.title ? `TURMA ATIVA • ${activeChallenge.title}` : 'CENTRAL DO ALUNO'}
@@ -220,11 +215,13 @@ function StudentMaterialsContent() {
             </h1>
           </div>
         </div>
-        {activeChallenge && (
-          <span className="text-[9px] font-mono font-bold uppercase px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
-            Desafio Ativo
-          </span>
-        )}
+        <Link
+          href="/app"
+          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          VOLTAR
+        </Link>
       </div>
 
       {/* Seletor Principal: Arquivos vs Mural de Avisos */}

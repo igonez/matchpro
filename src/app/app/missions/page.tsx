@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { useWorkoutSession } from '@/lib/workout-session-context';
 import {
   Clock,
@@ -814,15 +815,18 @@ function StudentMissionsContent() {
       <Monochrome3DBackground />
 
       {/* Header */}
-      <div className="flex items-center justify-between pt-1 relative z-10 border-b border-white/[0.08] pb-3.5">
-        <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block mb-0.5">
-            CENTRAL DE EXECUÇÃO • {challenge?.title || 'TURMA ATIVA'}
-          </span>
-          <h1 className="text-2xl font-black text-white tracking-tight">Cronograma de Missões</h1>
-          <p className="text-xs text-zinc-400">
-            Missões organizadas em blocos por pilar e semana oficial do desafio.
-          </p>
+      <div className="flex items-start justify-between pt-1 relative z-10 border-b border-white/[0.08] pb-3.5">
+        <div className="flex items-start gap-3">
+          <StudentMenuTrigger className="mt-0.5" />
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block mb-0.5">
+              CENTRAL DE EXECUÇÃO • {challenge?.title || 'TURMA ATIVA'}
+            </span>
+            <h1 className="text-2xl font-black text-white tracking-tight">Cronograma de Missões</h1>
+            <p className="text-xs text-zinc-400">
+              Missões organizadas em blocos por pilar e semana oficial do desafio.
+            </p>
+          </div>
         </div>
       </div>
 

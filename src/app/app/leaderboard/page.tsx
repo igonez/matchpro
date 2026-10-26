@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import {
   Trophy,
@@ -328,26 +329,29 @@ export default function LeaderboardPage() {
       {/* Header Editorial com Status Ao Vivo */}
       <div 
         data-tour="student-ranking-card"
-        className="flex items-start justify-between pt-2 relative z-10 border-b border-white/[0.08] pb-4"
+        className="flex items-start justify-between pt-2 relative z-10 border-b border-white/[0.08] pb-4 gap-3"
       >
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest text-amber-300 uppercase">
-              <Trophy className="w-3 h-3 text-amber-400" />
-              RANKING OFICIAL
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-bold text-emerald-400 uppercase">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              AO VIVO
-            </span>
+        <div className="flex items-start gap-3 min-w-0">
+          <StudentMenuTrigger className="mt-0.5" />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest text-amber-300 uppercase">
+                <Trophy className="w-3 h-3 text-amber-400" />
+                RANKING OFICIAL
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-bold text-emerald-400 uppercase">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                AO VIVO
+              </span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight truncate">
+              {currentChallenge?.title || 'Arena de Classificação'}
+            </h1>
+            <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              Pontuação auditada por integridade de check-ins.
+            </p>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
-            {currentChallenge?.title || 'Arena de Classificação'}
-          </h1>
-          <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-            Pontuação auditada por integridade de check-ins.
-          </p>
         </div>
         <Link
           href="/app"

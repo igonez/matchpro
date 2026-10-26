@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { createStudentNotification } from '@/lib/notifications';
 
 export type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
@@ -621,12 +622,15 @@ export default function StudentSocialFeedPage() {
 
       {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
-        <div>
-          <span className="text-[11px] text-zinc-400 font-medium block">
-            Comunidade • {challengeTitle}
-          </span>
-          <h1 className="text-xl font-black text-white">Feed da Turma</h1>
-          <p className="text-xs text-zinc-400">Interaja com seus colegas de desafio em tempo real</p>
+        <div className="flex items-start gap-3">
+          <StudentMenuTrigger className="mt-0.5" />
+          <div>
+            <span className="text-[11px] text-zinc-400 font-medium block">
+              Comunidade • {challengeTitle}
+            </span>
+            <h1 className="text-xl font-black text-white">Feed da Turma</h1>
+            <p className="text-xs text-zinc-400">Interaja com seus colegas de desafio em tempo real</p>
+          </div>
         </div>
       </div>
 

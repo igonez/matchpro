@@ -25,7 +25,8 @@ import {
   Droplets,
   ChevronRight,
   Circle,
-  Bell
+  Bell,
+  Clock
 } from 'lucide-react';
 import { NotificationsDrawer } from '@/components/student/notifications-drawer';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
@@ -208,10 +209,12 @@ export default function StudentHomePage() {
             setRank('1º');
           }
 
+          const twentyFourHoursAgoIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
           const { data: notices } = await supabase
             .from('challenge_announcements')
             .select('*')
             .eq('challenge_id', challengeData.id)
+            .gte('created_at', twentyFourHoursAgoIso)
             .order('is_pinned', { ascending: false })
             .order('created_at', { ascending: false })
             .limit(3);
@@ -542,11 +545,37 @@ export default function StudentHomePage() {
     }
   }, [streakRisk.isAtRisk, streakRisk.alertMessage]);
 
+  const [nowTs, setNowTs] = useState<number>(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNowTs(Date.now()), 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const activeAnnouncements = useMemo(() => {
+    const ttlMs = 24 * 60 * 60 * 1000;
+    return announcements.filter((a) => {
+      if (!a.created_at) return true;
+      const elapsed = nowTs - new Date(a.created_at).getTime();
+      return elapsed < ttlMs;
+    });
+  }, [announcements, nowTs]);
+
+  const formatRemaining24h = (createdAt?: string) => {
+    if (!createdAt) return '24h';
+    const expiresAt = new Date(createdAt).getTime() + 24 * 60 * 60 * 1000;
+    const diffMs = Math.max(0, expiresAt - nowTs);
+    const totalMinutes = Math.floor(diffMs / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    if (hours > 0) return `${hours}h ${mins}m`;
+    return `${mins}min`;
+  };
+
   if (loading && isInitialBoot) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
 
-  const topAnnouncement = announcements[0] || null;
+  const topAnnouncement = activeAnnouncements[0] || null;
 
   return (
     <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 bg-black text-white selection:bg-white selection:text-black w-full pb-28 relative">
@@ -705,19 +734,25 @@ export default function StudentHomePage() {
             </div>
           )}
 
-          {/* 1.5 Banner de Aviso em Destaque do Treinador */}
+          {/* 1.5 Banner de Aviso em Destaque do Treinador (Expira em 24h) */}
           {topAnnouncement && (
             <div className="relative z-10">
               <div className="p-4 rounded-2xl border border-white/10 bg-zinc-950 space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400">
-                    {topAnnouncement.is_pinned ? 'AVISO FIXADO' : 'AVISO DO TREINADOR'}
-                  </span>
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400">
+                      {topAnnouncement.is_pinned ? 'AVISO FIXADO' : 'AVISO DO TREINADOR'}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] font-mono font-bold text-amber-300">
+                      <Clock className="w-3 h-3 shrink-0" />
+                      <span>Expira em {formatRemaining24h(topAnnouncement.created_at)}</span>
+                    </span>
+                  </div>
                   <Link
                     href="/app/materials?tab=avisos"
                     className="inline-flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-white"
                   >
-                    <span>VER TODOS ({announcements.length})</span>
+                    <span>VER TODOS ({activeAnnouncements.length})</span>
                     <ArrowRight className="w-3 h-3 shrink-0" />
                   </Link>
                 </div>

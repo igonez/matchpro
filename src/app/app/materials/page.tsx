@@ -16,6 +16,7 @@ import {
   Pin,
   ArrowLeft,
   Calendar,
+  Clock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -115,6 +116,8 @@ function StudentMaterialsContent() {
           return;
         }
 
+        const twentyFourHoursAgoIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
         const [{ data: mats }, { data: anns }] = await Promise.all([
           supabase
             .from('challenge_materials')
@@ -125,6 +128,7 @@ function StudentMaterialsContent() {
             .from('challenge_announcements')
             .select('*')
             .eq('challenge_id', challengeId)
+            .gte('created_at', twentyFourHoursAgoIso)
             .order('is_pinned', { ascending: false })
             .order('created_at', { ascending: false }),
         ]);
@@ -150,7 +154,29 @@ function StudentMaterialsContent() {
     return matchesType && matchesSearch;
   });
 
-  const filteredAnnouncements = announcements.filter((a) => {
+  const [nowTs, setNowTs] = useState<number>(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNowTs(Date.now()), 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatRemaining24h = (createdAt?: string) => {
+    if (!createdAt) return '24h';
+    const expiresAt = new Date(createdAt).getTime() + 24 * 60 * 60 * 1000;
+    const diffMs = Math.max(0, expiresAt - nowTs);
+    const totalMinutes = Math.floor(diffMs / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    if (hours > 0) return `${hours}h ${mins}m`;
+    return `${mins}min`;
+  };
+
+  const activeAnnouncements = announcements.filter((a) => {
+    if (!a.created_at) return true;
+    return nowTs - new Date(a.created_at).getTime() < 24 * 60 * 60 * 1000;
+  });
+
+  const filteredAnnouncements = activeAnnouncements.filter((a) => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return true;
     return (
@@ -246,7 +272,7 @@ function StudentMaterialsContent() {
           }`}
         >
           <Megaphone className="h-3.5 w-3.5" />
-          Avisos ({announcements.length})
+          Avisos 24h ({activeAnnouncements.length})
         </button>
       </div>
 
@@ -421,12 +447,9 @@ function StudentMaterialsContent() {
                     )}
                   </div>
                   {ann.created_at && (
-                    <span className="text-[10px] font-mono text-zinc-500 flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {new Date(ann.created_at).toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: 'short',
-                      })}
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] font-mono font-bold text-amber-300">
+                      <Clock className="h-3 w-3 shrink-0" />
+                      <span>Expira em {formatRemaining24h(ann.created_at)}</span>
                     </span>
                   )}
                 </div>

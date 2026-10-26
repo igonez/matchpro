@@ -8,7 +8,7 @@ import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Input } from '@/components/ui/input';
 import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
-import { Copy, ArrowRight } from 'lucide-react';
+import { Copy, ArrowRight, Clock } from 'lucide-react';
 
 export default function DashboardOverviewPage() {
   const supabase = createClient();
@@ -612,6 +612,13 @@ export default function DashboardOverviewPage() {
               Fixar este aviso no topo do mural dos alunos
             </span>
           </label>
+
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[11px] font-mono text-amber-200 leading-relaxed flex items-start gap-2">
+            <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <span>
+              Duração Automática de 24h: este aviso exibirá um cronômetro regressivo de 24 horas para os alunos e desaparecerá automaticamente após o término do tempo.
+            </span>
+          </div>
         </div>
       </CustomDialog>
 

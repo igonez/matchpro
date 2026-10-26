@@ -444,8 +444,8 @@ function JoinChallengeContent() {
       <Monochrome3DBackground />
 
       {/* Top Navbar */}
-      <header className="border-b border-white/[0.06] bg-black/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="border-b border-white/[0.06] bg-black/80 backdrop-blur-md sticky top-0 z-50 safe-top-header pb-2">
+        <div className="max-w-4xl mx-auto px-6 min-h-[3.5rem] flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="h-8 w-8 rounded-lg bg-zinc-900 border border-white/20 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">

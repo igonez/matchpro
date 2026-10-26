@@ -133,7 +133,7 @@ export function DashboardHeader() {
 
   return (
     <>
-      <header className="min-h-[5rem] h-auto border-b border-white/[0.08] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-black/85 backdrop-blur-2xl sticky top-0 z-40 pt-[env(safe-area-inset-top,0px)] pb-3">
+      <header className="min-h-[5rem] h-auto border-b border-white/[0.08] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-black/85 backdrop-blur-2xl sticky top-0 z-40 safe-top-header pb-3.5">
         <div className="flex items-center gap-3.5">
           {/* Logo do App + Brand ArenaFitPro (sem botão hambúrguer) */}
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
@@ -197,7 +197,7 @@ export function DashboardHeader() {
           {/* Drawer Content */}
           <div className="relative w-4/5 max-w-xs bg-zinc-950/95 border-r border-white/10 flex flex-col h-full shadow-2xl z-10">
             {/* Header / Brand Mobile */}
-            <div className="p-5 pb-3 pt-[max(1.25rem,env(safe-area-inset-top))] border-b border-white/[0.08] shrink-0">
+            <div className="p-5 pb-3.5 safe-top-drawer border-b border-white/[0.08] shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center shrink-0">
@@ -305,7 +305,7 @@ export function DashboardHeader() {
             </div>
 
             {/* Ações Rápidas Mobile (FIXO NO RODAPÉ DO DRAWER) */}
-            <div className="p-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] border-t border-white/[0.08] bg-black/40 backdrop-blur-md space-y-2 shrink-0">
+            <div className="p-5 pt-3 safe-bottom-drawer border-t border-white/[0.08] bg-black/40 backdrop-blur-md space-y-2 shrink-0">
               <button
                 type="button"
                 onClick={() => {
@@ -345,7 +345,7 @@ export function DashboardHeader() {
       )}
 
       {/* 3. Dock Inferior Mobile para o Coach (Visível apenas em telas menores que md) */}
-      <nav className="md:hidden fixed bottom-3 inset-x-0 mx-auto max-w-[430px] w-[94%] z-30 pb-safe">
+      <nav className="md:hidden fixed safe-bottom-nav inset-x-0 mx-auto max-w-[430px] w-[94%] z-30">
         <div className="bg-black/95 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.95)] border border-white/15">
           <Link
             href="/dashboard"

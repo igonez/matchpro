@@ -120,6 +120,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark scroll-smooth">
       <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans text-base leading-relaxed">
+        {/* Escudo superior para Dynamic Island / Status Bar iOS em modo PWA e Safari */}
+        <div
+          className="fixed top-0 inset-x-0 h-[env(safe-area-inset-top,0px)] bg-black z-[100] pointer-events-none"
+          aria-hidden="true"
+        />
         <JsonLd data={organizationSchema} />
         {children}
         <CookieConsentBanner />

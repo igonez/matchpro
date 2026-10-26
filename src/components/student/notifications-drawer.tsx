@@ -149,7 +149,7 @@ export function NotificationsDrawer({
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col justify-end items-center">
-      <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-white/20 shadow-2xl">
+      <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 safe-bottom-drawer border-t border-white/20 shadow-2xl">
         {/* Header do Drawer */}
         <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <div className="flex items-center gap-2.5">

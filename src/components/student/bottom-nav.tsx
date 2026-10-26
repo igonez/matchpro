@@ -374,7 +374,7 @@ export function StudentBottomNav() {
   return (
     <>
       {/* 1. Menu Inferior Horizontal 100% Simétrico (Hoje, Missões | Check-in | Ranking, Feed) */}
-      <nav className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-40 transition-all pb-[env(safe-area-inset-bottom,0px)]">
+      <nav className="fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-40 transition-all">
         <div className="mono-glass-pill rounded-full px-3 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/20">
           
           {/* Lado Esquerdo (Hoje, Missões) */}
@@ -455,7 +455,7 @@ export function StudentBottomNav() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-xs h-full bg-black/95 border-r border-white/15 p-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-200"
+            className="w-full max-w-xs h-full bg-black/95 border-r border-white/15 p-6 safe-top-drawer safe-bottom-drawer flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-200"
           >
             
             {/* Topo do Menu Vertical */}
@@ -590,7 +590,7 @@ export function StudentBottomNav() {
       {/* 3. Bottom Sheet Rápido de Check-in ao tocar na Câmera */}
       {showQuickSheet && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
-          <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 space-y-4 max-h-[85vh] flex flex-col border-t border-white/20">
+          <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 safe-bottom-drawer space-y-4 max-h-[85vh] flex flex-col border-t border-white/20">
             {/* Header do Sheet */}
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
               <div>

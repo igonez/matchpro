@@ -270,12 +270,12 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer relative overflow-hidden">
       {/* 1. Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Bar Minimalista */}
-      <div className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
+      <div className="max-w-md w-full mx-auto flex items-center justify-between pt-1 z-10">
         <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
           <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />

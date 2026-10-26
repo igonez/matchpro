@@ -60,7 +60,7 @@ export function WorkoutActiveSessionHud() {
     <>
       {/* 1. Barra Flutuante Minimizada (Acima do menu inferior com Safe Area) */}
       {!isExpanded && (
-        <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] inset-x-0 mx-auto max-w-[460px] sm:max-w-lg w-[95%] sm:w-[90%] z-40 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="fixed safe-bottom-hud inset-x-0 mx-auto max-w-[460px] sm:max-w-lg w-[95%] sm:w-[90%] z-40 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="bg-zinc-950/95 border border-white/20 rounded-2xl p-2.5 sm:p-3 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex items-center justify-between gap-3">
             <div 
               onClick={() => setIsExpanded(true)}
@@ -104,7 +104,7 @@ export function WorkoutActiveSessionHud() {
 
       {/* 2. Modal Expandido HUD em Tela Cheia */}
       {isExpanded && (
-        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-6 animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-6 safe-top-drawer safe-bottom-drawer animate-in fade-in zoom-in-95 duration-200">
           {/* Top Bar HUD */}
           <div className="flex items-center justify-between max-w-md sm:max-w-xl mx-auto w-full">
             <div className="flex items-center gap-2">

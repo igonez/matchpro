@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+import { StoryShareModal } from '@/components/student/story-share-modal';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import {
   Trophy,
@@ -21,6 +22,7 @@ import {
   Sparkles,
   Zap,
   Award,
+  Share2,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -54,6 +56,7 @@ export default function LeaderboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [rankHistory, setRankHistory] = useState<Record<string, number>>({});
   const [streaksMap, setStreaksMap] = useState<Record<string, number>>({});
+  const [showStoryShare, setShowStoryShare] = useState(false);
 
   const fetchLeaderboard = async () => {
     try {
@@ -421,6 +424,17 @@ export default function LeaderboardPage() {
                 className="h-full rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-emerald-400 transition-all duration-700"
                 style={{ width: `${overtakeProgressPct}%` }}
               />
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowStoryShare(true)}
+                className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-mono font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                <Share2 className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                <span>Compartilhar Minha Posição nos Stories (9:16)</span>
+              </button>
             </div>
           </div>
         </SpotlightCard3D>
@@ -848,6 +862,20 @@ export default function LeaderboardPage() {
           )
         )}
       </div>
+
+      {/* Modal de Card 9:16 para Instagram Stories */}
+      <StoryShareModal
+        isOpen={showStoryShare}
+        onClose={() => setShowStoryShare(false)}
+        data={{
+          mode: 'leaderboard',
+          studentName: myStanding?.students?.full_name || 'Atleta ArenaFit',
+          challengeTitle: currentChallenge?.title || 'Arena Oficial',
+          pointsText: `${myStanding?.total_points || 0} XP`,
+          rankPosition: `#${myRank || 1}`,
+          streakDays: currentUserId ? streaksMap[currentUserId] || 1 : 1,
+        }}
+      />
     </div>
   );
 }

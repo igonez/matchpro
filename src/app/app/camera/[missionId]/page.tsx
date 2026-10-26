@@ -7,7 +7,8 @@ import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { ArrowLeft } from 'lucide-react';
+import { StoryShareModal } from '@/components/student/story-share-modal';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default function CameraCapturePage() {
   return (
@@ -34,6 +35,9 @@ function CameraCaptureContent() {
   const [caption, setCaption] = useState('');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showStoryShare, setShowStoryShare] = useState(false);
+  const [studentDisplayName, setStudentDisplayName] = useState('Atleta');
+  const [challengeDisplayName, setChallengeDisplayName] = useState('Desafio Oficial');
 
   // Metadados de Geolocalização e Horário
   const [captureTime, setCaptureTime] = useState<Date | null>(null);
@@ -359,7 +363,22 @@ function CameraCaptureContent() {
         if (fallbackError) throw fallbackError;
       }
 
-      router.push('/app');
+      setStudentDisplayName(
+        user.user_metadata?.full_name ||
+          user.user_metadata?.name ||
+          user.email?.split('@')[0] ||
+          'Atleta'
+      );
+      if (resolvedChallengeId) {
+        const { data: chData } = await supabase
+          .from('challenges')
+          .select('title')
+          .eq('id', resolvedChallengeId)
+          .maybeSingle();
+        if (chData?.title) setChallengeDisplayName(chData.title);
+      }
+
+      setShowStoryShare(true);
     } catch (err: any) {
       console.error('Erro no upload:', err);
       setError(err.message || 'Falha ao processar o check-in.');
@@ -574,9 +593,10 @@ function CameraCaptureContent() {
               <button
                 onClick={handleUploadSubmission}
                 disabled={uploading}
-                className="mono-button-primary flex-1 h-11 text-xs font-mono font-bold"
+                className="mono-button-primary flex-1 h-11 text-xs font-mono font-bold flex items-center justify-center gap-1.5"
               >
-                {uploading ? 'ENVIANDO...' : 'CONFIRMAR CHECK-IN →'}
+                <span>{uploading ? 'ENVIANDO...' : 'CONFIRMAR CHECK-IN'}</span>
+                {!uploading && <ArrowRight className="w-3.5 h-3.5 shrink-0" />}
               </button>
             </div>
           </div>
@@ -584,13 +604,45 @@ function CameraCaptureContent() {
           <div className="w-full">
             <button
               onClick={() => cameraInputRef.current?.click()}
-              className="mono-button-primary w-full h-12 text-xs font-mono font-bold"
+              className="mono-button-primary w-full h-12 text-xs font-mono font-bold flex items-center justify-center gap-2"
             >
-              ABRIR CÂMERA AO VIVO (ANTIFRAUDE) →
+              <span>ABRIR CÂMERA AO VIVO (ANTIFRAUDE)</span>
+              <ArrowRight className="w-4 h-4 shrink-0" />
             </button>
           </div>
         )}
       </div>
+
+      {/* Modal de Vitória & Card 9:16 para Instagram Stories */}
+      <StoryShareModal
+        isOpen={showStoryShare}
+        onClose={() => router.push('/app')}
+        onPrimaryAction={() => router.push('/app')}
+        primaryActionLabel="Concluir e Voltar para a Arena"
+        data={{
+          mode: 'checkin',
+          studentName: studentDisplayName,
+          challengeTitle: challengeDisplayName,
+          pointsText: `+${mission?.points_rewarded || 10} XP`,
+          missionTitle: mission?.title || 'Check-in de Missão',
+          missionCategory: mission?.category || 'treino',
+          photoDataUrl: previewUrl,
+          durationSeconds: durationSeconds,
+          caloriesText:
+            aiMacros && aiAnalysisResult?.isValid && aiMacros.calories !== 'Não identificado'
+              ? aiMacros.calories
+              : null,
+          proteinText:
+            aiMacros && aiAnalysisResult?.isValid && aiMacros.protein !== '0g'
+              ? aiMacros.protein
+              : null,
+          timestampText: captureTime?.toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+          locationText: location?.text || 'CHECK-IN OFICIAL',
+        }}
+      />
     </div>
   );
 }

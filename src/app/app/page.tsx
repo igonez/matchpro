@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { NotificationsDrawer } from '@/components/student/notifications-drawer';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+import { PushNotificationBanner } from '@/components/student/push-notification-manager';
 import { checkStreakRisk, sendBrowserNotification } from '@/lib/notifications';
 
 export default function StudentHomePage() {
@@ -678,6 +679,13 @@ export default function StudentHomePage() {
         </div>
       ) : (
         <>
+          {/* Banner de Ativação de Web Push Notifications (PWA) */}
+          <PushNotificationBanner
+            streakDays={currentStreak}
+            isStreakAtRisk={streakRisk.isAtRisk}
+            hoursLeft={streakRisk.hoursLeft}
+          />
+
           {/* Alerta de Urgência de Streak (Proteção das 20h) */}
           {streakRisk.isAtRisk && (
             <div className="relative z-10 p-4 rounded-2xl bg-zinc-950 border border-amber-500/40 flex items-center justify-between gap-3">

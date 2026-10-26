@@ -2,22 +2,130 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trophy, Calendar, DollarSign, ArrowLeft, CheckCircle2, CreditCard, AlertTriangle, ExternalLink } from 'lucide-react';
+import {
+  Trophy,
+  ArrowLeft,
+  CheckCircle2,
+  CreditCard,
+  AlertTriangle,
+  ExternalLink,
+  Flame,
+  Dumbbell,
+  Zap,
+  Sparkles,
+  Check,
+} from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
+interface ChallengePreset {
+  id: string;
+  badge: string;
+  name: string;
+  defaultTitle: string;
+  durationDays: number;
+  suggestedPrice: string;
+  weeklyBonus: string;
+  summary: string;
+  icon: React.ComponentType<{ className?: string }>;
+  workoutsPerWeek: number;
+  workoutLabel: string;
+  cardiosPerWeek: number;
+  cardioLabel: string;
+  meals: string[];
+  habitTitle: string;
+}
+
+const CHALLENGE_PRESETS: ChallengePreset[] = [
+  {
+    id: 'seca_21',
+    badge: 'MAIS VENDIDO • 21 DIAS',
+    name: 'Seca & Definição 21D',
+    defaultTitle: 'Desafio Seca 21 Dias • Queima & Definição',
+    durationDays: 21,
+    suggestedPrice: '69.90',
+    weeklyBonus: '25',
+    summary: '5 Treinos Metabólicos + 6 Cardios HIIT + 4 Refeições c/ IA + Hábito 3L Água',
+    icon: Flame,
+    workoutsPerWeek: 5,
+    workoutLabel: 'Treino Metabólico',
+    cardiosPerWeek: 6,
+    cardioLabel: 'Cardio Queima (Mín. 30min)',
+    meals: ['Café da Manhã Proteico', 'Almoço Limpo & Fibras', 'Lanche Funcional', 'Jantar Low Carb'],
+    habitTitle: 'Meta Diária: 3L de Água + Zero Açúcar Refinado',
+  },
+  {
+    id: 'hipertrofia_30',
+    badge: 'ALTO TICKET • 30 DIAS',
+    name: 'Hipertrofia & Força 30D',
+    defaultTitle: 'Desafio Hipertrofia 30 Dias • Ganho Muscular',
+    durationDays: 30,
+    suggestedPrice: '89.90',
+    weeklyBonus: '30',
+    summary: '6 Treinos de Força + 4 Cardios Controlados + 4 Refeições Hiperproteicas + Creatina/Água',
+    icon: Dumbbell,
+    workoutsPerWeek: 6,
+    workoutLabel: 'Treino de Força & Hipertrofia',
+    cardiosPerWeek: 4,
+    cardioLabel: 'Cardio Moderado (25min)',
+    meals: ['Café da Manhã Hiperproteico', 'Almoço de Construção Muscular', 'Pré/Pós-Treino Sólido', 'Jantar Rico em Proteínas'],
+    habitTitle: 'Meta Diária: Creatina + 3.5L de Água + 7h de Sono',
+  },
+  {
+    id: 'consistencia_14',
+    badge: 'ISCA GRATUITA • 14 DIAS',
+    name: 'Sprint Consistência 14D',
+    defaultTitle: 'Sprint 14 Dias de Disciplina & Consistência',
+    durationDays: 14,
+    suggestedPrice: '0.00',
+    weeklyBonus: '20',
+    summary: 'Ideal para atrair alunos novos gratuitamente e converter para sua consultoria',
+    icon: Sparkles,
+    workoutsPerWeek: 4,
+    workoutLabel: 'Treino do Dia Concluído',
+    cardiosPerWeek: 5,
+    cardioLabel: 'Caminhada ou Cardio Ativo (20min)',
+    meals: ['Café da Manhã Equilibrado', 'Almoço Colorido', 'Jantar Leve'],
+    habitTitle: 'Meta Diária: 2.5L de Água + 10min Alongamento',
+  },
+  {
+    id: 'performance_28',
+    badge: 'CONDICIONAMENTO • 28 DIAS',
+    name: 'Performance & Cardio 28D',
+    defaultTitle: 'Desafio Performance & Condicionamento 28 Dias',
+    durationDays: 28,
+    suggestedPrice: '59.90',
+    weeklyBonus: '25',
+    summary: '4 Treinos de Fortalecimento + 6 Sessões de Corrida/Cardio + Nutrição Energética',
+    icon: Zap,
+    workoutsPerWeek: 4,
+    workoutLabel: 'Fortalecimento & Core',
+    cardiosPerWeek: 6,
+    cardioLabel: 'Sessão de Corrida / Endurance',
+    meals: ['Café Pré-Treino Energético', 'Almoço Recuperação', 'Lanche Natural', 'Jantar Reparador'],
+    habitTitle: 'Meta Diária: 3L de Água + Mobilidade Articular',
+  },
+];
+
+function computeDateOffset(daysFromNow: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromNow);
+  return d.toISOString().split('T')[0];
+}
+
 export default function NewChallengePage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [price, setPrice] = useState('49.90');
-  const [weeklyBonusPoints, setWeeklyBonusPoints] = useState('20');
+  const [selectedPresetId, setSelectedPresetId] = useState<string>('seca_21');
+  const [title, setTitle] = useState(CHALLENGE_PRESETS[0].defaultTitle);
+  const [startDate, setStartDate] = useState(() => computeDateOffset(1));
+  const [endDate, setEndDate] = useState(() => computeDateOffset(22));
+  const [price, setPrice] = useState(CHALLENGE_PRESETS[0].suggestedPrice);
+  const [weeklyBonusPoints, setWeeklyBonusPoints] = useState(CHALLENGE_PRESETS[0].weeklyBonus);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -50,6 +158,18 @@ export default function NewChallengePage() {
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleApplyPreset = (preset: ChallengePreset) => {
+    setSelectedPresetId(preset.id);
+    setTitle(preset.defaultTitle);
+    const start = computeDateOffset(1);
+    const end = computeDateOffset(1 + preset.durationDays);
+    setStartDate(start);
+    setEndDate(end);
+    setPrice(preset.suggestedPrice);
+    setWeeklyBonusPoints(preset.weeklyBonus);
+    showToast(`Template "${preset.name}" aplicado em 1 clique!`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,16 +226,27 @@ export default function NewChallengePage() {
 
       if (challengeError) throw challengeError;
 
-      // Auto-provisionar as 4 semanas padrão e todas as missões ativas do desafio
+      // Auto-provisionar semanas e missões completas baseadas no Template selecionado
       try {
+        const activePreset =
+          CHALLENGE_PRESETS.find((p) => p.id === selectedPresetId) || CHALLENGE_PRESETS[0];
         const bonusVal = Math.max(0, parseInt(weeklyBonusPoints, 10) || 20);
-        const defaultWeeks = [
-          { challenge_id: challenge.id, week_number: 1, title: 'Semana 1 • Sprint 1 (Ativação)', bonus_points: bonusVal },
-          { challenge_id: challenge.id, week_number: 2, title: 'Semana 2 • Sprint 2 (Intensidade)', bonus_points: bonusVal },
-          { challenge_id: challenge.id, week_number: 3, title: 'Semana 3 • Sprint 3 (Consistência)', bonus_points: bonusVal },
-          { challenge_id: challenge.id, week_number: 4, title: 'Semana 4 • Sprint 4 (Sprint Final)', bonus_points: bonusVal },
+        const totalWeeksCount = Math.max(2, Math.min(4, Math.ceil(activePreset.durationDays / 7)));
+
+        const weekTitles = [
+          'Semana 1 • Sprint 1 (Ativação)',
+          'Semana 2 • Sprint 2 (Intensidade)',
+          'Semana 3 • Sprint 3 (Consistência)',
+          'Semana 4 • Sprint 4 (Sprint Final)',
         ];
-        
+
+        const defaultWeeks = Array.from({ length: totalWeeksCount }, (_, idx) => ({
+          challenge_id: challenge.id,
+          week_number: idx + 1,
+          title: weekTitles[idx] || `Semana ${idx + 1}`,
+          bonus_points: bonusVal,
+        }));
+
         const { data: createdWeeks, error: wErr } = await supabase
           .from('challenge_weeks')
           .insert(defaultWeeks)
@@ -125,18 +256,19 @@ export default function NewChallengePage() {
           console.warn('Erro ao criar semanas:', wErr);
         }
 
-        // Criar as missões iniciais apenas para a Semana 1 (as semanas 2, 3 e 4 ficam livres para programação futura ou cópia)
         if (createdWeeks && createdWeeks.length > 0) {
-          const defaultMissions: any[] = [];
-          const week1 = createdWeeks.find((w: any) => Number(w.week_number) === 1) || createdWeeks[0];
+          const allMissions: any[] = [];
 
-          if (week1) {
-            // 1. Treinos (6 treinos na Semana 1)
-            for (let t = 1; t <= 6; t++) {
-              defaultMissions.push({
+          // Provisiona as missões em TODAS as semanas do desafio para o treinador já ter tudo pronto em 1 clique
+          for (const wk of createdWeeks) {
+            const wNum = wk.week_number;
+
+            // 1. Treinos da Semana
+            for (let t = 1; t <= activePreset.workoutsPerWeek; t++) {
+              allMissions.push({
                 challenge_id: challenge.id,
-                week_id: week1.id,
-                title: `Treino #${t} da Semana 1`,
+                week_id: wk.id,
+                title: `${activePreset.workoutLabel} #${t} • Semana ${wNum}`,
                 category: 'treino',
                 points_rewarded: 15,
                 requires_cooldown: true,
@@ -146,12 +278,12 @@ export default function NewChallengePage() {
               });
             }
 
-            // 2. Cardios (7 cardios na Semana 1)
-            for (let c = 1; c <= 7; c++) {
-              defaultMissions.push({
+            // 2. Cardios da Semana
+            for (let c = 1; c <= activePreset.cardiosPerWeek; c++) {
+              allMissions.push({
                 challenge_id: challenge.id,
-                week_id: week1.id,
-                title: `Cardio #${c} (Mín. 30min) • Semana 1`,
+                week_id: wk.id,
+                title: `${activePreset.cardioLabel} #${c} • Semana ${wNum}`,
                 category: 'cardio',
                 points_rewarded: 10,
                 requires_cooldown: true,
@@ -161,13 +293,12 @@ export default function NewChallengePage() {
               });
             }
 
-            // 3. Refeições Diárias
-            const meals = ['Café da Manhã Limpo', 'Almoço Balanceado', 'Lanche da Tarde', 'Jantar & Ceia'];
-            meals.forEach((meal, idx) => {
-              defaultMissions.push({
+            // 3. Refeições Diárias Auditadas por IA
+            activePreset.meals.forEach((meal, idx) => {
+              allMissions.push({
                 challenge_id: challenge.id,
-                week_id: week1.id,
-                title: `${meal} • Semana 1`,
+                week_id: wk.id,
+                title: `${meal} • Semana ${wNum}`,
                 category: 'refeicao',
                 points_rewarded: 10,
                 requires_cooldown: false,
@@ -176,11 +307,11 @@ export default function NewChallengePage() {
               });
             });
 
-            // 4. Bônus / Hábito
-            defaultMissions.push({
+            // 4. Hábito / Bônus
+            allMissions.push({
               challenge_id: challenge.id,
-              week_id: week1.id,
-              title: 'Desafio Bônus: 3L Água + Alongamento • Semana 1',
+              week_id: wk.id,
+              title: `${activePreset.habitTitle} • Semana ${wNum}`,
               category: 'habito',
               points_rewarded: 25,
               requires_cooldown: false,
@@ -189,12 +320,10 @@ export default function NewChallengePage() {
             });
           }
 
-          let { error: mErr } = await supabase.from('missions').insert(defaultMissions);
+          const { error: mErr } = await supabase.from('missions').insert(allMissions);
 
-          // Fallback resiliente caso colunas opcionais não existam no cache do Supabase
           if (mErr && (mErr.message.includes('column') || mErr.message.includes('schema cache'))) {
-            console.warn('Erro de coluna no schema cache. Tentando insert básico...', mErr);
-            const basicMissions = defaultMissions.map((m) => ({
+            const basicMissions = allMissions.map((m) => ({
               challenge_id: m.challenge_id,
               week_id: m.week_id,
               title: m.title,
@@ -208,7 +337,7 @@ export default function NewChallengePage() {
         console.warn('Erro não bloqueante ao criar semanas e missões padrão:', weekErr);
       }
 
-      showToast('Desafio e missões padrão criados com sucesso!');
+      showToast('Desafio e cronograma completo criados em 1 clique!');
       setTimeout(() => {
         router.push(`/dashboard/missions?challengeId=${challenge.id}`);
       }, 700);
@@ -219,12 +348,12 @@ export default function NewChallengePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 relative">
+    <div className="max-w-3xl mx-auto space-y-6 relative">
       {/* Toast Notificação */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
           <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         </div>
@@ -238,18 +367,73 @@ export default function NewChallengePage() {
         </Link>
         <div>
           <h1 className="text-2xl font-black text-white">Criar Novo Desafio Fitness</h1>
-          <p className="text-xs text-zinc-400">Configure as datas, taxa de inscrição e regras gerais.</p>
+          <p className="text-xs text-zinc-400">
+            Escolha um modelo pronto em 1 clique ou personalize cada detalhe da sua turma.
+          </p>
         </div>
       </div>
 
-      <Card 
-        data-tour="challenge-form-card"
-        className="border-zinc-800 bg-zinc-900/40"
-      >
+      {/* SELETOR DE TEMPLATES EM 1 CLIQUE */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-300 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            Modelos Prontos em 1 Clique (Auto-Preenche Semanas & Missões)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {CHALLENGE_PRESETS.map((preset) => {
+            const Icon = preset.icon;
+            const isSelected = selectedPresetId === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => handleApplyPreset(preset)}
+                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                  isSelected
+                    ? 'bg-white/[0.08] border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.12)]'
+                    : 'bg-zinc-950/70 border-white/10 hover:border-white/25 hover:bg-white/[0.03]'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/10">
+                    {preset.badge}
+                  </span>
+                  {isSelected ? (
+                    <span className="h-5 w-5 rounded-full bg-white text-black flex items-center justify-center">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </span>
+                  ) : (
+                    <Icon className="w-4 h-4 text-zinc-400" />
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-black text-white">{preset.name}</h3>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed mt-0.5">
+                    {preset.summary}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-[11px] font-mono text-zinc-300">
+                  <span>Duração: {preset.durationDays} dias</span>
+                  <span className="font-bold text-emerald-400">
+                    {Number(preset.suggestedPrice) === 0 ? 'GRÁTIS' : `R$ ${preset.suggestedPrice}`}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Card data-tour="challenge-form-card" className="border-zinc-800 bg-zinc-900/40">
         <CardHeader>
           <CardTitle className="text-lg">Dados do Desafio</CardTitle>
           <CardDescription className="text-xs">
-            Preencha os dados do programa de gamificação que seus alunos irão participar.
+            Revise ou edite livremente o título, período e valor de inscrição da turma.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -260,7 +444,7 @@ export default function NewChallengePage() {
               </label>
               <Input
                 type="text"
-                placeholder="Ex: Desafio Seca 30 Dias - Turma Outubro"
+                placeholder="Ex: Desafio Seca 21 Dias - Turma Oficial"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -357,9 +541,9 @@ export default function NewChallengePage() {
                 </div>
                 <div className="pt-1 flex items-center justify-end">
                   <Link href="/dashboard/finance" target="_blank">
-                    <Button 
-                      type="button" 
-                      size="sm" 
+                    <Button
+                      type="button"
+                      size="sm"
                       className="bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs h-8 flex items-center gap-1.5"
                     >
                       Configurar Recebimento na Central Financeira
@@ -400,10 +584,12 @@ export default function NewChallengePage() {
 
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
               <Link href="/dashboard" className="w-full sm:w-auto">
-                <Button type="button" variant="ghost" className="w-full sm:w-auto">Cancelar</Button>
+                <Button type="button" variant="ghost" className="w-full sm:w-auto">
+                  Cancelar
+                </Button>
               </Link>
               <Button type="submit" disabled={loading} className="w-full sm:w-auto font-mono">
-                {loading ? 'Salvando...' : 'Criar e Definir Missões'}
+                {loading ? 'Gerando Semanas & Missões...' : 'Criar Desafio em 1 Clique'}
               </Button>
             </div>
           </form>

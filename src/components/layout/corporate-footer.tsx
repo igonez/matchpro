@@ -74,13 +74,13 @@ export function CorporateFooter({ showNavigation = true }: CorporateFooterProps)
                 </Link>
               </li>
               <li>
-                <Link href="/beta" className="hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white rounded">
-                  Programa Treinadores Pioneiros
+                <Link href="/login?role=professional" className="hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white rounded">
+                  Portal do Treinador
                 </Link>
               </li>
               <li>
-                <Link href="/vip" className="hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white rounded">
-                  Lista VIP
+                <Link href="/login?role=student" className="hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white rounded">
+                  Área do Aluno
                 </Link>
               </li>
               <li>

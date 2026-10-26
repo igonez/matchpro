@@ -49,9 +49,6 @@ export default function HomePage() {
   // FAQ Accordion
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  // Modal de Aviso de Fase de Testes Fechada (Bloqueio de Aluno / Plataforma)
-  const [isBetaClosedModalOpen, setIsBetaClosedModalOpen] = useState(false);
-
   // Cálculos da Calculadora
   const grossRevenue = studentsCount * ticketPrice;
   const netStarter = grossRevenue * 0.85; // 15% taxa
@@ -268,16 +265,15 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => setIsBetaClosedModalOpen(true)}
-              className="hidden sm:flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition-colors cursor-pointer"
+            <Link
+              href="/login?role=student"
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition-colors"
             >
-              <Lock className="w-3.5 h-3.5 text-zinc-500" />
               <span>Sou Aluno</span>
-            </button>
-            <Link href="/beta">
+            </Link>
+            <Link href="/login?role=professional&mode=signup">
               <button className="mono-button-primary min-h-[44px] px-4 sm:px-5 py-2 text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer">
-                <span>Participe da Fase de Testes</span>
+                <span>Criar Conta Grátis</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
@@ -309,20 +305,15 @@ export default function HomePage() {
               ))}
             </div>
             <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
-              <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  setIsBetaClosedModalOpen(true);
-                }}
-                className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer text-zinc-400"
-              >
-                <Lock className="w-4 h-4 text-zinc-500" />
-                <span>Acesso Aluno (Fase Fechada)</span>
-              </button>
-              <Link href="/beta" onClick={() => setMobileNavOpen(false)} className="flex-1">
+              <Link href="/login?role=student" onClick={() => setMobileNavOpen(false)} className="flex-1">
+                <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
+                  <span>Sou Aluno (Entrar na Turma)</span>
+                </button>
+              </Link>
+              <Link href="/login?role=professional&mode=signup" onClick={() => setMobileNavOpen(false)} className="flex-1">
                 <button className="mono-button-primary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4" />
-                  <span>Participe da Fase de Testes</span>
+                  <span>Sou Treinador (Criar Conta)</span>
                 </button>
               </Link>
             </div>
@@ -366,20 +357,20 @@ export default function HomePage() {
 
             {/* CTAs Principais com Touch Targets Confortáveis (>= 52px) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-8">
-              <Link href="/beta" className="w-full sm:w-auto">
+              <Link href="/login?role=professional&mode=signup" className="w-full sm:w-auto">
                 <button className="mono-button-primary w-full sm:w-auto min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 cursor-pointer">
                   <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>Participe da Fase de Testes</span>
+                  <span>Criar Conta Grátis</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
                 </button>
               </Link>
 
-              <a href="#mockup" className="w-full sm:w-auto">
+              <Link href="/login?role=student" className="w-full sm:w-auto">
                 <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
                   <Smartphone className="w-4 h-4 text-zinc-300 shrink-0" />
-                  <span>Ver App & Cockpit ao Vivo</span>
+                  <span>Sou Aluno • Entrar na Turma</span>
                 </button>
-              </a>
+              </Link>
             </div>
 
 
@@ -1076,10 +1067,10 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <Link href="/beta" className="block w-full">
+              <Link href="/login?role=professional&mode=signup" className="block w-full">
                 <button className="mono-button-secondary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4 text-zinc-300" />
-                  <span>Participe da Fase de Testes</span>
+                  <span>Começar Grátis no Starter</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
@@ -1164,10 +1155,10 @@ export default function HomePage() {
 
               </div>
 
-              <Link href="/beta" className="block w-full">
+              <Link href="/login?role=professional&mode=signup" className="block w-full">
                 <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-black shadow-[0_0_25px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4 text-black" />
-                  <span>Participe da Fase de Testes</span>
+                  <span>Começar com Pro Coach</span>
                   <ArrowRight className="w-4 h-4 text-black" />
                 </button>
               </Link>
@@ -1362,19 +1353,19 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/beta" className="w-full sm:w-auto">
+            <Link href="/login?role=professional&mode=signup" className="w-full sm:w-auto">
               <button className="mono-button-primary w-full sm:w-auto min-h-[54px] px-10 py-4 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 shadow-[0_0_35px_rgba(255,255,255,0.3)] cursor-pointer">
                 <Sparkles className="w-4 h-4 shrink-0" />
-                <span>Participe da Fase de Testes</span>
+                <span>Criar Conta Grátis Agora</span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
             </Link>
-            <a href="#mockup" className="w-full sm:w-auto">
+            <Link href="/login?role=student" className="w-full sm:w-auto">
               <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
                 <Smartphone className="w-4 h-4 text-zinc-300" />
-                <span>Ver App & Cockpit ao Vivo</span>
+                <span>Sou Aluno • Entrar na Turma</span>
               </button>
-            </a>
+            </Link>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-mono text-zinc-400">
@@ -1387,58 +1378,6 @@ export default function HomePage() {
 
       {/* 13. Rodapé Institucional e Legal Completo */}
       <CorporateFooter />
-
-      {/* Modal de Aviso de Fase de Testes Fechada */}
-      {isBetaClosedModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="relative w-full max-w-md rounded-3xl bg-zinc-950 border border-white/20 p-6 sm:p-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setIsBetaClosedModalOpen(false)}
-              className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
-              aria-label="Fechar"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-center mx-auto mb-4 text-white shadow-inner">
-              <Lock className="w-6 h-6 text-zinc-200" />
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-zinc-300 font-mono text-[11px] uppercase tracking-wider mb-3">
-              <span>Piloto Exclusivo</span>
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
-              Fase de Testes Fechada
-            </h3>
-
-            <p className="text-sm text-zinc-300 leading-relaxed mb-6 font-normal">
-              O acesso aos desafios e ao cockpit está restrito aos treinadores e turmas pioneiras do programa piloto. Novas vagas e turmas de alunos são liberadas por ordem de inscrição.
-            </p>
-
-            <div className="space-y-3">
-              <Link
-                href="/beta"
-                onClick={() => setIsBetaClosedModalOpen(false)}
-                className="block w-full"
-              >
-                <button className="mono-button-primary w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_25px_rgba(255,255,255,0.2)]">
-                  <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>Participar da Fase de Testes</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
-                </button>
-              </Link>
-
-              <button
-                onClick={() => setIsBetaClosedModalOpen(false)}
-                className="w-full py-2.5 text-xs font-mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors cursor-pointer"
-              >
-                Voltar à Página Principal
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -22,13 +22,21 @@ function LoginContent() {
   const supabase = createClient();
 
   // Perfis: 'student' | 'professional'
-  const [role, setRole] = useState<'student' | 'professional'>('student');
+  const roleParam = searchParams.get('role');
+  const modeParam = searchParams.get('mode');
+  const [role, setRole] = useState<'student' | 'professional'>(
+    roleParam === 'professional' ? 'professional' : 'student'
+  );
 
   // Modos do Aluno: 'code' (novo aluno com convite) | 'signin' (já é aluno e volta)
-  const [studentMode, setStudentMode] = useState<'code' | 'signin'>('code');
+  const [studentMode, setStudentMode] = useState<'code' | 'signin'>(
+    modeParam === 'signin' ? 'signin' : 'code'
+  );
 
   // Modos do Profissional: 'signin' | 'signup'
-  const [coachMode, setCoachMode] = useState<'signin' | 'signup'>('signin');
+  const [coachMode, setCoachMode] = useState<'signin' | 'signup'>(
+    modeParam === 'signup' ? 'signup' : 'signin'
+  );
 
   // Estados de Código de Convite
   const [inviteCode, setInviteCode] = useState(initialCode);

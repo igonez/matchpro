@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AsaasClient } from '@/lib/asaas/client';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -13,6 +14,10 @@ export async function POST(request: Request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
     }
+
+    // 1.1 Rate limiting por treinador para evitar criação duplicada de assinaturas no Asaas
+    const rateLimitResponse = enforceRateLimit(request, 'checkout', `coach-plan:${user.id}`);
+    if (rateLimitResponse) return rateLimitResponse;
 
     const body = await request.json();
     const { planTier, billingType = 'PIX', creditCard, creditCardHolderInfo } = body;

@@ -44,3 +44,7 @@ next-env.d.ts
 data/leads_backup.json*
 *.tmp
 .temp-puppeteer*
+.temp-pup*
+supabase/.temp/
+video/node_modules/
+video/out/

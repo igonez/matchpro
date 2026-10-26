@@ -328,7 +328,7 @@ export function StudentBottomNav() {
       category: 'CONTA',
       items: [
         {
-          title: 'Guia / Tour do Aluno',
+          title: 'Guia do App',
           subtitle: 'Rever como funcionam câmera, IA e pontos',
           href: '#tour',
           icon: Sparkles,
@@ -509,7 +509,7 @@ export function StudentBottomNav() {
                               className="w-full flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:text-white hover:bg-white/[0.08] transition-all text-left cursor-pointer"
                             >
                               <div className="flex items-center gap-2.5 min-w-0">
-                                <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                                <div className="p-1.5 rounded-lg bg-white/5 text-zinc-400">
                                   <Icon className="w-3.5 h-3.5" />
                                 </div>
                                 <div className="min-w-0">

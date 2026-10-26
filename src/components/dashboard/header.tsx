@@ -21,7 +21,8 @@ import {
   Target,
   ChevronDown,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Smartphone
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWalkthrough } from '@/components/ui/walkthrough-spotlight';
@@ -159,16 +160,6 @@ export function DashboardHeader() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            type="button"
-            onClick={() => startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY)}
-            className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-300 hover:text-white hover:bg-emerald-500/20 transition-all cursor-pointer"
-            title="Abrir o tour guiado do app"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-            <span className="font-bold">Tour do App</span>
-          </button>
-
           <Link
             href="/app?preview=true"
             target="_blank"
@@ -321,13 +312,13 @@ export function DashboardHeader() {
                   setMobileMenuOpen(false);
                   startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY);
                 }}
-                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-emerald-300 hover:text-white bg-emerald-500/10 border border-emerald-500/20 active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all cursor-pointer"
               >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-emerald-400" />
-                  <span>Guia / Tour do App</span>
+                <div className="flex items-center gap-2.5">
+                  <Sparkles className="h-4 w-4 text-zinc-400" />
+                  <span>Guia do App</span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-emerald-400" />
+                <ChevronRight className="h-4 w-4 text-zinc-500" />
               </button>
 
               <Link
@@ -335,7 +326,10 @@ export function DashboardHeader() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] border border-white/10 active:scale-[0.98] transition-all"
               >
-                <span>Visão do Aluno</span>
+                <div className="flex items-center gap-2.5">
+                  <Smartphone className="h-4 w-4 text-zinc-400" />
+                  <span>Visão do Aluno</span>
+                </div>
                 <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
               </Link>
               <button

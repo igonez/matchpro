@@ -433,7 +433,7 @@ export default function LeaderboardPage() {
                 className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-mono font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
                 <Share2 className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>Compartilhar Minha Posição nos Stories (9:16)</span>
+                <span>Compartilhar Pódio & Ranking (Stories / WhatsApp)</span>
               </button>
             </div>
           </div>
@@ -515,16 +515,21 @@ export default function LeaderboardPage() {
           {/* Glow de fundo para o pódio */}
           <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-56 h-32 rounded-full bg-amber-400/15 blur-3xl" />
 
-          <div className="flex items-center justify-between mb-6 relative z-10">
+          <div className="flex items-center justify-between mb-6 relative z-10 gap-2">
             <div className="flex items-center gap-2">
               <Award className="w-4 h-4 text-amber-400" />
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-300">
                 PÓDIO DE ELITE • TOP 3
               </span>
             </div>
-            <span className="text-[10px] font-mono text-amber-300/90 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full">
-              Liderança Auditada
-            </span>
+            <button
+              type="button"
+              onClick={() => setShowStoryShare(true)}
+              className="text-[10px] font-mono font-bold text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <Share2 className="w-3 h-3 text-amber-300" />
+              <span>Compartilhar Ranking</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 items-end pt-4 relative z-10">
@@ -863,17 +868,29 @@ export default function LeaderboardPage() {
         )}
       </div>
 
-      {/* Modal de Card 9:16 para Instagram Stories */}
+      {/* Modal de Card 9:16 para Instagram Stories / WhatsApp */}
       <StoryShareModal
         isOpen={showStoryShare}
         onClose={() => setShowStoryShare(false)}
         data={{
           mode: 'leaderboard',
-          studentName: myStanding?.students?.full_name || 'Atleta ArenaFit',
+          studentName: myStanding?.students?.full_name || top1?.students?.full_name || 'Atleta ArenaFit',
           challengeTitle: currentChallenge?.title || 'Arena Oficial',
-          pointsText: `${myStanding?.total_points || 0} XP`,
+          pointsText: `${myStanding?.total_points ?? top1?.total_points ?? 0} XP`,
           rankPosition: `#${myRank || 1}`,
           streakDays: currentUserId ? streaksMap[currentUserId] || 1 : 1,
+          currentUserId,
+          isCoachView: !myStanding,
+          classAveragePoints,
+          topStreakDays: topStreakStudent?.streak || 0,
+          topStreakName: topStreakStudent?.name || 'Atleta',
+          standings: standings.map((s) => ({
+            studentId: s.student_id,
+            name: s.students?.full_name || 'Atleta',
+            avatarUrl: s.students?.avatar_url || null,
+            points: Number(s.total_points || 0),
+            streakDays: streaksMap[s.student_id] || 0,
+          })),
         }}
       />
     </div>

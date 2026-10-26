@@ -17,12 +17,14 @@ import {
   TrendingUp,
   ShieldCheck,
   Target,
+  Share2,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
+import { StoryShareModal } from '@/components/student/story-share-modal';
 import { createClient } from '@/lib/supabase/client';
 
 function CoachLeaderboardContent() {
@@ -38,6 +40,7 @@ function CoachLeaderboardContent() {
   const [streaksMap, setStreaksMap] = useState<Record<string, number>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showStoryShare, setShowStoryShare] = useState(false);
 
   // 1. Carregar turmas do coach
   useEffect(() => {
@@ -278,6 +281,17 @@ function CoachLeaderboardContent() {
             </select>
           )}
 
+          {standings.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowStoryShare(true)}
+              className="h-10 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-mono font-black flex items-center gap-1.5 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5 shrink-0" />
+              <span>Compartilhar Ranking (Stories / WhatsApp)</span>
+            </button>
+          )}
+
           {currentChallenge && (
             <Link href={`/dashboard/challenges/${currentChallenge.id}/edit`}>
               <Button
@@ -364,9 +378,19 @@ function CoachLeaderboardContent() {
                 Top 3 Atletas Mais Consistentes
               </h2>
             </div>
-            <span className="text-xs font-mono text-zinc-400 bg-white/[0.04] border border-white/10 px-3 py-1 rounded-full self-start sm:self-auto">
-              Pontuação Auditada por Câmera & IA
-            </span>
+            <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setShowStoryShare(true)}
+                className="text-xs font-mono font-bold text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <Share2 className="w-3.5 h-3.5 text-amber-300" />
+                <span>Gerar Card do Pódio (9:16)</span>
+              </button>
+              <span className="text-xs font-mono text-zinc-400 bg-white/[0.04] border border-white/10 px-3 py-1.5 rounded-full">
+                Pontuação Auditada por Câmera & IA
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4 sm:gap-6 items-end max-w-2xl mx-auto pt-8 relative z-10">
@@ -741,6 +765,37 @@ function CoachLeaderboardContent() {
           </CardContent>
         </Card>
       )}
+
+      {/* Modal de Compartilhamento do Ranking da Turma (Stories 9:16 + WhatsApp) */}
+      <StoryShareModal
+        isOpen={showStoryShare}
+        onClose={() => setShowStoryShare(false)}
+        data={{
+          mode: 'leaderboard',
+          studentName: top1?.students?.full_name || 'Líder da Turma',
+          challengeTitle: currentChallenge?.title || 'Desafio Oficial',
+          pointsText: `${top1?.total_points || 0} XP`,
+          rankPosition: '#1',
+          streakDays: maxStreak,
+          isCoachView: true,
+          classAveragePoints:
+            standings.length > 0
+              ? Math.round(
+                  standings.reduce((acc, curr) => acc + Number(curr.total_points || 0), 0) /
+                    standings.length
+                )
+              : 0,
+          topStreakDays: maxStreak,
+          standings: standings.map((s) => ({
+            studentId: s.student_id,
+            name: s.students?.full_name || 'Atleta',
+            avatarUrl: s.students?.avatar_url || null,
+            points: Number(s.total_points || 0),
+            streakDays: streaksMap[s.student_id] || 0,
+            approvedMissions: s.approvedMissions || 0,
+          })),
+        }}
+      />
     </div>
   );
 }

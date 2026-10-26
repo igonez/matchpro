@@ -1,6 +1,15 @@
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 
-export const elevenlabs = new ElevenLabsClient();
+let _elevenlabs: ElevenLabsClient | null = null;
+
+export function getElevenLabsClient(): ElevenLabsClient {
+  if (!_elevenlabs) {
+    _elevenlabs = new ElevenLabsClient({
+      apiKey: process.env.ELEVENLABS_API_KEY,
+    });
+  }
+  return _elevenlabs;
+}
 
 export const ARENA_VOICEOVER_SCRIPT = [
   {
@@ -52,7 +61,7 @@ export async function synthesizeVoiceover(
   text: string,
   voiceId = "CwhRBWXzGAHq8TQ4Fs17" // Roger — descontraído, informal e impactante
 ): Promise<Buffer> {
-  const audioStream = await elevenlabs.textToSpeech.convert(voiceId, {
+  const audioStream = await getElevenLabsClient().textToSpeech.convert(voiceId, {
     text,
     modelId: "eleven_multilingual_v2",
     outputFormat: "mp3_44100_128",
@@ -71,7 +80,7 @@ export async function synthesizeSoundEffect(
   prompt: string,
   durationSeconds = 1.5
 ): Promise<Buffer> {
-  const audioStream = await elevenlabs.textToSoundEffects.convert({
+  const audioStream = await getElevenLabsClient().textToSoundEffects.convert({
     text: prompt,
     durationSeconds,
     promptInfluence: 0.4,

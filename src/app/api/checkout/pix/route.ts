@@ -52,6 +52,8 @@ export async function POST(request: Request) {
         id,
         title,
         price,
+        is_active,
+        end_date,
         professional_id,
         professionals (
           id,
@@ -66,6 +68,35 @@ export async function POST(request: Request) {
 
     if (chError || !challenge) {
       return NextResponse.json({ error: 'Desafio não encontrado.' }, { status: 404 });
+    }
+
+    if (challenge.is_active === false) {
+      return NextResponse.json({ error: 'Esta turma foi encerrada pelo treinador.' }, { status: 400 });
+    }
+
+    if (challenge.end_date) {
+      const endDate = new Date(challenge.end_date + 'T23:59:59');
+      if (endDate < new Date()) {
+        return NextResponse.json(
+          { error: `Este desafio terminou em ${new Date(challenge.end_date).toLocaleDateString('pt-BR')}.` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Verificar se o aluno já está matriculado e pago nesta turma
+    const { data: existingParticipant } = await supabaseAdmin
+      .from('challenge_participants')
+      .select('id, payment_status')
+      .eq('challenge_id', challengeId)
+      .eq('student_id', user.id)
+      .maybeSingle();
+
+    if (existingParticipant && ['paid', 'complimentary'].includes(existingParticipant.payment_status || '')) {
+      return NextResponse.json(
+        { error: 'Você já possui inscrição ativa e confirmada nesta turma!' },
+        { status: 400 }
+      );
     }
 
     const price = Number(challenge.price || 0);

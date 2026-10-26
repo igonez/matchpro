@@ -21,7 +21,10 @@ import {
   Utensils,
   Droplets,
   Smartphone,
-  Download
+  Download,
+  Play,
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
@@ -410,7 +413,7 @@ export function StudentBottomNav() {
               >
                 <div className="h-full w-full bg-black rounded-full flex items-center justify-center text-white relative">
                   {activeSession ? (
-                    <span className="text-emerald-400 font-bold text-sm animate-pulse">▶</span>
+                    <Play className="w-4 h-4 text-emerald-400 fill-emerald-400 animate-pulse" />
                   ) : (
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <circle cx="12" cy="12" r="3" strokeWidth="2.2" />
@@ -568,7 +571,8 @@ export function StudentBottomNav() {
                   onClick={() => setShowVerticalMenu(false)}
                   className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-white text-black font-semibold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
                 >
-                  <span>← Voltar ao Painel do Coach</span>
+                  <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
+                  <span>Voltar ao Painel do Coach</span>
                 </Link>
               )}
 
@@ -616,7 +620,7 @@ export function StudentBottomNav() {
               <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-3 shadow-[0_0_20px_rgba(52,211,153,0.15)]">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-xs shrink-0 animate-pulse">
-                    ▶
+                    <Play className="w-3.5 h-3.5 fill-emerald-400" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block font-bold">
@@ -661,9 +665,10 @@ export function StudentBottomNav() {
                   <Link
                     href="/app/missions"
                     onClick={() => setShowQuickSheet(false)}
-                    className="inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-200 hover:text-white transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-200 hover:text-white transition-colors"
                   >
-                    Ver cronograma da semana →
+                    <span>Ver cronograma da semana</span>
+                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                   </Link>
                 </div>
               ) : (

@@ -31,10 +31,23 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Obter dados da missão
+    // 1. Obter dados da missão e do desafio vinculado
     const { data: mission, error: missionError } = await supabaseAdmin
       .from('missions')
-      .select('id, title, challenge_id, points_rewarded, validation_type, category')
+      .select(`
+        id,
+        title,
+        challenge_id,
+        points_rewarded,
+        validation_type,
+        category,
+        challenges (
+          id,
+          price,
+          is_active,
+          end_date
+        )
+      `)
       .eq('id', missionId)
       .single();
 
@@ -45,9 +58,41 @@ export async function POST(request: Request) {
       );
     }
 
-    const resolvedChallengeId = mission.challenge_id || challengeId;
+    // 1.1 Garantir que apenas missões de clique simples (hábitos/check-in direto) usem esta rota
+    const allowedValidationTypes = ['simple_click', 'checkbox', 'click', null];
+    const isSimpleHabit =
+      allowedValidationTypes.includes(mission.validation_type) ||
+      mission.category === 'habito';
 
-    // 2. Verificar se o aluno está matriculado no desafio correspondente
+    if (!isSimpleHabit && (mission.validation_type === 'photo' || mission.validation_type === 'timer')) {
+      return NextResponse.json(
+        { error: 'Esta missão exige comprovação por foto ou cronômetro na câmera do app.' },
+        { status: 400 }
+      );
+    }
+
+    const resolvedChallengeId = mission.challenge_id || challengeId;
+    const challengeInfo: any = mission.challenges;
+
+    if (challengeInfo) {
+      if (challengeInfo.is_active === false) {
+        return NextResponse.json(
+          { error: 'Esta turma foi encerrada pelo treinador.' },
+          { status: 400 }
+        );
+      }
+      if (challengeInfo.end_date) {
+        const endDate = new Date(challengeInfo.end_date + 'T23:59:59');
+        if (endDate < new Date()) {
+          return NextResponse.json(
+            { error: 'Este desafio já foi encerrado.' },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
+    // 2. Verificar se o aluno está matriculado e com status de pagamento ativo no desafio correspondente
     if (resolvedChallengeId) {
       const { data: participant, error: partError } = await supabaseAdmin
         .from('challenge_participants')
@@ -59,6 +104,17 @@ export async function POST(request: Request) {
       if (partError || !participant) {
         return NextResponse.json(
           { error: 'Você não está matriculado neste desafio.' },
+          { status: 403 }
+        );
+      }
+
+      const challengePrice = Number(challengeInfo?.price || 0);
+      if (
+        challengePrice > 0 &&
+        !['paid', 'complimentary'].includes(participant.payment_status || '')
+      ) {
+        return NextResponse.json(
+          { error: 'Sua inscrição neste desafio aguarda confirmação de pagamento.' },
           { status: 403 }
         );
       }

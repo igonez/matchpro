@@ -632,8 +632,9 @@ export default function StudentHomePage() {
                 Você iniciou a inscrição na turma <strong>{pendingChallenge.title}</strong> (R$ {Number(pendingChallenge.price || 0).toFixed(2)}).
               </p>
               <Link href={`/join/${pendingChallenge.id}`} className="block pt-1">
-                <button className="w-full min-h-[44px] py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs sm:text-sm font-mono transition-colors cursor-pointer">
-                  Concluir Pagamento no Pix →
+                <button className="w-full min-h-[44px] py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs sm:text-sm font-mono transition-colors cursor-pointer flex items-center justify-center gap-1.5">
+                  <span>Concluir Pagamento no Pix</span>
+                  <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                 </button>
               </Link>
             </div>
@@ -706,9 +707,10 @@ export default function StudentHomePage() {
                   </span>
                   <Link
                     href="/app/materials?tab=avisos"
-                    className="text-xs font-mono text-zinc-400 hover:text-white"
+                    className="inline-flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-white"
                   >
-                    VER TODOS ({announcements.length}) →
+                    <span>VER TODOS ({announcements.length})</span>
+                    <ArrowRight className="w-3 h-3 shrink-0" />
                   </Link>
                 </div>
                 <p className="text-sm font-bold text-white leading-tight">{topAnnouncement.title}</p>
@@ -760,22 +762,25 @@ export default function StudentHomePage() {
                     activeSession?.missionId === focalTask.id ? (
                       <button
                         onClick={() => router.push(`/app/camera/${focalTask.id}`)}
-                        className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer"
+                        className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer flex items-center justify-center gap-2"
                       >
-                        FINALIZAR SESSÃO & REGISTRAR FOTO →
+                        <span>FINALIZAR SESSÃO & REGISTRAR FOTO</span>
+                        <ArrowRight className="w-4 h-4 shrink-0" />
                       </button>
                     ) : (
                       <button
                         onClick={() => startSession(focalTask.id, focalTask.title, focalTask.category)}
-                        className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer"
+                        className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer flex items-center justify-center gap-2"
                       >
-                        INICIAR {focalTask.category === 'treino' ? 'TREINO' : 'CARDIO'} AGORA →
+                        <span>INICIAR {focalTask.category === 'treino' ? 'TREINO' : 'CARDIO'} AGORA</span>
+                        <ArrowRight className="w-4 h-4 shrink-0" />
                       </button>
                     )
                   ) : (
                     <Link href={`/app/camera/${focalTask.id}`} className="block w-full">
-                      <button className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer">
-                        REGISTRAR FOTO AO VIVO →
+                      <button className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer flex items-center justify-center gap-2">
+                        <span>REGISTRAR FOTO AO VIVO</span>
+                        <ArrowRight className="w-4 h-4 shrink-0" />
                       </button>
                     </Link>
                   )}
@@ -849,8 +854,9 @@ export default function StudentHomePage() {
                   title="Ver Arquivos do Treinador"
                 >
                   <span className="text-[11px] text-zinc-400 block uppercase font-mono tracking-wider group-hover:text-white">GUIA/PDF</span>
-                  <span className="text-xs sm:text-sm font-black text-zinc-200 font-mono block mt-1">
-                    ACESSAR →
+                  <span className="inline-flex items-center justify-center gap-1 text-xs sm:text-sm font-black text-zinc-200 font-mono mt-1">
+                    <span>ACESSAR</span>
+                    <ArrowRight className="w-3 h-3 shrink-0" />
                   </span>
                 </Link>
               </div>
@@ -863,8 +869,9 @@ export default function StudentHomePage() {
               <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 font-mono">
                 BLOCOS DE EXECUÇÃO DE HOJE
               </span>
-              <Link href="/app/missions" className="text-xs text-amber-300 hover:text-white transition-colors font-mono font-bold tracking-wider">
-                VER SEMANAS 1 A 4 →
+              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-amber-300 hover:text-white transition-colors font-mono font-bold tracking-wider">
+                <span>VER SEMANAS 1 A 4</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
             </div>
 
@@ -962,8 +969,9 @@ export default function StudentHomePage() {
                                 EM ANDAMENTO
                               </span>
                             ) : (
-                              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-xs font-mono font-bold text-white">
-                                Iniciar →
+                              <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 text-xs font-mono font-bold text-white">
+                                <span>Iniciar</span>
+                                <ArrowRight className="w-3 h-3 shrink-0" />
                               </span>
                             )}
                           </div>
@@ -982,8 +990,9 @@ export default function StudentHomePage() {
               <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 font-mono">
                 {missionLists.length > 0 ? 'PROGRESSO POR LISTA' : 'PROGRESSO POR PILAR'}
               </span>
-              <Link href="/app/missions" className="text-xs text-zinc-400 hover:text-white transition-colors font-mono tracking-wider">
-                VER TODOS →
+              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-white transition-colors font-mono tracking-wider">
+                <span>VER TODOS</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
             </div>
 

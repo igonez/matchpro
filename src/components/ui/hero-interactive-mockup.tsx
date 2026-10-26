@@ -367,7 +367,10 @@ export function HeroInteractiveMockup() {
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-white">Metadados Antifraude</span>
-                      <span className="text-xs font-mono text-emerald-400 font-bold">✓ Verificado</span>
+                      <span className="inline-flex items-center gap-1 text-xs font-mono text-emerald-400 font-bold">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        <span>Verificado</span>
+                      </span>
                     </div>
                     <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                       Captura direta da câmera com timestamp criptográfico e validação de sessão ativa.

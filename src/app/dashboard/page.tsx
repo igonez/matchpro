@@ -8,7 +8,7 @@ import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Input } from '@/components/ui/input';
 import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
-import { Copy } from 'lucide-react';
+import { Copy, ArrowRight } from 'lucide-react';
 
 export default function DashboardOverviewPage() {
   const supabase = createClient();
@@ -304,8 +304,9 @@ export default function DashboardOverviewPage() {
         <Link href="/dashboard/students" className="block group">
           <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
             <div className="flex items-center justify-between pb-3">
-              <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
-                Alunos Inscritos →
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
+                <span>Alunos Inscritos</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </span>
               <span className="h-2 w-2 rounded-full bg-white" />
             </div>
@@ -318,8 +319,9 @@ export default function DashboardOverviewPage() {
         <Link href="/dashboard/challenges/new" className="block group">
           <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
             <div className="flex items-center justify-between pb-3">
-              <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
-                Turmas Ativas →
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
+                <span>Turmas Ativas</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </span>
               <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
                 Em Andamento
@@ -427,9 +429,10 @@ export default function DashboardOverviewPage() {
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full h-11 min-h-[44px] text-xs flex items-center justify-center font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all"
+                        className="w-full h-11 min-h-[44px] text-xs flex items-center justify-center gap-1.5 font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all"
                       >
-                        Resgatar no WhatsApp →
+                        <span>Resgatar no WhatsApp</span>
+                        <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                       </a>
                     ) : (
                       <button
@@ -458,7 +461,7 @@ export default function DashboardOverviewPage() {
           </h2>
           <Link href="/dashboard/challenges" className="text-xs text-zinc-400 hover:text-white transition-colors font-mono flex items-center gap-1 group">
             <span>Gerenciar Desafios</span>
-            <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
@@ -682,7 +685,8 @@ export default function DashboardOverviewPage() {
                 rel="noopener noreferrer"
                 className="mono-button-secondary w-full py-2 text-xs flex items-center justify-center gap-2 font-mono"
               >
-                Compartilhar no WhatsApp →
+                <span>Compartilhar no WhatsApp</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </a>
             </div>
 

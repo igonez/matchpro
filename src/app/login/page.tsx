@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
-import { Trophy, ArrowRight, Check, Clipboard, Sparkles, User, ShieldCheck } from 'lucide-react';
+import { Trophy, ArrowRight, ArrowLeft, Check, Clipboard, Sparkles, User, ShieldCheck } from 'lucide-react';
 
 function LoginContent() {
   const router = useRouter();
@@ -291,8 +291,9 @@ function LoginContent() {
           <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
         </Link>
 
-        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
-          ← Início
+        <Link href="/" className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
+          <span>Início</span>
         </Link>
       </div>
 
@@ -462,8 +463,9 @@ function LoginContent() {
                     <div className="space-y-4 animate-in fade-in duration-300">
                       <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
-                            ✓ TURMA ENCONTRADA
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
+                            <Check className="w-3 h-3 shrink-0" />
+                            <span>TURMA ENCONTRADA</span>
                           </span>
                           <button
                             type="button"

@@ -111,7 +111,28 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Executar transferência Pix real via infraestrutura bancária Asaas
+    // 2. Reserve-Then-Transfer Pattern: Reservar o saque no banco ANTES da chamada externa ao Asaas
+    // Previne Race Condition (CWE-362) e permite Rollback imediato caso a transferência bancária falhe
+    const { data: reservedWithdrawal, error: reserveErr } = await supabaseAdmin
+      .from('withdrawals')
+      .insert({
+        professional_id: user.id,
+        amount: requestedAmount,
+        pix_key: prof.asaas_pix_key,
+        status: 'PENDING',
+      })
+      .select('id')
+      .single();
+
+    if (reserveErr || !reservedWithdrawal?.id) {
+      console.error('[Withdraw API] Erro ao criar reserva de saque:', reserveErr);
+      return NextResponse.json(
+        { error: 'Não foi possível iniciar a reserva de saque no momento. Tente novamente.' },
+        { status: 500 }
+      );
+    }
+
+    // 3. Executar transferência Pix real via infraestrutura bancária Asaas
     let transferRes: { id: string; status: string; value: number };
     try {
       transferRes = await AsaasClient.createPixTransfer({
@@ -125,7 +146,13 @@ export async function POST(request: Request) {
         throw new Error('O banco Asaas não retornou o identificador da transferência.');
       }
     } catch (transfErr: any) {
-      console.error('[Withdraw API] Falha na emissão de transferência Pix no Asaas:', transfErr?.message);
+      // ROLLBACK AUTOMÁTICO: Remover a reserva PENDING para liberar o saldo imediatamente ao treinador
+      await supabaseAdmin
+        .from('withdrawals')
+        .delete()
+        .eq('id', reservedWithdrawal.id);
+
+      console.error('[Withdraw API] Falha na emissão de transferência Pix no Asaas (Rollback executado):', transfErr?.message);
       return NextResponse.json(
         { 
           error: `Falha na transferência bancária: ${transfErr?.message || 'A instituição bancária recusou a transação.'}` 
@@ -134,18 +161,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Registrar o saque na tabela withdrawals via supabaseAdmin com status retornado pelo Asaas
+    // 4. Confirmar a reserva do saque na tabela withdrawals com o asaas_transfer_id e status final
     const finalStatus = transferRes.status === 'PENDING' ? 'PENDING' : 'COMPLETED';
-    const { error: insertErr } = await supabaseAdmin.from('withdrawals').insert({
-      professional_id: user.id,
-      amount: requestedAmount,
-      pix_key: prof.asaas_pix_key,
-      asaas_transfer_id: transferRes.id,
-      status: finalStatus,
-    });
+    const { error: updateErr } = await supabaseAdmin
+      .from('withdrawals')
+      .update({
+        asaas_transfer_id: transferRes.id,
+        status: finalStatus,
+      })
+      .eq('id', reservedWithdrawal.id);
 
-    if (insertErr) {
-      console.error('[Withdraw API] Erro ao registrar saque no banco:', insertErr);
+    if (updateErr) {
+      console.error('[Withdraw API] Erro ao atualizar status final do saque no banco:', updateErr);
     }
 
     await logSecurityEvent({

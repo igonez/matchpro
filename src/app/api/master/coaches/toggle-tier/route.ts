@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { isMasterAdmin } from '@/lib/master-auth';
+import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 import { logSecurityEvent } from '@/lib/security/audit';
 
 export async function POST(req: NextRequest) {
@@ -32,11 +33,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Dados inválidos.' }, { status: 400 });
     }
 
+    const selectedTier = targetTier as PlanTier;
+    const targetFeePercent = PLAN_CONFIG[selectedTier]?.platformFeePercent ?? 15;
+
     const { data, error } = await supabaseAdmin
       .from('professionals')
-      .update({ plan_tier: targetTier })
+      .update({
+        plan_tier: selectedTier,
+        plan_status: 'active',
+        platform_fee_percent: targetFeePercent,
+      })
       .eq('id', coachId)
-      .select('id, full_name, plan_tier')
+      .select('id, full_name, plan_tier, platform_fee_percent')
       .single();
 
     if (error) {

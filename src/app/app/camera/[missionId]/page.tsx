@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { ArrowLeft } from 'lucide-react';
 
 export default function CameraCapturePage() {
   return (
@@ -374,8 +375,9 @@ function CameraCaptureContent() {
 
       {/* Top Bar Monocromático com Safe Area */}
       <div className="flex items-center justify-between z-10">
-        <Link href="/app" className="px-3.5 py-2 min-h-[44px] h-11 inline-flex items-center rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors">
-          ← Voltar
+        <Link href="/app" className="px-3.5 py-2 min-h-[44px] h-11 inline-flex items-center gap-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
+          <span>Voltar</span>
         </Link>
         <div className="text-center">
           <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block">

@@ -144,7 +144,7 @@ export default function BetaTestersPage() {
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950 border border-white/10 text-xs font-mono">
-              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               <span className="text-zinc-300 font-bold uppercase tracking-wider">
                 Piloto Fechado • 15 Vagas
               </span>
@@ -198,8 +198,8 @@ export default function BetaTestersPage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-amber-400">
-                  <Bug className="w-4 h-4 text-amber-400" />
+                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-white">
+                  <Bug className="w-4 h-4 text-white" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-bold text-white tracking-tight">O que pedimos em troca: Olhar Crítico e Feedback</h4>
@@ -448,7 +448,7 @@ export default function BetaTestersPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
             <div className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-2">
-              <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+              <div className="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider">
                 01 • Onboarding & Setup
               </div>
               <h4 className="text-base font-bold text-white">Criamos sua Turma com Você</h4>

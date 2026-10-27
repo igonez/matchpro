@@ -208,6 +208,7 @@ export default function HomePage() {
     { label: 'Pódio & Feed', href: '#podio' },
     { label: 'Calculadora', href: '#calculadora' },
     { label: 'Planos', href: '#planos', highlight: true },
+    { label: 'Beta Pioneers', href: '/beta' },
     { label: 'FAQ', href: '#faq' },
   ];
 
@@ -267,6 +268,14 @@ export default function HomePage() {
 
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
+              href="/beta"
+              onClick={() => trackMarketingEvent('Lead', { content_name: 'Navbar Beta Fechado' })}
+              className="hidden lg:flex items-center gap-1.5 min-h-[44px] text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/20 bg-white/5 transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-white" />
+              <span>Beta 2026</span>
+            </Link>
+            <Link
               href="/login?role=student"
               onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Navbar Sou Aluno' })}
               className="hidden sm:flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition-colors"
@@ -279,7 +288,7 @@ export default function HomePage() {
             >
               <button className="mono-button-primary min-h-[44px] px-4 sm:px-5 py-2 text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer">
                 <span>Criar Conta Grátis</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-black" />
               </button>
             </Link>
             <button
@@ -311,15 +320,16 @@ export default function HomePage() {
             </div>
             <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
               <Link
-                href="/login?role=student"
+                href="/beta"
                 onClick={() => {
                   setMobileNavOpen(false);
-                  trackMarketingEvent('ViewContent', { content_name: 'Mobile Nav Sou Aluno' });
+                  trackMarketingEvent('Lead', { content_name: 'Mobile Nav Beta Pioneers' });
                 }}
                 className="flex-1"
               >
-                <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
-                  <span>Sou Aluno (Entrar na Turma)</span>
+                <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer border-white/20 text-white">
+                  <Sparkles className="w-4 h-4 text-white" />
+                  <span>Programa Beta Pioneers</span>
                 </button>
               </Link>
               <Link
@@ -331,8 +341,7 @@ export default function HomePage() {
                 className="flex-1"
               >
                 <button className="mono-button-primary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Sou Treinador (Criar Conta)</span>
+                  <span>Criar Conta Grátis</span>
                 </button>
               </Link>
             </div>
@@ -356,10 +365,14 @@ export default function HomePage() {
           </div>
 
           <div className="max-w-4xl w-full">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6 shadow-lg">
-              <Flame className="w-4 h-4 text-amber-400 animate-pulse shrink-0" />
-              <span>Gamificação & Disciplina • Compatível com Qualquer Método</span>
-            </div>
+            <Link
+              href="/beta"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/[0.05] hover:bg-white/10 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6 shadow-lg transition-all group cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-white shrink-0 group-hover:rotate-12 transition-transform" />
+              <span>Programa Beta 2026 • Candidaturas de Pioneiros Abertas</span>
+              <ArrowRight className="w-3.5 h-3.5 text-zinc-400 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.08] mb-6 text-balance">
               O Sistema Operacional para{' '}
@@ -382,9 +395,19 @@ export default function HomePage() {
                 className="w-full sm:w-auto"
               >
                 <button className="mono-button-primary w-full sm:w-auto min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 cursor-pointer">
-                  <Sparkles className="w-4 h-4 shrink-0" />
                   <span>Criar Conta Grátis</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
+                  <ArrowRight className="w-4 h-4 text-black shrink-0" />
+                </button>
+              </Link>
+
+              <Link
+                href="/beta"
+                onClick={() => trackMarketingEvent('Lead', { content_name: 'Hero Entrar no Beta' })}
+                className="w-full sm:w-auto"
+              >
+                <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer border border-white/20 bg-white/[0.08] hover:bg-white/15 text-white">
+                  <Sparkles className="w-4 h-4 text-white shrink-0" />
+                  <span>Acesso Beta Pioneiros</span>
                 </button>
               </Link>
 
@@ -393,9 +416,9 @@ export default function HomePage() {
                 onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Sou Aluno' })}
                 className="w-full sm:w-auto"
               >
-                <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer text-zinc-300 hover:text-white">
                   <Smartphone className="w-4 h-4 text-zinc-300 shrink-0" />
-                  <span>Sou Aluno • Entrar na Turma</span>
+                  <span>Sou Aluno</span>
                 </button>
               </Link>
             </div>
@@ -512,7 +535,7 @@ export default function HomePage() {
                   03
                 </div>
                 <h3 className="text-xl font-black text-white mb-3 flex items-center gap-2.5">
-                  <Flame className="w-5 h-5 text-amber-400 shrink-0" />
+                  <Flame className="w-5 h-5 text-zinc-200 shrink-0" />
                   <span>Streaks, Pódio e Feed</span>
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
@@ -521,8 +544,8 @@ export default function HomePage() {
               </div>
               <div className="mt-6 p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs sm:text-sm font-mono text-zinc-200 flex items-center justify-between">
                 <span>Engajamento Diário</span>
-                <span className="text-amber-400 font-bold flex items-center gap-1">
-                  <Flame className="w-4 h-4" /> Streak Ativo
+                <span className="text-white font-bold flex items-center gap-1">
+                  <Flame className="w-4 h-4 text-zinc-300" /> Streak Ativo
                 </span>
               </div>
             </SpotlightCard3D>
@@ -633,7 +656,7 @@ export default function HomePage() {
               </div>
               <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs sm:text-sm mt-6">
                 <span className="text-zinc-200 font-medium flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-amber-400" /> Squad Guerreiros
+                  <Trophy className="w-4 h-4 text-zinc-200" /> Squad Guerreiros
                 </span>
                 <span className="text-white font-bold font-mono">1º Lugar (2.450 pts)</span>
               </div>
@@ -652,7 +675,7 @@ export default function HomePage() {
               </div>
               <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs sm:text-sm mt-6">
                 <span className="text-zinc-200 font-medium flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-400" /> Alerta de Risco
+                  <Zap className="w-4 h-4 text-zinc-200" /> Alerta de Risco
                 </span>
                 <span className="text-emerald-400 font-bold font-mono">Resgate em 1 Toque</span>
               </div>
@@ -681,7 +704,7 @@ export default function HomePage() {
             <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl">
               <div className="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-white/[0.08] mb-8">
                 <div className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-amber-400 shrink-0" />
+                  <Trophy className="w-5 h-5 text-white shrink-0" />
                   <span className="text-sm sm:text-base font-bold text-white uppercase tracking-wider font-mono">
                     Leaderboard Oficial • Desafio Ativo
                   </span>
@@ -700,7 +723,7 @@ export default function HomePage() {
                   </div>
                   <span className="text-xs sm:text-sm font-bold text-white text-center truncate max-w-[95px]">Mariana S.</span>
                   <span className="text-xs font-mono text-zinc-300">1.820 pts</span>
-                  <div className="w-full h-24 bg-gradient-to-t from-zinc-900 to-zinc-800/80 rounded-t-2xl border-t border-x border-zinc-600/40 mt-3 flex items-center justify-center">
+                  <div className="w-full h-24 bg-gradient-to-t from-zinc-900 to-zinc-800/80 rounded-t-2xl border-t border-x border-white/15 mt-3 flex items-center justify-center">
                     <span className="font-mono font-black text-zinc-300 text-lg sm:text-xl">2º</span>
                   </div>
                 </div>
@@ -709,14 +732,14 @@ export default function HomePage() {
                 <div className="flex flex-col items-center">
                   <div className="relative mb-2">
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <Crown className="w-5 h-5 text-amber-400 animate-bounce" />
+                      <Crown className="w-5 h-5 text-white animate-pulse" />
                     </div>
-                    <GoldMedalBadge size={54} className="drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]" />
+                    <GoldMedalBadge size={54} className="drop-shadow-[0_0_20px_rgba(255,255,255,0.25)]" />
                   </div>
                   <span className="text-sm sm:text-base font-black text-white text-center truncate max-w-[110px]">Carlos E.</span>
-                  <span className="text-xs font-mono text-amber-400 font-bold">2.140 pts</span>
-                  <div className="w-full h-32 bg-gradient-to-t from-amber-500/20 via-zinc-900 to-amber-500/30 rounded-t-2xl border-t border-x border-amber-400/50 mt-3 flex items-center justify-center">
-                    <span className="font-mono font-black text-amber-300 text-2xl sm:text-3xl">1º</span>
+                  <span className="text-xs font-mono text-zinc-200 font-bold">2.140 pts</span>
+                  <div className="w-full h-32 bg-gradient-to-t from-zinc-800 to-zinc-700/80 rounded-t-2xl border-t border-x border-white/30 mt-3 flex items-center justify-center">
+                    <span className="font-mono font-black text-white text-2xl sm:text-3xl">1º</span>
                   </div>
                 </div>
 
@@ -727,15 +750,15 @@ export default function HomePage() {
                   </div>
                   <span className="text-xs sm:text-sm font-bold text-white text-center truncate max-w-[95px]">Rodrigo F.</span>
                   <span className="text-xs font-mono text-zinc-300">1.690 pts</span>
-                  <div className="w-full h-20 bg-gradient-to-t from-zinc-900 to-zinc-800/60 rounded-t-2xl border-t border-x border-amber-800/40 mt-3 flex items-center justify-center">
-                    <span className="font-mono font-black text-amber-600 text-base sm:text-lg">3º</span>
+                  <div className="w-full h-20 bg-gradient-to-t from-zinc-900 to-zinc-800/60 rounded-t-2xl border-t border-x border-white/10 mt-3 flex items-center justify-center">
+                    <span className="font-mono font-black text-zinc-400 text-base sm:text-lg">3º</span>
                   </div>
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
                 <span className="text-zinc-200">Incentivo com 1 clique para alunos em perigo:</span>
-                <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
+                <span className="text-white font-mono font-bold flex items-center gap-1">
                   Disparar WhatsApp →
                 </span>
               </div>
@@ -746,7 +769,7 @@ export default function HomePage() {
               <div className="p-6 sm:p-7 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl">
                 <div className="flex items-center justify-between mb-4 pb-3.5 border-b border-white/[0.08]">
                   <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-rose-500 fill-rose-500 shrink-0" />
+                    <Heart className="w-4 h-4 text-white/80 fill-white/80 shrink-0" />
                     <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider font-mono">
                       Feed da Turma
                     </span>
@@ -1374,11 +1397,66 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 11.1 Programa Beta Pioneers (Destaque Exclusivo) */}
+      <section id="beta" className="py-16 sm:py-20 px-4 sm:px-6 border-t border-white/[0.06] relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="p-8 sm:p-12 rounded-3xl border border-white/20 bg-gradient-to-b from-zinc-950 via-zinc-900 to-black relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.03] rounded-full blur-3xl -z-10 pointer-events-none" />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-8 space-y-4">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/10 text-xs font-mono uppercase tracking-wider text-white">
+                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                  <span>Programa Beta Pioneers 2026</span>
+                </div>
+                
+                <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                  Construa o futuro dos desafios fitness conosco
+                </h2>
+                
+                <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
+                  Buscamos personal trainers e consultorias esportivas selecionadas para testar em primeira mão as novas funcionalidades de IA e gamificação, com acesso direto aos fundadores e benefícios vitalícios.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-zinc-300 pt-2">
+                  <span className="flex items-center gap-1.5">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Vagas Limitadas
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Onboarding 1-a-1
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Condições Pioneiras
+                  </span>
+                </div>
+              </div>
+
+              <div className="lg:col-span-4 flex flex-col items-stretch lg:items-end justify-center">
+                <Link
+                  href="/beta"
+                  onClick={() => trackMarketingEvent('Lead', { content_name: 'Landing Banner Beta Pioneers' })}
+                  className="w-full sm:w-auto"
+                >
+                  <button className="mono-button-primary w-full min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_30px_rgba(255,255,255,0.25)]">
+                    <Sparkles className="w-4 h-4 text-black shrink-0" />
+                    <span>Quero ser Pioneiro</span>
+                    <ArrowRight className="w-4 h-4 text-black shrink-0" />
+                  </button>
+                </Link>
+                <span className="text-[11px] font-mono text-zinc-400 mt-2 text-center lg:text-right">
+                  Candidatura rápida • Resposta em 24h
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 12. Grand Final CTA Section */}
       <section className="py-20 sm:py-24 px-4 sm:px-6 border-t border-white/[0.06] relative">
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6">
-            <Trophy className="w-4 h-4 text-amber-400" />
+            <Trophy className="w-4 h-4 text-white" />
             <span>Junte-se aos Melhores Treinadores</span>
           </div>
 

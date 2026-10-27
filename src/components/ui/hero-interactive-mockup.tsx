@@ -88,7 +88,7 @@ export function HeroInteractiveMockup() {
                 <div className="h-6 w-28 rounded-full bg-zinc-950 border border-white/15 flex items-center justify-between px-3">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                   <div className="flex items-center gap-1 text-[11px] font-mono text-zinc-200 font-bold">
-                    <Flame className="w-3 h-3 text-amber-400" />
+                    <Flame className="w-3 h-3 text-zinc-200" />
                     <span>14d</span>
                   </div>
                 </div>
@@ -129,13 +129,13 @@ export function HeroInteractiveMockup() {
 
                       <div className="flex flex-col items-center">
                         <div className="relative">
-                          <Crown className="w-4 h-4 text-amber-400 absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
-                          <GoldMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
+                          <Crown className="w-4 h-4 text-white absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
+                          <GoldMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
                         </div>
                         <span className="text-xs sm:text-sm font-black text-white truncate max-w-[90px]">Carlos E.</span>
-                        <span className="text-[11px] font-mono text-amber-400 font-bold">2.140 pts</span>
-                        <div className="w-full h-28 bg-gradient-to-t from-amber-500/20 via-zinc-900 to-amber-500/30 rounded-t-xl border-t border-x border-amber-400/50 mt-1.5 flex items-center justify-center">
-                          <span className="font-mono font-black text-amber-300 text-xl">1º</span>
+                        <span className="text-[11px] font-mono text-zinc-200 font-bold">2.140 pts</span>
+                        <div className="w-full h-28 bg-gradient-to-t from-zinc-800 to-zinc-700/80 rounded-t-xl border-t border-x border-white/30 mt-1.5 flex items-center justify-center">
+                          <span className="font-mono font-black text-white text-xl">1º</span>
                         </div>
                       </div>
 
@@ -143,8 +143,8 @@ export function HeroInteractiveMockup() {
                         <BronzeMedalBadge size={32} className="mb-1.5" />
                         <span className="text-xs font-bold text-white truncate max-w-[80px]">Rodrigo</span>
                         <span className="text-[11px] font-mono text-zinc-300">1.690 pts</span>
-                        <div className="w-full h-16 bg-gradient-to-t from-zinc-900 to-zinc-800/60 rounded-t-xl border-t border-x border-amber-800/40 mt-1.5 flex items-center justify-center">
-                          <span className="font-mono font-black text-amber-600 text-base">3º</span>
+                        <div className="w-full h-16 bg-gradient-to-t from-zinc-900 to-zinc-800/60 rounded-t-xl border-t border-x border-white/10 mt-1.5 flex items-center justify-center">
+                          <span className="font-mono font-black text-zinc-400 text-base">3º</span>
                         </div>
                       </div>
                     </div>
@@ -166,7 +166,7 @@ export function HeroInteractiveMockup() {
                     {/* Feed Rápido */}
                     <div className="p-3 rounded-xl bg-zinc-950 border border-white/10 flex items-center justify-between text-xs">
                       <span className="text-zinc-200 flex items-center gap-1.5 truncate">
-                        <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 shrink-0" />
+                        <Heart className="w-3.5 h-3.5 text-white/80 fill-white/80 shrink-0" />
                         <span><strong>Larissa M.</strong> concluiu Treino</span>
                       </span>
                       <span className="text-zinc-400 font-mono shrink-0 ml-2">há 2m</span>
@@ -196,7 +196,7 @@ export function HeroInteractiveMockup() {
                           <div className="grid grid-cols-3 gap-1.5 text-[11px] font-mono text-zinc-200">
                             <div>Prot: <strong className="text-white">38g</strong></div>
                             <div>Carb: <strong className="text-white">42g</strong></div>
-                            <div>Kcal: <strong className="text-amber-400">460</strong></div>
+                            <div>Kcal: <strong className="text-white">460</strong></div>
                           </div>
                         </div>
                       </div>
@@ -318,7 +318,7 @@ export function HeroInteractiveMockup() {
             {activeTab === 'podium' && (
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold block mb-1">
+                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold block mb-1">
                     GESTÃO DE ENGAJAMENTO & RETENÇÃO
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
@@ -338,7 +338,7 @@ export function HeroInteractiveMockup() {
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Squad Líder</span>
                     <span className="text-lg font-black text-white mt-1 block truncate">Esquadrão Alpha</span>
-                    <span className="text-xs text-amber-400 font-mono font-bold mt-1 block">8.420 XP somados</span>
+                    <span className="text-xs text-zinc-200 font-mono font-bold mt-1 block">8.420 XP somados</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Radar Anti-Churn</span>
@@ -379,7 +379,7 @@ export function HeroInteractiveMockup() {
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-white">Leitura de Macronutrientes</span>
-                      <span className="text-xs font-mono text-amber-400 font-bold">Gemini Vision</span>
+                      <span className="text-xs font-mono text-zinc-200 font-bold">Gemini Vision</span>
                     </div>
                     <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                       Estimativa instantânea de proteínas, carboidratos, gorduras e densidade calórica no feed.

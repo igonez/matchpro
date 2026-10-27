@@ -62,7 +62,7 @@ export function SocialProofTestimonials() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-3">
-            <Flame className="w-4 h-4 text-amber-400" />
+            <Flame className="w-4 h-4 text-zinc-300" />
             WHATSAPP VS. ARENAFITPRO
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4 text-balance">

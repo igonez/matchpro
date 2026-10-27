@@ -69,6 +69,12 @@ export function CorporateFooter({ showNavigation = true }: CorporateFooterProps)
             </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-zinc-300">
               <li>
+                <Link href="/beta" className="hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white rounded flex items-center gap-1.5">
+                  <span>Programa Beta Pioneers</span>
+                  <span className="text-[9px] font-mono uppercase bg-white/10 text-white px-1.5 py-0.5 rounded border border-white/20">Vagas</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/ajuda" className="hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white rounded">
                   Central de Ajuda & FAQ
                 </Link>
@@ -130,7 +136,7 @@ export function CorporateFooter({ showNavigation = true }: CorporateFooterProps)
         {/* Isenções Legais e Avisos Mandatórios (CDC & Saúde) */}
         <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950/80 border border-white/10 space-y-2 text-xs text-zinc-300 leading-relaxed font-normal">
           <div className="flex items-center gap-2 text-zinc-200 font-mono text-[11px] uppercase tracking-wider font-bold">
-            <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <AlertCircle className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
             <span>Avisos Legais & Isenção de Responsabilidade Técnica (CDC & CFM/CFN)</span>
           </div>
           <p>

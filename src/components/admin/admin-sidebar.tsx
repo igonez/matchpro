@@ -8,6 +8,8 @@ import {
   DollarSign, 
   Users, 
   Target, 
+  GraduationCap, 
+  Trophy, 
   LogOut, 
   ExternalLink 
 } from 'lucide-react';
@@ -37,18 +39,32 @@ export function AdminSidebar() {
       active: pathname === '/admin' && (currentTab === 'overview' || !currentTab),
     },
     {
+      tabId: 'coaches',
+      name: 'Treinadores & VIPs',
+      href: '/admin?tab=coaches',
+      icon: Users,
+      active: pathname.startsWith('/admin') && currentTab === 'coaches',
+    },
+    {
+      tabId: 'students',
+      name: 'Alunos por Personal',
+      href: '/admin?tab=students',
+      icon: GraduationCap,
+      active: pathname.startsWith('/admin') && currentTab === 'students',
+    },
+    {
+      tabId: 'challenges',
+      name: 'Desafios & Turmas',
+      href: '/admin?tab=challenges',
+      icon: Trophy,
+      active: pathname.startsWith('/admin') && currentTab === 'challenges',
+    },
+    {
       tabId: 'financial',
       name: 'Financeiro & Mídia',
       href: '/admin?tab=financial',
       icon: DollarSign,
       active: pathname.startsWith('/admin') && currentTab === 'financial',
-    },
-    {
-      tabId: 'coaches',
-      name: 'Gestão de Treinadores',
-      href: '/admin?tab=coaches',
-      icon: Users,
-      active: pathname.startsWith('/admin') && currentTab === 'coaches',
     },
     {
       tabId: 'leads',

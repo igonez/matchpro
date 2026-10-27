@@ -42,9 +42,10 @@ export async function POST(req: NextRequest) {
         plan_tier: selectedTier,
         plan_status: 'active',
         platform_fee_percent: targetFeePercent,
+        is_vip: false,
       })
       .eq('id', coachId)
-      .select('id, full_name, plan_tier, platform_fee_percent')
+      .select('id, full_name, plan_tier, is_vip, platform_fee_percent')
       .single();
 
     if (error) {

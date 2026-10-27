@@ -868,6 +868,7 @@ export type Database = {
           id: string
           instagram: string | null
           is_master_admin: boolean | null
+          is_vip: boolean | null
           phone: string | null
           plan_cycle: string | null
           plan_status: string | null
@@ -899,6 +900,7 @@ export type Database = {
           id: string
           instagram?: string | null
           is_master_admin?: boolean | null
+          is_vip?: boolean | null
           phone?: string | null
           plan_cycle?: string | null
           plan_status?: string | null
@@ -930,6 +932,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_master_admin?: boolean | null
+          is_vip?: boolean | null
           phone?: string | null
           plan_cycle?: string | null
           plan_status?: string | null

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
           is_vip: true,
           plan_tier: 'pro',
           platform_fee_percent: PLAN_CONFIG.pro.platformFeePercent, // 0%
-          plan_status: 'vip',
+          plan_status: 'active',
         }
       : {
           is_vip: false,

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { sendMetaConversionEvent } from '@/lib/analytics/meta-capi';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -71,6 +72,18 @@ export async function GET(request: Request) {
             full_name: fullName,
             specialty: 'personal_trainer',
           });
+
+          // Disparo de novo cadastro de Treinador via Google OAuth (Server-Side CAPI)
+          sendMetaConversionEvent({
+            eventName: 'CompleteRegistration',
+            eventId: `reg_oauth_prof_${user.id}`,
+            contentName: 'Cadastro Treinador (Google OAuth)',
+            contentCategory: 'Professional_Signup',
+            user: {
+              email: user.email,
+              externalId: user.id,
+            },
+          }).catch(() => {});
         }
         await supabase.auth.updateUser({
           data: { role: 'professional' }
@@ -85,6 +98,18 @@ export async function GET(request: Request) {
             full_name: fullName,
             avatar_url: avatarUrl,
           });
+
+          // Disparo de novo cadastro de Aluno via Google OAuth (Server-Side CAPI)
+          sendMetaConversionEvent({
+            eventName: 'CompleteRegistration',
+            eventId: `reg_oauth_student_${user.id}`,
+            contentName: 'Cadastro Aluno (Google OAuth)',
+            contentCategory: 'Student_Signup',
+            user: {
+              email: user.email,
+              externalId: user.id,
+            },
+          }).catch(() => {});
         }
         await supabase.auth.updateUser({
           data: { role: 'student' }

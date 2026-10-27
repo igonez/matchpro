@@ -9,6 +9,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { Trophy, ArrowRight, ArrowLeft, Check, Clipboard, Sparkles, User, ShieldCheck } from 'lucide-react';
+import { trackMarketingEvent } from '@/lib/analytics/tracking';
 
 function LoginContent() {
   const router = useRouter();
@@ -188,6 +189,11 @@ function LoginContent() {
             payment_status: isFree ? 'paid' : 'pending',
           });
 
+          trackMarketingEvent('CompleteRegistration', {
+            content_name: 'Cadastro Aluno',
+            status: isFree ? 'free' : 'paid_pending',
+          });
+
           setSuccessMessage(`Bem-vindo à turma "${validatedChallenge.title}"! Entrando no app...`);
           setTimeout(() => {
             router.push(isFree ? '/app' : `/join/${validatedChallenge.id}`);
@@ -244,6 +250,11 @@ function LoginContent() {
               full_name: fullName || 'Treinador ArenaFitPro',
               phone: phone || null,
               specialty: specialty,
+            });
+
+            trackMarketingEvent('CompleteRegistration', {
+              content_name: 'Cadastro Treinador',
+              specialty: specialty || 'Personal Trainer',
             });
 
             setSuccessMessage('Conta de treinador criada com sucesso! Abrindo Cockpit...');

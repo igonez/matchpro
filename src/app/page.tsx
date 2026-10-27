@@ -11,6 +11,7 @@ import { SocialProofTestimonials } from '@/components/ui/social-proof-testimonia
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import { JsonLd } from '@/components/seo/json-ld';
 import { CorporateFooter } from '@/components/layout/corporate-footer';
+import { trackMarketingEvent } from '@/lib/analytics/tracking';
 import {
   Check,
   X,
@@ -267,11 +268,15 @@ export default function HomePage() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login?role=student"
+              onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Navbar Sou Aluno' })}
               className="hidden sm:flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition-colors"
             >
               <span>Sou Aluno</span>
             </Link>
-            <Link href="/login?role=professional&mode=signup">
+            <Link
+              href="/login?role=professional&mode=signup"
+              onClick={() => trackMarketingEvent('Lead', { content_name: 'Navbar Criar Conta Grátis' })}
+            >
               <button className="mono-button-primary min-h-[44px] px-4 sm:px-5 py-2 text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer">
                 <span>Criar Conta Grátis</span>
                 <ArrowRight className="w-4 h-4" />
@@ -305,12 +310,26 @@ export default function HomePage() {
               ))}
             </div>
             <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
-              <Link href="/login?role=student" onClick={() => setMobileNavOpen(false)} className="flex-1">
+              <Link
+                href="/login?role=student"
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  trackMarketingEvent('ViewContent', { content_name: 'Mobile Nav Sou Aluno' });
+                }}
+                className="flex-1"
+              >
                 <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
                   <span>Sou Aluno (Entrar na Turma)</span>
                 </button>
               </Link>
-              <Link href="/login?role=professional&mode=signup" onClick={() => setMobileNavOpen(false)} className="flex-1">
+              <Link
+                href="/login?role=professional&mode=signup"
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  trackMarketingEvent('Lead', { content_name: 'Mobile Nav Criar Conta' });
+                }}
+                className="flex-1"
+              >
                 <button className="mono-button-primary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4" />
                   <span>Sou Treinador (Criar Conta)</span>
@@ -357,7 +376,11 @@ export default function HomePage() {
 
             {/* CTAs Principais com Touch Targets Confortáveis (>= 52px) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-8">
-              <Link href="/login?role=professional&mode=signup" className="w-full sm:w-auto">
+              <Link
+                href="/login?role=professional&mode=signup"
+                onClick={() => trackMarketingEvent('Lead', { content_name: 'Hero Criar Conta Grátis' })}
+                className="w-full sm:w-auto"
+              >
                 <button className="mono-button-primary w-full sm:w-auto min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 cursor-pointer">
                   <Sparkles className="w-4 h-4 shrink-0" />
                   <span>Criar Conta Grátis</span>
@@ -365,7 +388,11 @@ export default function HomePage() {
                 </button>
               </Link>
 
-              <Link href="/login?role=student" className="w-full sm:w-auto">
+              <Link
+                href="/login?role=student"
+                onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Sou Aluno' })}
+                className="w-full sm:w-auto"
+              >
                 <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
                   <Smartphone className="w-4 h-4 text-zinc-300 shrink-0" />
                   <span>Sou Aluno • Entrar na Turma</span>
@@ -1067,7 +1094,11 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <Link href="/login?role=professional&mode=signup" className="block w-full">
+              <Link
+                href="/login?role=professional&mode=signup"
+                onClick={() => trackMarketingEvent('Lead', { content_name: 'Plano Starter Treinador' })}
+                className="block w-full"
+              >
                 <button className="mono-button-secondary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4 text-zinc-300" />
                   <span>Começar Grátis no Starter</span>
@@ -1155,7 +1186,17 @@ export default function HomePage() {
 
               </div>
 
-              <Link href="/login?role=professional&mode=signup" className="block w-full">
+              <Link
+                href="/login?role=professional&mode=signup"
+                onClick={() =>
+                  trackMarketingEvent('InitiateCheckout', {
+                    content_name: 'Plano Pro Treinador',
+                    value: billingCycle === 'monthly' ? 49.9 : 478.8,
+                    currency: 'BRL',
+                  })
+                }
+                className="block w-full"
+              >
                 <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-black shadow-[0_0_25px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4 text-black" />
                   <span>Começar com Pro Coach</span>
@@ -1353,14 +1394,22 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/login?role=professional&mode=signup" className="w-full sm:w-auto">
+            <Link
+              href="/login?role=professional&mode=signup"
+              onClick={() => trackMarketingEvent('Lead', { content_name: 'Footer Criar Conta Grátis' })}
+              className="w-full sm:w-auto"
+            >
               <button className="mono-button-primary w-full sm:w-auto min-h-[54px] px-10 py-4 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 shadow-[0_0_35px_rgba(255,255,255,0.3)] cursor-pointer">
                 <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Criar Conta Grátis Agora</span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
             </Link>
-            <Link href="/login?role=student" className="w-full sm:w-auto">
+            <Link
+              href="/login?role=student"
+              onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Footer Sou Aluno' })}
+              className="w-full sm:w-auto"
+            >
               <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer">
                 <Smartphone className="w-4 h-4 text-zinc-300" />
                 <span>Sou Aluno • Entrar na Turma</span>

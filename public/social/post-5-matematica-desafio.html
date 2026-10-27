@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post 05 — A Matemática do Desafio Fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #050505;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #f4f4f5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header-bar {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .header-bar h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-bar p {
+      font-size: 13px;
+      color: #71717a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .carousel-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      max-width: 1400px;
+    }
+
+    .slide-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #52525b;
+    }
+
+    /* 
+      Dimensões Oficiais do Instagram Portrait 4:5 
+      1080px x 1350px (renderizado em escala 540px x 675px para visualização nítida em desktop)
+    */
+    .slide {
+      width: 540px;
+      height: 675px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      padding: 44px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    /* Variações Ricas de Backgrounds Contextuais */
+    .slide.bg-financial-candlesticks {
+      background: 
+        radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, #000000 100%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 60px),
+        #000000;
+    }
+
+    .slide.bg-hour-ceiling {
+      background: 
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(9, 9, 11, 0.8) 0%, #000000 100%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 40px),
+        #000000;
+    }
+
+    .slide.bg-calculator-matrix {
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #09090b 0%, #000000 100%),
+        radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        #000000;
+      background-size: 100% 100%, 100% 100%, 24px 24px, 100% 100%;
+    }
+
+    .slide.bg-network-mesh {
+      background: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.07) 0%, transparent 70%),
+        linear-gradient(180deg, rgba(12, 12, 15, 0.9) 0%, #000000 100%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 30px),
+        #000000;
+    }
+
+    .slide.bg-founder-seal {
+      background: 
+        radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.10) 0%, transparent 65%),
+        radial-gradient(circle at 50% 30%, transparent 120px, rgba(255, 255, 255, 0.03) 121px, transparent 122px),
+        radial-gradient(circle at 50% 30%, transparent 220px, rgba(255, 255, 255, 0.03) 221px, transparent 222px),
+        linear-gradient(180deg, #09090b 0%, #000000 100%);
+    }
+
+    /* Glow de profundidade titânio */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    /* Top Bar */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(24, 24, 27, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 6px 14px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-pill img {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
+    }
+
+    .brand-pill span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #71717a;
+      letter-spacing: 0.08em;
+    }
+
+    /* Conteúdo Principal */
+    .slide-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 5px 10px;
+      border-radius: 6px;
+      align-self: flex-start;
+    }
+
+    .slide-title {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      color: #ffffff;
+    }
+
+    .slide-title .gradient-text {
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-desc {
+      font-size: 13.5px;
+      color: #a1a1aa;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+    }
+
+    /* Moldura Central / Card Principal */
+    .feature-card {
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
+    }
+
+    /* Sub-cards dentro do container */
+    .sub-item {
+      background: rgba(24, 24, 27, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sub-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sub-item-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+    }
+
+    .sub-item-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .sub-item-desc {
+      font-size: 11.5px;
+      color: #71717a;
+      line-height: 1.35;
+    }
+
+    /* Linhas de Tabela Financeira */
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+    }
+
+    .calc-cohort {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .calc-cohort-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .calc-cohort-detail {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #71717a;
+    }
+
+    .calc-result {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      text-align: right;
+    }
+
+    /* Highlight Banner Grande */
+    .metric-hero {
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-hero-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #a1a1aa;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    .slide-footer {
+      position: relative;
+      z-index: 10;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-brand img {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+    }
+
+    .footer-brand span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header-bar">
+    <h1>Post 05 — A Matemática do Desafio Fitness</h1>
+    <p>5 Slides Oficiais • 1080 × 1350 px (4:5) • Luxury Monochromatic Titanium</p>
+  </header>
+
+  <main class="carousel-container">
+
+    <!-- SLIDE 1 -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 01 • Capa (Alavancagem Real)</span>
+      <article class="slide bg-financial-candlesticks">
+        <header class="slide-header">
+          <div class="brand-pill">
+            <img src="./app-logo.png" alt="ArenaFitPro">
+            <span>MODELO FINANCEIRO</span>
+          </div>
+          <span class="slide-counter">01 / 05</span>
+        </header>
+
+        <section class="slide-content">
+          <div class="category-badge">ESCALA SEM HORA EXTRA</div>
+          <h2 class="slide-title">
+            Como colocar<br>
+            <span class="gradient-text">R$ 2.500 a R$ 6.000</span><br>
+            a mais no bolso.
+          </h2>
+          <p class="slide-desc">
+            A cada 21 dias, sem dar 1 hora a mais de aula. O modelo financeiro que rompe o teto biológico da sua agenda.
+          </p>
+
+          <div class="metric-hero">
+            <div class="metric-hero-val">+ R$ 6.350 / TURMA</div>
+            <div class="metric-hero-label">ZERO HORAS EXTRAS • 15 MIN/DIA NA CENTRAL DE SWIPE</div>
+          </div>
+        </section>
+
+        <footer class="slide-footer">
+          <div class="footer-brand">
+            <img src="./app-logo.png" alt="Logo">
+            <span>arenafitpro.app</span>
+          </div>
+          <div class="footer-cta">ARRASTE →</div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 02 • O Teto Biológico</span>
+      <article class="slide bg-hour-ceiling">
+        <header class="slide-header">
+          <div class="brand-pill">
+            <img src="./app-logo.png" alt="ArenaFitPro">
+            <span>DIAGNÓSTICO</span>
+          </div>
+          <span class="slide-counter">02 / 05</span>
+        </header>
+
+        <section class="slide-content">
+          <div class="category-badge">A TRAVA DA HORA-AULA</div>
+          <h2 class="slide-title">
+            O limite físico<br>
+            <span class="gradient-text">do seu tempo.</span>
+          </h2>
+          <p class="slide-desc">
+            Se você atende 8 a 10 alunos presenciais por dia, você bateu no teto. Para ganhar mais, você precisa abdicar do seu descanso ou da sua família.
+          </p>
+
+          <div class="feature-card">
+            <div class="sub-item" style="border-left: 3px solid #71717a;">
+              <div class="sub-item-header">
+                <span class="sub-item-title">MODELO 1x1 TRADICIONAL</span>
+                <span class="sub-item-value" style="color: #a1a1aa;">TETO RÍGIDO</span>
+              </div>
+              <p class="sub-item-desc">
+                8 horas de aula = 8 horas vendidas. Se o aluno viaja, falta ou desiste, sua receita despenca e você volta à estaca zero.
+              </p>
+            </div>
+
+            <div class="sub-item" style="border-left: 3px solid #ffffff; background: rgba(255,255,255,0.04);">
+              <div class="sub-item-header">
+                <span class="sub-item-title">MODELO DESAFIO SAZONAL</span>
+                <span class="sub-item-value">ESCALA LIMPA</span>
+              </div>
+              <p class="sub-item-desc" style="color: #d4d4d8;">
+                1 turma de 40 alunos roda em paralelo. O sistema audita os check-ins e você gerencia tudo em 15 minutos diários pelo app.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="slide-footer">
+          <div class="footer-brand">
+            <img src="./app-logo.png" alt="Logo">
+            <span>arenafitpro.app</span>
+          </div>
+          <div class="footer-cta">ARRASTE →</div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 03 • A Calculadora</span>
+      <article class="slide bg-calculator-matrix">
+        <header class="slide-header">
+          <div class="brand-pill">
+            <img src="./app-logo.png" alt="ArenaFitPro">
+            <span>SIMULAÇÃO REAL</span>
+          </div>
+          <span class="slide-counter">03 / 05</span>
+        </header>
+
+        <section class="slide-content">
+          <div class="category-badge">MATRIZ DE RECEITA LÍQUIDA</div>
+          <h2 class="slide-title">
+            A conta é simples.<br>
+            <span class="gradient-text">E previsível.</span>
+          </h2>
+          <p class="slide-desc">
+            Veja quanto uma única turma trimestral de 21 dias injeta de caixa direto na sua conta bancária:
+          </p>
+
+          <div class="feature-card">
+            <div class="calc-row">
+              <div class="calc-cohort">
+                <span class="calc-cohort-name">TURMA PILOTO (TESTE)</span>
+                <span class="calc-cohort-detail">30 alunos × R$ 97,00</span>
+              </div>
+              <div class="calc-result">R$ 2.910,00</div>
+            </div>
+
+            <div class="calc-row" style="background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.18);">
+              <div class="calc-cohort">
+                <span class="calc-cohort-name" style="color: #ffffff;">TURMA CONSOLIDADA</span>
+                <span class="calc-cohort-detail">50 alunos × R$ 127,00</span>
+              </div>
+              <div class="calc-result">R$ 6.350,00</div>
+            </div>
+
+            <div class="calc-row">
+              <div class="calc-cohort">
+                <span class="calc-cohort-name">COMUNIDADE MADURA</span>
+                <span class="calc-cohort-detail">80 alunos × R$ 147,00</span>
+              </div>
+              <div class="calc-result">R$ 11.760,00</div>
+            </div>
+
+            <div style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #a1a1aa; padding-top: 4px;">
+              0% DE TAXA SOBRE INSCRIÇÕES • APENAS R$ 49,90/MÊS NO PLANO PRO
+            </div>
+          </div>
+        </section>
+
+        <footer class="slide-footer">
+          <div class="footer-brand">
+            <img src="./app-logo.png" alt="Logo">
+            <span>arenafitpro.app</span>
+          </div>
+          <div class="footer-cta">ARRASTE →</div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 04 • Psicologia do Preço</span>
+      <article class="slide bg-network-mesh">
+        <header class="slide-header">
+          <div class="brand-pill">
+            <img src="./app-logo.png" alt="ArenaFitPro">
+            <span>COMPORTAMENTO</span>
+          </div>
+          <span class="slide-counter">04 / 05</span>
+        </header>
+
+        <section class="slide-content">
+          <div class="category-badge">ALTA PERCEPÇÃO DE VALOR</div>
+          <h2 class="slide-title">
+            Ticket acessível,<br>
+            <span class="gradient-text">experiência premium.</span>
+          </h2>
+          <p class="slide-desc">
+            Quem não tem R$ 800/mês para personal particular compra seu desafio de R$ 97 na hora. Por quê?
+          </p>
+
+          <div class="feature-card">
+            <div class="sub-item">
+              <div class="sub-item-header">
+                <span class="sub-item-title">01 • ACESSO À SUA LIDERANÇA</span>
+              </div>
+              <p class="sub-item-desc">
+                O aluno entra no seu ecossistema e treina orientado por você por uma fração acessível do valor individual.
+              </p>
+            </div>
+
+            <div class="sub-item">
+              <div class="sub-item-header">
+                <span class="sub-item-title">02 • JOGO REAL & PÓDIO</span>
+              </div>
+              <p class="sub-item-desc">
+                App profissional com câmera antifraude e ranking ao vivo. Parece um reality show, não uma planilha amadora.
+              </p>
+            </div>
+
+            <div class="sub-item">
+              <div class="sub-item-header">
+                <span class="sub-item-title">03 • CICLO FECHADO DE 21 DIAS</span>
+              </div>
+              <p class="sub-item-desc">
+                Prazos curtos geram 3x mais comprometimento do que metas abertas e vagas de início de ano.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="slide-footer">
+          <div class="footer-brand">
+            <img src="./app-logo.png" alt="Logo">
+            <span>arenafitpro.app</span>
+          </div>
+          <div class="footer-cta">ARRASTE →</div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 05 • Chamada Fundadores</span>
+      <article class="slide bg-founder-seal">
+        <header class="slide-header">
+          <div class="brand-pill">
+            <img src="./app-logo.png" alt="ArenaFitPro">
+            <span>BETA FECHADO</span>
+          </div>
+          <span class="slide-counter">05 / 05</span>
+        </header>
+
+        <section class="slide-content">
+          <div class="category-badge">15 VAGAS EXCLUSIVAS</div>
+          <h2 class="slide-title">
+            Rode sua 1ª turma<br>
+            <span class="gradient-text">com o Plano PRO Grátis.</span>
+          </h2>
+          <p class="slide-desc">
+            Estamos selecionando 15 treinadores para o Beta Fechado. Você roda o desafio com seus alunos e fica com 100% do lucro da turma.
+          </p>
+
+          <div class="feature-card">
+            <div class="sub-item" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.18);">
+              <div class="sub-item-header">
+                <span class="sub-item-title">PLANO PRO VITALÍCIO GRATUITO</span>
+                <span class="sub-item-value" style="color: #ffffff;">R$ 0 / MÊS</span>
+              </div>
+              <p class="sub-item-desc">Isenção perpétua da mensalidade de R$ 49,90/mês para os 15 treinadores fundadores.</p>
+            </div>
+
+            <div class="sub-item">
+              <div class="sub-item-header">
+                <span class="sub-item-title">ZERO TAXA POR TRANSAÇÃO</span>
+                <span class="sub-item-value">0% DE TAXA</span>
+              </div>
+              <p class="sub-item-desc">0% de taxa sobre inscrições. 100% da receita dos seus alunos fica no seu bolso.</p>
+            </div>
+
+            <div class="sub-item">
+              <div class="sub-item-header">
+                <span class="sub-item-title">TEMPLATE VALIDADO DE 21 DIAS</span>
+                <span class="sub-item-value">PRONTO</span>
+              </div>
+              <p class="sub-item-desc">Regras, pontuação e calendário prontos para aplicar na sua turma hoje.</p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="slide-footer">
+          <div class="footer-brand">
+            <img src="./app-logo.png" alt="Logo">
+            <span>arenafitpro.app/beta</span>
+          </div>
+          <div class="footer-cta" style="background: #ffffff; color: #000000; border-color: #ffffff;">CANDIDATURA →</div>
+        </footer>
+      </article>
+    </div>
+
+  </main>
+
+</body>
+</html>

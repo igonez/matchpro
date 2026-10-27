@@ -4,6 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ASAAS_CONFIG } from '@/lib/asaas/config';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 import { logSecurityEvent } from '@/lib/security/audit';
+import { sendMetaConversionEvent } from '@/lib/analytics/meta-capi';
 
 function safeCompare(a: string, b: string): boolean {
   if (!a || !b) return false;
@@ -161,6 +162,32 @@ export async function POST(request: Request) {
             .eq('id', coachId);
           console.log(`[Asaas Webhook] Plano do treinador ${coachId} atualizado para pro`);
         }
+      }
+
+      // 3.4. Disparo Server-Side (Meta Conversions API - CAPI) para atribuição de tráfego pago (Pix/Cartão)
+      const purchaseValue = Number(payment?.value || 0);
+      if (purchaseValue > 0 && payment?.id) {
+        const isCoachSubscription = Boolean(
+          payment.subscription ||
+            (payment.externalReference &&
+              payment.externalReference.startsWith('coach_plan_'))
+        );
+        const buyerUserId =
+          updatedPayment?.student_id || updatedPayment?.professional_id || null;
+
+        await sendMetaConversionEvent({
+          eventName: isCoachSubscription ? 'Subscribe' : 'Purchase',
+          eventId: `asaas_pay_${payment.id}`,
+          value: purchaseValue,
+          currency: 'BRL',
+          contentName: isCoachSubscription
+            ? 'Assinatura ArenaFitPro Pro'
+            : 'Inscrição em Desafio Fitness',
+          contentCategory: isCoachSubscription ? 'SaaS_Subscription' : 'Challenge_Ticket',
+          user: {
+            externalId: buyerUserId,
+          },
+        });
       }
     }
 

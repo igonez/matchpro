@@ -117,8 +117,8 @@ async function generateStory() {
         <rect x="0" y="0" width="920" height="136" rx="24" fill="#09090B" fill-opacity="0.85" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.5" />
         <rect x="24" y="24" width="70" height="88" rx="14" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="1" />
         <text x="41" y="78" class="font-mono" font-size="30" font-weight="800" fill="#71717A">02</text>
-        <text x="120" y="58" class="font-sans" font-size="27" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">Split Pix D+0 (Apenas 8%)</text>
-        <text x="120" y="94" class="font-sans" font-size="21" font-weight="400" fill="#A1A1AA">Inscrições caem direto na sua conta com a taxa mínima congelada.</text>
+        <text x="120" y="58" class="font-sans" font-size="27" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">Split Pix D+0 (0% de Taxa)</text>
+        <text x="120" y="94" class="font-sans" font-size="21" font-weight="400" fill="#A1A1AA">Zero comissão sobre inscrições. 100% do valor do desafio é seu.</text>
       </g>
 
       <!-- Card 3 -->
@@ -127,7 +127,7 @@ async function generateStory() {
         <rect x="24" y="24" width="70" height="88" rx="14" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="1" />
         <text x="41" y="78" class="font-mono" font-size="30" font-weight="800" fill="#71717A">03</text>
         <text x="120" y="58" class="font-sans" font-size="27" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">Plano PRO Vitalício Gratuito</text>
-        <text x="120" y="94" class="font-sans" font-size="21" font-weight="400" fill="#A1A1AA">Apenas 15 vagas com isenção perpétua de mensalidade do PRO.</text>
+        <text x="120" y="94" class="font-sans" font-size="21" font-weight="400" fill="#A1A1AA">Apenas 15 vagas com isenção perpétua dos R$ 49,90/mês do PRO.</text>
       </g>
     </g>
 
@@ -173,7 +173,7 @@ async function generateStory() {
 
 Dimensões: 1080 x 1920 px (Proporção oficial 9:16 do Instagram Stories)
 Cores: Luxury Monochromatic Titanium (OLED Black, Titânio, Branco Metálico)
-Condição Especial: Plano PRO Vitalício Gratuito (R$ 0 de mensalidade) + Split de apenas 8%
+Condição Especial: Plano PRO Vitalício Gratuito (R$ 0 de mensalidade) + 0% de Taxa sobre Inscrições
 
 COMO POSTAR NO SEU INSTAGRAM:
 1. Abra o Instagram e selecione o arquivo 'story-abertura-beta.jpg'.

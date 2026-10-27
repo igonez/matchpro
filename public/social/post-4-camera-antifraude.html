@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post 04 — A Câmera Antifraude e a IA Nutricional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #050505;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #f4f4f5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header-bar {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .header-bar h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-bar p {
+      font-size: 13px;
+      color: #71717a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .carousel-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      max-width: 1400px;
+    }
+
+    .slide-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #52525b;
+    }
+
+    /* 
+      Dimensões Oficiais do Instagram Portrait 4:5 
+      1080px x 1350px (renderizado em escala 540px x 675px para visualização nítida em desktop)
+    */
+    .slide {
+      width: 540px;
+      height: 675px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      padding: 44px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    /* Fundo cinematográfico com foto atleta low-key e overlay preto OLED */
+    .slide.hero-bg {
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.94) 75%, #000000 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.88) 50%, #000000 100%),
+        url('./hero-post-2.jpg');
+      background-size: cover;
+      background-position: center 30%;
+    }
+
+    /* Glow de profundidade titânio */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    /* Grid sutil monocromático de fundo */
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .slide-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #e4e4e7;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .slide-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: #71717a;
+      letter-spacing: 0.1em;
+    }
+
+    .slide-body {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tag-category {
+      display: inline-flex;
+      align-self: flex-start;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a1a1aa;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .headline-xl {
+      font-size: 33px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      color: #ffffff;
+    }
+
+    .headline-xl span {
+      background: linear-gradient(180deg, #ffffff 30%, #71717a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+
+    .headline-lg {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+    }
+
+    .text-body {
+      font-size: 14px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* Cards e Blocos Titanium */
+    .bento-card {
+      background: rgba(18, 18, 20, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      backdrop-filter: blur(16px);
+    }
+
+    .bento-card-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .bento-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 800;
+      color: #71717a;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bento-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    .bento-card-desc {
+      font-size: 12px;
+      color: #a1a1aa;
+      line-height: 1.5;
+    }
+
+    /* Big Highlight Box */
+    .highlight-box {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%), #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .highlight-metric {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .highlight-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #a1a1aa;
+    }
+
+    /* Checklist */
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(18, 18, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+
+    .check-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .check-text strong {
+      font-size: 13px;
+      color: #ffffff;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .check-text p {
+      font-size: 11px;
+      color: #a1a1aa;
+      line-height: 1.45;
+    }
+
+    /* Footer oficial */
+    .slide-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: #000;
+    }
+
+    .footer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .footer-domain {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #71717a;
+      letter-spacing: 0.05em;
+    }
+
+    .swipe-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #f4f4f5;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 6px 14px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>POST 04 • A CÂMERA ANTIFRAUDE E A IA NUTRICIONAL</h1>
+    <p>Carrossel Instagram (1080x1350 • 4:5 Portrait) • Padrão Luxury Titanium Monocromático</p>
+  </div>
+
+  <div class="carousel-container">
+
+    <!-- ==================== SLIDE 1: CAPA ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 01 • Capa de Impacto</span>
+      <div class="slide hero-bg">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            ArenaFitPro • Integridade
+          </div>
+          <span class="slide-index">01 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Tecnologia Antifraude</span>
+          <h2 class="headline-xl">
+            O fim da foto
+            <span>da galeria.</span>
+          </h2>
+          <p class="text-body" style="font-size: 15px; color: #d4d4d8;">
+            Por que desafios no WhatsApp perdem a credibilidade quando a turma percebe que o pódio não é 100% honesto.
+          </p>
+
+          <div class="highlight-box" style="margin-top: 6px;">
+            <div class="highlight-metric">BLOQUEIO NATIVO</div>
+            <div class="highlight-label">Check-in Válido Apenas pela Câmera ao Vivo</div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 2: O PROBLEMA NO WHATSAPP ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 02 • O Problema</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            O Caos no WhatsApp
+          </div>
+          <span class="slide-index">02 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Vulnerabilidade Real</span>
+          <h2 class="headline-lg">
+            Como saber se o treino foi feito hoje ou há duas semanas?
+          </h2>
+          <p class="text-body">
+            Nos grupos convencionais de WhatsApp, o treinador depende da boa-fé cega. E isso destrói a dinâmica da competição.
+          </p>
+
+          <div class="bento-card">
+            <div class="bento-card-row">
+              <div class="bento-num">01</div>
+              <div>
+                <div class="bento-card-title">A Trapaça Silenciosa</div>
+                <div class="bento-card-desc">O aluno esquece de treinar na quarta. Às 23h, busca uma foto antiga no rolo da câmera e manda no grupo para não perder pontos.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div class="bento-card-row">
+              <div class="bento-num">02</div>
+              <div>
+                <div class="bento-card-title">Desmotivação em Cadeia</div>
+                <div class="bento-card-desc">Quem acordou às 6h da manhã e se esforçou de verdade percebe o pódio corrompido, perde o entusiasmo e abandona a disputa.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 3: A SOLUÇÃO ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 03 • Mecanismo Câmera</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Mecanismo Exclusivo
+          </div>
+          <span class="slide-index">03 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">Sensor Forçado ao Vivo</span>
+          <h2 class="headline-lg">
+            Zero upload de galeria. Foto capturada no instante real.
+          </h2>
+
+          <div class="check-list">
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-text">
+                <strong>Bloqueio Nativo de Galeria</strong>
+                <p>O botão de check-in aciona diretamente o sensor óptico da câmera traseira. Não existe opção de escolher foto salva.</p>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-text">
+                <strong>Timestamp Criptografado</strong>
+                <p>Cada submissão recebe carimbo temporal inviolável no momento do clique antes de sincronizar com o banco de dados.</p>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-text">
+                <strong>Pódio 100% Inquestionável</strong>
+                <p>A turma compete sabendo que cada ponto conquistado no ranking reflete disciplina real, e não fotos recicladas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 4: IA NUTRICIONAL ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 04 • Visão Computacional</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Visão Computacional
+          </div>
+          <span class="slide-index">04 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">IA Nutricional Integrada</span>
+          <h2 class="headline-lg">
+            Foto do prato auditada com estimativa de macros.
+          </h2>
+
+          <div class="bento-card">
+            <div class="bento-card-title">Reconhecimento Visual Instantâneo</div>
+            <div class="bento-card-desc">
+              O aluno fotografa a refeição ao vivo e a IA estima calorias e distribuição de proteínas, carboidratos e gorduras para educar o hábito.
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div class="bento-card-title">Cockpit de Auditoria em Swipe</div>
+            <div class="bento-card-desc">
+              Você não gasta horas abrindo fotos no WhatsApp. Avalie 30 refeições em menos de 2 minutos deslizando para aprovar ou rejeitar.
+            </div>
+          </div>
+
+          <div class="highlight-box" style="padding: 14px 18px; margin-top: 4px;">
+            <div class="highlight-metric" style="font-size: 26px;">2 MINUTOS</div>
+            <div class="highlight-label">Para Auditar os Check-ins Diários de 30 Alunos</div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="swipe-pill">Arraste →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 5: CTA CONVOCAÇÃO ==================== -->
+    <div class="slide-wrapper">
+      <span class="slide-label">Slide 05 • Candidatura</span>
+      <div class="slide">
+        <div class="slide-top">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Programa Fundador
+          </div>
+          <span class="slide-index">05 / 05</span>
+        </div>
+
+        <div class="slide-body">
+          <span class="tag-category">15 Vagas de Piloto</span>
+          <h2 class="headline-lg">
+            Coloque integridade total no seu próximo desafio.
+          </h2>
+
+          <div class="check-list">
+            <div class="check-item" style="padding: 12px 14px;">
+              <div class="check-icon" style="font-size: 11px;">PRO</div>
+              <div class="check-text">
+                <strong>Plano PRO Gratuito Vitalício</strong>
+                <p>Isenção perpétua da mensalidade de R$ 49,90 para os 15 selecionados.</p>
+              </div>
+            </div>
+
+            <div class="check-item" style="padding: 12px 14px;">
+              <div class="check-icon" style="font-size: 11px;">0%</div>
+              <div class="check-text">
+                <strong>0% de Taxa sobre Inscrições</strong>
+                <p>Zero comissão sobre os alunos. 100% da receita fica no seu bolso.</p>
+              </div>
+            </div>
+
+            <div class="check-item" style="padding: 12px 14px;">
+              <div class="check-icon" style="font-size: 11px;">03</div>
+              <div class="check-text">
+                <strong>Acompanhamento Direto com os Devs</strong>
+                <p>Rodamos o desafio de 21 dias lado a lado com você e seus alunos.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box" style="padding: 14px 18px; margin-top: 4px;">
+            <div style="font-size: 13px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">
+              Comente "BETA" abaixo ou acesse a bio
+            </div>
+            <div style="font-size: 11px; color: #a1a1aa; font-family: 'JetBrains Mono', monospace;">
+              arenafitpro.app/beta • Avaliação manual de perfil
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">
+            <div class="footer-avatar"><img src="./app-logo.png" alt="ArenaFitPro"></div>
+            <span class="footer-domain">arenafitpro.app</span>
+          </div>
+          <div class="brand-pill" style="font-size: 9px;">15 Vagas Disponíveis</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -9,7 +9,8 @@ type ConsentLevel = 'all' | 'essential' | 'rejected' | null;
 
 interface CookiePreferences {
   essential: boolean; // Sempre true
-  analytics: boolean; // Métricas internas
+  analytics: boolean; // Métricas e atribuição de campanhas
+  marketing: boolean; // Pixel & Conversões
   functional: boolean; // Preferências de UI
   timestamp: string;
 }
@@ -19,7 +20,7 @@ const STORAGE_KEY = 'arenafitpro_cookie_consent_v1';
 export function CookieConsentBanner() {
   const [isVisible, setIsVisible] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
-  const [analyticsAllowed, setAnalyticsAllowed] = useState(false);
+  const [analyticsAllowed, setAnalyticsAllowed] = useState(true);
   const [functionalAllowed, setFunctionalAllowed] = useState(true);
 
   useEffect(() => {
@@ -37,13 +38,19 @@ export function CookieConsentBanner() {
 
   const saveConsent = (level: ConsentLevel, customPrefs?: Partial<CookiePreferences>) => {
     try {
+      const allowAnalyticsAndMarketing =
+        level === 'all' ? true : customPrefs?.analytics ?? false;
       const prefs: CookiePreferences = {
         essential: true,
-        analytics: level === 'all' ? true : customPrefs?.analytics ?? false,
+        analytics: allowAnalyticsAndMarketing,
+        marketing: allowAnalyticsAndMarketing,
         functional: level === 'all' ? true : customPrefs?.functional ?? true,
         timestamp: new Date().toISOString(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('arenafitpro:consent-updated'));
+      }
     } catch {
       // Ignora erro em iframes/privado
     }
@@ -75,7 +82,7 @@ export function CookieConsentBanner() {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
-                Utilizamos cookies estritamente necessários para autenticação segura e funcionamento da plataforma. Não utilizamos cookies de terceiros para publicidade comportamental nem vendemos dados. Saiba mais em nossa{' '}
+                Utilizamos cookies essenciais para autenticação segura e cookies analíticos/de atribuição para medir o desempenho das nossas campanhas, sem jamais vender seus dados. Saiba mais em nossa{' '}
                 <Link
                   href="/privacidade"
                   className="text-white underline underline-offset-2 hover:text-zinc-200 font-medium focus-visible:ring-2 focus-visible:ring-white rounded"

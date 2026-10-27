@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>ArenaFitPro - Anúncio Motion 3D Cinematográfico (1080x1920)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: #030305;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 20px;
+      gap: 20px;
+    }
+
+    /* Top Control Bar */
+    .controls-panel {
+      width: 100%;
+      max-width: 960px;
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    .brand-col h1 {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-col p {
+      font-size: 13px;
+      color: #a1a1aa;
+      margin-top: 3px;
+    }
+
+    .badge-3d {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: #fbbf24;
+    }
+
+    .actions-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-play {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-play:hover {
+      background: #f4f4f5;
+      transform: translateY(-1px);
+    }
+
+    .btn-voice {
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #d4d4d8;
+    }
+
+    .btn-voice.active {
+      border-color: #34d399;
+      color: #34d399;
+      background: rgba(52, 211, 153, 0.1);
+    }
+
+    .btn-record {
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      color: #000000;
+      font-weight: 900;
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.35);
+    }
+
+    .btn-record.recording {
+      background: #ef4444;
+      color: #ffffff;
+      animation: pulse 1.5s infinite;
+    }
+
+    /* 3D Viewport Frame */
+    .viewport-outer {
+      position: relative;
+      width: 480px;
+      height: 853px; /* 9:16 Preview Ratio */
+      background: #000000;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 
+        0 40px 100px rgba(0, 0, 0, 0.95),
+        0 0 40px rgba(255, 255, 255, 0.05);
+      perspective: 1200px;
+      transform-style: preserve-3d;
+    }
+
+    /* 3D World Scene */
+    .scene-world {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.1s linear;
+    }
+
+    /* Studio Specular Lighting Beam */
+    .studio-beam {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .light-streak {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transform: skewX(-25deg);
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    /* 3D Phone Chassis Container */
+    .phone-container-3d {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .phone-body {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .phone-screen-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      will-change: transform, opacity;
+    }
+
+    .phone-screen-img.active {
+      opacity: 1;
+    }
+
+    /* Dynamic Kinetic Subtitles Overlay (Estilo Hormozi / CapCut) */
+    .kinetic-caption-box {
+      position: absolute;
+      top: 48%;
+      left: 20px;
+      right: 20px;
+      transform: translateY(-50%);
+      text-align: center;
+      z-index: 100;
+      pointer-events: none;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 16px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .kinetic-word {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin: 0 3px;
+      color: #a1a1aa;
+      opacity: 0.35;
+      transform: scale(0.92);
+      transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .kinetic-word.active {
+      opacity: 1;
+      transform: scale(1.18);
+      color: #fde047;
+      text-shadow: 0 0 25px rgba(251, 191, 36, 0.85);
+    }
+
+    .kinetic-word.highlight-red {
+      color: #ef4444 !important;
+      text-shadow: 0 0 25px rgba(239, 68, 68, 0.85);
+    }
+
+    .kinetic-word.highlight-green {
+      color: #34d399 !important;
+      text-shadow: 0 0 25px rgba(52, 211, 153, 0.85);
+    }
+
+    .kinetic-word.highlight-cyan {
+      color: #22d3ee !important;
+      text-shadow: 0 0 25px rgba(34, 211, 238, 0.85);
+    }
+
+    /* Top Stories Progress Bar */
+    .story-progress-bar {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+      z-index: 120;
+    }
+
+    .progress-segment {
+      flex: 1;
+      height: 3.5px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-segment-fill {
+      width: 0%;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: 0 0 8px #ffffff;
+    }
+
+    /* Hidden 1080x1920 Canvas */
+    #render-canvas {
+      display: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Panel -->
+  <div class="controls-panel">
+    <div class="brand-col">
+      <h1>
+        ArenaFitPro • Anúncio 3D & Legenda Dinâmica
+        <span class="badge-3d">MOTION 3D HUD</span>
+      </h1>
+      <p>Câmera 3D entra dentro do app, dá whip-pan lateral e sincroniza a legenda palavra por palavra.</p>
+    </div>
+    <div class="actions-group">
+      <button id="btn-toggle-play" class="btn-action btn-play" onclick="togglePlay()">
+        ⏸ Pausar Animação
+      </button>
+      <button id="btn-toggle-voice" class="btn-action btn-voice active" onclick="toggleVoice()">
+        🔊 Locução IA Ativa
+      </button>
+      <button id="btn-record-video" class="btn-action btn-record" onclick="recordAndDownloadVideo()">
+        🎥 Gravar & Baixar Vídeo (.webm)
+      </button>
+    </div>
+  </div>
+
+  <!-- 3D Viewport Outer -->
+  <div class="viewport-outer" id="viewport-box">
+    <!-- Progress Bar -->
+    <div class="story-progress-bar">
+      <div class="progress-segment"><div class="progress-segment-fill" id="fill-0"></div></div>
+      <div class="progress-segment"><div class="progress-segment-fill" id="fill-1"></div></div>
+      <div class="progress-segment"><div class="progress-segment-fill" id="fill-2"></div></div>
+      <div class="progress-segment"><div class="progress-segment-fill" id="fill-3"></div></div>
+    </div>
+
+    <!-- 3D World Scene -->
+    <div class="scene-world" id="scene-world">
+      <!-- Specular Beams -->
+      <div class="studio-beam"></div>
+      <div class="light-streak" id="light-streak"></div>
+
+      <!-- Phone Body & Screens -->
+      <div class="phone-container-3d" id="phone-container">
+        <div class="phone-body">
+          <img src="./App Screens Realistas/mockup-leaderboard-titanium.jpg" class="phone-screen-img active" id="img-0" alt="Leaderboard">
+          <img src="./App Screens Realistas/mockup-camera-antifraude-titanium.jpg" class="phone-screen-img" id="img-1" alt="Câmera">
+          <img src="./App Screens Realistas/mockup-financeiro-split-titanium.jpg" class="phone-screen-img" id="img-2" alt="Financeiro">
+          
+          <!-- Cena 4: Card de Fechamento -->
+          <div class="phone-screen-img" id="img-3" style="background: radial-gradient(circle at 50% 30%, #1c1917 0%, #09090b 70%, #000000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px;">
+            <div style="background: rgba(9, 9, 11, 0.95); border: 2px solid #fbbf24; border-radius: 28px; padding: 36px 24px; text-align: center; width: 90%; box-shadow: 0 0 50px rgba(251, 191, 36, 0.25);">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 900; color: #fbbf24; letter-spacing: 2px;">
+                BETA DOS FUNDADORES
+              </span>
+              <h2 style="font-size: 28px; font-weight: 900; color: #ffffff; margin-top: 10px; line-height: 1.2;">
+                15 Vagas Oficiais
+              </h2>
+              <div style="margin: 18px 0; padding: 14px; background: rgba(251, 191, 36, 0.12); border-radius: 14px; border: 1px solid rgba(251, 191, 36, 0.3);">
+                <strong style="color: #fde047; font-family: 'JetBrains Mono', monospace; font-size: 14px; display: block;">
+                  PLANO PRO VITALÍCIO ($0)
+                </strong>
+                <span style="color: #d4d4d8; font-size: 12px;">Zero mensalidade + 0% de comissão</span>
+              </div>
+              <div style="background: #ffffff; color: #000000; font-weight: 900; font-size: 14px; padding: 14px; border-radius: 14px; letter-spacing: 0.5px;">
+                TOQUE EM SAIBA MAIS ↗
+              </div>
+              <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #71717a; margin-top: 14px;">
+                arenafitpro.app/beta
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kinetic Word-by-Word Subtitles in Center -->
+    <div class="kinetic-caption-box" id="caption-box">
+      <!-- Palavras injetadas via JS -->
+    </div>
+  </div>
+
+  <!-- Real 1080x1920 Canvas for Video Recording -->
+  <canvas id="render-canvas" width="1080" height="1920"></canvas>
+
+  <script>
+    // ====================================================================
+    // ROTEIRO SINCRONIZADO: FALA, TEMPO E EFEITOS 3D
+    // ====================================================================
+    const SCRIPT_TIMELINE = [
+      // CENA 1: O GANCHO & DIVE-IN (0s - 5s)
+      {
+        sceneIndex: 0,
+        startMs: 0,
+        endMs: 5000,
+        spokenText: "Você ainda confere treino em grupo de WhatsApp?",
+        words: [
+          { text: "VOCÊ", at: 200 },
+          { text: "AINDA", at: 600 },
+          { text: "CONFERE", at: 1100 },
+          { text: "TREINO", at: 1600 },
+          { text: "NO", at: 2100 },
+          { text: "WHATSAPP?", at: 2500, highlight: "red" },
+          { text: "VEJA", at: 3500 },
+          { text: "ESSE", at: 3800 },
+          { text: "PÓDIO", at: 4200, highlight: "yellow" }
+        ],
+        camera3D: (t) => {
+          if (t < 0.6) {
+            const rotY = -14 + (t * 8);
+            const rotX = 10 - (t * 5);
+            return `rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${1 + t * 0.15})`;
+          } else {
+            const diveProgress = (t - 0.6) / 0.4;
+            const zoom = 1.09 + (diveProgress * 0.7);
+            const rotY = -9 * (1 - diveProgress);
+            const rotX = 7 * (1 - diveProgress);
+            return `rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${zoom}) translateZ(${diveProgress * 200}px)`;
+          }
+        }
+      },
+
+      // CENA 2: WHIP-PAN LATERAL & CÂMERA ANTIFRAUDE (5s - 10s)
+      {
+        sceneIndex: 1,
+        startMs: 5000,
+        endMs: 10000,
+        spokenText: "Câmera antifraude com sensor nativo e IA nutricional.",
+        words: [
+          { text: "CÂMERA", at: 5200 },
+          { text: "ANTIFRAUDE", at: 5600, highlight: "green" },
+          { text: "SEM", at: 6400 },
+          { text: "GALERIA", at: 6800, highlight: "red" },
+          { text: "E", at: 7500 },
+          { text: "IA", at: 7900, highlight: "green" },
+          { text: "NUTRICIONAL", at: 8300, highlight: "green" },
+          { text: "AO", at: 9000 },
+          { text: "VIVO!", at: 9400 }
+        ],
+        camera3D: (t) => {
+          if (t < 0.2) {
+            const panT = t / 0.2;
+            const transX = panT * -35;
+            const rotY = panT * 22;
+            return `translateX(${transX}%) rotateY(${rotY}deg) scale(1.15)`;
+          } else if (t < 0.35) {
+            const enterT = (t - 0.2) / 0.15;
+            const transX = (1 - enterT) * 30;
+            const rotY = (1 - enterT) * -20;
+            return `translateX(${transX}%) rotateY(${rotY}deg) scale(1.1)`;
+          } else {
+            const subtle = (t - 0.35) / 0.65;
+            return `rotateY(${Math.sin(subtle * Math.PI) * 4}deg) scale(${1.08 + subtle * 0.08})`;
+          }
+        }
+      },
+
+      // CENA 3: SPLIT PIX D+0 & ZOOM DE DINHEIRO (10s - 15s)
+      {
+        sceneIndex: 2,
+        startMs: 10000,
+        endMs: 15000,
+        spokenText: "Zero por cento de taxa no Plano Pro. O dinheiro cai no seu Pix no mesmo dia.",
+        words: [
+          { text: "ZERO", at: 10200, highlight: "cyan" },
+          { text: "DE", at: 10600 },
+          { text: "TAXA", at: 10900, highlight: "cyan" },
+          { text: "NO", at: 11500 },
+          { text: "PRO!", at: 11800, highlight: "yellow" },
+          { text: "O", at: 12500 },
+          { text: "PIX", at: 12800, highlight: "green" },
+          { text: "CAI", at: 13200 },
+          { text: "NO", at: 13600 },
+          { text: "MESMO", at: 14000, highlight: "green" },
+          { text: "DIA!", at: 14400, highlight: "green" }
+        ],
+        camera3D: (t) => {
+          const rotX = -8 + (t * 12);
+          const rotY = 6 - (t * 8);
+          const zoom = 1.05 + (t * 0.12);
+          return `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${zoom})`;
+        }
+      },
+
+      // CENA 4: PULL-BACK CINEMATOGRÁFICO & FECHAMENTO (15s - 20s)
+      {
+        sceneIndex: 3,
+        startMs: 15000,
+        endMs: 20000,
+        spokenText: "Apenas quinze vagas de fundadores com acesso vitalício gratuito. Garanta a sua.",
+        words: [
+          { text: "APENAS", at: 15200 },
+          { text: "15", at: 15500, highlight: "yellow" },
+          { text: "VAGAS", at: 15900, highlight: "yellow" },
+          { text: "PRO", at: 16700 },
+          { text: "VITALÍCIO", at: 17100, highlight: "yellow" },
+          { text: "GRATUITO!", at: 17600, highlight: "yellow" },
+          { text: "TOQUE", at: 18400 },
+          { text: "NO", at: 18800 },
+          { text: "LINK!", at: 19200, highlight: "green" }
+        ],
+        camera3D: (t) => {
+          const pull = 1.15 - (t * 0.15);
+          const floatY = Math.sin(t * Math.PI * 2) * 6;
+          return `translateY(${floatY}px) scale(${pull})`;
+        }
+      }
+    ];
+
+    let isPlaying = true;
+    let voiceEnabled = true;
+    let animStartTime = Date.now();
+    const TOTAL_DURATION_MS = 20000;
+
+    const phoneContainer = document.getElementById('phone-container');
+    const captionBox = document.getElementById('caption-box');
+    const streakElement = document.getElementById('light-streak');
+
+    const screens = [
+      document.getElementById('img-0'),
+      document.getElementById('img-1'),
+      document.getElementById('img-2'),
+      document.getElementById('img-3')
+    ];
+
+    const fills = [
+      document.getElementById('fill-0'),
+      document.getElementById('fill-1'),
+      document.getElementById('fill-2'),
+      document.getElementById('fill-3')
+    ];
+
+    function speakText(text) {
+      if (!voiceEnabled || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'pt-BR';
+      utterance.rate = 1.15;
+      utterance.pitch = 0.95;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    let lastSpokenScene = -1;
+
+    function renderLoop() {
+      if (!isPlaying) return;
+
+      const now = Date.now();
+      const totalElapsed = (now - animStartTime) % TOTAL_DURATION_MS;
+
+      const currentSection = SCRIPT_TIMELINE.find(
+        s => totalElapsed >= s.startMs && totalElapsed < s.endMs
+      ) || SCRIPT_TIMELINE[0];
+
+      const sceneIdx = currentSection.sceneIndex;
+      const sceneElapsed = totalElapsed - currentSection.startMs;
+      const sceneDuration = currentSection.endMs - currentSection.startMs;
+      const sceneProgress = Math.min(1, sceneElapsed / sceneDuration);
+
+      if (sceneIdx !== lastSpokenScene) {
+        lastSpokenScene = sceneIdx;
+        speakText(currentSection.spokenText);
+
+        screens.forEach((s, idx) => {
+          if (idx === sceneIdx) s.classList.add('active');
+          else s.classList.remove('active');
+        });
+
+        streakElement.style.transition = 'none';
+        streakElement.style.left = '-100%';
+        setTimeout(() => {
+          streakElement.style.transition = 'left 0.7s ease-out';
+          streakElement.style.left = '200%';
+        }, 20);
+      }
+
+      const transform3D = currentSection.camera3D(sceneProgress);
+      phoneContainer.style.transform = transform3D;
+
+      fills.forEach((f, idx) => {
+        if (idx < sceneIdx) f.style.width = '100%';
+        else if (idx === sceneIdx) f.style.width = (sceneProgress * 100) + '%';
+        else f.style.width = '0%';
+      });
+
+      updateKineticWords(currentSection, totalElapsed);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    requestAnimationFrame(renderLoop);
+
+    function updateKineticWords(section, totalElapsed) {
+      const currentWords = section.words;
+      let html = '';
+
+      currentWords.forEach(w => {
+        const isPastOrCurrent = totalElapsed >= w.at;
+        const isActive = isPastOrCurrent && (totalElapsed < w.at + 450);
+
+        let colorClass = '';
+        if (w.highlight === 'red') colorClass = 'highlight-red';
+        if (w.highlight === 'green') colorClass = 'highlight-green';
+        if (w.highlight === 'cyan') colorClass = 'highlight-cyan';
+
+        const activeClass = isActive ? 'active' : (isPastOrCurrent ? 'visible' : '');
+        html += `<span class="kinetic-word ${activeClass} ${colorClass}">${w.text}</span>`;
+      });
+
+      captionBox.innerHTML = html;
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('btn-toggle-play');
+      if (isPlaying) {
+        animStartTime = Date.now();
+        btn.innerText = '⏸ Pausar Animação';
+        requestAnimationFrame(renderLoop);
+      } else {
+        btn.innerText = '▶ Reproduzir Animação';
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+      }
+    }
+
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      const btn = document.getElementById('btn-toggle-voice');
+      if (voiceEnabled) {
+        btn.classList.add('active');
+        btn.innerText = '🔊 Locução IA Ativa';
+      } else {
+        btn.classList.remove('active');
+        btn.innerText = '🔇 Locução Silenciada';
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+      }
+    }
+
+    async function recordAndDownloadVideo() {
+      const recordBtn = document.getElementById('btn-record-video');
+      recordBtn.classList.add('recording');
+      recordBtn.innerText = '🔴 Renderizando Vídeo 3D (0/20s)...';
+
+      const canvas = document.getElementById('render-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const img0 = new Image(); img0.src = './App Screens Realistas/mockup-leaderboard-titanium.jpg';
+      const img1 = new Image(); img1.src = './App Screens Realistas/mockup-camera-antifraude-titanium.jpg';
+      const img2 = new Image(); img2.src = './App Screens Realistas/mockup-financeiro-split-titanium.jpg';
+      await Promise.all([
+        new Promise(r => img0.onload = r),
+        new Promise(r => img1.onload = r),
+        new Promise(r => img2.onload = r)
+      ]);
+
+      const stream = canvas.captureStream(60);
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm;codecs=vp9',
+        videoBitsPerSecond: 18000000
+      });
+
+      const chunks = [];
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'anuncio-3d-motion-arenafitpro-1080x1920.webm';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        recordBtn.classList.remove('recording');
+        recordBtn.innerText = '✓ Vídeo 3D Baixado com Sucesso!';
+      };
+
+      mediaRecorder.start();
+      const recStart = performance.now();
+
+      function draw3DFrame(now) {
+        const elapsed = now - recStart;
+        if (elapsed >= TOTAL_DURATION_MS) {
+          mediaRecorder.stop();
+          return;
+        }
+
+        const sec = Math.floor(elapsed / 1000);
+        recordBtn.innerText = `🔴 Renderizando Vídeo 3D (${sec}/20s)...`;
+
+        ctx.fillStyle = '#030305';
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        const currentSection = SCRIPT_TIMELINE.find(
+          s => elapsed >= s.startMs && elapsed < s.endMs
+        ) || SCRIPT_TIMELINE[0];
+
+        const sceneIdx = currentSection.sceneIndex;
+        const sceneElapsed = elapsed - currentSection.startMs;
+        const progress = sceneElapsed / (currentSection.endMs - currentSection.startMs);
+
+        ctx.save();
+        ctx.translate(540, 960);
+
+        if (sceneIdx === 0) {
+          const scale = 1.0 + (progress * 0.28);
+          ctx.scale(scale, scale);
+          ctx.drawImage(img0, -540, -960, 1080, 1920);
+        } else if (sceneIdx === 1) {
+          let offsetX = 0;
+          if (progress < 0.2) offsetX = progress * -400;
+          else if (progress < 0.35) offsetX = (1 - (progress - 0.2) / 0.15) * 350;
+          ctx.translate(offsetX, 0);
+          ctx.scale(1.1 + progress * 0.08, 1.1 + progress * 0.08);
+          ctx.drawImage(img1, -540, -960, 1080, 1920);
+        } else if (sceneIdx === 2) {
+          const scale = 1.05 + (progress * 0.15);
+          ctx.scale(scale, scale);
+          ctx.drawImage(img2, -540, -960, 1080, 1920);
+        } else {
+          ctx.restore();
+          drawCanvasFinalScene(ctx);
+          ctx.save();
+        }
+        ctx.restore();
+
+        drawCanvasKineticCaption(ctx, currentSection, elapsed);
+        drawCanvasStoriesProgress(ctx, elapsed);
+
+        requestAnimationFrame(draw3DFrame);
+      }
+
+      requestAnimationFrame(draw3DFrame);
+    }
+
+    function drawCanvasKineticCaption(ctx, section, elapsed) {
+      ctx.save();
+      ctx.textAlign = 'center';
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+      ctx.fillRect(80, 920, 920, 120);
+
+      const words = section.words;
+      ctx.font = '900 48px "Plus Jakarta Sans"';
+
+      const activeWords = words.filter(w => elapsed >= w.at);
+      const textToDisplay = activeWords.map(w => w.text).join(' ');
+
+      if (textToDisplay) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(textToDisplay, 540, 1000);
+      }
+      ctx.restore();
+    }
+
+    function drawCanvasFinalScene(ctx) {
+      ctx.save();
+      ctx.fillStyle = '#050507';
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      ctx.fillStyle = '#09090B';
+      ctx.strokeStyle = '#FBBF24';
+      ctx.lineWidth = 4;
+      roundRect(ctx, 100, 480, 880, 960, 48, true, true);
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#FBBF24';
+      ctx.font = 'bold 24px "JetBrains Mono"';
+      ctx.fillText('PROGRAMA PILOTO OFICIAL', 540, 580);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 64px "Plus Jakarta Sans"';
+      ctx.fillText('15 Treinadores', 540, 680);
+      ctx.fillText('Fundadores', 540, 750);
+
+      ctx.fillStyle = 'rgba(251, 191, 36, 0.15)';
+      ctx.strokeStyle = '#FBBF24';
+      ctx.lineWidth = 2;
+      roundRect(ctx, 160, 830, 760, 180, 28, true, true);
+
+      ctx.fillStyle = '#FDE047';
+      ctx.font = '900 32px "JetBrains Mono"';
+      ctx.fillText('PLANO PRO VITALÍCIO GRATUITO', 540, 910);
+      ctx.fillStyle = '#D4D4D8';
+      ctx.font = '500 24px "Plus Jakarta Sans"';
+      ctx.fillText('$0 de mensalidade para sempre • 0% de taxa', 540, 960);
+
+      ctx.fillStyle = '#FFFFFF';
+      roundRect(ctx, 220, 1070, 640, 110, 55, true, false);
+      ctx.fillStyle = '#000000';
+      ctx.font = '900 32px "Plus Jakarta Sans"';
+      ctx.fillText('TOQUE EM SAIBA MAIS ↗', 540, 1140);
+
+      ctx.fillStyle = '#71717A';
+      ctx.font = 'bold 24px "JetBrains Mono"';
+      ctx.fillText('arenafitpro.app/beta', 540, 1260);
+      ctx.restore();
+    }
+
+    function drawCanvasStoriesProgress(ctx, elapsed) {
+      const segWidth = 220;
+      const segGap = 16;
+      const startX = 80;
+      const y = 50;
+
+      for (let i = 0; i < 4; i++) {
+        const segX = startX + (i * (segWidth + segGap));
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        roundRect(ctx, segX, y, segWidth, 8, 4, true, false);
+
+        const segStart = i * 5000;
+        const segEnd = (i + 1) * 5000;
+        if (elapsed >= segEnd) {
+          ctx.fillStyle = '#FFFFFF';
+          roundRect(ctx, segX, y, segWidth, 8, 4, true, false);
+        } else if (elapsed > segStart) {
+          const fillW = ((elapsed - segStart) / 5000) * segWidth;
+          ctx.fillStyle = '#FFFFFF';
+          roundRect(ctx, segX, y, fillW, 8, 4, true, false);
+        }
+      }
+    }
+
+    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+  </script>
+</body>
+</html>

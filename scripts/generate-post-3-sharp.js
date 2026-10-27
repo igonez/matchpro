@@ -83,7 +83,7 @@ async function generatePost3() {
       <g transform="translate(0, 420)">
         <rect x="0" y="0" width="920" height="190" rx="24" fill="#09090B" fill-opacity="0.9" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2" />
         <text x="460" y="90" text-anchor="middle" class="font-mono" font-size="64" font-weight="900" fill="#FFFFFF" letter-spacing="4">15 VAGAS</text>
-        <text x="460" y="145" text-anchor="middle" class="font-mono" font-size="20" font-weight="700" fill="#A1A1AA" letter-spacing="2">PLANO PRO GRATUITO VITALÍCIO • APENAS 8% DE SPLIT</text>
+        <text x="460" y="145" text-anchor="middle" class="font-mono" font-size="20" font-weight="700" fill="#A1A1AA" letter-spacing="2">PLANO PRO GRATUITO VITALÍCIO • 0% DE TAXA</text>
       </g>
     </g>
 
@@ -225,10 +225,10 @@ async function generatePost3() {
         <rect x="0" y="0" width="445" height="270" rx="22" fill="#09090B" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.5" />
         <rect x="28" y="28" width="56" height="56" rx="12" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="1" />
         <text x="56" y="66" text-anchor="middle" class="font-mono" font-size="24" font-weight="800" fill="#71717A">02</text>
-        <text x="28" y="130" class="font-sans" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">Apenas 8% de Split</text>
-        <text x="28" y="175" class="font-sans" font-size="20" font-weight="400" fill="#A1A1AA">A menor taxa congelada</text>
-        <text x="28" y="205" class="font-sans" font-size="20" font-weight="400" fill="#A1A1AA">vitaliciamente. Você só paga</text>
-        <text x="28" y="235" class="font-sans" font-size="20" font-weight="400" fill="#A1A1AA">quando seus alunos pagarem.</text>
+        <text x="28" y="130" class="font-sans" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">0% de Taxa sobre Alunos</text>
+        <text x="28" y="175" class="font-sans" font-size="20" font-weight="400" fill="#A1A1AA">Zero comissão sobre as</text>
+        <text x="28" y="205" class="font-sans" font-size="20" font-weight="400" fill="#A1A1AA">inscrições. 100% do valor</text>
+        <text x="28" y="235" class="font-sans" font-size="20" font-weight="400" fill="#A1A1AA">do desafio fica com você.</text>
       </g>
 
       <!-- Card 3 -->
@@ -440,8 +440,8 @@ O QUE É O PROGRAMA DE FUNDADORES:
 Você vai rodar um desafio real com seus alunos (turmas de 5 a 30 pessoas) com acompanhamento direto do nosso time de desenvolvimento.
 
 O QUE VOCÊ GANHA COMO FUNDADOR:
-1. Plano PRO Vitalício Gratuito: Isenção permanente e perpétua da mensalidade do plano PRO (recursos avançados sem mensalidade fixa).
-2. Apenas 8% de Taxa de Split: A menor taxa da plataforma congelada na sua conta para sempre (você só compartilha 8% quando seus alunos pagarem).
+1. Plano PRO Vitalício Gratuito: Isenção permanente e perpétua da mensalidade de R$ 49,90 do plano PRO para os 15 selecionados.
+2. 0% de Taxa sobre Inscrições: Zero comissão sobre o valor pago pelos seus alunos (100% da receita do desafio é sua).
 3. Canal Direto de WhatsApp com os Devs: Suas sugestões viram melhorias no app em tempo recorde.
 4. Template Validado de Desafio de 21 Dias: Estrutura completa pronta para aplicar na sua turma de imediato.
 

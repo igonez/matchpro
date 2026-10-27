@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "model": "eleven_multilingual_v2",
+  "durations": {
+    "vo-hook.mp3": 3.27,
+    "vo-logo.mp3": 1.52,
+    "vo-camera.mp3": 4.1,
+    "vo-leaderboard.mp3": 3.32,
+    "vo-finance.mp3": 4.57,
+    "vo-final.mp3": 2.95
+  },
+  "generatedAt": "2026-10-24T17:29:37.278Z"
+}

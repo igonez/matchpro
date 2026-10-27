@@ -44,6 +44,11 @@ export const metadata: Metadata = {
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    other: {
+      'facebook-domain-verification':
+        process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION ||
+        'r9pmhnlils01kccnjjte9gn5ieeuia',
+    },
   },
   robots: {
     index: true,
@@ -100,6 +105,7 @@ export const metadata: Metadata = {
 
 import { JsonLd } from '@/components/seo/json-ld';
 import { CookieConsentBanner } from '@/components/legal/cookie-consent-banner';
+import { MarketingScripts } from '@/components/analytics/marketing-scripts';
 
 export const viewport: Viewport = {
   themeColor: '#000000',
@@ -141,6 +147,7 @@ export default function RootLayout({
           aria-hidden="true"
         />
         <JsonLd data={organizationSchema} />
+        <MarketingScripts />
         {children}
         <CookieConsentBanner />
       </body>

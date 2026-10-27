@@ -177,6 +177,7 @@ export default function PrivacyPage() {
               <li><strong className="text-white">Supabase / PostgreSQL:</strong> Hospedagem segura de banco de dados com criptografia em repouso e trânsito (SSL/TLS).</li>
               <li><strong className="text-white">Asaas Gestão Financeira S.A.:</strong> Instituição autorizada pelo Banco Central do Brasil para emissão e liquidação de Pix e split automático.</li>
               <li><strong className="text-white">APIs de Inteligência Artificial Multimodal:</strong> Processamento pontual e efêmero de imagens de refeições para estimativa de calorias e macronutrientes. Imagens não são usadas para treino público identificável.</li>
+              <li><strong className="text-white">Plataformas de Mensuração de Campanhas (Meta Platforms / Google):</strong> Processamento criptografado (hash unidirecional SHA-256) de dados estritamente necessários para atribuição de conversões e medição de desempenho de tráfego pago, sempre condicionado ao consentimento do usuário.</li>
             </ul>
           </div>
 
@@ -207,11 +208,12 @@ export default function PrivacyPage() {
               <Lock className="h-4 w-4 text-amber-400" /> 5. Cookies e Tecnologias de Sessão
             </h2>
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
-              O ArenaFitPro não utiliza cookies para rastreamento de anúncios de terceiros ou perfilamento comercial. Nossos cookies dividem-se em:
+              O ArenaFitPro respeita integralmente a sua privacidade e não comercializa dados pessoais com terceiros sob nenhuma hipótese. Nossos cookies dividem-se em:
             </p>
             <ul className="list-disc list-inside space-y-1.5 pl-2 text-xs text-zinc-400">
-              <li><strong className="text-white">Estritamente Essenciais:</strong> Tokens de autenticação Supabase (JWT), cookies seguros com flag <code>HttpOnly</code> e <code>SameSite=Lax</code> e proteção anti-CSRF.</li>
-              <li><strong className="text-white">Funcionais:</strong> Preferências de exibição da interface e status do banner de consentimento.</li>
+              <li><strong className="text-white">Estritamente Essenciais:</strong> Tokens de autenticação Supabase (JWT), cookies seguros com flag <code>HttpOnly</code> e <code>SameSite=Lax</code> e proteção anti-CSRF para login e pagamentos seguros. Sempre ativos.</li>
+              <li><strong className="text-white">Funcionais:</strong> Preferências de exibição da interface, memorização de turmas e status do banner de consentimento.</li>
+              <li><strong className="text-white">Métricas & Atribuição de Marketing (Sob Consentimento):</strong> Identificadores anônimos e tags de conversão (como Meta Pixel e Google Analytics) para aferição de retorno de campanhas e prevenção de fraudes em anúncios. Podem ser ativados ou revogados a qualquer momento através do nosso banner de consentimento.</li>
             </ul>
           </div>
 

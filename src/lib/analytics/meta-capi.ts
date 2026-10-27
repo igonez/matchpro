@@ -33,6 +33,7 @@ export interface MetaCapiEventInput {
   currency?: string;
   contentName?: string;
   contentCategory?: string;
+  testEventCode?: string;
   user?: {
     email?: string | null;
     phone?: string | null;
@@ -96,8 +97,8 @@ export async function sendMetaConversionEvent(
           },
         },
       ],
-      ...(process.env.META_CAPI_TEST_EVENT_CODE
-        ? { test_event_code: process.env.META_CAPI_TEST_EVENT_CODE }
+      ...((input.testEventCode || process.env.META_CAPI_TEST_EVENT_CODE)
+        ? { test_event_code: input.testEventCode || process.env.META_CAPI_TEST_EVENT_CODE }
         : {}),
     };
 

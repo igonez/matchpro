@@ -41,8 +41,15 @@ function CoachLeaderboardContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [showStoryShare, setShowStoryShare] = useState(false);
+  const [coachProfile, setCoachProfile] = useState<{
+    id: string;
+    fullName: string | null;
+    avatarUrl: string | null;
+    brandName: string | null;
+    brandLogoUrl: string | null;
+  } | null>(null);
 
-  // 1. Carregar turmas do coach
+  // 1. Carregar turmas e perfil do coach
   useEffect(() => {
     async function loadChallenges() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -51,12 +58,27 @@ function CoachLeaderboardContent() {
         return;
       }
 
-      const { data } = await supabase
-        .from('challenges')
-        .select('id, title, start_date, end_date, is_active')
-        .eq('professional_id', user.id)
-        .order('is_active', { ascending: false })
-        .order('start_date', { ascending: false });
+      const [{ data }, { data: prof }] = await Promise.all([
+        supabase
+          .from('challenges')
+          .select('id, title, start_date, end_date, is_active')
+          .eq('professional_id', user.id)
+          .order('is_active', { ascending: false })
+          .order('start_date', { ascending: false }),
+        supabase
+          .from('professionals')
+          .select('id, full_name, avatar_url, brand_name, brand_logo_url')
+          .eq('id', user.id)
+          .maybeSingle(),
+      ]);
+
+      setCoachProfile({
+        id: user.id,
+        fullName: prof?.full_name || user.user_metadata?.full_name || null,
+        avatarUrl: prof?.avatar_url || user.user_metadata?.avatar_url || null,
+        brandName: prof?.brand_name || null,
+        brandLogoUrl: prof?.brand_logo_url || null,
+      });
 
       if (data && data.length > 0) {
         setChallenges(data);
@@ -772,6 +794,9 @@ function CoachLeaderboardContent() {
         onClose={() => setShowStoryShare(false)}
         challengeId={currentChallenge?.id || selectedChallengeId || null}
         challengeTitle={currentChallenge?.title || 'Desafio Oficial'}
+        coachId={coachProfile?.id || null}
+        coachBrandName={coachProfile?.brandName || coachProfile?.fullName || null}
+        coachLogoUrl={coachProfile?.brandLogoUrl || coachProfile?.avatarUrl || null}
         standings={standings.map((s) => ({
           studentId: s.student_id,
           name: s.students?.full_name || 'Atleta',

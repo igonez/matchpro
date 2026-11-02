@@ -76,7 +76,7 @@ export default function LeaderboardPage() {
 
       let participationQuery = supabase
         .from('challenge_participants')
-        .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
+        .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
         .eq('student_id', user.id);
 
       if (requestedChallengeId) {
@@ -91,7 +91,7 @@ export default function LeaderboardPage() {
       if (!participation && requestedChallengeId) {
         const fallbackRes = await supabase
           .from('challenge_participants')
-          .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
+          .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
           .eq('student_id', user.id)
           .order('joined_at', { ascending: false })
           .limit(1)
@@ -891,21 +891,31 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Tela Compartilhar Ranking (Carrossel 9:16 Pódio Top 3 + Lista Top 10) */}
-      <ShareRankingSheet
-        open={showStoryShare}
-        onClose={() => setShowStoryShare(false)}
-        challengeId={currentChallenge?.id || null}
-        challengeTitle={currentChallenge?.title || 'Arena Oficial'}
-        standings={standings.map((s) => ({
-          studentId: s.student_id,
-          name: s.students?.full_name || 'Atleta',
-          avatarUrl: s.students?.avatar_url || null,
-          points: Number(s.total_points || 0),
-          streakDays: streaksMap[s.student_id] || 0,
-        }))}
-        currentUserId={currentUserId}
-        isCoachView={!myStanding}
-      />
+      {(() => {
+        const coachRecord = Array.isArray(currentChallenge?.professionals)
+          ? currentChallenge?.professionals[0]
+          : currentChallenge?.professionals;
+        return (
+          <ShareRankingSheet
+            open={showStoryShare}
+            onClose={() => setShowStoryShare(false)}
+            challengeId={currentChallenge?.id || null}
+            challengeTitle={currentChallenge?.title || 'Arena Oficial'}
+            coachId={coachRecord?.id || currentChallenge?.professional_id || null}
+            coachBrandName={coachRecord?.brand_name || coachRecord?.full_name || null}
+            coachLogoUrl={coachRecord?.brand_logo_url || coachRecord?.avatar_url || null}
+            standings={standings.map((s) => ({
+              studentId: s.student_id,
+              name: s.students?.full_name || 'Atleta',
+              avatarUrl: s.students?.avatar_url || null,
+              points: Number(s.total_points || 0),
+              streakDays: streaksMap[s.student_id] || 0,
+            }))}
+            currentUserId={currentUserId}
+            isCoachView={!myStanding}
+          />
+        );
+      })()}
     </div>
   );
 }

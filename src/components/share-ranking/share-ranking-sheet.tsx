@@ -10,8 +10,10 @@ import {
   Image as ImageIcon,
   Loader2,
   MoreHorizontal,
+  Upload,
   X,
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 import {
   RankingBgMode,
   RankingCardVariant,
@@ -26,6 +28,9 @@ export interface ShareRankingSheetProps {
   challengeId?: string | null;
   challengeTitle: string;
   challengeLogoUrl?: string | null;
+  coachId?: string | null;
+  coachBrandName?: string | null;
+  coachLogoUrl?: string | null;
   standings: ShareParticipantItem[];
   currentUserId?: string | null;
   isCoachView?: boolean;
@@ -37,8 +42,8 @@ interface ShareLinkState {
   expiresAt: string;
 }
 
-const PREVIEW_WIDTH = 252;
-const PREVIEW_HEIGHT = 448; // 252 * (16 / 9)
+const PREVIEW_WIDTH = 244;
+const PREVIEW_HEIGHT = 434; // 244 * (16 / 9)
 const PREVIEW_SCALE = PREVIEW_WIDTH / 1080;
 
 export function ShareRankingSheet({
@@ -47,10 +52,15 @@ export function ShareRankingSheet({
   challengeId,
   challengeTitle,
   challengeLogoUrl,
+  coachId,
+  coachBrandName,
+  coachLogoUrl,
   standings,
   currentUserId,
   isCoachView = false,
 }: ShareRankingSheetProps) {
+  const supabase = createClient();
+
   const [activeSlide, setActiveSlide] = useState<0 | 1>(0);
   const [bgMode, setBgMode] = useState<RankingBgMode>('transparent');
   const [bgPhotos, setBgPhotos] = useState<{ gallery: string | null; camera: string | null }>({
@@ -58,6 +68,97 @@ export function ShareRankingSheet({
     camera: null,
   });
   const [photoVersion, setPhotoVersion] = useState(0);
+
+  // Estado do Logo do Personal + Nome de escolha (topo do card)
+  const [customBrandName, setCustomBrandName] = useState<string>(coachBrandName || '');
+  const [debouncedBrandName, setDebouncedBrandName] = useState<string>(coachBrandName || '');
+  const [customCoachLogo, setCustomCoachLogo] = useState<string | null>(
+    coachLogoUrl || challengeLogoUrl || null
+  );
+  const coachLogoInputRef = useRef<HTMLInputElement | null>(null);
+
+  const storageKeyPrefix = `arenafit_coach_brand_${coachId || challengeId || 'default'}`;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const savedName = window.localStorage.getItem(`${storageKeyPrefix}_name`);
+    const savedLogo = window.localStorage.getItem(`${storageKeyPrefix}_logo`);
+
+    const initialName =
+      coachBrandName !== undefined && coachBrandName !== null && coachBrandName !== ''
+        ? coachBrandName
+        : savedName ?? '';
+    const initialLogo = coachLogoUrl || challengeLogoUrl || savedLogo || null;
+
+    setCustomBrandName(initialName);
+    setDebouncedBrandName(initialName);
+    setCustomCoachLogo(initialLogo);
+  }, [coachBrandName, coachLogoUrl, challengeLogoUrl, storageKeyPrefix]);
+
+  // Debounce no nome de escolha para regenerar o PNG suavemente após digitar
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedBrandName(customBrandName);
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem(`${storageKeyPrefix}_name`, customBrandName);
+        } catch {
+          // ignore storage quota
+        }
+      }
+    }, 320);
+    return () => clearTimeout(t);
+  }, [customBrandName, storageKeyPrefix]);
+
+  const persistBrandToCoachProfile = useCallback(
+    async (nextName?: string, nextLogoUrl?: string | null) => {
+      if (!isCoachView || !coachId) return;
+      try {
+        const payload: Record<string, any> = {};
+        if (nextName !== undefined) payload.brand_name = nextName.trim() || null;
+        if (nextLogoUrl !== undefined) payload.brand_logo_url = nextLogoUrl;
+        if (Object.keys(payload).length === 0) return;
+        await supabase.from('professionals').update(payload).eq('id', coachId);
+      } catch {
+        // Silencioso caso não tenha permissão
+      }
+    },
+    [isCoachView, coachId, supabase]
+  );
+
+  const handleCoachLogoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await readPhotoFileToDataUrl(file, 512, 0.92);
+      setCustomCoachLogo(dataUrl);
+      setPhotoVersion((v) => v + 1);
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem(`${storageKeyPrefix}_logo`, dataUrl);
+        } catch {
+          // ignore quota
+        }
+      }
+
+      if (isCoachView && coachId) {
+        const fileExt = file.name.split('.').pop() || 'jpg';
+        const filePath = `avatars/coach_brand_${coachId}_${Date.now()}.${fileExt}`;
+        const { error: uploadErr } = await supabase.storage
+          .from('submissions')
+          .upload(filePath, file, { upsert: true });
+        if (!uploadErr) {
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from('submissions').getPublicUrl(filePath);
+          await persistBrandToCoachProfile(undefined, publicUrl);
+        }
+      }
+      showToast('Logo do personal atualizado!', 'success');
+    } catch (err: any) {
+      showToast(err?.message || 'Não foi possível carregar o logo.', 'error');
+    }
+  };
 
   const previousBgStateRef = useRef<{
     mode: RankingBgMode;
@@ -112,6 +213,8 @@ export function ShareRankingSheet({
     open,
     standings,
     challengeLogoUrl,
+    coachLogoUrl: customCoachLogo,
+    coachBrandName: debouncedBrandName,
     backgroundMode: bgMode,
     backgroundPhotoUrl: activePhotoUrl,
     photoVersion,
@@ -491,8 +594,7 @@ export function ShareRankingSheet({
   };
 
   const handleMoreAction = async () => {
-    // Se escolheu foto e ela falhou na captura, bloqueia para NÃO exportar sem fundo
-    if ((bgMode === 'gallery' || bgMode === 'camera') && ! validateReadyToExport()) {
+    if ((bgMode === 'gallery' || bgMode === 'camera') && !validateReadyToExport()) {
       return;
     }
 
@@ -598,6 +700,8 @@ export function ShareRankingSheet({
           variant="list"
           challengeTitle={challengeTitle}
           challengeLogoUrl={challengeLogoUrl}
+          coachLogoUrl={customCoachLogo}
+          coachBrandName={debouncedBrandName}
           standings={standings}
           currentUserId={currentUserId}
           isCoachView={isCoachView}
@@ -610,6 +714,8 @@ export function ShareRankingSheet({
           variant="hero"
           challengeTitle={challengeTitle}
           challengeLogoUrl={challengeLogoUrl}
+          coachLogoUrl={customCoachLogo}
+          coachBrandName={debouncedBrandName}
           standings={standings}
           currentUserId={currentUserId}
           isCoachView={isCoachView}
@@ -619,7 +725,7 @@ export function ShareRankingSheet({
         />
       </div>
 
-      {/* Inputs ocultos de Galeria e Câmera */}
+      {/* Inputs ocultos de Galeria, Câmera e Logo do Personal */}
       <input
         ref={galleryInputRef}
         type="file"
@@ -634,6 +740,13 @@ export function ShareRankingSheet({
         capture="environment"
         className="hidden"
         onChange={(e) => handleFileChange(e, 'camera')}
+      />
+      <input
+        ref={coachLogoInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleCoachLogoFileChange}
       />
 
       {/* Toast */}
@@ -689,9 +802,9 @@ export function ShareRankingSheet({
         </div>
       )}
 
-      <div className="w-full max-w-md mx-auto flex flex-col flex-1 justify-between px-5 py-4 sm:py-6 gap-4">
+      <div className="w-full max-w-md mx-auto flex flex-col flex-1 justify-between px-5 py-4 sm:py-5 gap-3.5">
         {/* 1. Header */}
-        <header className="flex items-center justify-between pb-2">
+        <header className="flex items-center justify-between pb-1">
           <button
             type="button"
             onClick={onClose}
@@ -728,7 +841,7 @@ export function ShareRankingSheet({
         ) : (
           <>
             {/* 2. Carrossel de 2 cards 9:16 com dots */}
-            <section className="flex flex-col items-center gap-3">
+            <section className="flex flex-col items-center gap-2.5">
               <div
                 ref={carouselRef}
                 onScroll={handleCarouselScroll}
@@ -773,6 +886,8 @@ export function ShareRankingSheet({
                             variant={variant}
                             challengeTitle={challengeTitle}
                             challengeLogoUrl={challengeLogoUrl}
+                            coachLogoUrl={customCoachLogo}
+                            coachBrandName={customBrandName}
                             standings={standings}
                             currentUserId={currentUserId}
                             isCoachView={isCoachView}
@@ -816,8 +931,63 @@ export function ShareRankingSheet({
               </div>
             </section>
 
+            {/* 2.5. Identidade Superior: Logo do Personal + Nome de escolha */}
+            <section className="space-y-1.5">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-xs font-medium text-zinc-400">
+                  Marca superior (Personal)
+                </span>
+                <span className="text-[11px] text-zinc-500">
+                  Rodapé: ArenaFitPro
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-zinc-900/90 border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => coachLogoInputRef.current?.click()}
+                  title="Alterar logo do personal"
+                  className="relative h-10 w-10 rounded-xl bg-zinc-950 border border-amber-400/40 flex items-center justify-center overflow-hidden shrink-0 group cursor-pointer"
+                >
+                  {customCoachLogo ? (
+                    <img
+                      src={customCoachLogo}
+                      alt="Logo do Personal"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Upload className="w-4 h-4 text-amber-400" />
+                  )}
+                  <span className=" inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Upload className="w-3.5 h-3.5 text-white" />
+                  </span>
+                </button>
+
+                <input
+                  type="text"
+                  value={customBrandName}
+                  maxLength={32}
+                  onChange={(e) => setCustomBrandName(e.target.value)}
+                  onBlur={() => persistBrandToCoachProfile(customBrandName, undefined)}
+                  placeholder="Nome de escolha (ex: Personal / Consultoria)"
+                  aria-label="Nome de escolha do personal"
+                  className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-500 focus:outline-none px-1"
+                />
+
+                {customCoachLogo && (
+                  <button
+                    type="button"
+                    onClick={() => coachLogoInputRef.current?.click()}
+                    className="text-[11px] font-medium text-amber-400 hover:text-amber-300 px-2 py-1 rounded-lg bg-amber-400/10 cursor-pointer shrink-0"
+                  >
+                    Logo
+                  </button>
+                )}
+              </div>
+            </section>
+
             {/* 3. Seção "Plano de fundo": Transparente, Galeria, Câmera */}
-            <section className="space-y-2">
+            <section className="space-y-1.5">
               <span className="text-xs font-medium text-zinc-400 px-1 block">
                 Plano de fundo
               </span>
@@ -881,7 +1051,7 @@ export function ShareRankingSheet({
             </section>
 
             {/* 4. Seção "Compartilhar com": Copiar, Salvar, Story, Mais */}
-            <section className="space-y-2">
+            <section className="space-y-1.5">
               <span className="text-xs font-medium text-zinc-400 px-1 block">
                 Compartilhar com
               </span>
@@ -891,7 +1061,7 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleCopyAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white">
                     <Copy className="w-4 h-4" />
@@ -903,7 +1073,7 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleSaveAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white">
                     <Download className="w-4 h-4" />
@@ -915,7 +1085,7 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleStoryAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-white">
                     <svg
@@ -940,7 +1110,7 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleMoreAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white">
                     <MoreHorizontal className="w-4 h-4" />
@@ -951,7 +1121,7 @@ export function ShareRankingSheet({
             </section>
 
             {/* 5. Ação discreta para desativar/reativar link público */}
-            <div className="flex justify-center pt-1">
+            <div className="flex justify-center pt-0.5">
               {shareLink ? (
                 <button
                   type="button"

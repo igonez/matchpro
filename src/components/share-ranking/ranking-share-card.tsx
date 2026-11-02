@@ -18,6 +18,8 @@ export interface RankingShareCardProps {
   variant: RankingCardVariant;
   challengeTitle: string;
   challengeLogoUrl?: string | null;
+  coachLogoUrl?: string | null;
+  coachBrandName?: string | null;
   standings: ShareParticipantItem[];
   currentUserId?: string | null;
   isCoachView?: boolean;
@@ -29,12 +31,24 @@ export interface RankingShareCardProps {
 const GOLD = '#fbbf24';
 const TEXT_SHADOW = '0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.85)';
 
+function getInitials(text: string): string {
+  const parts = text
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (parts.length === 0) return 'P';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
 export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps>(
   function RankingShareCard(
     {
       variant,
       challengeTitle,
       challengeLogoUrl,
+      coachLogoUrl,
+      coachBrandName,
       standings,
       currentUserId,
       isCoachView = false,
@@ -63,15 +77,25 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
       return preloadedImages[url] || url;
     };
 
-    const appLogoSrc =
-      resolveImgSrc(challengeLogoUrl) ||
-      preloadedImages['/icon-192.png'] ||
-      '/icon-192.png';
+    // Logo superior: do Personal Trainer (ou logo customizado escolhido)
+    const rawPersonalLogo = coachLogoUrl ?? challengeLogoUrl ?? null;
+    const personalLogoSrc = resolveImgSrc(rawPersonalLogo);
+
+    // Nome de escolha do Personal Trainer
+    const cleanBrandName = coachBrandName?.trim()
+      ? truncateWithEllipsis(coachBrandName.trim(), 32)
+      : '';
+
+    // Marca d'água inferior: SEMPRE ArenaFitPro
+    const arenaWatermarkLogoSrc =
+      preloadedImages['/icon-192.png'] || '/icon-192.png';
 
     const cleanChallengeTitle = truncateWithEllipsis(
       (challengeTitle || 'Desafio Oficial').trim(),
       38
     );
+
+    const personalInitials = getInitials(cleanBrandName || cleanChallengeTitle);
 
     // Top 5 participantes existentes (sem placeholders vazios).
     // Se o usuário estiver abaixo do 5º lugar, exibe os 4 primeiros + o usuário na 5ª linha.
@@ -171,22 +195,63 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
                 width: '100%',
               }}
             >
-              {/* Logo pequeno + Nome do desafio + Título "Ranking" */}
-              <img
-                src={appLogoSrc}
-                alt="ArenaFitPro"
-                width={54}
-                height={54}
-                decoding="sync"
-                style={{
-                  width: '54px',
-                  height: '54px',
-                  borderRadius: '14px',
-                  objectFit: 'cover',
-                  marginBottom: '18px',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
-                }}
-              />
+              {/* Logo superior do Personal + Nome de escolha */}
+              {personalLogoSrc ? (
+                <img
+                  data-role="card-coach-logo"
+                  src={personalLogoSrc}
+                  alt={cleanBrandName || 'Personal'}
+                  width={60}
+                  height={60}
+                  decoding="sync"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '16px',
+                    objectFit: 'cover',
+                    marginBottom: cleanBrandName ? '12px' : '18px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '16px',
+                    border: '2px solid rgba(251, 191, 36, 0.65)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '24px',
+                    fontWeight: 800,
+                    color: GOLD,
+                    textShadow: TEXT_SHADOW,
+                    marginBottom: cleanBrandName ? '12px' : '18px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {personalInitials}
+                </div>
+              )}
+
+              {cleanBrandName && (
+                <div
+                  style={{
+                    fontSize: '23px',
+                    fontWeight: 700,
+                    color: GOLD,
+                    textShadow: TEXT_SHADOW,
+                    textAlign: 'center',
+                    letterSpacing: '2.5px',
+                    textTransform: 'uppercase',
+                    marginBottom: '6px',
+                  }}
+                >
+                  {cleanBrandName}
+                </div>
+              )}
 
               <div
                 style={{
@@ -442,7 +507,7 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
             </div>
           ) : (
             /* ================================================================
-             * CARD 2 (HERÓI): Posição gigante, "de N atletas", pontos e desafio
+             * CARD 2 (HERÓI): Logo do Personal + Nome de Escolha + Posição gigante
              * ================================================================ */
             <div
               style={{
@@ -454,6 +519,63 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
                 paddingBottom: '28px',
               }}
             >
+              {/* Logo superior do Personal + Nome de escolha */}
+              {personalLogoSrc ? (
+                <img
+                  data-role="card-coach-logo"
+                  src={personalLogoSrc}
+                  alt={cleanBrandName || 'Personal'}
+                  width={60}
+                  height={60}
+                  decoding="sync"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '16px',
+                    objectFit: 'cover',
+                    marginBottom: cleanBrandName ? '12px' : '16px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '16px',
+                    border: '2px solid rgba(251, 191, 36, 0.65)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '24px',
+                    fontWeight: 800,
+                    color: GOLD,
+                    textShadow: TEXT_SHADOW,
+                    marginBottom: cleanBrandName ? '12px' : '16px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {personalInitials}
+                </div>
+              )}
+
+              {cleanBrandName && (
+                <div
+                  style={{
+                    fontSize: '23px',
+                    fontWeight: 700,
+                    color: GOLD,
+                    textShadow: TEXT_SHADOW,
+                    letterSpacing: '2.5px',
+                    textTransform: 'uppercase',
+                    marginBottom: '6px',
+                  }}
+                >
+                  {cleanBrandName}
+                </div>
+              )}
+
               {/* Nome do desafio */}
               <div
                 style={{
@@ -521,7 +643,7 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
             </div>
           )}
 
-          {/* Rodapé: só logo pequeno em opacidade baixa */}
+          {/* Rodapé inferior: SEMPRE marca d'água do ArenaFitPro em opacidade baixa */}
           <div
             style={{
               display: 'flex',
@@ -533,7 +655,8 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
             }}
           >
             <img
-              src={appLogoSrc}
+              data-role="card-arena-watermark"
+              src={arenaWatermarkLogoSrc}
               alt="ArenaFitPro"
               width={32}
               height={32}

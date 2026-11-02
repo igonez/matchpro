@@ -295,6 +295,8 @@ interface UseRankingExportParams {
   open: boolean;
   standings: ShareParticipantItem[];
   challengeLogoUrl?: string | null;
+  coachLogoUrl?: string | null;
+  coachBrandName?: string | null;
   backgroundMode: RankingBgMode;
   backgroundPhotoUrl: string | null;
   photoVersion: number;
@@ -314,6 +316,8 @@ export function useRankingExport({
   open,
   standings,
   challengeLogoUrl,
+  coachLogoUrl,
+  coachBrandName,
   backgroundMode,
   backgroundPhotoUrl,
   photoVersion,
@@ -338,9 +342,10 @@ export function useRankingExport({
   onExportErrorRef.current = onExportError;
 
   const expectsPhoto = backgroundMode === 'gallery' || backgroundMode === 'camera';
+  const brandSignature = `${(coachBrandName || '').trim()}:${coachLogoUrl ? coachLogoUrl.length : 0}`;
   const currentCacheKey = expectsPhoto
-    ? `${backgroundMode}:v${photoVersion}:${backgroundPhotoUrl ? backgroundPhotoUrl.length : 0}`
-    : 'transparent:v0';
+    ? `${backgroundMode}:v${photoVersion}:${backgroundPhotoUrl ? backgroundPhotoUrl.length : 0}:${brandSignature}`
+    : `transparent:v0:${brandSignature}`;
 
   // 0. Registrar qualquer violação de CSP (connect-src / img-src)
   useEffect(() => {
@@ -363,7 +368,7 @@ export function useRankingExport({
     return () => window.removeEventListener('securitypolicyviolation', handleCspViolation);
   }, [open]);
 
-  // 1. Pré-carregar o logo para dataURL
+  // 1. Pré-carregar o logo da ArenaFitPro (marca d'água inferior) + logo do Personal (superior) para dataURL
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
@@ -372,6 +377,7 @@ export function useRankingExport({
       setAssetsReady(false);
       const urls = new Set<string>(['/icon-192.png']);
       if (challengeLogoUrl) urls.add(challengeLogoUrl);
+      if (coachLogoUrl) urls.add(coachLogoUrl);
 
       const entries = await Promise.all(
         Array.from(urls).map(async (u) => {
@@ -394,7 +400,7 @@ export function useRankingExport({
     return () => {
       cancelled = true;
     };
-  }, [open, challengeLogoUrl]);
+  }, [open, challengeLogoUrl, coachLogoUrl]);
 
   // 2. Gerar/refazer os PNGs 1080x1920 sempre que currentCacheKey mudar
   useEffect(() => {

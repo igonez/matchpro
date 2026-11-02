@@ -112,15 +112,20 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
           userSelect: 'none',
         }}
       >
-        {/* Foto de fundo + Overlay escuro de 30% + leve vinheta inferior para leitura */}
+        {/* Foto de fundo + Overlay escuro de 30% */}
         {hasPhotoBg && backgroundPhotoUrl && (
           <>
             <img
+              data-role="card-bg-photo"
               src={resolveImgSrc(backgroundPhotoUrl) || backgroundPhotoUrl}
               alt=""
+              width={1080}
+              height={1920}
+              decoding="sync"
               style={{
                 position: 'absolute',
-                inset: 0,
+                top: 0,
+                left: 0,
                 width: '1080px',
                 height: '1920px',
                 objectFit: 'cover',
@@ -131,7 +136,10 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
               data-testid="card-photo-overlay-30"
               style={{
                 position: 'absolute',
-                inset: 0,
+                top: 0,
+                left: 0,
+                width: '1080px',
+                height: '1920px',
                 backgroundColor: 'rgba(0, 0, 0, 0.30)',
                 zIndex: 1,
               }}
@@ -167,6 +175,9 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
               <img
                 src={appLogoSrc}
                 alt="ArenaFitPro"
+                width={54}
+                height={54}
+                decoding="sync"
                 style={{
                   width: '54px',
                   height: '54px',
@@ -524,6 +535,9 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
             <img
               src={appLogoSrc}
               alt="ArenaFitPro"
+              width={32}
+              height={32}
+              decoding="sync"
               style={{
                 width: '32px',
                 height: '32px',

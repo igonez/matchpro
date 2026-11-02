@@ -57,13 +57,16 @@ export function ShareRankingSheet({
     gallery: null,
     camera: null,
   });
+  const [photoVersion, setPhotoVersion] = useState(0);
 
   const previousBgStateRef = useRef<{
     mode: RankingBgMode;
     photos: { gallery: string | null; camera: string | null };
+    version: number;
   }>({
     mode: 'transparent',
     photos: { gallery: null, camera: null },
+    version: 0,
   });
   const pendingPickerRef = useRef<'gallery' | 'camera' | null>(null);
 
@@ -93,7 +96,7 @@ export function ShareRankingSheet({
       setToast({ message, tone });
       toastTimerRef.current = setTimeout(() => {
         setToast(null);
-      }, 3000);
+      }, 3200);
     },
     []
   );
@@ -105,14 +108,16 @@ export function ShareRankingSheet({
       ? bgPhotos.camera
       : null;
 
-  const { preloadedImages, isPreparing, exportedCards } = useRankingExport({
+  const { preloadedImages, isPreparing, exportError, exportedCards } = useRankingExport({
     open,
     standings,
     challengeLogoUrl,
     backgroundMode: bgMode,
     backgroundPhotoUrl: activePhotoUrl,
+    photoVersion,
     listNodeRef: offscreenListRef,
     heroNodeRef: offscreenHeroRef,
+    onExportError: (msg) => showToast(msg, 'error'),
   });
 
   const activeVariant: RankingCardVariant = activeSlide === 0 ? 'list' : 'hero';
@@ -141,6 +146,7 @@ export function ShareRankingSheet({
           setCameraModalOpen(false);
           setBgMode(previousBgStateRef.current.mode);
           setBgPhotos(previousBgStateRef.current.photos);
+          setPhotoVersion(previousBgStateRef.current.version);
         } else {
           onClose();
         }
@@ -219,6 +225,7 @@ export function ShareRankingSheet({
         pendingPickerRef.current = null;
         setBgMode(previousBgStateRef.current.mode);
         setBgPhotos(previousBgStateRef.current.photos);
+        setPhotoVersion(previousBgStateRef.current.version);
       }
     };
 
@@ -237,7 +244,11 @@ export function ShareRankingSheet({
   };
 
   const handleSelectGallery = () => {
-    previousBgStateRef.current = { mode: bgMode, photos: { ...bgPhotos } };
+    previousBgStateRef.current = {
+      mode: bgMode,
+      photos: { ...bgPhotos },
+      version: photoVersion,
+    };
     pendingPickerRef.current = 'gallery';
     setBgMode('gallery');
     if (galleryInputRef.current) {
@@ -247,7 +258,11 @@ export function ShareRankingSheet({
   };
 
   const handleSelectCamera = async () => {
-    previousBgStateRef.current = { mode: bgMode, photos: { ...bgPhotos } };
+    previousBgStateRef.current = {
+      mode: bgMode,
+      photos: { ...bgPhotos },
+      version: photoVersion,
+    };
     setBgMode('camera');
 
     if (
@@ -278,6 +293,7 @@ export function ShareRankingSheet({
         if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
           setBgMode(previousBgStateRef.current.mode);
           setBgPhotos(previousBgStateRef.current.photos);
+          setPhotoVersion(previousBgStateRef.current.version);
           showToast('Permissão da câmera negada.', 'error');
           return;
         }
@@ -303,36 +319,64 @@ export function ShareRankingSheet({
     if (!file) {
       setBgMode(previousBgStateRef.current.mode);
       setBgPhotos(previousBgStateRef.current.photos);
+      setPhotoVersion(previousBgStateRef.current.version);
       return;
     }
 
     try {
-      const dataUrl = await readPhotoFileToDataUrl(file);
+      // Converte para data URL (JPEG, máx 2160px, qualidade 0.9) e aguarda img.decode()
+      const dataUrl = await readPhotoFileToDataUrl(file, 2160, 0.9);
       setBgPhotos((prev) => ({ ...prev, [source]: dataUrl }));
+      setPhotoVersion((v) => v + 1);
       setBgMode(source);
     } catch (err: any) {
       setBgMode(previousBgStateRef.current.mode);
       setBgPhotos(previousBgStateRef.current.photos);
+      setPhotoVersion(previousBgStateRef.current.version);
       showToast(err?.message || 'Não foi possível carregar a foto.', 'error');
     }
   };
 
-  const handleCaptureFromLiveCamera = () => {
+  const handleCaptureFromLiveCamera = async () => {
     const video = videoRef.current;
     if (!video) return;
-    const w = video.videoWidth || 1080;
-    const h = video.videoHeight || 1920;
-    const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.drawImage(video, 0, 0, w, h);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-    stopCameraStream();
-    setCameraModalOpen(false);
-    setBgPhotos((prev) => ({ ...prev, camera: dataUrl }));
-    setBgMode('camera');
+    try {
+      const rawW = video.videoWidth || 1080;
+      const rawH = video.videoHeight || 1920;
+      const maxDim = 2160;
+      const scale = Math.min(1, maxDim / Math.max(rawW, rawH));
+      const w = Math.max(1, Math.round(rawW * scale));
+      const h = Math.max(1, Math.round(rawH * scale));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        throw new Error('Falha ao capturar o quadro da câmera.');
+      }
+      ctx.drawImage(video, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+      const probe = new Image();
+      probe.src = dataUrl;
+      if (typeof probe.decode === 'function') {
+        await probe.decode();
+      }
+
+      stopCameraStream();
+      setCameraModalOpen(false);
+      setBgPhotos((prev) => ({ ...prev, camera: dataUrl }));
+      setPhotoVersion((v) => v + 1);
+      setBgMode('camera');
+    } catch (err: any) {
+      stopCameraStream();
+      setCameraModalOpen(false);
+      setBgMode(previousBgStateRef.current.mode);
+      setBgPhotos(previousBgStateRef.current.photos);
+      setPhotoVersion(previousBgStateRef.current.version);
+      showToast(err?.message || 'Erro ao processar foto da câmera.', 'error');
+    }
   };
 
   const handleCancelLiveCamera = () => {
@@ -340,6 +384,7 @@ export function ShareRankingSheet({
     setCameraModalOpen(false);
     setBgMode(previousBgStateRef.current.mode);
     setBgPhotos(previousBgStateRef.current.photos);
+    setPhotoVersion(previousBgStateRef.current.version);
   };
 
   const handleCarouselScroll = () => {
@@ -362,12 +407,25 @@ export function ShareRankingSheet({
     });
   };
 
+  const validateReadyToExport = (): boolean => {
+    if (exportError) {
+      showToast(exportError, 'error');
+      return false;
+    }
+    if ((bgMode === 'gallery' || bgMode === 'camera') && !activePhotoUrl) {
+      showToast('Selecione uma foto de fundo primeiro.', 'error');
+      return false;
+    }
+    if (isPreparing || !activeBundle) {
+      showToast('Preparando imagem…', 'info');
+      return false;
+    }
+    return true;
+  };
+
   // Ações de compartilhamento (preservando gesto do usuário no Safari iOS)
   const handleCopyAction = async () => {
-    if (!activeBundle) {
-      showToast('Preparando imagem…', 'info');
-      return;
-    }
+    if (!validateReadyToExport() || !activeBundle) return;
 
     try {
       if (
@@ -399,10 +457,7 @@ export function ShareRankingSheet({
   };
 
   const handleSaveAction = async () => {
-    if (!activeBundle) {
-      showToast('Preparando imagem…', 'info');
-      return;
-    }
+    if (!validateReadyToExport() || !activeBundle) return;
 
     try {
       const isIOS =
@@ -436,6 +491,11 @@ export function ShareRankingSheet({
   };
 
   const handleMoreAction = async () => {
+    // Se escolheu foto e ela falhou na captura, bloqueia para NÃO exportar sem fundo
+    if ((bgMode === 'gallery' || bgMode === 'camera') && ! validateReadyToExport()) {
+      return;
+    }
+
     const publicUrl =
       shareLink?.url ||
       (typeof window !== 'undefined'
@@ -486,10 +546,7 @@ export function ShareRankingSheet({
   };
 
   const handleStoryAction = async () => {
-    if (!activeBundle) {
-      showToast('Preparando imagem…', 'info');
-      return;
-    }
+    if (!validateReadyToExport() || !activeBundle) return;
 
     try {
       if (
@@ -833,7 +890,7 @@ export function ShareRankingSheet({
                 <button
                   type="button"
                   onClick={handleCopyAction}
-                  disabled={isPreparing}
+                  disabled={isPreparing || Boolean(exportError)}
                   className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white">
@@ -845,7 +902,7 @@ export function ShareRankingSheet({
                 <button
                   type="button"
                   onClick={handleSaveAction}
-                  disabled={isPreparing}
+                  disabled={isPreparing || Boolean(exportError)}
                   className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white">
@@ -857,7 +914,7 @@ export function ShareRankingSheet({
                 <button
                   type="button"
                   onClick={handleStoryAction}
-                  disabled={isPreparing}
+                  disabled={isPreparing || Boolean(exportError)}
                   className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-white">
@@ -882,7 +939,7 @@ export function ShareRankingSheet({
                 <button
                   type="button"
                   onClick={handleMoreAction}
-                  disabled={isPreparing}
+                  disabled={isPreparing || Boolean(exportError)}
                   className="flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-zinc-900/80 hover:bg-zinc-900 border border-white/10 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white">

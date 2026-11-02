@@ -15,6 +15,8 @@ export const RATE_LIMIT_TIERS: Record<string, RateLimitConfig> = {
   ai: { maxRequests: 15, windowMs: 60 * 1000 }, // 15 reqs / 1 min
   // Rotas de API públicas / Envio de Submissões
   submissions: { maxRequests: 30, windowMs: 60 * 1000 }, // 30 reqs / 1 min
+  // Geração e revogação de links públicos de compartilhamento de ranking
+  share: { maxRequests: 15, windowMs: 60 * 1000 }, // 15 reqs / 1 min
   // Padrão geral para endpoints de API
   default: { maxRequests: 60, windowMs: 60 * 1000 }, // 60 reqs / 1 min
 };

@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
-import { StoryShareModal } from '@/components/student/story-share-modal';
+import { ShareRankingSheet } from '@/components/share-ranking/share-ranking-sheet';
 import { createClient } from '@/lib/supabase/client';
 
 function CoachLeaderboardContent() {
@@ -766,35 +766,20 @@ function CoachLeaderboardContent() {
         </Card>
       )}
 
-      {/* Modal de Compartilhamento do Ranking da Turma (Stories 9:16 + WhatsApp) */}
-      <StoryShareModal
-        isOpen={showStoryShare}
+      {/* Tela Compartilhar Ranking da Turma (Carrossel 9:16 Pódio Top 3 + Lista Top 10) */}
+      <ShareRankingSheet
+        open={showStoryShare}
         onClose={() => setShowStoryShare(false)}
-        data={{
-          mode: 'leaderboard',
-          studentName: top1?.students?.full_name || 'Líder da Turma',
-          challengeTitle: currentChallenge?.title || 'Desafio Oficial',
-          pointsText: `${top1?.total_points || 0} XP`,
-          rankPosition: '#1',
-          streakDays: maxStreak,
-          isCoachView: true,
-          classAveragePoints:
-            standings.length > 0
-              ? Math.round(
-                  standings.reduce((acc, curr) => acc + Number(curr.total_points || 0), 0) /
-                    standings.length
-                )
-              : 0,
-          topStreakDays: maxStreak,
-          standings: standings.map((s) => ({
-            studentId: s.student_id,
-            name: s.students?.full_name || 'Atleta',
-            avatarUrl: s.students?.avatar_url || null,
-            points: Number(s.total_points || 0),
-            streakDays: streaksMap[s.student_id] || 0,
-            approvedMissions: s.approvedMissions || 0,
-          })),
-        }}
+        challengeId={currentChallenge?.id || selectedChallengeId || null}
+        challengeTitle={currentChallenge?.title || 'Desafio Oficial'}
+        standings={standings.map((s) => ({
+          studentId: s.student_id,
+          name: s.students?.full_name || 'Atleta',
+          avatarUrl: s.students?.avatar_url || null,
+          points: Number(s.total_points || 0),
+          streakDays: streaksMap[s.student_id] || 0,
+        }))}
+        isCoachView={true}
       />
     </div>
   );

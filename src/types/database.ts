@@ -946,6 +946,50 @@ export type Database = {
         }
         Relationships: []
       }
+      ranking_share_links: {
+        Row: {
+          challenge_id: string
+          code: string
+          created_at: string
+          created_by: string
+          expires_at: string
+          id: string
+          revoked_at: string | null
+          snapshot: Json
+          view_count: number
+        }
+        Insert: {
+          challenge_id: string
+          code: string
+          created_at?: string
+          created_by: string
+          expires_at?: string
+          id?: string
+          revoked_at?: string | null
+          snapshot: Json
+          view_count?: number
+        }
+        Update: {
+          challenge_id?: string
+          code?: string
+          created_at?: string
+          created_by?: string
+          expires_at?: string
+          id?: string
+          revoked_at?: string | null
+          snapshot?: Json
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_share_links_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_audit_logs: {
         Row: {
           created_at: string

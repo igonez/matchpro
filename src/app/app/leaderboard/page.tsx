@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
-import { StoryShareModal } from '@/components/student/story-share-modal';
+import { ShareRankingSheet } from '@/components/share-ranking/share-ranking-sheet';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import {
   Trophy,
@@ -68,14 +68,36 @@ export default function LeaderboardPage() {
       }
       setCurrentUserId(user.id);
 
-      // 1. Identificar turma do atleta
-      const { data: participation } = await supabase
+      // 1. Identificar turma do atleta (respeitando deep link ?challenge=<id> se presente)
+      const requestedChallengeId =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('challenge')
+          : null;
+
+      let participationQuery = supabase
         .from('challenge_participants')
         .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
-        .eq('student_id', user.id)
+        .eq('student_id', user.id);
+
+      if (requestedChallengeId) {
+        participationQuery = participationQuery.eq('challenge_id', requestedChallengeId);
+      }
+
+      let { data: participation } = await participationQuery
         .order('joined_at', { ascending: false })
         .limit(1)
         .maybeSingle();
+
+      if (!participation && requestedChallengeId) {
+        const fallbackRes = await supabase
+          .from('challenge_participants')
+          .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
+          .eq('student_id', user.id)
+          .order('joined_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        participation = fallbackRes.data;
+      }
 
       const challengeObj = Array.isArray(participation?.challenges)
         ? participation?.challenges[0]
@@ -868,30 +890,21 @@ export default function LeaderboardPage() {
         )}
       </div>
 
-      {/* Modal de Card 9:16 para Instagram Stories / WhatsApp */}
-      <StoryShareModal
-        isOpen={showStoryShare}
+      {/* Tela Compartilhar Ranking (Carrossel 9:16 Pódio Top 3 + Lista Top 10) */}
+      <ShareRankingSheet
+        open={showStoryShare}
         onClose={() => setShowStoryShare(false)}
-        data={{
-          mode: 'leaderboard',
-          studentName: myStanding?.students?.full_name || top1?.students?.full_name || 'Atleta ArenaFit',
-          challengeTitle: currentChallenge?.title || 'Arena Oficial',
-          pointsText: `${myStanding?.total_points ?? top1?.total_points ?? 0} XP`,
-          rankPosition: `#${myRank || 1}`,
-          streakDays: currentUserId ? streaksMap[currentUserId] || 1 : 1,
-          currentUserId,
-          isCoachView: !myStanding,
-          classAveragePoints,
-          topStreakDays: topStreakStudent?.streak || 0,
-          topStreakName: topStreakStudent?.name || 'Atleta',
-          standings: standings.map((s) => ({
-            studentId: s.student_id,
-            name: s.students?.full_name || 'Atleta',
-            avatarUrl: s.students?.avatar_url || null,
-            points: Number(s.total_points || 0),
-            streakDays: streaksMap[s.student_id] || 0,
-          })),
-        }}
+        challengeId={currentChallenge?.id || null}
+        challengeTitle={currentChallenge?.title || 'Arena Oficial'}
+        standings={standings.map((s) => ({
+          studentId: s.student_id,
+          name: s.students?.full_name || 'Atleta',
+          avatarUrl: s.students?.avatar_url || null,
+          points: Number(s.total_points || 0),
+          streakDays: streaksMap[s.student_id] || 0,
+        }))}
+        currentUserId={currentUserId}
+        isCoachView={!myStanding}
       />
     </div>
   );

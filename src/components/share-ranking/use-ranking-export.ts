@@ -4,14 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { toBlob, toPng } from 'html-to-image';
 import type { RankingBgMode, RankingCardVariant, ShareParticipantItem } from './ranking-share-card';
 
-/**
- * Converte uma URL de imagem em dataURL PNG via Image + Canvas (com crossOrigin="anonymous").
- * Evita falhas de CORS na hora da captura do DOM e garante que todos os avatares já estejam
- * decodificados antes de gerar o PNG 1080x1920.
- */
 export async function preloadImageToDataUrl(
   url?: string | null,
-  timeoutMs = 3500
+  timeoutMs = 3000
 ): Promise<string | null> {
   if (!url) return null;
   if (url.startsWith('data:')) return url;
@@ -27,7 +22,7 @@ export async function preloadImageToDataUrl(
     img.onload = () => {
       clearTimeout(timer);
       try {
-        const maxDim = 512;
+        const maxDim = 256;
         const w = img.naturalWidth || img.width || 128;
         const h = img.naturalHeight || img.height || 128;
         const scale = Math.min(1, maxDim / Math.max(w, h));
@@ -42,7 +37,6 @@ export async function preloadImageToDataUrl(
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         resolve(canvas.toDataURL('image/png'));
       } catch {
-        // Se o servidor de origem bloquear leitura do canvas (CORS), faz fallback gracioso para iniciais
         resolve(null);
       }
     };
@@ -56,13 +50,10 @@ export async function preloadImageToDataUrl(
   });
 }
 
-/**
- * Redimensiona um File de foto (Galeria ou Câmera) para dataURL otimizada (máx 1920px)
- */
 export async function readPhotoFileToDataUrl(file: File, maxDim = 1920): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Não foi possível ler o arquivo de imagem.'));
+    reader.onerror = () => reject(new Error('Não foi possível ler a imagem.'));
     reader.onload = () => {
       const resultStr = String(reader.result || '');
       const img = new Image();
@@ -85,7 +76,7 @@ export async function readPhotoFileToDataUrl(file: File, maxDim = 1920): Promise
           resolve(resultStr);
         }
       };
-      img.onerror = () => reject(new Error('Formato de imagem inválido ou não suportado.'));
+      img.onerror = () => reject(new Error('Formato de imagem inválido.'));
       img.src = resultStr;
     };
     reader.readAsDataURL(file);
@@ -98,8 +89,8 @@ interface UseRankingExportParams {
   challengeLogoUrl?: string | null;
   backgroundMode: RankingBgMode;
   backgroundPhotoUrl: string | null;
-  podiumNodeRef: React.RefObject<HTMLDivElement | null>;
   listNodeRef: React.RefObject<HTMLDivElement | null>;
+  heroNodeRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export interface ExportedCardBundle {
@@ -114,29 +105,26 @@ export function useRankingExport({
   challengeLogoUrl,
   backgroundMode,
   backgroundPhotoUrl,
-  podiumNodeRef,
   listNodeRef,
+  heroNodeRef,
 }: UseRankingExportParams) {
   const [preloadedImages, setPreloadedImages] = useState<Record<string, string>>({});
-  const [avatarsReady, setAvatarsReady] = useState(false);
+  const [assetsReady, setAssetsReady] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportedCards, setExportedCards] = useState<
     Partial<Record<RankingCardVariant, ExportedCardBundle>>
   >({});
   const warmedUpRef = useRef(false);
 
-  // 1. Pré-carregar todos os avatares dos Top 10 + usuário atual + logo do app
+  // 1. Pré-carregar apenas o logo (sem avatares na lista)
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
 
     async function runPreload() {
-      setAvatarsReady(false);
+      setAssetsReady(false);
       const urls = new Set<string>(['/icon-192.png']);
       if (challengeLogoUrl) urls.add(challengeLogoUrl);
-      standings.slice(0, 10).forEach((s) => {
-        if (s.avatarUrl) urls.add(s.avatarUrl);
-      });
 
       const entries = await Promise.all(
         Array.from(urls).map(async (u) => {
@@ -151,7 +139,7 @@ export function useRankingExport({
         if (dataUrl) map[u] = dataUrl;
       }
       setPreloadedImages(map);
-      setAvatarsReady(true);
+      setAssetsReady(true);
     }
 
     runPreload();
@@ -159,11 +147,11 @@ export function useRankingExport({
     return () => {
       cancelled = true;
     };
-  }, [open, standings, challengeLogoUrl]);
+  }, [open, challengeLogoUrl]);
 
-  // 2. Pré-renderizar os PNGs 1080x1920 fora da tela assim que avatares ou fundo mudarem
+  // 2. Renderizar os 2 cards 1080x1920 fora da tela ('list' e 'hero')
   useEffect(() => {
-    if (!open || !avatarsReady) return;
+    if (!open || !assetsReady || standings.length === 0) return;
     let cancelled = false;
 
     async function renderBothCards() {
@@ -172,7 +160,6 @@ export function useRankingExport({
         if (typeof document !== 'undefined' && 'fonts' in document) {
           await document.fonts.ready.catch(() => {});
         }
-        // Aguarda próximo frame para o React aplicar as dataURLs no DOM offscreen
         await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
         if (cancelled) return;
 
@@ -195,7 +182,6 @@ export function useRankingExport({
             backgroundColor: isTransparent ? undefined : '#09090b',
           };
 
-          // Workaround Safari iOS: primeira captura de aquecimento para forçar decode das imagens e fontes
           if (!warmedUpRef.current) {
             await toPng(node, options).catch(() => {});
             warmedUpRef.current = true;
@@ -213,27 +199,27 @@ export function useRankingExport({
           return { blob, file, objectUrl };
         };
 
-        const [podiumBundle, listBundle] = await Promise.all([
-          renderVariant(podiumNodeRef.current, 'podium'),
+        const [listBundle, heroBundle] = await Promise.all([
           renderVariant(listNodeRef.current, 'list'),
+          renderVariant(heroNodeRef.current, 'hero'),
         ]);
 
         if (cancelled) {
-          if (podiumBundle) URL.revokeObjectURL(podiumBundle.objectUrl);
           if (listBundle) URL.revokeObjectURL(listBundle.objectUrl);
+          if (heroBundle) URL.revokeObjectURL(heroBundle.objectUrl);
           return;
         }
 
         setExportedCards((prev) => {
-          if (prev.podium?.objectUrl) URL.revokeObjectURL(prev.podium.objectUrl);
           if (prev.list?.objectUrl) URL.revokeObjectURL(prev.list.objectUrl);
+          if (prev.hero?.objectUrl) URL.revokeObjectURL(prev.hero.objectUrl);
           return {
-            podium: podiumBundle || undefined,
             list: listBundle || undefined,
+            hero: heroBundle || undefined,
           };
         });
       } catch (err) {
-        console.error('[useRankingExport] Erro ao exportar cards 1080x1920:', err);
+        console.error('[useRankingExport] Erro ao exportar cards:', err);
       } finally {
         if (!cancelled) {
           setExporting(false);
@@ -246,11 +232,11 @@ export function useRankingExport({
     return () => {
       cancelled = true;
     };
-  }, [open, avatarsReady, preloadedImages, backgroundMode, backgroundPhotoUrl, podiumNodeRef, listNodeRef]);
+  }, [open, assetsReady, standings, preloadedImages, backgroundMode, backgroundPhotoUrl, listNodeRef, heroNodeRef]);
 
   return {
     preloadedImages,
-    isPreparing: !avatarsReady || exporting,
+    isPreparing: !assetsReady || exporting,
     exportedCards,
   };
 }

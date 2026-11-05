@@ -103,7 +103,7 @@ export function CorporateFooter({ showNavigation = true }: CorporateFooterProps)
           {/* Conformidade e LGPD */}
           <div className="md:col-span-4 space-y-3">
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" />
               <span>Privacidade & Direitos do Titular</span>
             </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-zinc-300">
@@ -118,7 +118,7 @@ export function CorporateFooter({ showNavigation = true }: CorporateFooterProps)
                 </Link>
               </li>
               <li>
-                <Link href="/lgpd" className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors focus-visible:ring-2 focus-visible:ring-emerald-400 rounded flex items-center gap-1">
+                <Link href="/lgpd" className="text-white hover:text-zinc-200 font-bold transition-colors focus-visible:ring-2 focus-visible:ring-white rounded flex items-center gap-1">
                   <span>Formulário de Requisições LGPD (Art. 18)</span>
                 </Link>
               </li>

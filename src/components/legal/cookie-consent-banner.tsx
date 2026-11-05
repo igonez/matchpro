@@ -77,7 +77,7 @@ export function CookieConsentBanner() {
                 <h2 className="text-sm sm:text-base font-bold tracking-tight text-white">
                   Controle de Cookies & Privacidade
                 </h2>
-                <span className="text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                <span className="text-[10px] font-mono uppercase bg-white/10 text-white px-2 py-0.5 rounded-full border border-white/20">
                   LGPD
                 </span>
               </div>
@@ -92,7 +92,7 @@ export function CookieConsentBanner() {
                 ou exerça seus direitos no{' '}
                 <Link
                   href="/lgpd"
-                  className="text-emerald-400 underline underline-offset-2 hover:text-emerald-300 font-medium focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
+                  className="text-white underline underline-offset-2 hover:text-zinc-200 font-medium focus-visible:ring-2 focus-visible:ring-white rounded"
                 >
                   Canal LGPD
                 </Link>.

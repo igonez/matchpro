@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
+import { TitaniumMedalBadge, SilverMedalBadge } from '@/components/ui/metallic-badges';
 import { 
   Trophy, 
   Camera, 
@@ -43,7 +43,7 @@ export function HeroInteractiveMockup() {
           className={`flex-1 sm:flex-initial min-h-[44px] flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-2xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
             activeTab === 'stories_share'
               ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]'
-              : 'text-amber-300 hover:text-white hover:bg-white/5'
+              : 'text-zinc-300 hover:text-white hover:bg-white/5'
           }`}
         >
           <Share2 className="w-4 h-4 shrink-0" />
@@ -81,7 +81,7 @@ export function HeroInteractiveMockup() {
         {/* COLUNA 1: Smartphone PWA do Aluno (Mobile-First Ergonomics) */}
         <div className="lg:col-span-5 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 mb-4">
-            <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+            <Smartphone className="w-3.5 h-3.5 text-zinc-300" />
             <span>Visão Mobile do Aluno (Sem Baixar App)</span>
           </div>
 
@@ -98,9 +98,9 @@ export function HeroInteractiveMockup() {
               <div className="pt-3.5 px-6 flex items-center justify-between z-20 text-xs font-mono text-zinc-300">
                 <span>09:41</span>
                 <div className="h-6 w-28 rounded-full bg-zinc-950 border border-white/15 flex items-center justify-between px-3">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
                   <div className="flex items-center gap-1 text-[11px] font-mono text-zinc-200 font-bold">
-                    <Flame className="w-3 h-3 text-amber-400" />
+                    <Flame className="w-3 h-3 text-zinc-300" />
                     <span>14d</span>
                   </div>
                 </div>
@@ -118,17 +118,17 @@ export function HeroInteractiveMockup() {
                   <div className="space-y-4 animate-in fade-in duration-300">
                     <div className="flex items-center justify-between pb-2.5 border-b border-white/10 text-left">
                       <div>
-                        <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block font-bold">
+                        <span className="text-[11px] font-mono text-zinc-300 uppercase tracking-wider block font-bold">
                           Team Silva • Desafio 30D
                         </span>
                         <h4 className="text-sm sm:text-base font-black text-white">Leaderboard da Turma</h4>
                       </div>
-                      <span className="text-[11px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">
+                      <span className="text-[11px] font-mono bg-white/10 text-zinc-200 border border-white/20 px-2.5 py-0.5 rounded-full font-bold">
                         AO VIVO
                       </span>
                     </div>
 
-                    {/* Pódio 3 Colunas */}
+                    {/* Pódio 3 Colunas Titanium */}
                     <div className="grid grid-cols-3 gap-2.5 items-end pt-2 pb-1">
                       <div className="flex flex-col items-center">
                         <SilverMedalBadge size={34} className="mb-1.5" />
@@ -141,18 +141,20 @@ export function HeroInteractiveMockup() {
 
                       <div className="flex flex-col items-center">
                         <div className="relative">
-                          <Crown className="w-4 h-4 text-amber-400 absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
-                          <GoldMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
+                          <Crown className="w-4 h-4 text-white absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
+                          <TitaniumMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" />
                         </div>
                         <span className="text-xs sm:text-sm font-black text-white truncate max-w-[90px]">Carlos E.</span>
-                        <span className="text-[11px] font-mono text-amber-300 font-bold">2.140 pts</span>
+                        <span className="text-[11px] font-mono text-zinc-200 font-bold">2.140 pts</span>
                         <div className="w-full h-28 bg-gradient-to-t from-zinc-800 to-zinc-700/80 rounded-t-xl border-t border-x border-white/30 mt-1.5 flex items-center justify-center">
                           <span className="font-mono font-black text-white text-xl">1º</span>
                         </div>
                       </div>
 
                       <div className="flex flex-col items-center">
-                        <BronzeMedalBadge size={32} className="mb-1.5" />
+                        <div className="h-8 w-8 rounded-full border border-white/20 bg-zinc-800 flex items-center justify-center text-xs font-black font-mono text-zinc-300 mb-1.5">
+                          3º
+                        </div>
                         <span className="text-xs font-bold text-white truncate max-w-[80px]">Rodrigo</span>
                         <span className="text-[11px] font-mono text-zinc-300">1.690 pts</span>
                         <div className="w-full h-16 bg-gradient-to-t from-zinc-900 to-zinc-800/60 rounded-t-xl border-t border-x border-white/10 mt-1.5 flex items-center justify-center">
@@ -162,10 +164,10 @@ export function HeroInteractiveMockup() {
                     </div>
 
                     {/* Card Pessoal + Botão de Compartilhar nos Stories */}
-                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-zinc-900 to-black border border-amber-400/30 space-y-2.5 text-left">
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-zinc-800/50 via-zinc-900 to-black border border-white/15 space-y-2.5 text-left">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                          <div className="h-9 w-9 rounded-xl bg-amber-400 text-black flex flex-col items-center justify-center text-xs font-black font-mono">
+                          <div className="h-9 w-9 rounded-xl bg-white text-black flex flex-col items-center justify-center text-xs font-black font-mono">
                             #03
                           </div>
                           <div>
@@ -173,14 +175,14 @@ export function HeroInteractiveMockup() {
                             <div className="text-[11px] text-zinc-300">Faltam 130 XP para #2 Mariana</div>
                           </div>
                         </div>
-                        <span className="text-xs sm:text-sm font-mono font-bold text-amber-400">1.690 XP</span>
+                        <span className="text-xs sm:text-sm font-mono font-bold text-zinc-200">1.690 XP</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => setActiveTab('stories_share')}
                         className="w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 flex items-center justify-center gap-2 text-xs font-mono font-bold text-white transition-colors cursor-pointer"
                       >
-                        <Share2 className="w-3.5 h-3.5 text-amber-400" />
+                        <Share2 className="w-3.5 h-3.5 text-zinc-300" />
                         <span>Compartilhar Ranking 9:16 nos Stories</span>
                       </button>
                     </div>
@@ -190,29 +192,29 @@ export function HeroInteractiveMockup() {
                 {activeTab === 'stories_share' && (
                   <div className="space-y-3.5 animate-in fade-in duration-300">
                     {/* Preview do Card 9:16 com Marca do Personal no Topo */}
-                    <div className="relative rounded-2xl overflow-hidden border border-amber-400/35 bg-gradient-to-b from-zinc-800/80 via-zinc-900 to-black p-4 text-center space-y-2.5 shadow-[0_0_25px_rgba(251,191,36,0.12)]">
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-[11px] font-mono text-amber-300 font-bold">
+                    <div className="relative rounded-2xl overflow-hidden border border-white/20 bg-gradient-to-b from-zinc-800/80 via-zinc-900 to-black p-4 text-center space-y-2.5 shadow-[0_0_25px_rgba(255,255,255,0.08)]">
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/20 text-[11px] font-mono text-zinc-200 font-bold">
                         <span>SUA MARCA NO TOPO</span>
                       </div>
 
                       <div className="flex flex-col items-center">
-                        <div className="w-9 h-9 rounded-xl border-2 border-amber-400/70 bg-black/60 flex items-center justify-center text-xs font-black text-amber-400 mb-1">
+                        <div className="w-9 h-9 rounded-xl border-2 border-white/60 bg-black/60 flex items-center justify-center text-xs font-black text-white mb-1">
                           TS
                         </div>
-                        <div className="text-xs font-extrabold text-amber-400 tracking-[2px] uppercase">
+                        <div className="text-xs font-extrabold text-white tracking-[2px] uppercase">
                           TEAM SILVA
                         </div>
                         <div className="text-[11px] text-zinc-300">Desafio 30 Dias Shape</div>
                       </div>
 
-                      <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center py-2 border-b border-amber-400/60">
+                      <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center py-2 border-b border-white/20">
                         <div>
                           <div className="text-base font-black text-white">3º</div>
                           <div className="text-[11px] text-zinc-300">posição</div>
                         </div>
                         <div className="w-px h-6 bg-white/20" />
                         <div>
-                          <div className="text-base font-black text-amber-400">1110</div>
+                          <div className="text-base font-black text-white">1110</div>
                           <div className="text-[11px] text-zinc-300">pontos</div>
                         </div>
                         <div className="w-px h-6 bg-white/20" />
@@ -225,13 +227,13 @@ export function HeroInteractiveMockup() {
                       <div className="space-y-1 text-left text-xs">
                         <div className="flex justify-between text-zinc-200">
                           <span>• Ana Clara</span>
-                          <span className="text-amber-400 font-bold">1280 XP</span>
+                          <span className="text-white font-bold">1280 XP</span>
                         </div>
                         <div className="flex justify-between text-zinc-200">
                           <span>• Bruno M.</span>
-                          <span className="text-amber-400 font-bold">1195 XP</span>
+                          <span className="text-white font-bold">1195 XP</span>
                         </div>
-                        <div className="flex justify-between text-amber-400 font-extrabold">
+                        <div className="flex justify-between text-white font-extrabold">
                           <span>• Carla S. (Você)</span>
                           <span>1110 XP</span>
                         </div>
@@ -245,7 +247,7 @@ export function HeroInteractiveMockup() {
                     <div className="p-3 rounded-2xl bg-white/[0.05] border border-white/10 text-left space-y-1">
                       <div className="text-xs font-bold text-white flex items-center justify-between">
                         <span>Foto, Galeria ou Sticker PNG</span>
-                        <span className="text-amber-400 font-mono text-[11px]">1080×1920</span>
+                        <span className="text-zinc-300 font-mono text-[11px]">1080×1920</span>
                       </div>
                       <p className="text-xs text-zinc-300 leading-relaxed">
                         O aluno posta o treino nos Stories com o nome da sua consultoria em destaque.
@@ -260,9 +262,9 @@ export function HeroInteractiveMockup() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/45 z-10" />
                       
                       <div className="absolute inset-3.5 border border-dashed border-white/30 rounded-xl z-20 flex flex-col justify-between p-2.5">
-                        <div className="flex justify-between items-center text-[11px] font-mono text-emerald-400 font-bold">
+                        <div className="flex justify-between items-center text-[11px] font-mono text-zinc-200 font-bold">
                           <span className="flex items-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                            <span className="h-2 w-2 rounded-full bg-white animate-ping" />
                             AI SCANNER ATIVO
                           </span>
                           <span>GPS: OK</span>
@@ -271,7 +273,7 @@ export function HeroInteractiveMockup() {
                         <div className="p-2.5 rounded-xl bg-black/85 backdrop-blur-md border border-white/20 text-left space-y-1.5">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-bold text-white">Refeição Auditada</span>
-                            <span className="text-[11px] font-mono text-emerald-400 font-bold">100% Ao Vivo</span>
+                            <span className="text-[11px] font-mono text-zinc-200 font-bold">100% Ao Vivo</span>
                           </div>
                           <div className="grid grid-cols-3 gap-1.5 text-[11px] font-mono text-zinc-200">
                             <div>Prot: <strong className="text-white">38g</strong></div>
@@ -289,10 +291,10 @@ export function HeroInteractiveMockup() {
                     <div className="p-3.5 rounded-2xl bg-white/[0.05] border border-white/10 space-y-2 text-left">
                       <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-white">
                         <span className="flex items-center gap-1.5">
-                          <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                          <ShieldCheck className="w-4 h-4 text-zinc-300" />
                           Bloqueio de Galeria Ativo
                         </span>
-                        <span className="text-emerald-400 font-mono text-xs font-bold">+50 XP</span>
+                        <span className="text-zinc-200 font-mono text-xs font-bold">+50 XP</span>
                       </div>
                       <p className="text-xs text-zinc-300 leading-relaxed">
                         Sensor óptico em tempo real impede envio de fotos antigas da galeria, mantendo 100% de justiça no desafio.
@@ -303,28 +305,28 @@ export function HeroInteractiveMockup() {
 
                 {activeTab === 'pix_split' && (
                   <div className="space-y-4 animate-in fade-in duration-300">
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-950 border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.15)] space-y-2 text-left">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-950 border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.08)] space-y-2 text-left">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="h-7 w-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-                            <Zap className="w-4 h-4 text-emerald-400" />
+                          <div className="h-7 w-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
+                            <Zap className="w-4 h-4 text-white" />
                           </div>
                           <span className="text-xs sm:text-sm font-black text-white">Split Pix Recebido</span>
                         </div>
                         <span className="text-xs font-mono text-zinc-300">Agora</span>
                       </div>
-                      <div className="text-2xl font-black font-mono text-emerald-400">
+                      <div className="text-2xl font-black font-mono text-white">
                         + R$ 97,00
                       </div>
                       <div className="text-xs text-zinc-300 flex items-center justify-between border-t border-white/10 pt-2 font-mono">
                         <span>Inscrição: R$ 97,00</span>
-                        <span className="text-emerald-400 font-bold">Taxa Plataforma: 0% (Pro)</span>
+                        <span className="text-white font-bold">Taxa Plataforma: 0% (Pro)</span>
                       </div>
                     </div>
 
                     <div className="p-3.5 rounded-2xl bg-white/[0.05] border border-white/10 space-y-1.5 text-left">
                       <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-zinc-300 shrink-0" />
                         <span>Lucro Direto na Sua Conta</span>
                       </div>
                       <p className="text-xs text-zinc-300 leading-relaxed">
@@ -339,7 +341,7 @@ export function HeroInteractiveMockup() {
                       </div>
                       <div className="p-3 rounded-xl bg-zinc-950 border border-white/10">
                         <span className="text-[11px] text-zinc-400 block">Seu Faturamento</span>
-                        <span className="text-sm sm:text-base font-bold text-emerald-400">R$ 4.656,00</span>
+                        <span className="text-sm sm:text-base font-bold text-white">R$ 4.656,00</span>
                       </div>
                     </div>
                   </div>
@@ -389,8 +391,8 @@ export function HeroInteractiveMockup() {
                   arenafitpro.com.br/dashboard
                 </span>
               </div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-3 py-1 rounded-full font-bold">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-200 bg-white/10 border border-white/20 px-3 py-1 rounded-full font-bold">
+                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                 Zero Trabalho Manual no WhatsApp
               </span>
             </div>
@@ -413,7 +415,7 @@ export function HeroInteractiveMockup() {
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Engajamento Ativo</span>
                     <span className="text-2xl font-black text-white font-mono mt-1 block">94.8%</span>
-                    <span className="text-xs text-emerald-400 font-medium mt-1 block">Turma cumprindo o plano</span>
+                    <span className="text-xs text-zinc-300 font-medium mt-1 block">Turma cumprindo o plano</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Squad Líder</span>
@@ -422,7 +424,7 @@ export function HeroInteractiveMockup() {
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Radar Anti-Churn</span>
-                    <span className="text-lg font-black text-emerald-400 mt-1 block">1 Toque</span>
+                    <span className="text-lg font-black text-white mt-1 block">1 Toque</span>
                     <span className="text-xs text-zinc-300 mt-1 block">Resgate direto no WhatsApp</span>
                   </div>
                 </div>
@@ -432,20 +434,20 @@ export function HeroInteractiveMockup() {
             {activeTab === 'stories_share' && (
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold block mb-1">
+                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-bold block mb-1">
                     MARKETING VIRAL WHITE-LABEL 9:16
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                     Cada aluno vira um outdoor da SUA consultoria no Instagram
                   </h3>
                   <p className="text-sm sm:text-base text-zinc-300 mt-2 leading-relaxed">
-                    Configure seu Logo e o Nome da sua Consultoria em 10 segundos. Toda vez que um aluno ou você compartilhar o Ranking nos Stories, sua marca aparece em dourado no topo — gerando directs de seguidores perguntando como entrar na próxima turma.
+                    Configure seu Logo e o Nome da sua Consultoria em 10 segundos. Toda vez que um aluno ou você compartilhar o Ranking nos Stories, sua marca aparece no topo — gerando directs de seguidores perguntando como entrar na próxima turma.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                  <div className="p-4 rounded-2xl bg-black/70 border border-amber-400/25">
-                    <span className="text-xs font-mono text-amber-300 uppercase block">Identidade Visual</span>
+                  <div className="p-4 rounded-2xl bg-black/70 border border-white/20">
+                    <span className="text-xs font-mono text-zinc-200 uppercase block">Identidade Visual</span>
                     <span className="text-lg font-black text-white mt-1 block">Seu Logo + Nome</span>
                     <span className="text-xs text-zinc-300 mt-1 block">Destaque no topo do card</span>
                   </div>
@@ -456,7 +458,7 @@ export function HeroInteractiveMockup() {
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Aquisição de Alunos</span>
-                    <span className="text-lg font-black text-emerald-400 mt-1 block">100% Orgânica</span>
+                    <span className="text-lg font-black text-white mt-1 block">100% Orgânica</span>
                     <span className="text-xs text-zinc-300 mt-1 block">Prova social diária nos Stories</span>
                   </div>
                 </div>
@@ -466,7 +468,7 @@ export function HeroInteractiveMockup() {
             {activeTab === 'ai_camera' && (
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
+                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-bold block mb-1">
                     AUDITORIA AUTOMÁTICA + IA NUTRICIONAL
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
@@ -481,8 +483,8 @@ export function HeroInteractiveMockup() {
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-white">Câmera Antifraude Ao Vivo</span>
-                      <span className="inline-flex items-center gap-1 text-xs font-mono text-emerald-400 font-bold">
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                      <span className="inline-flex items-center gap-1 text-xs font-mono text-zinc-200 font-bold">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-white" />
                         <span>Sem Galeria</span>
                       </span>
                     </div>
@@ -506,7 +508,7 @@ export function HeroInteractiveMockup() {
             {activeTab === 'pix_split' && (
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
+                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-bold block mb-1">
                     FATURAMENTO AUTOMÁTICO PIX D+0
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
@@ -520,7 +522,7 @@ export function HeroInteractiveMockup() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Liberação do Saldo</span>
-                    <span className="text-2xl font-black text-emerald-400 font-mono mt-1 block">D+0</span>
+                    <span className="text-2xl font-black text-white font-mono mt-1 block">D+0</span>
                     <span className="text-xs text-zinc-300 mt-1 block">Dinheiro na mão na hora</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">

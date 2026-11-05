@@ -1,18 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { trackMarketingEvent } from '@/lib/analytics/tracking';
 import {
   Share2,
-  Sparkles,
   Camera,
-  Image as ImageIcon,
   Layers,
   Check,
   X,
-  ArrowRight,
   Crown,
   Trophy,
   Download,
@@ -23,9 +18,9 @@ type StoryVariant = 'list' | 'hero';
 type StoryBgMode = 'photo' | 'transparent';
 
 const BRAND_PRESETS = [
-  { label: 'Team Silva', initials: 'TS', challenge: 'Desafio 30 Dias Shape' },
-  { label: 'Consultoria Elite', initials: 'CE', challenge: 'Seca Barriga 21D' },
-  { label: 'Nutri Carolina', initials: 'NC', challenge: 'Desafio Reeducação 4 Semanas' },
+  { label: 'Team Silva', challenge: 'Desafio 30 Dias Shape' },
+  { label: 'Consultoria Elite', challenge: 'Seca Barriga 21D' },
+  { label: 'Nutri Carolina', challenge: 'Desafio Reeducação 4 Semanas' },
 ];
 
 const STANDINGS = [
@@ -65,14 +60,14 @@ export function ViralStoriesShowcase() {
       <div className="max-w-6xl mx-auto">
         {/* Cabeçalho da Seção */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-xs font-mono uppercase tracking-wider text-amber-300 mb-4">
-            <Share2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-4">
+            <Share2 className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
             <span>NOVO • MÁQUINA DE AQUISIÇÃO ORGÂNICA 9:16</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4 text-balance">
             Seus alunos agora divulgam a{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-400 to-amber-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400">
               sua consultoria nos Stories
             </span>
           </h2>
@@ -88,7 +83,7 @@ export function ViralStoriesShowcase() {
           <div className="lg:col-span-6 space-y-6">
             <SpotlightCard3D className="p-6 sm:p-8 border-white/15 bg-zinc-950/90 space-y-6">
               <div>
-                <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold block mb-1">
+                <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-bold block mb-1">
                   TESTE AO VIVO AGORA
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
@@ -114,7 +109,7 @@ export function ViralStoriesShowcase() {
                   value={customBrand}
                   onChange={(e) => setCustomBrand(e.target.value)}
                   placeholder="Ex: Team Silva / Consultoria Elite"
-                  className="w-full min-h-[46px] px-4 py-2.5 rounded-2xl bg-black border border-white/15 text-sm font-bold text-white placeholder-zinc-400 focus:border-amber-400 focus:outline-none transition-colors"
+                  className="w-full min-h-[46px] px-4 py-2.5 rounded-2xl bg-black border border-white/15 text-sm font-bold text-white placeholder-zinc-400 focus:border-white/40 focus:outline-none transition-colors"
                 />
                 <div className="flex flex-wrap gap-2 pt-1">
                   {BRAND_PRESETS.map((preset, idx) => (
@@ -124,7 +119,7 @@ export function ViralStoriesShowcase() {
                       onClick={() => handlePresetClick(idx)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer border ${
                         customBrand.toLowerCase() === preset.label.toLowerCase()
-                          ? 'bg-amber-400/15 text-amber-300 border-amber-400/40 font-bold'
+                          ? 'bg-white/15 text-white border-white/40 font-bold'
                           : 'bg-white/5 text-zinc-300 border-white/10 hover:text-white hover:bg-white/10'
                       }`}
                     >
@@ -149,7 +144,7 @@ export function ViralStoriesShowcase() {
                         : 'bg-black/60 text-zinc-200 border-white/10 hover:border-white/25'
                     }`}
                   >
-                    <Trophy className={`w-4 h-4 shrink-0 ${variant === 'list' ? 'text-black' : 'text-amber-400'}`} />
+                    <Trophy className={`w-4 h-4 shrink-0 ${variant === 'list' ? 'text-black' : 'text-zinc-300'}`} />
                     <div>
                       <div className="text-xs sm:text-sm font-black leading-tight">Classificação</div>
                       <div className={`text-[11px] font-mono ${variant === 'list' ? 'text-zinc-700' : 'text-zinc-400'}`}>
@@ -167,7 +162,7 @@ export function ViralStoriesShowcase() {
                         : 'bg-black/60 text-zinc-200 border-white/10 hover:border-white/25'
                     }`}
                   >
-                    <Crown className={`w-4 h-4 shrink-0 ${variant === 'hero' ? 'text-black' : 'text-amber-400'}`} />
+                    <Crown className={`w-4 h-4 shrink-0 ${variant === 'hero' ? 'text-black' : 'text-zinc-300'}`} />
                     <div>
                       <div className="text-xs sm:text-sm font-black leading-tight">Posição Gigante</div>
                       <div className={`text-[11px] font-mono ${variant === 'hero' ? 'text-zinc-700' : 'text-zinc-400'}`}>
@@ -189,11 +184,11 @@ export function ViralStoriesShowcase() {
                     onClick={() => setBgMode('photo')}
                     className={`min-h-[48px] p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-2.5 ${
                       bgMode === 'photo'
-                        ? 'bg-amber-400/15 text-white border-amber-400/50'
+                        ? 'bg-white/15 text-white border-white/50'
                         : 'bg-black/60 text-zinc-300 border-white/10 hover:border-white/25'
                     }`}
                   >
-                    <Camera className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Camera className="w-4 h-4 text-zinc-300 shrink-0" />
                     <div>
                       <div className="text-xs sm:text-sm font-bold leading-tight">Câmera / Galeria</div>
                       <div className="text-[11px] font-mono text-zinc-400">Foto pós-treino 9:16</div>
@@ -205,11 +200,11 @@ export function ViralStoriesShowcase() {
                     onClick={() => setBgMode('transparent')}
                     className={`min-h-[48px] p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-2.5 ${
                       bgMode === 'transparent'
-                        ? 'bg-amber-400/15 text-white border-amber-400/50'
+                        ? 'bg-white/15 text-white border-white/50'
                         : 'bg-black/60 text-zinc-300 border-white/10 hover:border-white/25'
                     }`}
                   >
-                    <Layers className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Layers className="w-4 h-4 text-zinc-300 shrink-0" />
                     <div>
                       <div className="text-xs sm:text-sm font-bold leading-tight">Sticker Transparente</div>
                       <div className="text-[11px] font-mono text-zinc-400">PNG sem fundo p/ Story</div>
@@ -230,13 +225,13 @@ export function ViralStoriesShowcase() {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-amber-400/[0.06] border border-amber-400/25 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-mono text-amber-300 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/20 space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-200 font-bold">
+                    <Check className="w-3.5 h-3.5 text-white shrink-0" />
                     <span>STORY WHITE-LABEL 9:16</span>
                   </div>
                   <p className="text-xs text-zinc-200 leading-relaxed">
-                    Estética Titanium + Dourado com <strong>seu Logo e Nome no topo</strong>. Gera curiosidade e novos clientes todo dia.
+                    Estética Titanium com <strong>seu Logo e Nome no topo</strong>. Gera curiosidade e novos clientes todo dia.
                   </p>
                 </div>
               </div>
@@ -247,8 +242,8 @@ export function ViralStoriesShowcase() {
           <div className="lg:col-span-6 flex flex-col items-center">
             {/* Callout Badges Superiores */}
             <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-xs font-mono text-amber-300 font-bold">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/25 text-xs font-mono text-zinc-200 font-bold">
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                 Topo: Seu Logo + Sua Marca
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-xs font-mono text-zinc-300">
@@ -257,7 +252,7 @@ export function ViralStoriesShowcase() {
             </div>
 
             {/* Moldura de Smartphone Titanium 9:16 */}
-            <div className="relative w-full max-w-[340px] sm:max-w-[360px] rounded-[48px] p-3 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/25 shadow-[0_35px_100px_rgba(0,0,0,0.95),0_0_45px_rgba(251,191,36,0.08)]">
+            <div className="relative w-full max-w-[340px] sm:max-w-[360px] rounded-[48px] p-3 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/25 shadow-[0_35px_100px_rgba(0,0,0,0.95),0_0_45px_rgba(255,255,255,0.08)]">
               {/* Dynamic Island */}
               <div className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-5 rounded-full bg-black border border-white/10 z-30" />
 
@@ -282,7 +277,7 @@ export function ViralStoriesShowcase() {
                 {/* Simulação visual de ambiente de treino ao fundo quando modo Foto */}
                 {bgMode === 'photo' && (
                   <>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500/15 via-zinc-900/60 to-black z-0" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-700/20 via-zinc-900/60 to-black z-0" />
                     <div className="absolute top-12 inset-x-0 flex flex-col items-center z-10 opacity-80">
                       <span className="px-2.5 py-0.5 rounded-full bg-black/60 border border-white/15 text-[11px] font-mono text-zinc-300">
                         Foto Pós-Treino do Aluno
@@ -293,7 +288,7 @@ export function ViralStoriesShowcase() {
 
                 {bgMode === 'transparent' && (
                   <div className="absolute top-12 inset-x-0 flex flex-col items-center z-10">
-                    <span className="px-2.5 py-0.5 rounded-full bg-black/80 border border-amber-400/30 text-[11px] font-mono text-amber-300">
+                    <span className="px-2.5 py-0.5 rounded-full bg-black/80 border border-white/30 text-[11px] font-mono text-zinc-200">
                       Fundo Transparente (Sticker PNG)
                     </span>
                   </div>
@@ -303,15 +298,15 @@ export function ViralStoriesShowcase() {
                 <div className="relative z-20 flex flex-col items-center text-center w-full">
                   {/* Logo do Personal no Topo */}
                   <div
-                    className="w-11 h-11 rounded-xl border-2 border-amber-400/70 bg-black/50 flex items-center justify-center text-sm font-black text-amber-400 shadow-lg mb-2"
+                    className="w-11 h-11 rounded-xl border-2 border-white/60 bg-black/50 flex items-center justify-center text-sm font-black text-white shadow-lg mb-2"
                     style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}
                   >
                     {getInitials(displayBrand)}
                   </div>
 
-                  {/* Nome da Marca do Personal em Dourado */}
+                  {/* Nome da Marca do Personal em Titanium */}
                   <div
-                    className="text-xs font-extrabold text-amber-400 uppercase tracking-[2px] mb-0.5 truncate max-w-full"
+                    className="text-xs font-extrabold text-white uppercase tracking-[2px] mb-0.5 truncate max-w-full"
                     style={{ textShadow: '0 2px 10px rgba(0,0,0,0.85)' }}
                   >
                     {displayBrand}
@@ -319,7 +314,7 @@ export function ViralStoriesShowcase() {
 
                   {/* Nome do Desafio */}
                   <div
-                    className="text-xs font-semibold text-white/85 mb-0.5"
+                    className="text-xs font-semibold text-zinc-300 mb-0.5"
                     style={{ textShadow: '0 2px 10px rgba(0,0,0,0.85)' }}
                   >
                     {activePreset.challenge}
@@ -338,43 +333,43 @@ export function ViralStoriesShowcase() {
                       <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center w-full pb-3">
                         <div className="flex flex-col items-center">
                           <span className="text-lg font-extrabold text-white leading-tight">3º</span>
-                          <span className="text-[11px] text-white/75">posição</span>
+                          <span className="text-[11px] text-zinc-400">posição</span>
                         </div>
-                        <div className="w-px h-7 bg-white/30" />
+                        <div className="w-px h-7 bg-white/20" />
                         <div className="flex flex-col items-center">
-                          <span className="text-lg font-extrabold text-amber-400 leading-tight">1110</span>
-                          <span className="text-[11px] text-white/75">pontos</span>
+                          <span className="text-lg font-extrabold text-white leading-tight">1110</span>
+                          <span className="text-[11px] text-zinc-400">pontos</span>
                         </div>
-                        <div className="w-px h-7 bg-white/30" />
+                        <div className="w-px h-7 bg-white/20" />
                         <div className="flex flex-col items-center">
                           <span className="text-lg font-extrabold text-white leading-tight">de 42</span>
-                          <span className="text-[11px] text-white/75">atletas</span>
+                          <span className="text-[11px] text-zinc-400">atletas</span>
                         </div>
                       </div>
 
-                      {/* Linha Dourada */}
-                      <div className="w-full h-[2px] bg-amber-400 shadow mb-3.5" />
+                      {/* Linha Divisória Titanium */}
+                      <div className="w-full h-px bg-white/30 shadow mb-3.5" />
 
                       {/* Lista Top 5 */}
                       <div className="w-full space-y-1.5 text-left">
-                        <div className="text-[11px] font-bold tracking-[2.5px] uppercase text-white/75 mb-1">
+                        <div className="text-[11px] font-bold tracking-[2.5px] uppercase text-zinc-400 mb-1">
                           CLASSIFICAÇÃO
                         </div>
                         {STANDINGS.map((s) => (
                           <div key={s.name} className="flex items-center justify-between text-xs">
                             <span
                               className={`flex items-center gap-2 truncate ${
-                                s.isMe ? 'text-amber-400 font-extrabold' : 'text-white font-semibold'
+                                s.isMe ? 'text-white font-extrabold' : 'text-zinc-300 font-semibold'
                               }`}
                             >
                               <span
                                 className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                  s.isMe ? 'bg-amber-400' : 'bg-white'
+                                  s.isMe ? 'bg-white' : 'bg-zinc-500'
                                 }`}
                               />
                               <span>{s.name}</span>
                             </span>
-                            <span className="text-amber-400 font-extrabold shrink-0">{s.pts} XP</span>
+                            <span className="text-white font-extrabold shrink-0">{s.pts} XP</span>
                           </div>
                         ))}
                       </div>
@@ -388,11 +383,11 @@ export function ViralStoriesShowcase() {
                       >
                         3º
                       </div>
-                      <div className="text-sm font-semibold text-white/85 mt-2">
+                      <div className="text-sm font-semibold text-zinc-300 mt-2">
                         de 42 atletas
                       </div>
-                      <div className="w-16 h-[2px] bg-amber-400 my-3.5 shadow" />
-                      <div className="text-xl font-extrabold text-amber-400">1110 XP</div>
+                      <div className="w-16 h-px bg-white/40 my-3.5 shadow" />
+                      <div className="text-xl font-extrabold text-white">1110 XP</div>
                     </div>
                   )}
 
@@ -412,7 +407,7 @@ export function ViralStoriesShowcase() {
             {/* Barra de Ações Nativa do Aluno abaixo do Smartphone */}
             <div className="mt-5 flex items-center justify-center gap-3 text-xs font-mono text-zinc-300">
               <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10">
-                <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-3.5 h-3.5 text-zinc-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
                   <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>

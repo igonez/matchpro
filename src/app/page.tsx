@@ -240,7 +240,7 @@ export default function HomePage() {
                 key={item.href}
                 href={item.href}
                 className={`hover:text-white transition-colors ${
-                  item.highlight ? 'text-amber-300 font-extrabold' : ''
+                  item.highlight ? 'text-white font-extrabold' : ''
                 }`}
               >
                 {item.label}
@@ -342,7 +342,7 @@ export default function HomePage() {
           <div className="max-w-4xl w-full">
             {/* Kicker Pill Focado no Público-Alvo */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/[0.05] text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6 shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
               <span>Para Personal Trainers, Nutricionistas e Consultorias • Comece Grátis</span>
             </div>
 
@@ -357,8 +357,8 @@ export default function HomePage() {
               Continue prescrevendo seus treinos e dietas como já faz hoje. A ArenaFitPro entrega o{' '}
               <strong className="text-white">Pódio ao Vivo</strong>,{' '}
               <strong className="text-white">Câmera Antifraude com IA</strong> e{' '}
-              <strong className="text-amber-300">Cards 9:16 com a SUA marca para os Stories</strong> — para seus alunos cumprirem o plano até o fim e você faturar de{' '}
-              <strong className="text-emerald-400">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
+              <strong className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 font-extrabold">Cards 9:16 com a SUA marca para os Stories</strong> — para seus alunos cumprirem o plano até o fim e você faturar de{' '}
+              <strong className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 font-extrabold">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
             </p>
 
             {/* Hierarquia Clara de CTAs (1 Primário Dominante + 1 Âncora de Lucro + Acesso Aluno) */}
@@ -380,7 +380,7 @@ export default function HomePage() {
                 className="w-full sm:w-auto"
               >
                 <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-7 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer border border-white/20 bg-white/[0.06] hover:bg-white/15 text-white">
-                  <Calculator className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <Calculator className="w-4 h-4 text-zinc-300 shrink-0" />
                   <span>Simular Meu Lucro</span>
                 </button>
               </a>
@@ -405,16 +405,16 @@ export default function HomePage() {
             {/* Badges de Diferenciais */}
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-zinc-200 font-mono">
               <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-amber-400 shrink-0" /> Sua Marca nos Stories 9:16
+                <Check className="w-4 h-4 text-zinc-300 shrink-0" /> Sua Marca nos Stories 9:16
               </span>
               <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Zero digitação de fichas
+                <Check className="w-4 h-4 text-zinc-300 shrink-0" /> Zero digitação de fichas
               </span>
               <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Split Pix D+0 direto na conta
+                <Check className="w-4 h-4 text-zinc-300 shrink-0" /> Split Pix D+0 direto na conta
               </span>
               <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Câmera Antifraude + IA Nutricional
+                <Check className="w-4 h-4 text-zinc-300 shrink-0" /> Câmera Antifraude + IA Nutricional
               </span>
             </div>
           </div>
@@ -431,11 +431,11 @@ export default function HomePage() {
       <section className="px-4 sm:px-6 py-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-amber-400 mb-1.5">9:16</div>
+            <div className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 mb-1.5">9:16</div>
             <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Stories com a Sua Marca</div>
           </div>
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-emerald-400 mb-1.5">D+0</div>
+            <div className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 mb-1.5">D+0</div>
             <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Liberação Pix na Conta</div>
           </div>
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
@@ -490,7 +490,7 @@ export default function HomePage() {
               </div>
               <div className="mt-6 p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs sm:text-sm font-mono text-zinc-200 flex items-center justify-between">
                 <span>Código: SHAPE-30D</span>
-                <span className="text-emerald-400 font-bold">✓ Turma Ativa</span>
+                <span className="text-white font-bold">✓ Turma Ativa</span>
               </div>
             </SpotlightCard3D>
 
@@ -521,7 +521,7 @@ export default function HomePage() {
                   03
                 </div>
                 <h3 className="text-xl font-black text-white mb-3 flex items-center gap-2.5">
-                  <Share2 className="w-5 h-5 text-amber-400 shrink-0" />
+                  <Share2 className="w-5 h-5 text-zinc-300 shrink-0" />
                   <span>Pódio, IA e Stories 9:16</span>
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
@@ -530,8 +530,8 @@ export default function HomePage() {
               </div>
               <div className="mt-6 p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs sm:text-sm font-mono text-zinc-200 flex items-center justify-between">
                 <span>Divulgação Orgânica</span>
-                <span className="text-amber-400 font-bold flex items-center gap-1">
-                  <Flame className="w-4 h-4 text-amber-400" /> Viralizando
+                <span className="text-white font-bold flex items-center gap-1">
+                  <Flame className="w-4 h-4 text-zinc-300" /> Viralizando
                 </span>
               </div>
             </SpotlightCard3D>
@@ -560,7 +560,7 @@ export default function HomePage() {
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/[0.08]">
                   <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 font-semibold">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" />
                     Câmera Nativa + IA Nutricional
                   </div>
                   <span className="text-xs uppercase tracking-wider text-zinc-200 border border-white/15 px-3 py-1 rounded-full font-medium">
@@ -593,9 +593,9 @@ export default function HomePage() {
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
                   <span className="text-xs sm:text-sm text-zinc-200 font-semibold flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-emerald-400" /> Split Pix Automático
+                    <Zap className="w-4 h-4 text-zinc-300" /> Split Pix Automático
                   </span>
-                  <span className="text-xs text-emerald-400 font-bold font-mono">D+0 Instantâneo</span>
+                  <span className="text-xs text-white font-bold font-mono">D+0 Instantâneo</span>
                 </div>
 
                 <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-6 mb-3">
@@ -614,12 +614,12 @@ export default function HomePage() {
                   </div>
                   <div className="text-right">
                     <span className="text-zinc-400 block text-xs">Seu líquido (Plano Pro)</span>
-                    <span className="text-emerald-400 font-bold font-mono">R$ 96,01 (100% seu)</span>
+                    <span className="text-white font-bold font-mono">R$ 96,01 (100% seu)</span>
                   </div>
                 </div>
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-zinc-400">
                   <span>Tarifa bancária Asaas: a partir de R$ 0,99 fixo</span>
-                  <span className="text-emerald-400">Taxa Plataforma: 0%</span>
+                  <span className="text-zinc-200 font-semibold">Taxa Plataforma: 0%</span>
                 </div>
               </div>
             </SpotlightCard3D>
@@ -639,7 +639,7 @@ export default function HomePage() {
               </div>
               <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs sm:text-sm mt-6">
                 <span className="text-zinc-200 font-medium flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-amber-400" /> Squad Guerreiros
+                  <Trophy className="w-4 h-4 text-zinc-300" /> Squad Guerreiros
                 </span>
                 <span className="text-white font-bold font-mono">1º Lugar (2.450 XP)</span>
               </div>
@@ -649,7 +649,7 @@ export default function HomePage() {
             <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between">
               <div>
                 <div className="text-xs sm:text-sm text-zinc-300 font-semibold tracking-wide mb-2 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-emerald-400" /> Prevenção Ativa de Abandono
+                  <Activity className="w-4 h-4 text-zinc-300" /> Prevenção Ativa de Abandono
                 </div>
                 <h4 className="text-xl sm:text-2xl font-black text-white mb-2.5">
                   Radar Anti-Churn 48h & Avisos 24h
@@ -660,9 +660,9 @@ export default function HomePage() {
               </div>
               <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs sm:text-sm mt-6">
                 <span className="text-zinc-200 font-medium flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-emerald-400" /> Alerta de Inatividade
+                  <Zap className="w-4 h-4 text-zinc-300" /> Alerta de Inatividade
                 </span>
-                <span className="text-emerald-400 font-bold font-mono">Resgate em 1 Toque</span>
+                <span className="text-white font-bold font-mono">Resgate em 1 Toque</span>
               </div>
             </SpotlightCard3D>
           </div>
@@ -673,7 +673,7 @@ export default function HomePage() {
       <section id="calculadora" className="py-20 sm:py-24 px-4 sm:px-6 border-t border-white/[0.06] relative">
         <div className="max-w-5xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 mb-2 block font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2 block font-bold">
               SIMULADOR DE LUCRO REAL
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
@@ -743,8 +743,8 @@ export default function HomePage() {
 
                 <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-zinc-300 leading-relaxed">
                   <p>
-                    <strong className="text-white">Matemática Simples:</strong> No plano Pro Coach, a taxa da plataforma cai de 15% para <strong className="text-emerald-400">ZERO (0%)</strong>. Com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
-                    <strong className="text-emerald-400">
+                    <strong className="text-white">Matemática Simples:</strong> No plano Pro Coach, a taxa da plataforma cai de 15% para <strong className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 font-bold">ZERO (0%)</strong>. Com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
+                    <strong className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 font-bold">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>{' '}
                     — ou seja, a assinatura de R$ 49,90 se paga sozinha já no seu 4º aluno!
@@ -782,7 +782,7 @@ export default function HomePage() {
                       </span>
                       <span className="text-xs text-zinc-300">R$ 49,90/mês</span>
                     </div>
-                    <span className="text-sm sm:text-base font-bold text-emerald-400 shrink-0">
+                    <span className="text-sm sm:text-base font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400 shrink-0">
                       R$ {netPro.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
@@ -804,8 +804,8 @@ export default function HomePage() {
 
             <div className="mt-6 pt-4 border-t border-white/10 max-w-3xl mx-auto space-y-2 text-center font-mono">
               <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-zinc-300">
-                <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">
-                  <Zap className="w-3.5 h-3.5" /> Pix Instantâneo D+0 (Sem Risco de Chargeback)
+                <span className="inline-flex items-center gap-1.5 bg-white/10 text-white px-3 py-1 rounded-full border border-white/20">
+                  <Zap className="w-3.5 h-3.5 text-zinc-300" /> Pix Instantâneo D+0 (Sem Risco de Chargeback)
                 </span>
                 <span className="inline-flex items-center gap-1.5 bg-white/5 text-zinc-300 px-3 py-1 rounded-full border border-white/10">
                   <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" /> Tarifa Bancária Asaas: a partir de R$ 0,99 fixo
@@ -855,7 +855,7 @@ export default function HomePage() {
               >
                 <span>Anual</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full font-extrabold ${
-                  billingCycle === 'yearly' ? 'bg-black text-white' : 'bg-emerald-500/20 text-emerald-400'
+                  billingCycle === 'yearly' ? 'bg-black text-white' : 'bg-white/10 text-white'
                 }`}>
                   20% OFF
                 </span>
@@ -904,27 +904,27 @@ export default function HomePage() {
                   </div>
                   <ul className="space-y-3 text-xs sm:text-sm text-zinc-200">
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>1 Desafio ativo</strong> por vez (até <strong>10 alunos</strong>)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>Stories 9:16 White-Label</strong> com sua Marca no topo</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span>Acesso rápido por <strong>Código de Convite</strong> & Link</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span>Câmera Nativa Antifraude & GPS</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>Pódio Ao Vivo & Feed Social</strong> da Turma</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span>Recebimento Pix D+0 direto na sua conta</span>
                     </li>
                   </ul>
@@ -1000,12 +1000,12 @@ export default function HomePage() {
                     <span className="text-xs sm:text-sm text-zinc-400 font-mono">/mês</span>
                   </div>
                   {billingCycle === 'yearly' && (
-                    <span className="text-xs font-mono text-emerald-400 block mt-1.5">
+                    <span className="text-xs font-mono text-zinc-300 block mt-1.5">
                       Cobrado anualmente (economia de R$ 120/ano)
                     </span>
                   )}
-                  <div className="text-xs sm:text-sm font-mono text-emerald-400 mt-2.5 flex items-center gap-1.5 font-bold">
-                    <Percent className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div className="text-xs sm:text-sm font-mono text-zinc-200 mt-2.5 flex items-center gap-1.5 font-bold">
+                    <Percent className="w-4 h-4 text-zinc-300 shrink-0" />
                     <span>Taxa ZERO da plataforma: 0% (100% do lucro é seu!)</span>
                   </div>
                   <div className="text-[11px] font-mono text-zinc-400 mt-1">
@@ -1020,27 +1020,27 @@ export default function HomePage() {
                   </div>
                   <ul className="space-y-3 text-xs sm:text-sm text-zinc-200">
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span>Até <strong>5 Desafios simultâneos</strong> (até <strong>100 alunos/cada</strong>)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>Stories 9:16 White-Label</strong> (Foto, Galeria e Sticker PNG)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>IA Nutricional Integrada</strong> em fotos de refeições</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>Squads & Times Cooperativos</strong> liberados</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span><strong>Radar Anti-Churn 48h & Resgate WhatsApp</strong></span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Check className="w-4 h-4 text-zinc-300 shrink-0" />
                       <span>Suporte prioritário direto no WhatsApp</span>
                     </li>
                   </ul>
@@ -1097,17 +1097,17 @@ export default function HomePage() {
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Taxa de Split da Plataforma</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono">15%</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">0% (Taxa ZERO)</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-mono font-bold bg-white/5">0% (Taxa ZERO)</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Compartilhamento Stories 9:16 com Sua Marca (White-Label)</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-amber-400 font-bold bg-white/5">✓ Completo (Foto + Sticker PNG)</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓ Completo (Foto + Sticker PNG)</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Entrada por Código de Convite & Link</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Desafios Ativos Simultâneos</td>
@@ -1121,23 +1121,23 @@ export default function HomePage() {
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Câmera Nativa Antifraude & GPS</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Pódio Ao Vivo & Feed Social da Turma</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Saque Pix D+0 no Asaas</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓ Imediato</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Imediato</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold">✓ Imediato</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓ Imediato</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Tarifa Bancária do Gateway (Asaas)</td>
@@ -1147,12 +1147,12 @@ export default function HomePage() {
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Squads & Times Cooperativos</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Radar Anti-Churn 48h & Resgate WhatsApp</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
+                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Canal de Suporte</td>
@@ -1230,7 +1230,7 @@ export default function HomePage() {
       <section className="py-20 sm:py-24 px-4 sm:px-6 border-t border-white/[0.06] relative">
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6">
-            <Trophy className="w-4 h-4 text-amber-400" />
+            <Trophy className="w-4 h-4 text-zinc-300" />
             <span>Comece Agora em Menos de 3 Minutos</span>
           </div>
 

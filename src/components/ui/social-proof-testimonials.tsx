@@ -28,7 +28,7 @@ export function SocialProofTestimonials() {
       },
       arena: {
         label: 'Na ArenaFitPro',
-        text: 'Cards 9:16 prontos para Stories (Foto, Galeria ou Sticker Transparente) com o SEU Logo e Nome da sua Consultoria em dourado no topo.',
+        text: 'Cards 9:16 prontos para Stories (Foto, Galeria ou Sticker Transparente) com o SEU Logo e Nome da sua Consultoria em destaque no topo.',
       },
     },
     {
@@ -77,7 +77,7 @@ export function SocialProofTestimonials() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-3">
-            <Flame className="w-4 h-4 text-amber-400" />
+            <Flame className="w-4 h-4 text-zinc-300" />
             WHATSAPP CAÓTICO VS. ARENAFITPRO
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4 text-balance">
@@ -122,8 +122,8 @@ export function SocialProofTestimonials() {
 
                   {/* Comparativo: A Solução ArenaFitPro */}
                   <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1.5 shadow-sm">
-                    <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs uppercase tracking-wider font-bold">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <div className="flex items-center gap-2 text-white font-mono text-xs uppercase tracking-wider font-bold">
+                      <Check className="w-3.5 h-3.5 text-white shrink-0" />
                       <span>{item.arena.label}</span>
                     </div>
                     <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed font-normal">

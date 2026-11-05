@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { HeroInteractiveMockup } from '@/components/ui/hero-interactive-mockup';
+import { ViralStoriesShowcase } from '@/components/ui/viral-stories-showcase';
 import { SocialProofTestimonials } from '@/components/ui/social-proof-testimonials';
-import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import { JsonLd } from '@/components/seo/json-ld';
 import { CorporateFooter } from '@/components/layout/corporate-footer';
 import { trackMarketingEvent } from '@/lib/analytics/tracking';
@@ -27,16 +26,13 @@ import {
   Smartphone,
   Percent,
   KeyRound,
-  Crown,
-  Heart,
   Activity,
   Menu,
-  Lock,
+  Share2,
+  Calculator,
 } from 'lucide-react';
 
 export default function HomePage() {
-  const router = useRouter();
-
   // Menu mobile da Landing Page
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -60,62 +56,49 @@ export default function HomePage() {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-
-
   const faqItems = [
     {
       q: 'Eu preciso cadastrar fichas de treino ou cardápios detalhados dentro do app?',
-      a: 'Não! E esse é o maior alívio para o profissional: zero tempo perdido digitando exercícios ou alimentos. Você continua prescrevendo seus treinos ou planos alimentares onde você já tem costume (PDF, planilha, WhatsApp ou seu software habitual). A ArenaFitPro não é um app de prescrição — é a camada de gamificação e auditoria de hábitos que faz o seu aluno realmente CUMPRIR o que você passou, comprovando a execução com Câmera ao vivo e IA para disputar o pódio da turma.',
+      a: 'Não! E esse é o maior alívio para o Personal Trainer e Nutricionista: zero tempo perdido digitando exercícios ou alimentos. Você continua prescrevendo seus treinos ou planos alimentares onde já tem costume (PDF, planilha, WhatsApp ou seu software habitual). A ArenaFitPro não substitui sua prescrição — ela é a camada de gamificação, ranking e auditoria que faz o seu aluno realmente CUMPRIR o que você passou até o último dia.',
     },
     {
-      q: 'Como meus alunos entram no desafio? Eles precisam baixar app pesado ou criar senha?',
-      a: 'Zero complicação! O aluno entra em menos de 10 segundos através do Código de Convite exclusivo do seu desafio (ex: VERAO-2026) ou clicando direto no link do WhatsApp. Ele não precisa baixar nenhum aplicativo de 150MB na App Store: a ArenaFitPro é um PWA ultra-rápido que abre no navegador e pode ser fixado na tela de início com 1 toque.',
+      q: 'Como funciona o Compartilhamento de Ranking 9:16 com a minha marca nos Stories?',
+      a: 'Você cadastra o seu Logo e o Nome da sua Consultoria (ex: Team Silva) no painel. Sempre que um aluno — ou você mesmo — clicar em Compartilhar Ranking, o sistema gera automaticamente um card 1080x1920 (formato Stories 9:16) com a SUA marca em dourado no topo, podendo usar foto da câmera, foto da galeria ou modo Sticker Transparente (PNG sem fundo) para colar direto no Instagram.',
     },
     {
-      q: 'O que acontece se o aluno já participou de desafios anteriores ou trocou de aparelho?',
-      a: 'A nossa tela de acesso possui modo inteligente duplo: "Tenho um Código" para quem está entrando agora e "Já sou da Turma" para alunos que já possuem histórico. Com apenas 1 toque via Google ou e-mail, todo o streak, XP acumulado e medalhas são restaurados instantaneamente.',
-    },
-    {
-      q: 'O ranking, pódio e feed de fotos funcionam no celular do aluno e no meu painel?',
-      a: 'Sim, em sincronia absoluta e tempo real! O treinador conta com a central de Auditoria e o Leaderboard no Dashboard para acompanhar cada aluno e enviar incentivos via WhatsApp. Ao mesmo tempo, no app do aluno existe a aba "Ranking" com o Pódio Oficial (Ouro, Prata e Bronze) e a aba "Feed Social" com todas as fotos auditadas de treinos e refeições aprovadas da turma.',
+      q: 'Como meus alunos entram no desafio? Eles precisam baixar app pesado na loja?',
+      a: 'Zero complicação! O aluno entra em menos de 10 segundos através do Código de Convite exclusivo do seu desafio (ex: VERAO-2026) ou clicando direto no seu link no WhatsApp. Ele não precisa baixar nenhum aplicativo pesado na App Store ou Google Play: a ArenaFitPro abre instantaneamente no navegador do celular e pode ser fixada na tela de início com 1 toque.',
     },
     {
       q: 'Como funciona a Câmera Antifraude e a IA Nutricional nas missões?',
-      a: 'Para garantir 100% de integridade e honestidade, nosso algoritmo bloqueia uploads de fotos antigas da galeria. O aluno fotografa o treino ao vivo com sensor óptico e coordenadas GPS. Em missões de alimentação, nossa IA de Visão Computacional analisa a foto do prato, estimando macronutrientes (proteínas, carboidratos, gorduras) e calorias para validação imediata sem você precisar conferir manualmente.',
+      a: 'Para garantir 100% de justiça na disputa do pódio, nosso sensor bloqueia uploads de fotos antigas da galeria: o aluno comprova o treino ao vivo na câmera. Nas missões de alimentação, nossa IA de Visão Computacional analisa a foto do prato na hora, estimando proteínas, carboidratos, gorduras e calorias automaticamente sem você precisar conferir 300 fotos manualmente no WhatsApp.',
     },
     {
       q: 'Como funciona o recebimento das inscrições dos alunos e o Split Pix D+0?',
-      a: 'A ArenaFitPro é integrada nativamente à infraestrutura bancária do Asaas. Quando seu aluno paga a inscrição por Pix Copia e Cola ou QR Code, o dinheiro é liberado imediatamente (D+0) com divisão automática no nível bancário: a comissão da plataforma (0% no Pro ou 15% no Starter) é separada na hora e o seu lucro líquido cai direto na sua carteira sem travas de 14 ou 30 dias.',
+      a: 'A ArenaFitPro é integrada nativamente à infraestrutura bancária do Asaas. Quando seu aluno paga a inscrição por Pix Copia e Cola ou QR Code, o acesso dele é liberado na hora e o dinheiro vai direto para a sua carteira no mesmo dia (D+0), já com divisão bancária automática (0% de taxa da plataforma no Plano Pro ou 15% no Starter).',
     },
     {
-      q: 'Por que o aluno paga exclusivamente via Pix? Existe risco de estorno (chargeback)?',
-      a: 'O Pix exclusivo é uma decisão de segurança máxima para o Personal Trainer. No cartão de crédito, o aluno pode participar do desafio, consumir seus treinos e depois solicitar estorno no banco (chargeback), deixando o treinador no prejuízo com multas financeiras. No Pix, o pagamento é 100% à vista, irreversível, sem risco de golpe de chargeback, com liberação em 3 segundos e taxa fixa muito mais baixa do que as porcentagens abusivas de maquininhas e operadoras de cartão.',
+      q: 'Por que o aluno paga a inscrição via Pix? Existe risco de estorno (chargeback)?',
+      a: 'O Pix exclusivo nas inscrições dos alunos protege 100% o seu bolso. No cartão de crédito, o aluno pode participar do desafio, consumir seu método e depois pedir estorno no banco (chargeback), deixando você no prejuízo. No Pix, o pagamento é à vista, irreversível, sem risco de calote, liberado em segundos e com tarifa bancária fixa centavos (a partir de R$ 0,99 no Asaas).',
     },
     {
-      q: 'Quais são as taxas bancárias exatas envolvidas no Pix e no Cartão?',
-      a: 'Transparência radical: no Plano Pro, a taxa da ArenaFitPro é ZERO (0%). A única dedução na venda de um desafio é a tarifa bancária de liquidação Pix do Asaas (a partir de R$ 0,99 fixo promocional nos primeiros meses e R$ 1,99 fixo padrão, sem percentuais abusivos e sem taxa de antecipação). Já a assinatura mensal do personal para uso da plataforma (R$ 49,90/mês no Pro) pode ser paga tanto via Pix quanto no Cartão de Crédito com renovação automática.',
+      q: 'Quais são os custos exatos para começar? Preciso cadastrar cartão agora?',
+      a: 'Você começa 100% grátis no plano Starter Coach, sem mensalidade e sem precisar cadastrar cartão de crédito. Nele você já pode lançar seu desafio com até 10 alunos pagando apenas 15% de split quando vender. Quando quiser escalar para até 100 alunos por turma e ter TAXA ZERO (0%) da plataforma, basta fazer o upgrade para o Pro Coach por apenas R$ 49,90/mês.',
     },
     {
-      q: 'O que é a proteção contra bitributação no Split bancário?',
-      a: 'Em plataformas antigas de checkout, todo o faturamento bruto passa pela sua conta pessoal/PJ e você é tributado sobre 100% do valor, pagando imposto até sobre as taxas da plataforma. No split nativo da ArenaFitPro, a transação é dividida na raiz bancária: você emite nota fiscal apenas sobre o seu lucro real e nós emitimos sobre a nossa taxa.',
-    },
-    {
-      q: 'Como funcionam os Squads Cooperativos e o Radar de Frequência?',
-      a: 'São mecânicas comprovadas de retenção: os Squads dividem a turma em equipes colaborativas (pressão social positiva onde ninguém quer decepcionar os parceiros, aumentando a disciplina e conclusão de treinos); e o Radar de Frequência monitora alunos em risco com alertas automáticos para intervenção ágil via WhatsApp.',
-    },
-    {
-      q: 'Preciso pagar algo para criar minha conta e lançar meu primeiro desafio?',
-      a: 'Não! O plano Starter Coach é 100% gratuito de mensalidade. Você pode criar seu cadastro em 1 minuto, configurar seu desafio de até 10 alunos e lançar sem cadastrar cartão de crédito. Você só compartilha a taxa de split de 15% quando seus alunos efetuarem o pagamento.',
+      q: 'Como funcionam os Squads Cooperativos e o Radar Anti-Churn?',
+      a: 'Os Squads dividem sua turma em equipes colaborativas onde a pontuação de todos soma — criando uma pressão social positiva em que ninguém quer deixar o time na mão. Já o Radar Anti-Churn monitora sua turma 24h e avisa quais alunos estão há mais de 48h sem fazer check-in, permitindo que você envie uma mensagem de resgate no WhatsApp com 1 clique.',
     },
   ];
 
-  // Schemas JSON-LD estruturados para SEO e Google Rich Snippets (/schema-markup-generator)
+  // Schemas JSON-LD estruturados para SEO e Google Rich Snippets
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'ArenaFitPro',
     url: 'https://arenafitpro.com.br',
-    description: 'Gamification OS para Desafios Fitness e Gestão de Alunos com Split Pix D+0.',
+    description:
+      'Plataforma de Desafios Fitness Gamificados para Personal Trainers e Nutricionistas com Pódio Ao Vivo, Stories 9:16 White-Label, Câmera IA Antifraude e Pix D+0.',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
@@ -135,7 +118,7 @@ export default function HomePage() {
     operatingSystem: 'Web, iOS, Android (PWA)',
     url: 'https://arenafitpro.com.br',
     description:
-      'Plataforma SaaS multi-tenant de gamificação fitness com câmera antifraude, estimativa de macros por IA e divisão bancária Pix instantânea para personal trainers, nutricionistas e academias.',
+      'Transforme grupos de WhatsApp em desafios fitness gamificados que engajam até o último dia, divulgam sua marca nos Stories 9:16 e faturam no Pix D+0.',
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'BRL',
@@ -144,13 +127,13 @@ export default function HomePage() {
       offerCount: 2,
     },
     featureList: [
+      'Compartilhamento Viral 9:16 nos Stories com Marca do Personal no Topo (White-Label)',
       'Pódio e Ranking de Turmas em Tempo Real',
       'Câmera Antifraude com Bloqueio de Galeria',
       'IA Nutricional com Estimativa de Macronutrientes',
-      'Split Pix D+0 integrado ao Asaas',
+      'Split Pix D+0 integrado ao Asaas (Taxa 0% no Plano Pro)',
       'Squads Cooperativos e Equipes',
-      'Radar de Frequência e Alertas Anti-Churn',
-      'Isolamento Multi-Tenant com Row-Level Security (RLS)',
+      'Radar de Frequência e Alertas Anti-Churn 48h',
     ],
     provider: {
       '@type': 'Organization',
@@ -162,27 +145,27 @@ export default function HomePage() {
   const howToSchema = {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
-    name: 'Como lançar e operar um desafio fitness gamificado na ArenaFitPro',
-    description: 'Passo a passo rápido para conectar alunos por código de convite e auditar hábitos com IA.',
+    name: 'Como lançar e faturar com um desafio fitness gamificado na ArenaFitPro',
+    description: 'Passo a passo em 3 minutos para criar sua turma, engajar alunos e viralizar sua consultoria nos Stories.',
     totalTime: 'PT3M',
     step: [
       {
         '@type': 'HowToStep',
         position: 1,
-        name: 'Crie a turma e gere o Código de Convite',
-        text: 'Configure seu desafio no painel do treinador e compartilhe o código exclusivo (ex: FIT-2026) ou link direto no WhatsApp.',
+        name: 'Crie sua turma em 3 minutos e gere o Código/Link',
+        text: 'Personalize com seu Logo e Nome de Consultoria, defina o valor da inscrição via Pix (ou entrada por código) e compartilhe no WhatsApp.',
       },
       {
         '@type': 'HowToStep',
         position: 2,
-        name: 'Acesso instantâneo via Web App PWA',
-        text: 'Seus alunos entram em segundos pelo navegador do celular Android ou iPhone sem precisar baixar arquivos pesados nas lojas.',
+        name: 'Seus alunos entram em 10 segundos sem baixar app',
+        text: 'Acesso imediato pelo navegador do iPhone ou Android, sem ocupar memória e sem você precisar digitar fichas de treino.',
       },
       {
         '@type': 'HowToStep',
         position: 3,
-        name: 'Check-ins ao vivo, IA Nutricional e Pódio',
-        text: 'Os alunos comprovam treinos e refeições na câmera antifraude, ganham XP automaticamente e disputam o pódio da turma em tempo real.',
+        name: 'Check-ins com IA, Pódio ao Vivo e Stories 9:16 com sua Marca',
+        text: 'Os alunos comprovam treinos e refeições na câmera ao vivo, disputam o pódio e compartilham o Ranking 9:16 nos Stories divulgando sua consultoria.',
       },
     ],
   };
@@ -201,14 +184,13 @@ export default function HomePage() {
   };
 
   const navLinks = [
+    { label: 'App Ao Vivo', href: '#mockup' },
+    { label: 'Stories 9:16', href: '#stories', highlight: true },
+    { label: 'WhatsApp vs. Arena', href: '#provasocial' },
     { label: 'Como Funciona', href: '#fluxo' },
-    { label: 'App & Cockpit', href: '#mockup' },
     { label: 'Tecnologia & IA', href: '#gamificacao' },
-    { label: 'Resultados', href: '#provasocial' },
-    { label: 'Pódio & Feed', href: '#podio' },
-    { label: 'Calculadora', href: '#calculadora' },
-    { label: 'Planos', href: '#planos', highlight: true },
-    { label: 'Beta Pioneers', href: '/beta' },
+    { label: 'Simulador de Lucro', href: '#calculadora' },
+    { label: 'Planos', href: '#planos' },
     { label: 'FAQ', href: '#faq' },
   ];
 
@@ -231,7 +213,7 @@ export default function HomePage() {
       {/* 1. Background 3D com Partículas Monocromáticas */}
       <Monochrome3DBackground />
 
-      {/* 2. Floating Navbar Monocromática (Mobile-First + Desktop com Safe Area iOS) */}
+      {/* 2. Floating Navbar Monocromática Focada em Conversão Direta */}
       <header className="sticky top-0 z-50 px-3 sm:px-6 safe-top-header">
         <div className="max-w-6xl mx-auto mono-glass-pill rounded-full px-4 sm:px-6 h-16 flex items-center justify-between shadow-2xl">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
@@ -247,18 +229,18 @@ export default function HomePage() {
                 ArenaFitPro
               </span>
               <span className="text-[11px] uppercase font-mono tracking-widest text-zinc-400 block mt-1">
-                Gamification OS
+                Desafios Fitness
               </span>
             </div>
           </Link>
 
-          <nav className="hidden xl:flex items-center gap-6 text-xs font-semibold tracking-wider uppercase text-zinc-300">
+          <nav className="hidden xl:flex items-center gap-5 text-xs font-semibold tracking-wider uppercase text-zinc-300">
             {navLinks.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 className={`hover:text-white transition-colors ${
-                  item.highlight ? 'text-white font-extrabold' : ''
+                  item.highlight ? 'text-amber-300 font-extrabold' : ''
                 }`}
               >
                 {item.label}
@@ -267,14 +249,6 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href="/beta"
-              onClick={() => trackMarketingEvent('Lead', { content_name: 'Navbar Beta Fechado' })}
-              className="hidden lg:flex items-center gap-1.5 min-h-[44px] text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/20 bg-white/5 transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-              <span>Beta 2026</span>
-            </Link>
             <Link
               href="/login?role=student"
               onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Navbar Sou Aluno' })}
@@ -320,16 +294,16 @@ export default function HomePage() {
             </div>
             <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
               <Link
-                href="/beta"
+                href="/login?role=student"
                 onClick={() => {
                   setMobileNavOpen(false);
-                  trackMarketingEvent('Lead', { content_name: 'Mobile Nav Beta Pioneers' });
+                  trackMarketingEvent('ViewContent', { content_name: 'Mobile Nav Sou Aluno' });
                 }}
                 className="flex-1"
               >
                 <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer border-white/20 text-white">
-                  <Sparkles className="w-4 h-4 text-white" />
-                  <span>Programa Beta Pioneers</span>
+                  <Smartphone className="w-4 h-4 text-zinc-300" />
+                  <span>Sou Aluno (Tenho Código)</span>
                 </button>
               </Link>
               <Link
@@ -341,7 +315,8 @@ export default function HomePage() {
                 className="flex-1"
               >
                 <button className="mono-button-primary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
-                  <span>Criar Conta Grátis</span>
+                  <span>Criar Conta Grátis Agora</span>
+                  <ArrowRight className="w-4 h-4 text-black" />
                 </button>
               </Link>
             </div>
@@ -349,8 +324,8 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* 3. Hero Section de Alta Conversão com Duplo Foco e Mockup Interativo */}
-      <main id="main-content" className="relative pt-10 sm:pt-16 md:pt-20 pb-14 sm:pb-20 px-4 sm:px-6 perspective-container">
+      {/* 3. Hero Section Orientada a Resultado, Retenção, Stories White-Label e Lucro */}
+      <main id="main-content" className="relative pt-10 sm:pt-14 md:pt-18 pb-12 sm:pb-16 px-4 sm:px-6 perspective-container">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center relative z-10">
           
           {/* Estrelas Cromadas 3D Flutuantes */}
@@ -365,67 +340,73 @@ export default function HomePage() {
           </div>
 
           <div className="max-w-4xl w-full">
-            <Link
-              href="/beta"
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/[0.05] hover:bg-white/10 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6 shadow-lg transition-all group cursor-pointer"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-white shrink-0 group-hover:rotate-12 transition-transform" />
-              <span>Programa Beta 2026 • Candidaturas de Pioneiros Abertas</span>
-              <ArrowRight className="w-3.5 h-3.5 text-zinc-400 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            {/* Kicker Pill Focado no Público-Alvo */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/[0.05] text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6 shadow-lg">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Para Personal Trainers, Nutricionistas e Consultorias • Comece Grátis</span>
+            </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.08] mb-6 text-balance">
-              O Sistema Operacional para{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500">
-                Desafios Fitness Gamificados
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.06] mb-6 text-balance">
+              Transforme grupos mortos de WhatsApp em{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400">
+                Desafios que Engajam, Viralizam sua Marca e Faturam no Pix D+0
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto leading-relaxed mb-8 font-normal text-pretty">
-              Você já tem o seu método de treino ou dieta. A ArenaFitPro é a{' '}
-              <strong className="text-white">camada de gamificação e auditoria</strong> que faz seus alunos{' '}
-              <strong className="text-white">cumprirem o planejado até o último dia</strong>. Câmera Antifraude ao vivo, IA Nutricional e Pódio em tempo real — sem perder horas no WhatsApp.
+            <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed mb-8 font-normal text-pretty">
+              Continue prescrevendo seus treinos e dietas como já faz hoje. A ArenaFitPro entrega o{' '}
+              <strong className="text-white">Pódio ao Vivo</strong>,{' '}
+              <strong className="text-white">Câmera Antifraude com IA</strong> e{' '}
+              <strong className="text-amber-300">Cards 9:16 com a SUA marca para os Stories</strong> — para seus alunos cumprirem o plano até o fim e você faturar de{' '}
+              <strong className="text-emerald-400">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
             </p>
 
-            {/* CTAs Principais com Touch Targets Confortáveis (>= 52px) */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-8">
+            {/* Hierarquia Clara de CTAs (1 Primário Dominante + 1 Âncora de Lucro + Acesso Aluno) */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-4">
               <Link
                 href="/login?role=professional&mode=signup"
                 onClick={() => trackMarketingEvent('Lead', { content_name: 'Hero Criar Conta Grátis' })}
                 className="w-full sm:w-auto"
               >
-                <button className="mono-button-primary w-full sm:w-auto min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 cursor-pointer">
-                  <span>Criar Conta Grátis</span>
+                <button className="mono-button-primary w-full sm:w-auto min-h-[54px] px-8 py-4 text-sm sm:text-base font-black flex items-center justify-center gap-2.5 cursor-pointer shadow-[0_0_35px_rgba(255,255,255,0.25)]">
+                  <span>Criar Minha Conta Grátis</span>
                   <ArrowRight className="w-4 h-4 text-black shrink-0" />
                 </button>
               </Link>
 
-              <Link
-                href="/beta"
-                onClick={() => trackMarketingEvent('Lead', { content_name: 'Hero Entrar no Beta' })}
+              <a
+                href="#calculadora"
+                onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Simular Lucro' })}
                 className="w-full sm:w-auto"
               >
-                <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer border border-white/20 bg-white/[0.08] hover:bg-white/15 text-white">
-                  <Sparkles className="w-4 h-4 text-white shrink-0" />
-                  <span>Acesso Beta Pioneiros</span>
+                <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-7 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer border border-white/20 bg-white/[0.06] hover:bg-white/15 text-white">
+                  <Calculator className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Simular Meu Lucro</span>
                 </button>
-              </Link>
+              </a>
 
               <Link
                 href="/login?role=student"
                 onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Sou Aluno' })}
                 className="w-full sm:w-auto"
               >
-                <button className="mono-button-secondary w-full sm:w-auto min-h-[52px] px-7 py-3.5 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer text-zinc-300 hover:text-white">
+                <button className="mono-button-secondary w-full sm:w-auto min-h-[54px] px-6 py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer text-zinc-300 hover:text-white">
                   <Smartphone className="w-4 h-4 text-zinc-300 shrink-0" />
                   <span>Sou Aluno</span>
                 </button>
               </Link>
             </div>
 
+            {/* Micro-copy de Redução de Atrito */}
+            <p className="text-xs font-mono text-zinc-400 mb-7">
+              ✓ Sem cartão de crédito • ✓ Lançamento da sua 1ª turma em 3 minutos • ✓ Taxa 0% no Plano Pro
+            </p>
 
-            {/* Badges de Confiança */}
+            {/* Badges de Diferenciais */}
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-zinc-200 font-mono">
+              <span className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-amber-400 shrink-0" /> Sua Marca nos Stories 9:16
+              </span>
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Zero digitação de fichas
               </span>
@@ -435,13 +416,10 @@ export default function HomePage() {
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Câmera Antifraude + IA Nutricional
               </span>
-              <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Pódio & Feed da Turma ao Vivo
-              </span>
             </div>
           </div>
 
-          {/* 3.1 Showcase Interativo Duplo (Mobile PWA + Web Cockpit) */}
+          {/* 3.1 Showcase Interativo Duplo (Mobile PWA + Web Cockpit com 4 Abas) */}
           <div id="mockup" className="w-full pt-6">
             <HeroInteractiveMockup />
           </div>
@@ -449,12 +427,12 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* 4. Metrics & Social Proof Bar (Grid 2x2 Simétrico no Mobile e 4 Colunas no Desktop) */}
+      {/* 4. Metrics & Impact Bar */}
       <section className="px-4 sm:px-6 py-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-white mb-1.5">Alta</div>
-            <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Conclusão de Desafios</div>
+            <div className="text-3xl sm:text-4xl font-black text-amber-400 mb-1.5">9:16</div>
+            <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Stories com a Sua Marca</div>
           </div>
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
             <div className="text-3xl sm:text-4xl font-black text-emerald-400 mb-1.5">D+0</div>
@@ -462,7 +440,7 @@ export default function HomePage() {
           </div>
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
             <div className="text-3xl sm:text-4xl font-black text-white mb-1.5">0 min</div>
-            <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Digitando Fichas ou Cardápios</div>
+            <div className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Digitando Fichas ou Dietas</div>
           </div>
           <div className="text-center p-5 sm:p-6 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl shadow-xl">
             <div className="text-3xl sm:text-4xl font-black text-white mb-1.5">0%</div>
@@ -471,18 +449,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. A Jornada do Aluno sem Fricção (Código de Convite + WhatsApp) */}
+      {/* 5. Vitrine Interativa: Compartilhamento Viral 9:16 White-Label nos Stories */}
+      <ViralStoriesShowcase />
+
+      {/* 6. Comparativo Direto: O Caos do WhatsApp vs. A Máquina ArenaFitPro */}
+      <div id="provasocial">
+        <SocialProofTestimonials />
+      </div>
+
+      {/* 7. Como Funciona em 3 Passos Simples (Sem Fricção) */}
       <section id="fluxo" className="py-20 sm:py-24 px-4 sm:px-6 relative border-t border-white/[0.06]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2 block">
-              EXPERIÊNCIA DO ALUNO
+              PASSO A PASSO EM 3 MINUTOS
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Como funciona o acesso ultra-rápido por Código
+              Como você lança seu desafio sem mudar sua rotina
             </h2>
             <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              Diga adeus a downloads pesados na App Store e formulários intermináveis. O aluno entra na turma em 3 passos simples.
+              Sem downloads pesados de 150MB e sem precisar redigitar treinos. Veja como sua turma entra em ação:
             </p>
           </div>
 
@@ -495,16 +481,16 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-xl font-black text-white mb-3 flex items-center gap-2.5">
                   <KeyRound className="w-5 h-5 text-zinc-300 shrink-0" />
-                  <span>Seu Método + Código</span>
+                  <span>Seu Método + Seu Link</span>
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Você passa o treino ou plano alimentar como já faz hoje (PDF, WhatsApp ou planilha). A ArenaFitPro gera o código exclusivo (ex:{' '}
-                  <code className="text-white bg-white/10 px-2 py-0.5 rounded font-mono text-xs sm:text-sm">FIT-2026</code>) para o aluno entrar na arena e pontuar.
+                  Você entrega o treino ou dieta como já faz hoje (PDF, WhatsApp ou app atual). Na ArenaFitPro, você cria o desafio em 3 minutos e envia o link ou código (ex:{' '}
+                  <code className="text-white bg-white/10 px-2 py-0.5 rounded font-mono text-xs sm:text-sm">SHAPE-30D</code>) para a turma.
                 </p>
               </div>
               <div className="mt-6 p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs sm:text-sm font-mono text-zinc-200 flex items-center justify-between">
-                <span>Código: FIT-2026</span>
-                <span className="text-emerald-400 font-bold">✓ Verificado</span>
+                <span>Código: SHAPE-30D</span>
+                <span className="text-emerald-400 font-bold">✓ Turma Ativa</span>
               </div>
             </SpotlightCard3D>
 
@@ -516,15 +502,15 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-xl font-black text-white mb-3 flex items-center gap-2.5">
                   <Smartphone className="w-5 h-5 text-zinc-300 shrink-0" />
-                  <span>Acesso Instantâneo PWA</span>
+                  <span>Entrada em 10s (Sem Loja)</span>
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Sem download de 150MB. O web app abre instantaneamente em qualquer smartphone Android, iPhone ou computador com experiência nativa fluida e veloz.
+                  O aluno entra com 1 toque pelo Google ou e-mail direto no celular (iPhone ou Android), sem precisar baixar nada na App Store. Se o desafio for pago, o Pix D+0 libera a vaga na hora.
                 </p>
               </div>
               <div className="mt-6 p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs sm:text-sm font-mono text-zinc-200 flex items-center justify-between">
-                <span>Modo de Acesso</span>
-                <span className="text-white font-bold">1 Toque no Google</span>
+                <span>Acesso Mobile PWA</span>
+                <span className="text-white font-bold">1 Toque no Celular</span>
               </div>
             </SpotlightCard3D>
 
@@ -535,17 +521,17 @@ export default function HomePage() {
                   03
                 </div>
                 <h3 className="text-xl font-black text-white mb-3 flex items-center gap-2.5">
-                  <Flame className="w-5 h-5 text-zinc-200 shrink-0" />
-                  <span>Streaks, Pódio e Feed</span>
+                  <Share2 className="w-5 h-5 text-amber-400 shrink-0" />
+                  <span>Pódio, IA e Stories 9:16</span>
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  O aluno cumpre as missões diárias com a Câmera Antifraude, ganha XP, disputa o Pódio ao vivo e compartilha as conquistas com os colegas no Feed Social.
+                  Seus alunos batem fotos ao vivo, ganham XP, disputam o Pódio e compartilham o Ranking 9:16 nos Stories com a SUA marca no topo — trazendo novos clientes enquanto você descansa.
                 </p>
               </div>
               <div className="mt-6 p-3.5 rounded-xl bg-black/60 border border-white/10 text-xs sm:text-sm font-mono text-zinc-200 flex items-center justify-between">
-                <span>Engajamento Diário</span>
-                <span className="text-white font-bold flex items-center gap-1">
-                  <Flame className="w-4 h-4 text-zinc-300" /> Streak Ativo
+                <span>Divulgação Orgânica</span>
+                <span className="text-amber-400 font-bold flex items-center gap-1">
+                  <Flame className="w-4 h-4 text-amber-400" /> Viralizando
                 </span>
               </div>
             </SpotlightCard3D>
@@ -553,23 +539,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5.1 Seção de Prova Social e Resultados Reais */}
-      <div id="provasocial">
-        <SocialProofTestimonials />
-      </div>
-
-      {/* 6. Bento Grid de Features & Moat Tecnológico */}
+      {/* 8. Bento Grid de Retenção, IA & Fintech */}
       <section id="gamificacao" className="py-20 sm:py-24 px-4 sm:px-6 relative border-t border-white/[0.06]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2 block">
-              INFRAESTRUTURA SAAS MULTI-TENANT
+              TECNOLOGIA DE RETENÇÃO & ESCALA
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              A ciência de manter alunos motivados até o último dia
+              Tudo o que mantém seus alunos viciados em cumprir o plano
             </h2>
             <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              Grupos de WhatsApp perdem o engajamento na primeira semana. A ArenaFitPro combina psicologia comportamental, cooperação em times, IA e fintech nativa com isolamento de dados por treinador.
+              Combinamos psicologia de jogos, visão computacional por IA e pagamentos instantâneos para você escalar de 10 para 500 alunos sem aumentar seu trabalho.
             </p>
           </div>
 
@@ -588,18 +569,18 @@ export default function HomePage() {
                 </div>
 
                 <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-6 mb-3">
-                  Câmera ao Vivo Antifraude & Triagem por IA
+                  Câmera ao Vivo Antifraude & Leitura de Pratos por IA
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Chega de passar o dia abrindo 400 fotos de pratos e academias no WhatsApp. O aluno comprova a execução ao vivo na câmera (sem fotos da galeria), e a{' '}
-                  <strong className="text-white">IA Nutricional</strong> calcula automaticamente proteínas, carboidratos e calorias liberando os pontos na hora.
+                  Chega de passar a noite abrindo 300 fotos de pratos e academias no WhatsApp. O aluno comprova a missão ao vivo na câmera (sem subir fotos antigas da galeria), e a{' '}
+                  <strong className="text-white">IA Nutricional</strong> estima proteínas, carboidratos e calorias liberando os pontos na hora.
                 </p>
               </div>
 
               <div className="p-4 rounded-2xl bg-black/60 border border-white/10 backdrop-blur-xl mt-6 flex flex-wrap items-center justify-between gap-3">
                 <div className="space-y-0.5">
                   <div className="text-xs text-zinc-400 font-medium">Validação de Integridade</div>
-                  <div className="text-xs sm:text-sm text-white font-semibold">Sensor Óptico + GPS + IA de Calorias</div>
+                  <div className="text-xs sm:text-sm text-white font-semibold">Bloqueio de Galeria + GPS + IA de Macros</div>
                 </div>
                 <div className="px-3.5 py-1.5 rounded-xl border border-white/20 bg-white/10 flex items-center justify-center text-xs font-bold text-white">
                   100% Auditado
@@ -618,10 +599,10 @@ export default function HomePage() {
                 </div>
 
                 <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-6 mb-3">
-                  Checkout Pix com Split Automático
+                  Checkout Pix com Lucro Direto na Conta
                 </h3>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Sem intermediários e sem riscos de estorno. O aluno paga via Pix Copia e Cola ou QR Code, e a sua comissão cai na hora na sua subconta. Zero bitributação, zero chargebacks de cartão e saque imediato D+0.
+                  Sem cobrar comprovante no privado e sem risco de estorno de cartão. O aluno paga via Pix Copia e Cola ou QR Code, entra na turma automaticamente e o dinheiro cai na sua conta em D+0.
                 </p>
               </div>
 
@@ -647,18 +628,20 @@ export default function HomePage() {
             <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between">
               <div>
                 <div className="text-xs sm:text-sm text-zinc-300 font-semibold tracking-wide mb-2 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-zinc-300" /> Squads Cooperativos
+                  <Users className="w-4 h-4 text-zinc-300" /> Squads Cooperativos & Gamificação
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black text-white mb-2.5">Esquadrões & Times</h4>
+                <h4 className="text-xl sm:text-2xl font-black text-white mb-2.5">
+                  Equipes, Escudo de Streak e Mystery Box
+                </h4>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Os alunos se unem em equipes colaborativas. A pontuação é somada, gerando um ambiente de companheirismo e responsabilidade coletiva onde ninguém quer deixar o time na mão.
+                  Una alunos em Squads onde a pontuação de todos soma, ative recompensas surpresa (Mystery Box) e proteja ofensivas com Escudos de Congelamento — criando um senso de comunidade imbatível.
                 </p>
               </div>
               <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs sm:text-sm mt-6">
                 <span className="text-zinc-200 font-medium flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-zinc-200" /> Squad Guerreiros
+                  <Trophy className="w-4 h-4 text-amber-400" /> Squad Guerreiros
                 </span>
-                <span className="text-white font-bold font-mono">1º Lugar (2.450 pts)</span>
+                <span className="text-white font-bold font-mono">1º Lugar (2.450 XP)</span>
               </div>
             </SpotlightCard3D>
 
@@ -666,16 +649,18 @@ export default function HomePage() {
             <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between">
               <div>
                 <div className="text-xs sm:text-sm text-zinc-300 font-semibold tracking-wide mb-2 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-zinc-300" /> Prevenção Ativa de Abandono
+                  <Activity className="w-4 h-4 text-emerald-400" /> Prevenção Ativa de Abandono
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black text-white mb-2.5">Radar Anti-Churn & WhatsApp</h4>
+                <h4 className="text-xl sm:text-2xl font-black text-white mb-2.5">
+                  Radar Anti-Churn 48h & Avisos 24h
+                </h4>
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
-                  Monitoramento inteligente que identifica alunos inativos há mais de 48 horas. Você recebe alertas em tempo real e dispara mensagens de resgate no WhatsApp com 1 toque.
+                  O sistema detecta sozinho alunos inativos há mais de 48 horas para você disparar uma mensagem de resgate no WhatsApp com 1 toque, além de mural de avisos com contagem regressiva no topo do app.
                 </p>
               </div>
               <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs sm:text-sm mt-6">
                 <span className="text-zinc-200 font-medium flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-zinc-200" /> Alerta de Risco
+                  <Zap className="w-4 h-4 text-emerald-400" /> Alerta de Inatividade
                 </span>
                 <span className="text-emerald-400 font-bold font-mono">Resgate em 1 Toque</span>
               </div>
@@ -684,166 +669,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. Pódio em Tempo Real com Medalhas Vetoriais Metálicas */}
-      <section id="podio" className="py-20 sm:py-24 px-4 sm:px-6 relative border-t border-white/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2 block">
-              COMPETIÇÃO & COMUNIDADE
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Pódio ao Vivo e Feed Social da Turma
-            </h2>
-            <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              O que faz as pessoas se dedicarem de verdade é ver o progresso compartilhado e a disputa saudável pela liderança.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Visual do Pódio 3D com Medalhas Vetoriais Metálicas */}
-            <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl">
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-white/[0.08] mb-8">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-white shrink-0" />
-                  <span className="text-sm sm:text-base font-bold text-white uppercase tracking-wider font-mono">
-                    Leaderboard Oficial • Desafio Ativo
-                  </span>
-                </div>
-                <span className="text-xs font-mono text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-                  Atualizado em Tempo Real
-                </span>
-              </div>
-
-              {/* Podium Visual (1st, 2nd, 3rd) */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-5 items-end pt-4 pb-6">
-                {/* 2º Lugar - Prata */}
-                <div className="flex flex-col items-center">
-                  <div className="relative mb-2">
-                    <SilverMedalBadge size={46} className="shadow-lg" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-bold text-white text-center truncate max-w-[95px]">Mariana S.</span>
-                  <span className="text-xs font-mono text-zinc-300">1.820 pts</span>
-                  <div className="w-full h-24 bg-gradient-to-t from-zinc-900 to-zinc-800/80 rounded-t-2xl border-t border-x border-white/15 mt-3 flex items-center justify-center">
-                    <span className="font-mono font-black text-zinc-300 text-lg sm:text-xl">2º</span>
-                  </div>
-                </div>
-
-                {/* 1º Lugar - Ouro */}
-                <div className="flex flex-col items-center">
-                  <div className="relative mb-2">
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <Crown className="w-5 h-5 text-white animate-pulse" />
-                    </div>
-                    <GoldMedalBadge size={54} className="drop-shadow-[0_0_20px_rgba(255,255,255,0.25)]" />
-                  </div>
-                  <span className="text-sm sm:text-base font-black text-white text-center truncate max-w-[110px]">Carlos E.</span>
-                  <span className="text-xs font-mono text-zinc-200 font-bold">2.140 pts</span>
-                  <div className="w-full h-32 bg-gradient-to-t from-zinc-800 to-zinc-700/80 rounded-t-2xl border-t border-x border-white/30 mt-3 flex items-center justify-center">
-                    <span className="font-mono font-black text-white text-2xl sm:text-3xl">1º</span>
-                  </div>
-                </div>
-
-                {/* 3º Lugar - Bronze */}
-                <div className="flex flex-col items-center">
-                  <div className="relative mb-2">
-                    <BronzeMedalBadge size={42} className="shadow-lg" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-bold text-white text-center truncate max-w-[95px]">Rodrigo F.</span>
-                  <span className="text-xs font-mono text-zinc-300">1.690 pts</span>
-                  <div className="w-full h-20 bg-gradient-to-t from-zinc-900 to-zinc-800/60 rounded-t-2xl border-t border-x border-white/10 mt-3 flex items-center justify-center">
-                    <span className="font-mono font-black text-zinc-400 text-base sm:text-lg">3º</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
-                <span className="text-zinc-200">Incentivo com 1 clique para alunos em perigo:</span>
-                <span className="text-white font-mono font-bold flex items-center gap-1">
-                  Disparar WhatsApp →
-                </span>
-              </div>
-            </div>
-
-            {/* Visual do Feed Social */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="p-6 sm:p-7 rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl">
-                <div className="flex items-center justify-between mb-4 pb-3.5 border-b border-white/[0.08]">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-white/80 fill-white/80 shrink-0" />
-                    <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider font-mono">
-                      Feed da Turma
-                    </span>
-                  </div>
-                  <span className="text-xs font-mono text-zinc-300 bg-white/5 px-2.5 py-1 rounded-full">Fotos Auditadas</span>
-                </div>
-
-                {/* Post Simulado 1 */}
-                <div className="p-4 rounded-2xl bg-black/60 border border-white/[0.08] mb-3.5">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold">
-                        C
-                      </div>
-                      <div>
-                        <div className="text-xs sm:text-sm font-bold text-white">Carlos E.</div>
-                        <div className="text-xs text-zinc-400">Missão: Treino Superior 45min</div>
-                      </div>
-                    </div>
-                    <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full font-bold shrink-0">
-                      Aprovado ✓
-                    </span>
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-200 mt-1.5 flex items-center justify-between">
-                    <span>Streak de 14 dias atingido!</span>
-                    <span className="text-zinc-400 text-xs">18 reações</span>
-                  </div>
-                </div>
-
-                {/* Post Simulado 2 - Refeição com IA */}
-                <div className="p-4 rounded-2xl bg-black/60 border border-white/[0.08]">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold">
-                        M
-                      </div>
-                      <div>
-                        <div className="text-xs sm:text-sm font-bold text-white">Mariana S.</div>
-                        <div className="text-xs text-zinc-400">Missão: Almoço Saudável</div>
-                      </div>
-                    </div>
-                    <span className="text-xs font-mono text-zinc-200 bg-white/10 px-2.5 py-0.5 rounded-full shrink-0">
-                      IA: 480 kcal
-                    </span>
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-200 mt-1.5 flex items-center justify-between">
-                    <span>35g Proteína detectada</span>
-                    <span className="text-zinc-400 text-xs">12 reações</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3.5 border-t border-white/[0.08] text-center">
-                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                    Disponível no painel web do treinador para aprovação rápida e no celular do aluno para máxima interação.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Calculadora Interativa de Faturamento & Economia */}
+      {/* 9. Calculadora Interativa de Faturamento & Economia */}
       <section id="calculadora" className="py-20 sm:py-24 px-4 sm:px-6 border-t border-white/[0.06] relative">
         <div className="max-w-5xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2 block">
+            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 mb-2 block font-bold">
               SIMULADOR DE LUCRO REAL
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Veja quanto você lucra em cada desafio
+              Veja quanto dinheiro você coloca no bolso em cada desafio
             </h2>
             <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              Arraste os seletores abaixo para simular a quantidade de alunos e o valor da inscrição do seu desafio:
+              Arraste os seletores abaixo para simular a quantidade de alunos e o valor da inscrição da sua próxima turma:
             </p>
           </div>
 
@@ -854,7 +691,7 @@ export default function HomePage() {
               <div className="lg:col-span-7 space-y-6">
                 <div>
                   <div className="flex justify-between items-center gap-2 mb-2.5">
-                    <label className="text-sm sm:text-base font-semibold text-zinc-200">
+                    <label htmlFor="students-range" className="text-sm sm:text-base font-semibold text-zinc-200">
                       Quantidade de Alunos no Desafio
                     </label>
                     <span className="text-base sm:text-lg font-mono font-bold text-white bg-white/10 px-3.5 py-1 rounded-xl shrink-0">
@@ -862,6 +699,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <input
+                    id="students-range"
                     type="range"
                     min="10"
                     max="150"
@@ -879,7 +717,7 @@ export default function HomePage() {
 
                 <div>
                   <div className="flex justify-between items-center gap-2 mb-2.5">
-                    <label className="text-sm sm:text-base font-semibold text-zinc-200">
+                    <label htmlFor="ticket-range" className="text-sm sm:text-base font-semibold text-zinc-200">
                       Valor da Inscrição por Aluno
                     </label>
                     <span className="text-base sm:text-lg font-mono font-bold text-white bg-white/10 px-3.5 py-1 rounded-xl shrink-0">
@@ -887,6 +725,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <input
+                    id="ticket-range"
                     type="range"
                     min="47"
                     max="297"
@@ -904,11 +743,11 @@ export default function HomePage() {
 
                 <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-zinc-300 leading-relaxed">
                   <p>
-                    <strong className="text-white">Dica Pro:</strong> No plano Pro Coach, sua taxa da plataforma cai de 15% para <strong className="text-emerald-400">ZERO (0%)</strong>. Com {studentsCount} alunos a R$ {ticketPrice}, você ganha{' '}
+                    <strong className="text-white">Matemática Simples:</strong> No plano Pro Coach, a taxa da plataforma cai de 15% para <strong className="text-emerald-400">ZERO (0%)</strong>. Com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
                     <strong className="text-emerald-400">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>{' '}
-                    a mais no seu bolso — o plano de R$ 49,90 se paga sozinho no primeiro desafio!
+                    — ou seja, a assinatura de R$ 49,90 se paga sozinha já no seu 4º aluno!
                   </p>
                 </div>
               </div>
@@ -917,7 +756,7 @@ export default function HomePage() {
               <div className="lg:col-span-5 p-6 rounded-2xl bg-black border border-white/10 space-y-5">
                 <div className="text-center pb-4 border-b border-white/[0.08]">
                   <span className="text-xs font-mono uppercase text-zinc-400 block mb-1">
-                    Faturamento Bruto Total
+                    Faturamento Bruto da Turma
                   </span>
                   <div className="text-3xl sm:text-4xl font-black text-white">
                     R$ {grossRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
@@ -939,7 +778,7 @@ export default function HomePage() {
                     <div>
                       <span className="text-white font-sans text-xs sm:text-sm font-bold flex flex-wrap items-center gap-1.5">
                         Plano Pro (Taxa ZERO • 0%)
-                        <span className="text-[11px] bg-white text-black px-2 py-0.5 rounded font-bold">RECOMENDADO</span>
+                        <span className="text-[11px] bg-white text-black px-2 py-0.5 rounded font-bold">100% SEU</span>
                       </span>
                       <span className="text-xs text-zinc-300">R$ 49,90/mês</span>
                     </div>
@@ -949,10 +788,14 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <Link href="/login" className="block w-full">
+                <Link
+                  href="/login?role=professional&mode=signup"
+                  onClick={() => trackMarketingEvent('Lead', { content_name: 'Calculadora Começar Desafio Agora' })}
+                  className="block w-full"
+                >
                   <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer">
-                    <span>Começar Meu Desafio Agora</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>Criar Conta Grátis e Lançar Turma</span>
+                    <ArrowRight className="w-4 h-4 text-black" />
                   </button>
                 </Link>
               </div>
@@ -976,18 +819,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. Pricing Section com os 2 Planos Detalhados */}
+      {/* 10. Pricing Section com os 2 Planos Detalhados */}
       <section id="planos" className="py-20 sm:py-24 px-4 sm:px-6 border-t border-white/[0.06] relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 mb-2 block">
-              TABELA DE INVESTIMENTO TRANSPARENTE
+              INVESTIMENTO TRANSPARENTE
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Escolha o plano ideal para a sua escala
+              Comece grátis hoje e escale com Taxa ZERO
             </h2>
             <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              Comece 100% grátis sem cartão de crédito e faça upgrade conforme sua comunidade crescer.
+              Crie sua conta sem cartão de crédito no Starter ou ative o Pro Coach para ficar com 100% do lucro das inscrições.
             </p>
 
             {/* Toggle Mensal / Anual */}
@@ -1028,7 +871,7 @@ export default function HomePage() {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
-                    Iniciante
+                    Para Começar Agora
                   </span>
                   <span className="text-xs font-mono px-3 py-1 rounded-full bg-white/10 text-white font-bold">
                     GRÁTIS
@@ -1037,7 +880,7 @@ export default function HomePage() {
 
                 <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">Starter Coach</h3>
                 <p className="text-sm text-zinc-300 mb-6 leading-relaxed">
-                  Perfeito para personais lançando seu primeiro desafio online com zero risco financeiro.
+                  Perfeito para validar seu primeiro desafio online com zero custo fixo e sem cartão de crédito.
                 </p>
 
                 <div className="mb-6 pb-6 border-b border-white/[0.08]">
@@ -1047,7 +890,7 @@ export default function HomePage() {
                   </div>
                   <div className="text-xs sm:text-sm font-mono text-zinc-300 mt-2.5 flex items-center gap-1.5">
                     <Percent className="w-4 h-4 text-zinc-300 shrink-0" />
-                    <span>Taxa de split: <strong className="text-white">15% sobre inscrições</strong></span>
+                    <span>Taxa de split: <strong className="text-white">15% apenas quando vender</strong></span>
                   </div>
                   <div className="text-[11px] font-mono text-zinc-400 mt-1">
                     + tarifa bancária Asaas por Pix recebido D+0
@@ -1062,15 +905,15 @@ export default function HomePage() {
                   <ul className="space-y-3 text-xs sm:text-sm text-zinc-200">
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>1 Desafio ativo</strong> por vez</span>
+                      <span><strong>1 Desafio ativo</strong> por vez (até <strong>10 alunos</strong>)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Até <strong>10 alunos</strong> no desafio</span>
+                      <span><strong>Stories 9:16 White-Label</strong> com sua Marca no topo</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Acesso por <strong>Código de Convite</strong> & Link</span>
+                      <span>Acesso rápido por <strong>Código de Convite</strong> & Link</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -1078,15 +921,11 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>Pódio & Leaderboard</strong> da Turma</span>
+                      <span><strong>Pódio Ao Vivo & Feed Social</strong> da Turma</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>Feed Social</strong> com fotos auditadas</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Saque Pix D+0 direto na sua conta</span>
+                      <span>Recebimento Pix D+0 direto na sua conta</span>
                     </li>
                   </ul>
                 </div>
@@ -1094,24 +933,24 @@ export default function HomePage() {
                 {/* Lista O que NÃO vem */}
                 <div className="space-y-2.5 mb-8 pt-4 border-t border-white/[0.08]">
                   <div className="text-xs font-mono uppercase text-zinc-400">
-                    Não inclui:
+                    Exclusivo do Pro Coach:
                   </div>
                   <ul className="space-y-2 text-xs sm:text-sm text-zinc-400">
                     <li className="flex items-center gap-2.5">
-                      <X className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span>Squads & Times Cooperativos</span>
+                      <X className="w-4 h-4 text-zinc-400 shrink-0" />
+                      <span>Taxa ZERO (0%) sobre as inscrições</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <X className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span>IA Nutricional Avançada</span>
+                      <X className="w-4 h-4 text-zinc-400 shrink-0" />
+                      <span>IA Nutricional (Cálculo de Calorias e Macros)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <X className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span>Radar Anti-Churn & WhatsApp</span>
+                      <X className="w-4 h-4 text-zinc-400 shrink-0" />
+                      <span>Squads Cooperativos & Radar Anti-Churn 48h</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <X className="w-4 h-4 text-zinc-500 shrink-0" />
-                      <span>Múltiplos desafios simultâneos</span>
+                      <X className="w-4 h-4 text-zinc-400 shrink-0" />
+                      <span>Até 5 desafios e 100 alunos por turma</span>
                     </li>
                   </ul>
                 </div>
@@ -1124,7 +963,7 @@ export default function HomePage() {
               >
                 <button className="mono-button-secondary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4 text-zinc-300" />
-                  <span>Começar Grátis no Starter</span>
+                  <span>Criar Conta Grátis no Starter</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
@@ -1135,13 +974,13 @@ export default function HomePage() {
               {/* Badge Flutuante no Topo */}
               <div className="inline-flex self-start mb-3 bg-white text-black px-3.5 py-1 rounded-full text-xs font-mono font-black uppercase tracking-wider shadow-xl items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-black shrink-0" />
-                <span>MAIS ESCOLHIDO • 94.8% RETENÇÃO</span>
+                <span>MAIS LUCRO • TAXA 0% NA PLATAFORMA</span>
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-xs font-mono uppercase tracking-wider text-zinc-300">
-                    Profissional
+                    Escala Profissional
                   </span>
                   <span className="text-xs font-mono px-3 py-1 rounded-full bg-white text-black font-extrabold">
                     PRO
@@ -1150,7 +989,7 @@ export default function HomePage() {
 
                 <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">Pro Coach</h3>
                 <p className="text-sm text-zinc-300 mb-6 leading-relaxed">
-                  Para personais e consultorias que buscam escala, gamificação avançada e taxa reduzida.
+                  Para personais e nutricionistas que querem ficar com 100% do lucro das inscrições e liberar a IA Nutricional.
                 </p>
 
                 <div className="mb-6 pb-6 border-b border-white/[0.08]">
@@ -1182,11 +1021,11 @@ export default function HomePage() {
                   <ul className="space-y-3 text-xs sm:text-sm text-zinc-200">
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Até <strong>5 Desafios simultâneos</strong></span>
+                      <span>Até <strong>5 Desafios simultâneos</strong> (até <strong>100 alunos/cada</strong>)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Até <strong>100 alunos por desafio</strong> (total 500)</span>
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span><strong>Stories 9:16 White-Label</strong> (Foto, Galeria e Sticker PNG)</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -1198,11 +1037,11 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span><strong>Radar Anti-Churn & Resgate WhatsApp</strong></span>
+                      <span><strong>Radar Anti-Churn 48h & Resgate WhatsApp</strong></span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Suporte prioritário via WhatsApp</span>
+                      <span>Suporte prioritário direto no WhatsApp</span>
                     </li>
                   </ul>
                 </div>
@@ -1222,21 +1061,21 @@ export default function HomePage() {
               >
                 <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-black shadow-[0_0_25px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4 text-black" />
-                  <span>Começar com Pro Coach</span>
+                  <span>Começar Agora com Pro Coach</span>
                   <ArrowRight className="w-4 h-4 text-black" />
                 </button>
               </Link>
             </SpotlightCard3D>
           </div>
 
-          {/* 10. Tabela Comparativa Detalhada Estilo Dark Matrix */}
+          {/* 10.1 Tabela Comparativa Detalhada Estilo Dark Matrix (100% WCAG AA >= zinc-400) */}
           <div className="mt-20">
             <div className="text-center mb-8">
               <h3 className="text-xl sm:text-2xl font-black text-white">
                 Comparativo Detalhado de Recursos
               </h3>
               <p className="text-sm text-zinc-300 mt-1">
-                Entenda exatamente o que está contemplado em cada nível
+                Transparência total em cada etapa da sua evolução
               </p>
             </div>
 
@@ -1261,6 +1100,11 @@ export default function HomePage() {
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">0% (Taxa ZERO)</td>
                   </tr>
                   <tr>
+                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Compartilhamento Stories 9:16 com Sua Marca (White-Label)</td>
+                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
+                    <td className="p-4 sm:p-5 text-center text-amber-400 font-bold bg-white/5">✓ Completo (Foto + Sticker PNG)</td>
+                  </tr>
+                  <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Entrada por Código de Convite & Link</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
@@ -1281,18 +1125,13 @@ export default function HomePage() {
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Pódio & Ranking Oficial da Turma</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Feed Social com Fotos Auditadas</td>
+                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Pódio Ao Vivo & Feed Social da Turma</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold">✓</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-500 font-bold">✗</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-400 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
                   </tr>
                   <tr>
@@ -1301,33 +1140,23 @@ export default function HomePage() {
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Imediato</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Cobrança de Alunos em Desafios</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono">Pix D+0 (Anti-Chargeback)</td>
-                    <td className="p-4 sm:p-5 text-center text-emerald-400 font-mono font-bold bg-white/5">Pix D+0 (Anti-Chargeback)</td>
-                  </tr>
-                  <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Tarifa Bancária do Gateway (Asaas)</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-400 font-mono text-xs">Tarifa fixa Asaas (a partir de R$ 0,99/Pix)</td>
                     <td className="p-4 sm:p-5 text-center text-zinc-300 font-mono text-xs bg-white/5">Tarifa fixa Asaas (a partir de R$ 0,99/Pix)</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Forma de Pagamento da Assinatura Pro</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-500">Gratuito (R$ 0)</td>
-                    <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">Pix ou Cartão de Crédito</td>
-                  </tr>
-                  <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Squads & Times Cooperativos</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-500 font-bold">✗</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-400 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Radar Anti-Churn & Resgate WhatsApp</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-500 font-bold">✗</td>
+                    <td className="p-4 sm:p-5 text-zinc-200 font-medium">Radar Anti-Churn 48h & Resgate WhatsApp</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-400 font-bold">✗</td>
                     <td className="p-4 sm:p-5 text-center text-emerald-400 font-bold bg-white/5">✓ Liberado</td>
                   </tr>
                   <tr>
                     <td className="p-4 sm:p-5 text-zinc-200 font-medium">Canal de Suporte</td>
-                    <td className="p-4 sm:p-5 text-center text-zinc-300">Comunidade & Docs</td>
+                    <td className="p-4 sm:p-5 text-center text-zinc-300">Central de Ajuda</td>
                     <td className="p-4 sm:p-5 text-center text-white font-bold bg-white/5">WhatsApp Prioritário</td>
                   </tr>
                 </tbody>
@@ -1349,7 +1178,7 @@ export default function HomePage() {
               Perguntas e Respostas
             </h2>
             <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              Tudo o que você precisa saber sobre o funcionamento da plataforma, pagamentos e regras.
+              Tudo o que você precisa saber antes de criar sua conta grátis e lançar sua primeira turma.
             </p>
           </div>
 
@@ -1397,78 +1226,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 11.1 Programa Beta Pioneers (Destaque Exclusivo) */}
-      <section id="beta" className="py-16 sm:py-20 px-4 sm:px-6 border-t border-white/[0.06] relative">
-        <div className="max-w-5xl mx-auto">
-          <div className="p-8 sm:p-12 rounded-3xl border border-white/20 bg-gradient-to-b from-zinc-950 via-zinc-900 to-black relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.03] rounded-full blur-3xl -z-10 pointer-events-none" />
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-8 space-y-4">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/10 text-xs font-mono uppercase tracking-wider text-white">
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
-                  <span>Programa Beta Pioneers 2026</span>
-                </div>
-                
-                <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-                  Construa o futuro dos desafios fitness conosco
-                </h2>
-                
-                <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-                  Buscamos personal trainers e consultorias esportivas selecionadas para testar em primeira mão as novas funcionalidades de IA e gamificação, com acesso direto aos fundadores e benefícios vitalícios.
-                </p>
-
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-zinc-300 pt-2">
-                  <span className="flex items-center gap-1.5">
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Vagas Limitadas
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Onboarding 1-a-1
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" /> Condições Pioneiras
-                  </span>
-                </div>
-              </div>
-
-              <div className="lg:col-span-4 flex flex-col items-stretch lg:items-end justify-center">
-                <Link
-                  href="/beta"
-                  onClick={() => trackMarketingEvent('Lead', { content_name: 'Landing Banner Beta Pioneers' })}
-                  className="w-full sm:w-auto"
-                >
-                  <button className="mono-button-primary w-full min-h-[52px] px-8 py-3.5 text-sm sm:text-base font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_30px_rgba(255,255,255,0.25)]">
-                    <Sparkles className="w-4 h-4 text-black shrink-0" />
-                    <span>Quero ser Pioneiro</span>
-                    <ArrowRight className="w-4 h-4 text-black shrink-0" />
-                  </button>
-                </Link>
-                <span className="text-[11px] font-mono text-zinc-400 mt-2 text-center lg:text-right">
-                  Candidatura rápida • Resposta em 24h
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 12. Grand Final CTA Section */}
       <section className="py-20 sm:py-24 px-4 sm:px-6 border-t border-white/[0.06] relative">
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs font-mono uppercase tracking-wider text-zinc-200 mb-6">
-            <Trophy className="w-4 h-4 text-white" />
-            <span>Junte-se aos Melhores Treinadores</span>
+            <Trophy className="w-4 h-4 text-amber-400" />
+            <span>Comece Agora em Menos de 3 Minutos</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight mb-6 leading-tight text-balance">
-            Transforme seus alunos em uma{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500">
-              comunidade imparável
+            Lote sua próxima turma e coloque{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-400">
+              sua marca nos Stories de cada aluno
             </span>
           </h2>
 
           <p className="text-zinc-300 text-base sm:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-            Crie seu primeiro desafio em menos de 3 minutos. Convide seus alunos via código ou link, receba inscrições por Pix e lidere com a tecnologia mais moderna do mercado fitness.
+            Crie sua conta grátis sem cartão de crédito, configure seu desafio em 3 minutos e receba inscrições via Pix D+0 com a tecnologia mais desejada do mercado fitness.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1477,10 +1251,10 @@ export default function HomePage() {
               onClick={() => trackMarketingEvent('Lead', { content_name: 'Footer Criar Conta Grátis' })}
               className="w-full sm:w-auto"
             >
-              <button className="mono-button-primary w-full sm:w-auto min-h-[54px] px-10 py-4 text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 shadow-[0_0_35px_rgba(255,255,255,0.3)] cursor-pointer">
-                <Sparkles className="w-4 h-4 shrink-0" />
-                <span>Criar Conta Grátis Agora</span>
-                <ArrowRight className="w-4 h-4 shrink-0" />
+              <button className="mono-button-primary w-full sm:w-auto min-h-[54px] px-10 py-4 text-sm sm:text-base font-black flex items-center justify-center gap-2.5 shadow-[0_0_35px_rgba(255,255,255,0.3)] cursor-pointer">
+                <Sparkles className="w-4 h-4 text-black shrink-0" />
+                <span>Criar Minha Conta Grátis Agora</span>
+                <ArrowRight className="w-4 h-4 text-black shrink-0" />
               </button>
             </Link>
             <Link
@@ -1496,9 +1270,9 @@ export default function HomePage() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-mono text-zinc-400">
-            <span>• Sem taxa de adesão</span>
-            <span>• Sem fidelidade contratual</span>
-            <span>• Configuração em 3 minutos</span>
+            <span>• Zero digitação de treinos</span>
+            <span>• Sem cartão para criar conta</span>
+            <span>• Saque Pix D+0 imediato</span>
           </div>
         </div>
       </section>

@@ -16,11 +16,11 @@ import {
   Monitor,
   Smartphone,
   Users,
-  Lock
+  Share2
 } from 'lucide-react';
 
 export function HeroInteractiveMockup() {
-  const [activeTab, setActiveTab] = useState<'podium' | 'ai_camera' | 'pix_split'>('podium');
+  const [activeTab, setActiveTab] = useState<'podium' | 'stories_share' | 'ai_camera' | 'pix_split'>('podium');
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10 sm:mt-14 mb-6 perspective-container">
@@ -36,6 +36,18 @@ export function HeroInteractiveMockup() {
         >
           <Trophy className="w-4 h-4 shrink-0" />
           <span>Pódio & Ranking</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('stories_share')}
+          className={`flex-1 sm:flex-initial min-h-[44px] flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-2xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            activeTab === 'stories_share'
+              ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+              : 'text-amber-300 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Share2 className="w-4 h-4 shrink-0" />
+          <span>Stories 9:16 (Sua Marca)</span>
         </button>
 
         <button
@@ -63,14 +75,14 @@ export function HeroInteractiveMockup() {
         </button>
       </div>
 
-      {/* Showcase Sincronizado: Mobile-First PWA (Aluno) + Web Cockpit Multi-Tenant (Treinador) */}
+      {/* Showcase Sincronizado: Mobile-First PWA (Aluno) + Web Cockpit (Treinador) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         
         {/* COLUNA 1: Smartphone PWA do Aluno (Mobile-First Ergonomics) */}
         <div className="lg:col-span-5 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 mb-4">
             <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Visão Mobile PWA do Aluno</span>
+            <span>Visão Mobile do Aluno (Sem Baixar App)</span>
           </div>
 
           <div className="relative w-full max-w-[360px] sm:max-w-[380px] rounded-[48px] p-3 sm:p-3.5 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-950 border border-white/20 shadow-[0_30px_100px_rgba(0,0,0,0.95),0_0_40px_rgba(255,255,255,0.08)]">
@@ -88,7 +100,7 @@ export function HeroInteractiveMockup() {
                 <div className="h-6 w-28 rounded-full bg-zinc-950 border border-white/15 flex items-center justify-between px-3">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                   <div className="flex items-center gap-1 text-[11px] font-mono text-zinc-200 font-bold">
-                    <Flame className="w-3 h-3 text-zinc-200" />
+                    <Flame className="w-3 h-3 text-amber-400" />
                     <span>14d</span>
                   </div>
                 </div>
@@ -106,8 +118,8 @@ export function HeroInteractiveMockup() {
                   <div className="space-y-4 animate-in fade-in duration-300">
                     <div className="flex items-center justify-between pb-2.5 border-b border-white/10 text-left">
                       <div>
-                        <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">
-                          Desafio Verão 2026
+                        <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block font-bold">
+                          Team Silva • Desafio 30D
                         </span>
                         <h4 className="text-sm sm:text-base font-black text-white">Leaderboard da Turma</h4>
                       </div>
@@ -129,11 +141,11 @@ export function HeroInteractiveMockup() {
 
                       <div className="flex flex-col items-center">
                         <div className="relative">
-                          <Crown className="w-4 h-4 text-white absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
+                          <Crown className="w-4 h-4 text-amber-400 absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
                           <GoldMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
                         </div>
                         <span className="text-xs sm:text-sm font-black text-white truncate max-w-[90px]">Carlos E.</span>
-                        <span className="text-[11px] font-mono text-zinc-200 font-bold">2.140 pts</span>
+                        <span className="text-[11px] font-mono text-amber-300 font-bold">2.140 pts</span>
                         <div className="w-full h-28 bg-gradient-to-t from-zinc-800 to-zinc-700/80 rounded-t-xl border-t border-x border-white/30 mt-1.5 flex items-center justify-center">
                           <span className="font-mono font-black text-white text-xl">1º</span>
                         </div>
@@ -149,27 +161,95 @@ export function HeroInteractiveMockup() {
                       </div>
                     </div>
 
-                    {/* Card Pessoal */}
-                    <div className="p-3.5 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-between text-left">
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-full bg-zinc-800 border border-white/20 flex items-center justify-center text-xs font-bold text-white">
-                          VC
+                    {/* Card Pessoal + Botão de Compartilhar nos Stories */}
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-zinc-900 to-black border border-amber-400/30 space-y-2.5 text-left">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className="h-9 w-9 rounded-xl bg-amber-400 text-black flex flex-col items-center justify-center text-xs font-black font-mono">
+                            #03
+                          </div>
+                          <div>
+                            <div className="text-xs sm:text-sm font-bold text-white">Seu Desempenho</div>
+                            <div className="text-[11px] text-zinc-300">Faltam 130 XP para #2 Mariana</div>
+                          </div>
                         </div>
+                        <span className="text-xs sm:text-sm font-mono font-bold text-amber-400">1.690 XP</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('stories_share')}
+                        className="w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 flex items-center justify-center gap-2 text-xs font-mono font-bold text-white transition-colors cursor-pointer"
+                      >
+                        <Share2 className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Compartilhar Ranking 9:16 nos Stories</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'stories_share' && (
+                  <div className="space-y-3.5 animate-in fade-in duration-300">
+                    {/* Preview do Card 9:16 com Marca do Personal no Topo */}
+                    <div className="relative rounded-2xl overflow-hidden border border-amber-400/35 bg-gradient-to-b from-zinc-800/80 via-zinc-900 to-black p-4 text-center space-y-2.5 shadow-[0_0_25px_rgba(251,191,36,0.12)]">
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-[11px] font-mono text-amber-300 font-bold">
+                        <span>SUA MARCA NO TOPO</span>
+                      </div>
+
+                      <div className="flex flex-col items-center">
+                        <div className="w-9 h-9 rounded-xl border-2 border-amber-400/70 bg-black/60 flex items-center justify-center text-xs font-black text-amber-400 mb-1">
+                          TS
+                        </div>
+                        <div className="text-xs font-extrabold text-amber-400 tracking-[2px] uppercase">
+                          TEAM SILVA
+                        </div>
+                        <div className="text-[11px] text-zinc-300">Desafio 30 Dias Shape</div>
+                      </div>
+
+                      <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center py-2 border-b border-amber-400/60">
                         <div>
-                          <div className="text-xs sm:text-sm font-bold text-white">Você (4º Lugar)</div>
-                          <div className="text-xs text-zinc-300">Faltam 45 pts para o Pódio</div>
+                          <div className="text-base font-black text-white">3º</div>
+                          <div className="text-[11px] text-zinc-300">posição</div>
+                        </div>
+                        <div className="w-px h-6 bg-white/20" />
+                        <div>
+                          <div className="text-base font-black text-amber-400">1110</div>
+                          <div className="text-[11px] text-zinc-300">pontos</div>
+                        </div>
+                        <div className="w-px h-6 bg-white/20" />
+                        <div>
+                          <div className="text-base font-black text-white">de 42</div>
+                          <div className="text-[11px] text-zinc-300">atletas</div>
                         </div>
                       </div>
-                      <span className="text-xs sm:text-sm font-mono font-bold text-emerald-400">1.645 pts</span>
+
+                      <div className="space-y-1 text-left text-xs">
+                        <div className="flex justify-between text-zinc-200">
+                          <span>• Ana Clara</span>
+                          <span className="text-amber-400 font-bold">1280 XP</span>
+                        </div>
+                        <div className="flex justify-between text-zinc-200">
+                          <span>• Bruno M.</span>
+                          <span className="text-amber-400 font-bold">1195 XP</span>
+                        </div>
+                        <div className="flex justify-between text-amber-400 font-extrabold">
+                          <span>• Carla S. (Você)</span>
+                          <span>1110 XP</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-1 text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+                        ✦ ARENAFITPRO
+                      </div>
                     </div>
 
-                    {/* Feed Rápido */}
-                    <div className="p-3 rounded-xl bg-zinc-950 border border-white/10 flex items-center justify-between text-xs">
-                      <span className="text-zinc-200 flex items-center gap-1.5 truncate">
-                        <Heart className="w-3.5 h-3.5 text-white/80 fill-white/80 shrink-0" />
-                        <span><strong>Larissa M.</strong> concluiu Treino</span>
-                      </span>
-                      <span className="text-zinc-400 font-mono shrink-0 ml-2">há 2m</span>
+                    <div className="p-3 rounded-2xl bg-white/[0.05] border border-white/10 text-left space-y-1">
+                      <div className="text-xs font-bold text-white flex items-center justify-between">
+                        <span>Foto, Galeria ou Sticker PNG</span>
+                        <span className="text-amber-400 font-mono text-[11px]">1080×1920</span>
+                      </div>
+                      <p className="text-xs text-zinc-300 leading-relaxed">
+                        O aluno posta o treino nos Stories com o nome da sua consultoria em destaque.
+                      </p>
                     </div>
                   </div>
                 )}
@@ -245,10 +325,10 @@ export function HeroInteractiveMockup() {
                     <div className="p-3.5 rounded-2xl bg-white/[0.05] border border-white/10 space-y-1.5 text-left">
                       <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white">
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                        <span>Divisão no Nível Bancário</span>
+                        <span>Lucro Direto na Sua Conta</span>
                       </div>
                       <p className="text-xs text-zinc-300 leading-relaxed">
-                        No plano Pro, 100% da inscrição vai para sua conta via Pix D+0 (deduzida apenas a tarifa bancária Asaas, a partir de R$ 0,99 fixo). Sem riscos de chargeback.
+                        No plano Pro, 100% da inscrição cai na sua conta via Pix D+0 (deduzida apenas a tarifa bancária fixa do Asaas, a partir de R$ 0,99). Zero chargeback.
                       </p>
                     </div>
 
@@ -258,7 +338,7 @@ export function HeroInteractiveMockup() {
                         <span className="text-sm sm:text-base font-bold text-white">48 alunos</span>
                       </div>
                       <div className="p-3 rounded-xl bg-zinc-950 border border-white/10">
-                        <span className="text-[11px] text-zinc-400 block">Seu Líquido</span>
+                        <span className="text-[11px] text-zinc-400 block">Seu Faturamento</span>
                         <span className="text-sm sm:text-base font-bold text-emerald-400">R$ 4.656,00</span>
                       </div>
                     </div>
@@ -269,7 +349,7 @@ export function HeroInteractiveMockup() {
                 <div className="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-around text-zinc-400 text-xs font-medium">
                   <span className="text-white font-bold flex flex-col items-center gap-1">
                     <Trophy className="w-4 h-4 text-white" />
-                    Hoje
+                    Ranking
                   </span>
                   <span className="flex flex-col items-center gap-1">
                     <Activity className="w-4 h-4" />
@@ -289,11 +369,11 @@ export function HeroInteractiveMockup() {
           </div>
         </div>
 
-        {/* COLUNA 2: Cockpit Web do Treinador & Isolamento SaaS Multi-Tenant */}
+        {/* COLUNA 2: Cockpit Web do Treinador & Máquina de Retenção e Aquisição */}
         <div className="lg:col-span-7 flex flex-col">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 mb-4 self-center lg:self-start">
             <Monitor className="w-3.5 h-3.5 text-white" />
-            <span>Cockpit Web & Mobile do Treinador (Sincronizado em Tempo Real)</span>
+            <span>Painel do Treinador & Nutricionista (Web + Celular em Tempo Real)</span>
           </div>
 
           <div className="mono-glass-card rounded-3xl p-6 sm:p-8 border border-white/15 bg-zinc-950/90 shadow-2xl text-left space-y-6">
@@ -310,8 +390,8 @@ export function HeroInteractiveMockup() {
                 </span>
               </div>
               <span className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-3 py-1 rounded-full font-bold">
-                <Lock className="w-3.5 h-3.5" />
-                Multi-Tenant RLS Isolado
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Zero Trabalho Manual no WhatsApp
               </span>
             </div>
 
@@ -319,21 +399,21 @@ export function HeroInteractiveMockup() {
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
                   <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold block mb-1">
-                    GESTÃO DE ENGAJAMENTO & RETENÇÃO
+                    RETENÇÃO ATÉ O ÚLTIMO DIA
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    Acompanhe o Ranking, Squads e Alunos em Risco sem Planilhas
+                    Acabe com o silêncio da 2ª semana e faça a turma inteira renovar
                   </h3>
                   <p className="text-sm sm:text-base text-zinc-300 mt-2 leading-relaxed">
-                    Enquanto o aluno visualiza sua posição no app mobile, o seu painel web consolida métricas de presença da turma e alerta automaticamente quem ficou 48h sem check-in.
+                    Enquanto o aluno disputa cada ponto no Pódio ao vivo, seu painel consolida a presença da turma, soma pontos de Squads cooperativos e avisa quem está há 48h sem treinar para você resgatar em 1 clique.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
-                    <span className="text-xs font-mono text-zinc-400 uppercase block">Taxa de Presença</span>
+                    <span className="text-xs font-mono text-zinc-400 uppercase block">Engajamento Ativo</span>
                     <span className="text-2xl font-black text-white font-mono mt-1 block">94.8%</span>
-                    <span className="text-xs text-emerald-400 font-medium mt-1 block">Turma engajada hoje</span>
+                    <span className="text-xs text-emerald-400 font-medium mt-1 block">Turma cumprindo o plano</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Squad Líder</span>
@@ -349,40 +429,74 @@ export function HeroInteractiveMockup() {
               </div>
             )}
 
+            {activeTab === 'stories_share' && (
+              <div className="space-y-5 animate-in fade-in duration-300">
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold block mb-1">
+                    MARKETING VIRAL WHITE-LABEL 9:16
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                    Cada aluno vira um outdoor da SUA consultoria no Instagram
+                  </h3>
+                  <p className="text-sm sm:text-base text-zinc-300 mt-2 leading-relaxed">
+                    Configure seu Logo e o Nome da sua Consultoria em 10 segundos. Toda vez que um aluno ou você compartilhar o Ranking nos Stories, sua marca aparece em dourado no topo — gerando directs de seguidores perguntando como entrar na próxima turma.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  <div className="p-4 rounded-2xl bg-black/70 border border-amber-400/25">
+                    <span className="text-xs font-mono text-amber-300 uppercase block">Identidade Visual</span>
+                    <span className="text-lg font-black text-white mt-1 block">Seu Logo + Nome</span>
+                    <span className="text-xs text-zinc-300 mt-1 block">Destaque no topo do card</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
+                    <span className="text-xs font-mono text-zinc-400 uppercase block">Formatos Prontos</span>
+                    <span className="text-lg font-black text-white mt-1 block">2 Cards × 3 Fundos</span>
+                    <span className="text-xs text-zinc-300 mt-1 block">Foto, Galeria ou Sticker PNG</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
+                    <span className="text-xs font-mono text-zinc-400 uppercase block">Aquisição de Alunos</span>
+                    <span className="text-lg font-black text-emerald-400 mt-1 block">100% Orgânica</span>
+                    <span className="text-xs text-zinc-300 mt-1 block">Prova social diária nos Stories</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === 'ai_camera' && (
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
                   <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
-                    AUDITORIA SWIPE + VISÃO COMPUTACIONAL
+                    AUDITORIA AUTOMÁTICA + IA NUTRICIONAL
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    Economize 2 Horas por Dia na Conferência de Pratos e Treinos
+                    Economize 2 horas por dia sem precisar abrir 300 fotos no WhatsApp
                   </h3>
                   <p className="text-sm sm:text-base text-zinc-300 mt-2 leading-relaxed">
-                    A IA Nutricional pré-valida calorias, proteínas e autenticidade da foto tirada ao vivo. No seu cockpit, você aprova ou modera toda a turma em segundos com o modo Auditoria Swipe.
+                    A câmera nativa bloqueia fotos antigas da galeria e a IA Nutricional lê o prato do aluno estimando calorias, proteínas, carboidratos e gorduras na hora. Você só acompanha o placar subir.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-white">Metadados Antifraude</span>
+                      <span className="text-xs font-bold text-white">Câmera Antifraude Ao Vivo</span>
                       <span className="inline-flex items-center gap-1 text-xs font-mono text-emerald-400 font-bold">
                         <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                        <span>Verificado</span>
+                        <span>Sem Galeria</span>
                       </span>
                     </div>
                     <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                      Captura direta da câmera com timestamp criptográfico e validação de sessão ativa.
+                      Impede fotos repetidas ou tiradas em outros dias, garantindo disputa 100% justa no pódio.
                     </p>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-white">Leitura de Macronutrientes</span>
-                      <span className="text-xs font-mono text-zinc-200 font-bold">Gemini Vision</span>
+                      <span className="text-xs font-mono text-zinc-200 font-bold">IA Vision</span>
                     </div>
                     <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                      Estimativa instantânea de proteínas, carboidratos, gorduras e densidade calórica no feed.
+                      Estimativa instantânea de proteínas, carboidratos, gorduras e calorias em cada refeição postada.
                     </p>
                   </div>
                 </div>
@@ -393,13 +507,13 @@ export function HeroInteractiveMockup() {
               <div className="space-y-5 animate-in fade-in duration-300">
                 <div>
                   <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
-                    INFRAESTRUTURA FINTECH ASAAS D+0
+                    FATURAMENTO AUTOMÁTICO PIX D+0
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    Liquidação Instantânea na Sua Conta com Zero Bitributação
+                    Receba 100% à vista na sua conta sem cobrar comprovante no privado
                   </h3>
                   <p className="text-sm sm:text-base text-zinc-300 mt-2 leading-relaxed">
-                    Cada treinador possui isolamento multi-tenant completo e subconta financeira integrada. O aluno paga o Pix da inscrição, o sistema libera o acesso na hora e transfere seu lucro líquido automaticamente.
+                    O aluno clica no seu link, paga o Pix e já entra na turma em 3 segundos. O valor líquido cai direto na sua conta bancária no mesmo dia (D+0), sem risco de chargeback e sem bitributação.
                   </p>
                 </div>
 
@@ -407,17 +521,17 @@ export function HeroInteractiveMockup() {
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
                     <span className="text-xs font-mono text-zinc-400 uppercase block">Liberação do Saldo</span>
                     <span className="text-2xl font-black text-emerald-400 font-mono mt-1 block">D+0</span>
-                    <span className="text-xs text-zinc-300 mt-1 block">Saque Pix imediato</span>
+                    <span className="text-xs text-zinc-300 mt-1 block">Dinheiro na mão na hora</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
-                    <span className="text-xs font-mono text-zinc-400 uppercase block">Proteção Fiscal</span>
-                    <span className="text-lg font-black text-white mt-1 block">Split Bancário</span>
-                    <span className="text-xs text-zinc-300 mt-1 block">Sem imposto sobre a taxa</span>
+                    <span className="text-xs font-mono text-zinc-400 uppercase block">Taxa da Plataforma</span>
+                    <span className="text-lg font-black text-white mt-1 block">0% no Plano Pro</span>
+                    <span className="text-xs text-zinc-300 mt-1 block">100% do lucro da inscrição é seu</span>
                   </div>
                   <div className="p-4 rounded-2xl bg-black/70 border border-white/10">
-                    <span className="text-xs font-mono text-zinc-400 uppercase block">Matrícula Automática</span>
-                    <span className="text-lg font-black text-white mt-1 block">Webhook Real-Time</span>
-                    <span className="text-xs text-zinc-300 mt-1 block">Liberação em 2 segundos</span>
+                    <span className="text-xs font-mono text-zinc-400 uppercase block">Acesso do Aluno</span>
+                    <span className="text-lg font-black text-white mt-1 block">Automático</span>
+                    <span className="text-xs text-zinc-300 mt-1 block">Liberado em 2 segundos pós-Pix</span>
                   </div>
                 </div>
               </div>
@@ -427,9 +541,9 @@ export function HeroInteractiveMockup() {
             <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-zinc-300">
               <span className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-zinc-400 shrink-0" />
-                <span>Arquitetura Web + Mobile-First nativa sem exigir download nas lojas</span>
+                <span>Você continua passando seu treino/dieta normal (PDF ou app atual) — nós cuidamos da gamificação!</span>
               </span>
-              <span className="font-mono text-white font-bold">iOS • Android • Desktop</span>
+              <span className="font-mono text-white font-bold shrink-0">iOS • Android • Web</span>
             </div>
           </div>
         </div>

@@ -182,13 +182,13 @@ export default function HomePage() {
     })),
   };
 
+  // Navegação refinada com espaçamento generoso e termos objetivos
   const navLinks = [
-    { label: 'App Ao Vivo', href: '#mockup' },
+    { label: 'Cockpit', href: '#mockup' },
     { label: 'Stories 9:16', href: '#stories', highlight: true },
-    { label: 'WhatsApp vs. Arena', href: '#provasocial' },
+    { label: 'Comparativo', href: '#provasocial' },
     { label: 'Como Funciona', href: '#fluxo' },
-    { label: 'Tecnologia & IA', href: '#gamificacao' },
-    { label: 'Simulador de Lucro', href: '#calculadora' },
+    { label: 'Simulador', href: '#calculadora' },
     { label: 'Planos', href: '#planos' },
     { label: 'FAQ', href: '#faq' },
   ];
@@ -212,34 +212,37 @@ export default function HomePage() {
       {/* 1. Background 3D com Partículas Monocromáticas Sutis */}
       <Monochrome3DBackground />
 
-      {/* 2. Floating Navbar Dark Premium com Azul Elétrico */}
-      <header className="sticky top-0 z-50 px-3 sm:px-6 safe-top-header">
-        <div className="max-w-6xl mx-auto bg-[#080A0F]/85 backdrop-blur-xl border border-[#252D3B] rounded-full px-4 sm:px-6 h-16 flex items-center justify-between shadow-2xl">
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-            <div className="h-10 w-10 rounded-xl overflow-hidden border border-[#252D3B] shadow-[0_0_15px_rgba(52,120,246,0.15)] group-hover:scale-105 group-hover:border-[#3478F6] transition-all bg-[#121722] shrink-0">
+      {/* 2. Header / Floating Navbar com Navegação Arejada e Alinhamento Perfeito */}
+      <header className="sticky top-0 z-50 px-4 sm:px-6 safe-top-header">
+        <div className="max-w-6xl mx-auto bg-[#080A0F]/90 backdrop-blur-xl border border-[#252D3B] rounded-full px-5 sm:px-6 h-16 flex items-center justify-between shadow-2xl">
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="h-9 w-9 rounded-xl overflow-hidden border border-[#252D3B] shadow-[0_0_15px_rgba(52,120,246,0.2)] group-hover:scale-105 group-hover:border-[#3478F6] transition-all bg-[#121722] shrink-0 flex items-center justify-center">
               <img
                 src="/app-logo.png"
                 alt="ArenaFitPro Logo"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div>
-              <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#F4F6FA] block leading-none">
+            <div className="text-left">
+              <span className="font-extrabold text-base tracking-tight text-[#F4F6FA] block leading-tight">
                 ArenaFitPro
               </span>
-              <span className="text-[11px] uppercase font-mono tracking-widest text-[#A7B0C0] block mt-1">
-                Desafios Fitness
+              <span className="text-[10px] uppercase font-mono tracking-widest text-[#A7B0C0] block">
+                SaaS Fitness
               </span>
             </div>
           </Link>
 
-          <nav className="hidden xl:flex items-center gap-5 text-xs font-semibold tracking-wider uppercase text-[#A7B0C0]">
+          {/* Links desktop com espaçamento equilibrado (gap-7) e alta legibilidade */}
+          <nav className="hidden lg:flex items-center gap-7 text-[13px] font-medium tracking-normal text-[#A7B0C0]">
             {navLinks.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className={`hover:text-[#F4F6FA] transition-colors ${
-                  item.highlight ? 'text-[#3478F6] font-extrabold' : ''
+                className={`transition-colors py-2 ${
+                  item.highlight
+                    ? 'text-[#3478F6] font-bold hover:text-[#75A7FF]'
+                    : 'hover:text-[#F4F6FA]'
                 }`}
               >
                 {item.label}
@@ -247,11 +250,11 @@ export default function HomePage() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3">
             <Link
               href="/login?role=student"
               onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Navbar Sou Aluno' })}
-              className="hidden sm:flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-[#A7B0C0] hover:text-[#F4F6FA] px-3.5 py-2 rounded-full hover:bg-[#121722] transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-[#A7B0C0] hover:text-[#F4F6FA] px-3 py-2 rounded-full hover:bg-[#121722] transition-colors"
             >
               <span>Sou Aluno</span>
             </Link>
@@ -259,16 +262,16 @@ export default function HomePage() {
               href="/login?role=professional&mode=signup"
               onClick={() => trackMarketingEvent('Lead', { content_name: 'Navbar Criar Conta Grátis' })}
             >
-              <button className="mono-button-primary min-h-[44px] px-4 sm:px-5 py-2 text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer">
+              <button className="mono-button-primary min-h-[44px] px-5 py-2 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.3)]">
                 <span>Criar Conta Grátis</span>
-                <ArrowRight className="w-4 h-4 text-white" />
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </Link>
             <button
               type="button"
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
               aria-label="Abrir menu de navegação"
-              className="xl:hidden h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
+              className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
             >
               {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -277,14 +280,14 @@ export default function HomePage() {
 
         {/* Menu Mobile Dropdown Responsivo */}
         {mobileNavOpen && (
-          <div className="xl:hidden max-w-6xl mx-auto mt-2 p-5 rounded-3xl bg-[#121722]/95 border border-[#252D3B] backdrop-blur-2xl shadow-2xl space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="lg:hidden max-w-6xl mx-auto mt-2 p-5 rounded-3xl bg-[#121722]/98 border border-[#252D3B] backdrop-blur-2xl shadow-2xl space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="grid grid-cols-2 gap-2">
               {navLinks.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs sm:text-sm font-semibold text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6] flex items-center justify-between transition-colors"
+                  className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs sm:text-sm font-semibold text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6] flex items-center justify-between transition-colors"
                 >
                   <span>{item.label}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-[#3478F6]" />
@@ -323,35 +326,36 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* 3. Hero Section — Headline Impactante, Tipografia Expressiva e Foco Limpo */}
-      <main id="main-content" className="relative pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 px-4 sm:px-6">
+      {/* 3. Hero Section — Headline Impactante, Espaçamentos Controlados e Protagonismo da Demonstração */}
+      <main id="main-content" className="relative pt-14 sm:pt-20 md:pt-24 pb-12 sm:pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center relative z-10">
           
           <div className="max-w-4xl w-full">
             {/* Kicker Pill Focado no Posicionamento Profissional */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#252D3B] bg-[#121722] text-xs font-mono uppercase tracking-wider text-[#A7B0C0] mb-6 shadow-md">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#252D3B] bg-[#121722] text-xs font-mono uppercase tracking-wider text-[#A7B0C0] mb-6 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
               <span>Para Personal Trainers, Nutricionistas e Consultorias • Comece Grátis</span>
             </div>
 
-            {/* Headline com Escala 48-64px Desktop e Alta Legibilidade */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#F4F6FA] leading-[1.08] mb-6 text-balance">
+            {/* Headline de Alto Impacto (48-64px desktop) com Entrelinha Equilibrada */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-[#F4F6FA] leading-[1.06] mb-6 text-balance">
               Transforme grupos mortos de WhatsApp em{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F4F6FA] via-[#75A7FF] to-[#3478F6]">
-                Desafios que Engajam, Viralizam sua Marca e Faturam no Pix D+0
+                Desafios que Engajam, Viralizam e Faturam no Pix
               </span>
             </h1>
 
+            {/* Subtítulo Conciso com Excelente Ritmo de Leitura */}
             <p className="text-base sm:text-lg md:text-xl text-[#A7B0C0] max-w-3xl mx-auto leading-relaxed mb-8 font-normal text-pretty">
-              Continue prescrevendo seus treinos e dietas como já faz hoje. A ArenaFitPro entrega o{' '}
-              <strong className="text-[#F4F6FA]">Pódio ao Vivo</strong>,{' '}
-              <strong className="text-[#F4F6FA]">Câmera Antifraude com IA</strong> e{' '}
-              <strong className="text-[#3478F6] font-extrabold">Cards 9:16 com a SUA marca para os Stories</strong> — para seus alunos cumprirem o plano até o fim e você faturar de{' '}
-              <strong className="text-[#F4F6FA] font-extrabold">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
+              Continue prescrevendo seus treinos e dietas como já faz hoje. A ArenaFitPro automatiza o{' '}
+              <strong className="text-[#F4F6FA]">Pódio ao Vivo</strong>, a{' '}
+              <strong className="text-[#F4F6FA]">Câmera Antifraude com IA</strong> e os{' '}
+              <strong className="text-[#3478F6]">Cards 9:16 com a sua marca para os Stories</strong> — para seus alunos cumprirem o plano até o fim e você faturar de{' '}
+              <strong className="text-[#F4F6FA]">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
             </p>
 
-            {/* Hierarquia Clara de CTAs (1 Primário em Azul Elétrico + 1 Secundário Discreto) */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-4">
+            {/* CTAs com Hierarquia Clara e Espaçamento Respirável */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-5">
               <Link
                 href="/login?role=professional&mode=signup"
                 onClick={() => trackMarketingEvent('Lead', { content_name: 'Hero Criar Conta Grátis' })}
@@ -386,13 +390,13 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Micro-copy de Redução de Atrito */}
-            <p className="text-xs font-mono text-[#A7B0C0] mb-7">
-              ✓ Sem cartão de crédito • ✓ Lançamento da sua 1ª turma em 3 minutos • ✓ Taxa 0% no Plano Pro
+            {/* Micro-copy de Redução de Fricção */}
+            <p className="text-xs font-mono text-[#A7B0C0] mb-8">
+              ✓ Sem cartão de crédito • ✓ Lançamento em 3 minutos • ✓ Taxa 0% no Plano Pro
             </p>
 
-            {/* Badges de Diferenciais com ícones azuis */}
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-[#A7B0C0] font-mono">
+            {/* Badges de Diferenciais com Espaçamento Limpo */}
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs sm:text-sm text-[#A7B0C0] font-mono">
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-[#3478F6] shrink-0" /> Sua Marca nos Stories 9:16
               </span>
@@ -403,42 +407,42 @@ export default function HomePage() {
                 <Check className="w-4 h-4 text-[#3478F6] shrink-0" /> Split Pix D+0 direto na conta
               </span>
               <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-[#3478F6] shrink-0" /> Câmera Antifraude + IA Nutricional
+                <Check className="w-4 h-4 text-[#3478F6] shrink-0" /> Câmera Antifraude + IA
               </span>
             </div>
           </div>
 
-          {/* 3.1 Showcase Interativo Duplo (Mobile PWA + Web Cockpit com 4 Abas) */}
-          <div id="mockup" className="w-full pt-8">
+          {/* 3.1 Demonstração do Produto em Evidência (Cockpit Web + Smartphone PWA) */}
+          <div id="mockup" className="w-full pt-12 sm:pt-16">
             <HeroInteractiveMockup />
           </div>
 
         </div>
       </main>
 
-      {/* 4. Metrics & Impact Bar — Superfícies #121722 e Bordas #252D3B */}
-      <section className="px-4 sm:px-6 py-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
-          <div className="text-center p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-[#3478F6] mb-1.5">9:16</div>
+      {/* 4. Metrics & Impact Bar — Destaque em Números e Legibilidade */}
+      <section className="px-4 sm:px-6 py-8">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="text-center p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#3478F6] mb-1.5 font-mono">9:16</div>
             <div className="text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Stories com a Sua Marca</div>
           </div>
-          <div className="text-center p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-[#3478F6] mb-1.5">D+0</div>
+          <div className="text-center p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#3478F6] mb-1.5 font-mono">D+0</div>
             <div className="text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Liberação Pix na Conta</div>
           </div>
-          <div className="text-center p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-[#F4F6FA] mb-1.5">0 min</div>
+          <div className="text-center p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F4F6FA] mb-1.5 font-mono">0 min</div>
             <div className="text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Digitando Fichas ou Dietas</div>
           </div>
-          <div className="text-center p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-xl">
-            <div className="text-3xl sm:text-4xl font-black text-[#F4F6FA] mb-1.5">0%</div>
+          <div className="text-center p-6 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F4F6FA] mb-1.5 font-mono">0%</div>
             <div className="text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Fotos Falsas de Galeria</div>
           </div>
         </div>
       </section>
 
-      {/* 5. Vitrine Interativa: Compartilhamento Viral 9:16 White-Label nos Stories */}
+      {/* 5. Vitrine Demonstrativa: Compartilhamento Viral 9:16 White-Label nos Stories */}
       <ViralStoriesShowcase />
 
       {/* 6. Comparativo Editorial & Demonstrativo: O Caos do WhatsApp vs. A Máquina ArenaFitPro */}
@@ -446,11 +450,11 @@ export default function HomePage() {
         <BeforeAfterComparison />
       </div>
 
-      {/* 7. Como Funciona em 3 Passos Simples (Linguagem Editorial & Limpa) */}
-      <section id="fluxo" className="py-20 sm:py-24 px-4 sm:px-6 relative border-t border-[#252D3B]">
+      {/* 7. Como Funciona em 3 Passos — Composição Editorial Arejada e Conectiva */}
+      <section id="fluxo" className="py-20 sm:py-28 px-4 sm:px-6 relative border-t border-[#252D3B]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 block font-bold">
+          <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-3 block font-bold">
               PASSO A PASSO EM 3 MINUTOS
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[#F4F6FA] tracking-tight mb-4">
@@ -461,78 +465,72 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
             {/* Passo 1 */}
-            <SpotlightCard3D className="p-6 sm:p-8 flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] flex flex-col justify-between space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
               <div>
-                <div className="h-11 w-11 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#3478F6] font-mono font-black text-base mb-6">
+                <div className="text-3xl sm:text-4xl font-mono font-black text-[#3478F6] mb-4">
                   01
                 </div>
-                <h3 className="text-xl font-black text-[#F4F6FA] mb-3 flex items-center gap-2.5">
+                <h3 className="text-xl font-bold text-[#F4F6FA] mb-3 flex items-center gap-2">
                   <KeyRound className="w-5 h-5 text-[#3478F6] shrink-0" />
                   <span>Seu Método + Seu Link</span>
                 </h3>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  Você entrega o treino ou dieta como já faz hoje (PDF, WhatsApp ou app atual). Na ArenaFitPro, você cria o desafio em 3 minutos e envia o link ou código (ex:{' '}
-                  <code className="text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-2 py-0.5 rounded font-mono text-xs sm:text-sm">SHAPE-30D</code>) para a turma.
+                <p className="text-sm text-[#A7B0C0] leading-relaxed">
+                  Você entrega seu treino ou dieta como já faz hoje (PDF, WhatsApp ou app habitual). Na ArenaFitPro, você cria o desafio em 3 minutos e envia o código exclusivo ou link direto para a turma.
                 </p>
               </div>
-              <div className="mt-6 p-3.5 rounded-xl bg-[#080A0F] border border-[#252D3B] text-xs sm:text-sm font-mono text-[#A7B0C0] flex items-center justify-between">
-                <span>Código: SHAPE-30D</span>
-                <span className="text-[#3478F6] font-bold">✓ Turma Ativa</span>
+              <div className="pt-4 border-t border-[#252D3B] text-xs font-mono text-[#3478F6] font-bold">
+                ✓ Setup em 3 minutos
               </div>
-            </SpotlightCard3D>
+            </div>
 
             {/* Passo 2 */}
-            <SpotlightCard3D className="p-6 sm:p-8 flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] flex flex-col justify-between space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
               <div>
-                <div className="h-11 w-11 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#3478F6] font-mono font-black text-base mb-6">
+                <div className="text-3xl sm:text-4xl font-mono font-black text-[#3478F6] mb-4">
                   02
                 </div>
-                <h3 className="text-xl font-black text-[#F4F6FA] mb-3 flex items-center gap-2.5">
+                <h3 className="text-xl font-bold text-[#F4F6FA] mb-3 flex items-center gap-2">
                   <Smartphone className="w-5 h-5 text-[#3478F6] shrink-0" />
                   <span>Entrada em 10s (Sem Loja)</span>
                 </h3>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  O aluno entra com 1 toque pelo Google ou e-mail direto no celular (iPhone ou Android), sem precisar baixar nada na App Store. Se o desafio for pago, o Pix D+0 libera a vaga na hora.
+                <p className="text-sm text-[#A7B0C0] leading-relaxed">
+                  O aluno entra com 1 toque no navegador do celular (iPhone ou Android) sem baixar nada na App Store. Se for um desafio pago, o Pix D+0 libera o acesso na hora.
                 </p>
               </div>
-              <div className="mt-6 p-3.5 rounded-xl bg-[#080A0F] border border-[#252D3B] text-xs sm:text-sm font-mono text-[#A7B0C0] flex items-center justify-between">
-                <span>Acesso Mobile PWA</span>
-                <span className="text-[#F4F6FA] font-bold">1 Toque no Celular</span>
+              <div className="pt-4 border-t border-[#252D3B] text-xs font-mono text-[#3478F6] font-bold">
+                ✓ 1 Toque no Navegador
               </div>
-            </SpotlightCard3D>
+            </div>
 
             {/* Passo 3 */}
-            <SpotlightCard3D className="p-6 sm:p-8 flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] flex flex-col justify-between space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
               <div>
-                <div className="h-11 w-11 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#3478F6] font-mono font-black text-base mb-6">
+                <div className="text-3xl sm:text-4xl font-mono font-black text-[#3478F6] mb-4">
                   03
                 </div>
-                <h3 className="text-xl font-black text-[#F4F6FA] mb-3 flex items-center gap-2.5">
+                <h3 className="text-xl font-bold text-[#F4F6FA] mb-3 flex items-center gap-2">
                   <Share2 className="w-5 h-5 text-[#3478F6] shrink-0" />
                   <span>Pódio, IA e Stories 9:16</span>
                 </h3>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  Seus alunos batem fotos ao vivo, ganham XP, disputam o Pódio e compartilham o Ranking 9:16 nos Stories com a SUA marca no topo — trazendo novos clientes enquanto você descansa.
+                <p className="text-sm text-[#A7B0C0] leading-relaxed">
+                  Alunos comprovam treinos ao vivo na câmera, disputam o pódio e postam o Ranking 9:16 nos Stories com a SUA marca no topo — atraindo novos alunos no piloto automático.
                 </p>
               </div>
-              <div className="mt-6 p-3.5 rounded-xl bg-[#080A0F] border border-[#252D3B] text-xs sm:text-sm font-mono text-[#A7B0C0] flex items-center justify-between">
-                <span>Divulgação Orgânica</span>
-                <span className="text-[#3478F6] font-bold flex items-center gap-1">
-                  <Flame className="w-4 h-4 text-[#3478F6]" /> Viralizando
-                </span>
+              <div className="pt-4 border-t border-[#252D3B] text-xs font-mono text-[#3478F6] font-bold">
+                ✓ Divulgação Orgânica Diária
               </div>
-            </SpotlightCard3D>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 8. Bento Grid de Retenção, IA & Fintech */}
-      <section id="gamificacao" className="py-20 sm:py-24 px-4 sm:px-6 relative border-t border-[#252D3B]">
+      {/* 8. Bento Grid de Retenção & Fintech — Cartões Respiráveis com Hierarquia Clara */}
+      <section id="gamificacao" className="py-20 sm:py-28 px-4 sm:px-6 relative border-t border-[#252D3B]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 block font-bold">
+          <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-3 block font-bold">
               TECNOLOGIA DE RETENÇÃO & ESCALA
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[#F4F6FA] tracking-tight mb-4">
@@ -543,126 +541,105 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 text-left">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 text-left">
             {/* Card 1: Antifraude Câmera e IA Nutricional */}
-            <SpotlightCard3D className="md:col-span-7 p-6 sm:p-8 min-h-[320px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <SpotlightCard3D className="md:col-span-7 p-6 sm:p-8 min-h-[300px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
               <div>
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#252D3B]">
-                  <div className="flex items-center gap-2 text-xs sm:text-sm text-[#F4F6FA] font-semibold">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#3478F6] animate-pulse" />
-                    Câmera Nativa + IA Nutricional
-                  </div>
-                  <span className="text-xs uppercase tracking-wider text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-3 py-1 rounded-full font-medium">
-                    Auditoria Automática
+                <div className="flex items-center justify-between pb-4 border-b border-[#252D3B]">
+                  <span className="text-xs font-mono text-[#75A7FF] font-bold flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
+                    AUDITORIA AUTOMÁTICA
+                  </span>
+                  <span className="text-xs font-mono text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-3 py-1 rounded-full">
+                    100% Ao Vivo
                   </span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight mt-6 mb-3">
-                  Câmera ao Vivo Antifraude & Leitura de Pratos por IA
+                <h3 className="text-2xl font-bold text-[#F4F6FA] tracking-tight mt-6 mb-3">
+                  Câmera Antifraude & Leitura de Pratos por IA
                 </h3>
                 <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  Chega de passar a noite abrindo 300 fotos de pratos e academias no WhatsApp. O aluno comprova a missão ao vivo na câmera (sem subir fotos antigas da galeria), e a{' '}
-                  <strong className="text-[#F4F6FA]">IA Nutricional</strong> estima proteínas, carboidratos e calorias liberando os pontos na hora.
+                  Chega de passar a noite abrindo 300 fotos no WhatsApp. O aluno bate a foto ao vivo na câmera (sem fotos da galeria) e a IA Nutricional estima proteínas, carboidratos e calorias liberando os pontos na hora.
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#080A0F] border border-[#252D3B] backdrop-blur-xl mt-6 flex flex-wrap items-center justify-between gap-3">
-                <div className="space-y-0.5">
-                  <div className="text-xs text-[#A7B0C0] font-medium">Validação de Integridade</div>
-                  <div className="text-xs sm:text-sm text-[#F4F6FA] font-semibold">Bloqueio de Galeria + GPS + IA de Macros</div>
-                </div>
-                <div className="px-3.5 py-1.5 rounded-xl border border-[#3478F6]/40 bg-[#3478F6]/15 flex items-center justify-center text-xs font-bold text-[#75A7FF]">
-                  100% Auditado
-                </div>
+              <div className="pt-6 mt-6 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+                <span>Sensor Óptico + IA de Macros</span>
+                <span className="text-[#3478F6] font-bold">Zero Fraudes</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 2: Split Pix D+0 no Asaas */}
-            <SpotlightCard3D className="md:col-span-5 p-6 sm:p-8 min-h-[320px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <SpotlightCard3D className="md:col-span-5 p-6 sm:p-8 min-h-[300px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-[#252D3B]">
-                  <span className="text-xs sm:text-sm text-[#F4F6FA] font-semibold flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-[#3478F6]" /> Split Pix Automático
+                  <span className="text-xs font-mono text-[#75A7FF] font-bold flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-[#3478F6]" />
+                    SPLIT PIX D+0
                   </span>
-                  <span className="text-xs text-[#3478F6] font-bold font-mono">D+0 Instantâneo</span>
+                  <span className="text-xs font-mono text-[#3478F6] font-bold">Instantâneo</span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight mt-6 mb-3">
+                <h3 className="text-2xl font-bold text-[#F4F6FA] tracking-tight mt-6 mb-3">
                   Checkout Pix com Lucro Direto na Conta
                 </h3>
                 <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  Sem cobrar comprovante no privado e sem risco de estorno de cartão. O aluno paga via Pix Copia e Cola ou QR Code, entra na turma automaticamente e o dinheiro cai na sua conta em D+0.
+                  Sem cobrar comprovante no privado e sem risco de estorno de cartão. O aluno paga via Pix, entra na turma na hora e o dinheiro cai na sua conta no mesmo dia com 0% de taxa no Pro.
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#080A0F] border border-[#252D3B] mt-6 space-y-2">
-                <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
-                  <div>
-                    <span className="text-[#A7B0C0] block text-xs">Inscrição de aluno</span>
-                    <span className="text-[#F4F6FA] font-bold font-mono">R$ 97,00 (Pix D+0)</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[#A7B0C0] block text-xs">Seu líquido (Plano Pro)</span>
-                    <span className="text-[#3478F6] font-bold font-mono">R$ 96,01 (100% seu)</span>
-                  </div>
-                </div>
-                <div className="pt-2 border-t border-[#252D3B] flex items-center justify-between text-[11px] font-mono text-[#A7B0C0]">
-                  <span>Tarifa bancária Asaas: R$ 0,99 fixo</span>
-                  <span className="text-[#3478F6] font-semibold">Taxa Plataforma: 0%</span>
-                </div>
+              <div className="pt-6 mt-6 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+                <span>Integrado ao Asaas</span>
+                <span className="text-[#3478F6] font-bold">Taxa 0% no Pro</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 3: Squads e Times Cooperativos */}
             <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
               <div>
-                <div className="text-xs sm:text-sm text-[#75A7FF] font-semibold tracking-wide mb-2 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#3478F6]" /> Squads Cooperativos & Gamificação
+                <div className="text-xs font-mono text-[#75A7FF] font-bold mb-3 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#3478F6]" /> PRESSÃO SOCIAL POSITIVA
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black text-[#F4F6FA] mb-2.5">
-                  Equipes, Escudo de Streak e Mystery Box
+                <h4 className="text-xl sm:text-2xl font-bold text-[#F4F6FA] mb-2.5">
+                  Squads em Equipe & Escudos de Streak
                 </h4>
                 <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  Una alunos em Squads onde a pontuação de todos soma, ative recompensas surpresa (Mystery Box) e proteja ofensivas com Escudos de Congelamento — criando um senso de comunidade imbatível.
+                  Divida sua turma em equipes cooperativas onde a pontuação de todos soma. Alunos cobram uns aos outros para treinar todo dia e ninguém deixa o time na mão.
                 </p>
               </div>
-              <div className="p-3.5 rounded-xl bg-[#080A0F] border border-[#252D3B] flex items-center justify-between text-xs sm:text-sm mt-6">
-                <span className="text-[#A7B0C0] font-medium flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-[#3478F6]" /> Squad Guerreiros
-                </span>
-                <span className="text-[#3478F6] font-bold font-mono">1º Lugar (2.450 XP)</span>
+              <div className="pt-4 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+                <span>Gamificação Cooperativa</span>
+                <span className="text-[#3478F6] font-bold">94.8% Retenção</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 4: Radar Anti-Churn & Resgate WhatsApp */}
             <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
               <div>
-                <div className="text-xs sm:text-sm text-[#75A7FF] font-semibold tracking-wide mb-2 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-[#3478F6]" /> Prevenção Ativa de Abandono
+                <div className="text-xs font-mono text-[#75A7FF] font-bold mb-3 flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-[#3478F6]" /> RESGATE ATIVO 24H
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black text-[#F4F6FA] mb-2.5">
-                  Radar Anti-Churn 48h & Avisos 24h
+                <h4 className="text-xl sm:text-2xl font-bold text-[#F4F6FA] mb-2.5">
+                  Radar Anti-Churn 48h em 1 Toque
                 </h4>
                 <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
-                  O sistema detecta sozinho alunos inativos há mais de 48 horas para você disparar uma mensagem de resgate no WhatsApp com 1 toque, além de mural de avisos com contagem regressiva no topo do app.
+                  O painel identifica automaticamente qualquer aluno que fique mais de 48 horas sem bater ponto, permitindo que você envie uma mensagem de resgate no WhatsApp com 1 clique.
                 </p>
               </div>
-              <div className="p-3.5 rounded-xl bg-[#080A0F] border border-[#252D3B] flex items-center justify-between text-xs sm:text-sm mt-6">
-                <span className="text-[#A7B0C0] font-medium flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#3478F6]" /> Alerta de Inatividade
-                </span>
-                <span className="text-[#3478F6] font-bold font-mono">Resgate em 1 Toque</span>
+              <div className="pt-4 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+                <span>Alerta Automático</span>
+                <span className="text-[#3478F6] font-bold">Resgate em 1 Toque</span>
               </div>
             </SpotlightCard3D>
           </div>
         </div>
       </section>
 
-      {/* 9. Calculadora Interativa de Faturamento & Economia */}
-      <section id="calculadora" className="py-20 sm:py-24 px-4 sm:px-6 border-t border-[#252D3B] relative">
+      {/* 9. Calculadora Interativa de Lucro Real */}
+      <section id="calculadora" className="py-20 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 block font-bold">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-3 block font-bold">
               SIMULADOR DE LUCRO REAL
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[#F4F6FA] tracking-tight mb-4">
@@ -674,16 +651,16 @@ export default function HomePage() {
           </div>
 
           <div className="p-6 sm:p-10 rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
               
               {/* Sliders de Controle */}
-              <div className="lg:col-span-7 space-y-6">
+              <div className="lg:col-span-7 space-y-7">
                 <div>
-                  <div className="flex justify-between items-center gap-2 mb-2.5">
+                  <div className="flex justify-between items-center gap-2 mb-3">
                     <label htmlFor="students-range" className="text-sm sm:text-base font-semibold text-[#F4F6FA]">
                       Quantidade de Alunos no Desafio
                     </label>
-                    <span className="text-base sm:text-lg font-mono font-bold text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-3.5 py-1 rounded-xl shrink-0">
+                    <span className="text-base sm:text-lg font-mono font-bold text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-4 py-1 rounded-xl shrink-0">
                       {studentsCount} alunos
                     </span>
                   </div>
@@ -697,7 +674,7 @@ export default function HomePage() {
                     onChange={(e) => setStudentsCount(Number(e.target.value))}
                     className="w-full accent-[#3478F6] h-2.5 bg-[#1B2330] rounded-lg cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs font-mono text-[#A7B0C0] mt-1.5">
+                  <div className="flex justify-between text-xs font-mono text-[#A7B0C0] mt-2">
                     <span>10 alunos</span>
                     <span>50 alunos</span>
                     <span>150 alunos</span>
@@ -705,11 +682,11 @@ export default function HomePage() {
                 </div>
 
                 <div>
-                  <div className="flex justify-between items-center gap-2 mb-2.5">
+                  <div className="flex justify-between items-center gap-2 mb-3">
                     <label htmlFor="ticket-range" className="text-sm sm:text-base font-semibold text-[#F4F6FA]">
                       Valor da Inscrição por Aluno
                     </label>
-                    <span className="text-base sm:text-lg font-mono font-bold text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-3.5 py-1 rounded-xl shrink-0">
+                    <span className="text-base sm:text-lg font-mono font-bold text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-4 py-1 rounded-xl shrink-0">
                       R$ {ticketPrice},00
                     </span>
                   </div>
@@ -723,37 +700,37 @@ export default function HomePage() {
                     onChange={(e) => setTicketPrice(Number(e.target.value))}
                     className="w-full accent-[#3478F6] h-2.5 bg-[#1B2330] rounded-lg cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs font-mono text-[#A7B0C0] mt-1.5">
+                  <div className="flex justify-between text-xs font-mono text-[#A7B0C0] mt-2">
                     <span>R$ 47</span>
                     <span>R$ 147</span>
                     <span>R$ 297</span>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+                <div className="p-4 sm:p-5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
                   <p>
-                    <strong className="text-[#F4F6FA]">Matemática Simples:</strong> No plano Pro Coach, a taxa da plataforma cai de 15% para <strong className="text-[#3478F6] font-bold">ZERO (0%)</strong>. Com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
+                    <strong className="text-[#F4F6FA]">Economia Real no Plano Pro:</strong> Ao migrar da taxa de 15% para a <strong className="text-[#3478F6]">Taxa ZERO (0%)</strong> com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
                     <strong className="text-[#75A7FF] font-bold">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>{' '}
-                    — ou seja, a assinatura de R$ 49,90 se paga sozinha já no seu 4º aluno!
+                    diretamente no seu bolso. A assinatura de R$ 49,90 se paga sozinha já nas primeiras inscrições!
                   </p>
                 </div>
               </div>
 
               {/* Card de Resultados */}
-              <div className="lg:col-span-5 p-6 rounded-2xl bg-[#080A0F] border border-[#252D3B] space-y-5">
-                <div className="text-center pb-4 border-b border-[#252D3B]">
+              <div className="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-[#080A0F] border border-[#252D3B] space-y-6">
+                <div className="text-center pb-5 border-b border-[#252D3B]">
                   <span className="text-xs font-mono uppercase text-[#A7B0C0] block mb-1">
                     Faturamento Bruto da Turma
                   </span>
-                  <div className="text-3xl sm:text-4xl font-black text-[#F4F6FA]">
+                  <div className="text-3xl sm:text-4xl font-black text-[#F4F6FA] font-mono">
                     R$ {grossRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </div>
                 </div>
 
                 <div className="space-y-3 font-mono text-xs sm:text-sm">
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-[#121722] border border-[#252D3B]">
+                  <div className="flex justify-between items-center p-3.5 rounded-xl bg-[#121722] border border-[#252D3B]">
                     <div>
                       <span className="text-[#F4F6FA] block font-sans text-xs sm:text-sm font-medium">Plano Starter (Taxa 15%)</span>
                       <span className="text-xs text-[#A7B0C0]">Mensalidade R$ 0</span>
@@ -763,7 +740,7 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-[#1B2330] border border-[#3478F6]/50 shadow-[0_0_20px_rgba(52,120,246,0.15)]">
+                  <div className="flex justify-between items-center p-3.5 rounded-xl bg-[#1B2330] border border-[#3478F6]/50 shadow-[0_0_25px_rgba(52,120,246,0.15)]">
                     <div>
                       <span className="text-[#F4F6FA] font-sans text-xs sm:text-sm font-bold flex flex-wrap items-center gap-1.5">
                         Plano Pro (Taxa ZERO • 0%)
@@ -782,7 +759,7 @@ export default function HomePage() {
                   onClick={() => trackMarketingEvent('Lead', { content_name: 'Calculadora Começar Desafio Agora' })}
                   className="block w-full"
                 >
-                  <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_25px_rgba(52,120,246,0.25)]">
+                  <button className="mono-button-primary w-full min-h-[50px] py-3.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_25px_rgba(52,120,246,0.3)]">
                     <span>Criar Conta Grátis e Lançar Turma</span>
                     <ArrowRight className="w-4 h-4 text-white" />
                   </button>
@@ -791,16 +768,16 @@ export default function HomePage() {
 
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#252D3B] max-w-3xl mx-auto space-y-2 text-center font-mono">
+            <div className="mt-8 pt-5 border-t border-[#252D3B] max-w-3xl mx-auto space-y-2 text-center font-mono">
               <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-[#A7B0C0]">
-                <span className="inline-flex items-center gap-1.5 bg-[#1B2330] text-[#75A7FF] px-3 py-1 rounded-full border border-[#252D3B]">
+                <span className="inline-flex items-center gap-1.5 bg-[#1B2330] text-[#75A7FF] px-3.5 py-1 rounded-full border border-[#252D3B]">
                   <Zap className="w-3.5 h-3.5 text-[#3478F6]" /> Pix Instantâneo D+0 (Sem Risco de Chargeback)
                 </span>
-                <span className="inline-flex items-center gap-1.5 bg-[#121722] text-[#A7B0C0] px-3 py-1 rounded-full border border-[#252D3B]">
+                <span className="inline-flex items-center gap-1.5 bg-[#121722] text-[#A7B0C0] px-3.5 py-1 rounded-full border border-[#252D3B]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#3478F6]" /> Tarifa Bancária Asaas: a partir de R$ 0,99 fixo
                 </span>
               </div>
-              <p className="text-[11px] text-[#A7B0C0]/80 leading-relaxed">
+              <p className="text-xs text-[#A7B0C0]/80 leading-relaxed">
                 * Transparência Financeira: No plano Pro, a taxa da ArenaFitPro é 0% (você retém 100% do valor da inscrição deduzida apenas a tarifa bancária fixa do gateway de pagamento Asaas). Os alunos pagam via Pix à vista, eliminando estornos e inadimplência.
               </p>
             </div>
@@ -808,11 +785,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 10. Pricing Section — Destaque Claro em Azul Elétrico no Pro Coach */}
-      <section id="planos" className="py-20 sm:py-24 px-4 sm:px-6 border-t border-[#252D3B] relative">
+      {/* 10. Seção de Preços & Planos — Destaque Cirúrgico no Pro Coach e Tabela Dark Matrix Arejada */}
+      <section id="planos" className="py-20 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 block font-bold">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-3 block font-bold">
               INVESTIMENTO TRANSPARENTE
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[#F4F6FA] tracking-tight mb-4">
@@ -826,7 +803,7 @@ export default function HomePage() {
             <div className="mt-8 inline-flex items-center p-1.5 rounded-full border border-[#252D3B] bg-[#121722] shadow-xl">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`min-h-[40px] px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                className={`min-h-[42px] px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   billingCycle === 'monthly'
                     ? 'bg-[#3478F6] text-white shadow-lg'
                     : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
@@ -836,7 +813,7 @@ export default function HomePage() {
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`min-h-[40px] px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                className={`min-h-[42px] px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
                   billingCycle === 'yearly'
                     ? 'bg-[#3478F6] text-white shadow-lg'
                     : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
@@ -852,17 +829,17 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Grid dos 2 Cards de Preço */}
+          {/* Grid dos 2 Cards de Preço com Espaçamento e Hierarquia Sólida */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
             
-            {/* PLANO 1: Starter Coach (Discreto, Limpo) */}
-            <SpotlightCard3D className="p-6 sm:p-8 flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            {/* PLANO 1: Starter Coach */}
+            <SpotlightCard3D className="p-7 sm:p-9 flex flex-col justify-between border-[#252D3B] bg-[#121722] rounded-3xl">
               <div>
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-5">
                   <span className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0]">
                     Para Começar Agora
                   </span>
-                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] font-bold">
+                  <span className="text-xs font-mono px-3.5 py-1 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] font-bold">
                     GRÁTIS
                   </span>
                 </div>
@@ -874,45 +851,45 @@ export default function HomePage() {
 
                 <div className="mb-6 pb-6 border-b border-[#252D3B]">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl sm:text-5xl font-black text-[#F4F6FA]">R$ 0</span>
-                    <span className="text-xs sm:text-sm text-[#A7B0C0] font-mono">/mês</span>
+                    <span className="text-5xl font-black text-[#F4F6FA] font-mono">R$ 0</span>
+                    <span className="text-sm text-[#A7B0C0] font-mono">/mês</span>
                   </div>
-                  <div className="text-xs sm:text-sm font-mono text-[#A7B0C0] mt-2.5 flex items-center gap-1.5">
+                  <div className="text-xs sm:text-sm font-mono text-[#A7B0C0] mt-3 flex items-center gap-1.5">
                     <Percent className="w-4 h-4 text-[#3478F6] shrink-0" />
                     <span>Taxa de split: <strong className="text-[#F4F6FA]">15% apenas quando vender</strong></span>
                   </div>
-                  <div className="text-[11px] font-mono text-[#A7B0C0]/80 mt-1">
+                  <div className="text-xs font-mono text-[#A7B0C0]/80 mt-1">
                     + tarifa bancária Asaas por Pix recebido D+0
                   </div>
                 </div>
 
-                {/* Lista O que vem */}
-                <div className="space-y-3 mb-6">
+                {/* Lista O que vem com espaçamento vertical respirável */}
+                <div className="space-y-3.5 mb-8">
                   <div className="text-xs font-mono uppercase text-[#F4F6FA] font-bold">
                     O que está incluído:
                   </div>
                   <ul className="space-y-3 text-xs sm:text-sm text-[#A7B0C0]">
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
-                      <span><strong className="text-[#F4F6FA]">1 Desafio ativo</strong> por vez (até <strong className="text-[#F4F6FA]">10 alunos</strong>)</span>
+                      <span><strong className="text-[#F4F6FA]">1 Desafio ativo</strong> (até <strong className="text-[#F4F6FA]">10 alunos</strong>)</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span><strong className="text-[#F4F6FA]">Stories 9:16 White-Label</strong> com sua Marca no topo</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span>Acesso rápido por <strong className="text-[#F4F6FA]">Código de Convite</strong> & Link</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span>Câmera Nativa Antifraude & GPS</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span><strong className="text-[#F4F6FA]">Pódio Ao Vivo & Feed Social</strong> da Turma</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span>Recebimento Pix D+0 direto na sua conta</span>
                     </li>
@@ -920,24 +897,24 @@ export default function HomePage() {
                 </div>
 
                 {/* Lista O que NÃO vem */}
-                <div className="space-y-2.5 mb-8 pt-4 border-t border-[#252D3B]">
+                <div className="space-y-2.5 mb-8 pt-5 border-t border-[#252D3B]">
                   <div className="text-xs font-mono uppercase text-[#A7B0C0]">
                     Exclusivo do Pro Coach:
                   </div>
-                  <ul className="space-y-2 text-xs sm:text-sm text-[#A7B0C0]/70">
-                    <li className="flex items-center gap-2.5">
+                  <ul className="space-y-2.5 text-xs sm:text-sm text-[#A7B0C0]/70">
+                    <li className="flex items-center gap-3">
                       <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
                       <span>Taxa ZERO (0%) sobre as inscrições</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
                       <span>IA Nutricional (Cálculo de Calorias e Macros)</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
                       <span>Squads Cooperativos & Radar Anti-Churn 48h</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
                       <span>Até 5 desafios e 100 alunos por turma</span>
                     </li>
@@ -950,7 +927,7 @@ export default function HomePage() {
                 onClick={() => trackMarketingEvent('Lead', { content_name: 'Plano Starter Treinador' })}
                 className="block w-full"
               >
-                <button className="mono-button-secondary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2 border-[#252D3B] text-[#F4F6FA] hover:border-[#3478F6]">
+                <button className="mono-button-secondary w-full min-h-[50px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2 border-[#252D3B] text-[#F4F6FA] hover:border-[#3478F6]">
                   <Sparkles className="w-4 h-4 text-[#3478F6]" />
                   <span>Criar Conta Grátis no Starter</span>
                   <ArrowRight className="w-4 h-4" />
@@ -959,19 +936,19 @@ export default function HomePage() {
             </SpotlightCard3D>
 
             {/* PLANO 2: Pro Coach (DESTAQUE COM AZUL ELÉTRICO #3478F6) */}
-            <SpotlightCard3D className="p-6 sm:p-8 flex flex-col justify-between border-[#3478F6] bg-[#121722] shadow-[0_0_40px_rgba(52,120,246,0.2)] relative md:scale-[1.03]">
+            <SpotlightCard3D className="p-7 sm:p-9 flex flex-col justify-between border-2 border-[#3478F6] bg-[#121722] shadow-[0_0_50px_rgba(52,120,246,0.22)] relative md:scale-[1.03] rounded-3xl">
               {/* Badge Flutuante no Topo em Azul Elétrico */}
-              <div className="inline-flex self-start mb-3 bg-[#3478F6] text-white px-3.5 py-1 rounded-full text-xs font-mono font-black uppercase tracking-wider shadow-xl items-center gap-1.5">
+              <div className="inline-flex self-start mb-4 bg-[#3478F6] text-white px-4 py-1.5 rounded-full text-xs font-mono font-black uppercase tracking-wider shadow-lg items-center gap-2">
                 <Flame className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>MAIS ESCOLHIDO • TAXA 0% NA PLATAFORMA</span>
               </div>
 
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs font-mono uppercase tracking-wider text-[#75A7FF]">
+                <div className="flex justify-between items-center mb-5">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#75A7FF] font-bold">
                     Escala Profissional
                   </span>
-                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] font-extrabold">
+                  <span className="text-xs font-mono px-3.5 py-1 rounded-full bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] font-extrabold">
                     PRO
                   </span>
                 </div>
@@ -983,52 +960,52 @@ export default function HomePage() {
 
                 <div className="mb-6 pb-6 border-b border-[#252D3B]">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl sm:text-5xl font-black text-[#F4F6FA]">
+                    <span className="text-5xl font-black text-[#F4F6FA] font-mono">
                       R$ {billingCycle === 'monthly' ? '49,90' : '39,90'}
                     </span>
-                    <span className="text-xs sm:text-sm text-[#A7B0C0] font-mono">/mês</span>
+                    <span className="text-sm text-[#A7B0C0] font-mono">/mês</span>
                   </div>
                   {billingCycle === 'yearly' && (
-                    <span className="text-xs font-mono text-[#75A7FF] block mt-1.5 font-bold">
+                    <span className="text-xs font-mono text-[#75A7FF] block mt-2 font-bold">
                       Cobrado anualmente (economia de R$ 120/ano)
                     </span>
                   )}
-                  <div className="text-xs sm:text-sm font-mono text-[#75A7FF] mt-2.5 flex items-center gap-1.5 font-bold">
+                  <div className="text-xs sm:text-sm font-mono text-[#75A7FF] mt-3 flex items-center gap-1.5 font-bold">
                     <Percent className="w-4 h-4 text-[#3478F6] shrink-0" />
                     <span>Taxa ZERO da plataforma: 0% (100% do lucro é seu!)</span>
                   </div>
-                  <div className="text-[11px] font-mono text-[#A7B0C0]/80 mt-1">
+                  <div className="text-xs font-mono text-[#A7B0C0]/80 mt-1">
                     Deduzida apenas a tarifa bancária Asaas (a partir de R$ 0,99 fixo/Pix D+0)
                   </div>
                 </div>
 
                 {/* Lista O que vem */}
-                <div className="space-y-3 mb-8">
+                <div className="space-y-3.5 mb-8">
                   <div className="text-xs font-mono uppercase text-[#F4F6FA] font-bold">
                     Tudo do Starter, mais:
                   </div>
                   <ul className="space-y-3 text-xs sm:text-sm text-[#F4F6FA]">
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span>Até <strong className="text-white">5 Desafios simultâneos</strong> (até <strong className="text-white">100 alunos/cada</strong>)</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span><strong className="text-white">Stories 9:16 White-Label</strong> (Foto, Galeria e Sticker PNG)</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span><strong className="text-white">IA Nutricional Integrada</strong> em fotos de refeições</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span><strong className="text-white">Squads & Times Cooperativos</strong> liberados</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span><strong className="text-white">Radar Anti-Churn 48h & Resgate WhatsApp</strong></span>
                     </li>
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span>Suporte prioritário direto no WhatsApp</span>
                     </li>
@@ -1048,7 +1025,7 @@ export default function HomePage() {
                 }
                 className="block w-full"
               >
-                <button className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-black shadow-[0_0_25px_rgba(52,120,246,0.3)] flex items-center justify-center gap-2 cursor-pointer">
+                <button className="mono-button-primary w-full min-h-[50px] py-3.5 text-xs sm:text-sm font-black shadow-[0_0_30px_rgba(52,120,246,0.35)] flex items-center justify-center gap-2 cursor-pointer">
                   <Sparkles className="w-4 h-4 text-white" />
                   <span>Começar Agora com Pro Coach</span>
                   <ArrowRight className="w-4 h-4 text-white" />
@@ -1057,96 +1034,96 @@ export default function HomePage() {
             </SpotlightCard3D>
           </div>
 
-          {/* 10.1 Tabela Comparativa Detalhada Estilo Dark Matrix */}
-          <div className="mt-20">
-            <div className="text-center mb-8">
-              <h3 className="text-xl sm:text-2xl font-black text-[#F4F6FA]">
+          {/* 10.1 Tabela Comparativa Detalhada Estilo Dark Matrix Arejada */}
+          <div className="mt-24">
+            <div className="text-center mb-10">
+              <h3 className="text-2xl sm:text-3xl font-black text-[#F4F6FA]">
                 Comparativo Detalhado de Recursos
               </h3>
-              <p className="text-sm text-[#A7B0C0] mt-1">
+              <p className="text-sm sm:text-base text-[#A7B0C0] mt-1.5">
                 Transparência total em cada etapa da sua evolução
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-3xl border border-[#252D3B] bg-[#121722]/90 backdrop-blur-xl">
-              <table className="w-full text-left border-collapse text-xs sm:text-sm min-w-[540px]">
+            <div className="overflow-x-auto rounded-3xl border border-[#252D3B] bg-[#121722]/90 backdrop-blur-xl shadow-xl">
+              <table className="w-full text-left border-collapse text-xs sm:text-sm min-w-[560px]">
                 <thead>
                   <tr className="border-b border-[#252D3B] bg-[#1B2330]">
-                    <th className="p-4 sm:p-5 font-mono text-[#A7B0C0] uppercase tracking-wider text-xs">Recursos & Capacidade</th>
-                    <th className="p-4 sm:p-5 font-bold text-center text-[#F4F6FA]">Starter Coach</th>
-                    <th className="p-4 sm:p-5 font-bold text-center text-[#75A7FF] bg-[#3478F6]/10">Pro Coach</th>
+                    <th className="p-5 font-mono text-[#A7B0C0] uppercase tracking-wider text-xs">Recursos & Capacidade</th>
+                    <th className="p-5 font-bold text-center text-[#F4F6FA]">Starter Coach</th>
+                    <th className="p-5 font-bold text-center text-[#75A7FF] bg-[#3478F6]/10">Pro Coach</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#252D3B]">
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Mensalidade</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0] font-mono font-bold">R$ 0</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-mono font-bold bg-[#3478F6]/10">R$ 49,90/mês</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Mensalidade</td>
+                    <td className="p-5 text-center text-[#A7B0C0] font-mono font-bold">R$ 0</td>
+                    <td className="p-5 text-center text-[#3478F6] font-mono font-bold bg-[#3478F6]/10">R$ 49,90/mês</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Taxa de Split da Plataforma</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0] font-mono">15%</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-mono font-bold bg-[#3478F6]/10">0% (Taxa ZERO)</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Taxa de Split da Plataforma</td>
+                    <td className="p-5 text-center text-[#A7B0C0] font-mono">15%</td>
+                    <td className="p-5 text-center text-[#3478F6] font-mono font-bold bg-[#3478F6]/10">0% (Taxa ZERO)</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Compartilhamento Stories 9:16 com Sua Marca (White-Label)</td>
-                    <td className="p-4 sm:p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Completo (Foto + Sticker PNG)</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Compartilhamento Stories 9:16 com Sua Marca (White-Label)</td>
+                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Completo (Foto + Sticker PNG)</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Entrada por Código de Convite & Link</td>
-                    <td className="p-4 sm:p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Entrada por Código de Convite & Link</td>
+                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Desafios Ativos Simultâneos</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0]">1 Desafio</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">Até 5 Desafios</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Desafios Ativos Simultâneos</td>
+                    <td className="p-5 text-center text-[#A7B0C0]">1 Desafio</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">Até 5 Desafios</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Limite de Alunos por Desafio</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0]">Até 10 alunos</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">Até 100 alunos</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Limite de Alunos por Desafio</td>
+                    <td className="p-5 text-center text-[#A7B0C0]">Até 10 alunos</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">Até 100 alunos</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Câmera Nativa Antifraude & GPS</td>
-                    <td className="p-4 sm:p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Câmera Nativa Antifraude & GPS</td>
+                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Pódio Ao Vivo & Feed Social da Turma</td>
-                    <td className="p-4 sm:p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Pódio Ao Vivo & Feed Social da Turma</td>
+                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
+                    <td className="p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Saque Pix D+0 no Asaas</td>
-                    <td className="p-4 sm:p-5 text-center text-[#F4F6FA] font-bold">✓ Imediato</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Imediato</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Saque Pix D+0 no Asaas</td>
+                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓ Imediato</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Imediato</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Tarifa Bancária do Gateway (Asaas)</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0] font-mono text-xs">Tarifa fixa Asaas (a partir de R$ 0,99/Pix)</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0] font-mono text-xs bg-[#3478F6]/10">Tarifa fixa Asaas (a partir de R$ 0,99/Pix)</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Tarifa Bancária do Gateway (Asaas)</td>
+                    <td className="p-5 text-center text-[#A7B0C0] font-mono text-xs">Tarifa fixa Asaas (R$ 0,99/Pix)</td>
+                    <td className="p-5 text-center text-[#A7B0C0] font-mono text-xs bg-[#3478F6]/10">Tarifa fixa Asaas (R$ 0,99/Pix)</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Squads & Times Cooperativos</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Squads & Times Cooperativos</td>
+                    <td className="p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Radar Anti-Churn 48h & Resgate WhatsApp</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Radar Anti-Churn 48h & Resgate WhatsApp</td>
+                    <td className="p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-4 sm:p-5 text-[#F4F6FA] font-medium">Canal de Suporte</td>
-                    <td className="p-4 sm:p-5 text-center text-[#A7B0C0]">Central de Ajuda</td>
-                    <td className="p-4 sm:p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">WhatsApp Prioritário</td>
+                    <td className="p-5 text-[#F4F6FA] font-medium">Canal de Suporte</td>
+                    <td className="p-5 text-center text-[#A7B0C0]">Central de Ajuda</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">WhatsApp Prioritário</td>
                   </tr>
                 </tbody>
               </table>
@@ -1157,10 +1134,10 @@ export default function HomePage() {
       </section>
 
       {/* 11. Seção FAQ com Accordion Interativo */}
-      <section id="faq" className="py-20 sm:py-24 px-4 sm:px-6 border-t border-[#252D3B] relative">
+      <section id="faq" className="py-20 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 flex items-center justify-center gap-1.5 font-bold">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-3 flex items-center justify-center gap-1.5 font-bold">
               <HelpCircle className="w-4 h-4 text-[#3478F6]" /> DÚVIDAS FREQUENTES
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[#F4F6FA] tracking-tight mb-4">
@@ -1216,9 +1193,9 @@ export default function HomePage() {
       </section>
 
       {/* 12. Grand Final CTA Section — Alto Contraste e Ação Clara */}
-      <section className="py-20 sm:py-24 px-4 sm:px-6 border-t border-[#252D3B] relative bg-gradient-to-b from-[#121722] to-[#080A0F]">
+      <section className="py-20 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative bg-gradient-to-b from-[#121722] to-[#080A0F]">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#3478F6]/30 bg-[#3478F6]/10 text-xs font-mono uppercase tracking-wider text-[#75A7FF] mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#3478F6]/30 bg-[#3478F6]/10 text-xs font-mono uppercase tracking-wider text-[#75A7FF] mb-6">
             <Trophy className="w-4 h-4 text-[#3478F6]" />
             <span>Comece Agora em Menos de 3 Minutos</span>
           </div>

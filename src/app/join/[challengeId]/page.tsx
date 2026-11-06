@@ -11,6 +11,7 @@ import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Copy, Check, QrCode, Sparkles, User, ArrowRight, AlertCircle, RefreshCw } from 'lucide-react';
+import { trackMarketingEvent } from '@/lib/analytics/tracking';
 
 function JoinChallengeContent() {
   const params = useParams();
@@ -126,6 +127,12 @@ function JoinChallengeContent() {
 
         setPixModalOpen(true);
         setJoining(false);
+
+        trackMarketingEvent('InitiateCheckout', {
+          content_name: targetChallenge.title || 'Desafio Fitness',
+          value: Number(targetChallenge.price || 0),
+          currency: 'BRL',
+        });
         return;
       }
 
@@ -146,6 +153,10 @@ function JoinChallengeContent() {
       }
 
       setAlreadyJoined(true);
+      trackMarketingEvent('CompleteRegistration', {
+        content_name: targetChallenge.title || 'Desafio Fitness',
+        status: 'free',
+      });
       router.push('/app');
     } catch (err: any) {
       console.error('[Join Page] Erro ao ingressar:', err);
@@ -223,6 +234,11 @@ function JoinChallengeContent() {
         }
 
         setChallenge(challengeData);
+        trackMarketingEvent('ViewContent', {
+          content_name: challengeData.title,
+          value: Number(challengeData.price || 0),
+          currency: 'BRL',
+        });
 
         const { data: { user: currentUser } } = await supabase.auth.getUser();
         setUser(currentUser);

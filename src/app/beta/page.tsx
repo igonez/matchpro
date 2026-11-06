@@ -30,6 +30,7 @@ import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { JsonLd } from '@/components/seo/json-ld';
 import { CONTACT_CONFIG } from '@/lib/constants';
+import { trackMarketingEvent } from '@/lib/analytics/tracking';
 
 export default function BetaTestersPage() {
   const [name, setName] = useState('');
@@ -98,6 +99,11 @@ export default function BetaTestersPage() {
       }
 
       setSubmitted(true);
+      trackMarketingEvent('Lead', {
+        content_name: 'Inscrição Beta Tester',
+        role,
+        students_range: studentsRange,
+      });
     } catch (err) {
       console.error(err);
       setErrorMessage('Erro de conexão ao enviar o formulário. Por favor, tente novamente ou fale conosco pelo WhatsApp.');

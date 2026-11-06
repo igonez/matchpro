@@ -26,6 +26,7 @@ import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { CorporateFooter } from '@/components/layout/corporate-footer';
 import { JsonLd } from '@/components/seo/json-ld';
 import { CONTACT_CONFIG } from '@/lib/constants';
+import { trackMarketingEvent } from '@/lib/analytics/tracking';
 
 export default function VipCapturePage() {
   const [name, setName] = useState('');
@@ -91,6 +92,11 @@ export default function VipCapturePage() {
       }
 
       setSubmitted(true);
+      trackMarketingEvent('Lead', {
+        content_name: 'Lista VIP Treinador',
+        role,
+        students_range: studentsRange,
+      });
     } catch (err) {
       console.error(err);
       setErrorMessage('Erro de conexão ao enviar o formulário. Por favor, tente novamente ou fale conosco pelo WhatsApp.');

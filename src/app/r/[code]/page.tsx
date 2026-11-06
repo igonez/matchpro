@@ -345,7 +345,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                     <p className="text-xs font-bold text-white truncate">{entry.name}</p>
                     <div className="w-full h-1.5 rounded-full bg-white/10 mt-1 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-blue-600 to-[#3478F6]"
+                        className="h-full rounded-full bg-gradient-to-r from-[#2055BD] to-[#3478F6]"
                         style={{ width: `${widthPct}%` }}
                       />
                     </div>

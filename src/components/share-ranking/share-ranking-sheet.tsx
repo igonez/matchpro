@@ -870,7 +870,7 @@ export function ShareRankingSheet({
                           backgroundPosition: showCheckerboard
                             ? '0 0, 0 10px, 10px -10px, -10px 0'
                             : undefined,
-                          backgroundColor: showCheckerboard ? '#111114' : '#09090b',
+                          backgroundColor: showCheckerboard ? '#121722' : '#080A0F',
                         }}
                       >
                         <div

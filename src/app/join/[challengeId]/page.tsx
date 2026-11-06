@@ -630,8 +630,8 @@ function JoinChallengeContent() {
                 </button>
 
                 <div className="relative flex items-center justify-center my-2">
-                  <div className="border-t border-white/10 w-full" />
-                  <span className="bg-[#09090b] px-3 text-[10px] font-mono uppercase text-zinc-500 absolute">
+                  <div className="border-t border-[#252D3B] w-full" />
+                  <span className="bg-[#121722] px-3 text-[10px] font-mono uppercase text-[#A7B0C0] absolute">
                     ou preencha abaixo
                   </span>
                 </div>

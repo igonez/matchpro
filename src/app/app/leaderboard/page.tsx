@@ -144,7 +144,7 @@ export default function LeaderboardPage() {
             orange: '#f97316',
             rose: '#f43f5e',
             red: '#ef4444',
-            blue: '#3b82f6',
+            blue: '#3478F6',
           };
           return map[theme.toLowerCase()] || '#f59e0b';
         };
@@ -441,7 +441,7 @@ export default function LeaderboardPage() {
             </div>
             <div className="w-full h-2 rounded-full bg-black/80 border border-white/[0.08] overflow-hidden p-0.5">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-blue-600 via-[#3478F6] to-[#75A7FF] transition-all duration-700"
+                className="h-full rounded-full bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF] transition-all duration-700"
                 style={{ width: `${overtakeProgressPct}%` }}
               />
             </div>

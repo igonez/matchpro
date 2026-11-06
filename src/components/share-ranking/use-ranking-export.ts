@@ -454,7 +454,7 @@ export function useRankingExport({
           canvasHeight: 1920,
           pixelRatio: 1,
           cacheBust: false,
-          backgroundColor: isTransparent ? undefined : '#09090b',
+          backgroundColor: isTransparent ? undefined : '#080A0F',
         };
 
         // Captura de aquecimento no iOS, rodando DEPOIS da foto carregar

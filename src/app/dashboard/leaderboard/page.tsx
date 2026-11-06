@@ -687,7 +687,7 @@ function CoachLeaderboardContent() {
                                     ? 'bg-gradient-to-r from-slate-400 to-slate-200'
                                     : rankPos === 3
                                     ? 'bg-gradient-to-r from-amber-700 to-amber-500'
-                                    : 'bg-gradient-to-r from-blue-600 via-[#3478F6] to-[#75A7FF]'
+                                    : 'bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF]'
                                 }`}
                                 style={{ width: `${pctOfLeader}%` }}
                               />

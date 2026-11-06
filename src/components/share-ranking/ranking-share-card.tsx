@@ -124,7 +124,7 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
           height: '1920px',
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: isTransparent ? 'transparent' : '#09090b',
+          backgroundColor: isTransparent ? 'transparent' : '#080A0F',
           color: '#ffffff',
           fontFamily:
             '"Plus Jakarta Sans", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',

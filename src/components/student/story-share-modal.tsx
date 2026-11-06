@@ -91,7 +91,7 @@ export function StoryShareModal({
       // 1. Fundo Base OLED Dark Titanium
       const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
       bgGrad.addColorStop(0, '#000000');
-      bgGrad.addColorStop(0.2, '#09090b');
+      bgGrad.addColorStop(0.2, '#080A0F');
       bgGrad.addColorStop(0.6, '#040405');
       bgGrad.addColorStop(1, '#000000');
       ctx.fillStyle = bgGrad;
@@ -162,11 +162,11 @@ export function StoryShareModal({
           ctx.fillStyle = 'rgba(0,0,0,0.72)';
           drawRoundedRect(ctx, frameX + 44, frameY + 44, 430, 64, 32);
           ctx.fill();
-          ctx.strokeStyle = 'rgba(52,211,153,0.5)';
+          ctx.strokeStyle = 'rgba(52,120,246,0.6)';
           ctx.lineWidth = 2;
           ctx.stroke();
 
-          ctx.fillStyle = '#34d399';
+          ctx.fillStyle = '#3478F6';
           ctx.beginPath();
           ctx.arc(frameX + 80, frameY + 76, 9, 0, Math.PI * 2);
           ctx.fill();
@@ -209,7 +209,7 @@ export function StoryShareModal({
         ctx.font = '700 22px monospace';
         ctx.fillText('RECOMPENSA DA MISSÃO', 130, pillY + 75);
 
-        ctx.fillStyle = '#34d399';
+        ctx.fillStyle = '#3478F6';
         ctx.font = '900 58px monospace';
         ctx.fillText(data.pointsText, 130, pillY + 155);
 
@@ -309,9 +309,9 @@ export function StoryShareModal({
         ctx.fillStyle = 'rgba(16, 185, 129, 0.14)';
         drawRoundedRect(ctx, 334, 72, 150, 38, 19);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
+        ctx.strokeStyle = 'rgba(52, 120, 246, 0.45)';
         ctx.stroke();
-        ctx.fillStyle = '#34d399';
+        ctx.fillStyle = '#3478F6';
         ctx.beginPath();
         ctx.arc(360, 91, 5, 0, Math.PI * 2);
         ctx.fill();
@@ -334,7 +334,7 @@ export function StoryShareModal({
         const perfGrad = ctx.createLinearGradient(50, perfY, 1030, perfY + perfH);
         perfGrad.addColorStop(0, 'rgba(251, 191, 36, 0.14)');
         perfGrad.addColorStop(0.5, 'rgba(15, 15, 20, 0.96)');
-        perfGrad.addColorStop(1, 'rgba(9, 9, 11, 0.98)');
+        perfGrad.addColorStop(1, 'rgba(8, 10, 15, 0.98)');
         ctx.fillStyle = perfGrad;
         drawRoundedRect(ctx, 50, perfY, 980, perfH, 28);
         ctx.fill();
@@ -419,7 +419,7 @@ export function StoryShareModal({
           const barGrad = ctx.createLinearGradient(78, 0, 78 + (922 * progPct) / 100, 0);
           barGrad.addColorStop(0, '#f59e0b');
           barGrad.addColorStop(0.5, '#fbbf24');
-          barGrad.addColorStop(1, '#34d399');
+          barGrad.addColorStop(1, '#3478F6');
           ctx.fillStyle = barGrad;
           drawRoundedRect(ctx, 78, perfY + 162, Math.max(24, (922 * progPct) / 100), 14, 7);
           ctx.fill();
@@ -490,7 +490,7 @@ export function StoryShareModal({
             label: 'MÉDIA DA TURMA',
             val: `${avgPoints} XP`,
             sub: 'Ritmo coletivo',
-            color: '#34d399',
+            color: '#3478F6',
           },
           {
             label: 'TOP STREAK',
@@ -502,7 +502,7 @@ export function StoryShareModal({
 
         metricCards.forEach((mc, idx) => {
           const mx = 50 + idx * 333;
-          ctx.fillStyle = '#09090b';
+          ctx.fillStyle = '#080A0F';
           drawRoundedRect(ctx, mx, metricY, 314, 108, 22);
           ctx.fill();
           ctx.strokeStyle = 'rgba(255,255,255,0.09)';
@@ -531,7 +531,7 @@ export function StoryShareModal({
         // 4. BLOCO 3: PÓDIO 3D OLÍMPICO DOS TOP 3 (Y = 570, H = 480)
         const podY = 570;
         const podH = 480;
-        ctx.fillStyle = '#09090b';
+        ctx.fillStyle = '#080A0F';
         drawRoundedRect(ctx, 50, podY, 980, podH, 30);
         ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,0.12)';
@@ -666,7 +666,7 @@ export function StoryShareModal({
           ctx.arc(medalX, medalY, medalR, 0, Math.PI * 2);
           ctx.fillStyle = accentColor;
           ctx.fill();
-          ctx.strokeStyle = '#09090b';
+          ctx.strokeStyle = '#080A0F';
           ctx.lineWidth = 3;
           ctx.stroke();
 
@@ -766,7 +766,7 @@ export function StoryShareModal({
             Math.min(100, Math.round((entry.item.points / leaderPoints) * 100))
           );
 
-          ctx.fillStyle = isMe ? '#18181b' : '#09090b';
+          ctx.fillStyle = isMe ? '#18181b' : '#080A0F';
           drawRoundedRect(ctx, 50, rowY, 980, rowH, 24);
           ctx.fill();
 
@@ -863,7 +863,7 @@ export function StoryShareModal({
         });
 
         // 6. RODAPÉ OFICIAL ARENAFITPRO (Y = 1715..1850)
-        ctx.fillStyle = '#09090b';
+        ctx.fillStyle = '#080A0F';
         drawRoundedRect(ctx, 50, 1690, 980, 140, 32);
         ctx.fill();
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';

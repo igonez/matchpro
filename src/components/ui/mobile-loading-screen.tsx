@@ -15,7 +15,7 @@ export function MobileLoadingScreen({
   fullScreen = true,
   isReady,
   onFinish,
-  minDisplayTimeMs = 500,
+  minDisplayTimeMs = 1500, // 1.5s (1 segundo a mais de exibição cinematográfica)
 }: MobileLoadingScreenProps) {
   const [mountedTime] = useState(() => Date.now());
   const [isFadingOut, setIsFadingOut] = useState(false);
@@ -32,7 +32,7 @@ export function MobileLoadingScreen({
         const unmountTimer = setTimeout(() => {
           setShouldRender(false);
           if (onFinish) onFinish();
-        }, 250);
+        }, 300); // 300ms de fade-out suave cinematográfico
         return () => clearTimeout(unmountTimer);
       }, remainingTime);
 
@@ -48,7 +48,7 @@ export function MobileLoadingScreen({
     <div
       className={`${
         fullScreen ? 'fixed inset-0 z-50' : 'w-full min-h-[60vh]'
-      } bg-black flex items-center justify-center p-6 select-none transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      } bg-black flex items-center justify-center p-6 select-none overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isFadingOut
           ? 'opacity-0 scale-[1.03] pointer-events-none'
           : 'opacity-100 scale-100 pointer-events-auto'
@@ -57,11 +57,18 @@ export function MobileLoadingScreen({
         backgroundColor: '#000000',
       }}
     >
-      {/* Fundo Preto OLED Absoluto com Brilho Central Titânio Sutil */}
+      {/* 1. Fundo Preto OLED Absoluto com Brilho Central Titânio Sutil */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.035)_0%,_transparent_70%)] pointer-events-none" />
 
-      {/* Container Central com a Estrela Pura do Ícone Oficial (Sem Moldura) */}
-      <div className="relative flex items-center justify-center pointer-events-none">
+      {/* 2. FEIXE DE LUZ TITANIUM CINEMATOGRÁFICO CRUZANDO A TELA INTEIRA (100% GPU) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div 
+          className="absolute -top-[50%] -left-[50%] w-[200%] h-36 sm:h-52 bg-gradient-to-b from-transparent via-white/10 via-zinc-200/25 via-white/60 via-zinc-200/25 via-transparent to-transparent blur-md animate-screen-titanium-sweep pointer-events-none" 
+        />
+      </div>
+
+      {/* 3. Container Central com a Estrela Pura do Ícone Oficial (Sem Moldura) */}
+      <div className="relative flex items-center justify-center pointer-events-none z-10">
         {/* AURA TITANIUM ESPECULAR: Respiração Volumétrica 100% GPU */}
         <div 
           className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.12)_0%,_rgba(161,161,170,0.04)_45%,_transparent_70%)] blur-3xl animate-star-aura pointer-events-none" 
@@ -130,9 +137,9 @@ export function MobileLoadingScreen({
             </g>
           </svg>
 
-          {/* Feixe Especular de Luz Metálica Titânio (Gleam Shimmer) */}
+          {/* Feixe Especular de Luz Metálica Titânio no Corpo da Estrela */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-full">
-            <div className="w-[200%] h-8 bg-gradient-to-r from-transparent via-white/40 to-transparent blur-[2px] animate-star-shimmer pointer-events-none" />
+            <div className="w-[200%] h-8 bg-gradient-to-r from-transparent via-white/50 to-transparent blur-[2px] animate-star-shimmer pointer-events-none" />
           </div>
         </div>
       </div>

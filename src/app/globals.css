@@ -352,6 +352,32 @@ textarea:focus-visible,
   animation: starSpecularShimmer 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+@keyframes screenTitaniumSweep {
+  0% {
+    transform: translate3d(-100vw, -100vh, 0) rotate(-35deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate3d(100vw, 100vh, 0) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+.animate-screen-titanium-sweep {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  animation: screenTitaniumSweep 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
 
 
 

@@ -14,6 +14,8 @@ import {
   Zap,
   Sparkles,
   Check,
+  SlidersHorizontal,
+  RotateCcw,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -161,6 +163,15 @@ export default function NewChallengePage() {
   };
 
   const handleApplyPreset = (preset: ChallengePreset) => {
+    handleTogglePreset(preset);
+  };
+
+  const handleTogglePreset = (preset: ChallengePreset) => {
+    if (selectedPresetId === preset.id) {
+      // Se já estava selecionado, desmarca a caixinha e limpa os campos para o treinador personalizar do zero
+      handleSelectCustom();
+      return;
+    }
     setSelectedPresetId(preset.id);
     setTitle(preset.defaultTitle);
     const start = computeDateOffset(1);
@@ -169,7 +180,19 @@ export default function NewChallengePage() {
     setEndDate(end);
     setPrice(preset.suggestedPrice);
     setWeeklyBonusPoints(preset.weeklyBonus);
-    showToast(`Template "${preset.name}" aplicado em 1 clique!`);
+    showToast(`Template "${preset.name}" selecionado! Clique novamente para desmarcar.`);
+  };
+
+  const handleSelectCustom = () => {
+    setSelectedPresetId('custom');
+    setTitle('');
+    setPrice('');
+    setWeeklyBonusPoints('20');
+    const start = computeDateOffset(1);
+    const end = computeDateOffset(30); // 30 dias padrão para desafio personalizado
+    setStartDate(start);
+    setEndDate(end);
+    showToast('Modo personalizado ativado! Campos em branco liberados para preencher.');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -225,6 +248,35 @@ export default function NewChallengePage() {
         .single();
 
       if (challengeError) throw challengeError;
+
+      // Se for modo personalizado ('custom'), provisiona semanas em branco sem empurrar missões prontas
+      if (selectedPresetId === 'custom') {
+        try {
+          const startObj = new Date(startDate + 'T00:00:00');
+          const endObj = new Date(endDate + 'T00:00:00');
+          const diffMs = Math.max(0, endObj.getTime() - startObj.getTime());
+          const diffDays = Math.max(7, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+          const totalWeeksCount = Math.max(1, Math.min(8, Math.ceil(diffDays / 7)));
+          const bonusVal = Math.max(0, parseInt(weeklyBonusPoints, 10) || 20);
+
+          const defaultWeeks = Array.from({ length: totalWeeksCount }, (_, idx) => ({
+            challenge_id: challenge.id,
+            week_number: idx + 1,
+            title: `Semana ${idx + 1}`,
+            bonus_points: bonusVal,
+          }));
+
+          await supabase.from('challenge_weeks').insert(defaultWeeks);
+        } catch (customWeekErr) {
+          console.warn('Erro ao criar semanas do desafio customizado:', customWeekErr);
+        }
+
+        showToast('Desafio personalizado criado com sucesso! Agora configure as missões.');
+        setTimeout(() => {
+          router.push(`/dashboard/missions?challengeId=${challenge.id}`);
+        }, 700);
+        return;
+      }
 
       // Auto-provisionar semanas e missões completas baseadas no Template selecionado
       try {
@@ -376,10 +428,15 @@ export default function NewChallengePage() {
       {/* SELETOR DE TEMPLATES EM 1 CLIQUE */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-300 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            Modelos Prontos em 1 Clique (Auto-Preenche Semanas & Missões)
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#F4F6FA] flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#3478F6]" />
+            Modelos Prontos ou Personalizado
           </span>
+          {selectedPresetId !== 'custom' && (
+            <span className="text-[11px] font-mono text-[#A7B0C0]">
+              Dica: clique no selecionado para desmarcar
+            </span>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -390,34 +447,38 @@ export default function NewChallengePage() {
               <button
                 key={preset.id}
                 type="button"
-                onClick={() => handleApplyPreset(preset)}
-                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                onClick={() => handleTogglePreset(preset)}
+                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2.5 ${
                   isSelected
-                    ? 'bg-white/[0.08] border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.12)]'
-                    : 'bg-zinc-950/70 border-white/10 hover:border-white/25 hover:bg-white/[0.03]'
+                    ? 'bg-[#3478F6]/10 border-[#3478F6] shadow-[0_0_25px_rgba(52,120,246,0.22)] ring-1 ring-[#3478F6]'
+                    : 'bg-[#121722] border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/10">
+                  <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                    isSelected 
+                      ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/40' 
+                      : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
+                  }`}>
                     {preset.badge}
                   </span>
                   {isSelected ? (
-                    <span className="h-5 w-5 rounded-full bg-white text-black flex items-center justify-center">
+                    <span className="h-5 w-5 rounded-full bg-[#3478F6] text-white flex items-center justify-center shadow-md">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </span>
                   ) : (
-                    <Icon className="w-4 h-4 text-zinc-400" />
+                    <Icon className="w-4 h-4 text-[#A7B0C0]" />
                   )}
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-black text-white">{preset.name}</h3>
-                  <p className="text-[11px] text-zinc-400 leading-relaxed mt-0.5">
+                  <h3 className="text-sm font-black text-[#F4F6FA]">{preset.name}</h3>
+                  <p className="text-[11px] text-[#A7B0C0] leading-relaxed mt-0.5">
                     {preset.summary}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-[11px] font-mono text-zinc-300">
+                <div className="flex items-center justify-between pt-2 border-t border-[#252D3B] text-[11px] font-mono text-[#A7B0C0]">
                   <span>Duração: {preset.durationDays} dias</span>
                   <span className="font-bold text-[#75A7FF]">
                     {Number(preset.suggestedPrice) === 0 ? 'GRÁTIS' : `R$ ${preset.suggestedPrice}`}
@@ -426,53 +487,128 @@ export default function NewChallengePage() {
               </button>
             );
           })}
+
+          {/* Opção 5: Personalize seu Próprio Desafio (Do Zero) */}
+          <button
+            type="button"
+            onClick={handleSelectCustom}
+            className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2.5 sm:col-span-2 ${
+              selectedPresetId === 'custom'
+                ? 'bg-[#3478F6]/10 border-[#3478F6] shadow-[0_0_25px_rgba(52,120,246,0.22)] ring-1 ring-[#3478F6]'
+                : 'bg-[#121722] border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]'
+            }`}
+          >
+            <div className="flex items-center justify-between gap-2">
+              <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                selectedPresetId === 'custom'
+                  ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/40'
+                  : 'bg-[#1B2330] text-[#75A7FF] border-[#252D3B]'
+              }`}>
+                100% PERSONALIZADO • DO ZERO
+              </span>
+              {selectedPresetId === 'custom' ? (
+                <span className="h-5 w-5 rounded-full bg-[#3478F6] text-white flex items-center justify-center shadow-md">
+                  <Check className="w-3 h-3 stroke-[3]" />
+                </span>
+              ) : (
+                <SlidersHorizontal className="w-4 h-4 text-[#75A7FF]" />
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-sm font-black text-[#F4F6FA] flex items-center gap-2">
+                <span>Personalize seu Próprio Desafio</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] font-normal border border-[#3478F6]/30">
+                  Campos Vazios
+                </span>
+              </h3>
+              <p className="text-[11px] text-[#A7B0C0] leading-relaxed mt-0.5">
+                Não quer usar modelos prontos? Esta opção limpa o formulário para você definir seu próprio título, período, valor e criar suas missões do zero sem precisar apagar nada.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-[#252D3B] text-[11px] font-mono text-[#A7B0C0]">
+              <span>Duração: Você decide livremente</span>
+              <span className="font-bold text-[#3478F6]">Valor: Você define</span>
+            </div>
+          </button>
         </div>
       </div>
 
       <Card data-tour="challenge-form-card" className="border-[#252D3B] bg-[#121722]">
         <CardHeader>
-          <CardTitle className="text-lg text-[#F4F6FA]">Dados do Desafio</CardTitle>
-          <CardDescription className="text-xs text-[#A7B0C0]">
-            Revise ou edite livremente o título, período e valor de inscrição da turma.
-          </CardDescription>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <CardTitle className="text-lg text-[#F4F6FA]">Dados do Desafio</CardTitle>
+              <CardDescription className="text-xs text-[#A7B0C0]">
+                {selectedPresetId === 'custom'
+                  ? 'Modo Personalizado: Defina livremente título, período e valor da turma.'
+                  : 'Revise ou edite livremente o título, período e valor de inscrição da turma.'}
+              </CardDescription>
+            </div>
+            {selectedPresetId !== 'custom' ? (
+              <button
+                type="button"
+                onClick={handleSelectCustom}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-xs font-mono text-[#75A7FF] hover:text-white transition-colors self-start sm:self-auto cursor-pointer"
+                title="Limpar campos e criar desafio totalmente personalizado"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-[#3478F6]" />
+                <span>Limpar campos / Criar do zero</span>
+              </button>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#3478F6]/10 border border-[#3478F6]/30 text-xs font-mono text-[#75A7FF] self-start sm:self-auto">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#3478F6]" />
+                <span>Modo Personalizado Ativo</span>
+              </span>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
                 Título do Desafio
               </label>
               <Input
                 type="text"
-                placeholder="Ex: Desafio Seca 21 Dias - Turma Oficial"
+                placeholder={selectedPresetId === 'custom' ? "Digite o nome do seu desafio personalizado..." : "Ex: Desafio Seca 21 Dias - Turma Oficial"}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
+                className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-semibold text-zinc-300 block mb-1">
+            {/* Datas de Início e Encerramento com largura travada dentro do container */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full min-w-0">
+              <div className="w-full min-w-0 space-y-1">
+                <label className="text-xs font-semibold text-[#A7B0C0] block">
                   Data de Início
                 </label>
-                <Input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  required
-                />
+                <div className="w-full min-w-0 relative">
+                  <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    required
+                    className="block w-full min-w-0 max-w-full box-border [color-scheme:dark] bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] text-xs sm:text-sm px-3.5 h-11 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="text-xs font-semibold text-zinc-300 block mb-1">
+              <div className="w-full min-w-0 space-y-1">
+                <label className="text-xs font-semibold text-[#A7B0C0] block">
                   Data de Encerramento
                 </label>
-                <Input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  required
-                />
+                <div className="w-full min-w-0 relative">
+                  <Input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    required
+                    className="block w-full min-w-0 max-w-full box-border [color-scheme:dark] bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] text-xs sm:text-sm px-3.5 h-11 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
+                  />
+                </div>
               </div>
             </div>
 
@@ -588,8 +724,16 @@ export default function NewChallengePage() {
                   Cancelar
                 </Button>
               </Link>
-              <Button type="submit" disabled={loading} className="w-full sm:w-auto font-mono">
-                {loading ? 'Gerando Semanas & Missões...' : 'Criar Desafio em 1 Clique'}
+              <Button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full sm:w-auto font-mono bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-[0_0_20px_rgba(52,120,246,0.25)]"
+              >
+                {loading 
+                  ? 'Configurando Turma...' 
+                  : selectedPresetId === 'custom' 
+                    ? 'Criar Desafio Personalizado' 
+                    : 'Criar Desafio com Modelo Pronto'}
               </Button>
             </div>
           </form>

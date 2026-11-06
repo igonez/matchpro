@@ -352,8 +352,8 @@ export default function NewChallengePage() {
       {/* Toast Notificação */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
             <span>{toastMessage}</span>
           </div>
         </div>
@@ -419,7 +419,7 @@ export default function NewChallengePage() {
 
                 <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-[11px] font-mono text-zinc-300">
                   <span>Duração: {preset.durationDays} dias</span>
-                  <span className="font-bold text-emerald-400">
+                  <span className="font-bold text-[#75A7FF]">
                     {Number(preset.suggestedPrice) === 0 ? 'GRÁTIS' : `R$ ${preset.suggestedPrice}`}
                   </span>
                 </div>
@@ -429,10 +429,10 @@ export default function NewChallengePage() {
         </div>
       </div>
 
-      <Card data-tour="challenge-form-card" className="border-zinc-800 bg-zinc-900/40">
+      <Card data-tour="challenge-form-card" className="border-[#252D3B] bg-[#121722]">
         <CardHeader>
-          <CardTitle className="text-lg">Dados do Desafio</CardTitle>
-          <CardDescription className="text-xs">
+          <CardTitle className="text-lg text-[#F4F6FA]">Dados do Desafio</CardTitle>
+          <CardDescription className="text-xs text-[#A7B0C0]">
             Revise ou edite livremente o título, período e valor de inscrição da turma.
           </CardDescription>
         </CardHeader>
@@ -499,17 +499,17 @@ export default function NewChallengePage() {
             </div>
 
             {/* Gamificação: Bônus por Semana 100% Concluída */}
-            <div className="p-3.5 rounded-2xl border border-white/10 bg-zinc-950/60 space-y-2">
+            <div className="p-3.5 rounded-2xl border border-[#252D3B] bg-[#1B2330] space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-white flex items-center gap-1.5">
-                  <Trophy className="w-4 h-4 text-emerald-400" />
+                  <Trophy className="w-4 h-4 text-[#3478F6]" />
                   Bônus por Semana 100% Concluída
                 </label>
-                <span className="text-xs font-mono text-emerald-400 font-bold">
+                <span className="text-xs font-mono text-[#75A7FF] font-bold">
                   +{weeklyBonusPoints || 0} XP por semana
                 </span>
               </div>
-              <p className="text-[11px] text-zinc-400 leading-relaxed">
+              <p className="text-[11px] text-[#A7B0C0] leading-relaxed">
                 Pontuação extra que o aluno conquista ao completar 100% das missões da semana. Você também poderá calibrar cada semana individualmente na tela de Missões.
               </p>
               <div className="relative">
@@ -555,8 +555,8 @@ export default function NewChallengePage() {
             )}
 
             {parseFloat(price) > 0 && !checkingWallet && hasWalletId === true && (
-              <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs flex items-center gap-2.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+              <div className="p-3.5 rounded-xl border border-[#3478F6]/30 bg-[#3478F6]/10 text-[#75A7FF] text-xs flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 text-[#3478F6] shrink-0" />
                 <span className="font-mono">
                   Split de Pagamentos ativo: As inscrições pagas serão transferidas automaticamente para sua carteira.
                 </span>

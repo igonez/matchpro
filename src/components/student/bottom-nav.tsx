@@ -378,7 +378,7 @@ export function StudentBottomNav() {
     <>
       {/* 1. Menu Inferior Horizontal 100% Simétrico (Hoje, Missões | Check-in | Ranking, Feed) */}
       <nav className="fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-40 transition-all">
-        <div className="mono-glass-pill rounded-full px-3 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-white/20">
+        <div className="bg-[#121722]/90 backdrop-blur-xl rounded-full px-3 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-[#252D3B]">
           
           {/* Lado Esquerdo (Hoje, Missões) */}
           <div className="flex items-center justify-around flex-1 gap-1">
@@ -388,8 +388,8 @@ export function StudentBottomNav() {
                 href={tab.href}
                 className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all rounded-full whitespace-nowrap ${
                   tab.active
-                    ? 'text-white font-semibold bg-white/20 shadow-inner'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
+                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06]'
                 }`}
               >
                 {tab.name}
@@ -407,15 +407,15 @@ export function StudentBottomNav() {
               <div
                 className={`h-12 w-12 rounded-full p-px transition-all ${
                   activeSession
-                    ? 'bg-gradient-to-b from-emerald-300 via-emerald-500 to-emerald-800 shadow-[0_0_25px_rgba(52,211,153,0.6)] scale-105'
-                    : 'bg-gradient-to-b from-white via-zinc-300 to-zinc-800 shadow-[0_0_25px_rgba(255,255,255,0.35)] group-hover:scale-105 active:scale-95'
+                    ? 'bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#121722] shadow-[0_0_25px_rgba(52,120,246,0.6)] scale-105'
+                    : 'bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105 active:scale-95'
                 }`}
               >
-                <div className="h-full w-full bg-black rounded-full flex items-center justify-center text-white relative">
+                <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center text-white relative">
                   {activeSession ? (
-                    <Play className="w-4 h-4 text-emerald-400 fill-emerald-400 animate-pulse" />
+                    <Play className="w-4 h-4 text-[#75A7FF] fill-[#75A7FF] animate-pulse" />
                   ) : (
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg className="w-5 h-5 text-[#3478F6] group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <circle cx="12" cy="12" r="3" strokeWidth="2.2" />
                       <path
                         strokeLinecap="round"
@@ -438,8 +438,8 @@ export function StudentBottomNav() {
                 href={tab.href}
                 className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all rounded-full whitespace-nowrap ${
                   tab.active
-                    ? 'text-white font-semibold bg-white/20 shadow-inner'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
+                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06]'
                 }`}
               >
                 {tab.name}
@@ -458,15 +458,15 @@ export function StudentBottomNav() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-xs h-full bg-black/95 border-r border-white/15 p-6 safe-top-drawer safe-bottom-drawer flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-200"
+            className="w-full max-w-xs h-full bg-[#080A0F] border-r border-[#252D3B] p-6 safe-top-drawer safe-bottom-drawer flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-200"
           >
             
             {/* Topo do Menu Vertical */}
             <div className="space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div className="flex items-center justify-between pb-4 border-b border-[#252D3B]">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-800 p-px">
-                    <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-b from-[#3478F6] via-zinc-400 to-[#121722] p-px">
+                    <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
                       {studentInfo?.avatar_url ? (
                         <img src={studentInfo.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
@@ -475,10 +475,10 @@ export function StudentBottomNav() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-white leading-tight">
+                    <h3 className="text-sm font-black text-[#F4F6FA] leading-tight">
                       {studentInfo?.full_name || 'Atleta'}
                     </h3>
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase">
+                    <span className="text-[10px] font-mono text-[#A7B0C0] uppercase">
                       Turma Oficial
                     </span>
                   </div>
@@ -487,7 +487,7 @@ export function StudentBottomNav() {
                 <button
                   onClick={() => setShowVerticalMenu(false)}
                   aria-label="Fechar menu"
-                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -497,7 +497,7 @@ export function StudentBottomNav() {
               <div className="space-y-4">
                 {verticalMenuSections.map((section) => (
                   <div key={section.category} className="space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-bold block px-1">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] font-bold block px-1">
                       {section.category}
                     </span>
                     <div className="space-y-1">
@@ -509,22 +509,22 @@ export function StudentBottomNav() {
                               key={item.title}
                               type="button"
                               onClick={item.onClick}
-                              className="w-full flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:text-white hover:bg-white/[0.08] transition-all text-left cursor-pointer"
+                              className="w-full flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330] transition-all text-left cursor-pointer"
                             >
                               <div className="flex items-center gap-2.5 min-w-0">
-                                <div className="p-1.5 rounded-lg bg-white/5 text-zinc-400">
+                                <div className="p-1.5 rounded-lg bg-white/5 text-[#A7B0C0]">
                                   <Icon className="w-3.5 h-3.5" />
                                 </div>
                                 <div className="min-w-0">
-                                  <div className="text-xs font-semibold text-white leading-tight truncate">
+                                  <div className="text-xs font-semibold text-[#F4F6FA] leading-tight truncate">
                                     {item.title}
                                   </div>
-                                  <p className="text-[10px] text-zinc-400 leading-tight truncate mt-0.5">
+                                  <p className="text-[10px] text-[#A7B0C0] leading-tight truncate mt-0.5">
                                     {item.subtitle}
                                   </p>
                                 </div>
                               </div>
-                              <ChevronRight className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                              <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
                             </button>
                           );
                         }
@@ -536,24 +536,24 @@ export function StudentBottomNav() {
                             onClick={() => setShowVerticalMenu(false)}
                             className={`flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border transition-all ${
                               item.active
-                                ? 'bg-white/10 border-white/30 text-white shadow-md'
-                                : 'bg-black/40 border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                ? 'bg-[#3478F6]/15 border-[#3478F6]/40 text-[#F4F6FA] shadow-md'
+                                : 'bg-[#121722]/80 border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
                             }`}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <div className={`p-1.5 rounded-lg ${item.active ? 'bg-white text-black' : 'bg-white/5 text-zinc-400'}`}>
+                              <div className={`p-1.5 rounded-lg ${item.active ? 'bg-[#3478F6] text-white' : 'bg-white/5 text-[#A7B0C0]'}`}>
                                 <Icon className="w-3.5 h-3.5" />
                               </div>
                               <div className="min-w-0">
-                                <div className="text-xs font-semibold text-white leading-tight truncate">
+                                <div className="text-xs font-semibold text-[#F4F6FA] leading-tight truncate">
                                   {item.title}
                                 </div>
-                                <p className="text-[10px] text-zinc-500 leading-tight truncate mt-0.5">
+                                <p className="text-[10px] text-[#A7B0C0] leading-tight truncate mt-0.5">
                                   {item.subtitle}
                                 </p>
                               </div>
                             </div>
-                            <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+                            <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
                           </Link>
                         );
                       })}
@@ -564,12 +564,12 @@ export function StudentBottomNav() {
             </div>
 
             {/* Rodapé do Menu Vertical */}
-            <div className="pt-6 border-t border-white/[0.08] space-y-3">
+            <div className="pt-6 border-t border-[#252D3B] space-y-3">
               {isProfessional && (
                 <Link
                   href="/dashboard"
                   onClick={() => setShowVerticalMenu(false)}
-                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-white text-black font-semibold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md active:scale-95"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#3478F6] text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-[#75A7FF] transition-all shadow-md active:scale-95"
                 >
                   <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
                   <span>Voltar ao Painel do Coach</span>
@@ -578,11 +578,11 @@ export function StudentBottomNav() {
 
               <button
                 onClick={handleSignOut}
-                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition-colors text-center cursor-pointer"
+                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-medium text-[#A7B0C0] hover:text-white transition-colors text-center cursor-pointer"
               >
                 Sair da Conta
               </button>
-              <p className="text-[11px] text-zinc-500 text-center">
+              <p className="text-[11px] text-[#A7B0C0] text-center">
                 ArenaFitPro
               </p>
             </div>
@@ -594,22 +594,22 @@ export function StudentBottomNav() {
       {/* 3. Bottom Sheet Rápido de Check-in ao tocar na Câmera */}
       {showQuickSheet && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
-          <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 safe-bottom-drawer space-y-4 max-h-[85vh] flex flex-col border-t border-white/20">
+          <div className="bg-[#121722] w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 safe-bottom-drawer space-y-4 max-h-[85vh] flex flex-col border-t border-[#252D3B]">
             {/* Header do Sheet */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
               <div>
-                <h3 className="font-bold text-sm sm:text-base text-white flex items-center gap-2">
+                <h3 className="font-bold text-sm sm:text-base text-[#F4F6FA] flex items-center gap-2">
                   <span>Check-in Rápido</span>
-                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-200">
+                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF]">
                     {pendingMissions.length} pendente{pendingMissions.length !== 1 ? 's' : ''}
                   </span>
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-300 mt-0.5">Escolha a atividade para comprovar sua meta de hoje</p>
+                <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">Escolha a atividade para comprovar sua meta de hoje</p>
               </div>
               <button
                 onClick={() => setShowQuickSheet(false)}
                 aria-label="Fechar check-in rápido"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -617,16 +617,16 @@ export function StudentBottomNav() {
 
             {/* Destaque de Sessão Ativa (se houver treino ou cardio rodando) */}
             {activeSession && (
-              <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-3 shadow-[0_0_20px_rgba(52,211,153,0.15)]">
+              <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#3478F6]/40 flex items-center justify-between gap-3 shadow-[0_0_20px_rgba(52,120,246,0.15)]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-xs shrink-0 animate-pulse">
-                    <Play className="w-3.5 h-3.5 fill-emerald-400" />
+                  <div className="h-9 w-9 rounded-xl bg-[#3478F6]/20 border border-[#3478F6]/40 flex items-center justify-center text-[#75A7FF] font-bold text-xs shrink-0 animate-pulse">
+                    <Play className="w-3.5 h-3.5 fill-[#75A7FF]" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block font-bold">
+                    <span className="text-[11px] font-mono text-[#75A7FF] uppercase tracking-wider block font-bold">
                       Sessão em Andamento
                     </span>
-                    <p className="font-bold text-xs sm:text-sm text-white truncate">
+                    <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] truncate">
                       {activeSession.missionTitle}
                     </p>
                   </div>
@@ -644,7 +644,7 @@ export function StudentBottomNav() {
                       );
                     }
                   }}
-                  className="shrink-0 min-h-[44px] px-4 py-2 rounded-xl bg-emerald-400 text-black font-mono font-bold text-xs hover:bg-emerald-300 transition-all shadow-md flex items-center gap-1 active:scale-95 uppercase tracking-wider cursor-pointer"
+                  className="shrink-0 min-h-[44px] px-4 py-2 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs hover:bg-[#75A7FF] transition-all shadow-md flex items-center gap-1 active:scale-95 uppercase tracking-wider cursor-pointer"
                 >
                   <span>Finalizar</span>
                 </button>
@@ -655,17 +655,17 @@ export function StudentBottomNav() {
             <div className="space-y-2.5 overflow-y-auto flex-1 py-1">
               {pendingMissions.length === 0 && !activeSession ? (
                 <div className="text-center py-8 space-y-3">
-                  <div className="h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
+                  <div className="h-12 w-12 rounded-full bg-[#3478F6]/10 border border-[#3478F6]/30 flex items-center justify-center text-[#3478F6] mx-auto">
                     <CheckCircle className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-bold text-xs sm:text-sm text-white uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
-                    <p className="text-xs text-zinc-300 mt-1">Excelente disciplina. Seu streak e XP estão garantidos.</p>
+                    <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
+                    <p className="text-xs text-[#A7B0C0] mt-1">Excelente disciplina. Seu streak e XP estão garantidos.</p>
                   </div>
                   <Link
                     href="/app/missions"
                     onClick={() => setShowQuickSheet(false)}
-                    className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-200 hover:text-white transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2.5 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono text-[#F4F6FA] hover:border-[#3478F6]/50 transition-colors"
                   >
                     <span>Ver cronograma da semana</span>
                     <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -681,13 +681,13 @@ export function StudentBottomNav() {
                   const isTimer = valType === 'timer' || (!m.validation_type && (m.category === 'treino' || m.category === 'cardio'));
 
                   const catMeta: Record<string, { Icon: any; label: string; color: string }> = {
-                    treino: { Icon: Dumbbell, label: 'Treino', color: 'border-amber-400/30 text-amber-300 bg-amber-400/10' },
+                    treino: { Icon: Dumbbell, label: 'Treino', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
                     cardio: { Icon: Activity, label: 'Cardio', color: 'border-cyan-400/30 text-cyan-300 bg-cyan-400/10' },
-                    refeicao: { Icon: Utensils, label: 'Nutrição', color: 'border-emerald-400/30 text-emerald-300 bg-emerald-400/10' },
+                    refeicao: { Icon: Utensils, label: 'Nutrição', color: 'border-[#3478F6]/30 text-[#3478F6] bg-[#3478F6]/10' },
                     habito: { Icon: Droplets, label: 'Hábito', color: 'border-purple-400/30 text-purple-300 bg-purple-400/10' },
                   };
 
-                  const currentMeta = catMeta[m.category] || { Icon: Target, label: m.category, color: 'border-white/10 text-white bg-white/5' };
+                  const currentMeta = catMeta[m.category] || { Icon: Target, label: m.category, color: 'border-[#252D3B] text-[#F4F6FA] bg-[#121722]' };
                   const CategoryIcon = currentMeta.Icon;
                   const listLabel = customList?.name || currentMeta.label;
 
@@ -695,19 +695,19 @@ export function StudentBottomNav() {
                     <div
                       key={m.id}
                       onClick={() => handleQuickRegister(m)}
-                      className="w-full p-3.5 rounded-2xl bg-zinc-950/60 border border-white/10 hover:border-white/25 hover:bg-zinc-900/60 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
+                      className="w-full p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]/90 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div className={`h-10 w-10 rounded-xl border flex items-center justify-center shrink-0 transition-colors ${currentMeta.color}`}>
                           <CategoryIcon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-xs sm:text-sm text-white truncate">{m.title}</p>
+                          <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] truncate">{m.title}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-300 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                            <span className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] bg-[#121722] px-2 py-0.5 rounded border border-[#252D3B]">
                               {listLabel}
                             </span>
-                            <span className="text-xs font-mono font-bold text-amber-300">
+                            <span className="text-xs font-mono font-bold text-[#75A7FF]">
                               +{m.points_rewarded} XP
                             </span>
                           </div>
@@ -722,16 +722,16 @@ export function StudentBottomNav() {
                               e.stopPropagation();
                               handleSimpleCheckin(m);
                             }}
-                            className="min-h-[44px] px-3.5 py-2 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors shadow-sm active:scale-95 uppercase tracking-wider cursor-pointer"
+                            className="min-h-[44px] px-3.5 py-2 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs hover:bg-[#75A7FF] transition-colors shadow-sm active:scale-95 uppercase tracking-wider cursor-pointer"
                           >
                             Check-in
                           </button>
                         ) : isTimer ? (
-                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-1 shadow-sm uppercase tracking-wider">
+                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs flex items-center gap-1 shadow-sm uppercase tracking-wider">
                             Iniciar Sessão
                           </span>
                         ) : (
-                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-white/10 text-white font-mono font-medium text-xs border border-white/15 flex items-center gap-1 group-hover:bg-white/20 transition-colors uppercase tracking-wider">
+                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-[#121722] text-[#F4F6FA] font-mono font-medium text-xs border border-[#252D3B] flex items-center gap-1 group-hover:border-[#3478F6]/40 transition-colors uppercase tracking-wider">
                             Foto
                           </span>
                         )}
@@ -747,8 +747,8 @@ export function StudentBottomNav() {
 
       {/* Toast Flutuante da Barra */}
       {toastMessage && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-white text-black px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-[#121722] border border-[#3478F6]/40 text-[#F4F6FA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span>
           <span>{toastMessage}</span>
         </div>
       )}

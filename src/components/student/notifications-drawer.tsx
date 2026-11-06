@@ -120,17 +120,17 @@ export function NotificationsDrawer({
     switch (type) {
       case 'streak_risk':
       case 'reminder_20h':
-        return <Flame className="h-4 w-4 text-amber-400" />;
+        return <Flame className="h-4 w-4 text-[#75A7FF]" />;
       case 'rank_change':
-        return <Trophy className="h-4 w-4 text-yellow-400" />;
+        return <Trophy className="h-4 w-4 text-[#3478F6]" />;
       case 'feed_reaction':
         return <Heart className="h-4 w-4 text-rose-400" />;
       case 'feed_comment':
-        return <MessageSquare className="h-4 w-4 text-sky-400" />;
+        return <MessageSquare className="h-4 w-4 text-[#75A7FF]" />;
       case 'coach_announcement':
-        return <Zap className="h-4 w-4 text-amber-300" />;
+        return <Zap className="h-4 w-4 text-[#3478F6]" />;
       default:
-        return <Bell className="h-4 w-4 text-zinc-400" />;
+        return <Bell className="h-4 w-4 text-[#A7B0C0]" />;
     }
   };
 
@@ -149,23 +149,23 @@ export function NotificationsDrawer({
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col justify-end items-center">
-      <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 safe-bottom-drawer border-t border-white/20 shadow-2xl">
+      <div className="bg-[#080A0F] w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 safe-bottom-drawer border-t border-[#252D3B] shadow-2xl">
         {/* Header do Drawer */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center text-white border border-white/15">
+            <div className="h-9 w-9 rounded-full bg-[#121722] flex items-center justify-center text-[#3478F6] border border-[#252D3B]">
               <Bell className="h-4 w-4" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="font-bold text-sm text-white">Notificações</h3>
+                <h3 className="font-bold text-sm text-[#F4F6FA]">Notificações</h3>
                 {unreadCount > 0 && (
-                  <span className="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.2 rounded-full">
+                  <span className="text-[10px] font-mono font-bold bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 px-1.5 py-0.2 rounded-full">
                     {unreadCount} nova{unreadCount > 1 ? 's' : ''}
                   </span>
                 )}
               </div>
-              <p className="text-[11px] font-mono text-zinc-400">Alertas de streak, ranking e comunidade</p>
+              <p className="text-[11px] font-mono text-[#A7B0C0]">Alertas de streak, ranking e comunidade</p>
             </div>
           </div>
 
@@ -173,10 +173,10 @@ export function NotificationsDrawer({
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-[11px] font-mono text-zinc-400 hover:text-white flex items-center gap-1 px-3 py-2 min-h-[44px] rounded-xl hover:bg-white/5 transition-colors cursor-pointer"
+                className="text-[11px] font-mono text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center gap-1 px-3 py-2 min-h-[44px] rounded-xl hover:bg-[#121722] transition-colors cursor-pointer"
                 title="Marcar todas como lidas"
               >
-                <CheckCheck className="h-3.5 w-3.5" />
+                <CheckCheck className="h-3.5 w-3.5 text-[#3478F6]" />
                 <span>Ler todas</span>
               </button>
             )}
@@ -184,7 +184,7 @@ export function NotificationsDrawer({
             <button
               onClick={onClose}
               aria-label="Fechar notificações"
-              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
@@ -194,15 +194,15 @@ export function NotificationsDrawer({
         {/* Lista de Notificações */}
         <div className="flex-1 overflow-y-auto py-3 space-y-2.5 min-h-[220px] max-h-[55vh]">
           {loading ? (
-            <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
-              <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+              <div className="h-4 w-4 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               Carregando avisos...
             </div>
           ) : notifications.length === 0 ? (
-            <div className="text-center py-12 space-y-2 text-zinc-500">
-              <Bell className="h-8 w-8 mx-auto opacity-30 text-zinc-400" />
+            <div className="text-center py-12 space-y-2 text-[#A7B0C0]">
+              <Bell className="h-8 w-8 mx-auto opacity-30 text-[#A7B0C0]" />
               <p className="text-xs font-mono">Nenhuma notificação no momento.</p>
-              <p className="text-[11px] text-zinc-600">
+              <p className="text-[11px] text-[#A7B0C0]/70">
                 Você será avisado aqui sobre seu streak, ultrapassagens e interações.
               </p>
             </div>
@@ -213,24 +213,24 @@ export function NotificationsDrawer({
                 onClick={() => handleMarkSingleAsRead(item.id)}
                 className={`p-3 rounded-2xl border transition-all text-left flex items-start gap-3 ${
                   item.is_read
-                    ? 'bg-white/[0.02] border-white/[0.06] opacity-75'
-                    : 'bg-white/[0.06] border-white/20 shadow-sm'
+                    ? 'bg-[#121722]/60 border-[#252D3B] opacity-75'
+                    : 'bg-[#121722] border-[#3478F6]/40 shadow-sm'
                 }`}
               >
-                <div className="h-8 w-8 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="h-8 w-8 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center shrink-0 mt-0.5">
                   {getIcon(item.type)}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1 mb-0.5">
-                    <h4 className="text-xs font-bold text-white truncate">
+                    <h4 className="text-xs font-bold text-[#F4F6FA] truncate">
                       {item.title}
                     </h4>
-                    <span className="text-[9px] font-mono text-zinc-500 shrink-0">
+                    <span className="text-[9px] font-mono text-[#A7B0C0] shrink-0">
                       {formatTimeAgo(item.created_at)}
                     </span>
                   </div>
-                  <p className="text-[11px] text-zinc-300 font-sans leading-relaxed">
+                  <p className="text-[11px] text-[#A7B0C0] font-sans leading-relaxed">
                     {item.message}
                   </p>
 
@@ -238,7 +238,7 @@ export function NotificationsDrawer({
                     <Link
                       href={item.link}
                       onClick={onClose}
-                      className="inline-flex items-center gap-1 text-[10px] font-mono text-amber-300 hover:text-amber-200 mt-1.5 font-bold"
+                      className="inline-flex items-center gap-1 text-[10px] font-mono text-[#75A7FF] hover:text-[#3478F6] mt-1.5 font-bold"
                     >
                       <span>Abrir</span>
                       <ChevronRight className="h-3 w-3" />
@@ -247,7 +247,7 @@ export function NotificationsDrawer({
                 </div>
 
                 {!item.is_read && (
-                  <span className="h-2 w-2 rounded-full bg-amber-400 shrink-0 mt-1.5" />
+                  <span className="h-2 w-2 rounded-full bg-[#3478F6] shrink-0 mt-1.5" />
                 )}
               </div>
             ))

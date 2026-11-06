@@ -144,7 +144,7 @@ export default function BetaTestersPage() {
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950 border border-white/10 text-xs font-mono">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
               <span className="text-zinc-300 font-bold uppercase tracking-wider">
                 Piloto Fechado • 15 Vagas
               </span>
@@ -210,8 +210,8 @@ export default function BetaTestersPage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-emerald-400">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-[#3478F6]">
+                  <ShieldCheck className="w-4 h-4 text-[#3478F6]" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-bold text-white tracking-tight">Acompanhamento e Suporte Prioritário</h4>
@@ -261,9 +261,9 @@ export default function BetaTestersPage() {
                         href={CONTACT_CONFIG.getDirectWhatsappUrl(`Olá, tentei me candidatar ao Beta Fechado da ArenaFitPro mas tive uma falha. Meu nome é ${name || ''}.`)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold hover:underline"
+                        className="inline-flex items-center gap-1.5 text-[11px] text-[#75A7FF] font-semibold hover:underline"
                       >
-                        <MessageCircle className="w-3.5 h-3.5 text-emerald-400" /> Falar direto com o fundador no WhatsApp
+                        <MessageCircle className="w-3.5 h-3.5 text-[#3478F6]" /> Falar direto com o fundador no WhatsApp
                       </a>
                     </div>
                   )}
@@ -390,11 +390,11 @@ export default function BetaTestersPage() {
                 /* Estado de Sucesso */
                 <div className="py-8 text-center space-y-5 animate-in fade-in duration-300">
                   <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/20 text-white flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(255,255,255,0.15)]">
-                    <Check className="w-8 h-8 text-emerald-400" />
+                    <Check className="w-8 h-8 text-[#3478F6]" />
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-[11px] font-mono uppercase bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/25">
+                    <span className="text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
                       Candidatura Recebida
                     </span>
                     <h3 className="text-2xl font-black text-white tracking-tight">
@@ -416,9 +416,9 @@ export default function BetaTestersPage() {
                     href={CONTACT_CONFIG.getDirectWhatsappUrl(`Olá, me candidatei ao Beta Fechado da ArenaFitPro! Meu nome é ${name}.`)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] min-h-[48px]"
+                    className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-[#3478F6] hover:bg-[#75A7FF] text-white font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(52,120,246,0.3)] active:scale-[0.98] min-h-[48px]"
                   >
-                    <MessageCircle className="w-4 h-4 text-emerald-600" /> Falar Direto com o Fundador
+                    <MessageCircle className="w-4 h-4 text-white" /> Falar Direto com o Fundador
                   </a>
 
                   <Link 
@@ -458,7 +458,7 @@ export default function BetaTestersPage() {
             </div>
 
             <div className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-2">
-              <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
+              <div className="text-xs font-mono font-bold text-[#75A7FF] uppercase tracking-wider">
                 02 • Piloto com Alunos
               </div>
               <h4 className="text-base font-bold text-white">Validação Real em Campo</h4>

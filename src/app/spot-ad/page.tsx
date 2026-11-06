@@ -273,7 +273,7 @@ export default function SpotAdMotionPage() {
             onClick={() => setViewMode('video')}
             className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition flex items-center gap-1 ${
               viewMode === 'video'
-                ? 'bg-emerald-400 text-black shadow'
+                ? 'bg-[#3478F6] text-white shadow'
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
@@ -335,7 +335,7 @@ export default function SpotAdMotionPage() {
           <div className="absolute top-3 inset-x-0 h-6 z-50 flex items-center justify-center">
             <div className="w-32 h-4 bg-black border border-white/10 rounded-full flex items-center justify-between px-3">
               <span className="text-[8px] font-mono text-zinc-500 font-bold">ARENA 3D</span>
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
             </div>
           </div>
 
@@ -393,7 +393,7 @@ export default function SpotAdMotionPage() {
           {/* Rodapé Técnico */}
           <div className="p-3.5 bg-black/75 backdrop-blur-xl border-t border-white/[0.08] z-30 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Zap className="w-3.5 h-3.5 text-emerald-400" />
+              <Zap className="w-3.5 h-3.5 text-[#3478F6]" />
               <span className="text-[10px] font-mono tracking-wider uppercase text-zinc-300">
                 Telas Reais ArenaFitPro • 3D Motion
               </span>
@@ -567,7 +567,7 @@ function SceneCameraReal3D() {
           <motion.div
             animate={{ top: ['24%', '52%', '24%'] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
-            className="absolute inset-x-3 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_16px_4px_rgba(52,211,153,0.7)]"
+            className="absolute inset-x-3 h-1 bg-gradient-to-r from-transparent via-[#3478F6] to-transparent shadow-[0_0_16px_4px_rgba(52,120,246,0.7)]"
           />
         </Phone3DReal>
 
@@ -589,9 +589,9 @@ function SceneCameraReal3D() {
           animate={{ x: 0, y: [3, -3, 3], opacity: 1 }}
           transition={{ delay: 0.35, y: { duration: 2.8, repeat: Infinity } }}
           style={{ transform: 'translateZ(75px) rotateY(-14deg)' }}
-          className="absolute -right-14 top-36 px-3 py-2 rounded-2xl bg-zinc-950/90 border border-emerald-400/60 shadow-[0_15px_35px_rgba(0,0,0,0.9)] text-left backdrop-blur-md"
+          className="absolute -right-14 top-36 px-3 py-2 rounded-2xl bg-zinc-950/90 border border-[#3478F6]/60 shadow-[0_15px_35px_rgba(0,0,0,0.9)] text-left backdrop-blur-md"
         >
-          <p className="text-[8px] font-mono text-emerald-400 tracking-wider">IA NUTRICIONAL</p>
+          <p className="text-[8px] font-mono text-[#75A7FF] tracking-wider">IA NUTRICIONAL</p>
           <p className="text-xs font-black text-white">580 KCAL ✓</p>
         </motion.div>
 
@@ -609,7 +609,7 @@ function SceneCameraReal3D() {
       </div>
 
       <div className="mt-5 text-sm font-black uppercase tracking-tight">
-        CÂMERA <span className="bg-emerald-400 text-black px-2 py-0.5 rounded-md">ANTIFRAUDE</span> AO VIVO
+        CÂMERA <span className="bg-[#3478F6] text-white px-2 py-0.5 rounded-md">ANTIFRAUDE</span> AO VIVO
       </div>
     </motion.div>
   );
@@ -672,7 +672,7 @@ function SceneLeaderboardReal3D() {
         >
           <p className="text-[8px] font-mono text-zinc-400">GABRIEL • XP TOTAL</p>
           <p className="text-base font-black text-amber-400">1.865 XP</p>
-          <p className="text-[9px] font-bold text-emerald-400">▲ PASSOU PARA #03</p>
+          <p className="text-[9px] font-bold text-[#75A7FF]">▲ PASSOU PARA #03</p>
         </motion.div>
       </div>
 
@@ -694,19 +694,19 @@ function SceneFinanceReal3D() {
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div className="mb-2 z-20">
-        <span className="text-[9px] font-mono tracking-[0.25em] text-emerald-400 uppercase">
+        <span className="text-[9px] font-mono tracking-[0.25em] text-[#75A7FF] uppercase">
           ⚡ SPLIT PIX D+0 • ASAAS
         </span>
         <motion.div
           initial={{ scale: 0.7 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 180 }}
-          className="text-4xl font-black tracking-tight bg-gradient-to-b from-white via-zinc-100 to-emerald-300 bg-clip-text text-transparent drop-shadow-[0_5px_0_#064e3b]"
+          className="text-4xl font-black tracking-tight bg-gradient-to-b from-white via-zinc-100 to-[#75A7FF] bg-clip-text text-transparent drop-shadow-[0_5px_0_#1e3a8a]"
         >
           R$ 4.750,00
         </motion.div>
         <p className="text-[11px] text-zinc-400 font-semibold">
-          na sua conta. <span className="text-emerald-400 font-bold">0% de taxa</span> no PRO.
+          na sua conta. <span className="text-[#75A7FF] font-bold">0% de taxa</span> no PRO.
         </p>
       </div>
 
@@ -727,9 +727,9 @@ function SceneFinanceReal3D() {
             transition={{ duration: 2.6 + idx * 0.4, repeat: Infinity }}
             style={{
               transform: 'translateZ(75px)',
-              background: 'radial-gradient(circle at 35% 30%, #d1fae5, #34d399 45%, #065f46 110%)',
+              background: 'radial-gradient(circle at 35% 30%, #dbeafe, #3478f6 45%, #1e3a8a 110%)',
             }}
-            className={`absolute ${dir < 0 ? '-left-11 top-10' : '-right-11 bottom-14'} w-11 h-11 rounded-full border-2 border-emerald-300 flex items-center justify-center font-black text-xs text-emerald-950 shadow-[0_0_25px_rgba(52,211,153,0.6)]`}
+            className={`absolute ${dir < 0 ? '-left-11 top-10' : '-right-11 bottom-14'} w-11 h-11 rounded-full border-2 border-[#75A7FF] flex items-center justify-center font-black text-xs text-white shadow-[0_0_25px_rgba(52,120,246,0.6)]`}
           >
             R$
           </motion.div>

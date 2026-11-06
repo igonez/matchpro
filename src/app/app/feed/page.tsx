@@ -42,8 +42,8 @@ const REACTIONS: ReactionDef[] = [
     key: 'muscle',
     emoji: '💪',
     label: 'Força',
-    activeBg: 'bg-emerald-500/20 text-emerald-300',
-    activeBorder: 'border-emerald-500/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
   {
     key: 'clap',
@@ -635,13 +635,13 @@ export default function StudentSocialFeedPage() {
       </div>
 
       {/* Abas Superiores: Feed de Fotos vs Mural da Turma */}
-      <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-white/10 relative z-10">
+      <div className="grid grid-cols-2 p-1 rounded-xl bg-[#080A0F] border border-[#252D3B] relative z-10">
         <button
           onClick={() => setActiveTab('feed')}
           className={`py-2.5 min-h-[44px] flex items-center justify-center text-xs font-mono tracking-wider transition-all cursor-pointer ${
             activeTab === 'feed'
-              ? 'bg-white text-black font-black rounded-lg shadow-md'
-              : 'text-zinc-400 hover:text-white font-medium'
+              ? 'bg-[#3478F6] text-white font-black rounded-lg shadow-md'
+              : 'text-[#A7B0C0] hover:text-white font-medium'
           }`}
         >
           FOTOS ({posts.length})
@@ -651,8 +651,8 @@ export default function StudentSocialFeedPage() {
           onClick={() => setActiveTab('chat')}
           className={`py-2.5 min-h-[44px] flex items-center justify-center text-xs font-mono tracking-wider transition-all cursor-pointer ${
             activeTab === 'chat'
-              ? 'bg-white text-black font-black rounded-lg shadow-md'
-              : 'text-zinc-400 hover:text-white font-medium'
+              ? 'bg-[#3478F6] text-white font-black rounded-lg shadow-md'
+              : 'text-[#A7B0C0] hover:text-white font-medium'
           }`}
         >
           MURAL DA TURMA {messages.length > 0 && `(${messages.length})`}
@@ -829,7 +829,7 @@ export default function StudentSocialFeedPage() {
           {/* Header do Chat */}
           <div className="p-3.5 bg-black/40 border-b border-white/[0.08] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
               <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
                 Mural Ao Vivo • {challengeTitle}
               </span>

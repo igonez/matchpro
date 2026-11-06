@@ -383,7 +383,7 @@ export default function EditChallengePage({
                         </h3>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">
+                        <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/15 px-2 py-0.5 rounded-full border border-[#3478F6]/30 font-bold">
                           +{week.bonus_points || 20} XP Bônus
                         </span>
                         <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">

@@ -979,8 +979,8 @@ export function StoryShareModal({
         {/* Topo */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
-              {data.mode === 'checkin' ? <CheckCircle2 className="w-5 h-5 text-emerald-400" /> : <Trophy className="w-5 h-5" />}
+            <div className="h-9 w-9 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF]">
+              {data.mode === 'checkin' ? <CheckCircle2 className="w-5 h-5 text-[#3478F6]" /> : <Trophy className="w-5 h-5" />}
             </div>
             <div>
               <h3 className="text-sm font-black text-white leading-tight">
@@ -1051,7 +1051,7 @@ export function StoryShareModal({
               <button
                 type="button"
                 onClick={handleShareWhatsAppText}
-                className="min-h-[42px] py-2 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="min-h-[42px] py-2 px-3 rounded-xl bg-[#3478F6]/15 hover:bg-[#3478F6]/25 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <MessageCircle className="w-3.5 h-3.5 shrink-0" />
                 <span>Enviar no WhatsApp</span>
@@ -1064,8 +1064,8 @@ export function StoryShareModal({
               >
                 {copiedText ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-emerald-300">Placar Copiado!</span>
+                    <Check className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
+                    <span className="text-[#75A7FF]">Placar Copiado!</span>
                   </>
                 ) : (
                   <>

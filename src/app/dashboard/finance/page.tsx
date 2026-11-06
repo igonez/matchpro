@@ -418,38 +418,38 @@ export default function FinanceDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-8 relative">
+    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] p-4 md:p-8 relative">
       <Monochrome3DBackground />
 
       <div className="max-w-7xl mx-auto space-y-8 relative z-10">
         {/* Header com identificação do plano */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#252D3B] pb-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-black tracking-tight text-white flex items-center gap-3">
-                <Wallet className="w-8 h-8 text-zinc-300" />
+              <h1 className="text-3xl font-black tracking-tight text-[#F4F6FA] flex items-center gap-3">
+                <Wallet className="w-8 h-8 text-[#3478F6]" />
                 Central Financeira
               </h1>
-              <Badge className="bg-zinc-800 text-zinc-300 border-white/10 font-mono text-xs px-2.5 py-0.5">
+              <Badge className="bg-[#121722] text-[#75A7FF] border-[#252D3B] font-mono text-xs px-2.5 py-0.5">
                 ASAAS ENGINE v3
               </Badge>
             </div>
-            <p className="text-zinc-400 text-sm">
+            <p className="text-[#A7B0C0] text-sm">
               Gestão de repasses, saques Pix D+0, split de faturamento e plano de assinatura da plataforma.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-zinc-950/80 border border-white/10 px-3.5 py-2 rounded-xl backdrop-blur-md">
-              <Sparkles className="w-4 h-4 text-zinc-300" />
+            <div className="flex items-center gap-2 bg-[#121722] border border-[#252D3B] px-3.5 py-2 rounded-2xl backdrop-blur-md">
+              <Sparkles className="w-4 h-4 text-[#3478F6]" />
               <div className="text-left">
-                <span className="text-[10px] text-zinc-500 uppercase tracking-wider block font-mono">Seu Plano Atual</span>
-                <span className="text-sm font-bold text-white uppercase">{planDetails.name}</span>
+                <span className="text-[10px] text-[#A7B0C0] uppercase tracking-wider block font-mono">Seu Plano Atual</span>
+                <span className="text-sm font-bold text-[#F4F6FA] uppercase">{planDetails.name}</span>
               </div>
             </div>
             <Button 
               onClick={() => setUpgradeModalOpen(true)}
-              className="bg-white text-black hover:bg-zinc-200 font-bold shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+              className="bg-[#3478F6] text-white hover:bg-[#75A7FF] font-bold rounded-2xl shadow-[0_0_20px_rgba(52,120,246,0.3)] transition-all"
             >
               {currentPlanTier === 'starter' ? 'Fazer Upgrade' : 'Gerenciar Plano'}
             </Button>
@@ -459,23 +459,23 @@ export default function FinanceDashboardPage() {
         {/* 4 Cards de Indicadores de Topo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Saldo Disponível para Saque */}
-          <SpotlightCard3D className="p-6 border-white/[0.1] bg-zinc-950/60 backdrop-blur-xl relative overflow-hidden">
-            <div className="flex items-center justify-between text-zinc-400 mb-2">
+          <SpotlightCard3D className="p-6 border-[#252D3B] bg-[#121722] backdrop-blur-xl relative overflow-hidden">
+            <div className="flex items-center justify-between text-[#A7B0C0] mb-2">
               <span className="text-xs uppercase tracking-wider font-mono">Disponível para Saque</span>
-              <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <div className="p-2 rounded-lg bg-[#3478F6]/15 text-[#75A7FF]">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-white tracking-tight mb-3">
+            <div className="text-3xl font-black text-[#F4F6FA] tracking-tight mb-3">
               R$ {availableBalance.toFixed(2)}
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
-              <span className="text-[11px] text-zinc-500 font-mono">Pix Imediato (D+0)</span>
+            <div className="flex items-center justify-between pt-2 border-t border-[#252D3B]">
+              <span className="text-[11px] text-[#A7B0C0] font-mono">Pix Imediato (D+0)</span>
               <Button 
                 data-tour="finance-withdraw-btn"
                 size="sm" 
                 onClick={() => setWithdrawModalOpen(true)}
-                className="h-7 text-xs bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-3"
+                className="h-8 text-xs bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold px-3.5 rounded-xl shadow-md"
               >
                 Sacar Pix
               </Button>
@@ -483,51 +483,51 @@ export default function FinanceDashboardPage() {
           </SpotlightCard3D>
 
           {/* Card 2: Faturamento Líquido */}
-          <SpotlightCard3D className="p-6 border-white/[0.1] bg-zinc-950/60 backdrop-blur-xl">
-            <div className="flex items-center justify-between text-zinc-400 mb-2">
+          <SpotlightCard3D className="p-6 border-[#252D3B] bg-[#121722] backdrop-blur-xl">
+            <div className="flex items-center justify-between text-[#A7B0C0] mb-2">
               <span className="text-xs uppercase tracking-wider font-mono">Faturamento Líquido</span>
-              <div className="p-2 rounded-lg bg-white/5 text-zinc-300">
+              <div className="p-2 rounded-lg bg-[#1B2330] text-[#75A7FF]">
                 <TrendingUp className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-white tracking-tight mb-3">
+            <div className="text-3xl font-black text-[#F4F6FA] tracking-tight mb-3 font-mono">
               R$ {totalNet.toFixed(2)}
             </div>
-            <div className="text-[11px] text-zinc-500 font-mono pt-2 border-t border-white/[0.06]">
+            <div className="text-[11px] text-[#A7B0C0] font-mono pt-2 border-t border-[#252D3B]">
               Livre de taxas (Já no seu bolso)
             </div>
           </SpotlightCard3D>
 
           {/* Card 3: Faturamento Bruto */}
-          <SpotlightCard3D className="p-6 border-white/[0.1] bg-zinc-950/60 backdrop-blur-xl">
-            <div className="flex items-center justify-between text-zinc-400 mb-2">
+          <SpotlightCard3D className="p-6 border-[#252D3B] bg-[#121722] backdrop-blur-xl">
+            <div className="flex items-center justify-between text-[#A7B0C0] mb-2">
               <span className="text-xs uppercase tracking-wider font-mono">Faturamento Bruto</span>
-              <div className="p-2 rounded-lg bg-white/5 text-zinc-300">
+              <div className="p-2 rounded-lg bg-[#1B2330] text-[#A7B0C0]">
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-zinc-300 tracking-tight mb-3">
+            <div className="text-3xl font-black text-[#F4F6FA] tracking-tight mb-3 font-mono">
               R$ {totalGross.toFixed(2)}
             </div>
-            <div className="text-[11px] text-zinc-500 font-mono pt-2 border-t border-white/[0.06]">
+            <div className="text-[11px] text-[#A7B0C0] font-mono pt-2 border-t border-[#252D3B]">
               Total vendido em inscrições
             </div>
           </SpotlightCard3D>
 
           {/* Card 4: Taxa da Plataforma & Economia */}
-          <SpotlightCard3D className="p-6 border-white/[0.1] bg-zinc-950/60 backdrop-blur-xl">
-            <div className="flex items-center justify-between text-zinc-400 mb-2">
+          <SpotlightCard3D className="p-6 border-[#252D3B] bg-[#121722] backdrop-blur-xl">
+            <div className="flex items-center justify-between text-[#A7B0C0] mb-2">
               <span className="text-xs uppercase tracking-wider font-mono">Taxa de Split Atual</span>
-              <div className="p-2 rounded-lg bg-white/5 text-zinc-300">
+              <div className="p-2 rounded-lg bg-[#1B2330] text-[#3478F6]">
                 <ShieldCheck className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-white tracking-tight mb-3">
+            <div className="text-3xl font-black text-[#F4F6FA] tracking-tight mb-3 font-mono">
               {coachProfile?.platform_fee_percent || planDetails.platformFeePercent}%
             </div>
-            <div className="text-[11px] text-zinc-500 font-mono pt-2 border-t border-white/[0.06] flex items-center justify-between">
+            <div className="text-[11px] text-[#A7B0C0] font-mono pt-2 border-t border-[#252D3B] flex items-center justify-between">
               <span>Retido pelo ArenaFit</span>
-              <span className="text-zinc-400">R$ {totalFees.toFixed(2)}</span>
+              <span className="text-[#75A7FF]">R$ {totalFees.toFixed(2)}</span>
             </div>
           </SpotlightCard3D>
         </div>
@@ -535,22 +535,22 @@ export default function FinanceDashboardPage() {
         {/* Bloco de Configuração de Recebimento (CPF/CNPJ e Chave Pix) */}
         <SpotlightCard3D 
           data-tour="finance-account-card"
-          className="p-6 md:p-8 border-white/[0.1] bg-zinc-950/70 backdrop-blur-xl"
+          className="p-6 md:p-8 border-[#252D3B] bg-[#121722] backdrop-blur-xl"
         >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#252D3B]">
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-zinc-400" />
+              <h2 className="text-lg font-bold text-[#F4F6FA] flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-[#3478F6]" />
                 Dados Fiscais, Endereço & Subconta Asaas (Split)
               </h2>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs text-[#A7B0C0] mt-1">
                 Cadastre seus dados para receber repasses automáticos via Split e saques Pix D+0 instantâneos.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {coachProfile?.asaas_wallet_id ? (
-                <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 px-3 py-1 text-xs font-mono flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 px-3 py-1 text-xs font-mono flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#3478F6]" />
                   Split Ativo • {coachProfile.asaas_wallet_id.slice(0, 14)}...
                 </Badge>
               ) : (
@@ -559,33 +559,33 @@ export default function FinanceDashboardPage() {
                   Subconta Pendente de Cadastro
                 </Badge>
               )}
-              <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1 text-xs font-mono">
+              <Badge className="bg-[#3478F6]/10 text-[#75A7FF] border-[#3478F6]/25 px-3 py-1 text-xs font-mono">
                 Pix D+0 Imediato
               </Badge>
             </div>
           </div>
 
           {/* Dica importante esclarecendo a necessidade de conta no Asaas e regras de pagamento */}
-          <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start gap-3">
-            <Info className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-            <div className="text-xs text-zinc-300 space-y-2">
+          <div className="mb-6 p-4 rounded-2xl bg-[#1B2330] border border-[#252D3B] flex items-start gap-3">
+            <Info className="w-5 h-5 text-[#3478F6] shrink-0 mt-0.5" />
+            <div className="text-xs text-[#F4F6FA] space-y-2">
               <p className="font-semibold text-white flex items-center gap-2">
                 <span>Como funciona o Split, Subconta e Liquidação Pix?</span>
-                <Badge className="bg-emerald-500/15 text-emerald-400 border-0 text-[10px] font-mono">D+0 IMEDIATO</Badge>
+                <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-0 text-[10px] font-mono">D+0 IMEDIATO</Badge>
               </p>
-              <p className="text-zinc-400 leading-relaxed">
+              <p className="text-[#A7B0C0] leading-relaxed">
                 Ao preencher seus dados abaixo, nossa integração cria automaticamente a sua subconta no Asaas. Quando um aluno adquire seu desafio, o valor é dividido (Split) instantaneamente no nível bancário e cai na sua carteira. Você não precisa criar conta manualmente no site do Asaas!
               </p>
-              <div className="pt-2 border-t border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
-                <div className="p-2.5 rounded-lg bg-black/50 border border-white/5 space-y-0.5">
-                  <span className="text-white font-bold block">Inscrições de Alunos (Pix D+0)</span>
-                  <span className="text-zinc-400 block">
+              <div className="pt-2 border-t border-[#252D3B] grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+                <div className="p-2.5 rounded-xl bg-[#121722] border border-[#252D3B] space-y-0.5">
+                  <span className="text-[#F4F6FA] font-bold block">Inscrições de Alunos (Pix D+0)</span>
+                  <span className="text-[#A7B0C0] block">
                     Alunos pagam exclusivamente via Pix. O valor é liquidado em segundos e você fica 100% protegido contra fraudes e contestações (chargebacks) de cartão.
                   </span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-black/50 border border-white/5 space-y-0.5">
-                  <span className="text-white font-bold block">Tarifa Bancária Asaas Transparente</span>
-                  <span className="text-zinc-400 block">
+                <div className="p-2.5 rounded-xl bg-[#121722] border border-[#252D3B] space-y-0.5">
+                  <span className="text-[#F4F6FA] font-bold block">Tarifa Bancária Asaas Transparente</span>
+                  <span className="text-[#A7B0C0] block">
                     No Pro, a ArenaFitPro cobra 0% de taxa. É deduzida apenas a tarifa bancária fixa do gateway Asaas (a partir de R$ 0,99 fixo/Pix liquidado), sem taxas de antecipação.
                   </span>
                 </div>
@@ -596,24 +596,24 @@ export default function FinanceDashboardPage() {
           <div className="space-y-6">
             {/* Bloco 1: Dados do Titular e Pix */}
             <div>
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold mb-3 flex items-center gap-2">
-                <User className="w-4 h-4 text-zinc-400" />
+              <div className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0] font-bold mb-3 flex items-center gap-2">
+                <User className="w-4 h-4 text-[#3478F6]" />
                 1. Identificação Fiscal & Chave Pix
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* 1.1 Tipo de Documento */}
                 <div>
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     Tipo de Titularidade
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => handleDocTypeToggle('CPF')}
-                      className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
+                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
                         docTypeInput === 'CPF'
-                          ? 'bg-white text-black border-white'
-                          : 'bg-black text-zinc-400 border-white/10 hover:border-white/20'
+                          ? 'bg-[#3478F6] text-white border-[#3478F6]'
+                          : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B] hover:text-[#F4F6FA]'
                       }`}
                     >
                       CPF (Física)
@@ -621,10 +621,10 @@ export default function FinanceDashboardPage() {
                     <button
                       type="button"
                       onClick={() => handleDocTypeToggle('CNPJ')}
-                      className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors ${
+                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
                         docTypeInput === 'CNPJ'
-                          ? 'bg-white text-black border-white'
-                          : 'bg-black text-zinc-400 border-white/10 hover:border-white/20'
+                          ? 'bg-[#3478F6] text-white border-[#3478F6]'
+                          : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B] hover:text-[#F4F6FA]'
                       }`}
                     >
                       CNPJ (MEI/PJ)
@@ -635,13 +635,13 @@ export default function FinanceDashboardPage() {
                 {/* 1.2 Número do Documento */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-mono text-zinc-400 uppercase">
+                    <label className="text-xs font-mono text-[#A7B0C0] uppercase">
                       Número do {docTypeInput}
                     </label>
                     {isDocFilled && (
                       isDocValid ? (
-                        <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-bold">
-                          <Check className="w-3 h-3" /> Válido
+                        <span className="text-[10px] font-mono text-[#75A7FF] flex items-center gap-1 font-bold">
+                          <Check className="w-3 h-3 text-[#3478F6]" /> Válido
                         </span>
                       ) : (
                         <span className="text-[10px] font-mono text-rose-400 flex items-center gap-1">
@@ -655,22 +655,22 @@ export default function FinanceDashboardPage() {
                     onChange={(e) => handleDocChange(e.target.value)}
                     placeholder={docTypeInput === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
                     maxLength={docTypeInput === 'CPF' ? 14 : 18}
-                    className={`bg-black/60 text-white placeholder:text-zinc-600 ${
+                    className={`bg-[#1B2330] text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 ${
                       isDocFilled 
                         ? isDocValid 
-                          ? 'border-emerald-500/50 focus:border-emerald-500' 
+                          ? 'border-[#3478F6]/50 focus:border-[#3478F6]' 
                           : 'border-rose-500/50 focus:border-rose-500'
-                        : 'border-white/10'
+                        : 'border-[#252D3B]'
                     }`}
                   />
-                  <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                  <p className="text-[10px] text-[#A7B0C0] mt-1 font-mono">
                     {docTypeInput === 'CPF' ? '11 dígitos com validação matemática' : '14 dígitos para empresas'}
                   </p>
                 </div>
 
                 {/* 1.3 Data de Nascimento (apenas se CPF) ou Razão */}
                 <div>
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     {docTypeInput === 'CPF' ? 'Data de Nascimento' : 'Tipo de Empresa (Asaas)'}
                   </label>
                   {docTypeInput === 'CPF' ? (
@@ -679,15 +679,15 @@ export default function FinanceDashboardPage() {
                         type="date"
                         value={birthDateInput}
                         onChange={(e) => setBirthDateInput(e.target.value)}
-                        className="bg-black/60 text-white border-white/10 focus:border-white/30"
+                        className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6]"
                       />
                     </div>
                   ) : (
-                    <div className="py-2.5 px-3 rounded-lg bg-black/60 border border-white/10 text-xs font-mono text-zinc-300">
+                    <div className="py-2.5 px-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono text-[#F4F6FA]">
                       MEI / Sociedade Limitada
                     </div>
                   )}
-                  <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                  <p className="text-[10px] text-[#A7B0C0] mt-1 font-mono">
                     {docTypeInput === 'CPF' ? 'Obrigatório pelo Asaas para subconta PF' : 'Identificação de pessoa jurídica'}
                   </p>
                 </div>
@@ -696,19 +696,19 @@ export default function FinanceDashboardPage() {
               {/* Linha da Chave Pix */}
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-mono text-zinc-400 uppercase">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase">
                     Chave Pix para Recebimento de Repasses
                   </label>
                   {pixKeyInput.trim() && (
                     <div className="flex items-center gap-1.5">
                       {detectedPixType !== 'UNKNOWN' && (
-                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B]">
                           {detectedPixType === 'EMAIL' ? 'E-mail' : detectedPixType === 'PHONE' ? 'Celular' : detectedPixType === 'EVP' ? 'Chave Aleatória' : detectedPixType}
                         </span>
                       )}
                       {pixValidation.isValid ? (
-                        <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-0.5 font-bold">
-                          <Check className="w-3 h-3" /> Ok
+                        <span className="text-[10px] font-mono text-[#75A7FF] flex items-center gap-0.5 font-bold">
+                          <Check className="w-3 h-3 text-[#3478F6]" /> Ok
                         </span>
                       ) : (
                         <span className="text-[10px] font-mono text-rose-400 flex items-center gap-0.5">
@@ -722,12 +722,12 @@ export default function FinanceDashboardPage() {
                   value={pixKeyInput}
                   onChange={(e) => setPixKeyInput(e.target.value)}
                   placeholder="Seu E-mail, CPF, celular com DDD ou chave aleatória"
-                  className={`bg-black/60 text-white placeholder:text-zinc-600 ${
+                  className={`bg-[#1B2330] text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 ${
                     pixKeyInput.trim()
                       ? pixValidation.isValid
-                        ? 'border-emerald-500/50 focus:border-emerald-500'
+                        ? 'border-[#3478F6]/50 focus:border-[#3478F6]'
                         : 'border-rose-500/50 focus:border-rose-500'
-                      : 'border-white/10'
+                      : 'border-[#252D3B]'
                   }`}
                 />
                 {pixKeyInput.trim() && !pixValidation.isValid && (
@@ -739,21 +739,21 @@ export default function FinanceDashboardPage() {
             </div>
 
             {/* Bloco 2: Endereço (Necessário para a subconta Asaas) */}
-            <div className="pt-4 border-t border-white/[0.06]">
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold mb-3 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-zinc-400" />
+            <div className="pt-4 border-t border-[#252D3B]">
+              <div className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0] font-bold mb-3 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#3478F6]" />
                 2. Endereço Comercial / Residencial (Exigido pelo BACEN / Asaas)
               </div>
               <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
                 {/* CEP */}
                 <div className="md:col-span-2">
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-mono text-zinc-400 uppercase">
+                    <label className="text-xs font-mono text-[#A7B0C0] uppercase">
                       CEP
                     </label>
                     {loadingCep && (
-                      <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-1">
-                        <Loader2 className="w-3 h-3 animate-spin" /> Buscando...
+                      <span className="text-[10px] font-mono text-[#75A7FF] flex items-center gap-1">
+                        <Loader2 className="w-3 h-3 animate-spin text-[#3478F6]" /> Buscando...
                       </span>
                     )}
                   </div>
@@ -762,68 +762,68 @@ export default function FinanceDashboardPage() {
                     onChange={(e) => handleCepChange(e.target.value)}
                     placeholder="00000-000"
                     maxLength={9}
-                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                    className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6] placeholder:text-[#A7B0C0]/50"
                   />
-                  <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                  <p className="text-[10px] text-[#A7B0C0] mt-1 font-mono">
                     Preenchimento automático via ViaCEP
                   </p>
                 </div>
 
                 {/* Logradouro / Rua */}
                 <div className="md:col-span-3">
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     Logradouro / Rua / Avenida
                   </label>
                   <Input
                     value={addressInput}
                     onChange={(e) => setAddressInput(e.target.value)}
                     placeholder="Ex: Av. Paulista"
-                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                    className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6] placeholder:text-[#A7B0C0]/50"
                   />
                 </div>
 
                 {/* Número */}
                 <div className="md:col-span-1">
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     Número
                   </label>
                   <Input
                     value={numberInput}
                     onChange={(e) => setNumberInput(e.target.value)}
                     placeholder="100"
-                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                    className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6] placeholder:text-[#A7B0C0]/50"
                   />
                 </div>
 
                 {/* Bairro */}
                 <div className="md:col-span-2">
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     Bairro
                   </label>
                   <Input
                     value={provinceInput}
                     onChange={(e) => setProvinceInput(e.target.value)}
                     placeholder="Centro"
-                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                    className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6] placeholder:text-[#A7B0C0]/50"
                   />
                 </div>
 
                 {/* Cidade */}
                 <div className="md:col-span-3">
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     Cidade
                   </label>
                   <Input
                     value={cityInput}
                     onChange={(e) => setCityInput(e.target.value)}
                     placeholder="São Paulo"
-                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600"
+                    className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6] placeholder:text-[#A7B0C0]/50"
                   />
                 </div>
 
                 {/* UF */}
                 <div className="md:col-span-1">
-                  <label className="text-xs font-mono text-zinc-400 uppercase block mb-1.5">
+                  <label className="text-xs font-mono text-[#A7B0C0] uppercase block mb-1.5">
                     UF
                   </label>
                   <Input
@@ -831,7 +831,7 @@ export default function FinanceDashboardPage() {
                     onChange={(e) => setStateInput(e.target.value.toUpperCase())}
                     placeholder="SP"
                     maxLength={2}
-                    className="bg-black/60 text-white border-white/10 focus:border-white/30 placeholder:text-zinc-600 uppercase"
+                    className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] focus:border-[#3478F6] placeholder:text-[#A7B0C0]/50 uppercase"
                   />
                 </div>
               </div>
@@ -839,14 +839,14 @@ export default function FinanceDashboardPage() {
 
             {/* Bloco 3: Botão de Salvar e Criar Subconta */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-xs text-zinc-400 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="text-xs text-[#A7B0C0] flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#3478F6] shrink-0" />
                 <span>Dados protegidos por criptografia de ponta a ponta e auditoria BACEN.</span>
               </div>
               <Button 
                 onClick={handleSaveBankAccount} 
                 disabled={savingAccount || !isDocValid || !pixValidation.isValid}
-                className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold px-6 py-2.5 h-auto disabled:opacity-50"
+                className="w-full sm:w-auto bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold px-6 py-2.5 h-auto disabled:opacity-50 rounded-2xl shadow-lg shadow-[#3478F6]/20 transition-all"
               >
                 {savingAccount ? (
                   <>
@@ -865,25 +865,25 @@ export default function FinanceDashboardPage() {
 
           {/* Card de Confirmação de Chave Cadastrada & Subconta */}
           {coachProfile?.asaas_pix_key && (
-            <div className="mt-6 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="mt-6 p-4 rounded-2xl bg-[#1B2330] border border-[#3478F6]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
-                  <CheckCircle2 className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-xl bg-[#3478F6]/15 text-[#75A7FF] flex items-center justify-center shrink-0 border border-[#3478F6]/30">
+                  <CheckCircle2 className="w-5 h-5 text-[#3478F6]" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                  <div className="text-xs font-bold text-[#F4F6FA] flex items-center gap-2">
                     Conta e Split Configurados
-                    <Badge className="bg-emerald-500/20 text-emerald-400 border-0 text-[10px]">
+                    <Badge className="bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 text-[10px]">
                       ATIVA
                     </Badge>
                     {coachProfile.asaas_wallet_id && (
-                      <span className="text-[10px] font-mono text-zinc-400">
+                      <span className="text-[10px] font-mono text-[#A7B0C0]">
                         (Wallet ID: {coachProfile.asaas_wallet_id})
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
-                    Chave Pix: <span className="text-emerald-300 font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
+                  <div className="text-[11px] text-[#A7B0C0] font-mono mt-0.5">
+                    Chave Pix: <span className="text-[#75A7FF] font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
                   </div>
                 </div>
               </div>
@@ -891,7 +891,7 @@ export default function FinanceDashboardPage() {
                 size="sm"
                 variant="outline"
                 onClick={() => setWithdrawModalOpen(true)}
-                className="border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10 font-bold text-xs shrink-0"
+                className="border-[#3478F6]/40 text-[#75A7FF] hover:bg-[#3478F6]/10 font-bold text-xs shrink-0 rounded-xl"
               >
                 Solicitar Saque Pix
               </Button>
@@ -900,33 +900,33 @@ export default function FinanceDashboardPage() {
         </SpotlightCard3D>
 
         {/* Tabela de Extrato de Vendas & Inscrições */}
-        <SpotlightCard3D className="p-6 md:p-8 border-white/[0.1] bg-zinc-950/70 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.06]">
+        <SpotlightCard3D className="p-6 md:p-8 border-[#252D3B] bg-[#121722] backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#252D3B]">
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-zinc-400" />
+              <h2 className="text-lg font-bold text-[#F4F6FA] flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-[#3478F6]" />
                 Extrato de Inscrições & Pagamentos
               </h2>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs text-[#A7B0C0] mt-1">
                 Acompanhe o status em tempo real de cada transação de aluno gerada pelo Asaas.
               </p>
             </div>
-            <span className="text-xs font-mono text-zinc-500">
+            <span className="text-xs font-mono text-[#A7B0C0]">
               {payments.length} transação(ões) encontrada(s)
             </span>
           </div>
 
           {loading ? (
-            <div className="py-12 text-center text-zinc-500 text-sm">Carregando transações financeiras...</div>
+            <div className="py-12 text-center text-[#A7B0C0] text-sm">Carregando transações financeiras...</div>
           ) : payments.length === 0 ? (
-            <div className="py-12 text-center text-zinc-500 text-sm">
+            <div className="py-12 text-center text-[#A7B0C0] text-sm">
               Nenhuma transação registrada ainda. Assim que os alunos comprarem seus desafios, as entradas e splits aparecerão aqui em tempo real.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.08] text-[11px] font-mono text-zinc-400 uppercase">
+                  <tr className="border-b border-[#252D3B] text-[11px] font-mono text-[#A7B0C0] uppercase">
                     <th className="py-3 px-4">Data</th>
                     <th className="py-3 px-4">Aluno</th>
                     <th className="py-3 px-4">Desafio</th>
@@ -936,32 +936,32 @@ export default function FinanceDashboardPage() {
                     <th className="py-3 px-4">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/[0.04]">
+                <tbody className="divide-y divide-[#252D3B]">
                   {payments.map((p) => (
-                    <tr key={p.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-3.5 px-4 font-mono text-xs text-zinc-400">
+                    <tr key={p.id} className="hover:bg-[#1B2330]/50 transition-colors">
+                      <td className="py-3.5 px-4 font-mono text-xs text-[#A7B0C0]">
                         {new Date(p.created_at).toLocaleDateString('pt-BR')}
                       </td>
-                      <td className="py-3.5 px-4 font-bold text-white">
+                      <td className="py-3.5 px-4 font-bold text-[#F4F6FA]">
                         {p.student?.full_name || 'Aluno'}
                       </td>
-                      <td className="py-3.5 px-4 text-zinc-300">
+                      <td className="py-3.5 px-4 text-[#A7B0C0]">
                         {p.challenge?.title || 'Desafio'}
                       </td>
                       <td className="py-3.5 px-4">
-                        <Badge variant="outline" className="text-[10px] border-white/10 text-zinc-400 font-mono">
+                        <Badge variant="outline" className="text-[10px] border-[#252D3B] bg-[#1B2330] text-[#75A7FF] font-mono">
                           {p.billing_type || 'PIX'}
                         </Badge>
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-zinc-400">
+                      <td className="py-3.5 px-4 font-mono text-[#A7B0C0]">
                         R$ {Number(p.gross_value).toFixed(2)}
                       </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
+                      <td className="py-3.5 px-4 font-mono font-bold text-[#75A7FF]">
                         R$ {Number(p.net_coach_value).toFixed(2)}
                       </td>
                       <td className="py-3.5 px-4">
                         {p.status === 'RECEIVED' || p.status === 'CONFIRMED' ? (
-                          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] font-mono">
+                          <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[10px] font-mono">
                             APROVADO
                           </Badge>
                         ) : p.status === 'PENDING' ? (
@@ -991,13 +991,13 @@ export default function FinanceDashboardPage() {
         hideFooter
       >
         <div className="space-y-4 pt-2">
-          <p className="text-sm text-zinc-400">
-            O valor disponível de <strong className="text-white">R$ {availableBalance.toFixed(2)}</strong> será transferido via Pix instantâneo para a sua chave:
+          <p className="text-sm text-[#A7B0C0]">
+            O valor disponível de <strong className="text-[#F4F6FA]">R$ {availableBalance.toFixed(2)}</strong> será transferido via Pix instantâneo para a sua chave:
           </p>
 
-          <div className="bg-black/70 border border-white/10 rounded-xl p-3.5 font-mono text-sm text-emerald-400 flex items-center justify-between">
+          <div className="bg-[#1B2330] border border-[#252D3B] rounded-2xl p-3.5 font-mono text-sm text-[#75A7FF] flex items-center justify-between">
             <span className="truncate mr-2">{coachProfile?.asaas_pix_key || 'Nenhuma chave Pix cadastrada'}</span>
-            <Badge className="bg-emerald-500/10 text-emerald-400 border-0 text-[10px] shrink-0">
+            <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] shrink-0 font-mono">
               D+0 PIX
             </Badge>
           </div>
@@ -1009,7 +1009,7 @@ export default function FinanceDashboardPage() {
             </div>
           )}
 
-          <div className="text-xs text-zinc-500">
+          <div className="text-xs text-[#A7B0C0]">
             A transferência é processada automaticamente pela infraestrutura bancária do Asaas diretamente para a sua conta. O valor é creditado em poucos minutos.
           </div>
 
@@ -1017,7 +1017,7 @@ export default function FinanceDashboardPage() {
             <Button
               onClick={handleRequestWithdraw}
               disabled={withdrawing || !coachProfile?.asaas_pix_key || availableBalance <= 0}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold disabled:opacity-50"
+              className="w-full bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold disabled:opacity-50 rounded-2xl shadow-lg shadow-[#3478F6]/20 transition-all"
             >
               {withdrawing ? 'Processando Transferência...' : 'Confirmar Transferência Pix'}
             </Button>
@@ -1025,7 +1025,7 @@ export default function FinanceDashboardPage() {
               variant="outline"
               disabled={withdrawing}
               onClick={() => setWithdrawModalOpen(false)}
-              className="border-white/10 text-zinc-400"
+              className="border-[#252D3B] bg-[#1B2330] text-[#A7B0C0] hover:bg-[#252D3B] rounded-2xl"
             >
               Cancelar
             </Button>
@@ -1114,7 +1114,7 @@ export default function FinanceDashboardPage() {
                     }
                   }}
                   disabled={upgradeLoading}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-xs"
+                  className="w-full bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold text-xs rounded-2xl shadow-lg shadow-[#3478F6]/20 transition-all"
                 >
                   {upgradeLoading ? 'Confirmando...' : 'Já Efetuei o Pagamento PIX (Ativar Plano)'}
                 </Button>
@@ -1125,7 +1125,7 @@ export default function FinanceDashboardPage() {
                     setUpgradeModalOpen(false);
                     setUpgradePixData(null);
                   }}
-                  className="w-full border-white/10 text-zinc-400 text-xs"
+                  className="w-full border-[#252D3B] bg-[#1B2330] text-[#A7B0C0] hover:bg-[#252D3B] text-xs rounded-2xl"
                 >
                   Fechar
                 </Button>
@@ -1134,14 +1134,14 @@ export default function FinanceDashboardPage() {
           ) : (
             <>
               {/* Seletor de Método de Pagamento: PIX ou CARTÃO */}
-              <div className="flex bg-black/60 p-1 rounded-xl border border-white/10 gap-1 mb-2">
+              <div className="flex bg-[#1B2330] p-1 rounded-2xl border border-[#252D3B] gap-1 mb-2">
                 <button
                   type="button"
                   onClick={() => setUpgradePaymentMethod('PIX')}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                  className={`flex-1 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
                     upgradePaymentMethod === 'PIX'
-                      ? 'bg-white text-black shadow-md'
-                      : 'text-zinc-400 hover:text-white'
+                      ? 'bg-[#3478F6] text-white shadow-md'
+                      : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
                   }`}
                 >
                   PIX Recorrente (D+0)
@@ -1149,10 +1149,10 @@ export default function FinanceDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setUpgradePaymentMethod('CREDIT_CARD')}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                  className={`flex-1 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
                     upgradePaymentMethod === 'CREDIT_CARD'
-                      ? 'bg-white text-black shadow-md'
-                      : 'text-zinc-400 hover:text-white'
+                      ? 'bg-[#3478F6] text-white shadow-md'
+                      : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
                   }`}
                 >
                   Cartão de Crédito
@@ -1161,8 +1161,8 @@ export default function FinanceDashboardPage() {
 
               {/* Formulário de Cartão se Cartão estiver selecionado */}
               {upgradePaymentMethod === 'CREDIT_CARD' && (
-                <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl space-y-2.5 text-left mb-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
+                <div className="p-3.5 bg-[#1B2330] border border-[#252D3B] rounded-2xl space-y-2.5 text-left mb-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">
                     Dados do Cartão (Cobrança Automática Mensal)
                   </span>
                   <div>
@@ -1171,7 +1171,7 @@ export default function FinanceDashboardPage() {
                       placeholder="Nome impresso no cartão"
                       value={cardHolder}
                       onChange={(e) => setCardHolder(e.target.value)}
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30"
+                      className="w-full bg-[#121722] border border-[#252D3B] rounded-xl px-3 py-2 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 focus:outline-none focus:border-[#3478F6]"
                     />
                   </div>
                   <div>
@@ -1181,7 +1181,7 @@ export default function FinanceDashboardPage() {
                       maxLength={19}
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-white/30"
+                      className="w-full bg-[#121722] border border-[#252D3B] rounded-xl px-3 py-2 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 font-mono focus:outline-none focus:border-[#3478F6]"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -1191,7 +1191,7 @@ export default function FinanceDashboardPage() {
                       maxLength={5}
                       value={cardExpiry}
                       onChange={(e) => setCardExpiry(e.target.value)}
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-white/30"
+                      className="w-full bg-[#121722] border border-[#252D3B] rounded-xl px-3 py-2 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 font-mono focus:outline-none focus:border-[#3478F6]"
                     />
                     <input
                       type="password"
@@ -1199,16 +1199,16 @@ export default function FinanceDashboardPage() {
                       maxLength={4}
                       value={cardCvv}
                       onChange={(e) => setCardCvv(e.target.value)}
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-white/30"
+                      className="w-full bg-[#121722] border border-[#252D3B] rounded-xl px-3 py-2 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 font-mono focus:outline-none focus:border-[#3478F6]"
                     />
                   </div>
-                  <p className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
+                  <p className="text-[10px] text-[#A7B0C0] font-mono flex items-center gap-1">
                     Criptografia PCI Asaas • Renovação mensal sem bloqueio de limite
                   </p>
                 </div>
               )}
 
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[#A7B0C0]">
                 Escolha o plano ideal para a sua estrutura. A contratação é imediata.
               </p>
 
@@ -1220,33 +1220,33 @@ export default function FinanceDashboardPage() {
                       setSelectedPlanForUpgrade('pro');
                     }
                   }}
-                  className={`p-5 rounded-xl border transition-all ${
+                  className={`p-5 rounded-2xl border transition-all ${
                     currentPlanTier === 'pro'
-                      ? 'border-emerald-500/40 bg-emerald-500/5 cursor-not-allowed opacity-90'
+                      ? 'border-[#3478F6]/40 bg-[#3478F6]/10 cursor-not-allowed opacity-90'
                       : selectedPlanForUpgrade === 'pro'
-                      ? 'border-white bg-white/5 shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-pointer'
-                      : 'border-white/10 bg-black/40 hover:border-white/20 cursor-pointer'
+                      ? 'border-[#3478F6] bg-[#3478F6]/10 shadow-[0_0_20px_rgba(52,120,246,0.2)] cursor-pointer'
+                      : 'border-[#252D3B] bg-[#121722] hover:border-[#3478F6]/40 cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-white text-base">Pro Coach</span>
+                    <span className="font-bold text-[#F4F6FA] text-base">Pro Coach</span>
                     {currentPlanTier === 'pro' ? (
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-mono uppercase tracking-wider">
+                      <Badge className="bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/40 text-[9px] font-mono uppercase tracking-wider">
                         SEU PLANO ATUAL
                       </Badge>
                     ) : (
-                      <Badge className="bg-white text-black font-extrabold border-0 text-[10px]">RECOMENDADO</Badge>
+                      <Badge className="bg-[#3478F6] text-white font-extrabold border-0 text-[10px]">RECOMENDADO</Badge>
                     )}
                   </div>
-                  <div className="text-2xl font-black text-white mb-2">R$ 49,90<span className="text-xs text-zinc-500 font-normal">/mês</span></div>
-                  <ul className="text-xs text-zinc-300 space-y-1.5 mb-2">
-                    <li className="flex items-center gap-1.5">• Desbloqueia <strong className="text-white">Squads (Times Cooperativos)</strong></li>
-                    <li className="flex items-center gap-1.5">• <strong className="text-white">Radar Anti-Churn & Resgate WhatsApp</strong></li>
-                    <li className="flex items-center gap-1.5">• <strong className="text-emerald-400">Taxa ZERO (0%) da plataforma</strong> (100% do lucro é seu)</li>
-                    <li className="flex items-center gap-1.5">• Até <strong className="text-white">5 desafios simultâneos</strong> (100 alunos/desafio)</li>
+                  <div className="text-2xl font-black text-[#F4F6FA] mb-2 font-mono">R$ 49,90<span className="text-xs text-[#A7B0C0] font-normal font-sans">/mês</span></div>
+                  <ul className="text-xs text-[#A7B0C0] space-y-1.5 mb-2">
+                    <li className="flex items-center gap-1.5">• Desbloqueia <strong className="text-[#F4F6FA]">Squads (Times Cooperativos)</strong></li>
+                    <li className="flex items-center gap-1.5">• <strong className="text-[#F4F6FA]">Radar Anti-Churn & Resgate WhatsApp</strong></li>
+                    <li className="flex items-center gap-1.5">• <strong className="text-[#75A7FF]">Taxa ZERO (0%) da plataforma</strong> (100% do lucro é seu)</li>
+                    <li className="flex items-center gap-1.5">• Até <strong className="text-[#F4F6FA]">5 desafios simultâneos</strong> (100 alunos/desafio)</li>
                   </ul>
                   {currentPlanTier === 'pro' && (
-                    <div className="mt-3 pt-2 border-t border-emerald-500/20 text-[10px] text-emerald-400 font-mono text-center">
+                    <div className="mt-3 pt-2 border-t border-[#3478F6]/20 text-[10px] text-[#75A7FF] font-mono text-center">
                       Você já possui este plano ativo
                     </div>
                   )}

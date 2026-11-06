@@ -291,10 +291,10 @@ export default function StudentProfilePage() {
       </div>
 
       {/* Card Principal do Usuário */}
-      <Card className="mono-glass-card border border-white/10 p-5 rounded-3xl shadow-xl text-center relative z-10">
+      <Card className="bg-[#121722] border border-[#252D3B] p-5 rounded-3xl shadow-xl text-center relative z-10">
         {/* Avatar com upload de foto */}
-        <div className="relative mx-auto w-24 h-24 rounded-full border border-white/20 p-1 bg-white/5 shadow-xl shadow-black mb-3 group">
-          <div className="w-full h-full bg-zinc-950 rounded-full flex items-center justify-center font-black text-2xl text-white overflow-hidden relative">
+        <div className="relative mx-auto w-24 h-24 rounded-full border border-[#252D3B] p-1 bg-[#1B2330] shadow-xl shadow-black mb-3 group">
+          <div className="w-full h-full bg-[#080A0F] rounded-full flex items-center justify-center font-black text-2xl text-[#F4F6FA] overflow-hidden relative">
             {student?.avatar_url ? (
               <img
                 src={student.avatar_url}
@@ -307,13 +307,13 @@ export default function StudentProfilePage() {
 
             {uploadingAvatar && (
               <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
 
           {/* Botão de Câmera / Upload */}
-          <label className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-white hover:bg-zinc-200 border-2 border-zinc-950 flex items-center justify-center text-black cursor-pointer shadow-md transition-all active:scale-95" title="Alterar foto de perfil">
+          <label className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-[#3478F6] hover:bg-[#75A7FF] border-2 border-[#080A0F] flex items-center justify-center text-white cursor-pointer shadow-md transition-all active:scale-95" title="Alterar foto de perfil">
             <Camera className="h-4 w-4" />
             <input
               type="file"
@@ -325,30 +325,30 @@ export default function StudentProfilePage() {
           </label>
         </div>
 
-        <h2 className="text-lg font-black text-white tracking-tight">{student?.full_name || 'Atleta ArenaFitPro'}</h2>
-        <p className="text-xs text-zinc-400 mt-0.5 font-mono">
+        <h2 className="text-lg font-black text-[#F4F6FA] tracking-tight">{student?.full_name || 'Atleta ArenaFitPro'}</h2>
+        <p className="text-xs text-[#A7B0C0] mt-0.5 font-mono">
           {challenge?.title ? `Atleta • ${challenge.title}` : 'Aluno Oficial do Desafio'}
         </p>
 
         {/* Estatísticas Rápidas em Grid */}
-        <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-white/10">
-          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
-            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Pontos</span>
-            <span className="text-base font-black text-white mt-0.5 block font-mono">
+        <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-[#252D3B]">
+          <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B]">
+            <span className="text-[11px] text-[#A7B0C0] block font-mono uppercase">Pontos</span>
+            <span className="text-base font-black text-[#3478F6] mt-0.5 block font-mono">
               {standing?.total_points || 0}
             </span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
-            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Ofensiva</span>
-            <span className="text-base font-black text-white mt-0.5 block font-mono">
+          <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B]">
+            <span className="text-[11px] text-[#A7B0C0] block font-mono uppercase">Ofensiva</span>
+            <span className="text-base font-black text-[#F4F6FA] mt-0.5 block font-mono">
               {streakDays} {streakDays === 1 ? 'Dia' : 'Dias'}
             </span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-white/10">
-            <span className="text-[11px] text-zinc-500 block font-mono uppercase">Check-ins</span>
-            <span className="text-base font-black text-white mt-0.5 block font-mono">
+          <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B]">
+            <span className="text-[11px] text-[#A7B0C0] block font-mono uppercase">Check-ins</span>
+            <span className="text-base font-black text-[#75A7FF] mt-0.5 block font-mono">
               {submissionsCount}
             </span>
           </div>
@@ -357,20 +357,20 @@ export default function StudentProfilePage() {
 
       {/* MINHA TURMA ATUAL & STATUS DA MATRÍCULA */}
       {challenge && (
-        <Card className="mono-glass-card p-4 rounded-3xl border border-white/10 space-y-3 relative z-10">
+        <Card className="bg-[#121722] p-4 rounded-3xl border border-[#252D3B] space-y-3 relative z-10">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-white" />
-              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+              <Trophy className="w-4 h-4 text-[#3478F6]" />
+              <span className="text-xs font-mono font-bold text-[#F4F6FA] uppercase tracking-wider">
                 Minha Turma Atual
               </span>
             </div>
             {participation?.payment_status === 'paid' ? (
-              <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono">
+              <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono">
                 ✓ PAGO & CONFIRMADO
               </Badge>
             ) : participation?.payment_status === 'complimentary' ? (
-              <Badge className="bg-white/10 text-white border border-white/20 text-[10px] font-mono">
+              <Badge className="bg-[#1B2330] text-[#F4F6FA] border border-[#252D3B] text-[10px] font-mono">
                 ✦ VAGA CORTESIA
               </Badge>
             ) : (
@@ -380,18 +380,18 @@ export default function StudentProfilePage() {
             )}
           </div>
 
-          <div className="p-3 rounded-2xl bg-black/50 border border-white/5 space-y-1.5">
-            <h4 className="text-sm font-black text-white">{challenge.title}</h4>
-            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1">
+          <div className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-1.5">
+            <h4 className="text-sm font-black text-[#F4F6FA]">{challenge.title}</h4>
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#A7B0C0] pt-1">
               <span>Período da Turma:</span>
-              <span className="text-zinc-200">
+              <span className="text-[#F4F6FA]">
                 {challenge.start_date ? new Date(challenge.start_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'} até {challenge.end_date ? new Date(challenge.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
               </span>
             </div>
             {participation?.joined_at && (
-              <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#A7B0C0]">
                 <span>Inscrito em:</span>
-                <span className="text-zinc-200">
+                <span className="text-[#F4F6FA]">
                   {new Date(participation.joined_at).toLocaleDateString('pt-BR')}
                 </span>
               </div>
@@ -403,11 +403,11 @@ export default function StudentProfilePage() {
       {/* CONQUISTAS & MEDALHAS DA ARENA (Sistema de Mérito Limpo) */}
       <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono flex items-center gap-1.5">
-            <Award className="h-4 w-4 text-amber-300" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#A7B0C0] font-mono flex items-center gap-1.5">
+            <Award className="h-4 w-4 text-[#3478F6]" />
             <span>Conquistas & Medalhas</span>
           </span>
-          <span className="text-[11px] font-mono text-zinc-400">
+          <span className="text-[11px] font-mono text-[#A7B0C0]">
             {achievementsList.filter((a) => a.isUnlocked).length}/{achievementsList.length || DEFAULT_ACHIEVEMENTS.length}
           </span>
         </div>
@@ -429,10 +429,10 @@ export default function StudentProfilePage() {
       {/* FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
       <div
         onClick={() => setIsVaultModalOpen(true)}
-        className="mono-glass-card p-4 rounded-3xl border border-white/15 flex items-center justify-between gap-3 cursor-pointer hover:border-white/30 transition-all group shadow-lg relative z-10"
+        className="bg-[#121722] p-4 rounded-3xl border border-[#252D3B] flex items-center justify-between gap-3 cursor-pointer hover:border-[#3478F6]/40 transition-all group shadow-lg relative z-10"
       >
         <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-2xl bg-white/5 text-white border border-white/10 flex items-center justify-center shrink-0">
+          <div className="h-11 w-11 rounded-2xl bg-[#1B2330] text-[#3478F6] border border-[#252D3B] flex items-center justify-center shrink-0">
             {vaultData?.is_completed ? (
               <Unlock className="h-6 w-6 stroke-[2]" />
             ) : (
@@ -441,16 +441,16 @@ export default function StudentProfilePage() {
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#A7B0C0] font-mono">
                 {vaultData?.is_completed ? 'Desbloqueado' : 'Privado & Seguro'}
               </span>
-              <span className="h-1 w-1 rounded-full bg-zinc-600" />
-              <span className="text-[10px] text-zinc-400 font-semibold font-mono">Dia 1 ao 30</span>
+              <span className="h-1 w-1 rounded-full bg-[#3478F6]" />
+              <span className="text-[10px] text-[#A7B0C0] font-semibold font-mono">Dia 1 ao 30</span>
             </div>
-            <h4 className="text-xs font-black text-white group-hover:text-zinc-200 transition-colors">
+            <h4 className="text-xs font-black text-[#F4F6FA] group-hover:text-[#75A7FF] transition-colors">
               Cofre Antes & Depois
             </h4>
-            <p className="text-[11px] text-zinc-400 mt-0.5">
+            <p className="text-[11px] text-[#A7B0C0] mt-0.5">
               {vaultData?.is_completed
                 ? 'Arraste o slider e veja sua evolução comparativa.'
                 : vaultData?.before_photo_url
@@ -460,31 +460,31 @@ export default function StudentProfilePage() {
           </div>
         </div>
 
-        <ChevronRight className="h-5 w-5 text-zinc-500 group-hover:text-white transition-colors shrink-0" />
+        <ChevronRight className="h-5 w-5 text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors shrink-0" />
       </div>
 
       {/* SEÇÃO DE PREFERÊNCIAS & NOTIFICAÇÕES */}
       <div className="space-y-2.5 relative z-10">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#A7B0C0] font-mono">
           Notificações & Alertas
         </h3>
 
         {/* Item 18: Mandar Notificação no Celular */}
-        <div className="mono-glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-3">
+        <div className="bg-[#121722] p-4 rounded-2xl border border-[#252D3B] flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
+            <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#3478F6]">
               <Bell className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h4 className="text-xs font-bold text-white font-mono">Notificações Push no Celular</h4>
+                <h4 className="text-xs font-bold text-[#F4F6FA] font-mono">Notificações Push no Celular</h4>
                 {pushEnabled && (
-                  <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-mono">
+                  <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[9px] font-mono">
                     ✓ ATIVAS
                   </Badge>
                 )}
               </div>
-              <p className="text-[11px] text-zinc-400">
+              <p className="text-[11px] text-[#A7B0C0]">
                 Receba lembretes de missões e alertas de risco de perda de ofensiva.
               </p>
             </div>
@@ -494,8 +494,8 @@ export default function StudentProfilePage() {
             onClick={handleTogglePush}
             className={`text-xs font-mono font-bold rounded-xl h-11 min-h-[44px] px-3.5 shrink-0 ${
               pushEnabled
-                ? 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                : 'bg-white text-black hover:bg-zinc-200'
+                ? 'bg-[#1B2330] text-[#A7B0C0] hover:bg-[#252D3B]'
+                : 'bg-[#3478F6] text-white hover:bg-[#75A7FF]'
             }`}
           >
             {pushEnabled ? 'Silenciar' : 'Ativar Alertas'}
@@ -505,17 +505,17 @@ export default function StudentProfilePage() {
 
       {/* SEÇÃO DE LINKS DE SUPORTE E LEGAIS (Itens 20 & 21) */}
       <div className="space-y-2 relative z-10">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#A7B0C0] font-mono">
           Suporte & Informações
         </h3>
         <div className="grid grid-cols-2 gap-2">
-          <Link href="/ajuda" className="mono-glass-card p-3.5 rounded-2xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-2.5">
-            <HelpCircle className="h-4 w-4 text-zinc-400" />
-            <span className="text-xs text-zinc-300 font-medium font-mono">Central de Ajuda</span>
+          <Link href="/ajuda" className="bg-[#121722] p-3.5 rounded-2xl border border-[#252D3B] hover:border-[#3478F6]/50 transition-colors flex items-center gap-2.5">
+            <HelpCircle className="h-4 w-4 text-[#3478F6]" />
+            <span className="text-xs text-[#F4F6FA] font-medium font-mono">Central de Ajuda</span>
           </Link>
-          <Link href="/termos" className="mono-glass-card p-3.5 rounded-2xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-2.5">
-            <FileText className="h-4 w-4 text-zinc-400" />
-            <span className="text-xs text-zinc-300 font-medium font-mono">Termos & Privacidade</span>
+          <Link href="/termos" className="bg-[#121722] p-3.5 rounded-2xl border border-[#252D3B] hover:border-[#3478F6]/50 transition-colors flex items-center gap-2.5">
+            <FileText className="h-4 w-4 text-[#3478F6]" />
+            <span className="text-xs text-[#F4F6FA] font-medium font-mono">Termos & Privacidade</span>
           </Link>
         </div>
       </div>
@@ -523,16 +523,16 @@ export default function StudentProfilePage() {
       {/* Histórico de Fotos do Aluno */}
       <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 font-mono">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#A7B0C0] font-mono">
             Minha Galeria de Missões ({userPhotos.length})
           </h3>
           {userPhotos.length > 0 && (
-            <span className="text-[10px] font-mono text-zinc-500">Toque para ampliar</span>
+            <span className="text-[10px] font-mono text-[#A7B0C0]">Toque para ampliar</span>
           )}
         </div>
 
         {userPhotos.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500 text-xs border border-dashed border-white/10 rounded-2xl">
+          <div className="text-center py-8 text-[#A7B0C0] text-xs border border-dashed border-[#252D3B] rounded-2xl bg-[#121722]/40">
             Nenhuma foto enviada ainda.
           </div>
         ) : (
@@ -542,19 +542,19 @@ export default function StudentProfilePage() {
                 key={item.id}
                 type="button"
                 onClick={() => setSelectedPhoto(item)}
-                className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 group text-left focus:outline-none focus:ring-2 focus:ring-white/30"
+                className="relative aspect-square rounded-2xl overflow-hidden border border-[#252D3B] bg-[#1B2330] group text-left focus:outline-none focus:ring-2 focus:ring-[#3478F6]"
               >
                 <img
                   src={item.photo_url}
                   alt="Missão"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-2">
                   <span className="text-[10px] font-bold text-white line-clamp-1">
                     {item.missions?.title || 'Check-in'}
                   </span>
                   <span className={`text-[8px] font-black uppercase font-mono tracking-wider ${
-                    item.status === 'approved' ? 'text-emerald-400' : item.status === 'rejected' ? 'text-rose-400' : 'text-amber-300'
+                    item.status === 'approved' ? 'text-[#75A7FF]' : item.status === 'rejected' ? 'text-rose-400' : 'text-amber-300'
                   }`}>
                     {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Em Análise'}
                   </span>
@@ -573,7 +573,7 @@ export default function StudentProfilePage() {
       >
         {selectedPhoto && (
           <div className="space-y-3">
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-black max-h-[60vh] flex items-center justify-center">
+            <div className="rounded-2xl overflow-hidden border border-[#252D3B] bg-[#080A0F] max-h-[60vh] flex items-center justify-center">
               <img
                 src={selectedPhoto.photo_url}
                 alt={selectedPhoto?.missions?.title || 'Foto da Missão'}
@@ -582,7 +582,7 @@ export default function StudentProfilePage() {
             </div>
 
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="text-zinc-400">
+              <span className="text-[#A7B0C0]">
                 {selectedPhoto.submitted_at
                   ? new Date(selectedPhoto.submitted_at).toLocaleString('pt-BR', {
                       day: '2-digit',
@@ -596,7 +596,7 @@ export default function StudentProfilePage() {
               <Badge
                 className={`text-[10px] font-mono uppercase tracking-wider ${
                   selectedPhoto.status === 'approved'
-                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    ? 'bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30'
                     : selectedPhoto.status === 'rejected'
                     ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
                     : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
@@ -611,7 +611,7 @@ export default function StudentProfilePage() {
             </div>
 
             {selectedPhoto.caption && (
-              <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-zinc-300">
+              <div className="p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs text-[#F4F6FA]">
                 {selectedPhoto.caption}
               </div>
             )}
@@ -622,8 +622,8 @@ export default function StudentProfilePage() {
       {/* Toast Flutuante */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+          <div className="bg-[#121722] px-4 py-2.5 rounded-2xl border border-[#3478F6]/40 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         </div>

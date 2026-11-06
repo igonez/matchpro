@@ -253,9 +253,9 @@ export default function DashboardFinanceAndStudentsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="rounded-xl h-10 px-3.5 text-xs font-semibold text-zinc-300 border-white/10 hover:border-white/20 hover:text-white bg-white/5"
+              className="rounded-2xl h-10 px-3.5 text-xs font-semibold text-[#F4F6FA] border-[#252D3B] hover:border-[#3478F6]/40 hover:text-white bg-[#121722]"
             >
-              <CreditCard className="h-4 w-4 mr-1.5" /> Aba Financeiro →
+              <CreditCard className="h-4 w-4 mr-1.5 text-[#3478F6]" /> Aba Financeiro →
             </Button>
           </Link>
 
@@ -263,7 +263,7 @@ export default function DashboardFinanceAndStudentsPage() {
             data-tour="students-invite-card"
             size="sm"
             onClick={handleCopyInviteLink}
-            className="rounded-xl h-10 px-4 text-xs font-semibold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 cursor-pointer"
+            className="rounded-2xl h-10 px-4 text-xs font-semibold bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-lg shadow-[#3478F6]/20 transition-all cursor-pointer"
             title="Copiar link de convite para matrícula via app"
           >
             <Copy className="h-4 w-4 mr-1.5" /> Copiar Link de Convite
@@ -273,56 +273,56 @@ export default function DashboardFinanceAndStudentsPage() {
 
       {/* Grid de Métricas Operacionais de Alunos */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
-        <SpotlightCard3D className="p-5">
+        <SpotlightCard3D className="p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
               Total de Matriculados
             </span>
-            <Users className="h-4 w-4 text-zinc-400" />
+            <Users className="h-4 w-4 text-[#3478F6]" />
           </div>
-          <div className="text-3xl font-black text-white font-mono">
+          <div className="text-3xl font-black text-[#F4F6FA] font-mono">
             {filteredParticipants.length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-[#A7B0C0] mt-1">
             {selectedChallengeId === 'all' ? 'Soma de todas as turmas' : 'Alunos nesta turma'}
           </p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-5">
+        <SpotlightCard3D className="p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
               Inscrições Confirmadas
             </span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 text-[#75A7FF]" />
           </div>
-          <div className="text-3xl font-black text-white font-mono">
+          <div className="text-3xl font-black text-[#F4F6FA] font-mono">
             {filteredParticipants.filter((p) => p.payment_status === 'paid').length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Pagamento confirmado via plataforma</p>
+          <p className="text-xs text-[#A7B0C0] mt-1">Pagamento confirmado via plataforma</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-5">
+        <SpotlightCard3D className="p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
               Aguardando Confirmação Pix
             </span>
             <Clock className="h-4 w-4 text-amber-400" />
           </div>
-          <div className="text-3xl font-black text-white font-mono">
+          <div className="text-3xl font-black text-[#F4F6FA] font-mono">
             {filteredParticipants.filter((p) => p.payment_status === 'pending').length}
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Checkout iniciado no aplicativo</p>
+          <p className="text-xs text-[#A7B0C0] mt-1">Checkout iniciado no aplicativo</p>
         </SpotlightCard3D>
       </div>
 
       {/* Barra de Filtros e Busca de Alunos */}
-      <div className="mono-glass-card p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 relative z-10 border border-white/10">
+      <div className="p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 relative z-10 border border-[#252D3B] bg-[#121722]">
         <div className="flex flex-col sm:flex-row flex-1 items-stretch sm:items-center gap-2.5">
           {/* Seletor de Desafio */}
           <select
             value={selectedChallengeId}
             onChange={(e) => setSelectedChallengeId(e.target.value)}
-            className="h-11 min-h-[44px] w-full sm:w-auto rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-mono font-bold text-white focus:outline-none focus:border-white/30"
+            className="h-11 min-h-[44px] w-full sm:w-auto rounded-xl border border-[#252D3B] bg-[#1B2330] px-3 text-xs font-mono font-bold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6]"
           >
             <option value="all">Todas as Turmas ({challenges.length})</option>
             {challenges.map((c) => (
@@ -334,44 +334,44 @@ export default function DashboardFinanceAndStudentsPage() {
 
           {/* Campo de Busca */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3.5 h-4 w-4 text-zinc-500" />
+            <Search className="absolute left-3 top-3.5 h-4 w-4 text-[#A7B0C0]" />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar atleta por nome ou WhatsApp..."
-              className="pl-9 h-11 min-h-[44px] text-xs font-mono bg-zinc-900/60 border-white/10 text-white rounded-xl"
+              className="pl-9 h-11 min-h-[44px] text-xs font-mono bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 rounded-xl focus:border-[#3478F6]"
             />
           </div>
         </div>
 
         {/* Filtro de Status de Pagamento */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none font-mono">
           <button
             onClick={() => setFilterPayment('all')}
-            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono font-bold transition-all shrink-0 ${
+            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all shrink-0 ${
               filterPayment === 'all'
-                ? 'bg-white text-black'
-                : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
+                ? 'bg-[#3478F6] text-white shadow-md'
+                : 'bg-[#1B2330] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
             }`}
           >
             Todos ({participants.length})
           </button>
           <button
             onClick={() => setFilterPayment('paid')}
-            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono font-bold transition-all shrink-0 ${
+            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all shrink-0 ${
               filterPayment === 'paid'
-                ? 'bg-white text-black'
-                : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
+                ? 'bg-[#3478F6] text-white shadow-md'
+                : 'bg-[#1B2330] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
             }`}
           >
             Confirmados
           </button>
           <button
             onClick={() => setFilterPayment('pending')}
-            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono font-bold transition-all shrink-0 ${
+            className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all shrink-0 ${
               filterPayment === 'pending'
-                ? 'bg-white text-black'
-                : 'bg-zinc-900 text-zinc-400 hover:text-white border border-white/10'
+                ? 'bg-[#3478F6] text-white shadow-md'
+                : 'bg-[#1B2330] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
             }`}
           >
             Pendentes
@@ -380,18 +380,18 @@ export default function DashboardFinanceAndStudentsPage() {
       </div>
 
       {/* Tabela Estruturada de Alunos Inscritos */}
-      <div className="mono-glass-card rounded-3xl overflow-hidden border border-white/10 relative z-10">
-        <div className="p-4 sm:p-5 border-b border-white/[0.08] flex items-center justify-between">
+      <div className="bg-[#121722] rounded-3xl overflow-hidden border border-[#252D3B] relative z-10 shadow-md">
+        <div className="p-4 sm:p-5 border-b border-[#252D3B] flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-white tracking-tight">
+            <h3 className="text-base font-bold text-[#F4F6FA] tracking-tight">
               Alunos Inscritos
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[#A7B0C0]">
               {filteredParticipants.length} atleta(s) localizado(s)
             </p>
           </div>
 
-          <span className="text-xs text-zinc-400 font-medium">
+          <span className="text-xs text-[#A7B0C0] font-medium font-mono">
             Ordenado por data
           </span>
         </div>
@@ -455,7 +455,7 @@ export default function DashboardFinanceAndStudentsPage() {
                         {isPaid && (challengeObj?.price || 0) > 0 && (
                           <Badge
                             variant="outline"
-                            className="border-emerald-500/30 text-emerald-300 bg-emerald-500/10 text-xs font-semibold font-mono"
+                            className="border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/15 text-xs font-semibold font-mono"
                           >
                             ● Pago via App
                           </Badge>
@@ -463,7 +463,7 @@ export default function DashboardFinanceAndStudentsPage() {
                         {isPaid && (challengeObj?.price || 0) === 0 && (
                           <Badge
                             variant="outline"
-                            className="border-white/20 text-white bg-white/10 text-xs font-semibold font-mono"
+                            className="border-[#252D3B] text-[#F4F6FA] bg-[#1B2330] text-xs font-semibold font-mono"
                           >
                             ● Gratuito (App)
                           </Badge>
@@ -479,7 +479,7 @@ export default function DashboardFinanceAndStudentsPage() {
                         {!isPaid && !isPending && (
                           <Badge
                             variant="outline"
-                            className="border-white/20 text-zinc-300 bg-white/5 text-[10px] font-mono uppercase tracking-wider"
+                            className="border-[#252D3B] text-[#A7B0C0] bg-[#1B2330] text-[10px] font-mono uppercase tracking-wider"
                           >
                             ATIVO
                           </Badge>

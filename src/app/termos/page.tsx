@@ -149,7 +149,7 @@ export default function TermsPage() {
           {/* Seção 3 */}
           <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-emerald-400" /> 3. Pagamentos, Splits e Política de Reembolso
+              <CreditCard className="h-4 w-4 text-[#3478F6]" /> 3. Pagamentos, Splits e Política de Reembolso
             </h2>
             <div className="space-y-3">
               <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">

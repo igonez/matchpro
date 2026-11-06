@@ -439,25 +439,25 @@ function JoinChallengeContent() {
   const isPaidChallenge = Number(challenge.price) > 0;
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col justify-between selection:bg-white selection:text-black font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex flex-col justify-between selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-hidden">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Navbar */}
-      <header className="border-b border-white/[0.06] bg-black/80 backdrop-blur-md sticky top-0 z-50 safe-top-header pb-2">
+      <header className="border-b border-[#252D3B] bg-[#080A0F]/80 backdrop-blur-md sticky top-0 z-50 safe-top-header pb-2">
         <div className="max-w-4xl mx-auto px-6 min-h-[3.5rem] flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-8 w-8 rounded-lg bg-zinc-900 border border-white/20 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+            <div className="h-8 w-8 rounded-lg bg-[#121722] border border-[#252D3B] flex items-center justify-center text-white group-hover:scale-105 transition-transform">
+              <svg className="w-4 h-4 text-[#3478F6]" viewBox="0 0 24 24" fill="none">
                 <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
               </svg>
             </div>
-            <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
+            <span className="font-extrabold text-base tracking-tight text-[#F4F6FA]">ArenaFitPro</span>
           </Link>
 
           <button
             onClick={copyLink}
-            className="text-xs font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            className="text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
           >
             {copied ? 'Link copiado!' : 'Copiar link'}
           </button>
@@ -472,38 +472,38 @@ function JoinChallengeContent() {
 
         <SpotlightCard3D className="p-7 sm:p-9 space-y-6">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-4">
-              <span className="text-xs font-semibold text-zinc-400">
+            <div className="flex items-center justify-between pb-3 border-b border-[#252D3B] mb-4">
+              <span className="text-xs font-semibold text-[#A7B0C0]">
                 Convite Oficial
               </span>
-              <span className="text-xs font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 font-mono">
+              <span className="text-xs font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30 font-mono">
                 {isPaidChallenge ? `R$ ${Number(challenge.price).toFixed(2)}` : 'Gratuito'}
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#F4F6FA] tracking-tight">
               {challenge.title}
             </h1>
-            <p className="text-xs text-zinc-400 mt-1 font-medium">
+            <p className="text-xs text-[#A7B0C0] mt-1 font-medium">
               Treinador: {challenge.professionals?.full_name || 'Coach Certificado'}
             </p>
           </div>
 
-          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-sans">
+          <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed font-sans">
             {challenge.description || 'Desafio fitness focado em disciplina, consistência diária e evolução física com auditoria em tempo real.'}
           </p>
 
           {/* Cronograma */}
-          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-black/60 border border-white/[0.08] text-xs">
+          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-[#080A0F] border border-[#252D3B] text-xs">
             <div>
-              <span className="text-xs text-zinc-400 block font-medium">Início Oficial</span>
-              <span className="font-bold text-white font-mono">
+              <span className="text-xs text-[#A7B0C0] block font-medium">Início Oficial</span>
+              <span className="font-bold text-[#F4F6FA] font-mono">
                 {challenge.start_date ? new Date(challenge.start_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
               </span>
             </div>
             <div>
-              <span className="text-xs text-zinc-400 block font-medium">Término</span>
-              <span className="font-bold text-white font-mono">
+              <span className="text-xs text-[#A7B0C0] block font-medium">Término</span>
+              <span className="font-bold text-[#F4F6FA] font-mono">
                 {challenge.end_date ? new Date(challenge.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
               </span>
             </div>
@@ -512,14 +512,14 @@ function JoinChallengeContent() {
           {/* Resumo de Missões */}
           {missionsList.length > 0 && (
             <div className="space-y-2 pt-2">
-              <span className="text-xs font-semibold tracking-wide text-zinc-400 block">
+              <span className="text-xs font-semibold tracking-wide text-[#A7B0C0] block">
                 Grade de Missões ({missionsList.length})
               </span>
               <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {missionsList.map((m: any) => (
-                  <div key={m.id} className="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-xs">
-                    <span className="text-zinc-300 font-medium">{m.title}</span>
-                    <span className="text-white font-bold font-mono">+{m.points_rewarded} pts</span>
+                  <div key={m.id} className="p-3 rounded-xl bg-[#080A0F]/70 border border-[#252D3B] flex items-center justify-between text-xs">
+                    <span className="text-[#F4F6FA] font-medium">{m.title}</span>
+                    <span className="text-[#75A7FF] font-bold font-mono">+{m.points_rewarded} pts</span>
                   </div>
                 ))}
               </div>
@@ -535,10 +535,10 @@ function JoinChallengeContent() {
           )}
 
           {/* Área de Ação / Cadastro Direto */}
-          <div className="pt-4 border-t border-white/[0.08]">
+          <div className="pt-4 border-t border-[#252D3B]">
             {alreadyJoined ? (
               <Link href="/app" className="block">
-                <button className="mono-button-primary w-full h-12 text-xs font-semibold cursor-pointer">
+                <button className="w-full h-12 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-semibold cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all">
                   Você já está inscrito • Acessar App →
                 </button>
               </Link>
@@ -546,7 +546,7 @@ function JoinChallengeContent() {
               <div className="space-y-3">
                 {isPaidChallenge && (
                   <div className="text-left space-y-1">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">
                       CPF do Pagador (Obrigatório para emissão do Pix)
                     </label>
                     <Input
@@ -555,14 +555,14 @@ function JoinChallengeContent() {
                       value={cpf}
                       onChange={(e) => setCpf(formatCpf(e.target.value))}
                       required
-                      className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs font-mono"
+                      className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs font-mono"
                     />
                   </div>
                 )}
                 <button
                   onClick={handleJoin}
                   disabled={joining}
-                  className="mono-button-primary w-full h-12 min-h-[48px] text-xs font-semibold cursor-pointer"
+                  className="w-full h-12 min-h-[48px] rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-semibold cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all"
                 >
                   {joining
                     ? 'Processando inscrição...'
@@ -789,20 +789,20 @@ function JoinChallengeContent() {
                 }}
                 className="bg-white text-black hover:bg-zinc-200 font-bold px-3 shrink-0 cursor-pointer"
               >
-                {copiedPix ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                {copiedPix ? <Check className="w-4 h-4 text-[#3478F6]" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-emerald-950/30 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+          <div className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#3478F6]/10 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-mono">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3478F6] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#3478F6]"></span>
             </span>
             <span>Aguardando liquidação bancária em tempo real...</span>
           </div>
 
-          <div className="text-[11px] text-zinc-500 font-mono pt-1">
+          <div className="text-[11px] text-[#A7B0C0] font-mono pt-1">
             A confirmação é instantânea. Assim que o Pix for aprovado pelo seu banco, sua tela abrirá automaticamente.
           </div>
 
@@ -841,7 +841,7 @@ function JoinChallengeContent() {
                   setCheckingPixStatus(false);
                 }
               }}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold h-11 text-xs cursor-pointer"
+              className="w-full bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold h-11 text-xs cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all"
             >
               {checkingPixStatus ? (
                 <span className="flex items-center justify-center gap-2">

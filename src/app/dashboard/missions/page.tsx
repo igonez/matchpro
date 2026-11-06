@@ -59,7 +59,7 @@ const DEFAULT_PRESET_LISTS = [
     key: 'refeicao',
     name: 'Bloco de Refeições & Nutrição',
     categoryLabel: 'Nutrição',
-    color: 'emerald',
+    color: 'blue',
     validation_type: 'photo',
     daily_limit: 4,
     description: 'Pratos auditados ao vivo na câmera com leitura nutricional por IA',
@@ -984,8 +984,8 @@ function MissionsManagerContent() {
         };
       case 'refeicao':
         return {
-          border: 'border-emerald-500/25',
-          headerBg: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-300',
+          border: 'border-[#3478F6]/25',
+          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
           label: 'Nutrição',
         };
       case 'habito':
@@ -1118,7 +1118,7 @@ function MissionsManagerContent() {
                     isSelected
                       ? 'border-white bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.15)]'
                       : meta?.isCurrent
-                      ? 'border-emerald-500/40 bg-emerald-950/20 text-white hover:border-emerald-400'
+                      ? 'border-[#3478F6]/40 bg-[#3478F6]/10 text-white hover:border-[#3478F6]'
                       : 'border-white/10 bg-zinc-950/80 text-zinc-400 hover:border-white/25 hover:text-white'
                   }`}
                 >
@@ -1131,7 +1131,7 @@ function MissionsManagerContent() {
                         isSelected
                           ? 'bg-black/15 text-black'
                           : meta?.isCurrent
-                          ? 'bg-emerald-500/20 text-emerald-300'
+                          ? 'bg-[#3478F6]/20 text-[#75A7FF]'
                           : meta?.isFuture
                           ? 'bg-amber-500/15 text-amber-300'
                           : 'bg-white/5 text-zinc-400'
@@ -1167,10 +1167,10 @@ function MissionsManagerContent() {
             <div
               className={`p-5 rounded-3xl border flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                 selectedWeekMeta.isFuture
-                  ? 'border-amber-400/35 bg-gradient-to-r from-amber-500/15 via-zinc-950 to-zinc-950'
+                  ? 'border-amber-400/35 bg-gradient-to-r from-amber-500/15 via-[#121722] to-[#121722]'
                   : selectedWeekMeta.isCurrent
-                  ? 'border-emerald-500/35 bg-gradient-to-r from-emerald-500/15 via-zinc-950 to-zinc-950'
-                  : 'border-white/15 bg-zinc-950'
+                  ? 'border-[#3478F6]/35 bg-gradient-to-r from-[#3478F6]/15 via-[#121722] to-[#121722]'
+                  : 'border-[#252D3B] bg-[#121722]'
               }`}
             >
               <div className="flex items-start gap-3.5">
@@ -1179,7 +1179,7 @@ function MissionsManagerContent() {
                     selectedWeekMeta.isFuture
                       ? 'bg-amber-400/20 border-amber-400/40 text-amber-300'
                       : selectedWeekMeta.isCurrent
-                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                      ? 'bg-[#3478F6]/20 border-[#3478F6]/40 text-[#75A7FF]'
                       : 'bg-white/10 border-white/20 text-zinc-300'
                   }`}
                 >
@@ -1199,7 +1199,7 @@ function MissionsManagerContent() {
                         selectedWeekMeta.isFuture
                           ? 'bg-amber-400/20 text-amber-300 border-amber-400/30'
                           : selectedWeekMeta.isCurrent
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                          ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/30'
                           : 'bg-white/10 text-zinc-300 border-white/20'
                       }`}
                     >
@@ -1301,7 +1301,7 @@ function MissionsManagerContent() {
                 {editingWeekBonus ? (
                   <div 
                     data-tour="missions-bonus-card"
-                    className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900 border border-emerald-500/40 shadow-sm animate-in fade-in duration-150"
+                    className="flex items-center gap-1.5 p-1 rounded-xl bg-[#1B2330] border border-[#3478F6]/40 shadow-sm animate-in fade-in duration-150"
                   >
                     <Input
                       type="number"
@@ -1310,14 +1310,14 @@ function MissionsManagerContent() {
                       value={newWeekBonus}
                       onChange={(e) => setNewWeekBonus(e.target.value)}
                       placeholder="XP"
-                      className="h-8 w-20 text-xs bg-black border-white/20 text-emerald-400 font-mono font-bold rounded-lg px-2"
+                      className="h-8 w-20 text-xs bg-[#121722] border-[#252D3B] text-[#75A7FF] font-mono font-bold rounded-lg px-2"
                     />
                     <label className="flex items-center gap-1 text-[10px] font-mono text-zinc-300 pr-1 cursor-pointer select-none">
                       <input
                         type="checkbox"
                         checked={applyBonusToAll}
                         onChange={(e) => setApplyBonusToAll(e.target.checked)}
-                        className="rounded accent-emerald-400 cursor-pointer"
+                        className="rounded accent-[#3478F6] cursor-pointer"
                       />
                       <span>Todas</span>
                     </label>
@@ -1325,7 +1325,7 @@ function MissionsManagerContent() {
                       size="sm"
                       onClick={handleSaveWeekBonus}
                       disabled={savingWeekBonus}
-                      className="h-8 px-2.5 text-xs bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg cursor-pointer"
+                      className="h-8 px-2.5 text-xs bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold rounded-lg cursor-pointer"
                     >
                       {savingWeekBonus ? '...' : 'Salvar'}
                     </Button>
@@ -1348,12 +1348,12 @@ function MissionsManagerContent() {
                       setApplyBonusToAll(false);
                       setEditingWeekBonus(true);
                     }}
-                    className="h-9 px-3 rounded-xl text-xs border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                    className="h-9 px-3 rounded-xl text-xs border-[#3478F6]/30 bg-[#3478F6]/10 text-[#75A7FF] hover:bg-[#3478F6]/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
                     title="Editar a quantidade de XP concedida aos alunos que completarem 100% das missões desta semana"
                   >
-                    <Trophy className="w-3.5 h-3.5 text-emerald-400" />
+                    <Trophy className="w-3.5 h-3.5 text-[#3478F6]" />
                     <span>Bônus 100%: +{selectedWeek?.bonus_points || 20} XP</span>
-                    <Edit3 className="w-3 h-3 text-emerald-400 opacity-70" />
+                    <Edit3 className="w-3 h-3 text-[#3478F6] opacity-70" />
                   </Button>
                 )}
 
@@ -1618,7 +1618,7 @@ function MissionsManagerContent() {
                                       </Badge>
                                     )}
                                     {(m.is_daily_reset || m.category === 'refeicao') && (
-                                      <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 text-[9px] font-mono uppercase">
+                                      <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[9px] font-mono uppercase">
                                         RESET DIÁRIO (7X)
                                       </Badge>
                                     )}
@@ -1961,8 +1961,8 @@ function MissionsManagerContent() {
       {/* Toast Flutuante */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
             <span>{toastMessage}</span>
           </div>
         </div>

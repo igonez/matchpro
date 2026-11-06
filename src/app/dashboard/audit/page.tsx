@@ -426,23 +426,23 @@ export default function FiscalizacaoPage() {
           )}
 
           {/* Segmented Control Limpo (Swipe vs Grade) */}
-          <div className="flex items-center p-1 rounded-xl bg-zinc-950 border border-white/10">
+          <div className="flex items-center p-1 rounded-2xl bg-[#121722] border border-[#252D3B]">
             <button
               onClick={() => setViewMode('swipe')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${
                 viewMode === 'swipe'
-                  ? 'bg-white text-black font-black'
-                  : 'text-zinc-400 hover:text-white font-medium'
+                  ? 'bg-[#3478F6] text-white font-black shadow-md'
+                  : 'text-[#A7B0C0] hover:text-[#F4F6FA] font-medium'
               }`}
             >
               SWIPE
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-white text-black font-black'
-                  : 'text-zinc-400 hover:text-white font-medium'
+                  ? 'bg-[#3478F6] text-white font-black shadow-md'
+                  : 'text-[#A7B0C0] hover:text-[#F4F6FA] font-medium'
               }`}
             >
               GRADE
@@ -453,7 +453,7 @@ export default function FiscalizacaoPage() {
             <button
               onClick={handleBatchApprovePending}
               disabled={batchApproving || loading}
-              className="px-4 py-2 text-xs font-mono tracking-wider bg-white text-black hover:bg-zinc-200 font-black rounded-xl transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-mono tracking-wider bg-[#3478F6] text-white hover:bg-[#75A7FF] font-black rounded-2xl transition-all shadow-md shadow-[#3478F6]/20 cursor-pointer"
             >
               {batchApproving ? 'PROCESSANDO...' : `APROVAR FILA (${pendingCount})`}
             </button>
@@ -462,7 +462,7 @@ export default function FiscalizacaoPage() {
           <button
             onClick={fetchData}
             disabled={loading}
-            className="px-3.5 py-2 text-xs font-mono text-zinc-400 hover:text-white border border-white/10 rounded-xl transition-colors cursor-pointer"
+            className="px-3.5 py-2 text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B] bg-[#121722] rounded-2xl transition-colors cursor-pointer"
           >
             {loading ? 'ATUALIZANDO...' : 'RECARREGAR'}
           </button>
@@ -471,7 +471,7 @@ export default function FiscalizacaoPage() {
 
       {/* Alerta Tipográfico de Sinalizações */}
       {reportedCount > 0 && (
-        <div className="p-4 rounded-2xl bg-zinc-950 border border-rose-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+        <div className="p-4 rounded-2xl bg-[#121722] border border-rose-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 shadow-md">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
@@ -479,7 +479,7 @@ export default function FiscalizacaoPage() {
                 SINALIZAÇÃO PELA COMUNIDADE ({reportedCount})
               </span>
             </div>
-            <p className="text-xs text-zinc-300">
+            <p className="text-xs text-[#A7B0C0]">
               Registros sinalizados por outros participantes aguardam sua conferência.
             </p>
           </div>
@@ -488,7 +488,7 @@ export default function FiscalizacaoPage() {
               setFilter('reported');
               setSwipeIndex(0);
             }}
-            className="px-4 py-2 text-xs font-mono tracking-wider bg-rose-500/15 border border-rose-500/40 text-rose-300 hover:bg-rose-500/25 font-bold rounded-xl transition-colors shrink-0 cursor-pointer"
+            className="px-4 py-2 text-xs font-mono tracking-wider bg-rose-500/15 border border-rose-500/40 text-rose-300 hover:bg-rose-500/25 font-bold rounded-2xl transition-colors shrink-0 cursor-pointer"
           >
             FILTRAR SINALIZADAS
           </button>
@@ -496,7 +496,7 @@ export default function FiscalizacaoPage() {
       )}
 
       {/* Abas de Filtro Tipográficas */}
-      <div className="flex items-center gap-1 border-b border-white/[0.08] pb-3 relative z-10 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-1.5 border-b border-[#252D3B] pb-3 relative z-10 overflow-x-auto no-scrollbar font-mono">
         {[
           { key: 'all', label: 'TODAS', count: submissions.length },
           { key: 'pending', label: 'PENDENTES', count: pendingCount },
@@ -514,13 +514,13 @@ export default function FiscalizacaoPage() {
               }}
               className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${
                 active
-                  ? 'bg-white text-black font-black'
-                  : 'text-zinc-500 hover:text-zinc-300'
+                  ? 'bg-[#3478F6] text-white font-black shadow-md'
+                  : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
               }`}
             >
               <span>{tab.label}</span>
               {typeof tab.count === 'number' && (
-                <span className={`ml-2 text-[10px] ${active ? 'text-zinc-600' : 'text-zinc-600'}`}>
+                <span className={`ml-2 text-[10px] ${active ? 'text-white/80' : 'text-[#A7B0C0]'}`}>
                   {tab.count}
                 </span>
               )}
@@ -757,11 +757,11 @@ export default function FiscalizacaoPage() {
                   </div>
 
                   {/* Ações de Decisão de Swipe */}
-                  <div className="pt-5 mt-5 border-t border-white/[0.08] grid grid-cols-2 gap-3">
+                  <div className="pt-5 mt-5 border-t border-[#252D3B] grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setInvalidateTarget(sub)}
                       disabled={isProcessing}
-                      className="py-3.5 px-4 rounded-xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 font-mono text-xs tracking-wider font-bold transition-all cursor-pointer"
+                      className="py-3.5 px-4 rounded-2xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 font-mono text-xs tracking-wider font-bold transition-all cursor-pointer"
                     >
                       INVALIDAR (←)
                     </button>
@@ -772,7 +772,7 @@ export default function FiscalizacaoPage() {
                         setSwipeIndex((prev) => prev + 1);
                       }}
                       disabled={isProcessing}
-                      className="py-3.5 px-4 rounded-xl bg-white text-black hover:bg-zinc-200 font-mono text-xs tracking-wider font-black transition-all cursor-pointer"
+                      className="py-3.5 px-4 rounded-2xl bg-[#3478F6] text-white hover:bg-[#75A7FF] font-mono text-xs tracking-wider font-black transition-all shadow-lg shadow-[#3478F6]/20 cursor-pointer"
                     >
                       APROVAR (→)
                     </button>
@@ -793,26 +793,26 @@ export default function FiscalizacaoPage() {
             return (
               <div
                 key={sub.id}
-                className={`p-5 rounded-3xl bg-zinc-950 border flex flex-col justify-between ${
-                  isReported ? 'border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.1)]' : 'border-white/10'
+                className={`p-5 rounded-3xl bg-[#121722] border flex flex-col justify-between ${
+                  isReported ? 'border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.1)]' : 'border-[#252D3B]'
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-3">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#252D3B] mb-3">
                     <div>
-                      <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-wider block">
+                      <span className="text-[9px] font-mono text-[#A7B0C0] uppercase tracking-wider block">
                         ATLETA
                       </span>
-                      <span className="text-xs font-bold text-white block mt-0.5 truncate max-w-[150px]">
+                      <span className="text-xs font-bold text-[#F4F6FA] block mt-0.5 truncate max-w-[150px]">
                         {sub.students?.full_name}
                       </span>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-[11px] font-mono font-black text-white block">
+                      <span className="text-[11px] font-mono font-black text-[#75A7FF] block">
                         +{sub.missions?.points_rewarded || 10} PTS
                       </span>
-                      <span className="text-[9px] font-mono text-zinc-500 block uppercase">
+                      <span className="text-[9px] font-mono text-[#A7B0C0] block uppercase">
                         {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -826,13 +826,13 @@ export default function FiscalizacaoPage() {
                       <span className="text-[9px] font-mono tracking-wider font-bold text-rose-400 uppercase block">
                         SINALIZADA PELA COMUNIDADE ({sub.submission_reports.length})
                       </span>
-                      <p className="truncate text-zinc-400">
+                      <p className="truncate text-[#A7B0C0]">
                         {sub.submission_reports[0]?.reason || 'Foto suspeita'}
                       </p>
                     </div>
                   )}
 
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3 border border-white/5">
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-3 border border-[#252D3B]">
                     <img src={sub.photo_url} alt="Submissão" className="w-full h-full object-cover" />
                     {isRejected && (
                       <div className="absolute inset-0 bg-black/80 flex items-center justify-center font-mono text-[10px] tracking-widest text-rose-400 uppercase">
@@ -841,13 +841,13 @@ export default function FiscalizacaoPage() {
                     )}
                   </div>
 
-                  <div className="space-y-1.5 text-xs text-zinc-400">
-                    <p className="text-white font-bold text-sm">{sub.missions?.title}</p>
+                  <div className="space-y-1.5 text-xs text-[#A7B0C0]">
+                    <p className="text-[#F4F6FA] font-bold text-sm">{sub.missions?.title}</p>
                     {sub.location_name && (
-                      <p className="text-[10px] font-mono text-zinc-500">LOCAL: {sub.location_name}</p>
+                      <p className="text-[10px] font-mono text-[#A7B0C0]">LOCAL: {sub.location_name}</p>
                     )}
                     {sub.caption && (
-                      <p className="text-zinc-300 italic text-[11px] p-2 bg-white/[0.02] border border-white/5 rounded-lg">
+                      <p className="text-[#F4F6FA] italic text-[11px] p-2 bg-[#1B2330] border border-[#252D3B] rounded-xl">
                         "{sub.caption}"
                       </p>
                     )}
@@ -859,7 +859,7 @@ export default function FiscalizacaoPage() {
                       type="button"
                       onClick={() => handleAnalyzeWithAI(sub)}
                       disabled={analyzingId === sub.id}
-                      className="w-full py-2 px-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-zinc-300 hover:text-white text-[11px] font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
+                      className="w-full py-2 px-3 rounded-xl border border-[#252D3B] bg-[#1B2330] hover:bg-[#252D3B] text-[#F4F6FA] text-[11px] font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
                     >
                       <span>
                         {analyzingId === sub.id
@@ -868,60 +868,32 @@ export default function FiscalizacaoPage() {
                           ? 'PARECER TÉCNICO'
                           : 'ANALISAR IA'}
                       </span>
-                      <span className="text-[9px] text-zinc-500 font-mono">GEMINI</span>
+                      <span className="text-[9px] text-[#3478F6] font-mono font-bold">GEMINI</span>
                     </button>
 
                     {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
-                      <div className="mt-2 p-3 rounded-2xl bg-black border border-white/10 text-xs space-y-2">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
-                          <span className="text-[9px] font-mono text-zinc-500 uppercase">CONFORMIDADE</span>
-                          <span className="text-[10px] font-mono text-white font-bold">
+                      <div className="mt-2 p-3 rounded-2xl bg-[#080A0F] border border-[#252D3B] text-xs space-y-2">
+                        <div className="flex items-center justify-between border-b border-[#252D3B] pb-1.5">
+                          <span className="text-[9px] font-mono text-[#A7B0C0] uppercase">CONFORMIDADE</span>
+                          <span className="text-[10px] font-mono text-[#75A7FF] font-bold">
                             {aiAnalysisMap[sub.id].complianceScore}%
                           </span>
                         </div>
-                        <p className="text-zinc-300 text-xs leading-relaxed">
+                        <p className="text-[#A7B0C0] text-xs leading-relaxed">
                           {aiAnalysisMap[sub.id].summary}
                         </p>
-                        {aiAnalysisMap[sub.id].estimatedMacros && (
-                          <div className="grid grid-cols-4 gap-1.5 pt-1 text-center font-mono">
-                            <div className="p-1 bg-zinc-900 rounded">
-                              <span className="text-[8px] text-zinc-500 block">KCAL</span>
-                              <span className="text-white text-xs font-bold">
-                                {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
-                              </span>
-                            </div>
-                            <div className="p-1 bg-zinc-900 rounded">
-                              <span className="text-[8px] text-zinc-500 block">PROT</span>
-                              <span className="text-white text-xs font-bold">
-                                {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
-                              </span>
-                            </div>
-                            <div className="p-1 bg-zinc-900 rounded">
-                              <span className="text-[8px] text-zinc-500 block">CARB</span>
-                              <span className="text-white text-xs font-bold">
-                                {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
-                              </span>
-                            </div>
-                            <div className="p-1 bg-zinc-900 rounded">
-                              <span className="text-[8px] text-zinc-500 block">GORD</span>
-                              <span className="text-white text-xs font-bold">
-                                {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
-                              </span>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-white/[0.06] flex gap-2">
+                <div className="pt-4 mt-4 border-t border-[#252D3B] flex gap-2">
                   {sub.status === 'pending' ? (
                     <>
                       <button
                         onClick={() => handleApprovePhoto(sub)}
                         disabled={isProcessing}
-                        className="w-full py-2 text-xs font-mono font-black tracking-wider bg-white text-black hover:bg-zinc-200 rounded-xl transition-colors cursor-pointer"
+                        className="w-full py-2 text-xs font-mono font-black tracking-wider bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-xl transition-all shadow-md shadow-[#3478F6]/20 cursor-pointer"
                       >
                         {isProcessing ? '...' : 'APROVAR'}
                       </button>
@@ -937,7 +909,7 @@ export default function FiscalizacaoPage() {
                     <button
                       onClick={() => handleApprovePhoto(sub)}
                       disabled={isProcessing}
-                      className="w-full py-2 text-xs font-mono font-bold tracking-wider text-zinc-300 hover:text-white border border-white/10 rounded-xl transition-colors cursor-pointer"
+                      className="w-full py-2 text-xs font-mono font-bold tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B] rounded-xl transition-colors cursor-pointer"
                     >
                       {isProcessing ? '...' : 'REABILITAR FOTO'}
                     </button>
@@ -945,7 +917,7 @@ export default function FiscalizacaoPage() {
                     <button
                       onClick={() => setInvalidateTarget(sub)}
                       disabled={isProcessing}
-                      className="w-full py-2 text-xs font-mono font-medium tracking-wider text-zinc-400 hover:text-rose-400 border border-white/10 rounded-xl transition-colors cursor-pointer"
+                      className="w-full py-2 text-xs font-mono font-medium tracking-wider text-[#A7B0C0] hover:text-rose-400 border border-[#252D3B] rounded-xl transition-colors cursor-pointer"
                     >
                       {isProcessing ? '...' : 'INVALIDAR'}
                     </button>

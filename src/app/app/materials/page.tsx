@@ -199,11 +199,11 @@ function StudentMaterialsContent() {
   const getTypeBadge = (type: string) => {
     switch (type) {
       case 'video':
-        return <Badge className="bg-white/10 text-white border-white/20 font-mono text-[10px] uppercase">Vídeo / Aula</Badge>;
+        return <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 font-mono text-[10px] uppercase">Vídeo / Aula</Badge>;
       case 'cardapio':
-        return <Badge className="bg-white/10 text-white border-white/20 font-mono text-[10px] uppercase">Cardápio & Dieta</Badge>;
+        return <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 font-mono text-[10px] uppercase">Cardápio & Dieta</Badge>;
       default:
-        return <Badge className="bg-white/10 text-white border-white/20 font-mono text-[10px] uppercase">PDF & Guia</Badge>;
+        return <Badge className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] font-mono text-[10px] uppercase">PDF & Guia</Badge>;
     }
   };
 
@@ -225,7 +225,7 @@ function StudentMaterialsContent() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-4 w-full pb-28 relative text-white">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-4 w-full pb-28 relative text-[#F4F6FA]">
       <Monochrome3DBackground />
 
       {/* Header */}
@@ -233,17 +233,17 @@ function StudentMaterialsContent() {
         <div className="flex items-center gap-2.5">
           <StudentMenuTrigger />
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#3478F6] block font-bold">
               {activeChallenge?.title ? `TURMA ATIVA • ${activeChallenge.title}` : 'CENTRAL DO ALUNO'}
             </span>
-            <h1 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
+            <h1 className="text-xl font-black text-[#F4F6FA] flex items-center gap-2 tracking-tight">
               Materiais & Avisos
             </h1>
           </div>
         </div>
         <Link
           href="/app"
-          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0"
+          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-colors flex items-center gap-1.5 shrink-0"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           VOLTAR
@@ -251,13 +251,13 @@ function StudentMaterialsContent() {
       </div>
 
       {/* Seletor Principal: Arquivos vs Mural de Avisos */}
-      <div className="grid grid-cols-2 p-1 rounded-2xl bg-black border border-white/[0.08] relative z-10 font-mono">
+      <div className="grid grid-cols-2 p-1 rounded-2xl bg-[#080A0F] border border-[#252D3B] relative z-10 font-mono">
         <button
           onClick={() => setMainTab('materiais')}
           className={`py-2.5 min-h-[44px] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             mainTab === 'materiais'
-              ? 'bg-white text-black shadow-md'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-[#3478F6] text-white shadow-md'
+              : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
           }`}
         >
           <BookOpen className="h-3.5 w-3.5" />
@@ -267,8 +267,8 @@ function StudentMaterialsContent() {
           onClick={() => setMainTab('avisos')}
           className={`py-2.5 min-h-[44px] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             mainTab === 'avisos'
-              ? 'bg-white text-black shadow-md'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-[#3478F6] text-white shadow-md'
+              : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
           }`}
         >
           <Megaphone className="h-3.5 w-3.5" />
@@ -278,7 +278,7 @@ function StudentMaterialsContent() {
 
       {/* Barra de Busca Instantânea */}
       <div className="relative z-10">
-        <Search className="h-4 w-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search className="h-4 w-4 text-[#A7B0C0] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={searchQuery}
@@ -288,7 +288,7 @@ function StudentMaterialsContent() {
               ? 'Buscar cardápio, treino, vídeo ou PDF...'
               : 'Buscar comunicados do treinador...'
           }
-          className="w-full h-11 min-h-[44px] pl-10 pr-4 rounded-2xl bg-black/70 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/30 font-mono"
+          className="w-full h-11 min-h-[44px] pl-10 pr-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-mono"
         />
       </div>
 
@@ -300,8 +300,8 @@ function StudentMaterialsContent() {
               onClick={() => setFilter('all')}
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'all'
-                  ? 'bg-white text-black shadow-md'
-                  : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+                  ? 'bg-[#3478F6] text-white shadow-md'
+                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
               }`}
             >
               Todos ({materials.length})
@@ -310,8 +310,8 @@ function StudentMaterialsContent() {
               onClick={() => setFilter('pdf')}
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'pdf'
-                  ? 'bg-white text-black shadow-md'
-                  : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+                  ? 'bg-[#3478F6] text-white shadow-md'
+                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
               }`}
             >
               PDFs & Guias
@@ -320,8 +320,8 @@ function StudentMaterialsContent() {
               onClick={() => setFilter('video')}
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'video'
-                  ? 'bg-white text-black shadow-md'
-                  : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+                  ? 'bg-[#3478F6] text-white shadow-md'
+                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
               }`}
             >
               Vídeos & Aulas
@@ -330,8 +330,8 @@ function StudentMaterialsContent() {
               onClick={() => setFilter('cardapio')}
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'cardapio'
-                  ? 'bg-white text-black shadow-md'
-                  : 'bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white'
+                  ? 'bg-[#3478F6] text-white shadow-md'
+                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
               }`}
             >
               Cardápios
@@ -339,15 +339,15 @@ function StudentMaterialsContent() {
           </div>
 
           {loading ? (
-            <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
-              <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono relative z-10">
+              <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               CARREGANDO MATERIAIS...
             </div>
           ) : filteredMaterials.length === 0 ? (
-            <div className="mono-glass-card border-dashed border-white/10 p-10 rounded-3xl text-center relative z-10">
-              <BookOpen className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-              <p className="font-semibold text-xs text-zinc-300">Nenhum material encontrado nesta seção</p>
-              <p className="text-[11px] text-zinc-500 mt-1">
+            <div className="bg-[#121722] border border-dashed border-[#252D3B] p-10 rounded-3xl text-center relative z-10">
+              <BookOpen className="h-10 w-10 mx-auto text-[#A7B0C0]/60 mb-2" />
+              <p className="font-semibold text-xs text-[#F4F6FA]">Nenhum material encontrado nesta seção</p>
+              <p className="text-[11px] text-[#A7B0C0] mt-1">
                 Seu treinador adicionará novos arquivos, guias e vídeos ao longo do desafio.
               </p>
             </div>
@@ -356,17 +356,17 @@ function StudentMaterialsContent() {
               {filteredMaterials.map((mat) => (
                 <div
                   key={mat.id}
-                  className="mono-glass-card p-4 rounded-2xl border border-white/10 hover:border-white/25 transition-all flex flex-col justify-between gap-3"
+                  className="bg-[#121722] p-4 rounded-2xl border border-[#252D3B] hover:border-[#3478F6]/40 transition-all flex flex-col justify-between gap-3 shadow-md"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-zinc-950 border border-white/10 flex items-center justify-center shrink-0">
+                      <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center shrink-0 text-[#3478F6]">
                         {getTypeIcon(mat.type)}
                       </div>
                       <div>
-                        <h3 className="font-black text-sm text-white">{mat.title}</h3>
+                        <h3 className="font-black text-sm text-[#F4F6FA]">{mat.title}</h3>
                         {mat.description && (
-                          <p className="text-xs text-zinc-400 mt-0.5 line-clamp-2">{mat.description}</p>
+                          <p className="text-xs text-[#A7B0C0] mt-0.5 line-clamp-2">{mat.description}</p>
                         )}
                       </div>
                     </div>
@@ -375,12 +375,12 @@ function StudentMaterialsContent() {
                   </div>
 
                   {/* Botões de Ação (Visualizar no App / Abrir Externo) */}
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-end gap-2">
+                  <div className="pt-2 border-t border-[#252D3B] flex items-center justify-end gap-2">
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => setPreviewMaterial(mat)}
-                      className="h-11 min-h-[44px] px-3.5 text-xs font-mono font-bold border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl"
+                      className="h-11 min-h-[44px] px-3.5 text-xs font-mono font-bold border-[#252D3B] bg-[#1B2330] hover:bg-[#252D3B] text-[#F4F6FA] rounded-xl"
                     >
                       Detalhes
                     </Button>
@@ -390,7 +390,7 @@ function StudentMaterialsContent() {
                       rel="noopener noreferrer"
                       className="flex-1 sm:flex-initial"
                     >
-                      <Button size="sm" className="w-full h-11 min-h-[44px] px-4 text-xs font-bold bg-white hover:bg-zinc-200 text-black rounded-xl shadow-md">
+                      <Button size="sm" className="w-full h-11 min-h-[44px] px-4 text-xs font-bold bg-[#3478F6] hover:bg-[#75A7FF] text-white rounded-xl shadow-md transition-all">
                         {mat.type === 'video' ? (
                           <>
                             <Play className="h-3.5 w-3.5 mr-1.5 fill-current" /> Assistir Aula
@@ -412,15 +412,15 @@ function StudentMaterialsContent() {
         /* ABA DE MURAL DE AVISOS DO TREINADOR */
         <div className="space-y-3 relative z-10">
           {loading ? (
-            <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
-              <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+              <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               SINCRONIZANDO MURAL DE AVISOS...
             </div>
           ) : filteredAnnouncements.length === 0 ? (
-            <div className="mono-glass-card border-dashed border-white/10 p-10 rounded-3xl text-center">
-              <Megaphone className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-              <p className="font-semibold text-xs text-zinc-300">Nenhum comunicado publicado ainda</p>
-              <p className="text-[11px] text-zinc-500 mt-1">
+            <div className="bg-[#121722] border border-dashed border-[#252D3B] p-10 rounded-3xl text-center">
+              <Megaphone className="h-10 w-10 mx-auto text-[#A7B0C0]/60 mb-2" />
+              <p className="font-semibold text-xs text-[#F4F6FA]">Nenhum comunicado publicado ainda</p>
+              <p className="text-[11px] text-[#A7B0C0] mt-1">
                 Avisos importantes e orientações semanais do seu treinador aparecerão aqui.
               </p>
             </div>
@@ -428,34 +428,34 @@ function StudentMaterialsContent() {
             filteredAnnouncements.map((ann) => (
               <div
                 key={ann.id}
-                className={`mono-glass-card p-4 rounded-2xl border transition-all space-y-2 ${
+                className={`bg-[#121722] p-4 rounded-2xl border transition-all space-y-2 ${
                   ann.is_pinned
-                    ? 'border-amber-400/35 bg-amber-500/[0.04]'
-                    : 'border-white/10'
+                    ? 'border-[#3478F6]/50 shadow-lg shadow-[#3478F6]/5'
+                    : 'border-[#252D3B]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     {ann.is_pinned ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-amber-500/15 text-amber-300 border border-amber-400/30">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30">
                         <Pin className="h-2.5 w-2.5" /> Fixado pelo Treinador
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-white/10 text-zinc-300">
-                        <Megaphone className="h-2.5 w-2.5" /> Comunicado Oficial
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B]">
+                        <Megaphone className="h-2.5 w-2.5 text-[#3478F6]" /> Comunicado Oficial
                       </span>
                     )}
                   </div>
                   {ann.created_at && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] font-mono font-bold text-amber-300">
-                      <Clock className="h-3 w-3 shrink-0" />
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1B2330] border border-[#252D3B] text-[10px] font-mono font-bold text-[#75A7FF]">
+                      <Clock className="h-3 w-3 shrink-0 text-[#3478F6]" />
                       <span>Expira em {formatRemaining24h(ann.created_at)}</span>
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-sm font-black text-white">{ann.title}</h3>
-                <p className="text-xs text-zinc-300 whitespace-pre-line leading-relaxed">
+                <h3 className="text-sm font-black text-[#F4F6FA]">{ann.title}</h3>
+                <p className="text-xs text-[#A7B0C0] whitespace-pre-line leading-relaxed">
                   {ann.content}
                 </p>
               </div>
@@ -475,20 +475,20 @@ function StudentMaterialsContent() {
             <div className="flex items-center justify-between">
               {getTypeBadge(previewMaterial.type)}
               {previewMaterial.created_at && (
-                <span className="text-[10px] font-mono text-zinc-500">
+                <span className="text-[10px] font-mono text-[#A7B0C0]">
                   Publicado em {new Date(previewMaterial.created_at).toLocaleDateString('pt-BR')}
                 </span>
               )}
             </div>
 
             {previewMaterial.description && (
-              <p className="text-xs text-zinc-300 leading-relaxed whitespace-pre-line">
+              <p className="text-xs text-[#A7B0C0] leading-relaxed whitespace-pre-line">
                 {previewMaterial.description}
               </p>
             )}
 
             {previewMaterial.type === 'video' && getEmbedVideoUrl(previewMaterial.file_url) && (
-              <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 bg-black">
+              <div className="aspect-video w-full rounded-2xl overflow-hidden border border-[#252D3B] bg-[#080A0F]">
                 <iframe
                   src={getEmbedVideoUrl(previewMaterial.file_url) || ''}
                   title={previewMaterial.title}
@@ -506,7 +506,7 @@ function StudentMaterialsContent() {
                 rel="noopener noreferrer"
                 className="w-full"
               >
-                <Button className="w-full bg-white text-black hover:bg-zinc-200 font-mono text-xs font-bold rounded-xl h-10">
+                <Button className="w-full bg-[#3478F6] text-white hover:bg-[#75A7FF] font-mono text-xs font-bold rounded-xl h-10 shadow-lg shadow-[#3478F6]/20 transition-all">
                   <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                   Abrir em Nova Aba / Baixar
                 </Button>

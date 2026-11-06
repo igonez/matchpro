@@ -41,8 +41,8 @@ const REACTIONS: ReactionDef[] = [
     key: 'muscle',
     emoji: '💪',
     label: 'Força',
-    activeBg: 'bg-emerald-400/20 text-emerald-300',
-    activeBorder: 'border-emerald-400/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
   {
     key: 'clap',

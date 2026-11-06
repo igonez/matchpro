@@ -257,42 +257,42 @@ export default function DashboardOverviewPage() {
       >
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
               Visão Geral
             </span>
-            <span className="text-xs text-zinc-400 font-medium">Dados em tempo real</span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Dados em tempo real</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Operação dos Desafios</h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">Operação dos Desafios</h1>
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
             Métricas em tempo real, fila de auditoria e radar de retenção ativa.
           </p>
         </div>
 
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
-          {/* 1. Botão + Novo Desafio em PRIMEIRO, fundo claro, MAIOR que os outros 2, com hover destacado */}
+          {/* 1. Botão + Novo Desafio em PRIMEIRO com destaque azul elétrico */}
           <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
             <button 
               data-tour="create-challenge-cta"
-              className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-white text-black hover:bg-zinc-100 rounded-2xl shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-white"
+              className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-2xl shadow-[0_4px_20px_rgba(52,120,246,0.3)] hover:shadow-[0_0_25px_rgba(52,120,246,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-[#3478F6]"
             >
-              <span className="text-base leading-none font-black text-black group-hover:rotate-90 transition-transform duration-200">+</span>
+              <span className="text-base leading-none font-black text-white group-hover:rotate-90 transition-transform duration-200">+</span>
               <span>Novo Desafio</span>
             </button>
           </Link>
 
-          {/* 2. Publicar Aviso (fundo escuro) */}
+          {/* 2. Publicar Aviso */}
           <button
             onClick={() => setIsNoticeModalOpen(true)}
-            className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs font-semibold cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] hover:text-[#75A7FF] transition-colors cursor-pointer"
           >
             Publicar Aviso
           </button>
 
-          {/* 3. Auditar Fotos (abaixo/terceiro, fundo escuro sem evidência) */}
+          {/* 3. Auditar Fotos */}
           <Link href="/dashboard/audit" className="w-full sm:w-auto">
-            <button className="mono-button-secondary w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold text-zinc-400 hover:text-white cursor-pointer">
+            <button className="w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#252D3B] transition-colors cursor-pointer">
               <span>Auditar Fotos</span>
-              <span className="text-[11px] font-mono text-zinc-500">({stats.pendingSubmissions})</span>
+              <span className="text-[11px] font-mono text-[#3478F6] font-bold">({stats.pendingSubmissions})</span>
             </button>
           </Link>
         </div>
@@ -302,60 +302,60 @@ export default function DashboardOverviewPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         {/* Card 1: Alunos Ativos */}
         <Link href="/dashboard/students" className="block group">
-          <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
+          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/40 transition-all cursor-pointer bg-[#121722] border border-[#252D3B]">
             <div className="flex items-center justify-between pb-3">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors">
                 <span>Alunos Inscritos</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-[#3478F6]" />
               </span>
-              <span className="h-2 w-2 rounded-full bg-white" />
+              <span className="h-2 w-2 rounded-full bg-[#3478F6]" />
             </div>
-            <div className="text-3xl font-black text-white font-mono">{stats.activeStudents}</div>
-            <p className="text-xs text-zinc-500 mt-1">Inscritos nas turmas ativas</p>
+            <div className="text-3xl font-black text-[#F4F6FA] font-mono">{stats.activeStudents}</div>
+            <p className="text-xs text-[#A7B0C0] mt-1">Inscritos nas turmas ativas</p>
           </SpotlightCard3D>
         </Link>
 
         {/* Card 2: Turmas Ativas */}
         <Link href="/dashboard/challenges/new" className="block group">
-          <SpotlightCard3D className="p-5 group-hover:border-white/30 transition-all cursor-pointer">
+          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/40 transition-all cursor-pointer bg-[#121722] border border-[#252D3B]">
             <div className="flex items-center justify-between pb-3">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors">
                 <span>Turmas Ativas</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-[#3478F6]" />
               </span>
-              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-semibold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-2 py-0.5 rounded-full">
                 Em Andamento
               </span>
             </div>
-            <div className="text-3xl font-black text-white font-mono">{stats.activeChallenges}</div>
-            <p className="text-xs text-zinc-500 mt-1">Desafios em execução no momento</p>
+            <div className="text-3xl font-black text-[#F4F6FA] font-mono">{stats.activeChallenges}</div>
+            <p className="text-xs text-[#A7B0C0] mt-1">Desafios em execução no momento</p>
           </SpotlightCard3D>
         </Link>
 
         {/* Card 3: Auditoria Pendente */}
-        <SpotlightCard3D className="p-5">
+        <SpotlightCard3D className="p-5 bg-[#121722] border border-[#252D3B]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
               Fila de Revisão
             </span>
-            <span className="text-xs font-semibold text-white bg-white/10 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2 py-0.5 rounded-full border border-[#3478F6]/30">
               Pendente
             </span>
           </div>
-          <div className="text-3xl font-black text-white font-mono">{stats.pendingSubmissions}</div>
-          <p className="text-xs text-zinc-500 mt-1">Check-ins aguardando revisão</p>
+          <div className="text-3xl font-black text-[#F4F6FA] font-mono">{stats.pendingSubmissions}</div>
+          <p className="text-xs text-[#A7B0C0] mt-1">Check-ins aguardando revisão</p>
         </SpotlightCard3D>
 
         {/* Card 4: Desafios Criados */}
-        <SpotlightCard3D className="p-5">
+        <SpotlightCard3D className="p-5 bg-[#121722] border border-[#252D3B]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-zinc-400">
+            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
               Total de Desafios
             </span>
-            <span className="text-xs text-zinc-400">Ativos: {stats.activeChallenges}</span>
+            <span className="text-xs text-[#75A7FF]">Ativos: {stats.activeChallenges}</span>
           </div>
-          <div className="text-3xl font-black text-white font-mono">{challenges.length}</div>
-          <p className="text-xs text-zinc-500 mt-1">Turmas configuradas na plataforma</p>
+          <div className="text-3xl font-black text-[#F4F6FA] font-mono">{challenges.length}</div>
+          <p className="text-xs text-[#A7B0C0] mt-1">Turmas configuradas na plataforma</p>
         </SpotlightCard3D>
       </div>
 
@@ -363,11 +363,11 @@ export default function DashboardOverviewPage() {
       <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-base font-bold text-[#F4F6FA] tracking-tight flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-rose-500 animate-ping" />
               Radar de Frequência (Inativos há +48h)
             </h2>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[#A7B0C0]">
               Alunos que precisam de resgate via WhatsApp antes de abandonarem a rotina.
             </p>
           </div>
@@ -377,14 +377,14 @@ export default function DashboardOverviewPage() {
         </div>
 
         {atRiskStudents.length === 0 ? (
-          <div className="mono-glass-card p-4 rounded-2xl flex items-center justify-between border-emerald-500/20 bg-emerald-950/10">
+          <div className="p-4 rounded-2xl flex items-center justify-between border border-[#3478F6]/25 bg-[#121722]">
             <div>
-              <p className="text-xs font-bold text-emerald-400 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 100% de Presença na Turma
+              <p className="text-xs font-bold text-[#75A7FF] flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span> 100% de Presença na Turma
               </p>
-              <p className="text-xs text-zinc-400">Nenhum aluno está inativo há mais de 48 horas.</p>
+              <p className="text-xs text-[#A7B0C0]">Nenhum aluno está inativo há mais de 48 horas.</p>
             </div>
-            <span className="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="text-xs font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
               Em dia
             </span>
           </div>
@@ -406,7 +406,7 @@ export default function DashboardOverviewPage() {
               return (
                 <div
                   key={item.student_id}
-                  className="mono-glass-card p-4 rounded-2xl flex flex-col justify-between border-rose-500/20 bg-rose-950/10"
+                  className="bg-[#121722] p-4 rounded-2xl flex flex-col justify-between border border-rose-500/30 bg-rose-950/10"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
@@ -414,22 +414,22 @@ export default function DashboardOverviewPage() {
                         <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                         {item.days_inactive} dias sem foto
                       </span>
-                      <span className="text-xs text-zinc-400 font-medium">{item.challenge_title}</span>
+                      <span className="text-xs text-[#A7B0C0] font-medium">{item.challenge_title}</span>
                     </div>
 
-                    <h4 className="text-sm font-black text-white">{item.student_name}</h4>
-                    <p className="text-xs text-zinc-400 mt-0.5">
+                    <h4 className="text-sm font-black text-[#F4F6FA]">{item.student_name}</h4>
+                    <p className="text-xs text-[#A7B0C0] mt-0.5">
                       Última foto: {new Date(item.last_activity_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/[0.06]">
+                  <div className="mt-4 pt-3 border-t border-[#252D3B]">
                     {waLink ? (
                       <a
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full h-11 min-h-[44px] text-xs flex items-center justify-center gap-1.5 font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all"
+                        className="w-full h-11 min-h-[44px] text-xs flex items-center justify-center gap-1.5 font-bold text-white bg-[#3478F6] hover:bg-[#75A7FF] rounded-2xl shadow-[0_0_15px_rgba(52,120,246,0.3)] transition-all"
                       >
                         <span>Resgatar no WhatsApp</span>
                         <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -440,7 +440,7 @@ export default function DashboardOverviewPage() {
                           navigator.clipboard.writeText(decodeURIComponent(message));
                           showToast('Mensagem de resgate copiada com sucesso!');
                         }}
-                        className="mono-button-secondary w-full h-11 min-h-[44px] text-xs font-semibold"
+                        className="w-full h-11 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B]"
                       >
                         Copiar texto de resgate
                       </button>
@@ -466,13 +466,13 @@ export default function DashboardOverviewPage() {
         </div>
 
         {challenges.length === 0 && !loading ? (
-          <div className="mono-glass-card p-8 rounded-3xl text-center border-dashed">
-            <p className="font-bold text-white text-sm">Nenhum desafio criado ainda</p>
-            <p className="text-xs text-zinc-400 mt-1 mb-4">
+          <div className="bg-[#121722] p-8 rounded-3xl text-center border border-dashed border-[#252D3B]">
+            <p className="font-bold text-[#F4F6FA] text-sm">Nenhum desafio criado ainda</p>
+            <p className="text-xs text-[#A7B0C0] mt-1 mb-4">
               Crie seu primeiro desafio para cadastrar missões e convidar alunos.
             </p>
             <Link href="/dashboard/challenges/new">
-              <button className="mono-button-primary px-5 py-2.5 min-h-[44px] text-xs font-semibold">
+              <button className="px-5 py-2.5 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white transition-all shadow-md">
                 Criar Desafio
               </button>
             </Link>
@@ -480,7 +480,7 @@ export default function DashboardOverviewPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {challenges.map((c) => (
-              <div key={c.id} className="mono-glass-card p-5 rounded-3xl flex flex-col justify-between">
+              <div key={c.id} className="bg-[#121722] border border-[#252D3B] p-5 rounded-3xl flex flex-col justify-between shadow-md">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <button
@@ -488,51 +488,51 @@ export default function DashboardOverviewPage() {
                       title="Clique para alternar status da turma"
                       className={`text-xs px-3 py-1.5 min-h-[36px] rounded-full border transition-all ${
                         c.is_active
-                          ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
-                          : 'border-white/10 bg-black text-zinc-500 hover:text-white'
+                          ? 'border-[#3478F6]/30 bg-[#3478F6]/15 text-[#75A7FF] hover:bg-[#3478F6]/25'
+                          : 'border-[#252D3B] bg-[#080A0F] text-[#A7B0C0] hover:text-[#F4F6FA]'
                       }`}
                     >
                       {c.is_active ? '● Ativo' : '○ Encerrado'}
                     </button>
-                    <span className="text-xs font-mono font-black text-white">
+                    <span className="text-xs font-mono font-black text-[#F4F6FA]">
                       R$ {Number(c.price).toFixed(2)}
                     </span>
                   </div>
-                  <h3 className="text-base font-black text-white line-clamp-1">
+                  <h3 className="text-base font-black text-[#F4F6FA] line-clamp-1">
                     {c.title}
                   </h3>
-                  <p className="text-xs text-zinc-500 mt-1">
+                  <p className="text-xs text-[#A7B0C0] mt-1">
                     {new Date(c.start_date).toLocaleDateString('pt-BR')} até{' '}
                     {new Date(c.end_date).toLocaleDateString('pt-BR')}
                   </p>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-white/[0.06]">
-                  <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
+                <div className="pt-4 mt-4 border-t border-[#252D3B]">
+                  <div className="flex items-center justify-between text-xs text-[#A7B0C0] mb-3">
                     <span>Missões ativas:</span>
-                    <span className="font-bold text-white font-mono">
+                    <span className="font-bold text-[#75A7FF] font-mono">
                       {c.missionsCount ?? (c.missions?.length || 0)}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`}>
-                      <button className="mono-button-secondary w-full py-2 min-h-[44px] text-xs font-semibold">
+                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] transition-colors">
                         Missões ({c.missionsCount ?? (c.missions?.length || 0)})
                       </button>
                     </Link>
                     <Link href={`/dashboard/leaderboard?challengeId=${c.id}`}>
-                      <button className="mono-button-secondary w-full py-2 min-h-[44px] text-xs font-semibold text-white hover:text-amber-300">
+                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:text-[#75A7FF] hover:bg-[#252D3B] transition-colors">
                         Ranking
                       </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <button className="mono-button-secondary w-full py-2 min-h-[44px] text-xs font-semibold">
+                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] transition-colors">
                         Ver / Editar
                       </button>
                     </Link>
                     <button
                       onClick={() => setInviteModalChallenge(c)}
-                      className="mono-button-primary w-full py-2 min-h-[44px] text-xs font-semibold"
+                      className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#3478F6] text-white hover:bg-[#75A7FF] transition-all shadow-md"
                       title="Abrir central de convite"
                     >
                       Convite

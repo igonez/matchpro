@@ -75,20 +75,20 @@ export default function MasterLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white font-sans flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden">
       {/* Background 3D Animado igual à área de login de treinador/aluno */}
       <Monochrome3DBackground />
 
       {/* Top Bar Minimalista */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
         <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
-          <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+          <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
-          <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
+          <span className="font-extrabold text-base tracking-tight text-[#F4F6FA]">ArenaFitPro</span>
         </Link>
 
-        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors">
           ← Início
         </Link>
       </div>
@@ -102,13 +102,13 @@ export default function MasterLoginPage() {
         <SpotlightCard3D className="p-6 sm:p-7">
           {/* Header do Card */}
           <div className="text-center mb-5">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] block mb-1">
               PAINEL ADMINISTRATIVO
             </span>
-            <h1 className="text-2xl font-black text-white tracking-tight">
+            <h1 className="text-2xl font-black text-[#F4F6FA] tracking-tight">
               Acesso Mestre
             </h1>
-            <p className="text-xs text-zinc-400 mt-1">
+            <p className="text-xs text-[#A7B0C0] mt-1">
               Cockpit de gestão e operações globais da plataforma
             </p>
           </div>
@@ -121,7 +121,7 @@ export default function MasterLoginPage() {
 
           <form onSubmit={handleMasterSignIn} className="space-y-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
                 E-mail de Administrador
               </label>
               <Input
@@ -130,12 +130,12 @@ export default function MasterLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu.email@arenafitpro.com.br"
-                className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
                 Senha de Acesso
               </label>
               <Input
@@ -144,17 +144,17 @@ export default function MasterLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 text-xs"
+                className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="mono-button-primary w-full h-11 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer mt-2"
+              className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer mt-2"
             >
               {loading ? (
-                <div className="h-4 w-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <span>Entrar no Cockpit</span>
@@ -163,8 +163,8 @@ export default function MasterLoginPage() {
               )}
             </button>
 
-            <p className="text-[11px] text-zinc-500 text-center flex items-center justify-center gap-1.5 pt-1">
-              <Lock className="w-3 h-3 text-zinc-500" /> Acesso restrito ao administrador fundador
+            <p className="text-[11px] text-[#A7B0C0] text-center flex items-center justify-center gap-1.5 pt-1">
+              <Lock className="w-3 h-3 text-[#75A7FF]" /> Acesso restrito ao administrador fundador
             </p>
           </form>
         </SpotlightCard3D>
@@ -172,7 +172,7 @@ export default function MasterLoginPage() {
 
       {/* Rodapé Minimalista */}
       <div className="max-w-md w-full mx-auto text-center z-10 pb-2">
-        <span className="text-[11px] text-zinc-600 font-mono">
+        <span className="text-[11px] text-[#A7B0C0] font-mono">
           ArenaFitPro • Painel Mestre
         </span>
       </div>

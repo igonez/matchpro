@@ -3,6 +3,16 @@
 @theme inline {
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Cores Oficiais ArenaFit Pro (Tailwind Theme Tokens) */
+  --color-arena-bg: #080A0F;
+  --color-arena-surface: #121722;
+  --color-arena-card: #1B2330;
+  --color-arena-border: #252D3B;
+  --color-arena-text: #F4F6FA;
+  --color-arena-muted: #A7B0C0;
+  --color-arena-blue: #3478F6;
+  --color-arena-blue-hover: #75A7FF;
 }
 
 :root {
@@ -112,6 +122,45 @@ body {
 }
 .mono-button-secondary:active {
   transform: scale(0.98);
+}
+
+/* Utilitários Oficiais de Formulários, Badges e Superfícies ArenaFit Pro */
+.arena-input {
+  background-color: #1B2330;
+  border: 1px solid #252D3B;
+  color: #F4F6FA;
+  border-radius: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.arena-input:focus {
+  border-color: #3478F6;
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(52, 120, 246, 0.4);
+}
+.arena-input::placeholder {
+  color: #A7B0C0;
+  opacity: 0.6;
+}
+
+.arena-badge-blue {
+  background-color: rgba(52, 120, 246, 0.15);
+  border: 1px solid rgba(52, 120, 246, 0.35);
+  color: #75A7FF;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+.arena-card {
+  background-color: #121722;
+  border: 1px solid #252D3B;
+  border-radius: 1rem;
+}
+
+.arena-card-elevated {
+  background-color: #1B2330;
+  border: 1px solid #252D3B;
+  border-radius: 1rem;
 }
 
 /* Perspectiva e Camadas 3D */

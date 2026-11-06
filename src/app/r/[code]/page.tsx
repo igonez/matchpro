@@ -185,7 +185,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
               {snapshot.challengeTitle}
             </h1>
             <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
               Snapshot oficial verificado por câmera antifraude e IA.
             </p>
           </div>
@@ -202,7 +202,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-sm font-black text-white truncate">{sharer.name}</span>
                     {sharer.percentile !== null && (
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-400/15 border border-emerald-400/35 text-[10px] font-mono font-bold text-emerald-300">
+                      <span className="px-2 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/35 text-[10px] font-mono font-bold text-[#75A7FF]">
                         Top {sharer.percentile}%
                       </span>
                     )}
@@ -345,7 +345,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                     <p className="text-xs font-bold text-white truncate">{entry.name}</p>
                     <div className="w-full h-1.5 rounded-full bg-white/10 mt-1 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-amber-500 to-emerald-400"
+                        className="h-full rounded-full bg-gradient-to-r from-blue-600 to-[#3478F6]"
                         style={{ width: `${widthPct}%` }}
                       />
                     </div>
@@ -363,7 +363,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
         <div className="pt-1 space-y-3 text-center">
           <Link
             href={deepLinkHref}
-            className="w-full min-h-[52px] py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-emerald-400 text-black font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(251,191,36,0.3)] hover:brightness-105 transition-all"
+            className="w-full min-h-[52px] py-3.5 px-5 rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(52,120,246,0.3)] transition-all"
           >
             <Sparkles className="w-4 h-4" />
             <span>Abrir Desafio no ArenaFitPro</span>

@@ -473,7 +473,7 @@ function MasterDashboardContent() {
               onClick={() => handleTabChange(tab.id as any)}
               className={`px-3.5 py-2 rounded-xl text-xs font-mono transition-all cursor-pointer whitespace-nowrap ${
                 isActive
-                  ? 'bg-white/15 text-white font-semibold border border-white/30 shadow-sm'
+                  ? 'bg-[#3478F6] text-white font-semibold border border-[#3478F6] shadow-sm shadow-[#3478F6]/25'
                   : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
               }`}
             >

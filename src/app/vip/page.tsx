@@ -137,7 +137,7 @@ export default function VipCapturePage() {
 
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950 border border-white/10 text-xs font-mono">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
               <span className="text-zinc-300 font-bold uppercase tracking-wider">
                 Vagas Abertas • Lista VIP 2026
               </span>
@@ -199,8 +199,8 @@ export default function VipCapturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-emerald-400">
-                  <Zap className="w-4 h-4 text-emerald-400" />
+                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-[#3478F6]">
+                  <Zap className="w-4 h-4 text-[#3478F6]" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-bold text-white tracking-tight">Split Bancário Pix D+0 (Sem Bitributação)</h4>
@@ -369,11 +369,11 @@ export default function VipCapturePage() {
                 /* Estado de Sucesso */
                 <div className="py-8 text-center space-y-5 animate-in fade-in duration-300">
                   <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/20 text-white flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(255,255,255,0.15)]">
-                    <Check className="w-8 h-8 text-emerald-400" />
+                    <Check className="w-8 h-8 text-[#3478F6]" />
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-[11px] font-mono uppercase bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/25">
+                    <span className="text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
                       Inscrição VIP Confirmada
                     </span>
                     <h3 className="text-2xl font-black text-white tracking-tight">
@@ -398,13 +398,13 @@ export default function VipCapturePage() {
                       href={CONTACT_CONFIG.vipWhatsappGroupUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] min-h-[48px]"
+                      className="inline-flex items-center justify-center gap-2 w-full rounded-full bg-[#3478F6] hover:bg-[#75A7FF] text-white font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(52,120,246,0.3)] active:scale-[0.98] min-h-[48px]"
                     >
-                      <MessageCircle className="w-4 h-4 text-emerald-600" /> Entrar no Grupo VIP de Treinadores
+                      <MessageCircle className="w-4 h-4 text-white" /> Entrar no Grupo VIP de Treinadores
                     </a>
                   ) : (
-                    <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center justify-center gap-2 font-mono">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="p-3.5 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/20 text-xs text-[#75A7FF] flex items-center justify-center gap-2 font-mono">
+                      <span className="w-2 h-2 rounded-full bg-[#3478F6] animate-pulse" />
                       Você será notificado prioritariamente no WhatsApp cadastrado.
                     </div>
                   )}
@@ -438,7 +438,7 @@ export default function VipCapturePage() {
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Auditoria ao Vivo Antifraude</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-400 block">R$ 0</span>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-[#75A7FF] block">R$ 0</span>
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Mensalidade no Starter</p>
           </div>
         </div>

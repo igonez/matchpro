@@ -80,7 +80,7 @@ export default function ArenaFitMotionPlayer() {
         {/* Dynamic Island / Notch */}
         <div className="absolute top-3 inset-x-0 h-6 z-50 flex items-center justify-center">
           <div className="w-28 h-4 bg-black border border-white/10 rounded-full flex items-center justify-end px-3">
-            <div className="w-2 h-2 rounded-full bg-emerald-500/80 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
           </div>
         </div>
 

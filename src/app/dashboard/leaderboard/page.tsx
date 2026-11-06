@@ -275,8 +275,8 @@ function CoachLeaderboardContent() {
               <Trophy className="w-3 h-3 text-amber-400" />
               LEADERBOARD OFICIAL
             </span>
-            <span className="text-xs text-emerald-400 font-mono font-bold flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Sincronizado Ao Vivo
+            <span className="text-xs text-[#75A7FF] font-mono font-bold flex items-center gap-1.5 bg-[#3478F6]/10 border border-[#3478F6]/25 px-2.5 py-0.5 rounded-full">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_6px_#3478F6]" /> Sincronizado Ao Vivo
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -360,7 +360,7 @@ function CoachLeaderboardContent() {
         <SpotlightCard3D className="p-4">
           <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
             <span>MÉDIA DA TURMA</span>
-            <Sparkles className="h-4 w-4 text-emerald-400" />
+            <Sparkles className="h-4 w-4 text-[#3478F6]" />
           </div>
           <div className="text-2xl font-black text-white font-mono mt-2">
             {standings.length > 0
@@ -687,7 +687,7 @@ function CoachLeaderboardContent() {
                                     ? 'bg-gradient-to-r from-slate-400 to-slate-200'
                                     : rankPos === 3
                                     ? 'bg-gradient-to-r from-amber-700 to-amber-500'
-                                    : 'bg-gradient-to-r from-cyan-500 to-emerald-400'
+                                    : 'bg-gradient-to-r from-blue-600 via-[#3478F6] to-[#75A7FF]'
                                 }`}
                                 style={{ width: `${pctOfLeader}%` }}
                               />
@@ -706,8 +706,8 @@ function CoachLeaderboardContent() {
                           <span className="text-base font-black font-mono text-white block leading-none">
                             {item.total_points} <span className="text-[10px] text-amber-400 font-bold">XP</span>
                           </span>
-                          <span className="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-1">
-                            <CheckCircle2 className="h-2.5 w-2.5" /> Auditado
+                          <span className="text-[10px] text-[#75A7FF] font-mono flex items-center justify-end gap-1 mt-1">
+                            <CheckCircle2 className="h-2.5 w-2.5 text-[#3478F6]" /> Auditado
                           </span>
                         </div>
 
@@ -716,7 +716,7 @@ function CoachLeaderboardContent() {
                             href={waLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="h-9 px-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 hover:bg-emerald-500/20 flex items-center gap-1.5 text-xs font-mono font-bold transition-colors"
+                            className="h-9 px-3 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF] hover:bg-[#3478F6]/25 flex items-center gap-1.5 text-xs font-mono font-bold transition-colors"
                             title="Parabenizar via WhatsApp"
                           >
                             <MessageCircle className="h-3.5 w-3.5" />

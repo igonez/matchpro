@@ -462,7 +462,7 @@ export default function ProfessionalProfilePage() {
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                   <h3 className="text-base font-bold text-white font-mono">{fullName || 'Treinador ArenaFit'}</h3>
                   {documentVerified && (
-                    <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono">
+                    <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono">
                       <ShieldCheck className="h-3 w-3 mr-1" /> CONTA VERIFICADA
                     </Badge>
                   )}
@@ -477,23 +477,23 @@ export default function ProfessionalProfilePage() {
         </Card>
 
         {/* Card 2: Status de Verificação KYC e Confiabilidade (Item 3) */}
-        <Card className="border-white/10 bg-zinc-950/60 backdrop-blur-xl rounded-2xl">
+        <Card className="border-[#252D3B] bg-[#121722] rounded-2xl">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
-              <ShieldCheck className="h-4 w-4 text-white" /> Status de Verificação e Segurança
+              <ShieldCheck className="h-4 w-4 text-[#3478F6]" /> Status de Verificação e Segurança
             </CardTitle>
-            <CardDescription className="text-xs text-zinc-400">
+            <CardDescription className="text-xs text-[#A7B0C0]">
               Contas verificadas contam com saques Pix liberados em D+0 e maior conversão de vendas.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Item 1: Documento Oficial */}
-              <div className="p-4 rounded-xl border border-white/10 bg-black/40 space-y-2">
+              <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase text-zinc-400 font-bold">Documento (KYC)</span>
                   {documentVerified ? (
-                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono uppercase tracking-wider">
+                    <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono uppercase tracking-wider">
                       VERIFICADO
                     </Badge>
                   ) : (
@@ -511,11 +511,11 @@ export default function ProfessionalProfilePage() {
               </div>
 
               {/* Item 2: Telefone / WhatsApp */}
-              <div className="p-4 rounded-xl border border-white/10 bg-black/40 space-y-2">
+              <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase text-zinc-400 font-bold">Telefone Celular</span>
                   {phoneVerified ? (
-                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono uppercase tracking-wider">
+                    <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono uppercase tracking-wider">
                       VERIFICADO
                     </Badge>
                   ) : (
@@ -537,16 +537,16 @@ export default function ProfessionalProfilePage() {
                       <Smartphone className="h-3 w-3" /> Validar por Código
                     </button>
                   ) : (
-                    <span className="text-[10px] text-emerald-400 font-mono">Número validado</span>
+                    <span className="text-[10px] text-[#75A7FF] font-mono">Número validado</span>
                   )}
                 </div>
               </div>
 
               {/* Item 3: E-mail de Acesso */}
-              <div className="p-4 rounded-xl border border-white/10 bg-black/40 space-y-2">
+              <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase text-zinc-400 font-bold">E-mail de Login</span>
-                  <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono uppercase tracking-wider">
+                  <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono uppercase tracking-wider">
                     VERIFICADO
                   </Badge>
                 </div>
@@ -664,8 +664,8 @@ export default function ProfessionalProfilePage() {
                 <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold block mb-1">Subconta Asaas (Split)</span>
                 {asaasWalletId ? (
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono font-bold">
-                      <Check className="w-3.5 h-3.5" /> ATIVA PARA SPLIT
+                    <div className="flex items-center gap-1.5 text-xs text-[#75A7FF] font-mono font-bold">
+                      <Check className="w-3.5 h-3.5 text-[#3478F6]" /> ATIVA PARA SPLIT
                     </div>
                     <p className="text-[10px] text-zinc-400 font-mono truncate mt-1">
                       ID: {asaasWalletId}

@@ -532,7 +532,7 @@ function StudentMissionsContent() {
         );
       case 'refeicao':
         return (
-          <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
             <Utensils className="w-3 h-3" /> Nutrição IA
           </span>
         );
@@ -644,19 +644,19 @@ function StudentMissionsContent() {
         onClick={() => (isActionable || mission.isFutureWeek) && handleMissionClick(mission)}
         className={`group p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
           mission.isApproved
-            ? 'border-emerald-500/25 bg-emerald-950/15 opacity-85'
+            ? 'border-[#3478F6]/30 bg-[#3478F6]/10 opacity-90'
             : mission.isPending
             ? 'border-amber-500/25 bg-amber-950/15'
             : mission.isLocked
-            ? 'border-white/[0.06] bg-zinc-950/70 opacity-65'
-            : 'border-white/15 bg-zinc-900/70 hover:bg-zinc-800/80 hover:border-white/30 active:scale-[0.99] cursor-pointer shadow-sm'
+            ? 'border-[#252D3B] bg-[#121722]/60 opacity-65'
+            : 'border-[#252D3B] bg-[#1B2330] hover:bg-[#1B2330]/90 hover:border-[#3478F6]/40 active:scale-[0.99] cursor-pointer shadow-sm'
         }`}
       >
         <div className="flex items-center gap-3 min-w-0 flex-1">
           {/* Status Indicator Left */}
           <div className="shrink-0">
             {mission.isApproved ? (
-              <div className="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+              <div className="h-9 w-9 rounded-xl bg-[#3478F6]/20 border border-[#3478F6]/40 flex items-center justify-center text-[#3478F6]">
                 <CheckCircle2 className="h-4 w-4" />
               </div>
             ) : mission.isPending ? (
@@ -668,7 +668,7 @@ function StudentMissionsContent() {
                 <Lock className="h-4 w-4" />
               </div>
             ) : (
-              <div className="h-9 w-9 rounded-xl bg-white/10 border border-white/20 group-hover:border-white/50 group-hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+              <div className="h-9 w-9 rounded-xl bg-[#121722] border border-[#252D3B] group-hover:border-[#3478F6]/40 group-hover:bg-[#121722]/80 flex items-center justify-center text-[#3478F6] transition-colors">
                 {getCategoryIcon(mission.category, 'w-4 h-4')}
               </div>
             )}
@@ -679,13 +679,13 @@ function StudentMissionsContent() {
             <div className="flex items-center gap-1.5 flex-wrap">
               <span
                 className={`text-xs font-bold truncate ${
-                  mission.isApproved ? 'line-through text-zinc-400' : 'text-white'
+                  mission.isApproved ? 'line-through text-[#A7B0C0]' : 'text-[#F4F6FA]'
                 }`}
               >
                 {mission.title}
               </span>
               {mission.is_bonus && (
-                <span className="text-[9px] font-mono font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.5 rounded uppercase">
+                <span className="text-[9px] font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-1.5 py-0.5 rounded uppercase">
                   BÔNUS
                 </span>
               )}
@@ -693,7 +693,7 @@ function StudentMissionsContent() {
 
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               {getCategoryBadge(mission)}
-              <span className="text-[10px] font-mono font-bold text-amber-300">
+              <span className="text-[10px] font-mono font-bold text-[#75A7FF]">
                 +{mission.points_rewarded} XP
               </span>
             </div>
@@ -703,7 +703,7 @@ function StudentMissionsContent() {
         {/* Action / State Right */}
         <div className="shrink-0 flex items-center gap-2">
           {mission.isApproved && (
-            <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <span className="text-[10px] font-mono text-[#75A7FF] font-bold uppercase px-2 py-1 rounded-lg bg-[#3478F6]/15 border border-[#3478F6]/30">
               {mission.isDaily ? 'Concluída hoje' : 'Concluída'}
             </span>
           )}
@@ -721,11 +721,11 @@ function StudentMissionsContent() {
                   Em {selectedWeekMeta.daysUntilStart}d
                 </span>
               ) : mission.isDailyLocked ? (
-                <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/20 flex items-center gap-1">
+                <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-1 rounded-lg border border-[#3478F6]/25 flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {timeUntilMidnight || 'Amanhã'}
                 </span>
               ) : (
-                <span className="text-[10px] font-mono text-zinc-500 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] block">
+                <span className="text-[10px] font-mono text-[#A7B0C0] px-2 py-1 rounded-lg bg-[#121722] border border-[#252D3B] block">
                   Na fila
                 </span>
               )}
@@ -734,13 +734,13 @@ function StudentMissionsContent() {
 
           {isActionable &&
             (isCurrentlyActive ? (
-              <span className="px-2.5 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-[11px] animate-pulse">
+              <span className="px-2.5 py-1.5 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-[11px] animate-pulse">
                 Em andamento
               </span>
             ) : (
               <span 
                 data-tour="student-checkin-btn"
-                className="px-3 py-1.5 rounded-xl bg-white text-black font-mono font-bold text-xs group-hover:bg-zinc-200 transition-colors shadow-sm flex items-center gap-1"
+                className="px-3 py-1.5 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs hover:bg-[#75A7FF] transition-colors shadow-sm flex items-center gap-1 cursor-pointer"
               >
                 {isSimpleClick ? (
                   <>
@@ -790,9 +790,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Nutrição & Dieta',
       subtitle: '4 refeições diárias auditadas por IA • Reseta diariamente',
       Icon: Utensils,
-      accentBorder: 'border-emerald-500/25',
-      accentBg: 'from-emerald-500/[0.08] via-zinc-950 to-zinc-950',
-      badgeColor: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/30',
+      accentBorder: 'border-[#3478F6]/30',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
+      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
       ruleLabel: `${pillarStats.refeicao.todayDone || 0}/4 concluídas hoje`,
     },
     {
@@ -847,10 +847,10 @@ function StudentMissionsContent() {
                 }}
                 className={`p-2.5 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
                   isSelected
-                    ? 'border-white bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]'
+                    ? 'border-[#3478F6] bg-[#3478F6] text-white shadow-[0_0_20px_rgba(52,120,246,0.35)]'
                     : meta?.isCurrent
-                    ? 'border-emerald-500/40 bg-emerald-950/20 text-white hover:border-emerald-400'
-                    : 'border-white/10 bg-zinc-950 text-zinc-400 hover:text-white hover:border-white/25'
+                    ? 'border-[#3478F6]/40 bg-[#3478F6]/15 text-white hover:border-[#3478F6]'
+                    : 'border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/30'
                 }`}
               >
                 <span className="text-xs font-mono font-black tracking-tight">
@@ -859,12 +859,12 @@ function StudentMissionsContent() {
                 <span
                   className={`text-[9px] font-mono uppercase px-1.5 py-0.2 rounded ${
                     isSelected
-                      ? 'bg-black/15 text-black font-bold'
+                      ? 'bg-black/20 text-white font-bold'
                       : meta?.isCurrent
-                      ? 'text-emerald-400 font-bold'
+                      ? 'text-[#75A7FF] font-bold'
                       : meta?.isFuture
                       ? 'text-amber-400/90'
-                      : 'text-zinc-500'
+                      : 'text-[#A7B0C0]'
                   }`}
                 >
                   {meta?.isCurrent
@@ -883,10 +883,10 @@ function StudentMissionsContent() {
           <div
             className={`p-4 rounded-3xl border relative overflow-hidden ${
               selectedWeekMeta.isFuture
-                ? 'border-amber-400/40 bg-gradient-to-br from-amber-500/15 via-zinc-950 to-zinc-950'
+                ? 'border-amber-400/40 bg-gradient-to-br from-amber-500/15 via-[#121722] to-[#121722]'
                 : selectedWeekMeta.isCurrent
-                ? 'border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-zinc-950 to-zinc-950'
-                : 'border-white/15 bg-zinc-950'
+                ? 'border-[#3478F6]/30 bg-[#121722]'
+                : 'border-[#252D3B] bg-[#121722]'
             }`}
           >
             <div className="flex items-start justify-between gap-3">
@@ -896,7 +896,7 @@ function StudentMissionsContent() {
                     selectedWeekMeta.isFuture
                       ? 'bg-amber-400/20 border-amber-400/40 text-amber-300'
                       : selectedWeekMeta.isCurrent
-                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                      ? 'bg-[#3478F6]/20 border-[#3478F6]/40 text-[#75A7FF]'
                       : 'bg-white/10 border-white/20 text-zinc-300'
                   }`}
                 >
@@ -916,7 +916,7 @@ function StudentMissionsContent() {
                         selectedWeekMeta.isFuture
                           ? 'bg-amber-400/20 text-amber-300 border-amber-400/30'
                           : selectedWeekMeta.isCurrent
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                          ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/30'
                           : 'bg-white/10 text-zinc-300 border-white/20'
                       }`}
                     >
@@ -926,7 +926,7 @@ function StudentMissionsContent() {
                         ? `SEMANA ${selectedWeekNumber} EM ANDAMENTO`
                         : `SEMANA ${selectedWeekNumber} ENCERRADA`}
                     </span>
-                    <span className="text-[10px] font-mono text-zinc-400">
+                    <span className="text-[10px] font-mono text-[#A7B0C0]">
                       {selectedWeekMeta.formattedRange}
                     </span>
                   </div>
@@ -958,20 +958,20 @@ function StudentMissionsContent() {
                     </>
                   ) : selectedWeekMeta.isCurrent ? (
                     <>
-                      <h2 className="text-base font-black text-white tracking-tight">
+                      <h2 className="text-base font-black text-[#F4F6FA] tracking-tight">
                         Cronograma Liberado • {completedMissionsCount}/{missions.length} missões cumpridas
                       </h2>
-                      <p className="text-xs text-zinc-400">
+                      <p className="text-xs text-[#A7B0C0]">
                         Complete todas as tarefas da semana para conquistar{' '}
-                        <strong className="text-emerald-400">+{selectedWeek?.bonus_points || 20} XP Bônus</strong>.
+                        <strong className="text-[#3478F6]">+{selectedWeek?.bonus_points || 20} XP Bônus</strong>.
                       </p>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-base font-black text-white tracking-tight">
+                      <h2 className="text-base font-black text-[#F4F6FA] tracking-tight">
                         Ciclo da Semana {selectedWeekNumber} Concluído
                       </h2>
-                      <p className="text-xs text-zinc-400">
+                      <p className="text-xs text-[#A7B0C0]">
                         Você completou {completedMissionsCount} de {missions.length} missões registradas nesta semana.
                       </p>
                     </>
@@ -982,20 +982,16 @@ function StudentMissionsContent() {
 
             {/* Barra de Progresso da Semana */}
             {!selectedWeekMeta.isFuture && missions.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-white/[0.08] space-y-1.5">
+              <div className="mt-3 pt-3 border-t border-[#252D3B] space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-mono">
-                  <span className="text-zinc-400 uppercase">META DE BÔNUS DA SEMANA {selectedWeekNumber}</span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#A7B0C0] uppercase">META DE BÔNUS DA SEMANA {selectedWeekNumber}</span>
+                  <span className="text-[#F4F6FA] font-bold">
                     {Math.round((completedMissionsCount / missions.length) * 100)}%
                   </span>
                 </div>
-                <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-white/10">
+                <div className="w-full bg-[#1B2330] h-2 rounded-full overflow-hidden border border-[#252D3B]">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isWeekComplete
-                        ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300'
-                        : 'bg-gradient-to-r from-amber-500 to-amber-300'
-                    }`}
+                    className="h-full rounded-full transition-all duration-500 bg-[#3478F6] shadow-[0_0_10px_rgba(52,120,246,0.5)]"
                     style={{
                       width: `${missions.length > 0 ? (completedMissionsCount / missions.length) * 100 : 0}%`,
                     }}
@@ -1012,7 +1008,7 @@ function StudentMissionsContent() {
         <div className="p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs relative z-10 border border-amber-500/25 bg-amber-950/15">
           <div className="space-y-0.5">
             <p className="font-bold text-white text-xs flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#3478F6] shrink-0" />
               {isWorkoutDailyLocked && isCardioDailyLocked
                 ? 'Treino & Cardio de hoje concluídos!'
                 : isWorkoutDailyLocked
@@ -1055,7 +1051,7 @@ function StudentMissionsContent() {
               label: 'NUTRIÇÃO',
               Icon: Utensils,
               stats: pillarStats.refeicao,
-              color: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10',
+              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
             },
             {
               id: 'habito',
@@ -1228,9 +1224,9 @@ function StudentMissionsContent() {
 
                 {/* Lista de Missões do Bloco */}
                 {blockMissions.length === 0 ? (
-                  <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-xs">
-                    <span className="text-emerald-300 font-bold flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4" />
+                  <div className="p-3.5 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 flex items-center justify-between text-xs">
+                    <span className="text-[#75A7FF] font-bold flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-[#3478F6]" />
                       Todas as missões deste bloco foram concluídas na Semana {selectedWeekNumber}!
                     </span>
                   </div>
@@ -1245,15 +1241,15 @@ function StudentMissionsContent() {
 
           {/* BLOCO 4: Histórico de Concluídas na Semana (Colapsável) */}
           {completedMissions.length > 0 && (
-            <div className="p-4 rounded-3xl border border-emerald-500/25 bg-zinc-950/90 space-y-3">
+            <div className="p-4 rounded-3xl border border-[#3478F6]/25 bg-[#121722]/90 space-y-3">
               <button
                 type="button"
                 onClick={() => setShowCompletedSection((prev) => !prev)}
                 className="w-full flex items-center justify-between text-left cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <div className="h-8 w-8 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF]">
+                    <CheckCircle2 className="w-4 h-4 text-[#3478F6]" />
                   </div>
                   <div>
                     <h4 className="text-xs font-black text-white uppercase font-mono tracking-wider">
@@ -1283,8 +1279,8 @@ function StudentMissionsContent() {
 
       {/* Floating Instant Toast */}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-white text-black px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#121722] text-[#F4F6FA] border border-[#252D3B] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <CheckCircle2 className="w-4 h-4 text-[#3478F6] shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}

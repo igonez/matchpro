@@ -187,9 +187,9 @@ export function StudentOnboardingTour() {
         aria-labelledby="student-tour-title"
       >
         {/* Barra de Progresso Animada */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-zinc-800 rounded-t-3xl overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#1B2330] rounded-t-3xl overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-emerald-400 via-white to-emerald-400 transition-all duration-300"
+            className="h-full bg-gradient-to-r from-[#3478F6] via-[#75A7FF] to-[#3478F6] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -207,7 +207,7 @@ export function StudentOnboardingTour() {
         {/* Header do Passo */}
         <div className="space-y-3 mb-5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider bg-white/10 text-white px-3 py-1 rounded-full border border-white/15 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider bg-[#3478F6]/15 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/30 font-bold">
               {currentStep.tag}
             </span>
             <span className="text-xs font-mono text-zinc-400">
@@ -216,8 +216,8 @@ export function StudentOnboardingTour() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
-              <StepIcon className="w-5 h-5 text-emerald-400" />
+            <div className="h-11 w-11 rounded-2xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF] shrink-0 shadow-inner">
+              <StepIcon className="w-5 h-5 text-[#3478F6]" />
             </div>
             <div>
               <h2 id="student-tour-title" className="text-lg sm:text-xl font-black text-white tracking-tight">
@@ -231,8 +231,8 @@ export function StudentOnboardingTour() {
         <div className="space-y-3.5 mb-5 text-xs sm:text-sm text-zinc-300 leading-relaxed">
           <p>{currentStep.description}</p>
 
-          <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 font-medium flex items-start gap-2.5">
-            <Zap className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+          <div className="p-3 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 text-[#75A7FF] font-medium flex items-start gap-2.5">
+            <Zap className="w-4 h-4 text-[#3478F6] shrink-0 mt-0.5" />
             <p className="text-xs leading-snug">{currentStep.highlightText}</p>
           </div>
 
@@ -240,7 +240,7 @@ export function StudentOnboardingTour() {
           <ul className="space-y-1.5 pt-2 border-t border-white/[0.08] text-zinc-300">
             {currentStep.bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-center gap-2 text-xs">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
                 <span>{bullet}</span>
               </li>
             ))}

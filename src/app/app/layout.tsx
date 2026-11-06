@@ -15,8 +15,8 @@ export default function StudentAppLayout({
   return (
     <WorkoutSessionProvider>
       <WalkthroughProvider>
-        <div className="min-h-screen bg-black text-zinc-100 flex justify-center selection:bg-white selection:text-black">
-          <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl min-h-screen flex flex-col safe-page-pb relative bg-zinc-950 sm:border-x border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.95),0_0_30px_rgba(255,255,255,0.04)]">
+        <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex justify-center selection:bg-[#3478F6] selection:text-white">
+          <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl min-h-screen flex flex-col safe-page-pb relative bg-[#080A0F] sm:border-x border-[#252D3B] shadow-[0_0_80px_rgba(0,0,0,0.95),0_0_30px_rgba(52,120,246,0.06)]">
             <ReturnToCoachBanner />
             <PwaInstallPrompt />
             {children}

@@ -223,11 +223,11 @@ export default function AnnouncementsManagerPage() {
         return (
           <div className="p-4 rounded-2xl bg-zinc-900/70 border border-white/10 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <span className={`h-2.5 w-2.5 rounded-full ${currentCh.is_active !== false ? 'bg-emerald-400 animate-pulse' : 'bg-zinc-500'}`} />
+              <span className={`h-2.5 w-2.5 rounded-full ${currentCh.is_active !== false ? 'bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]' : 'bg-zinc-500'}`} />
               <div>
                 <p className="text-xs font-bold text-white flex items-center gap-2">
                   <span>Turma Conectada: {currentCh.title}</span>
-                  <Badge className={currentCh.is_active !== false ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 text-[10px] font-mono' : 'bg-zinc-800 text-zinc-400 border-white/10 text-[10px] font-mono'}>
+                  <Badge className={currentCh.is_active !== false ? 'bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[10px] font-mono' : 'bg-zinc-800 text-zinc-400 border-white/10 text-[10px] font-mono'}>
                     {currentCh.is_active !== false ? 'DESAFIO ATIVO' : 'ENCERRADO'}
                   </Badge>
                 </p>

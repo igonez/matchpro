@@ -25,14 +25,14 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
   ];
 
   const getBadgeColor = (category: string, isUnlocked: boolean) => {
-    if (!isUnlocked) return 'border-white/10 text-zinc-500 bg-white/5';
+    if (!isUnlocked) return 'border-[#252D3B] text-zinc-500 bg-white/5';
     switch (category) {
-      case 'streak': return 'border-amber-400/40 text-amber-300 bg-amber-400/10 shadow-[0_0_15px_rgba(251,191,36,0.15)]';
+      case 'streak': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
       case 'cardio': return 'border-cyan-400/40 text-cyan-300 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.15)]';
-      case 'nutrition': return 'border-emerald-400/40 text-emerald-300 bg-emerald-400/10 shadow-[0_0_15px_rgba(52,211,153,0.15)]';
-      case 'ranking': return 'border-amber-400/50 text-amber-200 bg-amber-500/20 shadow-[0_0_20px_rgba(251,191,36,0.25)]';
+      case 'nutrition': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
+      case 'ranking': return 'border-[#3478F6]/50 text-[#F4F6FA] bg-[#3478F6]/20 shadow-[0_0_20px_rgba(52,120,246,0.25)]';
       case 'points': return 'border-purple-400/40 text-purple-300 bg-purple-400/10 shadow-[0_0_15px_rgba(192,132,252,0.15)]';
-      default: return 'border-white/20 text-white bg-white/10';
+      default: return 'border-[#3478F6]/30 text-white bg-[#3478F6]/10';
     }
   };
 
@@ -78,10 +78,10 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all uppercase tracking-wider ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all uppercase tracking-wider cursor-pointer ${
               activeCategory === cat.id
-                ? 'bg-white text-black shadow-sm'
-                : 'bg-zinc-900/70 border border-white/10 text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-sm'
+                : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-white'
             }`}
           >
             {cat.label}
@@ -98,8 +98,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
               onClick={() => setSelectedAchievement(ach)}
               className={`p-3.5 rounded-2xl border transition-all text-left cursor-pointer flex flex-col justify-between space-y-3 group ${
                 ach.isUnlocked
-                  ? 'bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border-white/20 hover:border-white/40 shadow-md hover:scale-[1.01]'
-                  : 'bg-zinc-950/40 border-white/5 opacity-60 hover:opacity-85 hover:border-white/15'
+                  ? 'bg-gradient-to-b from-[#121722] to-[#080A0F] border-[#252D3B] hover:border-[#3478F6]/40 shadow-md hover:scale-[1.01]'
+                  : 'bg-[#080A0F]/40 border-[#252D3B]/40 opacity-60 hover:opacity-85 hover:border-[#3478F6]/20'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
@@ -114,8 +114,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
 
                 <div className="shrink-0">
                   {ach.isUnlocked ? (
-                    <span className="h-5 w-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                    <span className="h-5 w-5 rounded-full bg-[#3478F6]/20 border border-[#3478F6]/40 flex items-center justify-center">
+                      <CheckCircle2 className="h-3 w-3 text-[#3478F6]" />
                     </span>
                   ) : (
                     <span className="h-5 w-5 rounded-full bg-white/5 border border-white/10 text-zinc-500 flex items-center justify-center">
@@ -149,7 +149,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between text-[9px] font-mono text-emerald-400 pt-1 border-t border-white/5">
+                <div className="flex items-center justify-between text-[9px] font-mono text-[#75A7FF] pt-1 border-t border-white/5">
                   <span>Conquistada</span>
                   <span>+{ach.points_reward} XP</span>
                 </div>
@@ -177,8 +177,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
             )}`}>
               {selectedAchievement.icon}
               {selectedAchievement.isUnlocked && (
-                <span className="absolute -bottom-2 -right-2 h-7 w-7 rounded-full bg-emerald-400 text-black flex items-center justify-center shadow-md">
-                  <CheckCircle2 className="h-4 w-4 text-black stroke-[3]" />
+                <span className="absolute -bottom-2 -right-2 h-7 w-7 rounded-full bg-[#3478F6] text-white flex items-center justify-center shadow-md shadow-[#3478F6]/30">
+                  <CheckCircle2 className="h-4 w-4 text-white stroke-[3]" />
                 </span>
               )}
             </div>
@@ -206,8 +206,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
             {/* Status de Desbloqueio */}
             <div className="pt-2">
               {selectedAchievement.isUnlocked ? (
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center justify-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4" />
+                <div className="p-2.5 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-mono font-bold flex items-center justify-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-[#3478F6]" />
                   <span>
                     Conquistada!
                     {selectedAchievement.unlockedAt && ` • ${new Date(selectedAchievement.unlockedAt).toLocaleDateString('pt-BR')}`}

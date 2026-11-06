@@ -66,7 +66,7 @@ export function FeatureGate({
           <div className="bg-black/50 border border-white/[0.05] rounded-xl p-4 mb-6 text-left space-y-2">
             {benefits.map((benefit, i) => (
               <div key={i} className="flex items-center gap-2.5 text-xs text-zinc-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#3478F6] shrink-0" />
                 <span>{benefit}</span>
               </div>
             ))}

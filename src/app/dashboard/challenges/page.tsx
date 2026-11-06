@@ -372,8 +372,8 @@ export default function ChallengesManagementPage() {
 
         {/* Botão + Novo Desafio destacado */}
         <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
-          <button className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-white text-black hover:bg-zinc-100 rounded-2xl shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-white">
-            <span className="text-base leading-none font-black text-black group-hover:rotate-90 transition-transform duration-200">+</span>
+          <button className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-2xl shadow-[0_4px_20px_rgba(52,120,246,0.3)] hover:shadow-[0_0_25px_rgba(52,120,246,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-[#3478F6]">
+            <span className="text-base leading-none font-black text-white group-hover:rotate-90 transition-transform duration-200">+</span>
             <span>Novo Desafio</span>
           </button>
         </Link>
@@ -381,55 +381,55 @@ export default function ChallengesManagementPage() {
 
       {/* 2. Grid de Métricas de Resumo em 3D */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-10">
-        <SpotlightCard3D className="p-4 sm:p-5">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-zinc-400">Turmas Ativas</span>
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Turmas Ativas</span>
+            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-white font-mono">{activeCount}</div>
-          <p className="text-[10px] text-zinc-500 mt-1">{challenges.length} turmas no total</p>
+          <div className="text-2xl sm:text-3xl font-black text-[#F4F6FA] font-mono">{activeCount}</div>
+          <p className="text-[10px] text-[#A7B0C0] mt-1">{challenges.length} turmas no total</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-4 sm:p-5">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-zinc-400">Alunos Ativos</span>
-            <Users className="h-4 w-4 text-zinc-400" />
+            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Alunos Ativos</span>
+            <Users className="h-4 w-4 text-[#3478F6]" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-white font-mono">{totalStudents}</div>
-          <p className="text-[10px] text-zinc-500 mt-1">Inscritos nas turmas</p>
+          <div className="text-2xl sm:text-3xl font-black text-[#F4F6FA] font-mono">{totalStudents}</div>
+          <p className="text-[10px] text-[#A7B0C0] mt-1">Inscritos nas turmas</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-4 sm:p-5">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-zinc-400">Faturamento</span>
-            <DollarSign className="h-4 w-4 text-zinc-400" />
+            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Faturamento</span>
+            <DollarSign className="h-4 w-4 text-[#3478F6]" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-white font-mono">
+          <div className="text-2xl sm:text-3xl font-black text-[#F4F6FA] font-mono">
             R$ {totalProjectedRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}
           </div>
-          <p className="text-[10px] text-zinc-500 mt-1">Valor consolidado</p>
+          <p className="text-[10px] text-[#A7B0C0] mt-1">Valor consolidado</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-4 sm:p-5">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-zinc-400">Encerradas</span>
-            <span className="text-[10px] font-mono text-zinc-500">Histórico</span>
+            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Encerradas</span>
+            <span className="text-[10px] font-mono text-[#A7B0C0]">Histórico</span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-zinc-400 font-mono">{endedCount}</div>
-          <p className="text-[10px] text-zinc-500 mt-1">Turmas finalizadas</p>
+          <div className="text-2xl sm:text-3xl font-black text-[#A7B0C0] font-mono">{endedCount}</div>
+          <p className="text-[10px] text-[#A7B0C0] mt-1">Turmas finalizadas</p>
         </SpotlightCard3D>
       </div>
 
       {/* 3. Barra de Filtros e Busca */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 relative z-10">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 relative z-10 font-mono">
         {/* Tabs de Filtro */}
-        <div className="flex items-center p-1 rounded-2xl bg-black/60 border border-white/10 self-start">
+        <div className="flex items-center p-1 rounded-2xl bg-[#121722] border border-[#252D3B] self-start">
           <button
             onClick={() => setFilterTab('active')}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
               filterTab === 'active'
-                ? 'bg-white text-black shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-md'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
             Ativos ({activeCount})
@@ -438,8 +438,8 @@ export default function ChallengesManagementPage() {
             onClick={() => setFilterTab('all')}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
               filterTab === 'all'
-                ? 'bg-white text-black shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-md'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
             Todos ({challenges.length})
@@ -448,8 +448,8 @@ export default function ChallengesManagementPage() {
             onClick={() => setFilterTab('ended')}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
               filterTab === 'ended'
-                ? 'bg-white text-black shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-md'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
             Encerrados ({endedCount})
@@ -505,7 +505,7 @@ export default function ChallengesManagementPage() {
             return (
               <div
                 key={c.id}
-                className="mono-glass-card p-5 sm:p-6 rounded-3xl flex flex-col justify-between border border-white/[0.08] hover:border-white/25 transition-all group"
+                className="bg-[#121722] p-5 sm:p-6 rounded-3xl flex flex-col justify-between border border-[#252D3B] hover:border-[#3478F6]/40 transition-all group shadow-md"
               >
                 <div className="space-y-4">
                   {/* Topo do Card: Badge de Status e Preço / Split */}
@@ -515,8 +515,8 @@ export default function ChallengesManagementPage() {
                       title="Clique para alternar status da turma"
                       className={`text-xs px-2.5 py-0.5 rounded-full border transition-all cursor-pointer font-mono font-bold ${
                         c.is_active
-                          ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
-                          : 'border-white/10 bg-black text-zinc-500 hover:text-white'
+                          ? 'border-[#3478F6]/30 bg-[#3478F6]/15 text-[#75A7FF] hover:bg-[#3478F6]/25'
+                          : 'border-[#252D3B] bg-[#080A0F] text-[#A7B0C0] hover:text-[#F4F6FA]'
                       }`}
                     >
                       {c.is_active ? '● Ativo' : '○ Encerrado'}
@@ -525,15 +525,15 @@ export default function ChallengesManagementPage() {
                     <div className="flex items-center gap-1.5">
                       {c.price > 0 ? (
                         <>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 font-bold">
                             Split Asaas
                           </span>
-                          <span className="text-sm font-mono font-black text-white">
+                          <span className="text-sm font-mono font-black text-[#F4F6FA]">
                             R$ {c.price.toFixed(2).replace('.', ',')}
                           </span>
                         </>
                       ) : (
-                        <span className="text-xs font-mono font-bold text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10">
+                        <span className="text-xs font-mono font-bold text-[#A7B0C0] bg-[#1B2330] px-2.5 py-0.5 rounded-full border border-[#252D3B]">
                           Gratuito
                         </span>
                       )}
@@ -542,34 +542,34 @@ export default function ChallengesManagementPage() {
 
                   {/* Título e Período */}
                   <div>
-                    <h3 className="text-base sm:text-lg font-black text-white tracking-tight line-clamp-1 group-hover:text-zinc-100">
+                    <h3 className="text-base sm:text-lg font-black text-[#F4F6FA] tracking-tight line-clamp-1 group-hover:text-[#75A7FF] transition-colors">
                       {c.title}
                     </h3>
-                    <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 mt-1">
-                      <Calendar className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                    <div className="flex items-center gap-1.5 text-xs font-mono text-[#A7B0C0] mt-1">
+                      <Calendar className="h-3.5 w-3.5 text-[#3478F6] shrink-0" />
                       <span>{startFormatted} até {endFormatted}</span>
                     </div>
                   </div>
 
                   {/* Grid de Métricas da Turma (Alunos, Missões e Líquido) */}
-                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
-                    <div className="p-2.5 rounded-2xl bg-black/60 border border-white/[0.06] text-center">
-                      <span className="text-[10px] font-mono uppercase text-zinc-500 block">Alunos</span>
-                      <span className="text-base font-black text-white font-mono block mt-0.5">
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#252D3B]">
+                    <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center">
+                      <span className="text-[10px] font-mono uppercase text-[#A7B0C0] block">Alunos</span>
+                      <span className="text-base font-black text-[#F4F6FA] font-mono block mt-0.5">
                         {c.studentsCount}
                       </span>
                     </div>
 
-                    <div className="p-2.5 rounded-2xl bg-black/60 border border-white/[0.06] text-center">
-                      <span className="text-[10px] font-mono uppercase text-zinc-500 block">Missões</span>
-                      <span className="text-base font-black text-white font-mono block mt-0.5">
+                    <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center">
+                      <span className="text-[10px] font-mono uppercase text-[#A7B0C0] block">Missões</span>
+                      <span className="text-base font-black text-[#3478F6] font-mono block mt-0.5">
                         {c.missionsCount}
                       </span>
                     </div>
 
-                    <div className="p-2.5 rounded-2xl bg-black/60 border border-white/[0.06] text-center">
-                      <span className="text-[10px] font-mono uppercase text-zinc-500 block">Líquido</span>
-                      <span className="text-base font-black text-emerald-400 font-mono block mt-0.5 truncate">
+                    <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center">
+                      <span className="text-[10px] font-mono uppercase text-[#A7B0C0] block">Líquido</span>
+                      <span className="text-base font-black text-[#75A7FF] font-mono block mt-0.5 truncate">
                         R$ {c.netRevenue > 0 ? c.netRevenue.toFixed(0) : '0'}
                       </span>
                     </div>
@@ -577,13 +577,13 @@ export default function ChallengesManagementPage() {
                 </div>
 
                 {/* Rodapé do Card com Ações */}
-                <div className="pt-5 mt-4 border-t border-white/[0.08] space-y-2.5">
+                <div className="pt-5 mt-4 border-t border-[#252D3B] space-y-2.5">
                   {/* Botão de Convidar / Compartilhar */}
                   <button
                     onClick={() => setInviteModalChallenge(c)}
-                    className="w-full h-9 rounded-xl bg-white/[0.06] hover:bg-white/15 border border-white/15 text-xs font-mono font-semibold text-white flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
+                    className="w-full h-9 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-[#3478F6]/20 active:scale-98"
                   >
-                    <Share2 className="h-3.5 w-3.5 text-zinc-300" />
+                    <Share2 className="h-3.5 w-3.5 text-white" />
                     <span>Convidar Alunos (WhatsApp / QR)</span>
                   </button>
 
@@ -591,7 +591,7 @@ export default function ChallengesManagementPage() {
                   <div className="grid grid-cols-3 gap-2">
                     <Link
                       href={`/dashboard/challenges/${c.id}/edit`}
-                      className="w-full text-center py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-[11px] font-mono font-bold text-zinc-300 transition-all truncate"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[11px] font-mono font-bold text-[#F4F6FA] transition-all truncate"
                     >
                       Editar
                     </Link>
@@ -599,23 +599,23 @@ export default function ChallengesManagementPage() {
                     <button
                       onClick={() => handleDuplicateChallenge(c.id)}
                       disabled={duplicatingId === c.id}
-                      className="w-full text-center py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-[11px] font-mono font-bold text-zinc-300 transition-all flex items-center justify-center gap-1 disabled:opacity-50 cursor-pointer"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[11px] font-mono font-bold text-[#F4F6FA] transition-all flex items-center justify-center gap-1 disabled:opacity-50 cursor-pointer"
                       title="Clonar esta turma com todas as missões"
                     >
                       {duplicatingId === c.id ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
                       ) : (
-                        <CopyPlus className="h-3 w-3" />
+                        <CopyPlus className="h-3 w-3 text-[#3478F6]" />
                       )}
                       <span>Clonar</span>
                     </button>
 
                     <Link
                       href={`/dashboard/missions?challengeId=${c.id}`}
-                      className="w-full text-center py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-white hover:text-black border border-white/10 text-[11px] font-mono font-bold text-zinc-300 transition-all flex items-center justify-center gap-0.5"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[11px] font-mono font-bold text-[#F4F6FA] transition-all flex items-center justify-center gap-0.5"
                     >
                       <span>Missões</span>
-                      <ChevronRight className="h-3 w-3" />
+                      <ChevronRight className="h-3 w-3 text-[#3478F6]" />
                     </Link>
                   </div>
                 </div>

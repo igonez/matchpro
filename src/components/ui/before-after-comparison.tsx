@@ -152,12 +152,12 @@ export function BeforeAfterComparison() {
               </div>
             </div>
 
-            <div className="relative z-10 pt-6 mt-6 border-t border-[#252D3B] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="text-xs font-mono text-[#F4F6FA]">
+            <div className="relative z-10 pt-6 mt-6 border-t border-[#252D3B] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+              <div className="text-xs font-mono text-[#F4F6FA] text-center sm:text-left">
                 Taxa de conclusão média: <strong className="text-[#3478F6]">94.8%</strong> • Zero digitação de treinos
               </div>
-              <Link href="/login?role=professional&mode=signup">
-                <button className="mono-button-primary min-h-[46px] px-6 py-2.5 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.3)]">
+              <Link href="/login?role=professional&mode=signup" className="w-full sm:w-auto">
+                <button className="mono-button-primary w-full sm:w-auto min-h-[48px] px-6 py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.3)] active:scale-[0.98] transition-all">
                   <Sparkles className="w-4 h-4 text-white" />
                   <span>Experimentar Grátis Agora</span>
                   <ArrowRight className="w-4 h-4 text-white" />

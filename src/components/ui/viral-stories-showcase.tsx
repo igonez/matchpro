@@ -252,13 +252,13 @@ export function ViralStoriesShowcase() {
             </div>
 
             {/* Moldura de Smartphone 9:16 */}
-            <div className="relative w-full max-w-[340px] sm:max-w-[360px] rounded-[44px] p-3 bg-gradient-to-b from-[#1B2330] via-[#121722] to-[#080A0F] border border-[#252D3B] shadow-[0_35px_100px_rgba(0,0,0,0.95),0_0_35px_rgba(52,120,246,0.12)]">
+            <div className="relative w-full max-w-[320px] sm:max-w-[360px] rounded-[38px] sm:rounded-[44px] p-2.5 sm:p-3 bg-gradient-to-b from-[#1B2330] via-[#121722] to-[#080A0F] border border-[#252D3B] shadow-[0_35px_100px_rgba(0,0,0,0.95),0_0_35px_rgba(52,120,246,0.12)]">
               {/* Dynamic Island */}
-              <div className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-5 rounded-full bg-black border border-[#252D3B] z-30" />
+              <div className="absolute top-5 sm:top-6 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-4.5 sm:h-5 rounded-full bg-black border border-[#252D3B] z-30" />
 
               {/* Tela 9:16 */}
               <div
-                className="relative rounded-[36px] overflow-hidden border border-[#252D3B] aspect-[9/16] flex flex-col justify-end p-6 sm:p-7 select-none transition-all duration-300"
+                className="relative rounded-[30px] sm:rounded-[36px] overflow-hidden border border-[#252D3B] aspect-[9/16] flex flex-col justify-end p-5 sm:p-7 select-none transition-all duration-300"
                 style={
                   bgMode === 'transparent'
                     ? {

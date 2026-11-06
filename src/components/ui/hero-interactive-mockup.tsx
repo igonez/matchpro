@@ -24,11 +24,11 @@ export function HeroInteractiveMockup() {
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-8 sm:mt-12 mb-6 perspective-container">
-      {/* Tab Switcher Interativo Superior com Excelente Área de Toque */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-10 p-1.5 rounded-2xl sm:rounded-full bg-[#121722] border border-[#252D3B] backdrop-blur-xl w-full sm:w-fit mx-auto shadow-xl">
+      {/* Tab Switcher Interativo Superior com Scroll Horizontal Suave no Mobile e Centrado no Desktop */}
+      <div className="flex items-center gap-1.5 sm:gap-2 mb-6 sm:mb-10 p-1.5 rounded-2xl sm:rounded-full bg-[#121722] border border-[#252D3B] backdrop-blur-xl w-full sm:w-fit mx-auto shadow-xl overflow-x-auto no-scrollbar scroll-smooth">
         <button
           onClick={() => setActiveTab('podium')}
-          className={`flex-1 sm:flex-initial min-h-[46px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`shrink-0 min-h-[44px] flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
             activeTab === 'podium'
               ? 'bg-[#3478F6] text-white shadow-[0_0_25px_rgba(52,120,246,0.4)]'
               : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
@@ -40,19 +40,19 @@ export function HeroInteractiveMockup() {
 
         <button
           onClick={() => setActiveTab('stories_share')}
-          className={`flex-1 sm:flex-initial min-h-[46px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`shrink-0 min-h-[44px] flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
             activeTab === 'stories_share'
               ? 'bg-[#3478F6] text-white shadow-[0_0_25px_rgba(52,120,246,0.4)]'
               : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
           }`}
         >
           <Share2 className="w-4 h-4 shrink-0" />
-          <span>Stories 9:16 (Sua Marca)</span>
+          <span>Stories 9:16</span>
         </button>
 
         <button
           onClick={() => setActiveTab('ai_camera')}
-          className={`flex-1 sm:flex-initial min-h-[46px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`shrink-0 min-h-[44px] flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
             activeTab === 'ai_camera'
               ? 'bg-[#3478F6] text-white shadow-[0_0_25px_rgba(52,120,246,0.4)]'
               : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
@@ -64,7 +64,7 @@ export function HeroInteractiveMockup() {
 
         <button
           onClick={() => setActiveTab('pix_split')}
-          className={`flex-1 sm:flex-initial min-h-[46px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`shrink-0 min-h-[44px] flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
             activeTab === 'pix_split'
               ? 'bg-[#3478F6] text-white shadow-[0_0_25px_rgba(52,120,246,0.4)]'
               : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
@@ -85,14 +85,14 @@ export function HeroInteractiveMockup() {
             <span>Visão Mobile do Aluno (Sem Baixar App)</span>
           </div>
 
-          <div className="relative w-full max-w-[360px] sm:max-w-[380px] rounded-[44px] p-3 sm:p-3.5 bg-gradient-to-b from-[#1B2330] via-[#121722] to-[#080A0F] border border-[#252D3B] shadow-[0_30px_90px_rgba(0,0,0,0.9),0_0_35px_rgba(52,120,246,0.12)]">
+          <div className="relative w-full max-w-[335px] sm:max-w-[380px] rounded-[38px] sm:rounded-[44px] p-2.5 sm:p-3.5 bg-gradient-to-b from-[#1B2330] via-[#121722] to-[#080A0F] border border-[#252D3B] shadow-[0_30px_90px_rgba(0,0,0,0.9),0_0_35px_rgba(52,120,246,0.12)]">
             {/* Botões físicos laterais */}
             <div className="absolute -left-1 top-24 w-1 h-8 bg-[#252D3B] rounded-l-md hidden sm:block" />
             <div className="absolute -left-1 top-36 w-1 h-12 bg-[#252D3B] rounded-l-md hidden sm:block" />
             <div className="absolute -right-1 top-28 w-1 h-14 bg-[#252D3B] rounded-r-md hidden sm:block" />
 
             {/* Display interno */}
-            <div className="relative rounded-[36px] overflow-hidden bg-[#080A0F] border border-[#252D3B] text-[#F4F6FA] min-h-[570px] flex flex-col justify-between">
+            <div className="relative rounded-[30px] sm:rounded-[36px] overflow-hidden bg-[#080A0F] border border-[#252D3B] text-[#F4F6FA] min-h-[570px] flex flex-col justify-between">
               
               {/* Barra de Status e Dynamic Island */}
               <div className="pt-3.5 px-6 flex items-center justify-between z-20 text-xs font-mono text-[#A7B0C0]">

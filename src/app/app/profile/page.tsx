@@ -26,7 +26,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { TransformationVaultModal } from '@/components/student/transformation-vault-modal';
-import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { AchievementsGrid } from '@/components/student/achievements-grid';
@@ -277,7 +276,6 @@ export default function StudentProfilePage() {
       {/* Header do Perfil */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-center gap-3">
-          <StudentMenuTrigger />
           <h1 className="text-xl font-black text-white tracking-tight">Meu Perfil</h1>
         </div>
         <Button

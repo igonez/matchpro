@@ -168,20 +168,6 @@ export function DashboardHeader() {
             <span>Ver como Aluno</span>
             <ExternalLink className="h-3.5 w-3.5 text-[#A7B0C0]" />
           </Link>
-
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0]">
-            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
-            <span className="hidden sm:inline">Servidor</span> Conectado
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Abrir menu do painel"
-            className="md:hidden h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-[#121722] border border-[#252D3B] flex items-center justify-center text-[#F4F6FA] hover:bg-[#1B2330] transition-colors shrink-0"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
         </div>
       </header>
 

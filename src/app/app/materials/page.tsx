@@ -23,7 +23,6 @@ import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
-import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 function StudentMaterialsContent() {
   const supabase = createClient();
@@ -204,7 +203,6 @@ function StudentMaterialsContent() {
       {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-center gap-2.5">
-          <StudentMenuTrigger />
           <div>
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#3478F6] block font-bold">
               {activeChallenge?.title ? `TURMA ATIVA • ${activeChallenge.title}` : 'CENTRAL DO ALUNO'}

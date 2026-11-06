@@ -4,7 +4,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { ShareRankingSheet } from '@/components/share-ranking/share-ranking-sheet';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import {
@@ -357,7 +356,6 @@ export default function LeaderboardPage() {
         className="flex items-start justify-between pt-2 relative z-10 border-b border-white/[0.08] pb-4 gap-3"
       >
         <div className="flex items-start gap-3 min-w-0">
-          <StudentMenuTrigger className="mt-0.5" />
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest text-amber-300 uppercase">

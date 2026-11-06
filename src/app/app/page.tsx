@@ -29,7 +29,6 @@ import {
   Clock
 } from 'lucide-react';
 import { NotificationsDrawer } from '@/components/student/notifications-drawer';
-import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { PushNotificationBanner } from '@/components/student/push-notification-manager';
 import { checkStreakRisk, sendBrowserNotification } from '@/lib/notifications';
 
@@ -603,7 +602,6 @@ export default function StudentHomePage() {
         className="flex items-center justify-between pt-2 sm:pt-3 relative z-10"
       >
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <StudentMenuTrigger />
           <Link href="/app/profile">
             <div className="relative h-12 w-12 rounded-2xl bg-gradient-to-b from-[#3478F6] via-zinc-400 to-[#121722] p-px shadow-[0_0_15px_rgba(52,120,246,0.25)] active:scale-95 transition-all cursor-pointer">
               <div className="h-full w-full bg-[#080A0F] rounded-[15px] flex items-center justify-center font-bold text-white text-base overflow-hidden">

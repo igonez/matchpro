@@ -330,7 +330,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
         {/* Rodapé: Informações da conta & Desconectar */}
         <div className="w-full pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A7B0C0]">
           <div className="truncate max-w-[240px]">
-            Conectado como <span className="text-[#F4F6FA] font-medium">{userEmail || 'atleta'}</span>
+            <span className="text-[#F4F6FA] font-medium">{userEmail || 'atleta'}</span>
           </div>
           <button
             type="button"

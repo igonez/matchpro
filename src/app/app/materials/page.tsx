@@ -78,33 +78,6 @@ function StudentMaterialsContent() {
 
           challengeObj = Array.isArray(part?.challenges) ? part?.challenges[0] : part?.challenges;
           challengeId = part?.challenge_id || challengeObj?.id || null;
-
-          // Fallback para desafio ativo do treinador / ambiente
-          if (!challengeId) {
-            const { data: activeCh } = await supabase
-              .from('challenges')
-              .select('id, title, start_date, end_date, is_active')
-              .eq('is_active', true)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .maybeSingle();
-
-            if (activeCh) {
-              challengeId = activeCh.id;
-              challengeObj = activeCh;
-            } else {
-              const { data: latestCh } = await supabase
-                .from('challenges')
-                .select('id, title, start_date, end_date')
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .maybeSingle();
-              if (latestCh) {
-                challengeId = latestCh.id;
-                challengeObj = latestCh;
-              }
-            }
-          }
         }
 
         setActiveChallenge(challengeObj || null);

@@ -1,11 +1,9 @@
 import React from 'react';
-import { StudentBottomNav } from '@/components/student/bottom-nav';
 import { PwaInstallPrompt } from '@/components/student/pwa-install-prompt';
 import { ReturnToCoachBanner } from '@/components/student/return-to-coach-banner';
 import { WorkoutSessionProvider } from '@/lib/workout-session-context';
-import { WorkoutActiveSessionHud } from '@/components/student/workout-active-session-hud';
 import { WalkthroughProvider } from '@/components/ui/walkthrough-spotlight';
-import { StudentTourTrigger } from '@/components/student/student-tour-trigger';
+import { StudentAccessGate } from '@/components/student/student-access-gate';
 
 export default function StudentAppLayout({
   children,
@@ -19,10 +17,9 @@ export default function StudentAppLayout({
           <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl min-h-screen flex flex-col safe-page-pb relative bg-[#080A0F] sm:border-x border-[#252D3B] shadow-[0_0_80px_rgba(0,0,0,0.95),0_0_30px_rgba(52,120,246,0.06)]">
             <ReturnToCoachBanner />
             <PwaInstallPrompt />
-            {children}
-            <WorkoutActiveSessionHud />
-            <StudentBottomNav />
-            <StudentTourTrigger />
+            <StudentAccessGate>
+              {children}
+            </StudentAccessGate>
           </div>
         </div>
       </WalkthroughProvider>

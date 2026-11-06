@@ -216,20 +216,6 @@ function StudentMissionsContent() {
         let challengeObj: any = Array.isArray(part?.challenges) ? part?.challenges[0] : part?.challenges;
         let challengeId = part?.challenge_id || challengeObj?.id || null;
 
-        if (!challengeId) {
-          const { data: activeCh } = await supabase
-            .from('challenges')
-            .select('id, title, start_date, end_date, is_active')
-            .eq('is_active', true)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-          if (activeCh) {
-            challengeObj = activeCh;
-            challengeId = activeCh.id;
-          }
-        }
-
         setCurrentChallengeId(challengeId);
         setChallenge(challengeObj || null);
 

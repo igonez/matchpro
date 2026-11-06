@@ -241,10 +241,10 @@ export default function DashboardFinanceAndStudentsPage() {
             <span className="text-xs text-zinc-400 font-medium">Matrículas oficiais via Checkout</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Gestão de Alunos & Turmas
+            Gestão de Alunos
           </h1>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Todas as matrículas são processadas automaticamente após a confirmação do pagamento via app. Compartilhe o link de convite para novos alunos entrarem.
+            Matrículas oficiais, status de pagamento e controle de presença dos atletas. Compartilhe o link de convite da turma para novos alunos entrarem.
           </p>
         </div>
 

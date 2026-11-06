@@ -15,7 +15,7 @@ export function MobileLoadingScreen({
   fullScreen = true,
   isReady,
   onFinish,
-  minDisplayTimeMs = 1500, // 1.5s (1 segundo a mais de exibição cinematográfica)
+  minDisplayTimeMs = 1500, // 1.5s de exibição contínua
 }: MobileLoadingScreenProps) {
   const [mountedTime] = useState(() => Date.now());
   const [isFadingOut, setIsFadingOut] = useState(false);
@@ -32,7 +32,7 @@ export function MobileLoadingScreen({
         const unmountTimer = setTimeout(() => {
           setShouldRender(false);
           if (onFinish) onFinish();
-        }, 300); // 300ms de fade-out suave cinematográfico
+        }, 250);
         return () => clearTimeout(unmountTimer);
       }, remainingTime);
 
@@ -48,7 +48,7 @@ export function MobileLoadingScreen({
     <div
       className={`${
         fullScreen ? 'fixed inset-0 z-50' : 'w-full min-h-[60vh]'
-      } bg-black flex items-center justify-center p-6 select-none overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      } bg-black flex items-center justify-center p-6 select-none transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isFadingOut
           ? 'opacity-0 scale-[1.03] pointer-events-none'
           : 'opacity-100 scale-100 pointer-events-auto'
@@ -58,25 +58,18 @@ export function MobileLoadingScreen({
       }}
     >
       {/* 1. Fundo Preto OLED Absoluto com Brilho Central Titânio Sutil */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.035)_0%,_transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.025)_0%,_transparent_70%)] pointer-events-none" />
 
-      {/* 2. FEIXE DE LUZ TITANIUM CINEMATOGRÁFICO CRUZANDO A TELA INTEIRA (100% GPU) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div 
-          className="absolute -top-[50%] -left-[50%] w-[200%] h-36 sm:h-52 bg-gradient-to-b from-transparent via-white/10 via-zinc-200/25 via-white/60 via-zinc-200/25 via-transparent to-transparent blur-md animate-screen-titanium-sweep pointer-events-none" 
-        />
-      </div>
-
-      {/* 3. Container Central com a Estrela Pura do Ícone Oficial (Sem Moldura) */}
-      <div className="relative flex items-center justify-center pointer-events-none z-10">
+      {/* 2. Container Central com a Estrela Pura do Ícone Oficial (Sem Moldura e Sem Borda Redonda) */}
+      <div className="relative flex items-center justify-center pointer-events-none">
         {/* AURA TITANIUM ESPECULAR: Respiração Volumétrica 100% GPU */}
         <div 
-          className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.12)_0%,_rgba(161,161,170,0.04)_45%,_transparent_70%)] blur-3xl animate-star-aura pointer-events-none" 
+          className="absolute w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_0%,_rgba(161,161,170,0.02)_45%,_transparent_70%)] blur-3xl animate-star-aura pointer-events-none" 
         />
 
         {/* NÚCLEO LUMINOSO DE TITÂNIO ATRÁS DA ESTRELA */}
         <div 
-          className="absolute w-32 h-32 rounded-full bg-gradient-to-tr from-white/15 via-zinc-400/10 to-transparent blur-2xl pointer-events-none" 
+          className="absolute w-28 h-28 rounded-full bg-gradient-to-tr from-white/10 via-zinc-400/5 to-transparent blur-2xl pointer-events-none" 
         />
 
         {/* ESTRELA OFICIAL IDÊNTICA AO ÍCONE ARENAFITPRO: Hardware-Accelerated Floating Motion */}
@@ -85,7 +78,7 @@ export function MobileLoadingScreen({
             viewBox="0 0 2048 2048"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full drop-shadow-[0_0_25px_rgba(255,255,255,0.22)] drop-shadow-[0_15px_30px_rgba(0,0,0,0.95)]"
+            className="w-full h-full drop-shadow-[0_0_20px_rgba(255,255,255,0.18)] drop-shadow-[0_15px_30px_rgba(0,0,0,0.95)]"
           >
             <defs>
               {/* Gradiente Titânio Prateado Oficial do Ícone */}
@@ -103,6 +96,39 @@ export function MobileLoadingScreen({
                 <stop offset="100%" stopColor="#18181B" stopOpacity="0.7" />
               </linearGradient>
 
+              {/* Feixe Especular de Luz Nativo — Exclusivamente Sobre as Facetas da Estrela */}
+              <linearGradient id="titaniumGleamLight" x1="-120%" y1="-120%" x2="20%" y2="20%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+                <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0.05" />
+                <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.85" />
+                <stop offset="60%" stopColor="#FFFFFF" stopOpacity="0.05" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+                <animate 
+                  attributeName="x1" 
+                  values="-150%;150%;-150%" 
+                  dur="3s" 
+                  repeatCount="indefinite" 
+                />
+                <animate 
+                  attributeName="y1" 
+                  values="-150%;150%;-150%" 
+                  dur="3s" 
+                  repeatCount="indefinite" 
+                />
+                <animate 
+                  attributeName="x2" 
+                  values="-10%;290%;-10%" 
+                  dur="3s" 
+                  repeatCount="indefinite" 
+                />
+                <animate 
+                  attributeName="y2" 
+                  values="-10%;290%;-10%" 
+                  dur="3s" 
+                  repeatCount="indefinite" 
+                />
+              </linearGradient>
+
               {/* Filtro de Difusão Suave do Ícone */}
               <filter id="titaniumGlowFilter" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="16" result="blur" />
@@ -111,7 +137,7 @@ export function MobileLoadingScreen({
             </defs>
 
             <g filter="url(#titaniumGlowFilter)">
-              {/* Polígono Estelar / Estrela Geométrica Oficial do Ícone */}
+              {/* 1. Polígono Estelar / Estrela Geométrica Oficial do Ícone */}
               <path
                 d="M1024 420 L1160 888 L1628 1024 L1160 1160 L1024 1628 L888 1160 L420 1024 L888 888 Z"
                 fill="url(#titaniumStarGrad)"
@@ -119,28 +145,30 @@ export function MobileLoadingScreen({
                 strokeWidth="12"
               />
 
-              {/* Facetas de Bisel Interno (Linhas de Relevo Metálico) */}
+              {/* 2. Feixe de Luz Titanium Aplicado Diretamente sobre a MESMA Silhueta da Estrela (Sem Nenhuma Borda Redonda) */}
+              <path
+                d="M1024 420 L1160 888 L1628 1024 L1160 1160 L1024 1628 L888 1160 L420 1024 L888 888 Z"
+                fill="url(#titaniumGleamLight)"
+                style={{ mixBlendMode: 'screen' }}
+              />
+
+              {/* 3. Facetas de Bisel Interno (Linhas de Relevo Metálico) */}
               <line x1="1024" y1="420" x2="1024" y2="1628" stroke="#FFFFFF" strokeWidth="8" opacity="0.6" />
               <line x1="420" y1="1024" x2="1628" y2="1024" stroke="#FFFFFF" strokeWidth="8" opacity="0.6" />
 
-              {/* Núcleo de Contraste Geométrico */}
+              {/* 4. Núcleo de Contraste Geométrico */}
               <polygon
                 points="1024,710 1120,1024 1024,1338 928,1024"
                 fill="#000000"
                 fillOpacity="0.45"
               />
 
-              {/* Anéis Concêntricos Centrais Oficiais do Ícone */}
+              {/* 5. Anéis Concêntricos Centrais Oficiais do Ícone */}
               <circle cx="1024" cy="1024" r="70" fill="#FFFFFF" />
               <circle cx="1024" cy="1024" r="45" fill="#18181B" />
               <circle cx="1024" cy="1024" r="16" fill="#FFFFFF" />
             </g>
           </svg>
-
-          {/* Feixe Especular de Luz Metálica Titânio no Corpo da Estrela */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-full">
-            <div className="w-[200%] h-8 bg-gradient-to-r from-transparent via-white/50 to-transparent blur-[2px] animate-star-shimmer pointer-events-none" />
-          </div>
         </div>
       </div>
     </div>

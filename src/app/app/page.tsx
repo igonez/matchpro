@@ -571,7 +571,7 @@ export default function StudentHomePage() {
     return `${mins}min`;
   };
 
-  if (loading && isInitialBoot) {
+  if (loading) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
 

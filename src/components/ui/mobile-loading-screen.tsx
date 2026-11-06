@@ -13,26 +13,17 @@ interface MobileLoadingScreenProps {
 
 export function MobileLoadingScreen({
   fullScreen = true,
-  isReady = true,
+  isReady,
   onFinish,
-  minDisplayTimeMs = 0,
+  minDisplayTimeMs = 500,
 }: MobileLoadingScreenProps) {
   const [mountedTime] = useState(() => Date.now());
-  const [isMounted, setIsMounted] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [shouldRender, setShouldRender] = useState(true);
 
-  // 1. Entrada fluida e imediata no frame seguinte
+  // Fade Out só é disparado se isReady for explicitamente fornecido como true
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      setIsMounted(true);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  // 2. Orquestração ultrarrápida do ciclo de vida: sai assim que isReady for verdadeiro
-  useEffect(() => {
-    if (isReady) {
+    if (isReady === true) {
       const elapsed = Date.now() - mountedTime;
       const remainingTime = Math.max(0, minDisplayTimeMs - elapsed);
 
@@ -41,7 +32,7 @@ export function MobileLoadingScreen({
         const unmountTimer = setTimeout(() => {
           setShouldRender(false);
           if (onFinish) onFinish();
-        }, 220); // Transição ágil de 220ms (zero atraso perceptível)
+        }, 250);
         return () => clearTimeout(unmountTimer);
       }, remainingTime);
 
@@ -57,10 +48,8 @@ export function MobileLoadingScreen({
     <div
       className={`${
         fullScreen ? 'fixed inset-0 z-50' : 'w-full min-h-[60vh]'
-      } bg-[#080A0F] flex items-center justify-center p-6 select-none overflow-hidden transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        !isMounted
-          ? 'opacity-0 scale-[0.96] pointer-events-none'
-          : isFadingOut
+      } bg-[#080A0F] flex items-center justify-center p-6 select-none transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isFadingOut
           ? 'opacity-0 scale-[1.03] pointer-events-none'
           : 'opacity-100 scale-100 pointer-events-auto'
       }`}
@@ -68,28 +57,28 @@ export function MobileLoadingScreen({
         backgroundColor: '#080A0F',
       }}
     >
-      {/* Luz Ambiente Sutil de Fundo (Preto OLED com gradiente suave) */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(52,120,246,0.06)_0%,_transparent_75%)] pointer-events-none" />
+      {/* Luz Ambiente Sutil de Fundo (Preto OLED com aura suave) */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(52,120,246,0.08)_0%,_transparent_75%)] pointer-events-none" />
 
-      {/* Container Central com a Estrela Pura (Sem Nenhuma Moldura ou Card) */}
+      {/* Container Central com a Estrela Pura (Sem Nenhuma Moldura ou Borda) */}
       <div className="relative flex items-center justify-center pointer-events-none">
         {/* AURA DE LUZ AZUL ELÉTRICO: Respiração Volumétrica 100% GPU */}
         <div 
-          className="absolute w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-[radial-gradient(circle,_rgba(52,120,246,0.45)_0%,_rgba(52,120,246,0.12)_45%,_transparent_70%)] blur-2xl animate-star-aura pointer-events-none" 
+          className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[radial-gradient(circle,_rgba(52,120,246,0.5)_0%,_rgba(52,120,246,0.15)_45%,_transparent_70%)] blur-3xl animate-star-aura pointer-events-none" 
         />
 
         {/* NÚCLEO ESPECULAR INTERNO DA ESTRELA */}
         <div 
-          className="absolute w-28 h-28 rounded-full bg-gradient-to-tr from-[#3478F6]/30 via-[#75A7FF]/20 to-transparent blur-xl pointer-events-none" 
+          className="absolute w-32 h-32 rounded-full bg-gradient-to-tr from-[#3478F6]/40 via-[#75A7FF]/25 to-transparent blur-xl pointer-events-none" 
         />
 
         {/* ESTRELA SOLTA OFICIAL ARENAFITPRO: Hardware-Accelerated Floating Motion */}
-        <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center animate-star-float overflow-hidden">
+        <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center animate-star-float">
           <svg
             viewBox="0 0 200 200"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full drop-shadow-[0_0_30px_rgba(52,120,246,0.65)]"
+            className="w-full h-full drop-shadow-[0_0_35px_rgba(52,120,246,0.7)]"
           >
             <defs>
               {/* Gradiente Cromo Metálico Puro */}
@@ -143,7 +132,7 @@ export function MobileLoadingScreen({
           </svg>
 
           {/* Feixe Especular de Luz Metálica (Gleam Shimmer) */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-full">
             <div className="w-[200%] h-8 bg-gradient-to-r from-transparent via-white/50 to-transparent blur-[2px] animate-star-shimmer pointer-events-none" />
           </div>
         </div>

@@ -231,7 +231,7 @@ export default function DashboardOverviewPage() {
     }
   };
 
-  if (loading && isInitialBoot) {
+  if (loading) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
 

@@ -48,92 +48,91 @@ export function MobileLoadingScreen({
     <div
       className={`${
         fullScreen ? 'fixed inset-0 z-50' : 'w-full min-h-[60vh]'
-      } bg-[#080A0F] flex items-center justify-center p-6 select-none transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      } bg-black flex items-center justify-center p-6 select-none transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isFadingOut
           ? 'opacity-0 scale-[1.03] pointer-events-none'
           : 'opacity-100 scale-100 pointer-events-auto'
       }`}
       style={{
-        backgroundColor: '#080A0F',
+        backgroundColor: '#000000',
       }}
     >
-      {/* Luz Ambiente Sutil de Fundo (Preto OLED com aura suave) */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(52,120,246,0.08)_0%,_transparent_75%)] pointer-events-none" />
+      {/* Fundo Preto OLED Absoluto com Brilho Central Titânio Sutil */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.035)_0%,_transparent_70%)] pointer-events-none" />
 
-      {/* Container Central com a Estrela Pura (Sem Nenhuma Moldura ou Borda) */}
+      {/* Container Central com a Estrela Pura do Ícone Oficial (Sem Moldura) */}
       <div className="relative flex items-center justify-center pointer-events-none">
-        {/* AURA DE LUZ AZUL ELÉTRICO: Respiração Volumétrica 100% GPU */}
+        {/* AURA TITANIUM ESPECULAR: Respiração Volumétrica 100% GPU */}
         <div 
-          className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[radial-gradient(circle,_rgba(52,120,246,0.5)_0%,_rgba(52,120,246,0.15)_45%,_transparent_70%)] blur-3xl animate-star-aura pointer-events-none" 
+          className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.12)_0%,_rgba(161,161,170,0.04)_45%,_transparent_70%)] blur-3xl animate-star-aura pointer-events-none" 
         />
 
-        {/* NÚCLEO ESPECULAR INTERNO DA ESTRELA */}
+        {/* NÚCLEO LUMINOSO DE TITÂNIO ATRÁS DA ESTRELA */}
         <div 
-          className="absolute w-32 h-32 rounded-full bg-gradient-to-tr from-[#3478F6]/40 via-[#75A7FF]/25 to-transparent blur-xl pointer-events-none" 
+          className="absolute w-32 h-32 rounded-full bg-gradient-to-tr from-white/15 via-zinc-400/10 to-transparent blur-2xl pointer-events-none" 
         />
 
-        {/* ESTRELA SOLTA OFICIAL ARENAFITPRO: Hardware-Accelerated Floating Motion */}
+        {/* ESTRELA OFICIAL IDÊNTICA AO ÍCONE ARENAFITPRO: Hardware-Accelerated Floating Motion */}
         <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center animate-star-float">
           <svg
-            viewBox="0 0 200 200"
+            viewBox="0 0 2048 2048"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full drop-shadow-[0_0_35px_rgba(52,120,246,0.7)]"
+            className="w-full h-full drop-shadow-[0_0_25px_rgba(255,255,255,0.22)] drop-shadow-[0_15px_30px_rgba(0,0,0,0.95)]"
           >
             <defs>
-              {/* Gradiente Cromo Metálico Puro */}
-              <linearGradient id="starMetalMain" x1="0%" y1="0%" x2="100%" y2="100%">
+              {/* Gradiente Titânio Prateado Oficial do Ícone */}
+              <linearGradient id="titaniumStarGrad" x1="1024" y1="420" x2="1024" y2="1628" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#FFFFFF" />
-                <stop offset="25%" stopColor="#E4E4E7" />
-                <stop offset="50%" stopColor="#A1A1AA" />
-                <stop offset="75%" stopColor="#E4E4E7" />
-                <stop offset="100%" stopColor="#FFFFFF" />
+                <stop offset="25%" stopColor="#F4F4F5" />
+                <stop offset="65%" stopColor="#A1A1AA" />
+                <stop offset="100%" stopColor="#52525B" />
               </linearGradient>
 
-              {/* Bisel de Reflexo */}
-              <linearGradient id="starSpecularBezel" x1="50%" y1="0%" x2="50%" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="50%" stopColor="#A1A1AA" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#3F3F46" stopOpacity="0.8" />
+              {/* Bisel Chanfrado Especular Titânio */}
+              <linearGradient id="titaniumBezelGrad" x1="420" y1="420" x2="1628" y2="1628" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#71717A" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#18181B" stopOpacity="0.7" />
               </linearGradient>
 
-              {/* Brilho Azul no Centro da Estrela */}
-              <radialGradient id="starBlueCore" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#75A7FF" stopOpacity="0.95" />
-                <stop offset="45%" stopColor="#3478F6" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#080A0F" stopOpacity="0" />
-              </radialGradient>
+              {/* Filtro de Difusão Suave do Ícone */}
+              <filter id="titaniumGlowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="16" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
             </defs>
 
-            {/* Aura de calor atrás da geometria */}
-            <circle cx="100" cy="100" r="55" fill="url(#starBlueCore)" opacity="0.6" filter="blur(8px)" />
+            <g filter="url(#titaniumGlowFilter)">
+              {/* Polígono Estelar / Estrela Geométrica Oficial do Ícone */}
+              <path
+                d="M1024 420 L1160 888 L1628 1024 L1160 1160 L1024 1628 L888 1160 L420 1024 L888 888 Z"
+                fill="url(#titaniumStarGrad)"
+                stroke="url(#titaniumBezelGrad)"
+                strokeWidth="12"
+              />
 
-            {/* Geometria Estelar 4-Pontas ArenaFitPro */}
-            <path
-              d="M 100,6 
-                 C 100,66 134,100 194,100 
-                 C 134,100 100,134 100,194 
-                 C 100,134 66,100 6,100 
-                 C 66,100 100,66 100,6 Z"
-              fill="url(#starMetalMain)"
-              stroke="#FFFFFF"
-              strokeWidth="1.2"
-              strokeOpacity="0.85"
-            />
+              {/* Facetas de Bisel Interno (Linhas de Relevo Metálico) */}
+              <line x1="1024" y1="420" x2="1024" y2="1628" stroke="#FFFFFF" strokeWidth="8" opacity="0.6" />
+              <line x1="420" y1="1024" x2="1628" y2="1024" stroke="#FFFFFF" strokeWidth="8" opacity="0.6" />
 
-            {/* Facetas de Bisel 3D Interno */}
-            <path d="M 100,6 L 100,194" stroke="#FFFFFF" strokeWidth="1.1" opacity="0.75" />
-            <path d="M 6,100 L 194,100" stroke="#FFFFFF" strokeWidth="1.1" opacity="0.75" />
+              {/* Núcleo de Contraste Geométrico */}
+              <polygon
+                points="1024,710 1120,1024 1024,1338 928,1024"
+                fill="#000000"
+                fillOpacity="0.45"
+              />
 
-            {/* Núcleo Central de Titânio */}
-            <circle cx="100" cy="100" r="14" fill="#080A0F" opacity="0.6" />
-            <circle cx="100" cy="100" r="8" fill="#3478F6" opacity="0.8" />
-            <circle cx="100" cy="100" r="3.5" fill="#FFFFFF" />
+              {/* Anéis Concêntricos Centrais Oficiais do Ícone */}
+              <circle cx="1024" cy="1024" r="70" fill="#FFFFFF" />
+              <circle cx="1024" cy="1024" r="45" fill="#18181B" />
+              <circle cx="1024" cy="1024" r="16" fill="#FFFFFF" />
+            </g>
           </svg>
 
-          {/* Feixe Especular de Luz Metálica (Gleam Shimmer) */}
+          {/* Feixe Especular de Luz Metálica Titânio (Gleam Shimmer) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-full">
-            <div className="w-[200%] h-8 bg-gradient-to-r from-transparent via-white/50 to-transparent blur-[2px] animate-star-shimmer pointer-events-none" />
+            <div className="w-[200%] h-8 bg-gradient-to-r from-transparent via-white/40 to-transparent blur-[2px] animate-star-shimmer pointer-events-none" />
           </div>
         </div>
       </div>

@@ -292,5 +292,66 @@ textarea:focus-visible,
   }
 }
 
+/* ==========================================================================
+   Hardware-Accelerated Star Motion (GPU-Only 60-120fps, Zero Main-Thread Load)
+   ========================================================================== */
+
+@keyframes starFloatMotion {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) scale3d(1.035, 1.035, 1);
+  }
+}
+
+@keyframes starPulseAura {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translate3d(0, 0, 0) scale3d(0.95, 0.95, 1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate3d(0, 0, 0) scale3d(1.15, 1.15, 1);
+  }
+}
+
+@keyframes starSpecularShimmer {
+  0% {
+    transform: translate3d(-120%, -120%, 0) rotate(25deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  60% {
+    transform: translate3d(120%, 120%, 0) rotate(25deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(120%, 120%, 0) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+.animate-star-float {
+  will-change: transform;
+  transform: translateZ(0);
+  animation: starFloatMotion 3.8s ease-in-out infinite;
+}
+
+.animate-star-aura {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  animation: starPulseAura 3s ease-in-out infinite;
+}
+
+.animate-star-shimmer {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  animation: starSpecularShimmer 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+
 
 

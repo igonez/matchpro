@@ -21,6 +21,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { StudentBottomNav } from '@/components/student/bottom-nav';
 import { WorkoutActiveSessionHud } from '@/components/student/workout-active-session-hud';
 import { StudentTourTrigger } from '@/components/student/student-tour-trigger';
+import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
 
 interface StudentAccessGateProps {
   children: React.ReactNode;
@@ -174,14 +175,11 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
     }
   };
 
-  // 1. Tela de Carregamento
+  // 1. Tela de Carregamento Ultra-Fluida com Estrela Motion
   if (loading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-[70vh] bg-[#080A0F] text-[#F4F6FA]">
-        <div className="w-10 h-10 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0]">
-          Verificando credenciais da Arena...
-        </p>
+        <MobileLoadingScreen fullScreen={false} />
       </div>
     );
   }

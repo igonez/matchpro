@@ -177,11 +177,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
 
   // 1. Tela de Carregamento Ultra-Fluida com Estrela Motion
   if (loading) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-[70vh] bg-[#080A0F] text-[#F4F6FA]">
-        <MobileLoadingScreen fullScreen={false} />
-      </div>
-    );
+    return <MobileLoadingScreen fullScreen={true} />;
   }
 
   // 2. Aluno com acesso liberado a uma turma ativa

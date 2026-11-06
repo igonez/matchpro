@@ -20,9 +20,9 @@ import { CustomDialog } from '@/components/ui/custom-dialog';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { createStudentNotification } from '@/lib/notifications';
 
-export type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
+type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
 
-export interface ReactionDef {
+interface ReactionDef {
   key: ReactionType;
   emoji: string;
   label: string;
@@ -61,7 +61,7 @@ const REACTIONS: ReactionDef[] = [
   },
 ];
 
-export const QUICK_PRAISE_CHIPS = [
+const QUICK_PRAISE_CHIPS = [
   'Boa monstro!',
   'Foco total!',
   'Disciplina pura!',

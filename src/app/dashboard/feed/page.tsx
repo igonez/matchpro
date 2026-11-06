@@ -60,7 +60,7 @@ const REACTIONS: ReactionDef[] = [
   },
 ];
 
-export const COACH_PRAISE_CHIPS = [
+const COACH_PRAISE_CHIPS = [
   'Excelente treino! Foco total mantido.',
   'Orgulho da dedicação e constância.',
   'Mantenha a constância e disciplina.',

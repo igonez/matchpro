@@ -16,18 +16,11 @@ export function MobileLoadingScreen({
   fullScreen = true,
   isReady,
   onFinish,
-  minDisplayTimeMs = 1500, // 1.5s de exibição contínua
+  minDisplayTimeMs = 800, // Tempo de exibição ágil e fluido
 }: MobileLoadingScreenProps) {
   const [mountedTime] = useState(() => Date.now());
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [shouldRender, setShouldRender] = useState(true);
-
-  // Dispensa o splash estático do HTML de frame 0 assim que o componente React monta
-  useEffect(() => {
-    if (typeof window !== 'undefined' && typeof (window as any).dismissArenaSplash === 'function') {
-      (window as any).dismissArenaSplash();
-    }
-  }, []);
 
   // Fade Out só é disparado se isReady for explicitamente fornecido como true
   useEffect(() => {

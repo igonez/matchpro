@@ -144,25 +144,25 @@ export default function StudentHomePage() {
           return;
         }
 
-        const { data: studentData } = await supabase
-          .from('students')
-          .select('*')
-          .eq('id', user.id)
-          .maybeSingle();
+        // 1. Buscar perfil do aluno e participação ativa em paralelo
+        const [studentRes, participationRes] = await Promise.all([
+          supabase.from('students').select('*').eq('id', user.id).maybeSingle(),
+          supabase
+            .from('challenge_participants')
+            .select('challenge_id, payment_status, challenges(*, challenge_weeks(*))')
+            .eq('student_id', user.id)
+            .in('payment_status', ['paid', 'complimentary'])
+            .order('joined_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ]);
 
+        const studentData = studentRes.data;
+        const participation = participationRes.data;
         setStudent(studentData || { full_name: user.email?.split('@')[0] || 'Atleta' });
 
         let challengeData: any = null;
         let pendingData: any = null;
-
-        const { data: participation } = await supabase
-          .from('challenge_participants')
-          .select('challenge_id, payment_status, challenges(*, challenge_weeks(*))')
-          .eq('student_id', user.id)
-          .in('payment_status', ['paid', 'complimentary'])
-          .order('joined_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
 
         if (participation?.challenges) {
           challengeData = participation.challenges as any;
@@ -185,23 +185,67 @@ export default function StudentHomePage() {
         setChallenge(challengeData);
         setPendingChallenge(pendingData);
 
+        // 2. Buscar em paralelo todos os dados operacionais da turma e do atleta
+        let rawMissions: any[] = [];
+        let userSubmissions: any[] = [];
+
         if (challengeData?.id) {
-          const { data: standingData } = await supabase
-            .from('leaderboard_standings')
-            .select('total_points')
-            .eq('student_id', user.id)
-            .eq('challenge_id', challengeData.id)
-            .limit(1)
-            .maybeSingle();
+          const twentyFourHoursAgoIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-          setStanding(standingData || { total_points: 0 });
+          const [
+            standingRes,
+            allStandingsRes,
+            noticesRes,
+            gamifRes,
+            cListsRes,
+            rawMissionsRes,
+            userSubmissionsRes,
+          ] = await Promise.all([
+            supabase
+              .from('leaderboard_standings')
+              .select('total_points')
+              .eq('student_id', user.id)
+              .eq('challenge_id', challengeData.id)
+              .limit(1)
+              .maybeSingle(),
+            supabase
+              .from('leaderboard_standings')
+              .select('student_id, total_points')
+              .eq('challenge_id', challengeData.id)
+              .order('total_points', { ascending: false }),
+            supabase
+              .from('challenge_announcements')
+              .select('*')
+              .eq('challenge_id', challengeData.id)
+              .gte('created_at', twentyFourHoursAgoIso)
+              .order('is_pinned', { ascending: false })
+              .order('created_at', { ascending: false })
+              .limit(3),
+            supabase
+              .from('student_gamification_state')
+              .select('current_streak')
+              .eq('student_id', user.id)
+              .eq('challenge_id', challengeData.id)
+              .maybeSingle(),
+            supabase
+              .from('challenge_mission_lists')
+              .select('*')
+              .eq('challenge_id', challengeData.id)
+              .order('order_index', { ascending: true }),
+            supabase
+              .from('missions')
+              .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus, is_daily_reset')
+              .eq('challenge_id', challengeData.id)
+              .order('order_index', { ascending: true }),
+            supabase
+              .from('student_submissions')
+              .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
+              .eq('student_id', user.id),
+          ]);
 
-          const { data: allStandings } = await supabase
-            .from('leaderboard_standings')
-            .select('student_id, total_points')
-            .eq('challenge_id', challengeData.id)
-            .order('total_points', { ascending: false });
+          setStanding(standingRes.data || { total_points: 0 });
 
+          const allStandings = allStandingsRes.data;
           if (allStandings && allStandings.length > 0) {
             const idx = allStandings.findIndex((s: any) => s.student_id === user.id);
             setRank(idx !== -1 ? `${idx + 1}º` : `${allStandings.length + 1}º`);
@@ -209,49 +253,25 @@ export default function StudentHomePage() {
             setRank('1º');
           }
 
-          const twentyFourHoursAgoIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-          const { data: notices } = await supabase
-            .from('challenge_announcements')
-            .select('*')
-            .eq('challenge_id', challengeData.id)
-            .gte('created_at', twentyFourHoursAgoIso)
-            .order('is_pinned', { ascending: false })
-            .order('created_at', { ascending: false })
-            .limit(3);
+          setAnnouncements(noticesRes.data || []);
 
-          setAnnouncements(notices || []);
-
-          const { data: gamifData } = await supabase
-            .from('student_gamification_state')
-            .select('current_streak')
-            .eq('student_id', user.id)
-            .eq('challenge_id', challengeData.id)
-            .maybeSingle();
-
-          if (gamifData?.current_streak) {
-            setCurrentStreak(gamifData.current_streak);
+          if (gamifRes.data?.current_streak) {
+            setCurrentStreak(gamifRes.data.current_streak);
           }
-        }
 
-        // Carregar listas de missões personalizadas da turma
-        if (challengeData?.id) {
-          const { data: cLists } = await supabase
-            .from('challenge_mission_lists')
-            .select('*')
-            .eq('challenge_id', challengeData.id)
-            .order('order_index', { ascending: true });
-          if (cLists && cLists.length > 0) {
-            setMissionLists(cLists);
+          if (cListsRes.data && cListsRes.data.length > 0) {
+            setMissionLists(cListsRes.data);
           }
-        }
 
-        const { data: rawMissions } = challengeData?.id
-          ? await supabase
-              .from('missions')
-              .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus, is_daily_reset')
-              .eq('challenge_id', challengeData.id)
-              .order('order_index', { ascending: true })
-          : { data: [] };
+          rawMissions = rawMissionsRes.data || [];
+          userSubmissions = userSubmissionsRes.data || [];
+        } else {
+          const { data: subData } = await supabase
+            .from('student_submissions')
+            .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
+            .eq('student_id', user.id);
+          userSubmissions = subData || [];
+        }
 
         // Filtrar missões apenas da semana ativa atual para não multiplicar as metas semanais por 4
         let allMissions = rawMissions || [];
@@ -276,11 +296,6 @@ export default function StudentHomePage() {
             }
           }
         }
-
-        const { data: userSubmissions } = await supabase
-          .from('student_submissions')
-          .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
-          .eq('student_id', user.id);
 
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);

@@ -138,25 +138,34 @@ export default function DashboardOverviewPage() {
         }));
         setChallenges(augmentedChallenges);
 
-        // 2. Participantes exclusivos das turmas do treinador com matrícula confirmada
-        const { data: participantsData } = await supabase
-          .from('challenge_participants')
-          .select('id, challenge_id, payment_status')
-          .in('challenge_id', coachChallengeIds);
+        // 2, 3 e 4. Buscar participantes, contagem de auditoria e radar de risco em paralelo
+        const [participantsRes, pendingAuditRes, atRiskRes] = await Promise.all([
+          supabase
+            .from('challenge_participants')
+            .select('id, challenge_id, payment_status')
+            .in('challenge_id', coachChallengeIds),
+          supabase
+            .from('student_submissions')
+            .select('id, missions!inner(challenge_id)', { count: 'exact', head: true })
+            .eq('status', 'pending')
+            .in('missions.challenge_id', coachChallengeIds),
+          supabase
+            .from('at_risk_students_view')
+            .select('*')
+            .in('challenge_id', coachChallengeIds)
+            .gte('days_inactive', 2)
+            .order('days_inactive', { ascending: false })
+            .limit(5),
+        ]);
 
-        const participantsList = participantsData || [];
+        const participantsList = participantsRes.data || [];
         const confirmedParticipants = participantsList.filter((p: any) =>
           p.payment_status === 'paid' || p.payment_status === 'complimentary'
         );
 
-        // 3. Submissões pendentes de auditoria exclusivas das turmas do treinador
-        const { count: pendingCount } = await supabase
-          .from('student_submissions')
-          .select('id, missions!inner(challenge_id)', { count: 'exact', head: true })
-          .eq('status', 'pending')
-          .in('missions.challenge_id', coachChallengeIds);
+        const pendingCount = pendingAuditRes.count;
 
-        // 4. Calcular faturamento consolidado real (apenas alunos com pagamento 'paid')
+        // Calcular faturamento consolidado real (apenas alunos com pagamento 'paid')
         const priceMap = new Map<string, number>();
         safeChallenges.forEach((c: any) => {
           priceMap.set(c.id, Number(c.price) || 0);
@@ -175,16 +184,7 @@ export default function DashboardOverviewPage() {
           activeChallenges: safeChallenges.filter((c: any) => c.is_active).length,
         });
 
-        // 5. Radar de Alunos em Risco (Inativos) nas turmas do treinador
-        const { data: atRiskData } = await supabase
-          .from('at_risk_students_view')
-          .select('*')
-          .in('challenge_id', coachChallengeIds)
-          .gte('days_inactive', 2)
-          .order('days_inactive', { ascending: false })
-          .limit(5);
-
-        setAtRiskStudents(atRiskData || []);
+        setAtRiskStudents(atRiskRes.data || []);
 
       } catch (err) {
         console.error('Erro ao buscar dados do dashboard:', err);

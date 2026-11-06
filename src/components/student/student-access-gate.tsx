@@ -62,26 +62,25 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
           setUserEmail(user.email || null);
         }
 
-        // Buscar dados cadastrais do aluno
-        const { data: studentProfile } = await supabase
-          .from('students')
-          .select('full_name')
-          .eq('id', user.id)
-          .maybeSingle();
+        // Buscar perfil e matrícula ativa em paralelo
+        const [profileRes, activePartRes] = await Promise.all([
+          supabase.from('students').select('full_name').eq('id', user.id).maybeSingle(),
+          supabase
+            .from('challenge_participants')
+            .select('id, challenge_id, payment_status, challenges(id, title, is_active)')
+            .eq('student_id', user.id)
+            .in('payment_status', ['paid', 'complimentary'])
+            .order('joined_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ]);
+
+        const studentProfile = profileRes.data;
+        const activeParticipation = activePartRes.data;
 
         if (isMounted && studentProfile?.full_name) {
           setUserName(studentProfile.full_name);
         }
-
-        // Verificar matrículas ativas (pagas ou cortesia)
-        const { data: activeParticipation } = await supabase
-          .from('challenge_participants')
-          .select('id, challenge_id, payment_status, challenges(id, title, is_active)')
-          .eq('student_id', user.id)
-          .in('payment_status', ['paid', 'complimentary'])
-          .order('joined_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
 
         if (activeParticipation?.challenges?.id) {
           if (isMounted) {

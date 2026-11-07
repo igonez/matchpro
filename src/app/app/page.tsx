@@ -884,7 +884,7 @@ export default function StudentHomePage() {
           ) : (
             <div className="relative z-10">
               <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
-                <span className="text-xs font-mono tracking-widest text-amber-400 uppercase font-bold block">
+                <span className="text-xs font-mono tracking-widest text-[#75A7FF] uppercase font-bold block">
                   CRONOGRAMA DA SEMANA EM PREPARAÇÃO
                 </span>
                 <p className="text-xs sm:text-sm text-[#A7B0C0] max-w-sm mx-auto">
@@ -969,10 +969,10 @@ export default function StudentHomePage() {
           {/* 4. BLOCOS DE MISSÕES DE HOJE */}
           <div className="space-y-4 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 font-mono">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#A7B0C0] font-mono">
                 BLOCOS DE EXECUÇÃO DE HOJE
               </span>
-              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-amber-300 hover:text-white transition-colors font-mono font-bold tracking-wider">
+              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#75A7FF] hover:text-white transition-colors font-mono font-bold tracking-wider">
                 <span>VER SEMANAS 1 A 4</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>

@@ -268,27 +268,27 @@ function CoachLeaderboardContent() {
       <Monochrome3DBackground />
 
       {/* Header com Seletor de Turma */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 border-b border-white/[0.08] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 border-b border-[#252D3B] pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <Link
               href="/dashboard"
-              className="h-7 w-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
+              className="h-7 w-7 rounded-lg bg-[#121722] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
-            <span className="text-[11px] font-bold text-amber-300 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/30 font-mono flex items-center gap-1.5">
-              <Trophy className="w-3 h-3 text-amber-400" />
+            <span className="text-[11px] font-bold text-[#A7B0C0] bg-[#121722] px-2.5 py-0.5 rounded-full border border-[#252D3B] font-mono flex items-center gap-1.5">
+              <Trophy className="w-3 h-3 text-[#75A7FF]" />
               LEADERBOARD OFICIAL
             </span>
             <span className="text-xs text-[#75A7FF] font-mono font-bold flex items-center gap-1.5 bg-[#3478F6]/10 border border-[#3478F6]/25 px-2.5 py-0.5 rounded-full">
               <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_6px_#3478F6]" /> Sincronizado Ao Vivo
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
             Ranking & Telemetria da Turma
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-[#A7B0C0] mt-0.5">
             Acompanhe a disputa pelo pódio, consistência de check-ins e acione alunos via WhatsApp com 1 clique.
           </p>
         </div>
@@ -299,7 +299,7 @@ function CoachLeaderboardContent() {
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-white/15 bg-zinc-950 px-3.5 text-xs font-bold text-white focus:outline-none focus:border-amber-400/50 font-mono"
+              className="h-10 rounded-xl border border-[#252D3B] bg-[#121722] px-3.5 text-xs font-bold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6] font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -313,9 +313,9 @@ function CoachLeaderboardContent() {
             <button
               type="button"
               onClick={() => setShowStoryShare(true)}
-              className="h-10 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-mono font-black flex items-center gap-1.5 shadow-[0_0_20px_rgba(251,191,36,0.3)] transition-all cursor-pointer"
+              className="h-10 px-4 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[#F4F6FA] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
             >
-              <Share2 className="w-3.5 h-3.5 shrink-0" />
+              <Share2 className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
               <span>Compartilhar Ranking (Stories / WhatsApp)</span>
             </button>
           )}
@@ -325,7 +325,7 @@ function CoachLeaderboardContent() {
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-xl h-10 px-3.5 text-xs border-white/10 bg-zinc-950 text-zinc-300 hover:text-white"
+                className="rounded-xl h-10 px-3.5 text-xs border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA]"
               >
                 Configurar Desafio
               </Button>
@@ -340,52 +340,52 @@ function CoachLeaderboardContent() {
         className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 relative z-10"
       >
         <SpotlightCard3D className="p-4">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+          <div className="flex items-center justify-between text-[11px] text-[#A7B0C0] font-mono">
             <span>COMPETIDORES</span>
             <Users className="h-4 w-4 text-[#75A7FF]" />
           </div>
-          <div className="text-2xl font-black text-white font-mono mt-2">
+          <div className="text-2xl font-black text-[#F4F6FA] font-mono mt-2">
             {standings.length}
           </div>
-          <p className="text-[11px] text-zinc-500 mt-0.5">Atletas pontuando na turma</p>
+          <p className="text-[11px] text-[#A7B0C0] mt-0.5">Atletas pontuando na turma</p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-4">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+          <div className="flex items-center justify-between text-[11px] text-[#A7B0C0] font-mono">
             <span>LÍDER ATUAL (#1)</span>
-            <Trophy className="h-4 w-4 text-amber-400" />
+            <Trophy className="h-4 w-4 text-[#75A7FF]" />
           </div>
-          <div className="text-2xl font-black text-amber-300 font-mono mt-2 truncate">
+          <div className="text-2xl font-black text-[#F4F6FA] font-mono mt-2 truncate">
             {top1 ? top1.students?.full_name?.split(' ')[0] || 'Atleta' : 'Aguardando'}
           </div>
-          <p className="text-[11px] text-zinc-500 mt-0.5">
+          <p className="text-[11px] text-[#A7B0C0] mt-0.5">
             {top1 ? `${top1.total_points} XP acumulados` : 'Sem check-ins ainda'}
           </p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-4">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+          <div className="flex items-center justify-between text-[11px] text-[#A7B0C0] font-mono">
             <span>MÉDIA DA TURMA</span>
-            <Sparkles className="h-4 w-4 text-[#3478F6]" />
+            <Sparkles className="h-4 w-4 text-[#75A7FF]" />
           </div>
-          <div className="text-2xl font-black text-white font-mono mt-2">
+          <div className="text-2xl font-black text-[#F4F6FA] font-mono mt-2">
             {standings.length > 0
               ? Math.round(standings.reduce((acc, curr) => acc + (curr.total_points || 0), 0) / standings.length)
               : 0}{' '}
-            <span className="text-xs text-zinc-400 font-normal">XP</span>
+            <span className="text-xs text-[#A7B0C0] font-normal">XP</span>
           </div>
-          <p className="text-[11px] text-zinc-500 mt-0.5">{totalApprovedCheckins} check-ins validados</p>
+          <p className="text-[11px] text-[#A7B0C0] mt-0.5">{totalApprovedCheckins} check-ins validados</p>
         </SpotlightCard3D>
 
         <SpotlightCard3D className="p-4">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+          <div className="flex items-center justify-between text-[11px] text-[#A7B0C0] font-mono">
             <span>RECORDE DE STREAK</span>
-            <Flame className="h-4 w-4 text-amber-400" />
+            <Flame className="h-4 w-4 text-[#75A7FF]" />
           </div>
-          <div className="text-2xl font-black text-white font-mono mt-2">
-            {maxStreak} <span className="text-xs text-amber-400 font-normal">dias</span>
+          <div className="text-2xl font-black text-[#F4F6FA] font-mono mt-2">
+            {maxStreak} <span className="text-xs text-[#A7B0C0] font-normal">dias</span>
           </div>
-          <p className="text-[11px] text-zinc-500 mt-0.5">Maior sequência invicta</p>
+          <p className="text-[11px] text-[#A7B0C0] mt-0.5">Maior sequência invicta</p>
         </SpotlightCard3D>
       </div>
 
@@ -393,29 +393,19 @@ function CoachLeaderboardContent() {
       {standings.length > 0 && (
         <div 
           data-tour="leaderboard-podium-card"
-          className="relative z-10 p-6 sm:p-8 rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-950 to-zinc-950 overflow-hidden shadow-2xl"
+          className="relative z-10 p-6 sm:p-8 rounded-3xl border border-[#252D3B] bg-[#121722] overflow-hidden shadow-2xl"
         >
-          <div className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 rounded-full bg-amber-400/10 blur-3xl" />
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-6 border-b border-white/[0.08] relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-6 border-b border-[#252D3B] relative z-10">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#A7B0C0] font-bold block">
                 ARENA DE ELITE • PÓDIO OFICIAL
               </span>
-              <h2 className="text-xl font-black text-white tracking-tight">
+              <h2 className="text-xl font-black text-[#F4F6FA] tracking-tight">
                 Top 3 Atletas Mais Consistentes
               </h2>
             </div>
             <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
-              <button
-                type="button"
-                onClick={() => setShowStoryShare(true)}
-                className="text-xs font-mono font-bold text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Share2 className="w-3.5 h-3.5 text-amber-300" />
-                <span>Gerar Card do Pódio (9:16)</span>
-              </button>
-              <span className="text-xs font-mono text-zinc-400 bg-white/[0.04] border border-white/10 px-3 py-1.5 rounded-full">
+              <span className="text-xs font-mono text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-3 py-1.5 rounded-full">
                 Pontuação Auditada por Câmera & IA
               </span>
             </div>
@@ -669,36 +659,28 @@ function CoachLeaderboardContent() {
                         {/* Nome, Badges & Barra */}
                         <div className="min-w-0 flex-1 max-w-md">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <p className="text-sm font-bold text-white truncate">{studentName}</p>
+                            <p className="text-sm font-bold text-[#F4F6FA] truncate">{studentName}</p>
                             {rankPos === 1 && (
-                              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40 uppercase tracking-wider">
+                              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 uppercase tracking-wider">
                                 LÍDER
                               </span>
                             )}
                             {streakDays >= 2 && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                                <Flame className="w-3 h-3 text-amber-400" />
+                              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B]">
+                                <Flame className="w-3 h-3 text-[#75A7FF]" />
                                 {streakDays}d streak
                               </span>
                             )}
                           </div>
 
                           <div className="flex items-center gap-3 mt-1.5">
-                            <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] overflow-hidden max-w-[220px]">
+                            <div className="flex-1 h-1.5 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden max-w-[220px]">
                               <div
-                                className={`h-full rounded-full ${
-                                  rankPos === 1
-                                    ? 'bg-gradient-to-r from-amber-500 to-amber-300'
-                                    : rankPos === 2
-                                    ? 'bg-gradient-to-r from-slate-400 to-slate-200'
-                                    : rankPos === 3
-                                    ? 'bg-gradient-to-r from-amber-700 to-amber-500'
-                                    : 'bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF]'
-                                }`}
+                                className="h-full rounded-full bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF]"
                                 style={{ width: `${pctOfLeader}%` }}
                               />
                             </div>
-                            <span className="text-[11px] text-zinc-400 font-mono">
+                            <span className="text-[11px] text-[#A7B0C0] font-mono">
                               {item.approvedMissions || 0}{' '}
                               {item.approvedMissions === 1 ? 'check-in aprovado' : 'check-ins aprovados'}
                             </span>
@@ -709,8 +691,8 @@ function CoachLeaderboardContent() {
                       {/* Pontos & Ações */}
                       <div className="flex items-center gap-3 shrink-0">
                         <div className="text-right">
-                          <span className="text-base font-black font-mono text-white block leading-none">
-                            {item.total_points} <span className="text-[10px] text-amber-400 font-bold">XP</span>
+                          <span className="text-base font-black font-mono text-[#F4F6FA] block leading-none">
+                            {item.total_points} <span className="text-[10px] text-[#A7B0C0] font-bold">XP</span>
                           </span>
                           <span className="text-[10px] text-[#75A7FF] font-mono flex items-center justify-end gap-1 mt-1">
                             <CheckCircle2 className="h-2.5 w-2.5 text-[#3478F6]" /> Auditado

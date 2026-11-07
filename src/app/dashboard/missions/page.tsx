@@ -1070,7 +1070,7 @@ function MissionsManagerContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
         <div className="flex items-start gap-3.5">
           {coachIdentity.name && (
-            <div className="h-11 w-11 rounded-2xl bg-zinc-900 border border-white/15 overflow-hidden flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+            <div className="h-11 w-11 rounded-2xl bg-[#121722] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0 mt-0.5 shadow-md">
               {coachIdentity.avatarUrl ? (
                 <img
                   src={coachIdentity.avatarUrl}
@@ -1078,14 +1078,14 @@ function MissionsManagerContent() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-mono font-black text-amber-300">
+                <span className="text-sm font-mono font-black text-[#75A7FF]">
                   {coachIdentity.name.charAt(0).toUpperCase()}
                 </span>
               )}
             </div>
           )}
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold block mb-1">
               {coachIdentity.name ? `${coachIdentity.name} • ` : ''}PLANEJADOR DE CRONOGRAMA • 4 SEMANAS
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -1167,8 +1167,6 @@ function MissionsManagerContent() {
                           ? 'bg-black/15 text-black'
                           : meta?.isCurrent
                           ? 'bg-[#3478F6]/20 text-[#75A7FF]'
-                          : meta?.isFuture
-                          ? 'bg-amber-500/15 text-amber-300'
                           : 'bg-white/5 text-zinc-400'
                       }`}
                     >
@@ -1201,9 +1199,7 @@ function MissionsManagerContent() {
           {selectedWeekMeta && (
             <div
               className={`p-5 rounded-3xl border flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
-                selectedWeekMeta.isFuture
-                  ? 'border-amber-400/35 bg-gradient-to-r from-amber-500/15 via-[#121722] to-[#121722]'
-                  : selectedWeekMeta.isCurrent
+                selectedWeekMeta.isCurrent
                   ? 'border-[#3478F6]/35 bg-gradient-to-r from-[#3478F6]/15 via-[#121722] to-[#121722]'
                   : 'border-[#252D3B] bg-[#121722]'
               }`}
@@ -1211,11 +1207,9 @@ function MissionsManagerContent() {
               <div className="flex items-start gap-3.5">
                 <div
                   className={`h-11 w-11 rounded-2xl border flex items-center justify-center shrink-0 ${
-                    selectedWeekMeta.isFuture
-                      ? 'bg-amber-400/20 border-amber-400/40 text-amber-300'
-                      : selectedWeekMeta.isCurrent
+                    selectedWeekMeta.isCurrent
                       ? 'bg-[#3478F6]/20 border-[#3478F6]/40 text-[#75A7FF]'
-                      : 'bg-white/10 border-white/20 text-zinc-300'
+                      : 'bg-[#1B2330] border-[#252D3B] text-[#A7B0C0]'
                   }`}
                 >
                   {selectedWeekMeta.isFuture ? (
@@ -1231,11 +1225,9 @@ function MissionsManagerContent() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span
                       className={`text-[10px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${
-                        selectedWeekMeta.isFuture
-                          ? 'bg-amber-400/20 text-amber-300 border-amber-400/30'
-                          : selectedWeekMeta.isCurrent
+                        selectedWeekMeta.isCurrent
                           ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/30'
-                          : 'bg-white/10 text-zinc-300 border-white/20'
+                          : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
                       }`}
                     >
                       {selectedWeekMeta.isFuture
@@ -1258,7 +1250,7 @@ function MissionsManagerContent() {
                       </h2>
                       <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
                         No aplicativo do aluno, esta semana aparece bloqueada com a contagem regressiva até{' '}
-                        <strong className="text-amber-300">
+                        <strong className="text-white">
                           {selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}
                         </strong>
                         . Você já pode deixar os blocos de missões da Semana {selectedWeekNumber} prontos abaixo.
@@ -1294,9 +1286,9 @@ function MissionsManagerContent() {
                     variant="outline"
                     onClick={handleCopyFromWeek1}
                     disabled={copyingFromWeek1}
-                    className="h-9 px-3 rounded-xl text-xs font-mono font-bold border-amber-400/30 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20"
+                    className="h-9 px-3 rounded-xl text-xs font-mono font-bold border-[#252D3B] bg-[#1B2330] text-[#F4F6FA] hover:bg-[#252D3B]"
                   >
-                    <Copy className="w-3.5 h-3.5 mr-1.5" />
+                    <Copy className="w-3.5 h-3.5 mr-1.5 text-[#75A7FF]" />
                     {copyingFromWeek1 ? 'Copiando...' : `Copiar da Semana 1`}
                   </Button>
                 )}
@@ -1475,13 +1467,13 @@ function MissionsManagerContent() {
       ) : missions.length === 0 ? (
         <Card 
           data-tour="missions-list-card"
-          className="border-white/10 bg-zinc-950/90 rounded-3xl p-8 text-center space-y-4"
+          className="border-[#252D3B] bg-[#121722] rounded-3xl p-8 text-center space-y-4"
         >
-          <div className="h-14 w-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-amber-300 flex items-center justify-center mx-auto">
+          <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center mx-auto">
             <Calendar className="w-7 h-7" />
           </div>
           <div className="space-y-1 max-w-md mx-auto">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold">
               SEMANA {selectedWeekNumber} SEM MISSÕES CADASTRADAS
             </span>
             <h3 className="text-lg font-black text-white">
@@ -1501,7 +1493,7 @@ function MissionsManagerContent() {
                 size="sm"
                 onClick={handleCopyFromWeek1}
                 disabled={copyingFromWeek1}
-                className="rounded-xl text-xs font-mono font-bold bg-amber-400 text-black hover:bg-amber-300"
+                className="rounded-xl text-xs font-mono font-bold bg-[#3478F6] text-white hover:bg-[#75A7FF]"
               >
                 <Copy className="w-3.5 h-3.5 mr-1.5" />
                 {copyingFromWeek1 ? 'Copiando...' : `Copiar Missões da Semana 1 para Semana ${selectedWeekNumber}`}
@@ -1541,7 +1533,7 @@ function MissionsManagerContent() {
               return (
                 <Card
                   key={block.id}
-                  className={`border ${accent.border} bg-zinc-950/90 rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl`}
+                  className={`border ${accent.border} bg-[#121722] rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl`}
                 >
                   <div>
                     <CardHeader className="pb-3.5 border-b border-white/[0.06] flex flex-row items-start justify-between gap-3">
@@ -1562,7 +1554,7 @@ function MissionsManagerContent() {
                             <Badge className="bg-white/10 text-zinc-200 border-white/15 text-[10px] font-mono">
                               {blockMissions.length} {blockMissions.length === 1 ? 'missão' : 'missões'}
                             </Badge>
-                            <Badge className="bg-amber-400/15 text-amber-300 border-amber-400/30 text-[10px] font-mono">
+                            <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[10px] font-mono">
                               {blockTotalXp} XP
                             </Badge>
                           </div>
@@ -1627,10 +1619,10 @@ function MissionsManagerContent() {
                           {blockMissions.map((m, idx) => (
                             <div
                               key={m.id}
-                              className="p-3 rounded-2xl bg-zinc-900/60 border border-white/[0.07] hover:border-white/20 flex items-center justify-between gap-3 transition-all"
+                              className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-white/20 flex items-center justify-between gap-3 transition-all"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                <div className="h-7 w-7 rounded-lg bg-white/5 border border-white/10 text-zinc-300 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
+                                <div className="h-7 w-7 rounded-lg bg-[#121722] border border-[#252D3B] text-[#A7B0C0] font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
                                   #{idx + 1}
                                 </div>
                                 <div className="min-w-0">
@@ -1639,7 +1631,7 @@ function MissionsManagerContent() {
                                       {m.title}
                                     </p>
                                     {m.is_bonus && (
-                                      <Badge className="bg-amber-400/15 text-amber-300 border-amber-400/30 text-[9px] font-mono uppercase">
+                                      <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[9px] font-mono uppercase">
                                         BÔNUS
                                       </Badge>
                                     )}
@@ -1650,7 +1642,7 @@ function MissionsManagerContent() {
                                     )}
                                   </div>
                                   <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-zinc-400">
-                                    <span className="text-amber-300 font-bold">+{m.points_rewarded} XP</span>
+                                    <span className="text-[#75A7FF] font-bold">+{m.points_rewarded} XP</span>
                                     <span>•</span>
                                     <span>
                                       {m.validation_type === 'timer'

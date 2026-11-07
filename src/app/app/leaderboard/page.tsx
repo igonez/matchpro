@@ -353,13 +353,13 @@ export default function LeaderboardPage() {
       {/* Header Editorial com Status Ao Vivo */}
       <div 
         data-tour="student-ranking-card"
-        className="flex items-start justify-between pt-2 relative z-10 border-b border-white/[0.08] pb-4 gap-3"
+        className="flex items-start justify-between pt-2 relative z-10 border-b border-[#252D3B] pb-4 gap-3"
       >
         <div className="flex items-start gap-3 min-w-0">
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest text-amber-300 uppercase">
-                <Trophy className="w-3 h-3 text-amber-400" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#121722] border border-[#252D3B] text-[10px] font-mono font-bold tracking-widest text-[#A7B0C0] uppercase">
+                <Trophy className="w-3 h-3 text-[#75A7FF]" />
                 RANKING OFICIAL
               </span>
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#3478F6]/10 border border-[#3478F6]/25 text-[10px] font-mono font-bold text-[#75A7FF] uppercase">
@@ -367,10 +367,10 @@ export default function LeaderboardPage() {
                 AO VIVO
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight truncate">
+            <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight truncate">
               {currentChallenge?.title || 'Arena de Classificação'}
             </h1>
-            <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1.5">
+            <p className="text-xs text-[#A7B0C0] mt-0.5 flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
               Pontuação auditada por integridade de check-ins.
             </p>
@@ -378,7 +378,7 @@ export default function LeaderboardPage() {
         </div>
         <Link
           href="/app"
-          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0"
+          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330] transition-colors flex items-center gap-1.5 shrink-0"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           VOLTAR
@@ -387,31 +387,41 @@ export default function LeaderboardPage() {
 
       {/* BLOCO 1: Painel Pessoal de Performance & Alvo de Ultrapassagem */}
       {!loading && myStanding && myRank && (
-        <SpotlightCard3D className="p-4 rounded-3xl border border-amber-400/25 bg-gradient-to-br from-amber-500/[0.08] via-zinc-950 to-zinc-950 relative z-10 shadow-[0_12px_36px_rgba(0,0,0,0.65)]">
+        <SpotlightCard3D className="p-4 rounded-3xl border border-[#252D3B] bg-[#121722] relative z-10 shadow-[0_12px_36px_rgba(0,0,0,0.55)]">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 text-black flex flex-col items-center justify-center shrink-0 font-mono shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+              <div
+                className={`h-12 w-12 rounded-2xl flex flex-col items-center justify-center shrink-0 font-mono ${
+                  myRank === 1
+                    ? 'bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 text-black shadow-[0_0_20px_rgba(251,191,36,0.25)]'
+                    : myRank === 2
+                    ? 'bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 text-black shadow-[0_0_20px_rgba(203,213,225,0.2)]'
+                    : myRank === 3
+                    ? 'bg-gradient-to-br from-amber-500 via-amber-600 to-amber-800 text-white shadow-[0_0_20px_rgba(180,83,9,0.2)]'
+                    : 'bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA]'
+                }`}
+              >
                 <span className="text-[8px] font-black uppercase leading-none opacity-75">RANK</span>
                 <span className="text-base font-black leading-tight">#{String(myRank).padStart(2, '0')}</span>
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-black text-white uppercase tracking-wide">Seu Desempenho</span>
-                  <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  <span className="text-xs font-black text-[#F4F6FA] uppercase tracking-wide">Seu Desempenho</span>
+                  <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B]">
                     {myRank <= 3 ? 'ZONA DE PÓDIO' : 'COMPETIDOR ATIVO'}
                   </span>
                 </div>
-                <p className="text-[11px] font-mono text-zinc-300 mt-1">
+                <p className="text-[11px] font-mono text-[#A7B0C0] mt-1">
                   {myRank === 1 ? (
-                    <span className="text-amber-300 font-bold">
-                      Você lidera a turma com +{leadMargin} XP de vantagem!
+                    <span>
+                      Você lidera a turma com <strong className="text-[#F4F6FA]">+{leadMargin} XP</strong> de vantagem!
                     </span>
                   ) : pointsToOvertake === 0 ? (
                     `Empatado com #${myRank - 1} (${nextRankUp?.students?.full_name?.split(' ')[0] || 'Atleta'})`
                   ) : (
                     <>
-                      Faltam <strong className="text-amber-300">{pointsToOvertake} XP</strong> para ultrapassar{' '}
-                      <strong className="text-white">
+                      Faltam <strong className="text-[#F4F6FA]">{pointsToOvertake} XP</strong> para ultrapassar{' '}
+                      <strong className="text-[#F4F6FA]">
                         #{myRank - 1} {nextRankUp?.students?.full_name?.split(' ')[0] || 'Atleta'}
                       </strong>
                     </>
@@ -421,25 +431,25 @@ export default function LeaderboardPage() {
             </div>
 
             <div className="text-right shrink-0">
-              <span className="text-xl font-mono font-black text-white block leading-none">
+              <span className="text-xl font-mono font-black text-[#F4F6FA] block leading-none">
                 {myStanding.total_points}
               </span>
-              <span className="text-[9px] font-mono text-amber-400 font-bold uppercase mt-1 block tracking-wider">
+              <span className="text-[9px] font-mono text-[#A7B0C0] font-bold uppercase mt-1 block tracking-wider">
                 XP TOTAL
               </span>
             </div>
           </div>
 
           {/* Barra de Progresso de Ultrapassagem */}
-          <div className="space-y-1.5 pt-2 border-t border-white/[0.08]">
+          <div className="space-y-1.5 pt-2 border-t border-[#252D3B]">
             <div className="flex items-center justify-between text-[10px] font-mono">
-              <span className="text-zinc-400 uppercase flex items-center gap-1">
+              <span className="text-[#A7B0C0] uppercase flex items-center gap-1">
                 <Target className="w-3 h-3 text-[#75A7FF]" />
                 {myRank === 1 ? 'Domínio da Liderança' : `Progresso até #${myRank - 1}`}
               </span>
-              <span className="text-white font-bold">{overtakeProgressPct}%</span>
+              <span className="text-[#F4F6FA] font-bold">{overtakeProgressPct}%</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-black/80 border border-white/[0.08] overflow-hidden p-0.5">
+            <div className="w-full h-2 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden p-0.5">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF] transition-all duration-700"
                 style={{ width: `${overtakeProgressPct}%` }}
@@ -450,9 +460,9 @@ export default function LeaderboardPage() {
               <button
                 type="button"
                 onClick={() => setShowStoryShare(true)}
-                className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-mono font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
-                <Share2 className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                <Share2 className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
                 <span>Compartilhar Pódio & Ranking (Stories / WhatsApp)</span>
               </button>
             </div>
@@ -463,37 +473,37 @@ export default function LeaderboardPage() {
       {/* BLOCO 2: Métricas Rápidas da Turma (3 Pilares) */}
       {!loading && (
         <div className="grid grid-cols-3 gap-2.5 relative z-10">
-          <div className="p-3 rounded-2xl bg-zinc-950/90 border border-white/[0.08] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-zinc-400 uppercase">
+          <div className="p-3 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col justify-between">
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0] uppercase">
               <span>ATLETAS</span>
               <Users className="w-3.5 h-3.5 text-[#75A7FF]" />
             </div>
-            <div className="text-base font-black font-mono text-white mt-1.5">
+            <div className="text-base font-black font-mono text-[#F4F6FA] mt-1.5">
               {standings.length}
             </div>
-            <span className="text-[9px] font-mono text-zinc-500 truncate">Na disputa</span>
+            <span className="text-[9px] font-mono text-[#A7B0C0] truncate">Na disputa</span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-zinc-950/90 border border-white/[0.08] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-zinc-400 uppercase">
+          <div className="p-3 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col justify-between">
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0] uppercase">
               <span>MÉDIA TURMA</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#3478F6]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#75A7FF]" />
             </div>
-            <div className="text-base font-black font-mono text-white mt-1.5">
-              {classAveragePoints} <span className="text-[9px] text-zinc-400 font-normal">XP</span>
+            <div className="text-base font-black font-mono text-[#F4F6FA] mt-1.5">
+              {classAveragePoints} <span className="text-[9px] text-[#A7B0C0] font-normal">XP</span>
             </div>
-            <span className="text-[9px] font-mono text-[#75A7FF] truncate">Ritmo coletivo</span>
+            <span className="text-[9px] font-mono text-[#A7B0C0] truncate">Ritmo coletivo</span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-zinc-950/90 border border-white/[0.08] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-zinc-400 uppercase">
+          <div className="p-3 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col justify-between">
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0] uppercase">
               <span>TOP STREAK</span>
-              <Flame className="w-3.5 h-3.5 text-amber-400" />
+              <Flame className="w-3.5 h-3.5 text-[#75A7FF]" />
             </div>
-            <div className="text-base font-black font-mono text-amber-300 mt-1.5">
+            <div className="text-base font-black font-mono text-[#F4F6FA] mt-1.5">
               {topStreakStudent ? `${topStreakStudent.streak}d` : '0d'}
             </div>
-            <span className="text-[9px] font-mono text-zinc-500 truncate">
+            <span className="text-[9px] font-mono text-[#A7B0C0] truncate">
               {topStreakStudent ? topStreakStudent.name : 'Sem ofensiva'}
             </span>
           </div>
@@ -529,27 +539,19 @@ export default function LeaderboardPage() {
         </button>
       </div>
 
-      {/* BLOCO 3: Pódio 3D Olímpico (Ouro, Prata, Bronze — Mesma coloração do Painel do Treinador) */}
+      {/* BLOCO 3: Pódio 3D Olímpico (Ouro, Prata, Bronze restritos às medalhas e pedestais) */}
       {!loading && activeTab === 'individual' && !searchQuery && standings.length > 0 && (
-        <div className="relative z-10 p-5 rounded-3xl border border-white/[0.1] bg-gradient-to-b from-zinc-900/90 via-zinc-950 to-zinc-950 overflow-hidden shadow-2xl">
-          {/* Glow de fundo para o pódio */}
-          <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-56 h-32 rounded-full bg-amber-500/15 blur-3xl" />
-
+        <div className="relative z-10 p-5 rounded-3xl border border-[#252D3B] bg-[#121722] overflow-hidden shadow-2xl">
           <div className="flex items-center justify-between mb-6 relative z-10 gap-2">
             <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-amber-400" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300">
+              <Award className="w-4 h-4 text-[#75A7FF]" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
                 PÓDIO DE ELITE • TOP 3
               </span>
             </div>
-            <button
-              type="button"
-              onClick={() => setShowStoryShare(true)}
-              className="text-[10px] font-mono font-bold text-amber-300 bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <Share2 className="w-3 h-3 text-amber-300" />
-              <span>Compartilhar Ranking</span>
-            </button>
+            <span className="text-[10px] font-mono text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-2.5 py-1 rounded-full">
+              MEDALHAS OFICIAIS
+            </span>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 items-end pt-4 relative z-10">
@@ -682,26 +684,26 @@ export default function LeaderboardPage() {
       {/* BLOCO 4: Classificação Completa com Barras de Progresso Relativo */}
       <div className="space-y-2.5 relative z-10">
         <div className="flex items-center justify-between px-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
             {activeTab === 'individual' ? 'TABELA GERAL DE ATLETAS' : 'CLASSIFICAÇÃO DE SQUADS'}
           </span>
-          <span className="text-[10px] font-mono text-zinc-500">
+          <span className="text-[10px] font-mono text-[#A7B0C0]">
             {activeTab === 'individual' ? `${filteredStandings.length} competidores` : `${squadStandings.length} equipes`}
           </span>
         </div>
 
         {loading ? (
-          <div className="py-16 rounded-3xl border border-white/10 bg-zinc-950/60 text-center space-y-2">
-            <div className="h-6 w-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest">
+          <div className="py-16 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
+            <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs font-mono text-[#A7B0C0] uppercase tracking-widest">
               SINCRONIZANDO CLASSIFICAÇÃO...
             </p>
           </div>
         ) : activeTab === 'individual' ? (
           filteredStandings.length === 0 ? (
-            <div className="p-8 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-2">
-              <Trophy className="w-8 h-8 text-zinc-600 mx-auto" />
-              <p className="text-xs font-mono text-zinc-400">
+            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
+              <Trophy className="w-8 h-8 text-[#A7B0C0]/50 mx-auto" />
+              <p className="text-xs font-mono text-[#A7B0C0]">
                 {searchQuery ? 'NENHUM ATLETA ENCONTRADO.' : 'NENHUMA PONTUAÇÃO COMPUTADA NESTA TURMA.'}
               </p>
             </div>
@@ -720,19 +722,15 @@ export default function LeaderboardPage() {
                   ? 'bg-slate-300/20 text-slate-200 border-slate-300/40'
                   : actualRank === 3
                   ? 'bg-amber-700/20 text-amber-500 border-amber-700/40'
-                  : isMe
-                  ? 'bg-amber-400 text-black border-amber-400'
-                  : 'bg-white/[0.04] text-zinc-400 border-white/10';
+                  : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]';
 
               return (
                 <div
                   key={item.id}
                   className={`p-3.5 rounded-2xl border transition-all ${
                     isMe
-                      ? 'bg-gradient-to-r from-amber-500/15 via-zinc-900 to-zinc-950 border-amber-400/45 shadow-[0_0_25px_rgba(251,191,36,0.12)]'
-                      : actualRank <= 3
-                      ? 'bg-zinc-950 border-white/15'
-                      : 'bg-zinc-950/80 border-white/[0.07] hover:border-white/15'
+                      ? 'bg-[#121722] border-[#3478F6]/45 shadow-[0_0_20px_rgba(52,120,246,0.12)]'
+                      : 'bg-[#121722] border-[#252D3B] hover:border-white/15'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -743,7 +741,7 @@ export default function LeaderboardPage() {
                         #{String(actualRank).padStart(2, '0')}
                       </div>
 
-                      <div className="h-10 w-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden shrink-0">
+                      <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center font-mono font-bold text-xs text-[#F4F6FA] overflow-hidden shrink-0">
                         {item.students?.avatar_url ? (
                           <img src={item.students.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                         ) : (
@@ -753,17 +751,17 @@ export default function LeaderboardPage() {
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <p className="text-xs font-bold text-white truncate max-w-[135px]">
+                          <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[135px]">
                             {item.students?.full_name || 'Atleta'}
                           </p>
                           {isMe && (
-                            <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-amber-400 text-black shrink-0">
+                            <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 shrink-0">
                               VOCÊ
                             </span>
                           )}
                           {athleteStreak >= 2 && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-400/15 text-amber-300 border border-amber-400/30 shrink-0">
-                              <Flame className="w-2.5 h-2.5 text-amber-400" />
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B] shrink-0">
+                              <Flame className="w-2.5 h-2.5 text-[#75A7FF]" />
                               {athleteStreak}d
                             </span>
                           )}
@@ -771,34 +769,28 @@ export default function LeaderboardPage() {
 
                         {/* Barra de progresso relativa ao líder */}
                         <div className="mt-2 flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden">
                             <div
                               className={`h-full rounded-full transition-all duration-500 ${
-                                actualRank === 1
-                                  ? 'bg-gradient-to-r from-amber-500 to-amber-300'
-                                  : actualRank === 2
-                                  ? 'bg-gradient-to-r from-slate-400 to-slate-200'
-                                  : actualRank === 3
-                                  ? 'bg-gradient-to-r from-amber-700 to-amber-500'
-                                  : isMe
-                                  ? 'bg-amber-400'
-                                  : 'bg-zinc-600'
+                                isMe
+                                  ? 'bg-[#3478F6]'
+                                  : 'bg-[#3478F6]/50'
                               }`}
                               style={{ width: `${relativePct}%` }}
                             />
                           </div>
-                          <span className="text-[9px] font-mono text-zinc-500 shrink-0">{relativePct}%</span>
+                          <span className="text-[9px] font-mono text-[#A7B0C0] shrink-0">{relativePct}%</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end shrink-0">
-                      <span className="font-mono text-sm font-black text-white leading-none">
+                      <span className="font-mono text-sm font-black text-[#F4F6FA] leading-none">
                         {item.total_points}
                       </span>
                       <div className="flex items-center gap-1 mt-1">
                         {delta && delta.direction === 'up' && (
-                          <span className="inline-flex items-center text-[9px] font-mono font-bold text-amber-300">
+                          <span className="inline-flex items-center text-[9px] font-mono font-bold text-[#75A7FF]">
                             <TrendingUp className="w-2.5 h-2.5 mr-0.5" />+{delta.value}
                           </span>
                         )}
@@ -808,7 +800,7 @@ export default function LeaderboardPage() {
                           </span>
                         )}
                         {(!delta || delta.direction === 'same') && (
-                          <span className="text-[9px] font-mono text-amber-400 font-bold uppercase">
+                          <span className="text-[9px] font-mono text-[#A7B0C0] font-bold uppercase">
                             XP
                           </span>
                         )}
@@ -822,10 +814,10 @@ export default function LeaderboardPage() {
         ) : (
           /* Ranking de Squads */
           squadStandings.length === 0 ? (
-            <div className="p-8 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-2">
-              <Users className="w-8 h-8 text-zinc-600 mx-auto" />
-              <p className="text-xs font-mono text-zinc-400">NENHUM SQUAD ATIVO NESTA TURMA.</p>
-              <p className="text-[11px] text-zinc-500">
+            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
+              <Users className="w-8 h-8 text-[#A7B0C0]/50 mx-auto" />
+              <p className="text-xs font-mono text-[#A7B0C0]">NENHUM SQUAD ATIVO NESTA TURMA.</p>
+              <p className="text-[11px] text-[#A7B0C0]/70">
                 Quando o treinador dividir a turma em equipes cooperativas, o placar de squads aparecerá aqui.
               </p>
             </div>
@@ -837,7 +829,7 @@ export default function LeaderboardPage() {
               return (
                 <div
                   key={sq.id}
-                  className="p-4 rounded-2xl border border-white/10 bg-zinc-950 space-y-3"
+                  className="p-4 rounded-2xl border border-[#252D3B] bg-[#121722] space-y-3"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -853,29 +845,29 @@ export default function LeaderboardPage() {
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-black text-white truncate">{sq.name}</h3>
+                          <h3 className="text-sm font-black text-[#F4F6FA] truncate">{sq.name}</h3>
                           {idx === 0 && (
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase">
+                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 uppercase">
                               SQUAD LÍDER
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] font-mono text-zinc-400 uppercase mt-0.5">
+                        <p className="text-[10px] font-mono text-[#A7B0C0] uppercase mt-0.5">
                           {sq.member_count} INTEGRANTES • MÉDIA {sq.average_points} XP/ATLETA
                         </p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="font-mono text-base font-black text-white block leading-none">
+                      <span className="font-mono text-base font-black text-[#F4F6FA] block leading-none">
                         {sq.total_points}
                       </span>
-                      <span className="text-[9px] font-mono text-amber-400 font-bold uppercase mt-1 block">
+                      <span className="text-[9px] font-mono text-[#A7B0C0] font-bold uppercase mt-1 block">
                         XP TOTAL
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-full h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${sqPct}%`, backgroundColor: sq.color }}

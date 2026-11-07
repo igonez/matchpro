@@ -809,7 +809,7 @@ function StudentMissionsContent() {
       <Monochrome3DBackground />
 
       {/* Header */}
-      <div className="flex items-start justify-between pt-1 relative z-10 border-b border-white/[0.08] pb-3.5">
+      <div className="flex items-start justify-between pt-1 relative z-10 border-b border-[#252D3B] pb-3.5">
         <div className="flex items-center gap-3">
           {(() => {
             const profObj = Array.isArray(challenge?.professionals)
@@ -825,18 +825,18 @@ function StudentMissionsContent() {
                     {coachLogo ? (
                       <img src={coachLogo} alt={coachName} className="h-full w-full object-cover" />
                     ) : (
-                      <span className="text-sm font-mono font-black text-amber-300">
+                      <span className="text-sm font-mono font-black text-[#75A7FF]">
                         {coachName.charAt(0).toUpperCase()}
                       </span>
                     )}
                   </div>
                 )}
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block mb-0.5">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold block mb-0.5">
                     {coachName ? `${coachName} • ` : ''}{challenge?.title || 'TURMA ATIVA'}
                   </span>
-                  <h1 className="text-2xl font-black text-white tracking-tight">Cronograma de Missões</h1>
-                  <p className="text-xs text-zinc-400">
+                  <h1 className="text-2xl font-black text-[#F4F6FA] tracking-tight">Cronograma de Missões</h1>
+                  <p className="text-xs text-[#A7B0C0]">
                     Missões organizadas em blocos por pilar e semana oficial do desafio.
                   </p>
                 </div>
@@ -878,8 +878,6 @@ function StudentMissionsContent() {
                       ? 'bg-black/20 text-white font-bold'
                       : meta?.isCurrent
                       ? 'text-[#75A7FF] font-bold'
-                      : meta?.isFuture
-                      ? 'text-amber-400/90'
                       : 'text-[#A7B0C0]'
                   }`}
                 >
@@ -898,9 +896,7 @@ function StudentMissionsContent() {
         {selectedWeekMeta && (
           <div
             className={`p-4 rounded-3xl border relative overflow-hidden ${
-              selectedWeekMeta.isFuture
-                ? 'border-amber-400/40 bg-gradient-to-br from-amber-500/15 via-[#121722] to-[#121722]'
-                : selectedWeekMeta.isCurrent
+              selectedWeekMeta.isCurrent
                 ? 'border-[#3478F6]/30 bg-[#121722]'
                 : 'border-[#252D3B] bg-[#121722]'
             }`}
@@ -909,11 +905,9 @@ function StudentMissionsContent() {
               <div className="flex items-start gap-3">
                 <div
                   className={`h-10 w-10 rounded-2xl border flex items-center justify-center shrink-0 ${
-                    selectedWeekMeta.isFuture
-                      ? 'bg-amber-400/20 border-amber-400/40 text-amber-300'
-                      : selectedWeekMeta.isCurrent
+                    selectedWeekMeta.isCurrent
                       ? 'bg-[#3478F6]/20 border-[#3478F6]/40 text-[#75A7FF]'
-                      : 'bg-white/10 border-white/20 text-zinc-300'
+                      : 'bg-[#1B2330] border-[#252D3B] text-[#A7B0C0]'
                   }`}
                 >
                   {selectedWeekMeta.isFuture ? (
@@ -929,11 +923,9 @@ function StudentMissionsContent() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span
                       className={`text-[10px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${
-                        selectedWeekMeta.isFuture
-                          ? 'bg-amber-400/20 text-amber-300 border-amber-400/30'
-                          : selectedWeekMeta.isCurrent
+                        selectedWeekMeta.isCurrent
                           ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/30'
-                          : 'bg-white/10 text-zinc-300 border-white/20'
+                          : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
                       }`}
                     >
                       {selectedWeekMeta.isFuture
@@ -949,13 +941,13 @@ function StudentMissionsContent() {
 
                   {selectedWeekMeta.isFuture ? (
                     <>
-                      <h2 className="text-base font-black text-white tracking-tight">
+                      <h2 className="text-base font-black text-[#F4F6FA] tracking-tight">
                         Semana {selectedWeekNumber} começa em {selectedWeekMeta.daysUntilStart}{' '}
                         {selectedWeekMeta.daysUntilStart === 1 ? 'dia' : 'dias'}
                       </h2>
-                      <p className="text-xs text-zinc-300 leading-relaxed">
+                      <p className="text-xs text-[#A7B0C0] leading-relaxed">
                         As missões da Semana {selectedWeekNumber} serão desbloqueadas automaticamente no dia{' '}
-                        <strong className="text-amber-300">
+                        <strong className="text-[#F4F6FA]">
                           {selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}
                         </strong>
                         . Concentre seus check-ins na{' '}
@@ -965,7 +957,7 @@ function StudentMissionsContent() {
                             setSelectedWeekNumber(weekScheduleInfo.activeWeekNum);
                             setPreviewFutureMissions(false);
                           }}
-                          className="underline text-white font-bold cursor-pointer"
+                          className="underline text-[#75A7FF] font-bold cursor-pointer"
                         >
                           Semana {weekScheduleInfo.activeWeekNum} (Atual)
                         </button>
@@ -979,7 +971,7 @@ function StudentMissionsContent() {
                       </h2>
                       <p className="text-xs text-[#A7B0C0]">
                         Complete todas as tarefas da semana para conquistar{' '}
-                        <strong className="text-[#3478F6]">+{selectedWeek?.bonus_points || 20} XP Bônus</strong>.
+                        <strong className="text-[#75A7FF]">+{selectedWeek?.bonus_points || 20} XP Bônus</strong>.
                       </p>
                     </>
                   ) : (
@@ -1021,9 +1013,9 @@ function StudentMissionsContent() {
 
       {/* Banner de Regra Diária com Cronômetro Regressivo até 00:00 */}
       {!selectedWeekMeta?.isFuture && (isWorkoutDailyLocked || isCardioDailyLocked) && (
-        <div className="p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs relative z-10 border border-amber-500/25 bg-amber-950/15">
+        <div className="p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs relative z-10 border border-[#252D3B] bg-[#121722]">
           <div className="space-y-0.5">
-            <p className="font-bold text-white text-xs flex items-center gap-1.5">
+            <p className="font-bold text-[#F4F6FA] text-xs flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-[#3478F6] shrink-0" />
               {isWorkoutDailyLocked && isCardioDailyLocked
                 ? 'Treino & Cardio de hoje concluídos!'
@@ -1031,13 +1023,13 @@ function StudentMissionsContent() {
                 ? 'Treino de hoje concluído!'
                 : 'Cardio de hoje concluído!'}
             </p>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-[#A7B0C0]">
               Próxima liberação automática na virada do dia.
             </p>
           </div>
-          <div className="text-right shrink-0 bg-black/70 border border-white/10 px-2.5 py-1.5 rounded-xl">
-            <span className="text-[9px] font-mono text-zinc-400 uppercase block">Libera em</span>
-            <span className="text-xs font-mono font-black text-amber-300 flex items-center gap-1">
+          <div className="text-right shrink-0 bg-[#1B2330] border border-[#252D3B] px-2.5 py-1.5 rounded-xl">
+            <span className="text-[9px] font-mono text-[#A7B0C0] uppercase block">Libera em</span>
+            <span className="text-xs font-mono font-black text-[#75A7FF] flex items-center gap-1">
               <Clock className="h-3 w-3" /> {timeUntilMidnight || '00:00:00'}
             </span>
           </div>
@@ -1117,14 +1109,14 @@ function StudentMissionsContent() {
 
       {/* Filtro rápido de visualização */}
       {selectedCategory !== 'all' && (!selectedWeekMeta?.isFuture || previewFutureMissions) && (
-        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs relative z-10">
-          <span className="font-mono text-zinc-300">
-            Exibindo apenas o bloco: <strong className="text-white uppercase">{selectedCategory}</strong>
+        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#121722] border border-[#252D3B] text-xs relative z-10">
+          <span className="font-mono text-[#A7B0C0]">
+            Exibindo apenas o bloco: <strong className="text-[#F4F6FA] uppercase">{selectedCategory}</strong>
           </span>
           <button
             type="button"
             onClick={() => setSelectedCategory('all')}
-            className="text-[10px] font-mono font-bold text-amber-300 hover:underline cursor-pointer uppercase"
+            className="text-[10px] font-mono font-bold text-[#75A7FF] hover:underline cursor-pointer uppercase"
           >
             Mostrar Todos os Blocos
           </button>
@@ -1133,30 +1125,30 @@ function StudentMissionsContent() {
 
       {/* BLOCO 3: Container de Missões Organizado em Blocos por Categoria */}
       {loading || loadingMissions ? (
-        <div className="py-12 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
-          <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono relative z-10">
+          <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
           SINCRONIZANDO BLOCOS DA SEMANA {selectedWeekNumber}...
         </div>
       ) : selectedWeekMeta?.isFuture && !previewFutureMissions ? (
         /* Card Dedicado para Semana Futura (não mantém as missões da Semana 1 na tela) */
-        <SpotlightCard3D className="p-7 rounded-3xl border border-amber-400/30 bg-zinc-950 text-center space-y-4 relative z-10 shadow-[0_12px_35px_rgba(245,158,11,0.08)]">
-          <div className="h-14 w-14 rounded-2xl bg-amber-400/15 border border-amber-400/35 text-amber-300 flex items-center justify-center mx-auto">
+        <SpotlightCard3D className="p-7 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-4 relative z-10 shadow-xl">
+          <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center mx-auto">
             <Lock className="w-7 h-7" />
           </div>
           <div className="space-y-1.5">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-400 block">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0] block">
               CRONOGRAMA FUTURO • {selectedWeekMeta.formattedRange}
             </span>
-            <h3 className="text-lg font-black text-white">
+            <h3 className="text-lg font-black text-[#F4F6FA]">
               A Semana {selectedWeekNumber} começa daqui a {selectedWeekMeta.daysUntilStart}{' '}
               {selectedWeekMeta.daysUntilStart === 1 ? 'dia' : 'dias'}
             </h3>
-            <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
+            <p className="text-xs text-[#A7B0C0] max-w-xs mx-auto leading-relaxed">
               As missões da Semana {selectedWeekNumber} ficarão disponíveis para check-in assim que o ciclo iniciar em{' '}
-              <strong className="text-white">{selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}</strong>.
+              <strong className="text-[#F4F6FA]">{selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}</strong>.
             </p>
             {missions.length > 0 && (
-              <p className="text-[11px] font-mono text-amber-300/90 pt-1">
+              <p className="text-[11px] font-mono text-[#75A7FF] pt-1">
                 {missions.length} missões já estão programadas pelo treinador para esta semana.
               </p>
             )}
@@ -1168,7 +1160,7 @@ function StudentMissionsContent() {
                 setSelectedWeekNumber(weekScheduleInfo.activeWeekNum);
                 setPreviewFutureMissions(false);
               }}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs hover:bg-[#75A7FF] transition-colors cursor-pointer"
             >
               Voltar para Semana {weekScheduleInfo.activeWeekNum} (Em Andamento)
             </button>
@@ -1176,7 +1168,7 @@ function StudentMissionsContent() {
               <button
                 type="button"
                 onClick={() => setPreviewFutureMissions(true)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-300 font-mono font-bold text-xs hover:bg-amber-400/20 transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#252D3B] bg-[#1B2330] text-[#F4F6FA] font-mono font-bold text-xs hover:bg-[#252D3B] transition-colors cursor-pointer"
               >
                 Ver Prévia das Missões ({missions.length})
               </button>

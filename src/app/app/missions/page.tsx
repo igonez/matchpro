@@ -833,11 +833,13 @@ function StudentMissionsContent() {
                   </div>
                 )}
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold block mb-0.5">
-                    {coachName ? `${coachName} • ` : ''}{challenge?.title || 'TURMA ATIVA'}
+                  <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+                    {coachName ? `${coachName} • ` : ''}{challenge?.title || 'Turma Ativa'}
                   </span>
-                  <h1 className="text-2xl font-black text-[#F4F6FA] tracking-tight">Cronograma de Missões</h1>
-                  <p className="text-xs text-[#A7B0C0]">
+                  <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight mt-0.5">
+                    Cronograma de Missões
+                  </h1>
+                  <p className="text-xs text-[#A7B0C0] mt-0.5">
                     Missões organizadas em blocos por pilar e semana oficial do desafio.
                   </p>
                 </div>

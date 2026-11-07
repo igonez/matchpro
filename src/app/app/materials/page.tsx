@@ -205,10 +205,10 @@ function StudentMaterialsContent() {
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-center gap-2.5">
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#3478F6] block font-bold">
-              {activeChallenge?.title ? `TURMA ATIVA • ${activeChallenge.title}` : 'CENTRAL DO ALUNO'}
+            <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+              {activeChallenge?.title ? `Turma Ativa • ${activeChallenge.title}` : 'Central do Aluno'}
             </span>
-            <h1 className="text-xl font-black text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] flex items-center gap-2 tracking-tight mt-0.5">
               Materiais & Avisos
             </h1>
           </div>

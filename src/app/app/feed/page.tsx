@@ -629,11 +629,13 @@ export default function StudentSocialFeedPage() {
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-start gap-3">
           <div>
-            <span className="text-[11px] text-[#A7B0C0] font-medium block">
+            <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
               Comunidade • {challengeTitle}
             </span>
-            <h1 className="text-xl font-black text-[#F4F6FA]">Feed da Turma</h1>
-            <p className="text-xs text-[#A7B0C0]">Interaja com seus colegas de desafio em tempo real</p>
+            <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight mt-0.5">
+              Feed da Turma
+            </h1>
+            <p className="text-xs text-[#A7B0C0] mt-0.5">Interaja com seus colegas de desafio em tempo real</p>
           </div>
         </div>
         <StudentMenuTrigger />

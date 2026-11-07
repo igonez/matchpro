@@ -270,8 +270,13 @@ export default function StudentProfilePage() {
 
       {/* Header do Perfil */}
       <div className="flex items-center justify-between pt-1 relative z-10">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-black text-white tracking-tight">Meu Perfil</h1>
+        <div>
+          <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+            {challenge?.title ? `Turma Ativa • ${challenge.title}` : 'Conta do Atleta'}
+          </span>
+          <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight mt-0.5">
+            Meu Perfil
+          </h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Button

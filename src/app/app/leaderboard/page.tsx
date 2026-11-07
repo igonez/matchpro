@@ -358,19 +358,18 @@ export default function LeaderboardPage() {
       >
         <div className="flex items-start gap-3 min-w-0">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#121722] border border-[#252D3B] text-[10px] font-mono font-bold tracking-widest text-[#A7B0C0] uppercase">
-                <Trophy className="w-3 h-3 text-[#75A7FF]" />
-                RANKING OFICIAL
-              </span>
+            <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+              Ranking Oficial • {currentChallenge?.title || 'Turma Ativa'}
+            </span>
+            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight truncate">
+                Tabela de Classificação
+              </h1>
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#3478F6]/10 border border-[#3478F6]/25 text-[10px] font-mono font-bold text-[#75A7FF] uppercase">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_6px_#3478F6]" />
                 AO VIVO
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight truncate">
-              {currentChallenge?.title || 'Arena de Classificação'}
-            </h1>
             <p className="text-xs text-[#A7B0C0] mt-0.5 flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
               Pontuação auditada por integridade de check-ins.

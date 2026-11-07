@@ -181,7 +181,7 @@ export function StudentOnboardingTour() {
   return (
     <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-lg rounded-3xl bg-zinc-950 border border-white/20 p-6 sm:p-7 shadow-[0_20px_70px_rgba(0,0,0,0.95)] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-lg rounded-3xl bg-[#121722] border border-[#252D3B] p-6 sm:p-7 shadow-[0_20px_70px_rgba(0,0,0,0.95)] animate-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
         aria-labelledby="student-tour-title"
@@ -197,7 +197,7 @@ export function StudentOnboardingTour() {
         {/* Botão Fechar */}
         <button
           onClick={handleClose}
-          className="absolute top-5 right-5 p-2 rounded-full text-zinc-400 hover:text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-full text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors cursor-pointer"
           aria-label="Pular Tour"
           title="Pular Tour"
         >
@@ -210,7 +210,7 @@ export function StudentOnboardingTour() {
             <span className="text-[10px] font-mono uppercase tracking-wider bg-[#3478F6]/15 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/30 font-bold">
               {currentStep.tag}
             </span>
-            <span className="text-xs font-mono text-zinc-400">
+            <span className="text-xs font-mono text-[#A7B0C0]">
               Passo {currentStep.stepNumber} de {STUDENT_TOUR_STEPS.length}
             </span>
           </div>
@@ -220,7 +220,7 @@ export function StudentOnboardingTour() {
               <StepIcon className="w-5 h-5 text-[#3478F6]" />
             </div>
             <div>
-              <h2 id="student-tour-title" className="text-lg sm:text-xl font-black text-white tracking-tight">
+              <h2 id="student-tour-title" className="text-lg sm:text-xl font-black text-[#F4F6FA] tracking-tight">
                 {currentStep.title}
               </h2>
             </div>
@@ -228,7 +228,7 @@ export function StudentOnboardingTour() {
         </div>
 
         {/* Descrição & Destaque */}
-        <div className="space-y-3.5 mb-5 text-xs sm:text-sm text-zinc-300 leading-relaxed">
+        <div className="space-y-3.5 mb-5 text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
           <p>{currentStep.description}</p>
 
           <div className="p-3 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 text-[#75A7FF] font-medium flex items-start gap-2.5">
@@ -237,11 +237,11 @@ export function StudentOnboardingTour() {
           </div>
 
           {/* Bullets */}
-          <ul className="space-y-1.5 pt-2 border-t border-white/[0.08] text-zinc-300">
+          <ul className="space-y-1.5 pt-2 border-t border-[#252D3B] text-[#A7B0C0]">
             {currentStep.bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-center gap-2 text-xs">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
-                <span>{bullet}</span>
+                <span className="text-[#F4F6FA]">{bullet}</span>
               </li>
             ))}
           </ul>
@@ -252,20 +252,20 @@ export function StudentOnboardingTour() {
           <Button
             onClick={() => handleNavigate(currentStep.actionHref)}
             variant="outline"
-            className="w-full min-h-[42px] border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold text-xs flex items-center justify-center gap-2 rounded-xl cursor-pointer"
+            className="w-full min-h-[42px] border-[#252D3B] bg-[#1B2330] hover:bg-[#252D3B] text-[#F4F6FA] font-bold text-xs flex items-center justify-center gap-2 rounded-xl cursor-pointer"
           >
             <span>{currentStep.actionLabel}</span>
-            <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#A7B0C0]" />
           </Button>
         </div>
 
         {/* Rodapé de Navegação */}
-        <div className="flex items-center justify-between pt-3.5 border-t border-white/10">
+        <div className="flex items-center justify-between pt-3.5 border-t border-[#252D3B]">
           <button
             onClick={handlePrev}
             disabled={currentStepIndex === 0}
             className={`flex items-center gap-1 text-xs font-mono font-bold transition-colors cursor-pointer ${
-              currentStepIndex === 0 ? 'text-zinc-600 cursor-not-allowed' : 'text-zinc-400 hover:text-white'
+              currentStepIndex === 0 ? 'text-[#A7B0C0]/40 cursor-not-allowed' : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -280,8 +280,8 @@ export function StudentOnboardingTour() {
                 onClick={() => setCurrentStepIndex(idx)}
                 className={`h-2 rounded-full transition-all cursor-pointer ${
                   idx === currentStepIndex
-                    ? 'w-5 bg-white'
-                    : 'w-2 bg-zinc-700 hover:bg-zinc-500'
+                    ? 'w-5 bg-[#3478F6]'
+                    : 'w-2 bg-[#252D3B] hover:bg-[#3478F6]/50'
                 }`}
                 aria-label={`Ir para passo ${idx + 1}`}
               />
@@ -290,7 +290,7 @@ export function StudentOnboardingTour() {
 
           <Button
             onClick={handleNext}
-            className="bg-white hover:bg-zinc-200 text-black font-extrabold text-xs px-3.5 min-h-[36px] rounded-xl flex items-center gap-1 cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+            className="bg-[#3478F6] hover:bg-[#75A7FF] text-white font-extrabold text-xs px-3.5 min-h-[36px] rounded-xl flex items-center gap-1 cursor-pointer shadow-[0_0_15px_rgba(52,120,246,0.35)]"
           >
             <span>{currentStepIndex === STUDENT_TOUR_STEPS.length - 1 ? 'Bora Começar!' : 'Próximo'}</span>
             <ChevronRight className="w-4 h-4" />

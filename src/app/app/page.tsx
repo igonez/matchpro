@@ -659,7 +659,7 @@ export default function StudentHomePage() {
                   student?.full_name?.charAt(0) || 'A'
                 )}
               </div>
-              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-[#080A0F]" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#3478F6] shadow-[0_0_8px_#3478F6] border-2 border-[#080A0F]" />
             </div>
           </Link>
 

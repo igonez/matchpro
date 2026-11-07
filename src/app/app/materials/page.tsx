@@ -498,8 +498,8 @@ export default function StudentMaterialsPage() {
   return (
     <Suspense
       fallback={
-        <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
-          <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+          <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
           CARREGANDO CENTRAL DE MATERIAIS...
         </div>
       }

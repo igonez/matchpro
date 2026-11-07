@@ -25,7 +25,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
   ];
 
   const getBadgeColor = (category: string, isUnlocked: boolean) => {
-    if (!isUnlocked) return 'border-[#252D3B] text-zinc-500 bg-white/5';
+    if (!isUnlocked) return 'border-[#252D3B] text-[#A7B0C0] bg-[#1B2330]';
     switch (category) {
       case 'streak': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
       case 'cardio': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';

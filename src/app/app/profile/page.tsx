@@ -278,7 +278,7 @@ export default function StudentProfilePage() {
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className="h-11 min-h-[44px] px-3.5 text-xs text-zinc-400 hover:text-white hover:bg-white/10"
+            className="h-11 min-h-[44px] px-3.5 text-xs text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] border border-[#252D3B] rounded-xl"
           >
             <LogOut className="h-4 w-4 mr-1.5" /> Sair
           </Button>

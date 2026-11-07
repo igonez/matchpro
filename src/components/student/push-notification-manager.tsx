@@ -113,16 +113,16 @@ export function PushNotificationBanner({
   }
 
   return (
-    <div className="relative z-10 p-3.5 sm:p-4 rounded-2xl bg-zinc-950/90 border border-white/15 flex items-center justify-between gap-3">
+    <div className="relative z-10 p-3.5 sm:p-4 rounded-2xl bg-[#121722] border border-[#252D3B] flex items-center justify-between gap-3">
       <div className="flex items-center gap-3 min-w-0">
-        <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center text-white shrink-0">
-          <BellRing className="w-4 h-4 text-amber-300" />
+        <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-white shrink-0">
+          <BellRing className="w-4 h-4 text-[#75A7FF]" />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-bold text-white leading-tight">
+          <p className="text-xs font-bold text-[#F4F6FA] leading-tight">
             Ativar Alertas de Ofensiva & Pódio
           </p>
-          <p className="text-[11px] text-zinc-400 leading-snug mt-0.5">
+          <p className="text-[11px] text-[#A7B0C0] leading-snug mt-0.5">
             Receba lembrete às 20h antes de perder seu streak diário.
           </p>
         </div>
@@ -133,7 +133,7 @@ export function PushNotificationBanner({
           type="button"
           onClick={handleEnableNotifications}
           disabled={activating}
-          className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-white text-black text-xs font-mono font-bold hover:bg-zinc-200 transition-colors cursor-pointer"
+          className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors cursor-pointer shadow-md"
         >
           {activating ? '...' : 'Ativar'}
         </button>
@@ -144,7 +144,7 @@ export function PushNotificationBanner({
             localStorage.setItem('arena_push_banner_dismissed', 'true');
           }}
           aria-label="Dispensar"
-          className="min-h-[38px] px-2 text-xs font-mono text-zinc-500 hover:text-zinc-300 cursor-pointer flex items-center justify-center"
+          className="min-h-[38px] px-2 text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] cursor-pointer flex items-center justify-center"
         >
           <X className="w-3.5 h-3.5" />
         </button>

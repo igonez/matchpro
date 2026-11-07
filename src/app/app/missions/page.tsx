@@ -32,7 +32,7 @@ export default function StudentMissionsWeeklyPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-8 text-center text-zinc-500 text-xs font-mono">
+        <div className="p-8 text-center text-[#A7B0C0] text-xs font-mono">
           CARREGANDO CRONOGRAMA DE MISSÕES...
         </div>
       }
@@ -505,8 +505,8 @@ function StudentMissionsContent() {
       const list = missionLists.find((l) => l.id === mission.list_id);
       if (list) {
         return (
-          <span className="text-[10px] font-mono text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 font-bold flex items-center gap-1 uppercase">
-            <Layers className="w-3 h-3 text-zinc-400" /> {list.name}
+          <span className="text-[10px] font-mono text-[#F4F6FA] bg-[#1B2330] px-2 py-0.5 rounded-md border border-[#252D3B] font-bold flex items-center gap-1 uppercase">
+            <Layers className="w-3 h-3 text-[#A7B0C0]" /> {list.name}
           </span>
         );
       }
@@ -659,7 +659,7 @@ function StudentMissionsContent() {
                 <Clock className="h-4 w-4" />
               </div>
             ) : mission.isLocked ? (
-              <div className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-500">
+              <div className="h-9 w-9 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0]">
                 <Lock className="h-4 w-4" />
               </div>
             ) : (
@@ -1262,23 +1262,23 @@ function StudentMissionsContent() {
                     <CheckCircle2 className="w-4 h-4 text-[#3478F6]" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-black text-white uppercase font-mono tracking-wider">
+                    <h4 className="text-xs font-black text-[#F4F6FA] uppercase font-mono tracking-wider">
                       Bloco de Missões Concluídas ({completedMissions.length})
                     </h4>
-                    <p className="text-[10px] text-zinc-400 font-mono">
+                    <p className="text-[10px] text-[#A7B0C0] font-mono">
                       Pontos já auditados e somados ao seu ranking na Semana {selectedWeekNumber}
                     </p>
                   </div>
                 </div>
                 {showCompletedSection ? (
-                  <ChevronUp className="h-4 w-4 text-zinc-400" />
+                  <ChevronUp className="h-4 w-4 text-[#A7B0C0]" />
                 ) : (
-                  <ChevronDown className="h-4 w-4 text-zinc-400" />
+                  <ChevronDown className="h-4 w-4 text-[#A7B0C0]" />
                 )}
               </button>
 
               {showCompletedSection && (
-                <div className="space-y-2 pt-2 border-t border-white/[0.06]">
+                <div className="space-y-2 pt-2 border-t border-[#252D3B]">
                   {completedMissions.map(renderMissionCard)}
                 </div>
               )}

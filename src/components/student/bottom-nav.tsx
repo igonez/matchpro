@@ -15,6 +15,7 @@ import {
   LogOut, 
   Sparkles, 
   ChevronRight,
+  ChevronDown,
   Target,
   Award,
   Dumbbell,
@@ -280,47 +281,43 @@ export function StudentBottomNav() {
     { name: 'Feed', href: '/app/feed', active: pathname === '/app/feed' },
   ];
 
-  // Seções categorizadas do Drawer Vertical
+  // Seções categorizadas do Drawer Vertical (mesma estética do Treinador)
   const verticalMenuSections = [
     {
-      category: 'MINHA JORNADA',
+      category: 'VISÃO GERAL',
       items: [
         {
           title: 'Hoje (Painel Diário)',
-          subtitle: 'Metas diárias, água e streak',
           href: '/app',
           icon: Target,
           active: pathname === '/app',
         },
+      ],
+    },
+    {
+      category: 'DESAFIO & TURMA',
+      items: [
         {
           title: 'Missões da Semana',
-          subtitle: 'Treinos, cardios e refeições',
           href: '/app/missions',
           icon: CheckCircle,
           active: pathname === '/app/missions',
         },
         {
-          title: 'Placar & Leaderboard',
-          subtitle: 'Ranking individual e Squads',
+          title: 'Ranking da Turma',
           href: '/app/leaderboard',
           icon: Trophy,
           active: pathname === '/app/leaderboard',
+          badge: 'AO VIVO',
         },
         {
-          title: 'Feed da Turma',
-          subtitle: 'Fotos e check-ins aprovados',
+          title: 'Feed & Mural da Turma',
           href: '/app/feed',
           icon: Activity,
           active: pathname === '/app/feed',
         },
-      ],
-    },
-    {
-      category: 'CONTEÚDO & APOIO',
-      items: [
         {
           title: 'Materiais de Apoio',
-          subtitle: 'PDFs, dietas e treinos do coach',
           href: '/app/materials',
           icon: BookOpen,
           active: pathname === '/app/materials',
@@ -328,34 +325,27 @@ export function StudentBottomNav() {
       ],
     },
     {
-      category: 'CONTA',
+      category: 'CONTA & ATLETA',
       items: [
         {
-          title: 'Guia do App',
-          subtitle: 'Rever como funcionam câmera, IA e pontos',
-          href: '#tour',
-          icon: Sparkles,
-          active: false,
-          isAction: true,
-          onClick: () => {
-            setShowVerticalMenu(false);
-            triggerStudentTour();
-          },
-        },
-        {
           title: 'Meu Perfil & Inscrição',
-          subtitle: 'Histórico, streak e comprovantes',
           href: '/app/profile',
           icon: User,
           active: pathname === '/app/profile',
         },
         {
-          title: 'Instalar Aplicativo no Celular',
-          subtitle: 'Acesso rápido com 1 toque sem barra',
+          title: 'Conquistas & Medalhas',
+          href: '/app/profile',
+          icon: Award,
+          active: false,
+        },
+        {
+          title: 'Instalar Aplicativo (PWA)',
           href: '#install-pwa',
           icon: Smartphone,
           active: false,
           isAction: true,
+          badge: 'APP',
           onClick: () => {
             setShowVerticalMenu(false);
             if (typeof window !== 'undefined') {
@@ -363,16 +353,24 @@ export function StudentBottomNav() {
             }
           },
         },
-        {
-          title: 'Conquistas & Medalhas',
-          subtitle: 'Badges de mérito e ofensiva',
-          href: '/app/profile',
-          icon: Award,
-          active: false,
-        },
       ],
     },
   ];
+
+  const [openMobileGroups, setOpenMobileGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    verticalMenuSections.forEach((g) => {
+      initial[g.category] = true;
+    });
+    return initial;
+  });
+
+  const toggleMobileGroup = (title: string) => {
+    setOpenMobileGroups((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   return (
     <>
@@ -450,143 +448,195 @@ export function StudentBottomNav() {
         </div>
       </nav>
 
-      {/* 2. Menu Vertical Completo na Esquerda (Side Drawer Deslizante Padrão Universal) */}
+      {/* 2. Menu Vertical Completo na Esquerda (Side Drawer Deslizante Padrão Universal - Mesma estética do Treinador) */}
       {showVerticalMenu && (
-        <div
-          onClick={() => setShowVerticalMenu(false)}
-          className="fixed inset-0 z-50 flex justify-start bg-black/80 backdrop-blur-md transition-all"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-xs h-full bg-[#080A0F] border-r border-[#252D3B] p-6 safe-top-drawer safe-bottom-drawer flex flex-col justify-between shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-200"
-          >
-            
-            {/* Topo do Menu Vertical */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-[#252D3B]">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-b from-[#3478F6] via-zinc-400 to-[#121722] p-px">
-                    <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden">
-                      {studentInfo?.avatar_url ? (
-                        <img src={studentInfo.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-                      ) : (
-                        studentInfo?.full_name?.charAt(0) || 'A'
-                      )}
-                    </div>
+        <div className="fixed inset-0 z-50 flex">
+          {/* Backdrop Glass */}
+          <div 
+            onClick={() => setShowVerticalMenu(false)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity" 
+          />
+
+          {/* Drawer Content */}
+          <div className="relative w-4/5 max-w-xs bg-[#080A0F] border-r border-[#252D3B] flex flex-col h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
+            {/* Header / Brand Mobile */}
+            <div className="p-5 pb-3.5 safe-top-drawer border-b border-[#252D3B] shrink-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center shrink-0">
+                    <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-[#F4F6FA] leading-tight">
-                      {studentInfo?.full_name || 'Atleta'}
-                    </h3>
-                    <span className="text-[10px] font-mono text-[#A7B0C0] uppercase">
-                      Turma Oficial
-                    </span>
+                    <span className="font-extrabold text-sm tracking-tight text-[#F4F6FA] block">ArenaFitPro</span>
+                    <span className="text-[11px] text-[#A7B0C0] font-medium">Painel do Aluno</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setShowVerticalMenu(false)}
-                  aria-label="Fechar menu"
+                  aria-label="Fechar menu do aluno"
                   className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
-
-              {/* Lista Vertical de Módulos Categorizados */}
-              <div className="space-y-4">
-                {verticalMenuSections.map((section) => (
-                  <div key={section.category} className="space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] font-bold block px-1">
-                      {section.category}
-                    </span>
-                    <div className="space-y-1">
-                      {section.items.map((item: any) => {
-                        const Icon = item.icon;
-                        if (item.isAction) {
-                          return (
-                            <button
-                              key={item.title}
-                              type="button"
-                              onClick={item.onClick}
-                              className="w-full flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330] transition-all text-left cursor-pointer"
-                            >
-                              <div className="flex items-center gap-2.5 min-w-0">
-                                <div className="p-1.5 rounded-lg bg-white/5 text-[#A7B0C0]">
-                                  <Icon className="w-3.5 h-3.5" />
-                                </div>
-                                <div className="min-w-0">
-                                  <div className="text-xs font-semibold text-[#F4F6FA] leading-tight truncate">
-                                    {item.title}
-                                  </div>
-                                  <p className="text-[10px] text-[#A7B0C0] leading-tight truncate mt-0.5">
-                                    {item.subtitle}
-                                  </p>
-                                </div>
-                              </div>
-                              <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
-                            </button>
-                          );
-                        }
-
-                        return (
-                          <Link
-                            key={item.title}
-                            href={item.href}
-                            onClick={() => setShowVerticalMenu(false)}
-                            className={`flex items-center justify-between p-2.5 min-h-[44px] rounded-xl border transition-all ${
-                              item.active
-                                ? 'bg-[#3478F6]/15 border-[#3478F6]/40 text-[#F4F6FA] shadow-md'
-                                : 'bg-[#121722]/80 border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <div className={`p-1.5 rounded-lg ${item.active ? 'bg-[#3478F6] text-white' : 'bg-white/5 text-[#A7B0C0]'}`}>
-                                <Icon className="w-3.5 h-3.5" />
-                              </div>
-                              <div className="min-w-0">
-                                <div className="text-xs font-semibold text-[#F4F6FA] leading-tight truncate">
-                                  {item.title}
-                                </div>
-                                <p className="text-[10px] text-[#A7B0C0] leading-tight truncate mt-0.5">
-                                  {item.subtitle}
-                                </p>
-                              </div>
-                            </div>
-                            <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            {/* Rodapé do Menu Vertical */}
-            <div className="pt-6 border-t border-[#252D3B] space-y-3">
+            {/* Perfil do Aluno em Destaque */}
+            <div className="px-5 pt-3 pb-1 shrink-0">
+              <Link
+                href="/app/profile"
+                onClick={() => setShowVerticalMenu(false)}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors"
+                title="Meu Perfil"
+              >
+                <div className="h-8 w-8 rounded-full bg-[#1B2330] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0">
+                  {studentInfo?.avatar_url ? (
+                    <img src={studentInfo.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-[11px] font-mono font-black text-[#75A7FF]">
+                      {studentInfo?.full_name?.charAt(0) || 'A'}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="text-xs font-bold text-[#F4F6FA] truncate block leading-tight">
+                    {studentInfo?.full_name || 'Atleta'}
+                  </span>
+                  <span className="text-[10px] text-[#A7B0C0] font-mono uppercase block mt-0.5">
+                    Turma Ativa • Ver Perfil
+                  </span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
+              </Link>
+            </div>
+
+            {/* Links de Navegação Mobile Agrupados e Expansíveis (Scroll Independente) */}
+            <div className="flex-1 overflow-y-auto p-5 py-3 custom-scrollbar">
+              <nav className="space-y-3 pr-1">
+                {verticalMenuSections.map((group) => {
+                  const isOpen = openMobileGroups[group.category] ?? true;
+                  const hasActiveChild = group.items.some((it: any) => it.active);
+
+                  return (
+                    <div key={group.category} className="space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => toggleMobileGroup(group.category)}
+                        className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A7B0C0] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.04] transition-colors"
+                      >
+                        <span className={hasActiveChild ? 'text-[#75A7FF]' : ''}>
+                          {group.category}
+                        </span>
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 text-[#A7B0C0] transition-transform duration-200 ${
+                            isOpen ? 'transform rotate-0' : '-rotate-90'
+                          }`}
+                        />
+                      </button>
+
+                      {isOpen && (
+                        <div className="space-y-1 pt-0.5">
+                          {group.items.map((item: any) => {
+                            const Icon = item.icon;
+                            if (item.isAction) {
+                              return (
+                                <button
+                                  key={item.title}
+                                  type="button"
+                                  onClick={() => {
+                                    setShowVerticalMenu(false);
+                                    item.onClick?.();
+                                  }}
+                                  className="w-full flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] transition-all text-left cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    <Icon className="h-4 w-4 shrink-0" />
+                                    <span className="truncate">{item.title}</span>
+                                  </div>
+                                  {item.badge ? (
+                                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30">
+                                      {item.badge}
+                                    </span>
+                                  ) : (
+                                    <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0]/60 shrink-0" />
+                                  )}
+                                </button>
+                              );
+                            }
+
+                            return (
+                              <Link
+                                key={item.title}
+                                href={item.href}
+                                onClick={() => setShowVerticalMenu(false)}
+                                className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide transition-all ${
+                                  item.active
+                                    ? 'bg-[#3478F6]/15 text-[#75A7FF] font-semibold border border-[#3478F6]/30 shadow-md'
+                                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722]'
+                                }`}
+                              >
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                  <Icon className="h-4 w-4 shrink-0" />
+                                  <span className="truncate">{item.title}</span>
+                                </div>
+                                {item.badge ? (
+                                  <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30">
+                                    {item.badge}
+                                  </span>
+                                ) : (
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0]/60 shrink-0" />
+                                )}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Ações Rápidas Mobile (FIXO NO RODAPÉ DO DRAWER - Mesma estética do Treinador) */}
+            <div className="p-5 pt-3 safe-bottom-drawer border-t border-[#252D3B] bg-[#080A0F] space-y-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowVerticalMenu(false);
+                  triggerStudentTour();
+                }}
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#121722] border border-[#252D3B] active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Sparkles className="h-4 w-4 text-[#A7B0C0]" />
+                  <span>Guia do App</span>
+                </div>
+                <ChevronRight className="h-4 w-4 text-[#A7B0C0]" />
+              </button>
+
               {isProfessional && (
                 <Link
                   href="/dashboard"
                   onClick={() => setShowVerticalMenu(false)}
-                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#3478F6] text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-[#75A7FF] transition-all shadow-md active:scale-95"
+                  className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#75A7FF] hover:text-white bg-[#3478F6]/15 hover:bg-[#3478F6] border border-[#3478F6]/30 active:scale-[0.98] transition-all"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
-                  <span>Voltar ao Painel do Coach</span>
+                  <div className="flex items-center gap-2.5">
+                    <ArrowLeft className="h-4 w-4 shrink-0" />
+                    <span>Voltar ao Painel do Coach</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 shrink-0" />
                 </Link>
               )}
 
               <button
                 onClick={handleSignOut}
-                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-medium text-[#A7B0C0] hover:text-white transition-colors text-center cursor-pointer"
+                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A7B0C0] hover:text-white hover:bg-[#121722] rounded-xl transition-colors cursor-pointer"
               >
-                Sair da Conta
+                <LogOut className="h-4 w-4" />
+                <span>Sair da Conta</span>
               </button>
-              <p className="text-[11px] text-[#A7B0C0] text-center">
-                ArenaFitPro
-              </p>
             </div>
-
           </div>
         </div>
       )}

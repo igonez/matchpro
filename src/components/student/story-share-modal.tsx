@@ -990,7 +990,7 @@ export function StoryShareModal({
                   ? 'Compartilhar Ranking da Turma'
                   : 'Compartilhar Pódio & Ranking'}
               </h3>
-              <p className="text-[11px] text-zinc-400">
+              <p className="text-[11px] text-[#A7B0C0]">
                 Pódio Top 3 + Tabela Oficial em alta definição (9:16)
               </p>
             </div>
@@ -1000,18 +1000,18 @@ export function StoryShareModal({
             type="button"
             onClick={onClose}
             aria-label="Fechar modal"
-            className="h-10 w-10 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer"
+            className="h-10 w-10 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Preview do Card 9:16 */}
-        <div className="relative w-full max-w-[260px] aspect-[9/16] mx-auto rounded-2xl overflow-hidden border border-white/20 bg-zinc-950 shadow-2xl flex items-center justify-center">
+        <div className="relative w-full max-w-[260px] aspect-[9/16] mx-auto rounded-2xl overflow-hidden border border-[#252D3B] bg-[#080A0F] shadow-2xl flex items-center justify-center">
           {rendering || !renderedImageUrl ? (
             <div className="text-center space-y-2 p-4">
               <Sparkles className="w-6 h-6 text-amber-300 animate-spin mx-auto" />
-              <p className="text-xs font-mono text-zinc-400">MONTANDO PÓDIO E RANKING 9:16...</p>
+              <p className="text-xs font-mono text-[#A7B0C0]">MONTANDO PÓDIO E RANKING 9:16...</p>
             </div>
           ) : (
             <img
@@ -1060,7 +1060,7 @@ export function StoryShareModal({
               <button
                 type="button"
                 onClick={handleCopyRankingText}
-                className="min-h-[42px] py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-zinc-200 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="min-h-[42px] py-2 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[#F4F6FA] text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 {copiedText ? (
                   <>
@@ -1081,7 +1081,7 @@ export function StoryShareModal({
             <button
               type="button"
               onClick={onPrimaryAction}
-              className="w-full min-h-[44px] py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
+              className="w-full min-h-[44px] py-2.5 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
             >
               {primaryActionLabel || 'Voltar para a Arena'}
             </button>

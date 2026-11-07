@@ -29,6 +29,9 @@ export interface RankingShareCardProps {
 }
 
 const GOLD = '#fbbf24';
+const SILVER = '#e2e8f0';
+const BRONZE = '#f59e0b';
+const ELECTRIC_BLUE = '#3478F6';
 const TEXT_SHADOW = '0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.85)';
 
 function getInitials(text: string): string {
@@ -445,6 +448,35 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
                     !isCoachView &&
                     Boolean(currentUserId && item.studentId === currentUserId);
 
+                  const rankAccentColor =
+                    rank === 1
+                      ? GOLD
+                      : rank === 2
+                      ? SILVER
+                      : rank === 3
+                      ? BRONZE
+                      : isMe
+                      ? ELECTRIC_BLUE
+                      : 'rgba(255, 255, 255, 0.85)';
+
+                  const rankBadgeBg =
+                    rank === 1
+                      ? 'rgba(251, 191, 36, 0.22)'
+                      : rank === 2
+                      ? 'rgba(226, 232, 240, 0.20)'
+                      : rank === 3
+                      ? 'rgba(217, 119, 6, 0.28)'
+                      : 'rgba(27, 35, 48, 0.75)';
+
+                  const rankBadgeBorder =
+                    rank === 1
+                      ? 'rgba(251, 191, 36, 0.65)'
+                      : rank === 2
+                      ? 'rgba(226, 232, 240, 0.55)'
+                      : rank === 3
+                      ? 'rgba(245, 158, 11, 0.65)'
+                      : 'rgba(255, 255, 255, 0.22)';
+
                   return (
                     <div
                       key={`${item.studentId}-${rank}`}
@@ -453,36 +485,51 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         width: '100%',
+                        padding: isMe ? '8px 14px' : '2px 4px',
+                        borderRadius: '16px',
+                        backgroundColor: isMe ? 'rgba(52, 120, 246, 0.18)' : 'transparent',
+                        border: isMe ? '1.5px solid rgba(52, 120, 246, 0.45)' : '1.5px solid transparent',
+                        boxSizing: 'border-box',
                       }}
                     >
                       <div
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '18px',
+                          gap: '16px',
                           minWidth: 0,
                         }}
                       >
                         <span
                           style={{
-                            width: '10px',
-                            height: '10px',
+                            minWidth: '44px',
+                            height: '36px',
+                            padding: '0 8px',
                             borderRadius: '999px',
-                            backgroundColor: isMe ? GOLD : '#ffffff',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.7)',
+                            backgroundColor: rankBadgeBg,
+                            border: `1.5px solid ${rankBadgeBorder}`,
+                            color: rankAccentColor,
+                            fontSize: '20px',
+                            fontWeight: 800,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.65)',
                             flexShrink: 0,
                           }}
-                        />
+                        >
+                          {rank}º
+                        </span>
                         <span
                           style={{
                             fontSize: '34px',
-                            fontWeight: isMe ? 800 : 600,
-                            color: isMe ? GOLD : '#ffffff',
+                            fontWeight: isMe || rank <= 3 ? 800 : 600,
+                            color: isMe ? '#ffffff' : rank === 1 ? GOLD : '#ffffff',
                             textShadow: TEXT_SHADOW,
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            maxWidth: '610px',
+                            maxWidth: '560px',
                           }}
                         >
                           {formatCardDisplayName(item.name, 26)}
@@ -493,7 +540,7 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
                         style={{
                           fontSize: '34px',
                           fontWeight: 800,
-                          color: GOLD,
+                          color: rank <= 3 ? rankAccentColor : isMe ? '#75A7FF' : '#ffffff',
                           textShadow: TEXT_SHADOW,
                           flexShrink: 0,
                         }}

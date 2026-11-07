@@ -81,22 +81,22 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
   if (result.status === 'expired' || result.status === 'revoked' || !result.record) {
     const isRevoked = result.status === 'revoked';
     return (
-      <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-64 rounded-full bg-amber-400/10 blur-3xl" />
+      <main className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-64 rounded-full bg-[#3478F6]/15 blur-3xl" />
 
-        <div className="w-full max-w-md rounded-3xl border border-white/15 bg-zinc-950/95 p-7 text-center space-y-5 relative z-10 shadow-2xl">
-          <div className="h-14 w-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center mx-auto text-amber-300">
+        <div className="w-full max-w-md rounded-3xl border border-[#252D3B] bg-[#121722] p-7 text-center space-y-5 relative z-10 shadow-2xl">
+          <div className="h-14 w-14 rounded-2xl bg-[#3478F6]/15 border border-[#3478F6]/35 flex items-center justify-center mx-auto text-[#75A7FF]">
             <Clock className="w-7 h-7" />
           </div>
 
           <div className="space-y-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1B2330] border border-[#252D3B] text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
               ARENAFITPRO • RANKING PÚBLICO
             </span>
-            <h1 className="text-xl font-black text-white">
+            <h1 className="text-xl font-black text-[#F4F6FA]">
               {isRevoked ? 'Este link foi desativado' : 'Este link de ranking expirou'}
             </h1>
-            <p className="text-xs text-zinc-400 leading-relaxed">
+            <p className="text-xs text-[#A7B0C0] leading-relaxed">
               {isRevoked
                 ? 'A pessoa que compartilhou este placar desativou o acesso público a este snapshot.'
                 : 'Por privacidade, os links públicos de classificação têm validade limitada de 30 dias.'}
@@ -106,14 +106,14 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
           <div className="pt-2 space-y-2.5">
             <Link
               href="/app/leaderboard"
-              className="w-full min-h-[48px] py-3 px-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-black font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+              className="w-full min-h-[48px] py-3 px-4 rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
             >
               <span>Abrir no ArenaFitPro</span>
               <ArrowUpRight className="w-4 h-4" />
             </Link>
             <Link
               href="/"
-              className="w-full min-h-[44px] py-2.5 px-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 font-mono text-xs font-semibold flex items-center justify-center transition-colors"
+              className="w-full min-h-[44px] py-2.5 px-4 rounded-2xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[#F4F6FA] font-mono text-xs font-semibold flex items-center justify-center transition-colors"
             >
               Conhecer a plataforma
             </Link>
@@ -136,23 +136,23 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
   const leaderPts = Math.max(1, top1?.points || 1);
 
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center py-8 px-4 sm:px-6 relative overflow-x-hidden">
-      <div className="pointer-events-none fixed -top-24 left-1/2 -translate-x-1/2 w-[480px] h-72 rounded-full bg-amber-400/15 blur-3xl" />
+    <main className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex flex-col items-center py-8 px-4 sm:px-6 relative overflow-x-hidden">
+      <div className="pointer-events-none fixed -top-24 left-1/2 -translate-x-1/2 w-[480px] h-72 rounded-full bg-[#3478F6]/15 blur-3xl" />
 
       <div className="w-full max-w-lg space-y-5 relative z-10">
         {/* Header da Marca */}
-        <header className="flex items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <header className="flex items-center justify-between gap-3 border-b border-[#252D3B] pb-4">
           <div className="flex items-center gap-2.5">
             <img
               src="/icon-192.png"
               alt="ArenaFitPro"
-              className="w-9 h-9 rounded-xl border border-amber-400/40 object-cover"
+              className="w-9 h-9 rounded-xl border border-[#3478F6]/40 object-cover"
             />
             <div>
-              <span className="text-xs font-black tracking-wider text-white block leading-none">
+              <span className="text-xs font-black tracking-wider text-[#F4F6FA] block leading-none">
                 ARENAFITPRO
               </span>
-              <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest">
+              <span className="text-[10px] font-mono text-[#75A7FF] uppercase tracking-widest">
                 RANKING AUDITADO
               </span>
             </div>
@@ -160,7 +160,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
 
           <Link
             href={deepLinkHref}
-            className="min-h-[40px] px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-mono text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+            className="min-h-[40px] px-3.5 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white font-mono text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-[0_0_20px_rgba(52,120,246,0.3)]"
           >
             <span>Abrir no App</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -168,13 +168,13 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
         </header>
 
         {/* Título do Desafio */}
-        <section className="rounded-3xl border border-white/15 bg-gradient-to-b from-zinc-900/90 to-zinc-950 p-5 space-y-4 shadow-2xl">
+        <section className="rounded-3xl border border-[#252D3B] bg-[#121722] p-5 space-y-4 shadow-2xl">
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-400/15 border border-amber-400/35 text-[10px] font-mono font-bold text-amber-300 uppercase tracking-widest">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/35 text-[10px] font-mono font-bold text-[#75A7FF] uppercase tracking-widest">
               <Trophy className="w-3 h-3" />
               DESAFIO OFICIAL
             </span>
-            <span className="text-[10px] font-mono text-zinc-400">
+            <span className="text-[10px] font-mono text-[#A7B0C0]">
               {snapshot.totalParticipants}{' '}
               {snapshot.totalParticipants === 1 ? 'participante' : 'participantes'}
             </span>
@@ -226,13 +226,13 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
         </section>
 
         {/* Pódio Top 3 */}
-        <section className="rounded-3xl border border-white/10 bg-zinc-950 p-5 space-y-4">
+        <section className="rounded-3xl border border-[#252D3B] bg-[#121722] p-5 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300 flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5" />
               PÓDIO TOP 3
             </span>
-            <span className="text-[10px] font-mono text-zinc-500 uppercase">
+            <span className="text-[10px] font-mono text-[#A7B0C0] uppercase">
               CLASSIFICAÇÃO CONGELADA
             </span>
           </div>
@@ -245,18 +245,18 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                   <div className="h-12 w-12 rounded-2xl bg-slate-800/80 border-2 border-slate-300/60 flex items-center justify-center font-mono font-black text-sm text-slate-100">
                     {top2.initials}
                   </div>
-                  <p className="text-xs font-bold text-white truncate max-w-[95px] mt-1.5">
+                  <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[95px] mt-1.5">
                     {top2.name}
                   </p>
                   <span className="text-[11px] font-mono font-bold text-slate-300">
                     {top2.points} XP
                   </span>
-                  <div className="w-full h-16 rounded-t-2xl bg-gradient-to-t from-zinc-950 to-slate-400/20 border-t border-x border-slate-400/40 mt-2 flex flex-col items-center justify-center">
+                  <div className="w-full h-16 rounded-t-2xl bg-gradient-to-t from-[#121722] to-slate-400/20 border-t border-x border-slate-400/40 mt-2 flex flex-col items-center justify-center">
                     <span className="font-mono font-black text-slate-200 text-base">2º</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-16 rounded-t-2xl border border-dashed border-white/10 flex items-center justify-center text-zinc-600 font-mono text-xs">
+                <div className="w-full h-16 rounded-t-2xl border border-dashed border-[#252D3B] flex items-center justify-center text-[#A7B0C0] font-mono text-xs">
                   —
                 </div>
               )}
@@ -270,18 +270,18 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                   <div className="h-16 w-16 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center font-mono font-black text-lg text-amber-200 shadow-[0_0_24px_rgba(251,191,36,0.3)]">
                     {top1.initials}
                   </div>
-                  <p className="text-xs font-black text-white truncate max-w-[105px] mt-1.5">
+                  <p className="text-xs font-black text-[#F4F6FA] truncate max-w-[105px] mt-1.5">
                     {top1.name}
                   </p>
                   <span className="text-xs font-mono font-black text-amber-300">
                     {top1.points} XP
                   </span>
-                  <div className="w-full h-24 rounded-t-2xl bg-gradient-to-t from-zinc-950 to-amber-400/30 border-t border-x border-amber-400/60 mt-2 flex flex-col items-center justify-center">
+                  <div className="w-full h-24 rounded-t-2xl bg-gradient-to-t from-[#121722] to-amber-400/30 border-t border-x border-amber-400/60 mt-2 flex flex-col items-center justify-center">
                     <span className="font-mono font-black text-amber-300 text-xl">1º</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-24 rounded-t-2xl border border-dashed border-white/10 flex items-center justify-center text-zinc-600 font-mono text-xs">
+                <div className="w-full h-24 rounded-t-2xl border border-dashed border-[#252D3B] flex items-center justify-center text-[#A7B0C0] font-mono text-xs">
                   —
                 </div>
               )}
@@ -294,18 +294,18 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                   <div className="h-12 w-12 rounded-2xl bg-amber-950/70 border-2 border-amber-600/60 flex items-center justify-center font-mono font-black text-sm text-amber-300">
                     {top3.initials}
                   </div>
-                  <p className="text-xs font-bold text-white truncate max-w-[95px] mt-1.5">
+                  <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[95px] mt-1.5">
                     {top3.name}
                   </p>
                   <span className="text-[11px] font-mono font-bold text-amber-400">
                     {top3.points} XP
                   </span>
-                  <div className="w-full h-14 rounded-t-2xl bg-gradient-to-t from-zinc-950 to-amber-700/25 border-t border-x border-amber-700/50 mt-2 flex flex-col items-center justify-center">
+                  <div className="w-full h-14 rounded-t-2xl bg-gradient-to-t from-[#121722] to-amber-700/25 border-t border-x border-amber-700/50 mt-2 flex flex-col items-center justify-center">
                     <span className="font-mono font-black text-amber-400 text-sm">3º</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-14 rounded-t-2xl border border-dashed border-white/10 flex items-center justify-center text-zinc-600 font-mono text-xs">
+                <div className="w-full h-14 rounded-t-2xl border border-dashed border-[#252D3B] flex items-center justify-center text-[#A7B0C0] font-mono text-xs">
                   —
                 </div>
               )}
@@ -314,36 +314,45 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
         </section>
 
         {/* Lista Top 10 */}
-        <section className="rounded-3xl border border-white/10 bg-zinc-950 p-5 space-y-2.5">
+        <section className="rounded-3xl border border-[#252D3B] bg-[#121722] p-5 space-y-2.5">
           <div className="flex items-center justify-between pb-1">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
               TOP {topList.length} CLASSIFICAÇÃO
             </span>
-            <span className="text-[10px] font-mono text-zinc-500">PONTOS XP</span>
+            <span className="text-[10px] font-mono text-[#A7B0C0]">PONTOS XP</span>
           </div>
 
           {topList.map((entry) => {
             const isSharer = sharer?.rank === entry.rank && sharer?.name === entry.name;
             const widthPct = Math.max(8, Math.min(100, Math.round((entry.points / leaderPts) * 100)));
+            const rankBadgeClass =
+              entry.rank === 1
+                ? 'bg-amber-400/20 border-amber-400/50 text-amber-300'
+                : entry.rank === 2
+                ? 'bg-slate-300/20 border-slate-300/50 text-slate-200'
+                : entry.rank === 3
+                ? 'bg-amber-700/35 border-amber-500/60 text-amber-400'
+                : 'bg-[#080A0F] border-[#252D3B] text-[#A7B0C0]';
+
             return (
               <div
                 key={entry.rank}
                 className={`p-3 rounded-2xl border flex items-center justify-between gap-3 ${
                   isSharer
-                    ? 'bg-amber-400/10 border-amber-400/40'
-                    : 'bg-zinc-900/60 border-white/[0.07]'
+                    ? 'bg-[#3478F6]/15 border-[#3478F6]/40'
+                    : 'bg-[#181F2E] border-[#252D3B]'
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <span className="w-8 h-8 rounded-xl bg-black/60 border border-white/10 font-mono text-xs font-black text-zinc-200 flex items-center justify-center shrink-0">
+                  <span className={`w-8 h-8 rounded-xl border font-mono text-xs font-black flex items-center justify-center shrink-0 ${rankBadgeClass}`}>
                     #{entry.rank}
                   </span>
-                  <div className="w-8 h-8 rounded-xl bg-zinc-800 border border-white/10 font-mono text-xs font-bold text-amber-300 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#1B2330] border border-[#252D3B] font-mono text-xs font-bold text-[#75A7FF] flex items-center justify-center shrink-0">
                     {entry.initials}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-white truncate">{entry.name}</p>
-                    <div className="w-full h-1.5 rounded-full bg-white/10 mt-1 overflow-hidden">
+                    <p className="text-xs font-bold text-[#F4F6FA] truncate">{entry.name}</p>
+                    <div className="w-full h-1.5 rounded-full bg-[#252D3B] mt-1 overflow-hidden">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-[#2055BD] to-[#3478F6]"
                         style={{ width: `${widthPct}%` }}
@@ -351,7 +360,7 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
                     </div>
                   </div>
                 </div>
-                <span className="font-mono text-xs font-black text-white shrink-0">
+                <span className="font-mono text-xs font-black text-[#F4F6FA] shrink-0">
                   {entry.points} XP
                 </span>
               </div>

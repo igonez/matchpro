@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TitaniumMedalBadge, SilverMedalBadge } from '@/components/ui/metallic-badges';
+import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
 import { 
   Trophy, 
   Camera, 
@@ -128,37 +128,38 @@ export function HeroInteractiveMockup() {
                       </span>
                     </div>
 
-                    {/* Pódio 3 Colunas Titanium */}
+                    {/* Pódio 3 Colunas Ouro / Prata / Bronze */}
                     <div className="grid grid-cols-3 gap-2.5 items-end pt-2 pb-1">
                       <div className="flex flex-col items-center">
-                        <SilverMedalBadge size={34} className="mb-1.5" />
+                        <SilverMedalBadge size={34} className="mb-1.5 drop-shadow-[0_0_10px_rgba(203,213,225,0.3)]" />
                         <span className="text-xs font-bold text-[#F4F6FA] truncate max-w-[80px]">Mariana</span>
-                        <span className="text-xs font-mono text-[#A7B0C0]">1.820 pts</span>
-                        <div className="w-full h-20 bg-gradient-to-t from-[#121722] to-[#1B2330] rounded-t-xl border-t border-x border-[#252D3B] mt-1.5 flex items-center justify-center">
-                          <span className="font-mono font-bold text-[#A7B0C0] text-base">2º</span>
+                        <span className="text-xs font-mono text-slate-300 font-semibold">1.820 pts</span>
+                        <div className="w-full h-20 bg-gradient-to-t from-[#121722] via-slate-400/15 to-slate-300/25 rounded-t-xl border-t border-x border-slate-300/45 mt-1.5 flex flex-col items-center justify-center shadow-[0_0_15px_rgba(203,213,225,0.12)]">
+                          <span className="font-mono font-black text-slate-200 text-base leading-none">2º</span>
+                          <span className="text-[9px] font-mono font-bold text-slate-300/80 uppercase tracking-widest mt-0.5">PRATA</span>
                         </div>
                       </div>
 
                       <div className="flex flex-col items-center">
                         <div className="relative">
-                          <Crown className="w-4 h-4 text-[#3478F6] absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce" />
-                          <TitaniumMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_15px_rgba(52,120,246,0.35)]" />
+                          <Crown className="w-4 h-4 text-amber-400 absolute -top-3.5 left-1/2 -translate-x-1/2 animate-bounce drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                          <GoldMedalBadge size={42} className="mb-1.5 drop-shadow-[0_0_15px_rgba(251,191,36,0.45)]" />
                         </div>
                         <span className="text-xs sm:text-sm font-black text-[#F4F6FA] truncate max-w-[90px]">Carlos E.</span>
-                        <span className="text-xs font-mono text-[#3478F6] font-bold">2.140 pts</span>
-                        <div className="w-full h-28 bg-gradient-to-t from-[#1B2330] to-[#252D3B] rounded-t-xl border-t border-x border-[#3478F6]/40 mt-1.5 flex items-center justify-center shadow-[0_0_20px_rgba(52,120,246,0.15)]">
-                          <span className="font-mono font-black text-[#FFFFFF] text-xl">1º</span>
+                        <span className="text-xs font-mono text-amber-300 font-bold">2.140 pts</span>
+                        <div className="w-full h-28 bg-gradient-to-t from-[#121722] via-amber-500/20 to-amber-400/35 rounded-t-xl border-t border-x border-amber-400/60 mt-1.5 flex flex-col items-center justify-center shadow-[0_0_24px_rgba(251,191,36,0.22)]">
+                          <span className="font-mono font-black text-amber-300 text-xl leading-none">1º</span>
+                          <span className="text-[9px] font-mono font-bold text-amber-200/90 uppercase tracking-widest mt-1">OURO</span>
                         </div>
                       </div>
 
                       <div className="flex flex-col items-center">
-                        <div className="h-8 w-8 rounded-full border border-[#252D3B] bg-[#1B2330] flex items-center justify-center text-xs font-black font-mono text-[#A7B0C0] mb-1.5">
-                          3º
-                        </div>
+                        <BronzeMedalBadge size={34} className="mb-1.5 drop-shadow-[0_0_10px_rgba(217,119,6,0.35)]" />
                         <span className="text-xs font-bold text-[#F4F6FA] truncate max-w-[80px]">Rodrigo</span>
-                        <span className="text-xs font-mono text-[#A7B0C0]">1.690 pts</span>
-                        <div className="w-full h-16 bg-gradient-to-t from-[#121722] to-[#1B2330]/70 rounded-t-xl border-t border-x border-[#252D3B] mt-1.5 flex items-center justify-center">
-                          <span className="font-mono font-bold text-[#A7B0C0] text-base">3º</span>
+                        <span className="text-xs font-mono text-amber-500 font-semibold">1.690 pts</span>
+                        <div className="w-full h-16 bg-gradient-to-t from-[#121722] via-amber-900/25 to-amber-700/30 rounded-t-xl border-t border-x border-amber-600/50 mt-1.5 flex flex-col items-center justify-center shadow-[0_0_15px_rgba(217,119,6,0.15)]">
+                          <span className="font-mono font-black text-amber-400 text-base leading-none">3º</span>
+                          <span className="text-[9px] font-mono font-bold text-amber-500/85 uppercase tracking-widest mt-0.5">BRONZE</span>
                         </div>
                       </div>
                     </div>
@@ -167,7 +168,7 @@ export function HeroInteractiveMockup() {
                     <div className="p-3.5 rounded-xl bg-[#121722] border border-[#252D3B] space-y-2.5 text-left">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                          <div className="h-9 w-9 rounded-xl bg-[#3478F6] text-white flex flex-col items-center justify-center text-xs font-black font-mono shadow-md">
+                          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-500/50 text-amber-100 flex flex-col items-center justify-center text-xs font-black font-mono shadow-md">
                             #03
                           </div>
                           <div>
@@ -175,7 +176,7 @@ export function HeroInteractiveMockup() {
                             <div className="text-xs text-[#A7B0C0]">Faltam 130 XP para #2 Mariana</div>
                           </div>
                         </div>
-                        <span className="text-xs sm:text-sm font-mono font-bold text-[#F4F6FA]">1.690 XP</span>
+                        <span className="text-xs sm:text-sm font-mono font-bold text-amber-400">1.690 XP</span>
                       </div>
                       <button
                         type="button"
@@ -209,12 +210,12 @@ export function HeroInteractiveMockup() {
 
                       <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center py-2 border-b border-[#252D3B]">
                         <div>
-                          <div className="text-base font-black text-[#F4F6FA]">3º</div>
+                          <div className="text-base font-black text-amber-400">3º</div>
                           <div className="text-xs text-[#A7B0C0]">posição</div>
                         </div>
                         <div className="w-px h-6 bg-[#252D3B]" />
                         <div>
-                          <div className="text-base font-black text-[#F4F6FA]">1110</div>
+                          <div className="text-base font-black text-amber-300">1110</div>
                           <div className="text-xs text-[#A7B0C0]">pontos</div>
                         </div>
                         <div className="w-px h-6 bg-[#252D3B]" />
@@ -224,18 +225,33 @@ export function HeroInteractiveMockup() {
                         </div>
                       </div>
 
-                      <div className="space-y-1 text-left text-xs">
-                        <div className="flex justify-between text-[#A7B0C0]">
-                          <span>• Ana Clara</span>
-                          <span className="text-[#F4F6FA] font-bold">1280 XP</span>
+                      <div className="space-y-1.5 text-left text-xs">
+                        <div className="flex items-center justify-between text-[#F4F6FA] px-1.5 py-0.5">
+                          <span className="flex items-center gap-1.5 font-semibold">
+                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-400/20 border border-amber-400/50 text-[10px] font-mono font-black text-amber-300">
+                              1º
+                            </span>
+                            <span>Ana Clara</span>
+                          </span>
+                          <span className="text-amber-300 font-mono font-bold">1280 XP</span>
                         </div>
-                        <div className="flex justify-between text-[#A7B0C0]">
-                          <span>• Bruno M.</span>
-                          <span className="text-[#F4F6FA] font-bold">1195 XP</span>
+                        <div className="flex items-center justify-between text-[#F4F6FA] px-1.5 py-0.5">
+                          <span className="flex items-center gap-1.5 font-medium">
+                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-300/20 border border-slate-300/50 text-[10px] font-mono font-black text-slate-200">
+                              2º
+                            </span>
+                            <span>Bruno M.</span>
+                          </span>
+                          <span className="text-slate-200 font-mono font-bold">1195 XP</span>
                         </div>
-                        <div className="flex justify-between text-[#F4F6FA] font-extrabold">
-                          <span>• Carla S. (Você)</span>
-                          <span className="text-[#3478F6]">1110 XP</span>
+                        <div className="flex items-center justify-between text-[#F4F6FA] font-extrabold bg-[#3478F6]/15 border border-[#3478F6]/35 rounded-lg px-2 py-1">
+                          <span className="flex items-center gap-1.5">
+                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-700/35 border border-amber-500/60 text-[10px] font-mono font-black text-amber-400">
+                              3º
+                            </span>
+                            <span>Carla S. (Você)</span>
+                          </span>
+                          <span className="text-amber-400 font-mono">1110 XP</span>
                         </div>
                       </div>
 

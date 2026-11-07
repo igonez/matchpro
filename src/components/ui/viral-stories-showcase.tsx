@@ -24,11 +24,11 @@ const BRAND_PRESETS = [
 ];
 
 const STANDINGS = [
-  { name: 'Ana Clara', pts: 1280, isMe: false },
-  { name: 'Bruno M.', pts: 1195, isMe: false },
-  { name: 'Carla S.', pts: 1110, isMe: true },
-  { name: 'Diego R.', pts: 1040, isMe: false },
-  { name: 'Elisa P.', pts: 985, isMe: false },
+  { rank: 1, name: 'Ana Clara', pts: 1280, isMe: false },
+  { rank: 2, name: 'Bruno M.', pts: 1195, isMe: false },
+  { rank: 3, name: 'Carla S.', pts: 1110, isMe: true },
+  { rank: 4, name: 'Diego R.', pts: 1040, isMe: false },
+  { rank: 5, name: 'Elisa P.', pts: 985, isMe: false },
 ];
 
 export function ViralStoriesShowcase() {
@@ -332,12 +332,12 @@ export function ViralStoriesShowcase() {
                       {/* 3 Métricas com Divisórias */}
                       <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center w-full pb-3">
                         <div className="flex flex-col items-center">
-                          <span className="text-lg font-bold text-[#F4F6FA] leading-tight">3º</span>
+                          <span className="text-lg font-black text-amber-400 leading-tight">3º</span>
                           <span className="text-[11px] text-[#A7B0C0]">posição</span>
                         </div>
                         <div className="w-px h-7 bg-[#252D3B]" />
                         <div className="flex flex-col items-center">
-                          <span className="text-lg font-bold text-[#3478F6] leading-tight">1110</span>
+                          <span className="text-lg font-black text-amber-300 leading-tight">1110</span>
                           <span className="text-[11px] text-[#A7B0C0]">pontos</span>
                         </div>
                         <div className="w-px h-7 bg-[#252D3B]" />
@@ -348,46 +348,80 @@ export function ViralStoriesShowcase() {
                       </div>
 
                       {/* Linha Divisória */}
-                      <div className="w-full h-px bg-[#252D3B] mb-3.5" />
+                      <div className="w-full h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent mb-3.5" />
 
-                      {/* Lista Top 5 */}
+                      {/* Lista Top 5 com Pódio Ouro / Prata / Bronze */}
                       <div className="w-full space-y-1.5 text-left">
                         <div className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#A7B0C0] mb-1">
                           CLASSIFICAÇÃO
                         </div>
-                        {STANDINGS.map((s) => (
-                          <div key={s.name} className="flex items-center justify-between text-xs">
-                            <span
-                              className={`flex items-center gap-2 truncate ${
-                                s.isMe ? 'text-[#F4F6FA] font-extrabold' : 'text-[#A7B0C0] font-medium'
+                        {STANDINGS.map((s) => {
+                          const badgeStyle =
+                            s.rank === 1
+                              ? 'bg-amber-400/20 border-amber-400/60 text-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.25)]'
+                              : s.rank === 2
+                              ? 'bg-slate-300/20 border-slate-300/55 text-slate-200'
+                              : s.rank === 3
+                              ? 'bg-amber-700/35 border-amber-500/60 text-amber-400'
+                              : 'bg-[#1B2330] border-[#252D3B] text-[#A7B0C0]';
+
+                          const xpStyle =
+                            s.rank === 1
+                              ? 'text-amber-300 font-bold'
+                              : s.rank === 2
+                              ? 'text-slate-200 font-bold'
+                              : s.rank === 3
+                              ? 'text-amber-400 font-extrabold'
+                              : 'text-[#F4F6FA] font-semibold';
+
+                          return (
+                            <div
+                              key={s.name}
+                              className={`flex items-center justify-between text-xs transition-colors ${
+                                s.isMe
+                                  ? 'bg-[#3478F6]/15 border border-[#3478F6]/35 rounded-lg px-2 py-1'
+                                  : 'px-1 py-0.5'
                               }`}
                             >
                               <span
-                                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                  s.isMe ? 'bg-[#3478F6]' : 'bg-[#252D3B]'
+                                className={`flex items-center gap-2 truncate ${
+                                  s.isMe
+                                    ? 'text-[#F4F6FA] font-extrabold'
+                                    : s.rank <= 2
+                                    ? 'text-[#F4F6FA] font-semibold'
+                                    : 'text-[#A7B0C0] font-medium'
                                 }`}
-                              />
-                              <span>{s.name}</span>
-                            </span>
-                            <span className={s.isMe ? 'text-[#3478F6] font-bold' : 'text-[#F4F6FA]'}>{s.pts} XP</span>
-                          </div>
-                        ))}
+                              >
+                                <span
+                                  className={`w-4 h-4 rounded-full border flex items-center justify-center text-[9px] font-mono font-black shrink-0 ${badgeStyle}`}
+                                >
+                                  {s.rank}º
+                                </span>
+                                <span>{s.name}</span>
+                              </span>
+                              <span className={`font-mono ${xpStyle}`}>{s.pts} XP</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </>
                   ) : (
                     /* Variante Herói (Posição Gigante) */
                     <div className="py-3 flex flex-col items-center">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-700/30 border border-amber-500/50 text-[10px] font-mono font-bold text-amber-300 uppercase tracking-widest mb-1.5">
+                        PÓDIO • BRONZE
+                      </span>
                       <div
-                        className="text-7xl font-black text-[#F4F6FA] leading-none tracking-tight"
-                        style={{ textShadow: '0 4px 18px rgba(0,0,0,0.85)' }}
+                        className="text-7xl font-black text-amber-400 leading-none tracking-tight"
+                        style={{ textShadow: '0 4px 20px rgba(217,119,6,0.45)' }}
                       >
                         3º
                       </div>
                       <div className="text-sm font-semibold text-[#A7B0C0] mt-2">
                         de 42 atletas
                       </div>
-                      <div className="w-16 h-px bg-[#3478F6]/40 my-3.5 shadow" />
-                      <div className="text-xl font-extrabold text-[#3478F6]">1110 XP</div>
+                      <div className="w-16 h-px bg-amber-400/60 my-3.5 shadow" />
+                      <div className="text-xl font-extrabold font-mono text-amber-300">1110 XP</div>
                     </div>
                   )}
 

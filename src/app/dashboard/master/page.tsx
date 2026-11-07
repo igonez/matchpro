@@ -289,7 +289,7 @@ export default function MasterDashboardPage() {
             <SpotlightCard3D glowIntensity={0.12} className="p-5 space-y-3">
               <div className="flex items-center justify-between text-zinc-400">
                 <span className="text-[11px] font-mono uppercase tracking-wider">Treinadores Cadastrados</span>
-                <Users className="w-4 h-4 text-cyan-400" />
+                <Users className="w-4 h-4 text-[#75A7FF]" />
               </div>
               <div>
                 <span className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight">
@@ -343,7 +343,7 @@ export default function MasterDashboardPage() {
 
             <div className="p-6 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <Megaphone className="w-4 h-4 text-cyan-400" /> Aquisição & Tráfego (Resumo)
+                <Megaphone className="w-4 h-4 text-[#75A7FF]" /> Aquisição & Tráfego (Resumo)
               </h3>
               <div className="space-y-3 text-xs">
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
@@ -661,7 +661,7 @@ export default function MasterDashboardPage() {
                           <td className="py-3 px-3">
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase border ${
                               lead.utm_medium === 'beta_tester'
-                                ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                                ? 'bg-[#3478F6]/10 text-[#75A7FF] border-[#3478F6]/25'
                                 : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                             }`}>
                               {lead.utm_medium === 'beta_tester' ? 'Beta Tester' : 'Lista VIP'}

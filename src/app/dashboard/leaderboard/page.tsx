@@ -336,7 +336,7 @@ function CoachLeaderboardContent() {
         <SpotlightCard3D className="p-4">
           <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
             <span>COMPETIDORES</span>
-            <Users className="h-4 w-4 text-cyan-400" />
+            <Users className="h-4 w-4 text-[#75A7FF]" />
           </div>
           <div className="text-2xl font-black text-white font-mono mt-2">
             {standings.length}
@@ -774,7 +774,7 @@ function CoachLeaderboardContent() {
                     <div className="text-right">
                       <span className="text-base font-black font-mono text-white block">
                         {Math.round(squad.squad_average_points || 0)}{' '}
-                        <span className="text-[10px] text-cyan-400">XP Médio</span>
+                        <span className="text-[10px] text-[#75A7FF]">XP Médio</span>
                       </span>
                       <span className="text-[10px] font-mono text-zinc-500">
                         Total: {squad.squad_total_points || 0} XP

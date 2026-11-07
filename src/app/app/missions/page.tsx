@@ -505,13 +505,13 @@ function StudentMissionsContent() {
     switch (mission.category) {
       case 'treino':
         return (
-          <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
             <Dumbbell className="w-3 h-3" /> Treino (1/dia)
           </span>
         );
       case 'cardio':
         return (
-          <span className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
             <Activity className="w-3 h-3" /> Cardio (1/dia)
           </span>
         );
@@ -523,7 +523,7 @@ function StudentMissionsContent() {
         );
       case 'habito':
         return (
-          <span className="text-[10px] font-mono text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
             <Droplets className="w-3 h-3" /> Hábito
           </span>
         );
@@ -755,9 +755,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Treinos de Força',
       subtitle: 'Limite fisiológico de 1 treino validado por dia',
       Icon: Dumbbell,
-      accentBorder: 'border-amber-500/25',
-      accentBg: 'from-amber-500/[0.08] via-zinc-950 to-zinc-950',
-      badgeColor: 'text-amber-300 bg-amber-500/15 border-amber-500/30',
+      accentBorder: 'border-[#3478F6]/30',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
+      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
       ruleLabel: isWorkoutDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
     },
     {
@@ -765,9 +765,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Sessões de Cardio',
       subtitle: 'Condicionamento aeróbico • Limite de 1 sessão por dia',
       Icon: Activity,
-      accentBorder: 'border-cyan-500/25',
-      accentBg: 'from-cyan-500/[0.08] via-zinc-950 to-zinc-950',
-      badgeColor: 'text-cyan-300 bg-cyan-500/15 border-cyan-500/30',
+      accentBorder: 'border-[#3478F6]/30',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
+      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
       ruleLabel: isCardioDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
     },
     {
@@ -785,9 +785,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Hábitos & Metas',
       subtitle: 'Hidratação, rotina e disciplina diária da turma',
       Icon: Droplets,
-      accentBorder: 'border-purple-500/25',
-      accentBg: 'from-purple-500/[0.08] via-zinc-950 to-zinc-950',
-      badgeColor: 'text-purple-300 bg-purple-500/15 border-purple-500/30',
+      accentBorder: 'border-[#3478F6]/30',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
+      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
       ruleLabel:
         pillarStats.habito.dailyCount > 0
           ? `${pillarStats.habito.todayDone || 0}/${pillarStats.habito.dailyCount} concluídos hoje • Reset diário`
@@ -1021,14 +1021,14 @@ function StudentMissionsContent() {
               label: 'TREINOS',
               Icon: Dumbbell,
               stats: pillarStats.treino,
-              color: 'text-amber-300 border-amber-500/30 bg-amber-500/10',
+              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
             },
             {
               id: 'cardio',
               label: 'CARDIOS',
               Icon: Activity,
               stats: pillarStats.cardio,
-              color: 'text-cyan-300 border-cyan-500/30 bg-cyan-500/10',
+              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
             },
             {
               id: 'refeicao',
@@ -1042,7 +1042,7 @@ function StudentMissionsContent() {
               label: 'HÁBITOS',
               Icon: Droplets,
               stats: pillarStats.habito,
-              color: 'text-purple-300 border-purple-500/30 bg-purple-500/10',
+              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
             },
           ].map((p) => {
             const isSelected = selectedCategory === p.id;

@@ -682,9 +682,9 @@ export function StudentBottomNav() {
 
                   const catMeta: Record<string, { Icon: any; label: string; color: string }> = {
                     treino: { Icon: Dumbbell, label: 'Treino', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
-                    cardio: { Icon: Activity, label: 'Cardio', color: 'border-cyan-400/30 text-cyan-300 bg-cyan-400/10' },
+                    cardio: { Icon: Activity, label: 'Cardio', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
                     refeicao: { Icon: Utensils, label: 'Nutrição', color: 'border-[#3478F6]/30 text-[#3478F6] bg-[#3478F6]/10' },
-                    habito: { Icon: Droplets, label: 'Hábito', color: 'border-purple-400/30 text-purple-300 bg-purple-400/10' },
+                    habito: { Icon: Droplets, label: 'Hábito', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
                   };
 
                   const currentMeta = catMeta[m.category] || { Icon: Target, label: m.category, color: 'border-[#252D3B] text-[#F4F6FA] bg-[#121722]' };

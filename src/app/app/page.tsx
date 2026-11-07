@@ -977,9 +977,9 @@ export default function StudentHomePage() {
                       const customList = task.list_id ? missionLists.find((l) => l.id === task.list_id) : null;
                       const catMeta: Record<string, { label: string; color: string }> = {
                         treino: { label: 'TREINO', color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10' },
-                        cardio: { label: 'CARDIO', color: 'text-cyan-300 border-cyan-500/25 bg-cyan-500/10' },
+                        cardio: { label: 'CARDIO', color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10' },
                         refeicao: { label: 'NUTRIÇÃO', color: 'text-[#3478F6] border-[#3478F6]/30 bg-[#3478F6]/10' },
-                        habito: { label: 'HÁBITO', color: 'text-purple-300 border-purple-500/25 bg-purple-500/10' },
+                        habito: { label: 'HÁBITO', color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10' },
                       };
                       const defaultMeta = catMeta[task.category] || catMeta.habito;
                       const meta = customList

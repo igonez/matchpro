@@ -972,14 +972,14 @@ function MissionsManagerContent() {
     switch (key) {
       case 'treino':
         return {
-          border: 'border-amber-500/25',
-          headerBg: 'bg-amber-500/10 border-amber-500/25 text-amber-300',
+          border: 'border-[#3478F6]/25',
+          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
           label: 'Treino',
         };
       case 'cardio':
         return {
-          border: 'border-cyan-500/25',
-          headerBg: 'bg-cyan-500/10 border-cyan-500/25 text-cyan-300',
+          border: 'border-[#3478F6]/25',
+          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
           label: 'Cardio',
         };
       case 'refeicao':
@@ -990,8 +990,8 @@ function MissionsManagerContent() {
         };
       case 'habito':
         return {
-          border: 'border-purple-500/25',
-          headerBg: 'bg-purple-500/10 border-purple-500/25 text-purple-300',
+          border: 'border-[#3478F6]/25',
+          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
           label: 'Hábito',
         };
       default:

@@ -371,7 +371,7 @@ export default function LeaderboardPage() {
               {currentChallenge?.title || 'Arena de Classificação'}
             </h1>
             <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
               Pontuação auditada por integridade de check-ins.
             </p>
           </div>
@@ -434,7 +434,7 @@ export default function LeaderboardPage() {
           <div className="space-y-1.5 pt-2 border-t border-white/[0.08]">
             <div className="flex items-center justify-between text-[10px] font-mono">
               <span className="text-zinc-400 uppercase flex items-center gap-1">
-                <Target className="w-3 h-3 text-cyan-400" />
+                <Target className="w-3 h-3 text-[#75A7FF]" />
                 {myRank === 1 ? 'Domínio da Liderança' : `Progresso até #${myRank - 1}`}
               </span>
               <span className="text-white font-bold">{overtakeProgressPct}%</span>
@@ -466,7 +466,7 @@ export default function LeaderboardPage() {
           <div className="p-3 rounded-2xl bg-zinc-950/90 border border-white/[0.08] flex flex-col justify-between">
             <div className="flex items-center justify-between text-[9px] font-mono text-zinc-400 uppercase">
               <span>ATLETAS</span>
-              <Users className="w-3.5 h-3.5 text-cyan-400" />
+              <Users className="w-3.5 h-3.5 text-[#75A7FF]" />
             </div>
             <div className="text-base font-black font-mono text-white mt-1.5">
               {standings.length}

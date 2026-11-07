@@ -28,10 +28,10 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
     if (!isUnlocked) return 'border-[#252D3B] text-zinc-500 bg-white/5';
     switch (category) {
       case 'streak': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
-      case 'cardio': return 'border-cyan-400/40 text-cyan-300 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.15)]';
+      case 'cardio': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
       case 'nutrition': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
       case 'ranking': return 'border-[#3478F6]/50 text-[#F4F6FA] bg-[#3478F6]/20 shadow-[0_0_20px_rgba(52,120,246,0.25)]';
-      case 'points': return 'border-purple-400/40 text-purple-300 bg-purple-400/10 shadow-[0_0_15px_rgba(192,132,252,0.15)]';
+      case 'points': return 'border-[#3478F6]/40 text-[#75A7FF] bg-[#3478F6]/10 shadow-[0_0_15px_rgba(52,120,246,0.15)]';
       default: return 'border-[#3478F6]/30 text-white bg-[#3478F6]/10';
     }
   };

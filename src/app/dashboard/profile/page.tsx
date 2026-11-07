@@ -54,6 +54,7 @@ export default function ProfessionalProfilePage() {
   const [userEmail, setUserEmail] = useState('');
   const [professionalId, setProfessionalId] = useState('');
   const [fullName, setFullName] = useState('');
+  const [brandName, setBrandName] = useState('');
   const [specialty, setSpecialty] = useState<'personal_trainer' | 'nutritionist' | 'holistic_coach' | 'gym_owner'>('personal_trainer');
   const [phone, setPhone] = useState('');
   const [instagram, setInstagram] = useState('');
@@ -150,11 +151,12 @@ export default function ProfessionalProfilePage() {
 
         if (prof) {
           setFullName(prof.full_name || metadata.full_name || '');
+          setBrandName(prof.brand_name || metadata.brand_name || '');
           setSpecialty(prof.specialty || metadata.specialty || 'personal_trainer');
           setPhone(phNum);
           setInstagram(prof.instagram || metadata.instagram || '');
           setBio(prof.bio || metadata.bio || '');
-          setAvatarUrl(prof.avatar_url || metadata.avatar_url || metadata.picture || null);
+          setAvatarUrl(prof.avatar_url || prof.brand_logo_url || metadata.avatar_url || metadata.picture || null);
           setDocumentType(prof.document_type || metadata.document_type || 'CPF');
           setDocumentNumber(docNum);
           setCrefNumber(prof.cref_number || metadata.cref_number || '');
@@ -172,6 +174,7 @@ export default function ProfessionalProfilePage() {
           setCurrentPeriodEnd(prof.current_period_end || null);
         } else {
           setFullName(metadata.full_name || user.email?.split('@')[0] || '');
+          setBrandName(metadata.brand_name || '');
           setPhone(phNum);
           setInstagram(metadata.instagram || '');
           setBio(metadata.bio || '');
@@ -199,39 +202,28 @@ export default function ProfessionalProfilePage() {
     setUploadingAvatar(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `coach_${professionalId}_${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('role', 'coach');
 
-      const { error: uploadError } = await supabase.storage
-        .from('submissions')
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('submissions')
-        .getPublicUrl(filePath);
-
-      setAvatarUrl(publicUrl);
-
-      await supabase.auth.updateUser({
-        data: {
-          avatar_url: publicUrl,
-          picture: publicUrl,
-        },
+      const res = await fetch('/api/profile/avatar', {
+        method: 'POST',
+        body: formData,
       });
 
-      try {
-        await supabase
-          .from('professionals')
-          .update({ avatar_url: publicUrl } as any)
-          .eq('id', professionalId);
-      } catch (colErr) {
-        console.warn('Coluna avatar_url sincronizada via auth metadata.');
+      const data = await res.json();
+      if (!res.ok || !data?.publicUrl) {
+        throw new Error(data?.error || 'Falha ao enviar foto de perfil.');
       }
 
-      showToast('Foto de perfil atualizada com sucesso!');
+      const publicUrl = data.publicUrl;
+      setAvatarUrl(publicUrl);
+
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('arena_coach_logo_url', publicUrl);
+      }
+
+      showToast('Foto de perfil e logo do ranking atualizadas com sucesso!');
     } catch (err: any) {
       console.error('Erro ao subir foto de perfil:', err);
       showToast('Erro ao carregar imagem: ' + err.message);
@@ -282,9 +274,11 @@ export default function ProfessionalProfilePage() {
       const isDocNowVerified = Boolean(documentNumber.trim().replace(/\D/g, '').length >= 11);
 
       // 1. Atualizar metadados do Auth
+      const effectiveBrandName = brandName.trim() || fullName.trim();
       await supabase.auth.updateUser({
         data: {
           full_name: fullName.trim(),
+          brand_name: effectiveBrandName,
           phone: phone.trim() || null,
           specialty,
           instagram: instagram.trim() || null,
@@ -297,9 +291,18 @@ export default function ProfessionalProfilePage() {
         },
       });
 
-      // 2. Gravar na tabela professionals usando UPDATE (para não colidir com triggers de plano)
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('arena_coach_brand_name', effectiveBrandName);
+        if (avatarUrl) {
+          window.localStorage.setItem('arena_coach_logo_url', avatarUrl);
+        }
+      }
+
+      // 2. Gravar na tabela professionals usando UPDATE (com fallback para INSERT caso a linha ainda não exista)
       const updatePayload: any = {
         full_name: fullName.trim(),
+        brand_name: effectiveBrandName || null,
+        brand_logo_url: avatarUrl || null,
         specialty,
         phone: phone.trim() || null,
         instagram: instagram.trim() || null,
@@ -320,23 +323,36 @@ export default function ProfessionalProfilePage() {
         updatePayload.asaas_pix_key = asaasPixKey.trim();
       }
 
-      // Tenta atualizar incluindo cref_number
-      let { error: updateError } = await supabase
+      // Verifica se já existe registro em professionals
+      const { data: existingProf } = await supabase
         .from('professionals')
-        .update({ ...updatePayload, cref_number: crefNumber.trim() || null })
-        .eq('id', professionalId);
+        .select('id')
+        .eq('id', professionalId)
+        .maybeSingle();
 
-      // Se falhar (ex: coluna cref_number não existe ainda no banco), tenta sem cref_number
-      if (updateError) {
-        console.warn('Tentativa com cref_number falhou, salvando dados principais:', updateError.message);
-        const { error: retryError } = await supabase
+      if (!existingProf) {
+        await supabase
           .from('professionals')
-          .update(updatePayload)
+          .insert({ id: professionalId, ...updatePayload, cref_number: crefNumber.trim() || null });
+      } else {
+        // Tenta atualizar incluindo cref_number
+        let { error: updateError } = await supabase
+          .from('professionals')
+          .update({ ...updatePayload, cref_number: crefNumber.trim() || null })
           .eq('id', professionalId);
 
-        if (retryError) {
-          console.error('Erro ao atualizar tabela professionals:', retryError);
-          throw new Error('Falha ao salvar dados no banco: ' + retryError.message);
+        // Se falhar (ex: coluna opcional), tenta sem cref_number
+        if (updateError) {
+          console.warn('Tentativa com cref_number falhou, salvando dados principais:', updateError.message);
+          const { error: retryError } = await supabase
+            .from('professionals')
+            .update(updatePayload)
+            .eq('id', professionalId);
+
+          if (retryError) {
+            console.error('Erro ao atualizar tabela professionals:', retryError);
+            throw new Error('Falha ao salvar dados no banco: ' + retryError.message);
+          }
         }
       }
 
@@ -458,19 +474,40 @@ export default function ProfessionalProfilePage() {
                 />
               </div>
 
-              <div className="space-y-1.5 text-center sm:text-left flex-1">
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                  <h3 className="text-base font-bold text-white font-mono">{fullName || 'Treinador ArenaFit'}</h3>
-                  {documentVerified && (
-                    <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono">
-                      <ShieldCheck className="h-3 w-3 mr-1" /> CONTA VERIFICADA
-                    </Badge>
-                  )}
+              <div className="space-y-3 text-center sm:text-left flex-1 w-full">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <h3 className="text-base font-bold text-white font-mono">
+                      {brandName.trim() || fullName || 'Treinador ArenaFit'}
+                    </h3>
+                    {documentVerified && (
+                      <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono">
+                        <ShieldCheck className="h-3 w-3 mr-1" /> CONTA VERIFICADA
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-xs text-zinc-400">{userEmail}</p>
+                  <p className="text-[10px] font-mono text-zinc-500">
+                    {uploadingAvatar ? 'Enviando imagem...' : 'Formatos aceitos: JPG, PNG, WEBP até 5MB.'}
+                  </p>
                 </div>
-                <p className="text-xs text-zinc-400">{userEmail}</p>
-                <p className="text-[10px] font-mono text-zinc-500">
-                  {uploadingAvatar ? 'Enviando imagem...' : 'Formatos aceitos: JPG, PNG, WEBP até 5MB.'}
-                </p>
+
+                <div className="pt-2 border-t border-white/[0.06] text-left max-w-md">
+                  <label className="text-[11px] font-mono uppercase tracking-wider text-amber-300 font-bold block mb-1.5">
+                    Nome de Exibição / Marca (Compartilhar Ranking & Missões)
+                  </label>
+                  <Input
+                    type="text"
+                    value={brandName}
+                    onChange={(e) => setBrandName(e.target.value)}
+                    placeholder={fullName || 'Ex: Team Coach Igor • Consultoria'}
+                    maxLength={42}
+                    className="bg-black/60 border-white/15 text-white rounded-xl focus:border-amber-400/60 h-10 text-xs font-bold"
+                  />
+                  <span className="text-[10px] text-zinc-400 font-mono mt-1 block">
+                    Este nome e sua foto aparecerão no topo do card de Compartilhar Ranking (Stories 9:16) e nas missões dos alunos.
+                  </span>
+                </div>
               </div>
             </div>
           </CardContent>

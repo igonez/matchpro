@@ -206,6 +206,9 @@ function JoinChallengeContent() {
             *,
             professionals (
               full_name,
+              brand_name,
+              avatar_url,
+              brand_logo_url,
               specialty,
               plan_tier
             ),
@@ -500,9 +503,18 @@ function JoinChallengeContent() {
             <h1 className="text-3xl sm:text-4xl font-black text-[#F4F6FA] tracking-tight">
               {challenge.title}
             </h1>
-            <p className="text-xs text-[#A7B0C0] mt-1 font-medium">
-              Treinador: {challenge.professionals?.full_name || 'Coach Certificado'}
-            </p>
+            <div className="flex items-center gap-2 mt-2">
+              {(challenge.professionals?.avatar_url || challenge.professionals?.brand_logo_url) && (
+                <img
+                  src={challenge.professionals?.avatar_url || challenge.professionals?.brand_logo_url}
+                  alt={challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Treinador'}
+                  className="h-6 w-6 rounded-full object-cover border border-amber-400/50"
+                />
+              )}
+              <p className="text-xs text-[#A7B0C0] font-medium">
+                Treinador: <strong className="text-white">{challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Coach Certificado'}</strong>
+              </p>
+            </div>
           </div>
 
           <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed font-sans">

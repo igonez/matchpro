@@ -72,12 +72,18 @@ function CoachLeaderboardContent() {
           .maybeSingle(),
       ]);
 
+      const meta = user.user_metadata || {};
+      const localBrandName =
+        typeof window !== 'undefined' ? window.localStorage.getItem('arena_coach_brand_name') : null;
+      const localLogoUrl =
+        typeof window !== 'undefined' ? window.localStorage.getItem('arena_coach_logo_url') : null;
+
       setCoachProfile({
         id: user.id,
-        fullName: prof?.full_name || user.user_metadata?.full_name || null,
-        avatarUrl: prof?.avatar_url || user.user_metadata?.avatar_url || null,
-        brandName: prof?.brand_name || null,
-        brandLogoUrl: prof?.brand_logo_url || null,
+        fullName: prof?.full_name || meta.full_name || null,
+        avatarUrl: prof?.avatar_url || meta.avatar_url || meta.picture || localLogoUrl || null,
+        brandName: prof?.brand_name || meta.brand_name || localBrandName || prof?.full_name || meta.full_name || null,
+        brandLogoUrl: prof?.brand_logo_url || prof?.avatar_url || meta.avatar_url || meta.picture || localLogoUrl || null,
       });
 
       if (data && data.length > 0) {

@@ -66,6 +66,7 @@ export default function StudentHomePage() {
     habitos: { done: 0, total: 0 },
   });
   const [listCounts, setListCounts] = useState<Record<string, { done: number; total: number }>>({});
+  const [totalWeekMissionsCount, setTotalWeekMissionsCount] = useState(0);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Central de Notificações
@@ -148,7 +149,7 @@ export default function StudentHomePage() {
           supabase.from('students').select('*').eq('id', user.id).maybeSingle(),
           supabase
             .from('challenge_participants')
-            .select('challenge_id, payment_status, challenges(*, challenge_weeks(*))')
+            .select('challenge_id, payment_status, challenges(*, challenge_weeks(*), professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
             .eq('student_id', user.id)
             .in('payment_status', ['paid', 'complimentary'])
             .order('joined_at', { ascending: false })
@@ -233,7 +234,7 @@ export default function StudentHomePage() {
               .order('order_index', { ascending: true }),
             supabase
               .from('missions')
-              .select('id, title, category, list_id, validation_type, daily_limit, points_rewarded, target_frequency, week_id, order_index, is_bonus, is_daily_reset')
+              .select('*')
               .eq('challenge_id', challengeData.id)
               .order('order_index', { ascending: true }),
             supabase
@@ -290,11 +291,19 @@ export default function StudentHomePage() {
             const weekFiltered = allMissions.filter(
               (m: any) => m.week_id === activeWeekObj.id || (activeWeekNum === 1 && !m.week_id)
             );
-            if (weekFiltered.length > 0 || activeWeekNum > 1) {
+            if (weekFiltered.length > 0) {
               allMissions = weekFiltered;
+            } else {
+              // Fallback: se o treinador cadastrou missões apenas na Semana 1 ou sem week_id, exibir na tela inicial
+              const week1Obj = weeksArr.find((w: any) => Number(w.week_number) === 1);
+              const fallbackWeek1 = allMissions.filter(
+                (m: any) => !m.week_id || (week1Obj?.id && m.week_id === week1Obj.id)
+              );
+              allMissions = fallbackWeek1.length > 0 ? fallbackWeek1 : allMissions;
             }
           }
         }
+        setTotalWeekMissionsCount(allMissions.length);
 
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
@@ -330,7 +339,7 @@ export default function StudentHomePage() {
         const lCounts: Record<string, { done: number; total: number }> = {};
 
         allMissions?.forEach((m: any) => {
-          const isDaily = m.is_daily_reset || m.category === 'refeicao';
+          const isDaily = m.is_daily_reset || m.category === 'refeicao' || (m.category === 'habito' && (m.target_frequency || 1) >= 7);
           const freq = isDaily ? (m.target_frequency || 7) : (m.target_frequency || 1);
           
           // Se a missão for de reset diário, conta todas as submissões aprovadas dela nesta semana
@@ -344,12 +353,20 @@ export default function StudentHomePage() {
             doneForThis = approvedMissionIds.has(m.id) ? freq : 0;
           }
 
-          const listKey = m.list_id || m.category;
-          if (!lCounts[listKey]) {
-            lCounts[listKey] = { done: 0, total: 0 };
+          if (m.list_id) {
+            if (!lCounts[m.list_id]) {
+              lCounts[m.list_id] = { done: 0, total: 0 };
+            }
+            lCounts[m.list_id].total += freq;
+            lCounts[m.list_id].done += doneForThis;
           }
-          lCounts[listKey].total += freq;
-          lCounts[listKey].done += doneForThis;
+          if (m.category) {
+            if (!lCounts[m.category]) {
+              lCounts[m.category] = { done: 0, total: 0 };
+            }
+            lCounts[m.category].total += freq;
+            lCounts[m.category].done += doneForThis;
+          }
 
           if (m.category === 'treino') {
             tTot += freq;
@@ -375,13 +392,13 @@ export default function StudentHomePage() {
         setListCounts(lCounts);
 
         // Selecionar tarefas de hoje:
-        // - Para missões com reset diário (refeições, hábitos diários, etc.): incluir as ainda NÃO concluídas HOJE
-        // - Para missões semanais pontuais: próxima missão pendente de cada lista/categoria
+        // - Para missões com reset diário (refeições, hábitos, etc.): incluir todas as ainda NÃO concluídas HOJE
+        // - Para missões de treino/cardio: exibir a próxima missão pendente da semana
         const nextByCat: Record<string, any> = {};
         const availableDailyTasks: any[] = [];
 
         (allMissions || []).forEach((m: any) => {
-          const isDaily = m.is_daily_reset || m.category === 'refeicao';
+          const isDaily = m.is_daily_reset || m.category === 'refeicao' || m.category === 'habito';
           if (isDaily) {
             if (!todaySubmittedMissionIds.has(m.id)) {
               availableDailyTasks.push(m);
@@ -619,9 +636,19 @@ export default function StudentHomePage() {
           </Link>
 
           <div>
-            <span className="text-xs text-[#A7B0C0] font-medium block">
-              {challenge?.title || 'Olá, atleta'}
-            </span>
+            {(() => {
+              const profObj = Array.isArray(challenge?.professionals)
+                ? challenge?.professionals[0]
+                : challenge?.professionals;
+              const coachName = profObj?.brand_name || profObj?.full_name || null;
+              return (
+                <span className="text-xs text-[#A7B0C0] font-medium block">
+                  {coachName
+                    ? `${coachName} • ${challenge?.title || 'Turma Ativa'}`
+                    : challenge?.title || 'Olá, atleta'}
+                </span>
+              );
+            })()}
             <h1 className="text-base sm:text-lg font-black text-[#F4F6FA] leading-tight">
               {student?.full_name?.split(' ')[0] || 'Atleta'}
             </h1>
@@ -843,7 +870,7 @@ export default function StudentHomePage() {
                 </div>
               </div>
             </div>
-          ) : (
+          ) : totalWeekMissionsCount > 0 ? (
             <div className="relative z-10">
               <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-1.5">
                 <span className="text-xs font-mono tracking-widest text-[#3478F6] uppercase font-bold block">
@@ -852,6 +879,26 @@ export default function StudentHomePage() {
                 <p className="text-xs sm:text-sm text-[#A7B0C0] max-w-sm mx-auto">
                   Excelente consistência. Seu streak está seguro e seus pontos foram computados.
                 </p>
+              </div>
+            </div>
+          ) : (
+            <div className="relative z-10">
+              <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
+                <span className="text-xs font-mono tracking-widest text-amber-400 uppercase font-bold block">
+                  CRONOGRAMA DA SEMANA EM PREPARAÇÃO
+                </span>
+                <p className="text-xs sm:text-sm text-[#A7B0C0] max-w-sm mx-auto">
+                  Nenhuma missão ativa foi localizada para esta semana ainda. Confira o cronograma completo de semanas na aba Missões.
+                </p>
+                <div className="pt-1">
+                  <Link
+                    href="/app/missions"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors"
+                  >
+                    <span>Ver Cronograma de Missões</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           )}
@@ -1055,10 +1102,15 @@ export default function StudentHomePage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {missionLists.length > 0 ? (
                 missionLists.map((list) => {
-                  const c = listCounts[list.id] || { done: 0, total: 0 };
+                  const byId = listCounts[list.id];
+                  const byKey = list.key ? listCounts[list.key] : undefined;
+                  const c =
+                    byId && byId.total > 0
+                      ? byId
+                      : byKey || { done: 0, total: 0 };
                   const pct = c.total > 0 ? Math.min(100, Math.round((c.done / c.total) * 100)) : 0;
                   return (
-                    <Link key={list.id} href={`/app/missions?list=${list.id}`}>
+                    <Link key={list.id} href={`/app/missions?cat=${list.key || 'all'}`}>
                       <div className="p-3.5 rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
                           <span className="font-bold text-[#F4F6FA] text-xs truncate uppercase tracking-wider">

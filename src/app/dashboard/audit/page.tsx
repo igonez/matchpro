@@ -173,7 +173,7 @@ export default function FiscalizacaoPage() {
       .filter((s) => {
         const hasReport = s.submission_reports && s.submission_reports.length > 0;
         if (filter === 'pending') return s.status === 'pending';
-        if (filter === 'reported') return hasReport && s.status !== 'rejected';
+        if (filter === 'reported') return hasReport;
         if (filter === 'rejected') return s.status === 'rejected';
         if (filter === 'approved') return s.status === 'approved';
         return true;
@@ -188,7 +188,7 @@ export default function FiscalizacaoPage() {
 
   const reportedCount = useMemo(() => {
     return submissions.filter(
-      (s) => s.submission_reports && s.submission_reports.length > 0 && s.status !== 'rejected'
+      (s) => s.submission_reports && s.submission_reports.length > 0
     ).length;
   }, [submissions]);
 
@@ -215,7 +215,9 @@ export default function FiscalizacaoPage() {
       }
 
       setSubmissions((prev) =>
-        prev.map((item) => (item.id === sub.id ? { ...item, status: 'approved' } : item))
+        prev.map((item) =>
+          item.id === sub.id ? { ...item, status: 'approved', submission_reports: [] } : item
+        )
       );
       setSwipeHistory((prev) => [...prev, { id: sub.id, prevStatus }]);
       showToast(`Submissão de ${sub.students?.full_name} aprovada.`);
@@ -247,7 +249,9 @@ export default function FiscalizacaoPage() {
       }
 
       setSubmissions((prev) =>
-        prev.map((item) => (item.id === sub.id ? { ...item, status: 'rejected' } : item))
+        prev.map((item) =>
+          item.id === sub.id ? { ...item, status: 'rejected', submission_reports: [] } : item
+        )
       );
       setSwipeHistory((prev) => [...prev, { id: sub.id, prevStatus }]);
       showToast(`Submissão de ${sub.students?.full_name} invalidada.`);
@@ -348,7 +352,9 @@ export default function FiscalizacaoPage() {
       }
 
       setSubmissions((prev) =>
-        prev.map((s) => (pendingIds.includes(s.id) ? { ...s, status: 'approved' } : s))
+        prev.map((s) =>
+          pendingIds.includes(s.id) ? { ...s, status: 'approved', submission_reports: [] } : s
+        )
       );
       showToast(`${pendingIds.length} submissões aprovadas em lote.`);
     } catch (err: any) {

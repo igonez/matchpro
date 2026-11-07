@@ -194,7 +194,7 @@ function StudentMissionsContent() {
 
         let { data: part } = await supabase
           .from('challenge_participants')
-          .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
+          .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
           .eq('student_id', user.id)
           .in('payment_status', ['paid', 'complimentary'])
           .order('joined_at', { ascending: false })
@@ -204,7 +204,7 @@ function StudentMissionsContent() {
         if (!part) {
           const { data: fallbackPart } = await supabase
             .from('challenge_participants')
-            .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
+            .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
             .eq('student_id', user.id)
             .order('joined_at', { ascending: false })
             .limit(1)
@@ -444,26 +444,35 @@ function StudentMissionsContent() {
 
   const completedMissions = filteredMissions.filter((m) => m.isApproved);
 
-  // Estatísticas dos 4 pilares na semana selecionada
+  // Estatísticas dos 4 pilares na semana selecionada (100% sincronizadas com a Tela Inicial /app)
   const pillarStats = useMemo(() => {
     const calc = (cat: string) => {
       const all = processedMissions.filter((m) => m.category === cat);
       const dailyMissions = all.filter((m) => m.isDaily);
-      const nonDailyMissions = all.filter((m) => !m.isDaily);
 
-      // Metas da semana: missões diárias valem 7 check-ins (1 por dia da semana)
-      const total = dailyMissions.length * 7 + nonDailyMissions.length;
+      let total = 0;
+      let done = 0;
+      let totalXp = 0;
 
-      // Submissões aprovadas registradas na categoria
-      const done = rawSubmissions.filter(
-        (s: any) => s.missions?.category === cat && s.status === 'approved'
-      ).length;
+      all.forEach((m) => {
+        const freq = m.isDaily ? (m.target_frequency || 7) : (m.target_frequency || 1);
+        total += freq;
+
+        if (m.isDaily) {
+          const countApprovedForMission = rawSubmissions.filter(
+            (s: any) => s.mission_id === m.id && s.status === 'approved'
+          ).length;
+          done += Math.min(freq, countApprovedForMission);
+        } else {
+          if (m.isApproved) {
+            done += freq;
+          }
+        }
+
+        totalXp += Number(m.points_rewarded || 10) * freq;
+      });
 
       const todayDone = all.filter((m) => m.isApproved).length;
-      const totalXp = all.reduce((acc, m) => {
-        const mult = m.isDaily ? 7 : 1;
-        return acc + Number(m.points_rewarded || 10) * mult;
-      }, 0);
 
       return { total, done, todayDone, totalXp, slotsCount: all.length, dailyCount: dailyMissions.length };
     };
@@ -801,16 +810,39 @@ function StudentMissionsContent() {
 
       {/* Header */}
       <div className="flex items-start justify-between pt-1 relative z-10 border-b border-white/[0.08] pb-3.5">
-        <div className="flex items-start gap-3">
-          <div>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block mb-0.5">
-              CENTRAL DE EXECUÇÃO • {challenge?.title || 'TURMA ATIVA'}
-            </span>
-            <h1 className="text-2xl font-black text-white tracking-tight">Cronograma de Missões</h1>
-            <p className="text-xs text-zinc-400">
-              Missões organizadas em blocos por pilar e semana oficial do desafio.
-            </p>
-          </div>
+        <div className="flex items-center gap-3">
+          {(() => {
+            const profObj = Array.isArray(challenge?.professionals)
+              ? challenge?.professionals[0]
+              : challenge?.professionals;
+            const coachName = profObj?.brand_name || profObj?.full_name || null;
+            const coachLogo = profObj?.avatar_url || profObj?.brand_logo_url || null;
+
+            return (
+              <>
+                {coachName && (
+                  <div className="h-11 w-11 rounded-2xl bg-[#121722] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0 shadow-md">
+                    {coachLogo ? (
+                      <img src={coachLogo} alt={coachName} className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="text-sm font-mono font-black text-amber-300">
+                        {coachName.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                )}
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block mb-0.5">
+                    {coachName ? `${coachName} • ` : ''}{challenge?.title || 'TURMA ATIVA'}
+                  </span>
+                  <h1 className="text-2xl font-black text-white tracking-tight">Cronograma de Missões</h1>
+                  <p className="text-xs text-zinc-400">
+                    Missões organizadas em blocos por pilar e semana oficial do desafio.
+                  </p>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </div>
 

@@ -64,27 +64,21 @@ export default function StudentProfilePage() {
     setUploadingAvatar(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `avatar_${student.id}_${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('role', 'student');
 
-      const { error: uploadError } = await supabase.storage
-        .from('submissions')
-        .upload(filePath, file, { upsert: true });
+      const res = await fetch('/api/profile/avatar', {
+        method: 'POST',
+        body: formData,
+      });
 
-      if (uploadError) throw uploadError;
+      const data = await res.json();
+      if (!res.ok || !data?.publicUrl) {
+        throw new Error(data?.error || 'Falha ao enviar foto.');
+      }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('submissions')
-        .getPublicUrl(filePath);
-
-      const { error: updateError } = await supabase
-        .from('students')
-        .update({ avatar_url: publicUrl })
-        .eq('id', student.id);
-
-      if (updateError) throw updateError;
-
+      const publicUrl = data.publicUrl;
       setStudent((prev: any) => ({ ...prev, avatar_url: publicUrl }));
       showToast('Foto de perfil atualizada com sucesso!');
     } catch (err: any) {

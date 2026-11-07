@@ -72,6 +72,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
 
+    // Quando o treinador aprova ou invalida uma foto denunciada, limpar as denúncias resolvidas
+    // para que ela saia definitivamente da lista de "Sinalizadas"
+    if (status === 'approved' || status === 'rejected') {
+      await supabaseAdmin
+        .from('submission_reports')
+        .delete()
+        .in('submission_id', idsToUpdate);
+    }
+
     return NextResponse.json({
       success: true,
       updatedCount: updated?.length || idsToUpdate.length,

@@ -599,6 +599,11 @@ export default function StudentSocialFeedPage() {
     const post = reportTargetPost;
     setReportTargetPost(null);
 
+    if (post.student_id === currentUser.id) {
+      showToast('Você não pode sinalizar a sua própria publicação.');
+      return;
+    }
+
     const { error } = await supabase.from('submission_reports').insert({
       submission_id: post.id,
       reporter_student_id: currentUser.id,
@@ -790,16 +795,18 @@ export default function StudentSocialFeedPage() {
                           </button>
                         </div>
 
-                        <button
-                          onClick={() => {
-                            if (!currentUser) return;
-                            setReportTargetPost(post);
-                          }}
-                          className="text-[10px] font-mono tracking-wider text-zinc-500 hover:text-rose-400 cursor-pointer uppercase transition-colors px-2.5 py-2 min-h-[40px] flex items-center"
-                          title="Sinalizar foto suspeita"
-                        >
-                          SINALIZAR
-                        </button>
+                        {currentUser?.id && post.student_id !== currentUser.id && (
+                          <button
+                            onClick={() => {
+                              if (!currentUser) return;
+                              setReportTargetPost(post);
+                            }}
+                            className="text-[10px] font-mono tracking-wider text-zinc-500 hover:text-rose-400 cursor-pointer uppercase transition-colors px-2.5 py-2 min-h-[40px] flex items-center"
+                            title="Sinalizar foto suspeita"
+                          >
+                            SINALIZAR
+                          </button>
+                        )}
                       </div>
 
                       {post.caption && (

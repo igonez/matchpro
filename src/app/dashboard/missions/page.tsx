@@ -94,6 +94,10 @@ function MissionsManagerContent() {
 
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>(challengeIdParam || '');
+  const [coachIdentity, setCoachIdentity] = useState<{ name: string; avatarUrl: string | null }>({
+    name: '',
+    avatarUrl: null,
+  });
   const [weeks, setWeeks] = useState<any[]>([]);
   const [selectedWeekNumber, setSelectedWeekNumber] = useState<number>(1);
   const [missions, setMissions] = useState<any[]>([]);
@@ -159,12 +163,36 @@ function MissionsManagerContent() {
         return;
       }
 
-      const { data } = await supabase
-        .from('challenges')
-        .select('id, title, start_date, end_date, is_active')
-        .eq('professional_id', user.id)
-        .order('is_active', { ascending: false })
-        .order('start_date', { ascending: false });
+      const [{ data }, { data: prof }] = await Promise.all([
+        supabase
+          .from('challenges')
+          .select('id, title, start_date, end_date, is_active')
+          .eq('professional_id', user.id)
+          .order('is_active', { ascending: false })
+          .order('start_date', { ascending: false }),
+        supabase
+          .from('professionals')
+          .select('full_name, brand_name, avatar_url, brand_logo_url')
+          .eq('id', user.id)
+          .maybeSingle(),
+      ]);
+
+      const meta = user.user_metadata || {};
+      setCoachIdentity({
+        name:
+          prof?.brand_name ||
+          prof?.full_name ||
+          meta.brand_name ||
+          meta.full_name ||
+          user.email?.split('@')[0] ||
+          'Treinador',
+        avatarUrl:
+          prof?.avatar_url ||
+          prof?.brand_logo_url ||
+          meta.avatar_url ||
+          meta.picture ||
+          null,
+      });
 
       if (data && data.length > 0) {
         setChallenges(data);
@@ -394,7 +422,7 @@ function MissionsManagerContent() {
       }
 
       if (sourceMissions.length === 0) {
-        showToast('A Semana 1 ainda não possui missões para copiar. Use "Gerar Template (4 Semanas)".');
+        showToast('A Semana 1 ainda não possui missões cadastradas para copiar.');
         return;
       }
 
@@ -1040,16 +1068,33 @@ function MissionsManagerContent() {
     <div className="space-y-6 pb-16">
       {/* Header com Seletor de Desafio e Ações Globais */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
-        <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">
-            PLANEJADOR DE CRONOGRAMA • 4 SEMANAS
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Gestão de Missões em Blocos
-          </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Organize as tarefas da turma em blocos visuais de Treino, Cardio, Nutrição e Hábitos para cada semana.
-          </p>
+        <div className="flex items-start gap-3.5">
+          {coachIdentity.name && (
+            <div className="h-11 w-11 rounded-2xl bg-zinc-900 border border-white/15 overflow-hidden flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+              {coachIdentity.avatarUrl ? (
+                <img
+                  src={coachIdentity.avatarUrl}
+                  alt={coachIdentity.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-mono font-black text-amber-300">
+                  {coachIdentity.name.charAt(0).toUpperCase()}
+                </span>
+              )}
+            </div>
+          )}
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">
+              {coachIdentity.name ? `${coachIdentity.name} • ` : ''}PLANEJADOR DE CRONOGRAMA • 4 SEMANAS
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Gestão de Missões em Blocos
+            </h1>
+            <p className="text-xs text-zinc-400 mt-1">
+              Organize as tarefas da turma em blocos visuais de Treino, Cardio, Nutrição e Hábitos para cada semana.
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
@@ -1066,16 +1111,6 @@ function MissionsManagerContent() {
               ))}
             </select>
           )}
-
-          <Button
-            size="sm"
-            onClick={handleGenerateSmartTemplate}
-            disabled={!selectedChallengeId || generatingTemplate}
-            className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 shadow-lg uppercase tracking-wider"
-          >
-            <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-            {generatingTemplate ? 'Gerando 4 Semanas...' : 'Gerar Template (4 Semanas)'}
-          </Button>
 
           <Button
             size="sm"
@@ -1457,7 +1492,7 @@ function MissionsManagerContent() {
                 : `Configure os blocos da Semana ${selectedWeekNumber}`}
             </h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Você pode copiar as missões da Semana 1 para esta semana com 1 clique, gerar o template completo das 4 semanas ou criar missões manualmente em cada bloco.
+              Você pode copiar as missões da Semana 1 para esta semana com 1 clique ou criar missões manualmente em cada bloco.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
@@ -1472,15 +1507,6 @@ function MissionsManagerContent() {
                 {copyingFromWeek1 ? 'Copiando...' : `Copiar Missões da Semana 1 para Semana ${selectedWeekNumber}`}
               </Button>
             )}
-            <Button
-              size="sm"
-              onClick={handleGenerateSmartTemplate}
-              disabled={generatingTemplate}
-              className="rounded-xl text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200"
-            >
-              <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-              {generatingTemplate ? 'Gerando...' : 'Preencher Todas as 4 Semanas'}
-            </Button>
             <Button
               size="sm"
               variant="outline"

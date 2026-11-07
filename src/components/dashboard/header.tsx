@@ -43,13 +43,23 @@ export function DashboardHeader() {
       if (user) {
         const { data: prof } = await supabase
           .from('professionals')
-          .select('full_name, avatar_url')
+          .select('full_name, brand_name, avatar_url, brand_logo_url')
           .eq('id', user.id)
           .maybeSingle();
 
         setCoachProfile({
-          fullName: prof?.full_name || user.user_metadata?.full_name || 'Coach',
-          avatarUrl: prof?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+          fullName:
+            prof?.brand_name ||
+            prof?.full_name ||
+            user.user_metadata?.brand_name ||
+            user.user_metadata?.full_name ||
+            'Coach',
+          avatarUrl:
+            prof?.avatar_url ||
+            prof?.brand_logo_url ||
+            user.user_metadata?.avatar_url ||
+            user.user_metadata?.picture ||
+            null,
         });
       }
     }
@@ -160,6 +170,31 @@ export function DashboardHeader() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          {coachProfile && (
+            <Link
+              href="/dashboard/profile"
+              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[42px] rounded-full bg-[#121722] border border-[#252D3B] hover:border-amber-400/40 transition-colors"
+              title="Meu Perfil & Identidade"
+            >
+              <div className="h-7 w-7 rounded-full bg-[#080A0F] border border-amber-400/40 overflow-hidden flex items-center justify-center shrink-0">
+                {coachProfile.avatarUrl ? (
+                  <img
+                    src={coachProfile.avatarUrl}
+                    alt={coachProfile.fullName}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-[11px] font-mono font-black text-amber-300">
+                    {coachProfile.fullName.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <span className="text-xs font-bold text-[#F4F6FA] max-w-[140px] truncate hidden xs:inline">
+                {coachProfile.fullName}
+              </span>
+            </Link>
+          )}
+
           <Link
             href="/app?preview=true"
             target="_blank"

@@ -81,8 +81,22 @@ export function ShareRankingSheet({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const savedName = window.localStorage.getItem(`${storageKeyPrefix}_name`);
-    const savedLogo = window.localStorage.getItem(`${storageKeyPrefix}_logo`);
+    if (!isCoachView) {
+      // Na visão do aluno, usar estritamente os dados sincronizados do perfil do treinador
+      const syncedName = coachBrandName || '';
+      const syncedLogo = coachLogoUrl || challengeLogoUrl || null;
+      setCustomBrandName(syncedName);
+      setDebouncedBrandName(syncedName);
+      setCustomCoachLogo(syncedLogo);
+      return;
+    }
+
+    const savedName =
+      window.localStorage.getItem(`${storageKeyPrefix}_name`) ||
+      window.localStorage.getItem('arena_coach_brand_name');
+    const savedLogo =
+      window.localStorage.getItem(`${storageKeyPrefix}_logo`) ||
+      window.localStorage.getItem('arena_coach_logo_url');
 
     const initialName =
       coachBrandName !== undefined && coachBrandName !== null && coachBrandName !== ''
@@ -93,22 +107,24 @@ export function ShareRankingSheet({
     setCustomBrandName(initialName);
     setDebouncedBrandName(initialName);
     setCustomCoachLogo(initialLogo);
-  }, [coachBrandName, coachLogoUrl, challengeLogoUrl, storageKeyPrefix]);
+  }, [isCoachView, coachBrandName, coachLogoUrl, challengeLogoUrl, storageKeyPrefix]);
 
   // Debounce no nome de escolha para regenerar o PNG suavemente após digitar
   useEffect(() => {
+    if (!isCoachView) return;
     const t = setTimeout(() => {
       setDebouncedBrandName(customBrandName);
       if (typeof window !== 'undefined') {
         try {
           window.localStorage.setItem(`${storageKeyPrefix}_name`, customBrandName);
+          window.localStorage.setItem('arena_coach_brand_name', customBrandName);
         } catch {
           // ignore storage quota
         }
       }
     }, 320);
     return () => clearTimeout(t);
-  }, [customBrandName, storageKeyPrefix]);
+  }, [isCoachView, customBrandName, storageKeyPrefix]);
 
   const persistBrandToCoachProfile = useCallback(
     async (nextName?: string, nextLogoUrl?: string | null) => {
@@ -116,7 +132,10 @@ export function ShareRankingSheet({
       try {
         const payload: Record<string, any> = {};
         if (nextName !== undefined) payload.brand_name = nextName.trim() || null;
-        if (nextLogoUrl !== undefined) payload.brand_logo_url = nextLogoUrl;
+        if (nextLogoUrl !== undefined) {
+          payload.brand_logo_url = nextLogoUrl;
+          payload.avatar_url = nextLogoUrl;
+        }
         if (Object.keys(payload).length === 0) return;
         await supabase.from('professionals').update(payload).eq('id', coachId);
       } catch {
@@ -127,6 +146,7 @@ export function ShareRankingSheet({
   );
 
   const handleCoachLogoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isCoachView) return;
     const file = e.target.files?.[0];
     if (!file) return;
     try {
@@ -136,25 +156,30 @@ export function ShareRankingSheet({
       if (typeof window !== 'undefined') {
         try {
           window.localStorage.setItem(`${storageKeyPrefix}_logo`, dataUrl);
+          window.localStorage.setItem('arena_coach_logo_url', dataUrl);
         } catch {
           // ignore quota
         }
       }
 
-      if (isCoachView && coachId) {
-        const fileExt = file.name.split('.').pop() || 'jpg';
-        const filePath = `avatars/coach_brand_${coachId}_${Date.now()}.${fileExt}`;
-        const { error: uploadErr } = await supabase.storage
-          .from('submissions')
-          .upload(filePath, file, { upsert: true });
-        if (!uploadErr) {
-          const {
-            data: { publicUrl },
-          } = supabase.storage.from('submissions').getPublicUrl(filePath);
-          await persistBrandToCoachProfile(undefined, publicUrl);
+      if (coachId) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('role', 'coach');
+        const res = await fetch('/api/profile/avatar', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (res.ok && data?.publicUrl) {
+          setCustomCoachLogo(data.publicUrl);
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(`${storageKeyPrefix}_logo`, data.publicUrl);
+            window.localStorage.setItem('arena_coach_logo_url', data.publicUrl);
+          }
         }
       }
-      showToast('Logo do personal atualizado!', 'success');
+      showToast('Foto e logo do treinador sincronizadas!', 'success');
     } catch (err: any) {
       showToast(err?.message || 'Não foi possível carregar o logo.', 'error');
     }
@@ -931,60 +956,80 @@ export function ShareRankingSheet({
               </div>
             </section>
 
-            {/* 2.5. Identidade Superior: Logo do Personal + Nome de escolha */}
-            <section className="space-y-1.5">
-              <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-medium text-zinc-400">
-                  Marca superior (Personal)
-                </span>
-                <span className="text-[11px] text-zinc-500">
-                  Rodapé: ArenaFitPro
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-zinc-900/90 border border-white/10">
-                <button
-                  type="button"
-                  onClick={() => coachLogoInputRef.current?.click()}
-                  title="Alterar logo do personal"
-                  className="relative h-10 w-10 rounded-xl bg-zinc-950 border border-amber-400/40 flex items-center justify-center overflow-hidden shrink-0 group cursor-pointer"
-                >
-                  {customCoachLogo ? (
-                    <img
-                      src={customCoachLogo}
-                      alt="Logo do Personal"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Upload className="w-4 h-4 text-amber-400" />
-                  )}
-                  <span className=" inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Upload className="w-3.5 h-3.5 text-white" />
+            {/* 2.5. Identidade Superior: Editável apenas para o Treinador (isCoachView) */}
+            {isCoachView ? (
+              <section className="space-y-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-xs font-medium text-zinc-400">
+                    Marca superior (Personal)
                   </span>
-                </button>
+                  <span className="text-[11px] text-zinc-500">
+                    Rodapé: ArenaFitPro
+                  </span>
+                </div>
 
-                <input
-                  type="text"
-                  value={customBrandName}
-                  maxLength={32}
-                  onChange={(e) => setCustomBrandName(e.target.value)}
-                  onBlur={() => persistBrandToCoachProfile(customBrandName, undefined)}
-                  placeholder="Nome de escolha (ex: Personal / Consultoria)"
-                  aria-label="Nome de escolha do personal"
-                  className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-500 focus:outline-none px-1"
-                />
+                <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-zinc-900/90 border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => coachLogoInputRef.current?.click()}
+                    title="Alterar foto/logo do treinador"
+                    className="relative h-10 w-10 rounded-xl bg-zinc-950 border border-amber-400/40 flex items-center justify-center overflow-hidden shrink-0 group cursor-pointer"
+                  >
+                    {customCoachLogo ? (
+                      <img
+                        src={customCoachLogo}
+                        alt="Logo do Personal"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Upload className="w-4 h-4 text-amber-400" />
+                    )}
+                    <span className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Upload className="w-3.5 h-3.5 text-white" />
+                    </span>
+                  </button>
 
-                {customCoachLogo && (
+                  <input
+                    type="text"
+                    value={customBrandName}
+                    maxLength={42}
+                    onChange={(e) => setCustomBrandName(e.target.value)}
+                    onBlur={() => persistBrandToCoachProfile(customBrandName, undefined)}
+                    placeholder="Nome de exibição (ex: Personal / Consultoria)"
+                    aria-label="Nome de exibição do personal"
+                    className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-500 focus:outline-none px-1"
+                  />
+
                   <button
                     type="button"
                     onClick={() => coachLogoInputRef.current?.click()}
                     className="text-[11px] font-medium text-amber-400 hover:text-amber-300 px-2 py-1 rounded-lg bg-amber-400/10 cursor-pointer shrink-0"
                   >
-                    Logo
+                    Trocar Foto
                   </button>
-                )}
-              </div>
-            </section>
+                </div>
+              </section>
+            ) : (
+              (customCoachLogo || debouncedBrandName) && (
+                <section className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl bg-zinc-900/70 border border-white/10">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    {customCoachLogo && (
+                      <img
+                        src={customCoachLogo}
+                        alt={debouncedBrandName || 'Treinador'}
+                        className="h-7 w-7 rounded-lg object-cover border border-amber-400/40 shrink-0"
+                      />
+                    )}
+                    <span className="text-xs font-bold text-white truncate">
+                      {debouncedBrandName || challengeTitle}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-amber-300 uppercase shrink-0">
+                    Turma Oficial
+                  </span>
+                </section>
+              )
+            )}
 
             {/* 3. Seção "Plano de fundo": Transparente, Galeria, Câmera */}
             <section className="space-y-1.5">

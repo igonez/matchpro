@@ -529,25 +529,25 @@ export default function LeaderboardPage() {
         </button>
       </div>
 
-      {/* BLOCO 3: Pódio 3D Olímpico (Ouro, Prata, Bronze) */}
+      {/* BLOCO 3: Pódio 3D Olímpico (Ouro, Prata, Bronze — Mesma coloração do Painel do Treinador) */}
       {!loading && activeTab === 'individual' && !searchQuery && standings.length > 0 && (
-        <div className="relative z-10 p-5 rounded-3xl border border-[#252D3B] bg-[#121722] overflow-hidden shadow-2xl">
+        <div className="relative z-10 p-5 rounded-3xl border border-white/[0.1] bg-gradient-to-b from-zinc-900/90 via-zinc-950 to-zinc-950 overflow-hidden shadow-2xl">
           {/* Glow de fundo para o pódio */}
-          <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-56 h-32 rounded-full bg-[#3478F6]/15 blur-3xl" />
+          <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-56 h-32 rounded-full bg-amber-500/15 blur-3xl" />
 
           <div className="flex items-center justify-between mb-6 relative z-10 gap-2">
             <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-[#75A7FF]" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#F4F6FA]">
+              <Award className="w-4 h-4 text-amber-400" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300">
                 PÓDIO DE ELITE • TOP 3
               </span>
             </div>
             <button
               type="button"
               onClick={() => setShowStoryShare(true)}
-              className="text-[10px] font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 hover:bg-[#3478F6]/25 border border-[#3478F6]/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="text-[10px] font-mono font-bold text-amber-300 bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-colors cursor-pointer"
             >
-              <Share2 className="w-3 h-3 text-[#75A7FF]" />
+              <Share2 className="w-3 h-3 text-amber-300" />
               <span>Compartilhar Ranking</span>
             </button>
           </div>
@@ -583,22 +583,22 @@ export default function LeaderboardPage() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-24 rounded-t-2xl border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 font-mono text-[10px]">
+                <div className="w-full h-20 rounded-t-2xl border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 font-mono text-[10px]">
                   <span>2º VAGO</span>
                 </div>
               )}
             </div>
 
-            {/* 1º Lugar - Ouro com Destaque Azul Elétrico */}
+            {/* 1º Lugar - Ouro */}
             <div className="flex flex-col items-center">
               {top1 && (
                 <>
                   <div className="relative mb-2">
                     <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                      <Crown className="w-5 h-5 text-[#75A7FF] drop-shadow-[0_0_8px_rgba(52,120,246,0.6)] animate-bounce" />
+                      <Crown className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-bounce" />
                     </div>
-                    <div className="h-[72px] w-[72px] rounded-2xl bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#121722] p-0.5 shadow-[0_0_30px_rgba(52,120,246,0.4)]">
-                      <div className="w-full h-full rounded-[14px] bg-[#080A0F] flex items-center justify-center font-black text-lg text-[#F4F6FA] overflow-hidden">
+                    <div className="h-[72px] w-[72px] rounded-2xl bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-[0_0_30px_rgba(251,191,36,0.35)]">
+                      <div className="w-full h-full rounded-[14px] bg-zinc-950 flex items-center justify-center font-black text-lg text-amber-300 overflow-hidden">
                         {top1.students?.avatar_url ? (
                           <img src={top1.students.avatar_url} alt="1º" className="w-full h-full object-cover" />
                         ) : (
@@ -613,12 +613,12 @@ export default function LeaderboardPage() {
                   <p className="text-xs font-black text-white truncate max-w-[100px] mt-1">
                     {top1.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
-                  <span className="text-xs font-mono font-black text-[#75A7FF]">
+                  <span className="text-xs font-mono font-black text-amber-300">
                     {top1.total_points} XP
                   </span>
-                  <div className="w-full h-28 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-[#3478F6]/20 to-[#3478F6]/30 border-t border-x border-[#3478F6]/60 mt-2.5 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_12px_rgba(52,120,246,0.25)]">
-                    <span className="font-mono font-black text-[#75A7FF] text-2xl leading-none">1º</span>
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-[#F4F6FA] mt-1">
+                  <div className="w-full h-28 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-amber-500/20 to-amber-400/30 border-t border-x border-amber-400/60 mt-2.5 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_12px_rgba(251,191,36,0.2)]">
+                    <span className="font-mono font-black text-amber-300 text-2xl leading-none">1º</span>
+                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-amber-200 mt-1">
                       LÍDER OURO
                     </span>
                   </div>
@@ -656,7 +656,7 @@ export default function LeaderboardPage() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-18 rounded-t-2xl border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 font-mono text-[10px]">
+                <div className="w-full h-16 rounded-t-2xl border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 font-mono text-[10px]">
                   <span>3º VAGO</span>
                 </div>
               )}
@@ -715,24 +715,24 @@ export default function LeaderboardPage() {
 
               const rankBadgeStyle =
                 actualRank === 1
-                  ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/40'
+                  ? 'bg-amber-400/20 text-amber-300 border-amber-400/40'
                   : actualRank === 2
                   ? 'bg-slate-300/20 text-slate-200 border-slate-300/40'
                   : actualRank === 3
                   ? 'bg-amber-700/20 text-amber-500 border-amber-700/40'
                   : isMe
-                  ? 'bg-[#3478F6] text-white border-[#3478F6]'
-                  : 'bg-white/[0.04] text-[#A7B0C0] border-[#252D3B]';
+                  ? 'bg-amber-400 text-black border-amber-400'
+                  : 'bg-white/[0.04] text-zinc-400 border-white/10';
 
               return (
                 <div
                   key={item.id}
                   className={`p-3.5 rounded-2xl border transition-all ${
                     isMe
-                      ? 'bg-[#121722] border-[#3478F6]/50 shadow-[0_0_25px_rgba(52,120,246,0.15)]'
+                      ? 'bg-gradient-to-r from-amber-500/15 via-zinc-900 to-zinc-950 border-amber-400/45 shadow-[0_0_25px_rgba(251,191,36,0.12)]'
                       : actualRank <= 3
-                      ? 'bg-[#121722] border-[#252D3B]'
-                      : 'bg-[#121722]/80 border-[#252D3B] hover:border-[#3478F6]/30'
+                      ? 'bg-zinc-950 border-white/15'
+                      : 'bg-zinc-950/80 border-white/[0.07] hover:border-white/15'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -743,7 +743,7 @@ export default function LeaderboardPage() {
                         #{String(actualRank).padStart(2, '0')}
                       </div>
 
-                      <div className="h-10 w-10 rounded-xl bg-[#080A0F] border border-[#252D3B] flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden shrink-0">
+                      <div className="h-10 w-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center font-mono font-bold text-xs text-white overflow-hidden shrink-0">
                         {item.students?.avatar_url ? (
                           <img src={item.students.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                         ) : (
@@ -753,17 +753,17 @@ export default function LeaderboardPage() {
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[135px]">
+                          <p className="text-xs font-bold text-white truncate max-w-[135px]">
                             {item.students?.full_name || 'Atleta'}
                           </p>
                           {isMe && (
-                            <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[#3478F6] text-white shrink-0">
+                            <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-amber-400 text-black shrink-0">
                               VOCÊ
                             </span>
                           )}
                           {athleteStreak >= 2 && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 shrink-0">
-                              <Flame className="w-2.5 h-2.5 text-[#3478F6]" />
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-400/15 text-amber-300 border border-amber-400/30 shrink-0">
+                              <Flame className="w-2.5 h-2.5 text-amber-400" />
                               {athleteStreak}d
                             </span>
                           )}
@@ -771,34 +771,34 @@ export default function LeaderboardPage() {
 
                         {/* Barra de progresso relativa ao líder */}
                         <div className="mt-2 flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full bg-[#1B2330] overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
                             <div
                               className={`h-full rounded-full transition-all duration-500 ${
                                 actualRank === 1
-                                  ? 'bg-[#3478F6]'
+                                  ? 'bg-gradient-to-r from-amber-500 to-amber-300'
                                   : actualRank === 2
                                   ? 'bg-gradient-to-r from-slate-400 to-slate-200'
                                   : actualRank === 3
                                   ? 'bg-gradient-to-r from-amber-700 to-amber-500'
                                   : isMe
-                                  ? 'bg-[#3478F6]'
+                                  ? 'bg-amber-400'
                                   : 'bg-zinc-600'
                               }`}
                               style={{ width: `${relativePct}%` }}
                             />
                           </div>
-                          <span className="text-[9px] font-mono text-[#A7B0C0] shrink-0">{relativePct}%</span>
+                          <span className="text-[9px] font-mono text-zinc-500 shrink-0">{relativePct}%</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end shrink-0">
-                      <span className="font-mono text-sm font-black text-[#F4F6FA] leading-none">
+                      <span className="font-mono text-sm font-black text-white leading-none">
                         {item.total_points}
                       </span>
                       <div className="flex items-center gap-1 mt-1">
                         {delta && delta.direction === 'up' && (
-                          <span className="inline-flex items-center text-[9px] font-mono font-bold text-[#75A7FF]">
+                          <span className="inline-flex items-center text-[9px] font-mono font-bold text-amber-300">
                             <TrendingUp className="w-2.5 h-2.5 mr-0.5" />+{delta.value}
                           </span>
                         )}
@@ -808,7 +808,7 @@ export default function LeaderboardPage() {
                           </span>
                         )}
                         {(!delta || delta.direction === 'same') && (
-                          <span className="text-[9px] font-mono text-[#75A7FF] font-bold uppercase">
+                          <span className="text-[9px] font-mono text-amber-400 font-bold uppercase">
                             XP
                           </span>
                         )}
@@ -910,7 +910,7 @@ export default function LeaderboardPage() {
               streakDays: streaksMap[s.student_id] || 0,
             }))}
             currentUserId={currentUserId}
-            isCoachView={!myStanding}
+            isCoachView={false}
           />
         );
       })()}

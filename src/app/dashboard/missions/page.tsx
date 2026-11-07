@@ -1085,13 +1085,16 @@ function MissionsManagerContent() {
             </div>
           )}
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold block mb-1">
-              {coachIdentity.name ? `${coachIdentity.name} • ` : ''}PLANEJADOR DE CRONOGRAMA • 4 SEMANAS
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+                Cronograma
+              </span>
+              <span className="text-xs text-[#A7B0C0] font-medium">Missões em Blocos • 4 Semanas</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
               Gestão de Missões em Blocos
             </h1>
-            <p className="text-xs text-zinc-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
               Organize as tarefas da turma em blocos visuais de Treino, Cardio, Nutrição e Hábitos para cada semana.
             </p>
           </div>

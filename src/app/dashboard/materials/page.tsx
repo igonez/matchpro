@@ -206,10 +206,16 @@ export default function DashboardMaterialsPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+              Conteúdos & PDFs
+            </span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Biblioteca da Turma</span>
+          </div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight flex items-center gap-2">
             Materiais de Apoio
           </h1>
-          <p className="text-xs text-[#A7B0C0] mt-1">
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
             Compartilhe PDFs de treinos, cardápios e links de vídeos com controle total de edição e remoção.
           </p>
         </div>

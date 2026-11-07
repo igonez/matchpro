@@ -191,10 +191,16 @@ export default function AnnouncementsManagerPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-[#F4F6FA] tracking-tight flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+              Comunicação
+            </span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Transmissão aos Alunos</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight flex items-center gap-2">
             Mural de Avisos & Comunicados
           </h1>
-          <p className="text-xs text-[#A7B0C0] mt-1">
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
             Publique mensagens oficiais diretamente na tela inicial do app dos alunos com suporte a fixação, edição e exclusão.
           </p>
         </div>

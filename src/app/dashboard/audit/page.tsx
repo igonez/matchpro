@@ -396,21 +396,18 @@ export default function FiscalizacaoPage() {
       <Monochrome3DBackground />
 
       {/* Header Editorial */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 relative z-10 pt-2 border-b border-white/[0.08] pb-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
-              AUDITORIA & INTEGRIDADE
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 relative z-10 pt-2 border-b border-[#252D3B] pb-6">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+              Auditoria & IA
             </span>
-            <span className="h-1 w-1 rounded-full bg-zinc-600" />
-            <span className="text-[10px] font-mono text-zinc-500 uppercase">
-              PAINEL DO TREINADOR
-            </span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Fiscalização de Check-ins</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
             Fiscalização de Check-ins
           </h1>
-          <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#A7B0C0] max-w-xl leading-relaxed">
             Aferição de registros fotográficos, verificação técnica por IA e validação de pontuação de atletas.
           </p>
         </div>

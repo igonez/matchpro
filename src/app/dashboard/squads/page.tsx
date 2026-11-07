@@ -216,18 +216,19 @@ export default function SquadsManagerPage() {
         {/* Top Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-          <Badge className="font-black tracking-wider uppercase text-[10px] font-mono">
-            Guerra de Tribos & Retenção
-          </Badge>
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+              Guerra de Tribos & Retenção
+            </span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Competição Coletiva</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight flex items-center gap-3">
+            <Users className="h-7 w-7 sm:h-8 sm:w-8 text-[#3478F6] shrink-0" />
+            Squads & Micro-equipes
+          </h1>
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5 max-w-2xl leading-relaxed">
+            Divida a turma em equipes de 3 a 5 alunos. Ao invés de desistirem por estarem longe do 1º lugar individual, eles continuam treinando para manter o ritmo coletivo do seu Squad.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight flex items-center gap-3">
-          <Users className="h-7 w-7 sm:h-8 sm:w-8 text-[#3478F6] shrink-0" />
-          Squads & Micro-equipes
-        </h1>
-        <p className="text-xs sm:text-sm text-[#A7B0C0] mt-1 max-w-2xl leading-relaxed">
-          Divida a turma em equipes de 3 a 5 alunos. Ao invés de desistirem por estarem longe do 1º lugar individual, eles continuam treinando para manter o ritmo coletivo do seu Squad.
-        </p>
-      </div>
 
       {/* Seletor de Desafio */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">

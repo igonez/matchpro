@@ -383,15 +383,15 @@ export default function DashboardFeedPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
               Comunidade
             </span>
-            <span className="text-xs text-zinc-400 font-medium">Feed em Tempo Real</span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Feed em Tempo Real</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
             Feed das Turmas
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
             Acompanhe as fotos de treino, refeições e conquistas dos seus atletas com interação ao vivo.
           </p>
         </div>

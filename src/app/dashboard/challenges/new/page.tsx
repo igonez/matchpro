@@ -418,8 +418,14 @@ export default function NewChallengePage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-black text-white">Criar Novo Desafio Fitness</h1>
-          <p className="text-xs text-zinc-400">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+              Novo Desafio
+            </span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Configuração da Turma</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">Criar Novo Desafio Fitness</h1>
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
             Escolha um modelo pronto em 1 clique ou personalize cada detalhe da sua turma.
           </p>
         </div>

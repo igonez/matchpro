@@ -235,15 +235,15 @@ export default function DashboardFinanceAndStudentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
               Alunos & Turmas
             </span>
-            <span className="text-xs text-zinc-400 font-medium">Matrículas oficiais via Checkout</span>
+            <span className="text-xs text-[#A7B0C0] font-medium">Matrículas oficiais via Checkout</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
             Gestão de Alunos
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
             Matrículas oficiais, status de pagamento e controle de presença dos atletas. Compartilhe o link de convite da turma para novos alunos entrarem.
           </p>
         </div>

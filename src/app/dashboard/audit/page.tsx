@@ -537,33 +537,33 @@ export default function FiscalizacaoPage() {
 
       {/* Conteúdo Principal */}
       {loading ? (
-        <div className="py-28 text-center text-xs font-mono text-zinc-500 tracking-widest uppercase relative z-10">
+        <div className="py-28 text-center text-xs font-mono text-[#A7B0C0] tracking-widest uppercase relative z-10">
           SINCRONIZANDO REGISTROS DE AUDITORIA...
         </div>
       ) : filteredSubmissions.length === 0 ? (
-        <div className="p-16 rounded-3xl border border-white/5 bg-zinc-950/60 text-center space-y-2 relative z-10">
-          <p className="text-sm font-bold text-white">Nenhum registro encontrado neste filtro.</p>
-          <p className="text-xs text-zinc-500 font-mono">Alterne entre as opções acima para auditar outros status.</p>
+        <div className="p-16 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2 relative z-10">
+          <p className="text-sm font-bold text-[#F4F6FA]">Nenhum registro encontrado neste filtro.</p>
+          <p className="text-xs text-[#A7B0C0] font-mono">Alterne entre as opções acima para auditar outros status.</p>
         </div>
       ) : viewMode === 'swipe' ? (
         /* ==================== MODO SWIPE (MINIMALISTA) ==================== */
         <div className="relative z-10 max-w-lg mx-auto w-full pt-2">
           {/* Telemetria do Deck */}
-          <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-zinc-500">
+          <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-[#A7B0C0]">
             <span>
-              REGISTRO <strong className="text-white">{Math.min(swipeIndex + 1, filteredSubmissions.length)}</strong> DE{' '}
-              <strong className="text-white">{filteredSubmissions.length}</strong>
+              REGISTRO <strong className="text-[#F4F6FA]">{Math.min(swipeIndex + 1, filteredSubmissions.length)}</strong> DE{' '}
+              <strong className="text-[#F4F6FA]">{filteredSubmissions.length}</strong>
             </span>
             <div className="flex items-center gap-3">
               {swipeHistory.length > 0 && (
                 <button
                   onClick={handleUndoLastSwipe}
-                  className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  className="text-[11px] font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
                 >
                   DESFAZER ANTERIOR
                 </button>
               )}
-              <span className="hidden sm:inline text-[10px] text-zinc-600 tracking-wider">
+              <span className="hidden sm:inline text-[10px] text-[#A7B0C0] tracking-wider">
                 [ ← INVALIDAR / APROVAR → ]
               </span>
             </div>
@@ -572,25 +572,25 @@ export default function FiscalizacaoPage() {
           {swipeIndex >= filteredSubmissions.length ? (
             <div 
               data-tour="audit-swipe-container"
-              className="p-12 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-4"
+              className="p-12 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-4"
             >
-              <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block">
+              <span className="text-[10px] font-mono tracking-widest text-[#75A7FF] uppercase block">
                 AUDITORIA CONCLUÍDA
               </span>
-              <h2 className="text-xl font-black text-white">Todos os registros deste filtro foram revisados.</h2>
-              <p className="text-xs text-zinc-400 max-w-xs mx-auto">
+              <h2 className="text-xl font-black text-[#F4F6FA]">Todos os registros deste filtro foram revisados.</h2>
+              <p className="text-xs text-[#A7B0C0] max-w-xs mx-auto">
                 A fila está limpa. Você pode reiniciar a visualização ou retornar ao modo grade.
               </p>
               <div className="flex gap-3 justify-center pt-2">
                 <button
                   onClick={() => setSwipeIndex(0)}
-                  className="px-4 py-2.5 rounded-xl border border-white/10 text-xs font-mono font-bold text-zinc-300 hover:text-white cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono font-bold text-[#F4F6FA] hover:bg-[#252D3B] cursor-pointer"
                 >
                   REVER DO INÍCIO
                 </button>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className="px-4 py-2.5 rounded-xl bg-white text-black text-xs font-mono font-black cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-black shadow-[0_8px_20px_rgba(52,120,246,0.28)] cursor-pointer"
                 >
                   VER EM GRADE
                 </button>
@@ -606,8 +606,8 @@ export default function FiscalizacaoPage() {
                 <div
                   key={sub.id}
                   data-tour="audit-swipe-container"
-                  className={`p-5 rounded-3xl bg-zinc-950 border transition-all ${
-                    isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'border-white/10'
+                  className={`p-5 rounded-3xl bg-[#121722] border transition-all ${
+                    isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'border-[#252D3B]'
                   }`}
                 >
                   {/* Tarja de Denúncia */}
@@ -628,21 +628,21 @@ export default function FiscalizacaoPage() {
                   )}
 
                   {/* Header do Aluno */}
-                  <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-4">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#252D3B] mb-4">
                     <div>
-                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+                      <span className="text-[10px] font-mono text-[#A7B0C0] uppercase tracking-wider block">
                         ATLETA
                       </span>
-                      <span className="text-sm font-bold text-white block mt-0.5">
+                      <span className="text-sm font-bold text-[#F4F6FA] block mt-0.5">
                         {sub.students?.full_name}
                       </span>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-xs font-mono font-black text-white block">
+                      <span className="text-xs font-mono font-black text-[#75A7FF] block">
                         +{sub.missions?.points_rewarded || 10} PTS
                       </span>
-                      <span className="text-[10px] font-mono text-zinc-500 block uppercase">
+                      <span className="text-[10px] font-mono text-[#A7B0C0] block uppercase">
                         {new Date(sub.client_captured_at || sub.submitted_at).toLocaleTimeString('pt-BR', {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -652,14 +652,14 @@ export default function FiscalizacaoPage() {
                   </div>
 
                   {/* Foto com proporção cinematográfica limpa */}
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-4 border border-white/5">
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#080A0F] mb-4 border border-[#252D3B]">
                     <img
                       src={sub.photo_url}
                       alt="Registro do atleta"
                       className="w-full h-full object-cover"
                     />
                     {sub.status === 'rejected' && (
-                      <div className="absolute inset-0 bg-black/80 flex items-center justify-center text-xs font-mono tracking-widest text-rose-400 uppercase">
+                      <div className="absolute inset-0 bg-[#080A0F]/80 flex items-center justify-center text-xs font-mono tracking-widest text-rose-400 uppercase">
                         REGISTRO INVALIDADO
                       </div>
                     )}
@@ -668,32 +668,32 @@ export default function FiscalizacaoPage() {
                   {/* Detalhes da Missão e Local */}
                   <div className="space-y-2 text-xs">
                     <div>
-                      <span className="text-[9px] font-mono text-zinc-500 tracking-wider uppercase block">
+                      <span className="text-[9px] font-mono text-[#A7B0C0] tracking-wider uppercase block">
                         MISSÃO
                       </span>
-                      <p className="text-white font-bold text-sm mt-0.5">{sub.missions?.title}</p>
+                      <p className="text-[#F4F6FA] font-bold text-sm mt-0.5">{sub.missions?.title}</p>
                     </div>
 
                     {sub.location_name && (
-                      <p className="text-[11px] font-mono text-zinc-400">
+                      <p className="text-[11px] font-mono text-[#A7B0C0]">
                         LOCAL: {sub.location_name}
                       </p>
                     )}
 
                     {sub.caption && (
-                      <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-zinc-300 italic text-xs leading-relaxed">
+                      <div className="p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] italic text-xs leading-relaxed">
                         "{sub.caption}"
                       </div>
                     )}
                   </div>
 
                   {/* Botão de Disparo IA Gemini */}
-                  <div className="mt-4 pt-4 border-t border-white/[0.08]">
+                  <div className="mt-4 pt-4 border-t border-[#252D3B]">
                     <button
                       type="button"
                       onClick={() => handleAnalyzeWithAI(sub)}
                       disabled={analyzingId === sub.id}
-                      className="w-full py-2.5 px-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-zinc-300 hover:text-white text-xs font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
+                      className="w-full py-2.5 px-3 rounded-xl border border-[#252D3B] bg-[#1B2330] hover:bg-[#252D3B] text-[#F4F6FA] text-xs font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
                     >
                       <span>
                         {analyzingId === sub.id
@@ -702,51 +702,51 @@ export default function FiscalizacaoPage() {
                           ? 'PARECER TÉCNICO IA'
                           : 'ANALISAR NUTRIÇÃO & CONFORMIDADE (IA)'}
                       </span>
-                      <span className="text-[10px] text-zinc-500">
+                      <span className="text-[10px] text-[#75A7FF]">
                         {aiAnalysisMap[sub.id] ? (expandedAnalysis[sub.id] ? 'FECHAR' : 'EXPANDIR') : 'GEMINI'}
                       </span>
                     </button>
 
                     {/* Parecer IA Expandido */}
                     {aiAnalysisMap[sub.id] && expandedAnalysis[sub.id] && (
-                      <div className="mt-3 p-3.5 rounded-2xl bg-black border border-white/10 text-xs space-y-3">
-                        <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
-                          <span className="text-[10px] font-mono text-zinc-400 tracking-wider uppercase">
+                      <div className="mt-3 p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-xs space-y-3">
+                        <div className="flex items-center justify-between border-b border-[#252D3B] pb-2">
+                          <span className="text-[10px] font-mono text-[#A7B0C0] tracking-wider uppercase">
                             DIAGNÓSTICO
                           </span>
-                          <span className="text-[10px] font-mono text-white font-bold">
+                          <span className="text-[10px] font-mono text-[#75A7FF] font-bold">
                             CONFORMIDADE: {aiAnalysisMap[sub.id].complianceScore}%
                           </span>
                         </div>
 
-                        <p className="text-zinc-300 leading-relaxed text-xs">
+                        <p className="text-[#F4F6FA] leading-relaxed text-xs">
                           {aiAnalysisMap[sub.id].summary}
                         </p>
 
                         {/* Métricas Nutricionais Tipográficas */}
                         {aiAnalysisMap[sub.id].estimatedMacros && (
-                          <div className="grid grid-cols-4 gap-2 pt-1 border-t border-white/[0.06]">
-                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
-                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">CALORIAS</span>
-                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
+                          <div className="grid grid-cols-4 gap-2 pt-1 border-t border-[#252D3B]">
+                            <div className="text-center p-2 rounded-lg bg-[#121722] border border-[#252D3B]">
+                              <span className="text-[8px] font-mono text-[#A7B0C0] uppercase block">CALORIAS</span>
+                              <span className="text-[#F4F6FA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
                               </span>
                             </div>
-                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
-                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">PROTEÍNA</span>
-                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
+                            <div className="text-center p-2 rounded-lg bg-[#121722] border border-[#252D3B]">
+                              <span className="text-[8px] font-mono text-[#A7B0C0] uppercase block">PROTEÍNA</span>
+                              <span className="text-[#F4F6FA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
                               </span>
                             </div>
-                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
-                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">CARBOS</span>
-                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
+                            <div className="text-center p-2 rounded-lg bg-[#121722] border border-[#252D3B]">
+                              <span className="text-[8px] font-mono text-[#A7B0C0] uppercase block">CARBOS</span>
+                              <span className="text-[#F4F6FA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
                               </span>
                             </div>
-                            <div className="text-center p-2 rounded-lg bg-zinc-900/60">
-                              <span className="text-[8px] font-mono text-zinc-500 uppercase block">GORDURAS</span>
-                              <span className="text-white font-mono font-bold text-xs mt-0.5 block">
+                            <div className="text-center p-2 rounded-lg bg-[#121722] border border-[#252D3B]">
+                              <span className="text-[8px] font-mono text-[#A7B0C0] uppercase block">GORDURAS</span>
+                              <span className="text-[#F4F6FA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
                               </span>
                             </div>
@@ -754,7 +754,7 @@ export default function FiscalizacaoPage() {
                         )}
 
                         {aiAnalysisMap[sub.id].feedback && (
-                          <p className="text-zinc-500 text-[11px] italic pt-1">
+                          <p className="text-[#A7B0C0] text-[11px] italic pt-1">
                             "{aiAnalysisMap[sub.id].feedback}"
                           </p>
                         )}

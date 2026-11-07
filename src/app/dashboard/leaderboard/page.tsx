@@ -417,8 +417,8 @@ function CoachLeaderboardContent() {
               {top2 ? (
                 <>
                   <div className="relative mb-3">
-                    <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-zinc-900 border-2 border-slate-300/70 p-0.5 shadow-[0_0_25px_rgba(203,213,225,0.2)]">
-                      <div className="w-full h-full rounded-[14px] bg-zinc-950 flex items-center justify-center font-bold text-white overflow-hidden">
+                    <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#121722] border-2 border-slate-300/70 p-0.5 shadow-[0_0_25px_rgba(203,213,225,0.2)]">
+                      <div className="w-full h-full rounded-[14px] bg-[#080A0F] flex items-center justify-center font-bold text-[#F4F6FA] overflow-hidden">
                         {top2.students?.avatar_url ? (
                           <img src={top2.students.avatar_url} alt="Top 2" className="w-full h-full object-cover" />
                         ) : (
@@ -432,24 +432,24 @@ function CoachLeaderboardContent() {
                       <SilverMedalBadge size={28} />
                     </div>
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-white text-center truncate max-w-[120px]">
+                  <p className="text-xs sm:text-sm font-bold text-[#F4F6FA] text-center truncate max-w-[120px]">
                     {top2.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-xs font-mono font-bold text-slate-300 mt-0.5">
                     {top2.total_points} XP
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-500">
+                  <span className="text-[10px] font-mono text-[#A7B0C0]">
                     {top2.approvedMissions || 0} missões
                   </span>
-                  <div className="w-full h-24 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-slate-800/30 to-slate-400/20 border-t border-x border-slate-400/40 mt-3 flex flex-col items-center justify-center">
+                  <div className="w-full h-24 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-slate-400/15 to-slate-300/20 border-t border-x border-slate-300/40 mt-3 flex flex-col items-center justify-center">
                     <span className="text-xl font-black font-mono text-slate-200 leading-none">2º</span>
-                    <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest mt-1">
+                    <span className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest mt-1">
                       PRATA
                     </span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-24 rounded-t-2xl border border-dashed border-white/10 flex items-center justify-center text-xs font-mono text-zinc-600">
+                <div className="w-full h-24 rounded-t-2xl border border-dashed border-[#252D3B] bg-[#1B2330]/35 flex items-center justify-center text-xs font-mono text-[#A7B0C0]">
                   2º VAGO
                 </div>
               )}
@@ -464,7 +464,7 @@ function CoachLeaderboardContent() {
                       <Crown className="w-6 h-6 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] animate-bounce" />
                     </div>
                     <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-3xl bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-[0_0_35px_rgba(251,191,36,0.4)]">
-                      <div className="w-full h-full bg-zinc-950 rounded-[22px] flex items-center justify-center font-black text-white overflow-hidden">
+                      <div className="w-full h-full bg-[#080A0F] rounded-[22px] flex items-center justify-center font-black text-[#F4F6FA] overflow-hidden">
                         {top1.students?.avatar_url ? (
                           <img src={top1.students.avatar_url} alt="Top 1" className="w-full h-full object-cover" />
                         ) : (
@@ -478,7 +478,7 @@ function CoachLeaderboardContent() {
                       <GoldMedalBadge size={34} />
                     </div>
                   </div>
-                  <p className="text-sm sm:text-base font-black text-white text-center truncate max-w-[140px]">
+                  <p className="text-sm sm:text-base font-black text-[#F4F6FA] text-center truncate max-w-[140px]">
                     {top1.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-sm font-mono font-black text-amber-300 mt-0.5">
@@ -487,7 +487,7 @@ function CoachLeaderboardContent() {
                   <span className="text-[10px] font-mono text-amber-400/80">
                     {top1.approvedMissions || 0} missões aprovadas
                   </span>
-                  <div className="w-full h-32 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-amber-500/20 to-amber-400/35 border-t border-x border-amber-400/60 mt-3 flex flex-col items-center justify-center shadow-[inset_0_1px_16px_rgba(251,191,36,0.25)]">
+                  <div className="w-full h-32 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-amber-500/15 to-amber-400/30 border-t border-x border-amber-400/50 mt-3 flex flex-col items-center justify-center shadow-[inset_0_1px_16px_rgba(251,191,36,0.2)]">
                     <span className="text-2xl sm:text-3xl font-black font-mono text-amber-300 leading-none">1º</span>
                     <span className="text-[10px] font-mono font-bold text-amber-200 uppercase tracking-widest mt-1">
                       LÍDER OURO
@@ -502,8 +502,8 @@ function CoachLeaderboardContent() {
               {top3 ? (
                 <>
                   <div className="relative mb-3">
-                    <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-zinc-900 border-2 border-amber-700/70 p-0.5 shadow-[0_0_20px_rgba(180,83,9,0.2)]">
-                      <div className="w-full h-full rounded-[14px] bg-zinc-950 flex items-center justify-center font-bold text-white overflow-hidden">
+                    <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#121722] border-2 border-amber-600/70 p-0.5 shadow-[0_0_20px_rgba(180,83,9,0.2)]">
+                      <div className="w-full h-full rounded-[14px] bg-[#080A0F] flex items-center justify-center font-bold text-[#F4F6FA] overflow-hidden">
                         {top3.students?.avatar_url ? (
                           <img src={top3.students.avatar_url} alt="Top 3" className="w-full h-full object-cover" />
                         ) : (
@@ -517,16 +517,16 @@ function CoachLeaderboardContent() {
                       <BronzeMedalBadge size={28} />
                     </div>
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-white text-center truncate max-w-[120px]">
+                  <p className="text-xs sm:text-sm font-bold text-[#F4F6FA] text-center truncate max-w-[120px]">
                     {top3.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-xs font-mono font-bold text-amber-500 mt-0.5">
                     {top3.total_points} XP
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-500">
+                  <span className="text-[10px] font-mono text-[#A7B0C0]">
                     {top3.approvedMissions || 0} missões
                   </span>
-                  <div className="w-full h-20 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-amber-900/25 to-amber-700/25 border-t border-x border-amber-700/50 mt-3 flex flex-col items-center justify-center">
+                  <div className="w-full h-20 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-amber-800/15 to-amber-700/25 border-t border-x border-amber-600/45 mt-3 flex flex-col items-center justify-center">
                     <span className="text-lg font-black font-mono text-amber-500 leading-none">3º</span>
                     <span className="text-[9px] font-mono font-bold text-amber-600 uppercase tracking-widest mt-1">
                       BRONZE
@@ -534,7 +534,7 @@ function CoachLeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-white/10 flex items-center justify-center text-xs font-mono text-zinc-600">
+                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#252D3B] bg-[#1B2330]/35 flex items-center justify-center text-xs font-mono text-[#A7B0C0]">
                   3º VAGO
                 </div>
               )}
@@ -550,8 +550,8 @@ function CoachLeaderboardContent() {
             onClick={() => setActiveTab('individual')}
             className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'individual'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-zinc-950 border border-white/10 text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-[0_8px_20px_rgba(52,120,246,0.28)]'
+                : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40'
             }`}
           >
             <Trophy className="w-3.5 h-3.5" />
@@ -561,8 +561,8 @@ function CoachLeaderboardContent() {
             onClick={() => setActiveTab('squads')}
             className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'squads'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-zinc-950 border border-white/10 text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-[0_8px_20px_rgba(52,120,246,0.28)]'
+                : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
@@ -572,13 +572,13 @@ function CoachLeaderboardContent() {
 
         {activeTab === 'individual' && standings.length > 0 && (
           <div className="relative w-full sm:w-72">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 text-[#A7B0C0] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Filtrar aluno por nome..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 bg-zinc-950 border border-white/10 rounded-xl pl-9 pr-3 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/30 font-mono"
+              className="w-full h-10 bg-[#1B2330] border border-[#252D3B] rounded-xl pl-9 pr-3 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-mono"
             />
           </div>
         )}
@@ -586,18 +586,18 @@ function CoachLeaderboardContent() {
 
       {/* BLOCO 3: Tabela de Classificação Individual */}
       {activeTab === 'individual' && (
-        <Card className="border-white/10 bg-zinc-950/90 relative z-10 overflow-hidden rounded-3xl">
-          <CardHeader className="pb-4 border-b border-white/[0.06]">
+        <Card className="border-[#252D3B] bg-[#121722] relative z-10 overflow-hidden rounded-3xl">
+          <CardHeader className="pb-4 border-b border-[#252D3B]">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base text-white font-black tracking-tight">
+                <CardTitle className="text-base text-[#F4F6FA] font-black tracking-tight">
                   Tabela Geral de Classificação
                 </CardTitle>
-                <CardDescription className="text-xs text-zinc-400">
+                <CardDescription className="text-xs text-[#A7B0C0]">
                   Comparativo de XP relativo ao líder, missões validadas e contato rápido via WhatsApp.
                 </CardDescription>
               </div>
-              <span className="text-[11px] font-mono text-zinc-400">
+              <span className="text-[11px] font-mono text-[#A7B0C0]">
                 {filteredStandings.length} listados
               </span>
             </div>
@@ -606,13 +606,13 @@ function CoachLeaderboardContent() {
           <CardContent className="p-0">
             {filteredStandings.length === 0 ? (
               <div className="p-10 text-center space-y-2">
-                <Trophy className="h-8 w-8 text-zinc-600 mx-auto" />
-                <p className="text-xs font-mono text-zinc-400">
+                <Trophy className="h-8 w-8 text-[#75A7FF] opacity-60 mx-auto" />
+                <p className="text-xs font-mono text-[#A7B0C0]">
                   {searchQuery ? 'Nenhum atleta corresponde à busca.' : 'Nenhum aluno pontuou nesta turma ainda.'}
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-white/[0.06]">
+              <div className="divide-y divide-[#252D3B]">
                 {filteredStandings.map((item) => {
                   const actualIndex = standings.findIndex((s) => s.id === item.id);
                   const rankPos = actualIndex + 1;
@@ -629,7 +629,7 @@ function CoachLeaderboardContent() {
                   return (
                     <div
                       key={item.id}
-                      className="p-4 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors"
+                      className="p-4 flex items-center justify-between gap-4 hover:bg-[#1B2330]/50 transition-colors"
                     >
                       <div className="flex items-center gap-3.5 min-w-0 flex-1">
                         {/* Posição */}
@@ -641,14 +641,14 @@ function CoachLeaderboardContent() {
                               ? 'bg-slate-300/20 text-slate-200 border-slate-300/40'
                               : rankPos === 3
                               ? 'bg-amber-800/20 text-amber-500 border-amber-700/40'
-                              : 'bg-white/5 text-zinc-400 border-white/10'
+                              : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
                           }`}
                         >
                           #{String(rankPos).padStart(2, '0')}
                         </div>
 
                         {/* Avatar */}
-                        <div className="h-10 w-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center font-bold text-white text-xs overflow-hidden shrink-0">
+                        <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center font-bold text-[#F4F6FA] text-xs overflow-hidden shrink-0">
                           {item.students?.avatar_url ? (
                             <img src={item.students.avatar_url} alt={studentName} className="w-full h-full object-cover" />
                           ) : (
@@ -723,12 +723,12 @@ function CoachLeaderboardContent() {
 
       {/* BLOCO 4: Tabela de Squads */}
       {activeTab === 'squads' && (
-        <Card className="border-white/10 bg-zinc-950/90 relative z-10 rounded-3xl overflow-hidden">
-          <CardHeader className="pb-4 border-b border-white/[0.06]">
-            <CardTitle className="text-base text-white font-black tracking-tight">
+        <Card className="border-[#252D3B] bg-[#121722] relative z-10 rounded-3xl overflow-hidden">
+          <CardHeader className="pb-4 border-b border-[#252D3B]">
+            <CardTitle className="text-base text-[#F4F6FA] font-black tracking-tight">
               Classificação dos Squads Cooperativos
             </CardTitle>
-            <CardDescription className="text-xs text-zinc-400">
+            <CardDescription className="text-xs text-[#A7B0C0]">
               Média de pontos de cada equipe para estimular a responsabilidade coletiva.
             </CardDescription>
           </CardHeader>
@@ -736,35 +736,35 @@ function CoachLeaderboardContent() {
           <CardContent className="p-0">
             {squadStandings.length === 0 ? (
               <div className="p-10 text-center space-y-2">
-                <Users className="h-8 w-8 text-zinc-600 mx-auto" />
-                <p className="text-xs font-mono text-zinc-400">Nenhum Squad configurado nesta turma.</p>
+                <Users className="h-8 w-8 text-[#75A7FF] opacity-60 mx-auto" />
+                <p className="text-xs font-mono text-[#A7B0C0]">Nenhum Squad configurado nesta turma.</p>
                 <Link href="/dashboard/squads">
-                  <Button size="sm" variant="outline" className="mt-2 text-xs border-white/10 text-zinc-300">
+                  <Button size="sm" variant="outline" className="mt-2 text-xs">
                     Configurar Squads
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className="divide-y divide-white/[0.06]">
+              <div className="divide-y divide-[#252D3B]">
                 {squadStandings.map((squad, idx) => (
                   <div key={squad.squad_id || idx} className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3.5">
-                      <div className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 font-mono text-xs font-black text-white flex items-center justify-center">
+                      <div className="h-9 w-9 rounded-xl bg-[#1B2330] border border-[#252D3B] font-mono text-xs font-black text-[#F4F6FA] flex items-center justify-center">
                         #{String(idx + 1).padStart(2, '0')}
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-white">{squad.squad_name}</p>
-                        <p className="text-[11px] font-mono text-zinc-400">
+                        <p className="text-sm font-bold text-[#F4F6FA]">{squad.squad_name}</p>
+                        <p className="text-[11px] font-mono text-[#A7B0C0]">
                           {squad.total_members} atletas integrantes
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-base font-black font-mono text-white block">
+                      <span className="text-base font-black font-mono text-[#F4F6FA] block">
                         {Math.round(squad.squad_average_points || 0)}{' '}
                         <span className="text-[10px] text-[#75A7FF]">XP Médio</span>
                       </span>
-                      <span className="text-[10px] font-mono text-zinc-500">
+                      <span className="text-[10px] font-mono text-[#A7B0C0]">
                         Total: {squad.squad_total_points || 0} XP
                       </span>
                     </div>

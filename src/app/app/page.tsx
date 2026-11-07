@@ -683,9 +683,9 @@ export default function StudentHomePage() {
 
       {loading ? (
         <div className="relative z-10 space-y-4 pt-2 animate-pulse">
-          <div className="h-44 rounded-3xl bg-white/[0.04] border border-white/10" />
-          <div className="h-32 rounded-3xl bg-white/[0.04] border border-white/10" />
-          <div className="h-48 rounded-3xl bg-white/[0.04] border border-white/10" />
+          <div className="h-44 rounded-3xl bg-[#121722] border border-[#252D3B]" />
+          <div className="h-32 rounded-3xl bg-[#121722] border border-[#252D3B]" />
+          <div className="h-48 rounded-3xl bg-[#121722] border border-[#252D3B]" />
         </div>
       ) : !challenge ? (
         /* Tela de Primeiro Acesso - Exige Convite/QR Code ou Pagamento Pendente */
@@ -698,11 +698,11 @@ export default function StudentHomePage() {
                   Inscrição Aguardando Pagamento Pix
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-zinc-200">
+              <p className="text-xs sm:text-sm text-[#F4F6FA]">
                 Você iniciou a inscrição na turma <strong>{pendingChallenge.title}</strong> (R$ {Number(pendingChallenge.price || 0).toFixed(2)}).
               </p>
               <Link href={`/join/${pendingChallenge.id}`} className="block pt-1">
-                <button className="w-full min-h-[44px] py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs sm:text-sm font-mono transition-colors cursor-pointer flex items-center justify-center gap-1.5">
+                <button className="w-full min-h-[44px] py-2.5 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold text-xs sm:text-sm font-mono transition-colors cursor-pointer flex items-center justify-center gap-1.5">
                   <span>Concluir Pagamento no Pix</span>
                   <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                 </button>
@@ -711,19 +711,19 @@ export default function StudentHomePage() {
           )}
 
           <SpotlightCard3D className="p-6 sm:p-8 text-center space-y-4">
-            <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/20 mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(255,255,255,0.08)]">
-              <QrCode className="h-8 w-8 text-white" />
+            <div className="h-16 w-16 rounded-2xl bg-[#1B2330] border border-[#252D3B] mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(52,120,246,0.12)]">
+              <QrCode className="h-8 w-8 text-[#75A7FF]" />
             </div>
 
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 block mb-1">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#A7B0C0] block mb-1">
                 ACESSO À ARENA
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight">
                 Conecte-se à sua Turma
               </h2>
-              <p className="text-xs sm:text-sm text-zinc-300 mt-2 max-w-md mx-auto leading-relaxed">
-                Digite o <strong>Código de Convite</strong> fornecido pelo seu treinador para liberar seu cronograma de missões com auditoria por IA e disputar o pódio da sua turma.
+              <p className="text-xs sm:text-sm text-[#A7B0C0] mt-2 max-w-md mx-auto leading-relaxed">
+                Digite o <strong className="text-[#F4F6FA]">Código de Convite</strong> fornecido pelo seu treinador para liberar seu cronograma de missões com auditoria por IA e disputar o pódio da sua turma.
               </p>
             </div>
 
@@ -733,15 +733,15 @@ export default function StudentHomePage() {
                 placeholder="Ex: VERAO-2026 ou link do convite..."
                 value={inviteCodeInput}
                 onChange={(e) => setInviteCodeInput(e.target.value)}
-                className="w-full bg-black/70 border border-white/15 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/50 font-mono transition-colors"
+                className="w-full bg-[#1B2330] border border-[#252D3B] rounded-xl px-4 py-3.5 text-sm text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-mono transition-colors"
               />
               <button
                 type="button"
                 onClick={handleEnterChallengeByCode}
-                className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)] cursor-pointer"
+                className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.2)] cursor-pointer"
               >
                 <span>Validar e Entrar na Turma</span>
-                <ArrowRight className="h-4 w-4 text-black" />
+                <ArrowRight className="h-4 w-4 text-white" />
               </button>
             </div>
           </SpotlightCard3D>
@@ -757,17 +757,17 @@ export default function StudentHomePage() {
 
           {/* Alerta de Urgência de Streak (Proteção das 20h) */}
           {streakRisk.isAtRisk && (
-            <div className="relative z-10 p-4 rounded-2xl bg-zinc-950 border border-amber-500/40 flex items-center justify-between gap-3">
+            <div className="relative z-10 p-4 rounded-2xl bg-[#121722] border border-amber-500/40 flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs sm:text-sm font-mono font-bold text-amber-300 uppercase tracking-wider">
                   OFENSIVA EM RISCO ({currentStreak} DIAS ATIVOS)
                 </p>
-                <p className="text-xs sm:text-sm text-zinc-300 mt-0.5">
+                <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
                   Faltam {streakRisk.hoursLeft}h para a meia-noite. Registre seu check-in de hoje.
                 </p>
               </div>
               <Link href="/app/missions">
-                <button className="min-h-[40px] px-4 py-2 rounded-xl bg-white text-black text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer">
+                <button className="min-h-[40px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer">
                   SALVAR
                 </button>
               </Link>

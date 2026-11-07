@@ -414,8 +414,8 @@ function JoinChallengeContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center text-zinc-500 gap-3 font-mono text-xs">
-        <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#080A0F] flex flex-col items-center justify-center text-[#A7B0C0] gap-3 font-mono text-xs">
+        <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
         CARREGANDO CREDENCIAL DO DESAFIO...
       </div>
     );
@@ -424,16 +424,16 @@ function JoinChallengeContent() {
   // Se o desafio falhou ao carregar (código inexistente ou encerrado)
   if (pageError || !challenge) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-        <div className="mono-glass-card max-w-md w-full p-8 text-center rounded-3xl space-y-4 border border-white/10 shadow-2xl">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
+      <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex items-center justify-center p-4">
+        <div className="bg-[#121722] max-w-md w-full p-8 text-center rounded-3xl space-y-4 border border-[#252D3B] shadow-2xl">
+          <div className="w-12 h-12 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center mx-auto">
             <AlertCircle className="w-6 h-6" />
           </div>
           <div className="space-y-1.5">
-            <p className="font-bold text-sm text-white font-mono uppercase tracking-wider">
+            <p className="font-bold text-sm text-[#F4F6FA] font-mono uppercase tracking-wider">
               Convite Indisponível
             </p>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+            <p className="text-xs text-[#A7B0C0] leading-relaxed font-sans">
               {pageError || 'O link pode estar incompleto, com código expirado ou a turma foi arquivada pelo treinador.'}
             </p>
           </div>
@@ -508,11 +508,11 @@ function JoinChallengeContent() {
                 <img
                   src={challenge.professionals?.avatar_url || challenge.professionals?.brand_logo_url}
                   alt={challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Treinador'}
-                  className="h-6 w-6 rounded-full object-cover border border-amber-400/50"
+                  className="h-6 w-6 rounded-full object-cover border border-[#3478F6]/50"
                 />
               )}
               <p className="text-xs text-[#A7B0C0] font-medium">
-                Treinador: <strong className="text-white">{challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Coach Certificado'}</strong>
+                Treinador: <strong className="text-[#F4F6FA]">{challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Coach Certificado'}</strong>
               </p>
             </div>
           </div>
@@ -602,13 +602,13 @@ function JoinChallengeContent() {
             ) : (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0]">
                     Crie sua conta para entrar na turma
                   </span>
                 </div>
 
                 {/* Alternador: Criar Conta vs Já Tenho Conta */}
-                <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-white/[0.06]">
+                <div className="grid grid-cols-2 p-1 rounded-xl bg-[#080A0F] border border-[#252D3B]">
                   <button
                     type="button"
                     onClick={() => {
@@ -617,8 +617,8 @@ function JoinChallengeContent() {
                     }}
                     className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signup'
-                        ? 'bg-white text-black shadow'
-                        : 'text-zinc-400 hover:text-white'
+                        ? 'bg-[#3478F6] text-white shadow'
+                        : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
                     }`}
                   >
                     <Sparkles className="h-3.5 w-3.5" />
@@ -632,8 +632,8 @@ function JoinChallengeContent() {
                     }}
                     className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signin'
-                        ? 'bg-white text-black shadow'
-                        : 'text-zinc-400 hover:text-white'
+                        ? 'bg-[#3478F6] text-white shadow'
+                        : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
                     }`}
                   >
                     <User className="h-3.5 w-3.5" />
@@ -646,7 +646,7 @@ function JoinChallengeContent() {
                   type="button"
                   disabled={joining}
                   onClick={handleGoogleQuickJoin}
-                  className="w-full h-11 min-h-[44px] rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-white shadow-sm group cursor-pointer"
+                  className="w-full h-11 min-h-[44px] rounded-xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#252D3B] active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#F4F6FA] shadow-sm group cursor-pointer"
                 >
                   <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -669,7 +669,7 @@ function JoinChallengeContent() {
                   {authMode === 'signup' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                           Seu Nome Completo
                         </label>
                         <Input
@@ -678,11 +678,11 @@ function JoinChallengeContent() {
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           required
-                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
+                          className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                           WhatsApp
                         </label>
                         <Input
@@ -691,7 +691,7 @@ function JoinChallengeContent() {
                           value={phone}
                           onChange={(e) => setPhone(formatWhatsapp(e.target.value))}
                           required
-                          className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
+                          className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                         />
                       </div>
                     </div>
@@ -700,7 +700,7 @@ function JoinChallengeContent() {
                   {/* Campo CPF quando o desafio é pago */}
                   {isPaidChallenge && (
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                         CPF do Pagador (Obrigatório para emissão do Pix)
                       </label>
                       <Input
@@ -709,14 +709,14 @@ function JoinChallengeContent() {
                         value={cpf}
                         onChange={(e) => setCpf(formatCpf(e.target.value))}
                         required
-                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs font-mono"
+                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs font-mono"
                       />
                     </div>
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                         E-mail
                       </label>
                       <Input
@@ -725,11 +725,11 @@ function JoinChallengeContent() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
+                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                         Senha
                       </label>
                       <Input
@@ -739,7 +739,7 @@ function JoinChallengeContent() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength={6}
-                        className="bg-black/60 border-white/10 text-white rounded-xl focus:border-white/40 h-11 min-h-[44px] text-xs"
+                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                       />
                     </div>
                   </div>
@@ -751,7 +751,7 @@ function JoinChallengeContent() {
                   >
                     {joining ? (
                       <>
-                        <div className="h-4 w-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         <span>Processando sua entrada...</span>
                       </>
                     ) : (

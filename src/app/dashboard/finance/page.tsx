@@ -1046,10 +1046,10 @@ export default function FinanceDashboardPage() {
         <div className="space-y-4 pt-2">
           {upgradePixData ? (
             <div className="space-y-4 text-center">
-              <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-left">
-                <span className="text-[10px] font-mono text-zinc-400 uppercase">Plano Selecionado</span>
-                <h4 className="text-sm font-bold text-white">{upgradePixData.planName} — R$ {upgradePixData.monthlyPrice?.toFixed(2)}/mês</h4>
-                <p className="text-[11px] text-zinc-400 mt-1">Efetue o pagamento do PIX abaixo. A ativação do plano é automática e instantânea assim que o banco confirmar a transação.</p>
+              <div className="p-3 bg-[#1B2330] border border-[#252D3B] rounded-xl text-left">
+                <span className="text-[10px] font-mono text-[#A7B0C0] uppercase">Plano Selecionado</span>
+                <h4 className="text-sm font-bold text-[#F4F6FA]">{upgradePixData.planName} — R$ {upgradePixData.monthlyPrice?.toFixed(2)}/mês</h4>
+                <p className="text-[11px] text-[#A7B0C0] mt-1">Efetue o pagamento do PIX abaixo. A ativação do plano é automática e instantânea assim que o banco confirmar a transação.</p>
               </div>
 
               {upgradePixData.pixQrBase64 && (
@@ -1069,7 +1069,7 @@ export default function FinanceDashboardPage() {
                       navigator.clipboard.writeText(upgradePixData.pixCode);
                       showToast('Código PIX Copia e Cola copiado para a área de transferência!');
                     }}
-                    className="w-full bg-white text-black hover:bg-zinc-200 font-bold text-xs"
+                    className="w-full font-bold text-xs"
                   >
                     Copiar Código PIX
                   </Button>
@@ -1356,8 +1356,8 @@ export default function FinanceDashboardPage() {
                   }}
                   className={`w-full font-bold ${
                     selectedPlanForUpgrade === currentPlanTier
-                      ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-white/5'
-                      : 'bg-white text-black hover:bg-zinc-200'
+                      ? 'bg-[#1B2330] text-[#A7B0C0] cursor-not-allowed border border-[#252D3B]'
+                      : 'bg-[#3478F6] text-white hover:bg-[#75A7FF]'
                   }`}
                 >
                   {upgradeLoading 
@@ -1369,7 +1369,7 @@ export default function FinanceDashboardPage() {
                 <Button
                   variant="outline"
                   onClick={() => setUpgradeModalOpen(false)}
-                  className="border-white/10 text-zinc-400"
+                  className="border-[#252D3B] text-[#A7B0C0]"
                 >
                   Fechar
                 </Button>
@@ -1388,10 +1388,10 @@ export default function FinanceDashboardPage() {
         confirmText="Entendido"
       >
         {dialogNotice?.details && dialogNotice.details.length > 0 && (
-          <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 space-y-1.5 text-xs font-mono text-zinc-300">
+          <div className="p-3.5 rounded-xl bg-[#1B2330] border border-[#252D3B] space-y-1.5 text-xs font-mono text-[#A7B0C0]">
             {dialogNotice.details.map((line, idx) => (
               <div key={idx} className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] shrink-0" />
                 <span>{line}</span>
               </div>
             ))}
@@ -1401,8 +1401,8 @@ export default function FinanceDashboardPage() {
 
       {/* Toast Monocromático Flutuante */}
       {toastMessage && (
-        <div className="fixed bottom-8 right-8 z-50 mono-glass-card px-5 py-3.5 rounded-2xl border border-white/25 text-white text-xs font-bold shadow-[0_0_30px_rgba(255,255,255,0.12)] animate-in fade-in slide-in-from-bottom-4 duration-200 flex items-center gap-2.5">
-          <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+        <div className="fixed bottom-8 right-8 z-50 bg-[#121722] px-5 py-3.5 rounded-2xl border border-[#252D3B] text-[#F4F6FA] text-xs font-bold shadow-[0_0_30px_rgba(52,120,246,0.18)] animate-in fade-in slide-in-from-bottom-4 duration-200 flex items-center gap-2.5">
+          <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
           <span>{toastMessage}</span>
         </div>
       )}

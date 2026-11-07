@@ -11,13 +11,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer active:scale-[0.98]';
     
     const variants = {
-      default: 'bg-white text-black hover:bg-zinc-200 shadow-sm focus-visible:ring-white',
-      destructive: 'bg-zinc-900 border border-zinc-700 text-white hover:bg-zinc-800 focus-visible:ring-zinc-400',
-      success: 'bg-white text-black hover:bg-zinc-200 shadow-sm focus-visible:ring-white',
-      outline: 'border border-zinc-700 bg-zinc-900/50 text-zinc-100 hover:bg-zinc-800 hover:text-white focus-visible:ring-zinc-400',
-      secondary: 'bg-zinc-800 text-zinc-100 hover:bg-zinc-700 focus-visible:ring-zinc-500',
-      ghost: 'text-zinc-300 hover:bg-zinc-800/60 hover:text-white',
-      link: 'text-white underline-offset-4 hover:underline p-0 h-auto',
+      default: 'bg-[#3478F6] text-white hover:bg-[#75A7FF] border border-[#3478F6]/50 shadow-[0_8px_20px_rgba(52,120,246,0.28)] focus-visible:ring-[#3478F6]',
+      destructive: 'bg-rose-500/15 border border-rose-500/35 text-rose-300 hover:bg-rose-500/25 focus-visible:ring-rose-500',
+      success: 'bg-[#3478F6] text-white hover:bg-[#75A7FF] border border-[#3478F6]/50 shadow-[0_8px_20px_rgba(52,120,246,0.28)] focus-visible:ring-[#3478F6]',
+      outline: 'border border-[#252D3B] bg-[#1B2330] text-[#F4F6FA] hover:bg-[#252D3B] hover:border-[#3478F6]/40 hover:text-white focus-visible:ring-[#3478F6]',
+      secondary: 'border border-[#252D3B] bg-[#1B2330] text-[#F4F6FA] hover:bg-[#252D3B] hover:border-[#3478F6]/40 focus-visible:ring-[#3478F6]',
+      ghost: 'text-[#A7B0C0] hover:bg-[#1B2330] hover:text-[#F4F6FA]',
+      link: 'text-[#75A7FF] underline-offset-4 hover:underline p-0 h-auto',
     };
 
     const sizes = {

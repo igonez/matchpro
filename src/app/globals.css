@@ -107,7 +107,7 @@ body {
 
 /* Botão Secundário Grafite com Borda Cinza Azulado */
 .mono-button-secondary {
-  background: #121722;
+  background: #1B2330;
   color: #F4F6FA;
   border: 1px solid #252D3B;
   border-radius: 0.75rem;
@@ -115,8 +115,8 @@ body {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .mono-button-secondary:hover {
-  background: #1B2330;
-  border-color: rgba(52, 120, 246, 0.4);
+  background: #252D3B;
+  border-color: rgba(52, 120, 246, 0.45);
   color: #FFFFFF;
   transform: translateY(-1px);
 }

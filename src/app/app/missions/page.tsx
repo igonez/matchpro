@@ -1081,8 +1081,8 @@ function StudentMissionsContent() {
                 }}
                 className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
                   isSelected
-                    ? 'border-white bg-zinc-900 shadow-lg'
-                    : 'border-white/10 bg-zinc-950/90 hover:border-white/25'
+                    ? 'border-[#3478F6] bg-[#1B2330] shadow-lg'
+                    : 'border-[#252D3B] bg-[#121722] hover:border-[#3478F6]/40'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -1090,15 +1090,15 @@ function StudentMissionsContent() {
                     <IconComp className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono font-black text-white block tracking-wider">
+                    <span className="text-[10px] font-mono font-black text-[#F4F6FA] block tracking-wider">
                       {p.label}
                     </span>
-                    <span className="text-[10px] font-mono text-zinc-400 block">
+                    <span className="text-[10px] font-mono text-[#A7B0C0] block">
                       {p.stats.done}/{p.stats.total} feitas
                     </span>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-zinc-400 shrink-0">
+                <span className="text-[10px] font-mono font-bold text-[#75A7FF] shrink-0">
                   {p.stats.totalXp} XP
                 </span>
               </button>
@@ -1176,12 +1176,12 @@ function StudentMissionsContent() {
           </div>
         </SpotlightCard3D>
       ) : filteredMissions.length === 0 ? (
-        <div className="p-8 rounded-3xl border border-white/10 bg-zinc-950 text-center space-y-2 relative z-10">
-          <AlertCircle className="w-7 h-7 text-zinc-500 mx-auto" />
-          <p className="text-xs font-mono text-zinc-300 font-bold">
+        <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2 relative z-10">
+          <AlertCircle className="w-7 h-7 text-[#A7B0C0] mx-auto" />
+          <p className="text-xs font-mono text-[#F4F6FA] font-bold">
             Nenhuma missão cadastrada para a Semana {selectedWeekNumber}.
           </p>
-          <p className="text-[11px] text-zinc-500 max-w-xs mx-auto">
+          <p className="text-[11px] text-[#A7B0C0] max-w-xs mx-auto">
             O seu treinador ainda não publicou missões neste bloco para a Semana {selectedWeekNumber}.
           </p>
         </div>
@@ -1209,19 +1209,19 @@ function StudentMissionsContent() {
                 className={`p-4 rounded-3xl border ${block.accentBorder} bg-gradient-to-br ${block.accentBg} space-y-3 shadow-lg`}
               >
                 {/* Header do Bloco */}
-                <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-white/[0.08]">
+                <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-[#252D3B]">
                   <div className="flex items-center gap-2.5">
                     <div className={`h-9 w-9 rounded-xl border flex items-center justify-center shrink-0 ${block.badgeColor}`}>
                       <BlockIcon className="w-4 h-4" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-sm font-black text-white tracking-tight">{block.title}</h3>
-                        <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/10 uppercase">
+                        <h3 className="text-sm font-black text-[#F4F6FA] tracking-tight">{block.title}</h3>
+                        <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B] uppercase">
                           {doneCount}/{allBlockMissions.length} feitas
                         </span>
                       </div>
-                      <p className="text-[11px] text-zinc-400 mt-0.5">{block.subtitle}</p>
+                      <p className="text-[11px] text-[#A7B0C0] mt-0.5">{block.subtitle}</p>
                     </div>
                   </div>
 

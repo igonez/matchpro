@@ -173,10 +173,10 @@ export function DashboardHeader() {
           {coachProfile && (
             <Link
               href="/dashboard/profile"
-              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[42px] rounded-full bg-[#121722] border border-[#252D3B] hover:border-amber-400/40 transition-colors"
+              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[42px] rounded-full bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors"
               title="Meu Perfil & Identidade"
             >
-              <div className="h-7 w-7 rounded-full bg-[#080A0F] border border-amber-400/40 overflow-hidden flex items-center justify-center shrink-0">
+              <div className="h-7 w-7 rounded-full bg-[#1B2330] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0">
                 {coachProfile.avatarUrl ? (
                   <img
                     src={coachProfile.avatarUrl}
@@ -184,7 +184,7 @@ export function DashboardHeader() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-[11px] font-mono font-black text-amber-300">
+                  <span className="text-[11px] font-mono font-black text-[#75A7FF]">
                     {coachProfile.fullName.charAt(0).toUpperCase()}
                   </span>
                 )}

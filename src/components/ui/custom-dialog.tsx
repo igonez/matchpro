@@ -42,20 +42,20 @@ export function CustomDialog({
   const resolvedCancelLabel = cancelText || cancelLabel || (onConfirm ? 'Cancelar' : 'Fechar');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="mono-glass-card max-w-md w-full p-6 sm:p-7 rounded-3xl border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative space-y-5 animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080A0F]/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="mono-glass-card max-w-md w-full p-6 sm:p-7 rounded-3xl border border-[#252D3B] bg-[#121722] shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative space-y-5 animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
         
         {/* Cabeçalho */}
-        <div className="flex items-start justify-between pb-3 border-b border-white/[0.08]">
+        <div className="flex items-start justify-between pb-3 border-b border-[#252D3B]">
           <div>
-            <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 block mb-0.5">
+            <span className="text-[9px] font-mono uppercase tracking-widest text-[#A7B0C0] block mb-0.5">
               {tag}
             </span>
-            <h3 className="text-base sm:text-lg font-black text-white font-mono tracking-tight">
+            <h3 className="text-base sm:text-lg font-black text-[#F4F6FA] font-mono tracking-tight">
               {title}
             </h3>
             {description && (
-              <p className="text-xs text-zinc-400 mt-1 font-sans leading-relaxed">
+              <p className="text-xs text-[#A7B0C0] mt-1 font-sans leading-relaxed">
                 {description}
               </p>
             )}
@@ -65,7 +65,7 @@ export function CustomDialog({
             type="button"
             onClick={onClose}
             aria-label="Fechar janela"
-            className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
+            className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 flex items-center justify-center transition-colors shrink-0"
           >
             <X className="h-4 w-4" />
           </button>
@@ -76,7 +76,7 @@ export function CustomDialog({
 
         {/* Ações */}
         {!hideFooter && (
-          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-white/[0.08]">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#252D3B]">
             {onConfirm ? (
               <>
                 {resolvedCancelLabel && (
@@ -96,7 +96,7 @@ export function CustomDialog({
                   disabled={isLoading}
                   className={
                     variant === 'destructive'
-                      ? 'px-5 py-2 min-h-[44px] text-xs font-mono font-bold rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-colors'
+                      ? 'px-5 py-2 min-h-[44px] text-xs font-mono font-bold rounded-xl bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-200 transition-colors'
                       : 'mono-button-primary px-5 py-2 min-h-[44px] text-xs font-mono font-bold'
                   }
                 >

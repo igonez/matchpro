@@ -1102,7 +1102,7 @@ function MissionsManagerContent() {
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 flex-1 sm:flex-initial rounded-xl border border-white/15 bg-zinc-950 px-3.5 text-xs font-bold text-white focus:outline-none focus:border-white/30 font-mono"
+              className="h-10 flex-1 sm:flex-initial rounded-xl border border-[#252D3B] bg-[#1B2330] px-3.5 text-xs font-bold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6] font-mono"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -1117,9 +1117,9 @@ function MissionsManagerContent() {
             onClick={handleOpenCreateListModal}
             disabled={!selectedChallengeId}
             variant="outline"
-            className="w-full sm:w-auto rounded-xl h-10 px-3.5 text-xs font-mono font-bold border-white/15 text-zinc-200 hover:text-white hover:bg-white/10"
+            className="w-full sm:w-auto rounded-xl h-10 px-3.5 text-xs font-mono font-bold"
           >
-            <ListPlus className="h-4 w-4 mr-1.5" />
+            <ListPlus className="h-4 w-4 mr-1.5 text-[#75A7FF]" />
             Novo Bloco
           </Button>
         </div>
@@ -1151,10 +1151,10 @@ function MissionsManagerContent() {
                   }}
                   className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
                     isSelected
-                      ? 'border-white bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.15)]'
+                      ? 'border-[#3478F6] bg-[#3478F6] text-white shadow-[0_8px_20px_rgba(52,120,246,0.3)]'
                       : meta?.isCurrent
-                      ? 'border-[#3478F6]/40 bg-[#3478F6]/10 text-white hover:border-[#3478F6]'
-                      : 'border-white/10 bg-zinc-950/80 text-zinc-400 hover:border-white/25 hover:text-white'
+                      ? 'border-[#3478F6]/40 bg-[#3478F6]/10 text-[#F4F6FA] hover:border-[#3478F6]'
+                      : 'border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:border-[#3478F6]/40 hover:text-[#F4F6FA]'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
@@ -1164,10 +1164,10 @@ function MissionsManagerContent() {
                     <span
                       className={`text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded ${
                         isSelected
-                          ? 'bg-black/15 text-black'
+                          ? 'bg-white/20 text-white'
                           : meta?.isCurrent
                           ? 'bg-[#3478F6]/20 text-[#75A7FF]'
-                          : 'bg-white/5 text-zinc-400'
+                          : 'bg-[#1B2330] text-[#A7B0C0]'
                       }`}
                     >
                       {meta?.isCurrent
@@ -1177,7 +1177,7 @@ function MissionsManagerContent() {
                         : 'Concluída'}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between w-full text-[10px] font-mono opacity-80">
+                  <div className="flex items-center justify-between w-full text-[10px] font-mono opacity-85">
                     <span>{meta?.formattedRange || `Ciclo ${wNum}`}</span>
                     <span>+{week.bonus_points || 20} XP</span>
                   </div>
@@ -1188,9 +1188,9 @@ function MissionsManagerContent() {
             <button
               type="button"
               onClick={handleCreateNewWeek}
-              className="p-3.5 rounded-2xl border border-dashed border-white/15 bg-zinc-950/40 text-zinc-400 hover:text-white hover:border-white/30 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer text-xs font-mono"
+              className="p-3.5 rounded-2xl border border-dashed border-[#252D3B] bg-[#121722]/60 text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer text-xs font-mono"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4 text-[#75A7FF]" />
               <span>+ Nova Semana</span>
             </button>
           </div>
@@ -1299,12 +1299,12 @@ function MissionsManagerContent() {
                       value={newWeekTitle}
                       onChange={(e) => setNewWeekTitle(e.target.value)}
                       placeholder="Título da semana..."
-                      className="h-9 w-44 text-xs bg-zinc-900 border-white/20 text-white rounded-xl"
+                      className="h-9 w-44 text-xs bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl"
                     />
                     <Button
                       size="sm"
                       onClick={handleSaveWeekTitle}
-                      className="h-9 px-3 text-xs bg-white text-black font-bold rounded-xl"
+                      className="h-9 px-3 text-xs font-bold rounded-xl"
                     >
                       Salvar
                     </Button>
@@ -1317,7 +1317,7 @@ function MissionsManagerContent() {
                       setNewWeekTitle(selectedWeek?.title || `Semana ${selectedWeekNumber}`);
                       setEditingWeekTitle(true);
                     }}
-                    className="h-9 px-3 rounded-xl text-xs border-white/10 text-zinc-300 hover:text-white"
+                    className="h-9 px-3 rounded-xl text-xs"
                   >
                     <Edit3 className="w-3.5 h-3.5 mr-1.5" />
                     Renomear
@@ -1414,8 +1414,8 @@ function MissionsManagerContent() {
             onClick={() => setSelectedBlockFilter('all')}
             className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
               selectedBlockFilter === 'all'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-zinc-950 border border-white/10 text-zinc-400 hover:text-white'
+                ? 'bg-[#3478F6] text-white shadow-[0_6px_16px_rgba(52,120,246,0.28)]'
+                : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -1437,8 +1437,8 @@ function MissionsManagerContent() {
                 onClick={() => setSelectedBlockFilter((prev) => (prev === block.key ? 'all' : block.key))}
                 className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                   isSelected
-                    ? 'bg-white text-black shadow-md'
-                    : 'bg-zinc-950 border border-white/10 text-zinc-400 hover:text-white'
+                    ? 'bg-[#3478F6] text-white shadow-[0_6px_16px_rgba(52,120,246,0.28)]'
+                    : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40'
                 }`}
               >
                 {getBlockIcon(block.key, 'w-3.5 h-3.5')}
@@ -1452,7 +1452,7 @@ function MissionsManagerContent() {
         <Button
           size="sm"
           onClick={() => handleOpenCreateModal()}
-          className="rounded-xl h-9 px-4 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200"
+          className="rounded-xl h-9 px-4 text-xs font-mono font-bold"
         >
           <Plus className="w-4 h-4 mr-1" />
           Nova Missão na Semana {selectedWeekNumber}
@@ -1590,7 +1590,7 @@ function MissionsManagerContent() {
                         <Button
                           size="sm"
                           onClick={() => handleOpenCreateModal(block)}
-                          className="h-8 px-3 rounded-xl text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200"
+                          className="h-8 px-3 rounded-xl text-xs font-mono font-bold"
                         >
                           <Plus className="h-3.5 w-3.5 mr-1" />
                           Adicionar
@@ -1600,15 +1600,15 @@ function MissionsManagerContent() {
 
                     <CardContent className="p-4">
                       {blockMissions.length === 0 ? (
-                        <div className="py-8 text-center space-y-2 border border-dashed border-white/10 rounded-2xl">
-                          <p className="text-xs font-mono text-zinc-400">
+                        <div className="py-8 text-center space-y-2 border border-dashed border-[#252D3B] rounded-2xl bg-[#1B2330]/35">
+                          <p className="text-xs font-mono text-[#A7B0C0]">
                             Nenhuma missão neste bloco para a Semana {selectedWeekNumber}.
                           </p>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleOpenCreateModal(block)}
-                            className="h-8 text-xs rounded-xl border-white/15 text-zinc-300 hover:text-white"
+                            className="h-8 text-xs rounded-xl"
                           >
                             <Plus className="w-3.5 h-3.5 mr-1" />
                             Criar Missão de {accent.label}
@@ -1704,7 +1704,7 @@ function MissionsManagerContent() {
       >
         <form onSubmit={handleSaveList} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-300 block mb-1">Nome do Bloco</label>
+            <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Nome do Bloco</label>
             <Input
               value={listName}
               onChange={(e) => setListName(e.target.value)}
@@ -1714,10 +1714,10 @@ function MissionsManagerContent() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
+            <label className="text-xs font-semibold text-[#A7B0C0] block mb-1.5">
               Pilar / Categoria do Bloco
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 rounded-xl bg-zinc-950 border border-white/10">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 rounded-xl bg-[#1B2330] border border-[#252D3B]">
               {LIST_CATEGORY_OPTIONS.map((opt) => (
                 <button
                   key={opt.key}
@@ -1725,8 +1725,8 @@ function MissionsManagerContent() {
                   onClick={() => setListCategoryKey(opt.key)}
                   className={`h-9 px-2 rounded-lg flex items-center justify-center font-mono font-bold text-xs transition-all cursor-pointer ${
                     listCategoryKey === opt.key
-                      ? 'bg-white text-black shadow-sm'
-                      : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+                      ? 'bg-[#3478F6] text-white shadow-sm'
+                      : 'bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
                   }`}
                 >
                   {opt.label}
@@ -1737,11 +1737,11 @@ function MissionsManagerContent() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">Comprovação Padrão</label>
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Comprovação Padrão</label>
               <select
                 value={listValidationType}
                 onChange={(e: any) => setListValidationType(e.target.value)}
-                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="photo">Foto Obrigatória</option>
                 <option value="timer">Cronômetro de Sessão</option>
@@ -1751,11 +1751,11 @@ function MissionsManagerContent() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">Limite Diário</label>
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Limite Diário</label>
               <select
                 value={listDailyLimit}
                 onChange={(e) => setListDailyLimit(e.target.value)}
-                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="1">1 vez ao dia (trava até 00:00)</option>
                 <option value="0">Ilimitado (livre)</option>
@@ -1771,14 +1771,14 @@ function MissionsManagerContent() {
               type="button"
               variant="outline"
               onClick={() => setIsListModalOpen(false)}
-              className="flex-1 text-xs border-white/10 text-zinc-400 hover:text-white"
+              className="flex-1 text-xs"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
               disabled={submittingList}
-              className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black"
+              className="flex-1 text-xs font-bold"
             >
               {submittingList ? 'Salvando...' : 'Salvar Bloco'}
             </Button>
@@ -1796,7 +1796,7 @@ function MissionsManagerContent() {
       >
         <form onSubmit={handleSaveMission} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-300 block mb-1">Título da Missão</label>
+            <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Título da Missão</label>
             <Input
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
@@ -1807,7 +1807,7 @@ function MissionsManagerContent() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">Bloco de Destino</label>
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Bloco de Destino</label>
               <select
                 value={formListId}
                 onChange={(e) => {
@@ -1820,7 +1820,7 @@ function MissionsManagerContent() {
                     );
                   }
                 }}
-                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 {visualBlocks.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -1831,11 +1831,11 @@ function MissionsManagerContent() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">Comprovação</label>
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Comprovação</label>
               <select
                 value={formValidationType}
                 onChange={(e: any) => setFormValidationType(e.target.value)}
-                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="photo">Foto Obrigatória</option>
                 <option value="timer">Cronômetro de Sessão</option>
@@ -1847,7 +1847,7 @@ function MissionsManagerContent() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1 font-mono">Pontos (XP)</label>
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1 font-mono">Pontos (XP)</label>
               <Input
                 type="number"
                 min={1}
@@ -1858,14 +1858,14 @@ function MissionsManagerContent() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">Limite Diário</label>
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Limite Diário</label>
               <select
                 value={formDailyLimit}
                 onChange={(e) => {
                   setFormDailyLimit(e.target.value);
                   setFormRequiresCooldown(e.target.value === '1');
                 }}
-                className="w-full h-9 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30"
+                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="1">1 vez ao dia (trava 00:00)</option>
                 <option value="0">Ilimitado (livre)</option>
@@ -1876,8 +1876,8 @@ function MissionsManagerContent() {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-zinc-900/80 border border-white/10 space-y-3">
-            <label className="flex items-start gap-2.5 cursor-pointer text-xs font-bold text-zinc-200">
+          <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-3">
+            <label className="flex items-start gap-2.5 cursor-pointer text-xs font-bold text-[#F4F6FA]">
               <input
                 type="checkbox"
                 checked={formIsDailyReset}
@@ -1889,32 +1889,32 @@ function MissionsManagerContent() {
                     setFormRequiresCooldown(true);
                   }
                 }}
-                className="mt-0.5 rounded bg-zinc-950 border-white/20 text-white focus:ring-white h-4 w-4"
+                className="mt-0.5 rounded bg-[#121722] border-[#252D3B] text-[#3478F6] focus:ring-[#3478F6] h-4 w-4"
               />
               <div className="space-y-0.5">
-                <span className="text-white block font-black">Reset Diário (Meta Recorrente todos os dias)</span>
-                <span className="text-[11px] font-normal text-zinc-400 block leading-relaxed">
+                <span className="text-[#F4F6FA] block font-black">Reset Diário (Meta Recorrente todos os dias)</span>
+                <span className="text-[11px] font-normal text-[#A7B0C0] block leading-relaxed">
                   O aluno poderá cumprir e pontuar 1 vez por dia durante toda a semana, resetando às 00:00 (Meta semanal calculada para 7 dias). Ideal para hábitos diários (água, leitura, vácuo) e refeições.
                 </span>
               </div>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-2 border-t border-white/5">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#F4F6FA] pt-2 border-t border-[#252D3B]">
               <input
                 type="checkbox"
                 checked={formRequiresCooldown}
                 onChange={(e) => setFormRequiresCooldown(e.target.checked)}
-                className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
+                className="rounded bg-[#121722] border-[#252D3B] text-[#3478F6] focus:ring-[#3478F6]"
               />
               <span>Bloquear após o check-in até a virada de meia-noite</span>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-200 pt-1 border-t border-white/5">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#F4F6FA] pt-1 border-t border-[#252D3B]">
               <input
                 type="checkbox"
                 checked={formIsBonus}
                 onChange={(e) => setFormIsBonus(e.target.checked)}
-                className="rounded bg-zinc-950 border-white/20 text-white focus:ring-white"
+                className="rounded bg-[#121722] border-[#252D3B] text-[#3478F6] focus:ring-[#3478F6]"
               />
               <span>Marcar como Missão Extra / Bônus</span>
             </label>
@@ -1925,14 +1925,14 @@ function MissionsManagerContent() {
               type="button"
               variant="outline"
               onClick={() => setIsModalOpen(false)}
-              className="flex-1 text-xs border-white/10 text-zinc-400 hover:text-white"
+              className="flex-1 text-xs"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
               disabled={submittingMission}
-              className="flex-1 text-xs font-bold bg-white hover:bg-zinc-200 text-black"
+              className="flex-1 text-xs font-bold"
             >
               {submittingMission ? 'Salvando...' : 'Salvar Missão'}
             </Button>

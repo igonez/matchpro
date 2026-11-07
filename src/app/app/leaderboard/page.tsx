@@ -134,7 +134,7 @@ export default function LeaderboardPage() {
           .eq('challenge_id', challengeId);
 
         const resolveSquadHexColor = (theme?: string): string => {
-          if (!theme) return '#f59e0b';
+          if (!theme) return '#3478F6';
           if (theme.startsWith('#')) return theme;
           const map: Record<string, string> = {
             emerald: '#3478F6',
@@ -146,7 +146,7 @@ export default function LeaderboardPage() {
             red: '#ef4444',
             blue: '#3478F6',
           };
-          return map[theme.toLowerCase()] || '#f59e0b';
+          return map[theme.toLowerCase()] || '#3478F6';
         };
 
         if (squadsData && squadsData.length > 0) {
@@ -560,8 +560,8 @@ export default function LeaderboardPage() {
               {top2 ? (
                 <>
                   <div className="relative mb-2">
-                    <div className="h-14 w-14 rounded-2xl bg-zinc-900 border-2 border-slate-300/70 p-0.5 shadow-[0_0_20px_rgba(203,213,225,0.2)]">
-                      <div className="w-full h-full rounded-[12px] bg-zinc-950 flex items-center justify-center font-bold text-sm text-slate-200 overflow-hidden">
+                    <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border-2 border-slate-300/70 p-0.5 shadow-[0_0_20px_rgba(203,213,225,0.2)]">
+                      <div className="w-full h-full rounded-[12px] bg-[#080A0F] flex items-center justify-center font-bold text-sm text-slate-200 overflow-hidden">
                         {top2.students?.avatar_url ? (
                           <img src={top2.students.avatar_url} alt="2º" className="w-full h-full object-cover" />
                         ) : (
@@ -573,19 +573,19 @@ export default function LeaderboardPage() {
                       <SilverMedalBadge size={24} />
                     </div>
                   </div>
-                  <p className="text-xs font-bold text-white truncate max-w-[90px] mt-1">
+                  <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[90px] mt-1">
                     {top2.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-[11px] font-mono font-bold text-slate-300">
                     {top2.total_points} XP
                   </span>
-                  <div className="w-full h-20 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-slate-800/30 to-slate-400/20 border-t border-x border-slate-400/40 mt-2.5 flex flex-col items-center justify-center p-2">
+                  <div className="w-full h-20 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-slate-800/30 to-slate-400/20 border-t border-x border-slate-400/40 mt-2.5 flex flex-col items-center justify-center p-2">
                     <span className="font-mono font-black text-slate-200 text-lg leading-none">2º</span>
                     <span className="text-[8px] font-mono uppercase tracking-widest text-slate-400 mt-1">PRATA</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 font-mono text-[10px]">
+                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#252D3B] flex flex-col items-center justify-center text-[#A7B0C0] font-mono text-[10px]">
                   <span>2º VAGO</span>
                 </div>
               )}
@@ -600,7 +600,7 @@ export default function LeaderboardPage() {
                       <Crown className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-bounce" />
                     </div>
                     <div className="h-[72px] w-[72px] rounded-2xl bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-[0_0_30px_rgba(251,191,36,0.35)]">
-                      <div className="w-full h-full rounded-[14px] bg-zinc-950 flex items-center justify-center font-black text-lg text-amber-300 overflow-hidden">
+                      <div className="w-full h-full rounded-[14px] bg-[#080A0F] flex items-center justify-center font-black text-lg text-amber-300 overflow-hidden">
                         {top1.students?.avatar_url ? (
                           <img src={top1.students.avatar_url} alt="1º" className="w-full h-full object-cover" />
                         ) : (
@@ -612,13 +612,13 @@ export default function LeaderboardPage() {
                       <GoldMedalBadge size={28} />
                     </div>
                   </div>
-                  <p className="text-xs font-black text-white truncate max-w-[100px] mt-1">
+                  <p className="text-xs font-black text-[#F4F6FA] truncate max-w-[100px] mt-1">
                     {top1.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-xs font-mono font-black text-amber-300">
                     {top1.total_points} XP
                   </span>
-                  <div className="w-full h-28 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-amber-500/20 to-amber-400/30 border-t border-x border-amber-400/60 mt-2.5 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_12px_rgba(251,191,36,0.2)]">
+                  <div className="w-full h-28 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-amber-500/20 to-amber-400/30 border-t border-x border-amber-400/60 mt-2.5 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_12px_rgba(251,191,36,0.2)]">
                     <span className="font-mono font-black text-amber-300 text-2xl leading-none">1º</span>
                     <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-amber-200 mt-1">
                       LÍDER OURO
@@ -633,8 +633,8 @@ export default function LeaderboardPage() {
               {top3 ? (
                 <>
                   <div className="relative mb-2">
-                    <div className="h-14 w-14 rounded-2xl bg-zinc-900 border-2 border-amber-700/70 p-0.5 shadow-[0_0_20px_rgba(180,83,9,0.2)]">
-                      <div className="w-full h-full rounded-[12px] bg-zinc-950 flex items-center justify-center font-bold text-sm text-amber-500 overflow-hidden">
+                    <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border-2 border-amber-700/70 p-0.5 shadow-[0_0_20px_rgba(180,83,9,0.2)]">
+                      <div className="w-full h-full rounded-[12px] bg-[#080A0F] flex items-center justify-center font-bold text-sm text-amber-500 overflow-hidden">
                         {top3.students?.avatar_url ? (
                           <img src={top3.students.avatar_url} alt="3º" className="w-full h-full object-cover" />
                         ) : (
@@ -646,19 +646,19 @@ export default function LeaderboardPage() {
                       <BronzeMedalBadge size={24} />
                     </div>
                   </div>
-                  <p className="text-xs font-bold text-white truncate max-w-[90px] mt-1">
+                  <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[90px] mt-1">
                     {top3.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-[11px] font-mono font-bold text-amber-500">
                     {top3.total_points} XP
                   </span>
-                  <div className="w-full h-16 rounded-t-2xl bg-gradient-to-t from-zinc-950 via-amber-900/25 to-amber-700/25 border-t border-x border-amber-700/50 mt-2.5 flex flex-col items-center justify-center p-2">
+                  <div className="w-full h-16 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-amber-900/25 to-amber-700/25 border-t border-x border-amber-700/50 mt-2.5 flex flex-col items-center justify-center p-2">
                     <span className="font-mono font-black text-amber-500 text-base leading-none">3º</span>
                     <span className="text-[8px] font-mono uppercase tracking-widest text-amber-600 mt-1">BRONZE</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-16 rounded-t-2xl border border-dashed border-white/10 flex flex-col items-center justify-center text-zinc-600 font-mono text-[10px]">
+                <div className="w-full h-16 rounded-t-2xl border border-dashed border-[#252D3B] flex flex-col items-center justify-center text-[#A7B0C0] font-mono text-[10px]">
                   <span>3º VAGO</span>
                 </div>
               )}

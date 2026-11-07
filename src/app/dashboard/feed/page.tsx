@@ -34,8 +34,8 @@ const REACTIONS: ReactionDef[] = [
     key: 'fire',
     emoji: '🔥',
     label: 'Respeito',
-    activeBg: 'bg-amber-400/20 text-amber-300',
-    activeBorder: 'border-amber-400/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
   {
     key: 'muscle',
@@ -48,15 +48,15 @@ const REACTIONS: ReactionDef[] = [
     key: 'clap',
     emoji: '👏',
     label: 'Disciplina',
-    activeBg: 'bg-sky-400/20 text-sky-300',
-    activeBorder: 'border-sky-400/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
   {
     key: 'heart',
     emoji: '❤️',
     label: 'Apoio',
-    activeBg: 'bg-rose-400/20 text-rose-300',
-    activeBorder: 'border-rose-400/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
 ];
 
@@ -401,7 +401,7 @@ export default function DashboardFeedPage() {
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-white/10 bg-zinc-900 px-3 text-xs font-mono font-bold text-white focus:outline-none focus:border-white/30"
+              className="h-10 rounded-xl border border-[#252D3B] bg-[#1B2330] px-3 text-xs font-mono font-bold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6]"
             >
               <option value="all">Todas as Turmas ({challenges.length})</option>
               {challenges.map((c) => (
@@ -414,7 +414,7 @@ export default function DashboardFeedPage() {
 
           <Link href="/dashboard/audit">
             <button className="mono-button-secondary h-10 px-4 text-xs font-mono flex items-center gap-1.5 cursor-pointer">
-              <ShieldCheck className="h-3.5 w-3.5" />
+              <ShieldCheck className="h-3.5 w-3.5 text-[#3478F6]" />
               <span>Auditoria Swipe →</span>
             </button>
           </Link>
@@ -423,12 +423,12 @@ export default function DashboardFeedPage() {
 
       {/* Feed Stream */}
       {loading ? (
-        <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono relative z-10">
-          <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono relative z-10">
+          <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
           CARREGANDO FEED DA COMUNIDADE...
         </div>
       ) : posts.length === 0 ? (
-        <div className="mono-glass-card p-12 text-center text-xs font-mono text-zinc-500 relative z-10">
+        <div className="mono-glass-card p-12 text-center text-xs font-mono text-[#A7B0C0] relative z-10">
           Nenhuma postagem realizada ainda nesta turma.
         </div>
       ) : (
@@ -449,9 +449,9 @@ export default function DashboardFeedPage() {
             return (
               <SpotlightCard3D key={post.id} className="p-4 sm:p-5 space-y-3.5">
                 {/* Header do Post */}
-                <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center font-bold text-xs text-white overflow-hidden">
+                    <div className="h-9 w-9 rounded-full bg-[#1B2330] border border-[#252D3B] flex items-center justify-center font-bold text-xs text-[#F4F6FA] overflow-hidden">
                       {post.students?.avatar_url ? (
                         <img src={post.students.avatar_url} alt="aluno" className="w-full h-full object-cover" />
                       ) : (
@@ -459,56 +459,56 @@ export default function DashboardFeedPage() {
                       )}
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-white leading-tight">
+                      <h4 className="text-xs font-bold text-[#F4F6FA] leading-tight">
                         {post.students?.full_name || 'Atleta Arena'}
                       </h4>
-                      <p className="text-[10px] text-zinc-500 font-mono">
+                      <p className="text-[10px] text-[#A7B0C0] font-mono">
                         {new Date(post.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} • {new Date(post.submitted_at).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                   </div>
 
-                  <span className="text-[10px] font-mono font-bold text-white bg-white/10 px-2.5 py-1 rounded-full border border-white/20">
+                  <span className="text-[10px] font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-1 rounded-full border border-[#3478F6]/30">
                     +{post.missions?.points_rewarded || 10} PTS
                   </span>
                 </div>
 
                 {/* Imagem do Check-in */}
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-white/10">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#080A0F] border border-[#252D3B]">
                   <img src={post.photo_url} alt="Check-in" className="w-full h-full object-cover" />
 
                   {/* Tag de Missão */}
-                  <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-bold text-white">
+                  <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-[#121722]/90 backdrop-blur-md border border-[#252D3B] text-[10px] font-bold text-[#F4F6FA]">
                     {post.missions?.title}
                   </div>
                 </div>
 
                 {/* Informações de Treino e Legenda */}
-                <div className="space-y-1.5 text-xs text-zinc-300">
+                <div className="space-y-1.5 text-xs text-[#F4F6FA]">
                   {post.duration_seconds && (
-                    <p className="text-white font-mono text-[11px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-md w-fit">
+                    <p className="text-[#F4F6FA] font-mono text-[11px] bg-[#1B2330] border border-[#252D3B] px-2 py-0.5 rounded-md w-fit">
                       Duração: {Math.floor(post.duration_seconds / 60)}min {post.duration_seconds % 60}s
                     </p>
                   )}
 
                   {post.caption && (
-                    <p className="text-zinc-200 italic font-sans pt-0.5">
+                    <p className="text-[#F4F6FA] italic font-sans pt-0.5">
                       "{post.caption}"
                     </p>
                   )}
 
                   {post.location_name && (
-                    <p className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
+                    <p className="text-[10px] text-[#A7B0C0] font-mono flex items-center gap-1">
+                      <MapPin className="h-3 w-3 text-[#75A7FF]" />
                       <span>{post.location_name}</span>
                     </p>
                   )}
                 </div>
 
                 {/* Ações do Treinador: Dock de Reações & Comentários */}
-                <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                <div className="flex items-center justify-between pt-2 border-t border-[#252D3B]">
                   {/* Dock 4 Emojis para o Treinador */}
-                  <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/[0.08]">
+                  <div className="flex items-center gap-1 bg-[#1B2330] p-1 rounded-2xl border border-[#252D3B]">
                     {REACTIONS.map((r) => {
                       const isSelected = coachReaction === r.key;
                       const count = counts[r.key];
@@ -519,7 +519,7 @@ export default function DashboardFeedPage() {
                           className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
                             isSelected
                               ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
-                              : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                              : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722]'
                           }`}
                           title={`Reagir como Coach com ${r.label}`}
                         >
@@ -533,14 +533,14 @@ export default function DashboardFeedPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleOpenComments(post)}
-                      className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer bg-white/[0.04] hover:bg-white/[0.08] px-3.5 py-2 min-h-[44px] rounded-xl border border-white/[0.08]"
+                      className="flex items-center gap-1.5 text-xs font-mono text-[#F4F6FA] hover:border-[#3478F6]/40 transition-all cursor-pointer bg-[#1B2330] hover:bg-[#252D3B] px-3.5 py-2 min-h-[44px] rounded-xl border border-[#252D3B]"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                      <MessageSquare className="w-3.5 h-3.5 text-[#75A7FF]" />
                       <span>{commentsCount}</span>
                     </button>
 
                     <Link href={`/dashboard/audit`}>
-                      <button className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors px-2.5 py-2 min-h-[44px] flex items-center">
+                      <button className="text-[11px] font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors px-2.5 py-2 min-h-[44px] flex items-center">
                         [ Auditoria ]
                       </button>
                     </Link>
@@ -554,22 +554,22 @@ export default function DashboardFeedPage() {
 
       {/* Modal / Gaveta de Comentários do Coach */}
       {activeCommentPost && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
-          <div className="mono-glass-card w-full max-w-lg sm:max-w-xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-white/20">
+        <div className="fixed inset-0 bg-[#080A0F]/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+          <div className="mono-glass-card w-full max-w-lg sm:max-w-xl mx-auto rounded-t-[32px] max-h-[85vh] flex flex-col p-5 border-t border-[#252D3B] bg-[#121722]">
             {/* Header do Sheet */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[10px] font-mono font-bold tracking-widest uppercase">
+                <span className="px-2 py-0.5 rounded-full bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono font-bold tracking-widest uppercase">
                   COACH
                 </span>
-                <span className="font-bold text-xs text-white font-mono uppercase tracking-wider">
+                <span className="font-bold text-xs text-[#F4F6FA] font-mono uppercase tracking-wider">
                   Feedback para {activeCommentPost.students?.full_name?.split(' ')[0]}
                 </span>
               </div>
               <button
                 onClick={() => setActiveCommentPost(null)}
                 aria-label="Fechar comentários"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -578,12 +578,12 @@ export default function DashboardFeedPage() {
             {/* Lista de Comentários */}
             <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-[200px] max-h-[50vh]">
               {loadingComments ? (
-                <div className="py-8 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
-                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="py-8 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+                  <div className="h-4 w-4 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
                   Carregando comentários...
                 </div>
               ) : commentsList.length === 0 ? (
-                <p className="text-center text-xs font-mono text-zinc-500 py-10">
+                <p className="text-center text-xs font-mono text-[#A7B0C0] py-10">
                   Nenhum comentário nesta foto ainda. Deixe um feedback ou elogio para o atleta!
                 </p>
               ) : (
@@ -593,31 +593,31 @@ export default function DashboardFeedPage() {
 
                   return (
                     <div key={c.id} className="flex items-start gap-2.5 text-xs group">
-                      <div className="h-7 w-7 rounded-full bg-zinc-800 text-white font-mono font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden border border-white/10">
+                      <div className="h-7 w-7 rounded-full bg-[#1B2330] text-[#F4F6FA] font-mono font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden border border-[#252D3B]">
                         {c.user_avatar ? (
                           <img src={c.user_avatar} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
                           c.user_name?.charAt(0) || 'U'
                         )}
                       </div>
-                      <div className="flex-1 bg-white/[0.04] p-2.5 rounded-2xl border border-white/[0.06]">
+                      <div className="flex-1 bg-[#1B2330] p-2.5 rounded-2xl border border-[#252D3B]">
                         <div className="flex items-center justify-between gap-1 mb-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-white">{c.user_name}</span>
+                            <span className="font-bold text-[#F4F6FA]">{c.user_name}</span>
                             {isCoach && (
-                              <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-bold">
+                              <span className="px-1.5 py-0.2 rounded-full bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 text-[9px] font-bold">
                                 COACH
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-1">
-                            <span className="text-[10px] font-mono text-zinc-500">
+                            <span className="text-[10px] font-mono text-[#A7B0C0]">
                               {formatTimeAgo(c.created_at)}
                             </span>
                             {isMine && (
                               <button
                                 onClick={() => handleDeleteComment(c.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-zinc-600 hover:text-rose-400 p-0.5 cursor-pointer"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-[#A7B0C0] hover:text-rose-400 p-0.5 cursor-pointer"
                                 title="Excluir comentário"
                               >
                                 <Trash2 className="h-3 w-3" />
@@ -625,7 +625,7 @@ export default function DashboardFeedPage() {
                             )}
                           </div>
                         </div>
-                        <p className="text-zinc-300 leading-relaxed font-sans">{c.content}</p>
+                        <p className="text-[#F4F6FA] leading-relaxed font-sans">{c.content}</p>
                       </div>
                     </div>
                   );
@@ -642,7 +642,7 @@ export default function DashboardFeedPage() {
                     key={chip}
                     type="button"
                     onClick={() => setCommentText(chip)}
-                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-200 hover:text-white hover:border-amber-500/40 hover:bg-amber-500/20 shrink-0 transition-all cursor-pointer active:scale-95"
+                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:text-white hover:border-[#3478F6]/40 hover:bg-[#3478F6]/15 shrink-0 transition-all cursor-pointer active:scale-95"
                   >
                     {chip}
                   </button>
@@ -651,13 +651,13 @@ export default function DashboardFeedPage() {
             </div>
 
             {/* Input para envio de comentário */}
-            <form onSubmit={handleSendComment} className="pt-2 flex items-center gap-2 border-t border-white/[0.08]">
+            <form onSubmit={handleSendComment} className="pt-2 flex items-center gap-2 border-t border-[#252D3B]">
               <Input
                 type="text"
                 placeholder="Escreva um feedback ou elogio do Coach..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="h-11 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
+                className="h-11 text-xs rounded-xl bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:border-[#3478F6]"
               />
               <button
                 type="submit"

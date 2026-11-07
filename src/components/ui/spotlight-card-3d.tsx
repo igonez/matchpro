@@ -57,8 +57,8 @@ export function SpotlightCard3D({
         transition: isHovered ? 'transform 0.12s ease-out' : 'transform 0.6s ease-out',
         transformStyle: 'preserve-3d',
       }}
-      className={`relative rounded-3xl overflow-hidden border border-white/[0.08] bg-zinc-950/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-shadow duration-300 ${
-        isHovered ? 'shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_20px_rgba(255,255,255,0.03)]' : ''
+      className={`relative rounded-3xl overflow-hidden border border-[#252D3B] bg-[#121722]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-shadow duration-300 ${
+        isHovered ? 'shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_20px_rgba(52,120,246,0.08)]' : ''
       } ${className}`}
     >
       {/* Spotlight Radial Follower */}
@@ -66,12 +66,12 @@ export function SpotlightCard3D({
         className="pointer-events-none absolute -inset-px transition-opacity duration-300"
         style={{
           opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(650px circle at ${coords.x}px ${coords.y}px, rgba(255, 255, 255, ${glowIntensity}), transparent 40%)`,
+          background: `radial-gradient(650px circle at ${coords.x}px ${coords.y}px, rgba(52, 120, 246, ${glowIntensity}), transparent 40%)`,
         }}
       />
 
       {/* Specular Top Edge Light */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#3478F6]/25 to-transparent pointer-events-none" />
 
       {/* Inner Content with Z-Depth */}
       <div className="relative z-10 h-full w-full">{children}</div>

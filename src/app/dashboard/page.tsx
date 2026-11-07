@@ -581,13 +581,13 @@ export default function DashboardOverviewPage() {
         <div className="space-y-3.5">
           {challenges.length > 1 && (
             <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                 Turma / Desafio Destino
               </label>
               <select
                 value={noticeChallengeId || (challenges[0]?.id || '')}
                 onChange={(e) => setNoticeChallengeId(e.target.value)}
-                className="w-full h-10 rounded-xl bg-black/80 border border-white/15 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/40"
+                className="w-full h-10 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 font-mono focus:outline-none focus:border-[#3478F6]"
               >
                 {challenges.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -599,19 +599,19 @@ export default function DashboardOverviewPage() {
           )}
 
           <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+            <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
               Título do Aviso
             </label>
             <Input
               placeholder="Ex: Treino Extra de Sábado às 08h"
               value={noticeTitle}
               onChange={(e) => setNoticeTitle(e.target.value)}
-              className="bg-black/80 border-white/15 text-white rounded-xl text-xs h-10 focus:border-white/40"
+              className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs h-10 focus:border-[#3478F6]"
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+            <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
               Mensagem / Comunicado
             </label>
             <textarea
@@ -619,7 +619,7 @@ export default function DashboardOverviewPage() {
               value={noticeContent}
               onChange={(e) => setNoticeContent(e.target.value)}
               rows={4}
-              className="w-full bg-black/80 border border-white/15 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-white/40 font-sans"
+              className="w-full bg-[#1B2330] border border-[#252D3B] rounded-xl p-3 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-sans"
             />
           </div>
 
@@ -628,15 +628,15 @@ export default function DashboardOverviewPage() {
               type="checkbox"
               checked={noticeIsPinned}
               onChange={(e) => setNoticeIsPinned(e.target.checked)}
-              className="rounded bg-black border-white/20 text-white focus:ring-0"
+              className="rounded bg-[#1B2330] border-[#252D3B] text-[#3478F6] focus:ring-0"
             />
-            <span className="text-xs font-mono text-zinc-400">
+            <span className="text-xs font-mono text-[#A7B0C0]">
               Fixar este aviso no topo do mural dos alunos
             </span>
           </label>
 
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[11px] font-mono text-amber-200 leading-relaxed flex items-start gap-2">
-            <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="p-3 rounded-xl bg-[#3478F6]/10 border border-[#3478F6]/25 text-[11px] font-mono text-[#75A7FF] leading-relaxed flex items-start gap-2">
+            <Clock className="w-4 h-4 text-[#3478F6] shrink-0 mt-0.5" />
             <span>
               Duração Automática de 24h: este aviso exibirá um cronômetro regressivo de 24 horas para os alunos e desaparecerá automaticamente após o término do tempo.
             </span>
@@ -656,14 +656,14 @@ export default function DashboardOverviewPage() {
         >
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                 Link Público do Desafio
               </label>
               <div className="flex gap-2">
                 <Input
                   readOnly
                   value={typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''}
-                  className="bg-black/80 border-white/15 text-white rounded-xl text-xs font-mono select-all"
+                  className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs font-mono select-all"
                 />
                 <button
                   type="button"
@@ -679,10 +679,10 @@ export default function DashboardOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono">
-              <span className="text-zinc-400">Código de Acesso Rápido:</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono">
+              <span className="text-[#A7B0C0]">Código de Acesso Rápido:</span>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white tracking-widest uppercase bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+                <span className="font-bold text-[#F4F6FA] tracking-widest uppercase bg-[#121722] px-2.5 py-1 rounded-lg border border-[#252D3B]">
                   {inviteModalChallenge.id.slice(0, 8).toUpperCase()}
                 </span>
                 <button
@@ -691,7 +691,7 @@ export default function DashboardOverviewPage() {
                     navigator.clipboard.writeText(inviteModalChallenge.id.slice(0, 8).toUpperCase());
                     showToast('Código rápido copiado!');
                   }}
-                  className="text-zinc-400 hover:text-white p-1 transition-colors cursor-pointer"
+                  className="text-[#A7B0C0] hover:text-[#F4F6FA] p-1 transition-colors cursor-pointer"
                   title="Copiar código curto"
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -699,11 +699,11 @@ export default function DashboardOverviewPage() {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl border border-white/10 bg-zinc-900/40 space-y-2">
-              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">
+            <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
+              <span className="text-[10px] font-mono text-[#A7B0C0] uppercase tracking-wider block">
                 Disparo Rápido no WhatsApp
               </span>
-              <p className="text-xs text-zinc-300">
+              <p className="text-xs text-[#F4F6FA]">
                 Envie o convite formatado direto nos seus grupos ou no privado de cada atleta:
               </p>
               <a
@@ -712,19 +712,19 @@ export default function DashboardOverviewPage() {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mono-button-secondary w-full py-2 text-xs flex items-center justify-center gap-2 font-mono"
+                className="mono-button-primary w-full py-2.5 text-xs flex items-center justify-center gap-2 font-mono"
               >
                 <span>Compartilhar no WhatsApp</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </a>
             </div>
 
-            {/* QR Code Monocromático para Stories / Balcão */}
-            <div className="p-3.5 rounded-xl border border-white/10 bg-black/60 flex flex-col items-center justify-center text-center space-y-3">
-              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
+            {/* QR Code para Stories / Balcão */}
+            <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#080A0F] flex flex-col items-center justify-center text-center space-y-3">
+              <span className="text-[10px] font-mono text-[#A7B0C0] uppercase tracking-wider">
                 QR CODE • STORIES & BALCÃO DA ACADEMIA
               </span>
-              <div className="p-2 bg-black border border-white/20 rounded-2xl shadow-inner">
+              <div className="p-2 bg-[#121722] border border-[#252D3B] rounded-2xl shadow-inner">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
@@ -735,12 +735,12 @@ export default function DashboardOverviewPage() {
                   loading="lazy"
                 />
               </div>
-              <p className="text-[11px] text-zinc-400 font-mono">
+              <p className="text-[11px] text-[#A7B0C0] font-mono">
                 Peça para o aluno apontar a câmera do celular para entrar na hora.
               </p>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 pt-1 border-t border-white/[0.06]">
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#A7B0C0] pt-1 border-t border-[#252D3B]">
               <span>Inscrição: R$ {Number(inviteModalChallenge.price).toFixed(2)}</span>
               <span>Status: {inviteModalChallenge.is_active ? 'Turma Aberta' : 'Encerrada'}</span>
             </div>

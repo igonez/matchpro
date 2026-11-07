@@ -27,7 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         autoComplete={resolvedAutoComplete}
         aria-label={props['aria-label'] || placeholder || undefined}
         className={cn(
-          'flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 shadow-inner transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:border-white/40 focus-visible:ring-1 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-50',
+          'flex h-11 w-full rounded-xl border border-[#252D3B] bg-[#1B2330] px-4 py-2 text-sm text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 shadow-inner transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:border-[#3478F6] focus-visible:ring-1 focus-visible:ring-[#3478F6]/30 disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
         ref={ref}

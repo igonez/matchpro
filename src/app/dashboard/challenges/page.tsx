@@ -338,9 +338,9 @@ export default function ChallengesManagementPage() {
 
       {/* Toast flutuante */}
       {toastMessage && (
-        <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-zinc-900/95 border border-white/20 text-white font-mono text-xs shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4">
+        <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-[#F4F6FA] font-mono text-xs shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         </div>
@@ -352,20 +352,20 @@ export default function ChallengesManagementPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-xs font-mono text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+              className="text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center gap-1 transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Início</span>
             </Link>
-            <span className="text-zinc-600 font-mono">•</span>
-            <span className="text-[11px] font-semibold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 font-mono">
+            <span className="text-[#252D3B] font-mono">•</span>
+            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30 font-mono">
               TURMAS & DESAFIOS
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
             Gerenciar Desafios
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400">
+          <p className="text-xs sm:text-sm text-[#A7B0C0]">
             Acompanhe todas as turmas ativas e anteriores, matrículas, missões e links de convite.
           </p>
         </div>
@@ -458,30 +458,30 @@ export default function ChallengesManagementPage() {
 
         {/* Input de Busca */}
         <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A7B0C0]" />
           <Input
             type="text"
             placeholder="Buscar por nome..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-10 bg-black/60 border-white/10 text-white rounded-xl text-xs font-mono focus:border-white/30"
+            className="pl-9 h-10 bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs font-mono focus:border-[#3478F6]"
           />
         </div>
       </div>
 
       {/* 4. Lista dos Desafios */}
       {loading ? (
-        <div className="py-20 text-center font-mono text-zinc-500 text-sm">
+        <div className="py-20 text-center font-mono text-[#A7B0C0] text-sm">
           Carregando turmas e métricas em tempo real...
         </div>
       ) : filteredChallenges.length === 0 ? (
-        <div className="mono-glass-card p-10 sm:p-14 rounded-3xl text-center border-dashed border-white/10 relative z-10 space-y-4">
-          <div className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-zinc-400">
+        <div className="mono-glass-card p-10 sm:p-14 rounded-3xl text-center border-dashed border-[#252D3B] bg-[#121722] relative z-10 space-y-4">
+          <div className="h-12 w-12 rounded-2xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center mx-auto text-[#75A7FF]">
             <Trophy className="h-6 w-6" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-white">Nenhum desafio encontrado</h3>
-            <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+            <h3 className="text-base font-bold text-[#F4F6FA]">Nenhum desafio encontrado</h3>
+            <p className="text-xs text-[#A7B0C0] max-w-sm mx-auto">
               {searchQuery
                 ? 'Nenhuma turma corresponde à sua busca atual.'
                 : filterTab === 'ended'
@@ -637,7 +637,7 @@ export default function ChallengesManagementPage() {
         >
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
                 Link Público do Desafio
               </label>
               <div className="flex gap-2">
@@ -648,7 +648,7 @@ export default function ChallengesManagementPage() {
                       ? `${window.location.origin}/join/${inviteModalChallenge.id}`
                       : ''
                   }
-                  className="bg-black/80 border-white/15 text-white rounded-xl text-xs font-mono select-all"
+                  className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs font-mono select-all"
                 />
                 <button
                   type="button"
@@ -665,10 +665,10 @@ export default function ChallengesManagementPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono">
-              <span className="text-zinc-400">Código de Acesso Rápido:</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono">
+              <span className="text-[#A7B0C0]">Código de Acesso Rápido:</span>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white tracking-widest uppercase bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+                <span className="font-bold text-[#F4F6FA] tracking-widest uppercase bg-[#121722] px-2.5 py-1 rounded-lg border border-[#252D3B]">
                   {inviteModalChallenge.id.slice(0, 8).toUpperCase()}
                 </span>
                 <button
@@ -677,7 +677,7 @@ export default function ChallengesManagementPage() {
                     navigator.clipboard.writeText(inviteModalChallenge.id.slice(0, 8).toUpperCase());
                     showToast('Código rápido copiado!');
                   }}
-                  className="text-zinc-400 hover:text-white p-1 transition-colors cursor-pointer"
+                  className="text-[#A7B0C0] hover:text-[#F4F6FA] p-1 transition-colors cursor-pointer"
                   title="Copiar código curto"
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -697,7 +697,7 @@ export default function ChallengesManagementPage() {
                       : ''
                   }`
                 )}`}
-                className="w-full py-2.5 px-3 rounded-xl bg-white text-black font-mono font-bold text-xs flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors shadow-md"
+                className="w-full py-2.5 px-3 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#75A7FF] transition-colors shadow-[0_8px_20px_rgba(52,120,246,0.28)]"
               >
                 <span>Enviar no WhatsApp</span>
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -714,16 +714,16 @@ export default function ChallengesManagementPage() {
                     '_blank'
                   );
                 }}
-                className="w-full py-2.5 px-3 rounded-xl bg-zinc-900 border border-white/15 text-zinc-300 font-mono font-bold text-xs flex items-center justify-center gap-2 hover:text-white hover:bg-zinc-800 transition-colors"
+                className="w-full py-2.5 px-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] font-mono font-bold text-xs flex items-center justify-center gap-2 hover:text-white hover:bg-[#252D3B] hover:border-[#3478F6]/40 transition-colors"
               >
-                <QrCode className="h-3.5 w-3.5" />
+                <QrCode className="h-3.5 w-3.5 text-[#75A7FF]" />
                 <span>Ver QR Code Grande</span>
               </button>
             </div>
 
             {/* QR Code de Projeção Preview */}
-            <div className="p-4 rounded-2xl bg-black border border-white/10 flex flex-col items-center justify-center space-y-2">
-              <span className="text-[10px] font-mono uppercase text-zinc-500">
+            <div className="p-4 rounded-2xl bg-[#080A0F] border border-[#252D3B] flex flex-col items-center justify-center space-y-2">
+              <span className="text-[10px] font-mono uppercase text-[#A7B0C0]">
                 QR Code de Acesso Rápido
               </span>
               <div className="bg-white p-2 rounded-xl">
@@ -737,7 +737,7 @@ export default function ChallengesManagementPage() {
                   className="w-36 h-36"
                 />
               </div>
-              <p className="text-[10px] font-mono text-zinc-500 text-center">
+              <p className="text-[10px] font-mono text-[#A7B0C0] text-center">
                 Aponte a câmera do celular para abrir o checkout e matrícula da turma.
               </p>
             </div>

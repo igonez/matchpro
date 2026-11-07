@@ -397,18 +397,18 @@ export default function DashboardFinanceAndStudentsPage() {
         </div>
 
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-400 text-xs">
-            <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs">
+            <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
             Carregando lista de alunos...
           </div>
         ) : filteredParticipants.length === 0 ? (
-          <div className="py-16 text-center text-xs text-zinc-400">
+          <div className="py-16 text-center text-xs text-[#A7B0C0]">
             Nenhum atleta encontrado para os filtros selecionados.
           </div>
         ) : (
-          <div className="divide-y divide-white/[0.06] overflow-x-auto">
+          <div className="divide-y divide-[#252D3B] overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-white/[0.02] text-zinc-400 text-xs font-semibold">
+              <thead className="bg-[#1B2330]/70 text-[#A7B0C0] text-xs font-semibold border-b border-[#252D3B]">
                 <tr>
                   <th className="py-3 px-4">Atleta</th>
                   <th className="py-3 px-4">Turma</th>
@@ -417,7 +417,7 @@ export default function DashboardFinanceAndStudentsPage() {
                   <th className="py-3 px-4 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04] text-zinc-300">
+              <tbody className="divide-y divide-[#252D3B] text-[#F4F6FA]">
                 {filteredParticipants.map((p) => {
                   const challengeObj = challenges.find((c) => c.id === p.challenge_id);
                   const cleanPhone = p.student.phone?.replace(/\D/g, '') || '';
@@ -426,28 +426,28 @@ export default function DashboardFinanceAndStudentsPage() {
                   const isPending = p.payment_status === 'pending';
 
                   return (
-                    <tr key={p.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={p.id} className="hover:bg-[#1B2330]/50 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-white font-bold shrink-0">
+                          <div className="h-8 w-8 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#75A7FF] font-bold shrink-0">
                             {p.student.full_name.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <span className="font-bold text-white block">
+                            <span className="font-bold text-[#F4F6FA] block">
                               {p.student.full_name}
                             </span>
-                            <span className="text-[11px] text-zinc-400">
+                            <span className="text-[11px] text-[#A7B0C0]">
                               Matrícula: {p.student_id.slice(0, 8)}...
                             </span>
                           </div>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-zinc-300 font-semibold">
+                      <td className="py-3 px-4 text-[#F4F6FA] font-semibold">
                         {challengeObj?.title || 'Turma Ativa'}
                       </td>
 
-                      <td className="py-3 px-4 text-zinc-400 text-xs">
+                      <td className="py-3 px-4 text-[#A7B0C0] text-xs">
                         {new Date(p.joined_at).toLocaleDateString('pt-BR')}
                       </td>
 
@@ -493,7 +493,7 @@ export default function DashboardFinanceAndStudentsPage() {
                               href={waLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 text-[11px]"
+                              className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 text-[11px]"
                               title="Chamar no WhatsApp"
                             >
                               <Phone className="h-3.5 w-3.5" />
@@ -503,7 +503,7 @@ export default function DashboardFinanceAndStudentsPage() {
                           <button
                             type="button"
                             onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
-                            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-colors flex items-center justify-center"
+                            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-[#A7B0C0] hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center justify-center"
                             title="Remover matrícula da turma"
                           >
                             <Trash2 className="h-4 w-4" />

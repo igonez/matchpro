@@ -43,19 +43,19 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
   return (
     <div className="space-y-4">
       {/* Resumo no Topo */}
-      <div className="mono-glass-card p-3.5 rounded-2xl border border-white/10 flex items-center justify-between gap-3">
+      <div className="bg-[#121722] p-3.5 rounded-2xl border border-[#252D3B] flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 font-bold">
+          <div className="h-10 w-10 rounded-xl bg-[#3478F6]/10 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF] font-bold">
             <Trophy className="h-5 w-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white flex items-center gap-1.5 uppercase tracking-wider">
+            <h4 className="text-xs font-bold text-[#F4F6FA] flex items-center gap-1.5 uppercase tracking-wider">
               <span>Medalhas de Mérito</span>
-              <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.2 rounded">
+              <span className="text-[10px] font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-1.5 py-0.2 rounded">
                 +{totalPoints} XP
               </span>
             </h4>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-[#A7B0C0]">
               {unlockedCount} de {achievements.length} medalhas conquistadas
             </p>
           </div>
@@ -63,10 +63,10 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
 
         {/* Mini Barra de Progresso Circular ou Pílula */}
         <div className="text-right">
-          <span className="text-sm font-black font-mono text-white">
+          <span className="text-sm font-black font-mono text-[#F4F6FA]">
             {Math.round((unlockedCount / (achievements.length || 1)) * 100)}%
           </span>
-          <span className="text-[9px] font-mono text-zinc-500 block uppercase tracking-widest">
+          <span className="text-[9px] font-mono text-[#A7B0C0] block uppercase tracking-widest">
             Completude
           </span>
         </div>
@@ -118,7 +118,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
                       <CheckCircle2 className="h-3 w-3 text-[#3478F6]" />
                     </span>
                   ) : (
-                    <span className="h-5 w-5 rounded-full bg-white/5 border border-white/10 text-zinc-500 flex items-center justify-center">
+                    <span className="h-5 w-5 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] flex items-center justify-center">
                       <Lock className="h-2.5 w-2.5" />
                     </span>
                   )}
@@ -126,10 +126,10 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
               </div>
 
               <div>
-                <h5 className={`text-xs font-bold leading-tight line-clamp-1 ${ach.isUnlocked ? 'text-white' : 'text-zinc-400'}`}>
+                <h5 className={`text-xs font-bold leading-tight line-clamp-1 ${ach.isUnlocked ? 'text-[#F4F6FA]' : 'text-[#A7B0C0]'}`}>
                   {ach.title}
                 </h5>
-                <p className="text-[10px] text-zinc-400 line-clamp-2 mt-0.5 leading-snug">
+                <p className="text-[10px] text-[#A7B0C0] line-clamp-2 mt-0.5 leading-snug">
                   {ach.description}
                 </p>
               </div>
@@ -137,19 +137,19 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
               {/* Barra de Progresso inferior se bloqueada */}
               {!ach.isUnlocked ? (
                 <div className="space-y-1 pt-1">
-                  <div className="flex items-center justify-between text-[9px] font-mono text-zinc-400">
+                  <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0]">
                     <span>Progresso</span>
                     <span>{ach.currentValue}/{ach.requirement_value}</span>
                   </div>
-                  <div className="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-[#1B2330] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-white/40 rounded-full transition-all"
+                      className="h-full bg-[#3478F6]/60 rounded-full transition-all"
                       style={{ width: `${ach.progressPercent}%` }}
                     />
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between text-[9px] font-mono text-[#75A7FF] pt-1 border-t border-white/5">
+                <div className="flex items-center justify-between text-[9px] font-mono text-[#75A7FF] pt-1 border-t border-[#252D3B]">
                   <span>Conquistada</span>
                   <span>+{ach.points_reward} XP</span>
                 </div>
@@ -161,11 +161,11 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
 
       {/* Modal de Detalhes da Conquista */}
       {selectedAchievement && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="mono-glass-card max-w-sm w-full p-6 rounded-3xl border border-white/20 space-y-4 animate-in zoom-in-95 duration-200 text-center relative">
+        <div className="fixed inset-0 bg-[#080A0F]/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#121722] max-w-sm w-full p-6 rounded-3xl border border-[#252D3B] space-y-4 animate-in zoom-in-95 duration-200 text-center relative shadow-2xl">
             <button
               onClick={() => setSelectedAchievement(null)}
-              className="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center"
+              className="absolute top-4 right-4 h-8 w-8 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
@@ -184,21 +184,21 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
             </div>
 
             <div>
-              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest block font-bold">
+              <span className="text-[10px] font-mono text-[#A7B0C0] uppercase tracking-widest block font-bold">
                 Medalha de Mérito
               </span>
-              <h3 className="text-lg font-black text-white mt-0.5">
+              <h3 className="text-lg font-black text-[#F4F6FA] mt-0.5">
                 {selectedAchievement.title}
               </h3>
-              <p className="text-xs text-zinc-300 mt-2 leading-relaxed">
+              <p className="text-xs text-[#A7B0C0] mt-2 leading-relaxed">
                 {selectedAchievement.description}
               </p>
             </div>
 
             {/* Recompensa de XP */}
-            <div className="p-3 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-between text-xs font-mono">
-              <span className="text-zinc-400">Recompensa:</span>
-              <span className="text-amber-300 font-bold flex items-center gap-1">
+            <div className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-between text-xs font-mono">
+              <span className="text-[#A7B0C0]">Recompensa:</span>
+              <span className="text-[#75A7FF] font-bold flex items-center gap-1">
                 <Sparkles className="h-3.5 w-3.5" /> +{selectedAchievement.points_reward} XP
               </span>
             </div>
@@ -215,19 +215,19 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <div className="flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
                     <span>Requisito para desbloquear:</span>
-                    <span className="text-white font-bold">
+                    <span className="text-[#F4F6FA] font-bold">
                       {selectedAchievement.currentValue}/{selectedAchievement.requirement_value}
                     </span>
                   </div>
-                  <div className="w-full h-2 bg-zinc-900 rounded-full overflow-hidden border border-white/5">
+                  <div className="w-full h-2 bg-[#080A0F] rounded-full overflow-hidden border border-[#252D3B]">
                     <div
-                      className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF] rounded-full transition-all"
                       style={{ width: `${selectedAchievement.progressPercent}%` }}
                     />
                   </div>
-                  <p className="text-[11px] text-zinc-500">
+                  <p className="text-[11px] text-[#A7B0C0]">
                     Faltam {Math.max(0, selectedAchievement.requirement_value - selectedAchievement.currentValue)} para conquistar esta medalha.
                   </p>
                 </div>
@@ -236,7 +236,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
 
             <button
               onClick={() => setSelectedAchievement(null)}
-              className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs hover:bg-zinc-200 transition-colors shadow-md"
+              className="w-full py-2.5 rounded-xl bg-[#3478F6] text-white font-bold text-xs hover:bg-[#75A7FF] transition-colors shadow-md cursor-pointer"
             >
               Fechar
             </button>

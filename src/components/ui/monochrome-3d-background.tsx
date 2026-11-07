@@ -62,13 +62,13 @@ export function Monochrome3DBackground() {
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
 
-      ctx.fillStyle = '#030303';
+      ctx.fillStyle = '#080A0F';
       ctx.fillRect(0, 0, width, height);
 
-      // 1. Grid 3D de Horizonte em Perspectiva (Tron Floor Monocromático)
+      // 1. Grid 3D de Horizonte em Perspectiva (Obsidian & Cobalt Floor)
       const horizonY = height * 0.65;
       ctx.save();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.strokeStyle = 'rgba(52, 120, 246, 0.035)';
       ctx.lineWidth = 1;
 
       // Linhas de perspectiva convergindo para o centro
@@ -89,8 +89,8 @@ export function Monochrome3DBackground() {
       for (let i = 1; i <= numHorizLines; i++) {
         const factor = Math.pow(i / numHorizLines, 2.4);
         const y = vanishingY + factor * (height - vanishingY + 100);
-        const alpha = factor * 0.07;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+        const alpha = factor * 0.055;
+        ctx.strokeStyle = `rgba(117, 167, 255, ${alpha})`;
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
@@ -107,9 +107,9 @@ export function Monochrome3DBackground() {
         mouseY,
         width * 0.45
       );
-      glowGrad.addColorStop(0, 'rgba(255, 255, 255, 0.035)');
-      glowGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.01)');
-      glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      glowGrad.addColorStop(0, 'rgba(52, 120, 246, 0.045)');
+      glowGrad.addColorStop(0.5, 'rgba(52, 120, 246, 0.015)');
+      glowGrad.addColorStop(1, 'rgba(8, 10, 15, 0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, width, height);
 

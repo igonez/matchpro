@@ -43,7 +43,7 @@ export function StudentMenuTrigger({ className = '' }: { className?: string }) {
       onClick={openStudentMenu}
       aria-label="Abrir Menu"
       title="Menu Geral"
-      className={`h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0 ${className}`}
+      className={`h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-all cursor-pointer active:scale-95 shrink-0 ${className}`}
     >
       <Menu className="h-5 w-5 stroke-[2]" />
     </button>

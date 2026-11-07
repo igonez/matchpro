@@ -613,11 +613,11 @@ export default function NewChallengePage() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-300 block mb-1">
+              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
                 Valor da Inscrição (R$)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-3 text-zinc-500 font-bold text-sm">R$</span>
+                <span className="absolute left-3.5 top-3 text-[#A7B0C0] font-bold text-sm">R$</span>
                 <Input
                   type="number"
                   step="0.01"
@@ -629,7 +629,7 @@ export default function NewChallengePage() {
                   required
                 />
               </div>
-              <p className="text-[11px] text-zinc-500 mt-1">
+              <p className="text-[11px] text-[#A7B0C0] mt-1">
                 Digite 0.00 para desafio gratuito entre seus alunos.
               </p>
             </div>
@@ -637,7 +637,7 @@ export default function NewChallengePage() {
             {/* Gamificação: Bônus por Semana 100% Concluída */}
             <div className="p-3.5 rounded-2xl border border-[#252D3B] bg-[#1B2330] space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-white flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-[#F4F6FA] flex items-center gap-1.5">
                   <Trophy className="w-4 h-4 text-[#3478F6]" />
                   Bônus por Semana 100% Concluída
                 </label>
@@ -670,7 +670,7 @@ export default function NewChallengePage() {
                     <p className="font-bold text-amber-300 font-mono">
                       Atenção: Configure seus dados bancários para receber
                     </p>
-                    <p className="text-zinc-300 mt-1 leading-relaxed">
+                    <p className="text-[#F4F6FA] mt-1 leading-relaxed">
                       Para lançar desafios pagos e receber os pagamentos dos alunos via Split automático no Pix, configure seus dados fiscais e bancários na Central Financeira.
                     </p>
                   </div>
@@ -680,7 +680,7 @@ export default function NewChallengePage() {
                     <Button
                       type="button"
                       size="sm"
-                      className="bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs h-8 flex items-center gap-1.5"
+                      className="bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold text-xs h-8 flex items-center gap-1.5"
                     >
                       Configurar Recebimento na Central Financeira
                       <ExternalLink className="h-3 w-3" />
@@ -700,20 +700,20 @@ export default function NewChallengePage() {
             )}
 
             {/* Checkout Placeholder / Informação Gateway */}
-            <div className="p-4 rounded-xl border border-white/10 bg-zinc-950/60 flex items-start gap-3">
-              <div className="h-8 w-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center shrink-0">
+            <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] flex items-start gap-3">
+              <div className="h-8 w-8 rounded-lg bg-[#121722] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center shrink-0">
                 <CreditCard className="h-4 w-4" />
               </div>
               <div className="text-xs">
-                <p className="font-bold text-white font-mono">Gateway de Pagamento Integrado</p>
-                <p className="text-zinc-400 mt-0.5">
+                <p className="font-bold text-[#F4F6FA] font-mono">Gateway de Pagamento Integrado</p>
+                <p className="text-[#A7B0C0] mt-0.5">
                   Ao publicar, os links de checkout automatizados ficam disponíveis para repasse direto na sua conta bancária.
                 </p>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-zinc-900 border border-white/20 text-zinc-300 text-xs font-mono">
+              <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/35 text-rose-200 text-xs font-mono">
                 {error}
               </div>
             )}

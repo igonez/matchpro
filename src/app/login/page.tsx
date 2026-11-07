@@ -289,20 +289,20 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer relative overflow-hidden">
+    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white font-sans flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer relative overflow-hidden">
       {/* 1. Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Bar Minimalista */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between pt-1 z-10">
         <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
-          <div className="h-8 w-8 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+          <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
-          <span className="font-extrabold text-base tracking-tight text-white">ArenaFitPro</span>
+          <span className="font-extrabold text-base tracking-tight text-[#F4F6FA]">ArenaFitPro</span>
         </Link>
 
-        <Link href="/" className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+        <Link href="/" className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors">
           <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
           <span>Início</span>
         </Link>
@@ -814,7 +814,7 @@ function LoginContent() {
       </div>
 
       {/* Footer */}
-      <div className="max-w-md w-full mx-auto text-center text-xs text-zinc-500 z-10 pb-2 font-mono">
+      <div className="max-w-md w-full mx-auto text-center text-xs text-[#A7B0C0] z-10 pb-2 font-mono">
         ArenaFitPro • Gamificação para Personal Trainers & Atletas
       </div>
     </div>
@@ -825,7 +825,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-black flex items-center justify-center text-zinc-500 text-xs font-mono">
+        <div className="min-h-screen bg-[#080A0F] flex items-center justify-center text-[#A7B0C0] text-xs font-mono">
           Carregando portal...
         </div>
       }

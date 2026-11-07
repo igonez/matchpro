@@ -140,38 +140,38 @@ export function TransformationVaultModal({
   const isUnlocked = hasBefore && hasAfter;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-3xl mono-glass-card border border-white/15 p-5 text-white shadow-2xl relative overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 bg-[#080A0F]/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+      <div className="w-full max-w-md rounded-3xl bg-[#121722] border border-[#252D3B] p-5 text-[#F4F6FA] shadow-2xl relative overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Glow de fundo */}
-        <div className="absolute -top-20 -right-20 w-44 h-44 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 -right-20 w-44 h-44 bg-[#3478F6]/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-white/5 text-white border border-white/10 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-[#1B2330] text-[#75A7FF] border border-[#252D3B] flex items-center justify-center">
               {isUnlocked ? <Unlock className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 font-mono flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse inline-block" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#A7B0C0] font-mono flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse inline-block" />
                 SISTEMA_DIALOG • COFRE_EVOLUCAO
               </span>
-              <h3 className="text-base font-black text-white leading-tight">Cofre Antes & Depois</h3>
+              <h3 className="text-base font-black text-[#F4F6FA] leading-tight">Cofre Antes & Depois</h3>
             </div>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-xs text-zinc-400 hover:text-white h-8 px-2"
+            className="text-xs text-[#A7B0C0] hover:text-[#F4F6FA] h-8 px-2"
           >
             Fechar
           </Button>
         </div>
 
         {statusMessage && (
-          <div className="mt-3 p-3 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold text-center animate-in fade-in duration-200">
+          <div className="mt-3 p-3 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-bold text-center animate-in fade-in duration-200">
             {statusMessage}
           </div>
         )}
@@ -183,14 +183,14 @@ export function TransformationVaultModal({
               {/* SLIDER DE ANTES & DEPOIS (SE AMBAS AS FOTOS EXISTIREM) */}
               {isUnlocked ? (
                 <div className="space-y-3">
-                  <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-white/15 bg-black select-none shadow-xl">
+                  <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-[#252D3B] bg-[#080A0F] select-none shadow-xl">
                     {/* Imagem "DEPOIS" (Fundo total) */}
                     <img
                       src={vaultData.after_photo_url}
                       alt="Depois"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
-                    <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-md bg-white text-black text-[10px] font-black uppercase shadow font-mono">
+                    <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-md bg-[#3478F6] text-white text-[10px] font-black uppercase shadow font-mono">
                       Depois (Dia 30)
                     </div>
 
@@ -205,17 +205,17 @@ export function TransformationVaultModal({
                         className="absolute inset-0 w-full h-full object-cover max-w-none"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
-                      <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md bg-zinc-950/90 text-white text-[10px] font-black uppercase border border-white/20 shadow font-mono">
+                      <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md bg-[#121722]/90 text-[#F4F6FA] text-[10px] font-black uppercase border border-[#252D3B] shadow font-mono">
                         Antes (Dia 1)
                       </div>
                     </div>
 
                     {/* Divisor Visual do Slider */}
                     <div
-                      className="absolute inset-y-0 w-0.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] pointer-events-none flex items-center justify-center"
+                      className="absolute inset-y-0 w-0.5 bg-[#3478F6] shadow-[0_0_10px_rgba(52,120,246,0.8)] pointer-events-none flex items-center justify-center"
                       style={{ left: `${sliderPosition}%` }}
                     >
-                      <div className="h-7 w-7 rounded-full bg-white text-zinc-950 flex items-center justify-center shadow-lg font-bold text-xs -ml-3.5">
+                      <div className="h-7 w-7 rounded-full bg-[#3478F6] text-white flex items-center justify-center shadow-lg font-bold text-xs -ml-3.5">
                         ↔
                       </div>
                     </div>
@@ -231,21 +231,21 @@ export function TransformationVaultModal({
                     />
                   </div>
 
-                  <p className="text-[11px] text-zinc-400 text-center">
+                  <p className="text-[11px] text-[#A7B0C0] text-center">
                     Arraste o slider para o lado para comparar a evolução.
                   </p>
 
                   {/* Card Estatísticas da Transformação */}
-                  <div className="p-3.5 rounded-2xl bg-zinc-950 border border-white/10 grid grid-cols-2 gap-2 text-center text-xs">
+                  <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] grid grid-cols-2 gap-2 text-center text-xs">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-zinc-500 font-mono">Peso Inicial</span>
-                      <p className="text-sm font-black text-white mt-0.5 font-mono">
+                      <span className="text-[10px] uppercase font-bold text-[#A7B0C0] font-mono">Peso Inicial</span>
+                      <p className="text-sm font-black text-[#F4F6FA] mt-0.5 font-mono">
                         {vaultData.before_weight_kg ? `${vaultData.before_weight_kg} kg` : 'Registrado'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-zinc-400 font-mono">Peso Final</span>
-                      <p className="text-sm font-black text-white mt-0.5 font-mono">
+                      <span className="text-[10px] uppercase font-bold text-[#A7B0C0] font-mono">Peso Final</span>
+                      <p className="text-sm font-black text-[#F4F6FA] mt-0.5 font-mono">
                         {vaultData.after_weight_kg ? `${vaultData.after_weight_kg} kg` : 'Concluído'}
                       </p>
                     </div>
@@ -256,7 +256,7 @@ export function TransformationVaultModal({
                     onClick={() => {
                       showStatus('Story pronto para exportação!');
                     }}
-                    className="w-full h-11 rounded-xl text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 flex items-center justify-center gap-2"
+                    className="w-full h-11 rounded-xl text-xs font-black bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-lg flex items-center justify-center gap-2"
                   >
                     <Share2 className="h-4 w-4" />
                     Compartilhar nos Stories
@@ -265,38 +265,38 @@ export function TransformationVaultModal({
               ) : (
                 /* ESTADO TRANCADO OU PARCIAL */
                 <div className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 text-xs text-zinc-300 space-y-2">
-                    <p className="font-bold text-white flex items-center gap-2">
-                      <Lock className="h-4 w-4 text-white" />
+                  <div className="p-4 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-xs text-[#A7B0C0] space-y-2">
+                    <p className="font-bold text-[#F4F6FA] flex items-center gap-2">
+                      <Lock className="h-4 w-4 text-[#75A7FF]" />
                       Privacidade Absoluta Garantida:
                     </p>
-                    <p className="text-[11px] text-zinc-400 leading-relaxed">
-                      Sua foto do <strong className="text-white">Dia 1</strong> não vai para o feed público e ninguem tem acesso. Ela fica protegida em cofre privado até o último dia, quando você enviar a foto final e liberar a visualizacao comparativa.
+                    <p className="text-[11px] text-[#A7B0C0] leading-relaxed">
+                      Sua foto do <strong className="text-[#F4F6FA]">Dia 1</strong> não vai para o feed público e ninguem tem acesso. Ela fica protegida em cofre privado até o último dia, quando você enviar a foto final e liberar a visualizacao comparativa.
                     </p>
                   </div>
 
                   {/* Grid de status das duas fotos */}
                   <div className="grid grid-cols-2 gap-3">
                     {/* Foto Dia 1 */}
-                    <div className="p-3.5 rounded-2xl bg-zinc-950/80 border border-white/10 text-center space-y-2.5">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
+                    <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center space-y-2.5">
+                      <div className="text-[10px] font-black uppercase tracking-wider text-[#A7B0C0] font-mono">
                         Foto 1 • Dia 1
                       </div>
                       {hasBefore ? (
                         <div className="space-y-1.5">
-                          <div className="h-20 w-full rounded-xl overflow-hidden border border-white/10 bg-zinc-900 relative">
+                          <div className="h-20 w-full rounded-xl overflow-hidden border border-[#252D3B] bg-[#080A0F] relative">
                             <img src={vaultData.before_photo_url} alt="Antes" className="w-full h-full object-cover blur-sm" />
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                              <Lock className="h-5 w-5 text-white" />
+                            <div className="absolute inset-0 bg-[#080A0F]/60 flex items-center justify-center">
+                              <Lock className="h-5 w-5 text-[#75A7FF]" />
                             </div>
                           </div>
-                          <span className="text-[10px] font-bold text-zinc-300 block font-mono">Trancada no Cofre</span>
+                          <span className="text-[10px] font-bold text-[#A7B0C0] block font-mono">Trancada no Cofre</span>
                         </div>
                       ) : (
                         <Button
                           size="sm"
                           onClick={() => setActiveTab('upload_before')}
-                          className="w-full h-9 rounded-xl text-[11px] font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20"
+                          className="w-full h-9 rounded-xl text-[11px] font-bold bg-[#3478F6] text-white hover:bg-[#75A7FF]"
                         >
                           Tirar Foto 1
                         </Button>
@@ -304,22 +304,22 @@ export function TransformationVaultModal({
                     </div>
 
                     {/* Foto Dia 30 */}
-                    <div className="p-3.5 rounded-2xl bg-zinc-950/80 border border-white/10 text-center space-y-2.5">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
+                    <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center space-y-2.5">
+                      <div className="text-[10px] font-black uppercase tracking-wider text-[#A7B0C0] font-mono">
                         Foto 2 • Dia 30
                       </div>
                       {hasAfter ? (
-                        <span className="text-[10px] font-bold text-white block pt-4 font-mono">Concluída</span>
+                        <span className="text-[10px] font-bold text-[#75A7FF] block pt-4 font-mono">Concluída</span>
                       ) : hasBefore ? (
                         <Button
                           size="sm"
                           onClick={() => setActiveTab('upload_after')}
-                          className="w-full h-9 rounded-xl text-[11px] font-black bg-white hover:bg-zinc-200 text-black shadow-md shadow-white/5"
+                          className="w-full h-9 rounded-xl text-[11px] font-black bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-md"
                         >
                           Enviar Foto 2
                         </Button>
                       ) : (
-                        <div className="py-3 text-[10px] text-zinc-500 font-bold uppercase font-mono">
+                        <div className="py-3 text-[10px] text-[#A7B0C0] font-bold uppercase font-mono">
                           Aguardando Dia 1
                         </div>
                       )}
@@ -334,7 +334,7 @@ export function TransformationVaultModal({
           {(activeTab === 'upload_before' || activeTab === 'upload_after') && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase text-white font-mono">
+                <span className="text-xs font-black uppercase text-[#F4F6FA] font-mono">
                   {activeTab === 'upload_before' ? 'Foto de Início (Dia 1)' : 'Foto de Conclusão (Dia 30)'}
                 </span>
                 <button
@@ -343,23 +343,23 @@ export function TransformationVaultModal({
                     setFile(null);
                     setPreviewUrl(null);
                   }}
-                  className="text-xs text-zinc-500 hover:text-white"
+                  className="text-xs text-[#A7B0C0] hover:text-[#F4F6FA] cursor-pointer"
                 >
                   Cancelar
                 </button>
               </div>
 
               {/* Upload Dropzone / Câmera */}
-              <div className="relative aspect-[4/5] rounded-2xl border-2 border-dashed border-white/20 bg-zinc-950 flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+              <div className="relative aspect-[4/5] rounded-2xl border-2 border-dashed border-[#252D3B] bg-[#080A0F] flex flex-col items-center justify-center p-4 text-center overflow-hidden">
                 {previewUrl ? (
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover rounded-xl" />
                 ) : (
                   <label className="cursor-pointer flex flex-col items-center justify-center space-y-2">
-                    <div className="h-12 w-12 rounded-2xl bg-white/5 text-white flex items-center justify-center border border-white/10">
+                    <div className="h-12 w-12 rounded-2xl bg-[#1B2330] text-[#75A7FF] flex items-center justify-center border border-[#252D3B]">
                       <Camera className="h-6 w-6 stroke-[2]" />
                     </div>
-                    <span className="text-xs font-bold text-white">Toque para Abrir Câmera</span>
-                    <span className="text-[10px] text-zinc-500">Tire de frente com boa iluminação</span>
+                    <span className="text-xs font-bold text-[#F4F6FA]">Toque para Abrir Câmera</span>
+                    <span className="text-[10px] text-[#A7B0C0]">Tire de frente com boa iluminação</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -373,24 +373,24 @@ export function TransformationVaultModal({
 
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Peso Atual (kg)</label>
+                  <label className="text-[#A7B0C0] font-bold block mb-1">Peso Atual (kg)</label>
                   <input
                     type="number"
                     step="0.1"
                     placeholder="Ex: 78.5"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
+                    className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] px-3 focus:outline-none focus:border-[#3478F6]"
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Observações</label>
+                  <label className="text-[#A7B0C0] font-bold block mb-1">Observações</label>
                   <input
                     type="text"
                     placeholder="Ex: Em jejum pela manhã"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
+                    className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] px-3 focus:outline-none focus:border-[#3478F6]"
                   />
                 </div>
               </div>
@@ -398,7 +398,7 @@ export function TransformationVaultModal({
               <Button
                 onClick={() => handleUploadSubmit(activeTab === 'upload_before' ? 'before' : 'after')}
                 disabled={!file || uploading}
-                className="w-full h-11 rounded-xl text-xs font-black bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 disabled:opacity-40"
+                className="w-full h-11 rounded-xl text-xs font-black bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-lg disabled:opacity-40"
               >
                 {uploading ? 'Salvando Foto...' : 'Salvar no Cofre'}
               </Button>

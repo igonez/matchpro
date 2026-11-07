@@ -34,8 +34,8 @@ const REACTIONS: ReactionDef[] = [
     key: 'fire',
     emoji: '🔥',
     label: 'Fogo',
-    activeBg: 'bg-amber-500/20 text-amber-300',
-    activeBorder: 'border-amber-500/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
   {
     key: 'muscle',
@@ -48,15 +48,15 @@ const REACTIONS: ReactionDef[] = [
     key: 'clap',
     emoji: '👏',
     label: 'Palmas',
-    activeBg: 'bg-sky-500/20 text-sky-300',
-    activeBorder: 'border-sky-500/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
   {
     key: 'heart',
     emoji: '❤️',
     label: 'Coração',
-    activeBg: 'bg-rose-500/20 text-rose-300',
-    activeBorder: 'border-rose-500/40',
+    activeBg: 'bg-[#3478F6]/20 text-[#75A7FF]',
+    activeBorder: 'border-[#3478F6]/40',
   },
 ];
 
@@ -628,11 +628,11 @@ export default function StudentSocialFeedPage() {
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-start gap-3">
           <div>
-            <span className="text-[11px] text-zinc-400 font-medium block">
+            <span className="text-[11px] text-[#A7B0C0] font-medium block">
               Comunidade • {challengeTitle}
             </span>
-            <h1 className="text-xl font-black text-white">Feed da Turma</h1>
-            <p className="text-xs text-zinc-400">Interaja com seus colegas de desafio em tempo real</p>
+            <h1 className="text-xl font-black text-[#F4F6FA]">Feed da Turma</h1>
+            <p className="text-xs text-[#A7B0C0]">Interaja com seus colegas de desafio em tempo real</p>
           </div>
         </div>
       </div>
@@ -668,12 +668,12 @@ export default function StudentSocialFeedPage() {
       {activeTab === 'feed' && (
         <>
           {loading ? (
-            <div className="py-16 flex flex-col items-center justify-center gap-2 text-zinc-400 text-xs relative z-10">
-              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs relative z-10">
+              <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               Carregando publicações...
             </div>
           ) : posts.length === 0 ? (
-            <div className="mono-glass-card p-10 text-center text-xs text-zinc-400 relative z-10">
+            <div className="bg-[#121722] rounded-3xl border border-[#252D3B] p-10 text-center text-xs text-[#A7B0C0] relative z-10">
               Nenhuma publicação aprovada no momento. Os primeiros check-ins validados aparecerão aqui.
             </div>
           ) : (
@@ -695,13 +695,13 @@ export default function StudentSocialFeedPage() {
                 return (
                   <div
                     key={post.id}
-                    className="mono-glass-card rounded-3xl overflow-hidden border border-white/10"
+                    className="bg-[#121722] rounded-3xl overflow-hidden border border-[#252D3B]"
                   >
                     {/* Header do Post */}
-                    <div className="p-3.5 flex items-center justify-between border-b border-white/[0.06]">
+                    <div className="p-3.5 flex items-center justify-between border-b border-[#252D3B]">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-900 p-px shrink-0">
-                          <div className="h-full w-full bg-black rounded-full flex items-center justify-center font-bold text-xs text-white overflow-hidden">
+                        <div className="h-9 w-9 rounded-full bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] p-px shrink-0">
+                          <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center font-bold text-xs text-[#F4F6FA] overflow-hidden">
                             {post.students?.avatar_url ? (
                               <img
                                 src={post.students.avatar_url}
@@ -714,15 +714,15 @@ export default function StudentSocialFeedPage() {
                           </div>
                         </div>
                         <div>
-                          <p className="font-bold text-xs text-white">
+                          <p className="font-bold text-xs text-[#F4F6FA]">
                             {post.students?.full_name || 'Atleta'}
                           </p>
-                          <div className="flex items-center gap-2 text-xs text-zinc-400">
+                          <div className="flex items-center gap-2 text-xs text-[#A7B0C0]">
                             <span>
                               {new Date(post.client_captured_at || post.submitted_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                             </span>
                             {post.location_name && (
-                              <span className="text-zinc-500 truncate max-w-[130px]">
+                              <span className="text-[#A7B0C0] truncate max-w-[130px]">
                                 • {post.location_name}
                               </span>
                             )}
@@ -730,7 +730,7 @@ export default function StudentSocialFeedPage() {
                         </div>
                       </div>
 
-                      <span className="text-xs font-semibold text-white bg-white/10 border border-white/20 px-2.5 py-0.5 rounded-full font-mono">
+                      <span className="text-xs font-semibold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-2.5 py-0.5 rounded-full font-mono">
                         +{post.missions?.points_rewarded || 10} pts
                       </span>
                     </div>
@@ -738,7 +738,7 @@ export default function StudentSocialFeedPage() {
                     {/* Imagem do Post com Duplo Toque */}
                     <div
                       onClick={() => handlePhotoDoubleTap(post.id)}
-                      className="relative aspect-square sm:aspect-[4/3] max-h-[520px] w-full bg-black overflow-hidden cursor-pointer select-none group"
+                      className="relative aspect-square sm:aspect-[4/3] max-h-[520px] w-full bg-[#080A0F] overflow-hidden cursor-pointer select-none group"
                     >
                       <img
                         src={post.photo_url}
@@ -755,7 +755,7 @@ export default function StudentSocialFeedPage() {
                         </div>
                       )}
 
-                      <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold text-white border border-white/15">
+                      <div className="absolute bottom-3 left-3 bg-[#121722]/90 backdrop-blur-md px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold text-[#F4F6FA] border border-[#252D3B]">
                         {post.missions?.title || 'Check-in Realizado'}
                       </div>
                     </div>
@@ -764,7 +764,7 @@ export default function StudentSocialFeedPage() {
                     <div className="p-3.5 space-y-3">
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/[0.08]">
+                          <div className="flex items-center gap-1 bg-[#1B2330] p-1 rounded-2xl border border-[#252D3B]">
                             {REACTIONS.map((r) => {
                               const isSelected = myReaction === r.key;
                               const count = counts[r.key];
@@ -775,7 +775,7 @@ export default function StudentSocialFeedPage() {
                                   className={`flex items-center justify-center gap-1 px-2.5 py-1.5 min-h-[38px] rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
                                     isSelected
                                       ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
-                                      : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#252D3B]'
                                   }`}
                                   title={`Reagir com ${r.label}`}
                                 >
@@ -788,7 +788,7 @@ export default function StudentSocialFeedPage() {
 
                           <button
                             onClick={() => handleOpenComments(post)}
-                            className="px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono tracking-wider text-zinc-400 hover:text-white bg-white/[0.04] border border-white/10 transition-all cursor-pointer font-bold flex items-center gap-1.5"
+                            className="px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-mono tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#1B2330] border border-[#252D3B] transition-all cursor-pointer font-bold flex items-center gap-1.5"
                           >
                             <MessageSquare className="h-3.5 w-3.5" />
                             <span>{commentsCount}</span>
@@ -801,7 +801,7 @@ export default function StudentSocialFeedPage() {
                               if (!currentUser) return;
                               setReportTargetPost(post);
                             }}
-                            className="text-[10px] font-mono tracking-wider text-zinc-500 hover:text-rose-400 cursor-pointer uppercase transition-colors px-2.5 py-2 min-h-[40px] flex items-center"
+                            className="text-[10px] font-mono tracking-wider text-[#A7B0C0] hover:text-rose-400 cursor-pointer uppercase transition-colors px-2.5 py-2 min-h-[40px] flex items-center"
                             title="Sinalizar foto suspeita"
                           >
                             SINALIZAR
@@ -810,8 +810,8 @@ export default function StudentSocialFeedPage() {
                       </div>
 
                       {post.caption && (
-                        <p className="text-xs text-zinc-300 font-sans leading-relaxed pt-0.5">
-                          <span className="font-bold text-white mr-1.5">
+                        <p className="text-xs text-[#A7B0C0] font-sans leading-relaxed pt-0.5">
+                          <span className="font-bold text-[#F4F6FA] mr-1.5">
                             {post.students?.full_name?.split(' ')[0]}:
                           </span>
                           {post.caption}
@@ -830,16 +830,16 @@ export default function StudentSocialFeedPage() {
       {/* ABA 2: MURAL / CHAT DA TURMA (REALTIME)                                   */}
       {/* ========================================================================= */}
       {activeTab === 'chat' && (
-        <div className="relative z-10 flex flex-col h-[70vh] rounded-3xl mono-glass-card border border-white/10 overflow-hidden">
+        <div className="relative z-10 flex flex-col h-[70vh] rounded-3xl bg-[#121722] border border-[#252D3B] overflow-hidden">
           {/* Header do Chat */}
-          <div className="p-3.5 bg-black/40 border-b border-white/[0.08] flex items-center justify-between">
+          <div className="p-3.5 bg-[#080A0F]/60 border-b border-[#252D3B] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
-              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+              <span className="text-xs font-mono font-bold text-[#F4F6FA] uppercase tracking-wider">
                 Mural Ao Vivo • {challengeTitle}
               </span>
             </div>
-            <span className="text-[10px] font-mono text-zinc-400">
+            <span className="text-[10px] font-mono text-[#A7B0C0]">
               {messages.length} msg(s)
             </span>
           </div>
@@ -847,10 +847,10 @@ export default function StudentSocialFeedPage() {
           {/* Lista de Mensagens com Auto-scroll */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-zinc-500 text-xs font-mono">
-                <MessageSquare className="h-8 w-8 mb-2 text-zinc-600" />
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#A7B0C0] text-xs font-mono">
+                <MessageSquare className="h-8 w-8 mb-2 text-[#A7B0C0]" />
                 <p>Nenhuma mensagem ainda no mural da turma.</p>
-                <p className="text-[11px] text-zinc-600 mt-1">Dê um "bom dia" ou motive seus colegas abaixo!</p>
+                <p className="text-[11px] text-[#A7B0C0] mt-1">Dê um "bom dia" ou motive seus colegas abaixo!</p>
               </div>
             ) : (
               messages.map((msg) => {
@@ -863,16 +863,16 @@ export default function StudentSocialFeedPage() {
                     className={`flex flex-col ${isMine ? 'items-end' : 'items-start'} group`}
                   >
                     {/* Cabeçalho da Mensagem */}
-                    <div className="flex items-center gap-1.5 mb-1 px-1 text-[10px] font-mono text-zinc-400">
-                      <span className="font-bold text-zinc-300">
+                    <div className="flex items-center gap-1.5 mb-1 px-1 text-[10px] font-mono text-[#A7B0C0]">
+                      <span className="font-bold text-[#F4F6FA]">
                         {isMine ? 'Você' : msg.user_name}
                       </span>
                       {isCoach && (
-                        <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-bold">
+                        <span className="px-1.5 py-0.2 rounded-full bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/40 text-[9px] font-bold">
                           COACH
                         </span>
                       )}
-                      <span className="text-zinc-600">•</span>
+                      <span className="text-[#A7B0C0]/60">•</span>
                       <span>
                         {new Date(msg.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                       </span>
@@ -881,7 +881,7 @@ export default function StudentSocialFeedPage() {
                       {isMine && (
                         <button
                           onClick={() => handleDeleteChatMessage(msg.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 text-zinc-600 hover:text-rose-400 cursor-pointer"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 text-[#A7B0C0] hover:text-rose-400 cursor-pointer"
                           title="Excluir mensagem"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -893,10 +893,10 @@ export default function StudentSocialFeedPage() {
                     <div
                       className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs leading-relaxed break-words ${
                         isMine
-                          ? 'bg-white text-black font-medium rounded-tr-sm shadow-md'
+                          ? 'bg-[#3478F6] text-white font-medium rounded-tr-sm shadow-md'
                           : isCoach
-                          ? 'bg-amber-950/30 border border-amber-500/40 text-amber-100 rounded-tl-sm'
-                          : 'bg-zinc-900 border border-white/10 text-zinc-200 rounded-tl-sm'
+                          ? 'bg-[#1B2330] border border-[#3478F6]/40 text-[#F4F6FA] rounded-tl-sm'
+                          : 'bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] rounded-tl-sm'
                       }`}
                     >
                       {msg.content}
@@ -911,14 +911,14 @@ export default function StudentSocialFeedPage() {
           {/* Campo de Entrada de Mensagem do Chat */}
           <form
             onSubmit={handleSendChatMessage}
-            className="p-3 bg-black/60 border-t border-white/[0.08] flex items-center gap-2"
+            className="p-3 bg-[#080A0F]/80 border-t border-[#252D3B] flex items-center gap-2"
           >
             <Input
               type="text"
               placeholder="Digite sua mensagem para a turma..."
               value={newChatMessage}
               onChange={(e) => setNewChatMessage(e.target.value)}
-              className="h-11 text-xs rounded-xl bg-zinc-900/90 border-white/15 text-white placeholder:text-zinc-500 focus:border-white/40"
+              className="h-11 text-xs rounded-xl bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:border-[#3478F6]"
             />
             <button
               type="submit"
@@ -940,20 +940,20 @@ export default function StudentSocialFeedPage() {
       {/* SHEET / MODAL DE COMENTÁRIOS DA FOTO                                      */}
       {/* ========================================================================= */}
       {activeCommentPost && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
-          <div className="mono-glass-card w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[80vh] flex flex-col p-5 border-t border-white/20">
+        <div className="fixed inset-0 bg-[#080A0F]/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+          <div className="bg-[#121722] w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] max-h-[80vh] flex flex-col p-5 border-t border-[#252D3B]">
             {/* Header do Sheet */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-white animate-pulse" />
-                <span className="font-bold text-xs text-white font-mono uppercase tracking-wider">
+                <div className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
+                <span className="font-bold text-xs text-[#F4F6FA] font-mono uppercase tracking-wider">
                   Comentários na Foto • {activeCommentPost.students?.full_name?.split(' ')[0]}
                 </span>
               </div>
               <button
                 onClick={() => setActiveCommentPost(null)}
                 aria-label="Fechar comentários"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -962,12 +962,12 @@ export default function StudentSocialFeedPage() {
             {/* Lista de Comentários */}
             <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-[180px] max-h-[50vh]">
               {loadingComments ? (
-                <div className="py-8 flex flex-col items-center justify-center gap-2 text-zinc-500 text-xs font-mono">
-                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="py-8 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+                  <div className="h-4 w-4 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
                   Carregando comentários...
                 </div>
               ) : commentsList.length === 0 ? (
-                <p className="text-center text-xs font-mono text-zinc-500 py-10">
+                <p className="text-center text-xs font-mono text-[#A7B0C0] py-10">
                   Nenhum comentário ainda. Seja o primeiro a motivar seu colega!
                 </p>
               ) : (
@@ -977,7 +977,7 @@ export default function StudentSocialFeedPage() {
 
                   return (
                     <div key={c.id} className="flex items-start gap-2.5 text-xs group">
-                      <div className="h-7 w-7 rounded-full bg-zinc-800 text-white font-mono font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden border border-white/10">
+                      <div className="h-7 w-7 rounded-full bg-[#1B2330] text-[#F4F6FA] font-mono font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden border border-[#252D3B]">
                         {c.user_avatar ? (
                           <img
                             src={c.user_avatar}
@@ -988,26 +988,26 @@ export default function StudentSocialFeedPage() {
                           c.user_name?.charAt(0) || 'U'
                         )}
                       </div>
-                      <div className="flex-1 bg-white/[0.04] p-2.5 rounded-2xl border border-white/[0.06]">
+                      <div className="flex-1 bg-[#1B2330] p-2.5 rounded-2xl border border-[#252D3B]">
                         <div className="flex items-center justify-between gap-1 mb-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-white">
+                            <span className="font-bold text-[#F4F6FA]">
                               {c.user_name}
                             </span>
                             {isCoach && (
-                              <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-bold">
+                              <span className="px-1.5 py-0.2 rounded-full bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/40 text-[9px] font-bold">
                                 COACH
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-1">
-                            <span className="text-[10px] font-mono text-zinc-500">
+                            <span className="text-[10px] font-mono text-[#A7B0C0]">
                               {formatTimeAgo(c.created_at)}
                             </span>
                             {isMine && (
                               <button
                                 onClick={() => handleDeleteComment(c.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-zinc-600 hover:text-rose-400 p-0.5 cursor-pointer"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-[#A7B0C0] hover:text-rose-400 p-0.5 cursor-pointer"
                                 title="Excluir comentário"
                               >
                                 <Trash2 className="h-3 w-3" />
@@ -1015,7 +1015,7 @@ export default function StudentSocialFeedPage() {
                             )}
                           </div>
                         </div>
-                        <p className="text-zinc-300 leading-relaxed font-sans">{c.content}</p>
+                        <p className="text-[#A7B0C0] leading-relaxed font-sans">{c.content}</p>
                       </div>
                     </div>
                   );
@@ -1032,7 +1032,7 @@ export default function StudentSocialFeedPage() {
                     key={chip}
                     type="button"
                     onClick={() => setCommentText(chip)}
-                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:border-white/30 hover:bg-white/10 shrink-0 transition-all cursor-pointer active:scale-95"
+                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 hover:bg-[#252D3B] shrink-0 transition-all cursor-pointer active:scale-95"
                   >
                     {chip}
                   </button>
@@ -1041,13 +1041,13 @@ export default function StudentSocialFeedPage() {
             </div>
 
             {/* Input para envio de comentário */}
-            <form onSubmit={handleSendComment} className="pt-2 flex items-center gap-2 border-t border-white/[0.08]">
+            <form onSubmit={handleSendComment} className="pt-2 flex items-center gap-2 border-t border-[#252D3B]">
               <Input
                 type="text"
                 placeholder="Escreva um comentário de incentivo..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="h-11 text-xs rounded-xl bg-black border-white/15 text-white placeholder:text-zinc-600 focus:border-white/40"
+                className="h-11 text-xs rounded-xl bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:border-[#3478F6]"
               />
               <button
                 type="submit"
@@ -1078,7 +1078,7 @@ export default function StudentSocialFeedPage() {
 
       {/* Toast Monocromático Flutuante */}
       {toastMessage && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 mono-glass-card px-5 py-3 rounded-2xl border border-white/25 text-white text-xs font-bold shadow-[0_0_30px_rgba(255,255,255,0.12)] animate-in fade-in slide-in-from-bottom-4 duration-200 max-w-xs text-center">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-[#121722] px-5 py-3 rounded-2xl border border-[#252D3B] text-[#F4F6FA] text-xs font-bold shadow-[0_0_30px_rgba(52,120,246,0.18)] animate-in fade-in slide-in-from-bottom-4 duration-200 max-w-xs text-center">
           {toastMessage}
         </div>
       )}

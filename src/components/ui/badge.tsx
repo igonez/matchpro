@@ -9,12 +9,12 @@ export function Badge({
   variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
 }) {
   const variants = {
-    default: 'bg-white/10 text-white border-white/20',
-    secondary: 'bg-zinc-800 text-zinc-300 border-zinc-700',
-    destructive: 'bg-zinc-900 text-zinc-400 border-zinc-700',
-    outline: 'text-zinc-200 border-zinc-700',
-    success: 'bg-white/15 text-white border-white/30',
-    warning: 'bg-zinc-800 text-zinc-200 border-zinc-600',
+    default: 'bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30',
+    secondary: 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]',
+    destructive: 'bg-rose-500/15 text-rose-300 border-rose-500/35',
+    outline: 'text-[#F4F6FA] border-[#252D3B]',
+    success: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+    warning: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
   };
 
   return (

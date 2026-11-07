@@ -216,28 +216,28 @@ export default function SquadsManagerPage() {
         {/* Top Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-          <Badge className="bg-white/10 text-white border-white/20 font-black tracking-wider uppercase text-[10px] font-mono">
+          <Badge className="font-black tracking-wider uppercase text-[10px] font-mono">
             Guerra de Tribos & Retenção
           </Badge>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Users className="h-7 w-7 sm:h-8 sm:w-8 text-white shrink-0" />
+        <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight flex items-center gap-3">
+          <Users className="h-7 w-7 sm:h-8 sm:w-8 text-[#3478F6] shrink-0" />
           Squads & Micro-equipes
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#A7B0C0] mt-1 max-w-2xl leading-relaxed">
           Divida a turma em equipes de 3 a 5 alunos. Ao invés de desistirem por estarem longe do 1º lugar individual, eles continuam treinando para manter o ritmo coletivo do seu Squad.
         </p>
       </div>
 
       {/* Seletor de Desafio */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono">
+        <label className="text-xs font-bold text-[#A7B0C0] uppercase tracking-wider font-mono">
           Desafio Selecionado:
         </label>
         <select
           value={selectedChallengeId}
           onChange={(e) => setSelectedChallengeId(e.target.value)}
-          className="h-10 w-full sm:w-auto rounded-xl bg-zinc-900 border border-white/10 text-white text-xs px-3 focus:outline-none focus:border-white/30 font-mono"
+          className="h-10 w-full sm:w-auto rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6] font-mono"
         >
           {challenges.map((c) => (
             <option key={c.id} value={c.id}>
@@ -248,13 +248,13 @@ export default function SquadsManagerPage() {
       </div>
 
       {challenges.length === 0 && !loading && (
-        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 text-center space-y-2.5">
-          <p className="text-sm font-bold text-white font-mono">NENHUMA TURMA ATIVA ENCONTRADA</p>
-          <p className="text-xs text-zinc-400 max-w-md mx-auto">
+        <div className="p-6 rounded-2xl bg-[#121722] border border-[#252D3B] text-center space-y-2.5">
+          <p className="text-sm font-bold text-[#F4F6FA] font-mono">NENHUMA TURMA ATIVA ENCONTRADA</p>
+          <p className="text-xs text-[#A7B0C0] max-w-md mx-auto">
             Você precisa criar uma turma antes de poder formar Squads e dividir seus alunos em equipes.
           </p>
           <Link href="/dashboard/challenges/new">
-            <Button size="sm" className="rounded-xl px-4 py-2 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 mt-2">
+            <Button size="sm" className="rounded-xl px-4 py-2 text-xs font-mono font-bold mt-2">
               + Criar Primeiro Desafio
             </Button>
           </Link>
@@ -265,44 +265,44 @@ export default function SquadsManagerPage() {
         {/* Formulário de Criação e Alocação */}
         <div className="lg:col-span-1 space-y-6">
           {/* Card 1: Criar Squad */}
-          <Card className="border-white/10 bg-zinc-900/50">
+          <Card className="border-[#252D3B] bg-[#121722]">
             <CardHeader>
-              <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
-                <Plus className="h-4 w-4 text-white" /> Criar Novo Squad
+              <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+                <Plus className="h-4 w-4 text-[#3478F6]" /> Criar Novo Squad
               </CardTitle>
-              <CardDescription className="text-xs text-zinc-400">
+              <CardDescription className="text-xs text-[#A7B0C0]">
                 Dê um nome marcante para o time da turma.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleCreateSquad} className="space-y-4 text-xs">
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Nome da Equipe *</label>
+                  <label className="text-[#A7B0C0] font-bold block mb-1">Nome da Equipe *</label>
                   <input
                     type="text"
                     required
                     placeholder="Ex: Squad Espartanos / Team Foco Total"
                     value={squadName}
                     onChange={(e) => setSquadName(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
+                    className="w-full h-10 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 px-3 focus:outline-none focus:border-[#3478F6]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Lema / Grito de Guerra</label>
+                  <label className="text-[#A7B0C0] font-bold block mb-1">Lema / Grito de Guerra</label>
                   <input
                     type="text"
                     placeholder="Ex: Ninguém fica para trás"
                     value={squadMotto}
                     onChange={(e) => setSquadMotto(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
+                    className="w-full h-10 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 px-3 focus:outline-none focus:border-[#3478F6]"
                   />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={creating}
-                  className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 font-mono"
+                  className="w-full h-10 font-bold font-mono"
                 >
                   {creating ? 'Criando Equipe...' : 'Criar Squad'}
                 </Button>
@@ -312,22 +312,22 @@ export default function SquadsManagerPage() {
 
           {/* Card 2: Alocar Aluno ao Squad */}
           {squads.length > 0 && (
-            <Card className="border-white/10 bg-zinc-900/50">
+            <Card className="border-[#252D3B] bg-[#121722]">
               <CardHeader>
-                <CardTitle className="text-base font-bold text-white flex items-center gap-2 tracking-tight">
-                  <UserPlus className="h-4 w-4 text-white" /> Alocar Aluno no Squad
+                <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+                  <UserPlus className="h-4 w-4 text-[#3478F6]" /> Alocar Aluno no Squad
                 </CardTitle>
-                <CardDescription className="text-xs text-zinc-400">
+                <CardDescription className="text-xs text-[#A7B0C0]">
                   Distribua os alunos entre as equipes formadas.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 text-xs">
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Selecionar Aluno</label>
+                  <label className="text-[#A7B0C0] font-bold block mb-1">Selecionar Aluno</label>
                   <select
                     value={assignStudentId}
                     onChange={(e) => setAssignStudentId(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
+                    className="w-full h-10 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] px-3 focus:outline-none focus:border-[#3478F6]"
                   >
                     <option value="">Escolha um aluno cadastrado...</option>
                     {participants.map((p) => (
@@ -339,11 +339,11 @@ export default function SquadsManagerPage() {
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 font-bold block mb-1">Designar para Squad</label>
+                  <label className="text-[#A7B0C0] font-bold block mb-1">Designar para Squad</label>
                   <select
                     value={assignSquadId}
                     onChange={(e) => setAssignSquadId(e.target.value)}
-                    className="w-full h-9 rounded-xl bg-zinc-950 border border-white/10 text-white px-3 focus:outline-none focus:border-white/30"
+                    className="w-full h-10 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] px-3 focus:outline-none focus:border-[#3478F6]"
                   >
                     <option value="">Escolha o Squad destino...</option>
                     {squads.map((s) => (
@@ -358,7 +358,7 @@ export default function SquadsManagerPage() {
                   type="button"
                   onClick={handleAssignStudent}
                   disabled={!assignStudentId || !assignSquadId}
-                  className="w-full h-10 font-bold bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 font-mono"
+                  className="w-full h-10 font-bold font-mono"
                 >
                   Confirmar Alocação
                 </Button>
@@ -370,18 +370,18 @@ export default function SquadsManagerPage() {
         {/* Lista de Squads Formados */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2 tracking-tight">
-              <Shield className="h-5 w-5 text-white" />
+            <h2 className="text-lg font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+              <Shield className="h-5 w-5 text-[#3478F6]" />
               Equipes Cadastradas ({squads.length})
             </h2>
-            <span className="text-xs text-zinc-500 font-mono">Média de pontos calculada dinamicamente</span>
+            <span className="text-xs text-[#A7B0C0] font-mono">Média de pontos calculada dinamicamente</span>
           </div>
 
           {squads.length === 0 && !loading ? (
-            <Card className="border-dashed border-white/10 p-8 text-center bg-zinc-900/20">
-              <Users className="h-10 w-10 mx-auto text-zinc-600 mb-2" />
-              <p className="font-semibold text-zinc-300">Nenhum Squad criado neste desafio</p>
-              <p className="text-xs text-zinc-500 mt-1">
+            <Card className="border-dashed border-[#252D3B] p-8 text-center bg-[#121722]">
+              <Users className="h-10 w-10 mx-auto text-[#75A7FF] mb-2 opacity-75" />
+              <p className="font-semibold text-[#F4F6FA]">Nenhum Squad criado neste desafio</p>
+              <p className="text-xs text-[#A7B0C0] mt-1">
                 Crie o primeiro Squad ao lado para ativar a guerra de times.
               </p>
             </Card>
@@ -390,45 +390,45 @@ export default function SquadsManagerPage() {
               {squads.map((squad) => (
                 <Card
                   key={squad.id}
-                  className="border-white/10 bg-zinc-900/50 hover:border-white/25 transition-all flex flex-col justify-between"
+                  className="border-[#252D3B] bg-[#121722] hover:border-[#3478F6]/40 transition-all flex flex-col justify-between"
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between mb-1">
-                      <Badge className="bg-white/10 text-white border-white/20 font-black font-mono text-[10px]">
+                      <Badge className="font-black font-mono text-[10px]">
                         {squad.squad_members?.length || 0} Membros
                       </Badge>
                       <button
                         onClick={() => setDeleteTarget({ id: squad.id, name: squad.name })}
-                        className="text-zinc-500 hover:text-white hover:bg-white/10 rounded transition-colors p-1"
+                        className="text-[#A7B0C0] hover:text-rose-400 hover:bg-rose-500/10 rounded transition-colors p-1"
                         title="Excluir Squad"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
 
-                    <CardTitle className="text-base font-black text-white">
+                    <CardTitle className="text-base font-black text-[#F4F6FA]">
                       {squad.name}
                     </CardTitle>
 
                     {squad.motto && (
-                      <CardDescription className="text-xs text-zinc-400 italic">
+                      <CardDescription className="text-xs text-[#A7B0C0] italic">
                         "{squad.motto}"
                       </CardDescription>
                     )}
                   </CardHeader>
 
-                  <CardContent className="pt-0 border-t border-white/10 py-3">
-                    <span className="text-[10px] font-bold uppercase text-zinc-500 block mb-1.5 font-mono">
+                  <CardContent className="pt-0 border-t border-[#252D3B] py-3">
+                    <span className="text-[10px] font-bold uppercase text-[#A7B0C0] block mb-1.5 font-mono">
                       Integrantes do Time:
                     </span>
                     {squad.squad_members?.length === 0 ? (
-                      <p className="text-xs text-zinc-600 italic">Nenhum aluno alocado ainda.</p>
+                      <p className="text-xs text-[#A7B0C0] italic">Nenhum aluno alocado ainda.</p>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {squad.squad_members?.map((m: any) => (
                           <span
                             key={m.id}
-                            className="px-2 py-0.5 rounded-lg bg-zinc-950 text-zinc-300 border border-white/10 text-[11px] font-medium"
+                            className="px-2.5 py-0.5 rounded-lg bg-[#1B2330] text-[#F4F6FA] border border-[#252D3B] text-[11px] font-medium"
                           >
                             {m.students?.full_name || 'Aluno'}
                           </span>
@@ -446,8 +446,8 @@ export default function SquadsManagerPage() {
       {/* Toast Flutuante */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-2.5 text-xs font-mono text-white">
-            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+            <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         </div>
@@ -461,6 +461,7 @@ export default function SquadsManagerPage() {
         description={`Tem certeza de que deseja excluir o squad "${deleteTarget?.name}"? Os alunos ficarão sem equipe até serem redistribuídos.`}
         confirmLabel={deleting ? 'Removendo...' : 'Sim, Excluir Squad'}
         cancelLabel="Cancelar"
+        variant="destructive"
         onConfirm={handleConfirmDeleteSquad}
         isLoading={deleting}
       />

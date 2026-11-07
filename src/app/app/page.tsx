@@ -23,6 +23,8 @@ import {
   Activity, 
   Utensils, 
   Droplets,
+  Dumbbell,
+  Target,
   ChevronRight,
   Circle,
   Bell,
@@ -636,7 +638,7 @@ export default function StudentHomePage() {
   const topAnnouncement = activeAnnouncements[0] || null;
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white w-full pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white w-full max-w-full overflow-x-hidden min-w-0 pb-28 relative">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
@@ -1075,41 +1077,100 @@ export default function StudentHomePage() {
               </Link>
             </div>
 
-            {[
-              {
-                id: 'fisico',
-                title: 'Bloco de Treino & Condicionamento',
-                subtitle: 'Sessões físicas com cronômetro e câmera (1/dia)',
-                categories: ['treino', 'cardio'],
-                borderClass: 'border-[#252D3B]',
-                badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
-              },
-              {
-                id: 'rotina',
-                title: 'Bloco de Nutrição & Hábitos',
-                subtitle: 'Pratos auditados por IA e metas de rotina',
-                categories: ['refeicao', 'habito'],
-                borderClass: 'border-[#252D3B]',
-                badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
-              },
-            ].map((group) => {
-              const groupTasks = todayTasks.filter((t) => group.categories.includes(t.category));
-              if (groupTasks.length === 0) return null;
+            {(() => {
+              // Separação de todos os blocos de execução individuais
+              const standardBlocks = [
+                {
+                  id: 'bloco-treino',
+                  title: 'Bloco de Treinos de Força',
+                  subtitle: 'Exercícios físicos com cronômetro e câmera antifraude (1/dia)',
+                  categories: ['treino'],
+                  listId: null,
+                  Icon: Dumbbell,
+                  borderClass: 'border-[#252D3B]',
+                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                },
+                {
+                  id: 'bloco-cardio',
+                  title: 'Bloco de Sessões de Cardio',
+                  subtitle: 'Corrida, bike, esteira e aeróbico com cronômetro (1/dia)',
+                  categories: ['cardio'],
+                  listId: null,
+                  Icon: Activity,
+                  borderClass: 'border-[#252D3B]',
+                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                },
+                {
+                  id: 'bloco-nutricao',
+                  title: 'Bloco de Nutrição & Alimentação',
+                  subtitle: 'Refeições auditadas em tempo real com IA (Reset diário)',
+                  categories: ['refeicao'],
+                  listId: null,
+                  Icon: Utensils,
+                  borderClass: 'border-[#252D3B]',
+                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                },
+                {
+                  id: 'bloco-habitos',
+                  title: 'Bloco de Hábitos & Rotina',
+                  subtitle: 'Hidratação, sono, suplementação e consistência diária',
+                  categories: ['habito'],
+                  listId: null,
+                  Icon: Droplets,
+                  borderClass: 'border-[#252D3B]',
+                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                },
+              ];
 
-              return (
-                <div
-                  key={group.id}
-                  className={`p-4 sm:p-5 rounded-3xl bg-[#121722] border ${group.borderClass} space-y-3`}
-                >
-                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#252D3B]">
-                    <div>
-                      <h4 className="text-sm sm:text-base font-black text-[#F4F6FA] tracking-tight">{group.title}</h4>
-                      <p className="text-xs text-[#A7B0C0]">{group.subtitle}</p>
+              // Listas personalizadas criadas pelo treinador
+              const customBlocks = (missionLists || [])
+                .filter((l) => !l.id.startsWith('preset-'))
+                .map((l) => ({
+                  id: `custom-${l.id}`,
+                  title: l.name,
+                  subtitle: l.description || 'Tarefas do bloco personalizado',
+                  categories: [l.category_key || 'treino'],
+                  listId: l.id,
+                  Icon: Target,
+                  borderClass: 'border-[#252D3B]',
+                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                }));
+
+              const allBlocks = [...standardBlocks, ...customBlocks];
+
+              return allBlocks.map((group) => {
+                const groupTasks = todayTasks.filter((t) => {
+                  if (group.listId) {
+                    return t.list_id === group.listId;
+                  }
+                  return group.categories.includes(t.category) && (!t.list_id || t.list_id.startsWith('preset-'));
+                });
+
+                if (groupTasks.length === 0) return null;
+
+                const GroupIcon = group.Icon;
+
+                return (
+                  <div
+                    key={group.id}
+                    className={`p-4 sm:p-5 rounded-3xl bg-[#121722] border ${group.borderClass} space-y-3 w-full min-w-0 max-w-full shadow-lg`}
+                  >
+                    <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#252D3B]">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="h-8 w-8 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center shrink-0">
+                          <GroupIcon className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-sm sm:text-base font-black text-[#F4F6FA] tracking-tight truncate">
+                            {group.title}
+                          </h4>
+                          <p className="text-xs text-[#A7B0C0] truncate">{group.subtitle}</p>
+                        </div>
+                      </div>
+                      <span className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase shrink-0 ${group.badgeClass}`}>
+                        {groupTasks.length} {groupTasks.length === 1 ? 'missão' : 'missões'}
+                      </span>
                     </div>
-                    <span className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase shrink-0 ${group.badgeClass}`}>
-                      {groupTasks.length} {groupTasks.length === 1 ? 'missão' : 'missões'}
-                    </span>
-                  </div>
 
                   <div className="space-y-2.5">
                     {groupTasks.map((task) => {
@@ -1181,7 +1242,8 @@ export default function StudentHomePage() {
                   </div>
                 </div>
               );
-            })}
+            });
+          })()}
           </div>
 
           {/* 5. PROGRESSO POR PILAR / LISTAS DE MISSÕES */}

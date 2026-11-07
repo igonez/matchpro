@@ -806,7 +806,7 @@ function StudentMissionsContent() {
   ];
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full max-w-full overflow-x-hidden min-w-0 pb-28 relative">
       <Monochrome3DBackground />
 
       {/* Header */}
@@ -1210,7 +1210,7 @@ function StudentMissionsContent() {
             return (
               <div
                 key={block.key}
-                className={`p-4 rounded-3xl border ${block.accentBorder} bg-gradient-to-br ${block.accentBg} space-y-3 shadow-lg`}
+                className={`p-4 rounded-3xl border ${block.accentBorder} bg-gradient-to-br ${block.accentBg} space-y-3 shadow-lg w-full min-w-0 max-w-full overflow-hidden`}
               >
                 {/* Header do Bloco */}
                 <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-[#252D3B]">

@@ -25,6 +25,7 @@ import {
   FileText,
   Target,
   Trophy,
+  ChevronDown,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -109,6 +110,7 @@ function MissionsManagerContent() {
   // Listas / Blocos de Missões Personalizadas
   const [missionLists, setMissionLists] = useState<any[]>(DEFAULT_PRESET_LISTS);
   const [selectedBlockFilter, setSelectedBlockFilter] = useState<string>('all');
+  const [isBlockMenuOpen, setIsBlockMenuOpen] = useState(false);
 
   // Modal para Criar / Editar Lista (Bloco)
   const [isListModalOpen, setIsListModalOpen] = useState(false);
@@ -1065,9 +1067,9 @@ function MissionsManagerContent() {
   );
 
   return (
-    <div className="space-y-6 pb-16">
+    <div className="space-y-6 pb-16 max-w-full overflow-x-hidden">
       {/* Header com Seletor de Desafio e Ações Globais */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#252D3B] pb-5">
         <div className="flex items-start gap-3.5">
           {coachIdentity.name && (
             <div className="h-11 w-11 rounded-2xl bg-[#121722] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0 mt-0.5 shadow-md">
@@ -1409,53 +1411,120 @@ function MissionsManagerContent() {
         </div>
       )}
 
-      {/* BLOCO 2: Barra de Filtro de Blocos da Semana */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      {/* BLOCO 2: Menu Expansível de Filtro de Blocos da Semana */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-30">
+        <div className="relative w-full sm:w-auto">
+          {/* Botão Gatilho do Menu Expansível */}
           <button
             type="button"
-            onClick={() => setSelectedBlockFilter('all')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
-              selectedBlockFilter === 'all'
-                ? 'bg-[#3478F6] text-white shadow-[0_6px_16px_rgba(52,120,246,0.28)]'
-                : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40'
-            }`}
+            onClick={() => setIsBlockMenuOpen((prev) => !prev)}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-between gap-3 transition-all cursor-pointer shadow-lg"
           >
-            <Layers className="w-3.5 h-3.5" />
-            Todos os Blocos ({missions.length} missões)
+            <div className="flex items-center gap-2.5 min-w-0">
+              {selectedBlockFilter === 'all' ? (
+                <div className="h-6 w-6 rounded-lg bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] flex items-center justify-center shrink-0">
+                  <Layers className="w-3.5 h-3.5" />
+                </div>
+              ) : (
+                <div className="h-6 w-6 rounded-lg bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] flex items-center justify-center shrink-0">
+                  {getBlockIcon(selectedBlockFilter, 'w-3.5 h-3.5')}
+                </div>
+              )}
+              <span className="truncate">
+                {selectedBlockFilter === 'all'
+                  ? `Todos os Blocos (${missions.length} missões)`
+                  : `${visualBlocks.find((b) => b.key === selectedBlockFilter)?.name || 'Bloco'} (${
+                      missions.filter((m) =>
+                        m.list_id && !visualBlocks.find((b) => b.key === selectedBlockFilter)?.id.startsWith('preset-')
+                          ? m.list_id === visualBlocks.find((b) => b.key === selectedBlockFilter)?.id
+                          : m.category === selectedBlockFilter
+                      ).length
+                    } missões)`}
+              </span>
+            </div>
+            <ChevronDown
+              className={`w-4 h-4 text-[#A7B0C0] transition-transform duration-200 shrink-0 ${
+                isBlockMenuOpen ? 'rotate-180 text-[#75A7FF]' : ''
+              }`}
+            />
           </button>
 
-          {visualBlocks.map((block) => {
-            const count = missions.filter((m) =>
-              m.list_id && !block.id.startsWith('preset-')
-                ? m.list_id === block.id
-                : m.category === block.key
-            ).length;
-            const isSelected = selectedBlockFilter === block.key;
+          {/* Menu Dropdown Expansível */}
+          {isBlockMenuOpen && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setIsBlockMenuOpen(false)}
+              />
+              <div className="absolute left-0 top-full mt-2 w-full sm:w-80 rounded-2xl bg-[#121722] border border-[#252D3B] p-2 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(52,120,246,0.15)] z-50 space-y-1 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+                  Filtrar Exibição de Blocos
+                </div>
 
-            return (
-              <button
-                key={block.id}
-                type="button"
-                onClick={() => setSelectedBlockFilter((prev) => (prev === block.key ? 'all' : block.key))}
-                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
-                  isSelected
-                    ? 'bg-[#3478F6] text-white shadow-[0_6px_16px_rgba(52,120,246,0.28)]'
-                    : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40'
-                }`}
-              >
-                {getBlockIcon(block.key, 'w-3.5 h-3.5')}
-                <span>{block.name}</span>
-                <span className="opacity-70">({count})</span>
-              </button>
-            );
-          })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedBlockFilter('all');
+                    setIsBlockMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                    selectedBlockFilter === 'all'
+                      ? 'bg-[#3478F6] text-white shadow-md'
+                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Layers className="w-4 h-4 shrink-0" />
+                    <span>Todos os Blocos</span>
+                  </div>
+                  <span className="text-[10px] opacity-80 font-mono">
+                    ({missions.length})
+                  </span>
+                </button>
+
+                <div className="h-px bg-[#252D3B] my-1" />
+
+                {visualBlocks.map((block) => {
+                  const count = missions.filter((m) =>
+                    m.list_id && !block.id.startsWith('preset-')
+                      ? m.list_id === block.id
+                      : m.category === block.key
+                  ).length;
+                  const isSelected = selectedBlockFilter === block.key;
+
+                  return (
+                    <button
+                      key={block.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedBlockFilter(block.key);
+                        setIsBlockMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#3478F6] text-white shadow-md'
+                          : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="shrink-0">{getBlockIcon(block.key, 'w-4 h-4')}</span>
+                        <span className="truncate">{block.name}</span>
+                      </div>
+                      <span className="text-[10px] opacity-80 font-mono shrink-0 ml-2">
+                        ({count})
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         <Button
           size="sm"
           onClick={() => handleOpenCreateModal()}
-          className="rounded-xl h-9 px-4 text-xs font-mono font-bold"
+          className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-md shadow-[#3478F6]/20"
         >
           <Plus className="w-4 h-4 mr-1" />
           Nova Missão na Semana {selectedWeekNumber}
@@ -1516,7 +1585,7 @@ function MissionsManagerContent() {
       ) : (
         <div 
           data-tour="missions-list-card"
-          className="grid grid-cols-1 lg:grid-cols-2 gap-5"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full min-w-0 max-w-full"
         >
           {visualBlocks
             .filter((b) => selectedBlockFilter === 'all' || b.key === selectedBlockFilter)
@@ -1536,32 +1605,32 @@ function MissionsManagerContent() {
               return (
                 <Card
                   key={block.id}
-                  className={`border ${accent.border} bg-[#121722] rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl`}
+                  className={`border ${accent.border} bg-[#121722] rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl w-full min-w-0 max-w-full`}
                 >
                   <div>
-                    <CardHeader className="pb-3.5 border-b border-white/[0.06] flex flex-row items-start justify-between gap-3">
-                      <div className="flex items-start gap-3 min-w-0">
+                    <CardHeader className="pb-3.5 border-b border-[#252D3B] flex flex-col sm:flex-row sm:items-start justify-between gap-3 min-w-0">
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
                         <div
                           className={`h-10 w-10 rounded-2xl border flex items-center justify-center shrink-0 ${accent.headerBg}`}
                         >
                           {getBlockIcon(block.key, 'w-5 h-5')}
                         </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <CardTitle className="text-base font-black text-white tracking-tight">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <CardTitle className="text-base font-black text-[#F4F6FA] tracking-tight">
                               {block.name}
                             </CardTitle>
-                            <Badge className="bg-white/15 text-white border-white/25 text-[10px] font-mono">
+                            <Badge className="bg-[#1B2330] text-[#A7B0C0] border-[#252D3B] text-[10px] font-mono">
                               Semana {selectedWeekNumber}
                             </Badge>
-                            <Badge className="bg-white/10 text-zinc-200 border-white/15 text-[10px] font-mono">
+                            <Badge className="bg-[#1B2330] text-[#A7B0C0] border-[#252D3B] text-[10px] font-mono">
                               {blockMissions.length} {blockMissions.length === 1 ? 'missão' : 'missões'}
                             </Badge>
                             <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[10px] font-mono">
                               {blockTotalXp} XP
                             </Badge>
                           </div>
-                          <CardDescription className="text-xs text-zinc-400 mt-1">
+                          <CardDescription className="text-xs text-[#A7B0C0] mt-1">
                             {block.description}
                           </CardDescription>
                         </div>
@@ -1574,7 +1643,7 @@ function MissionsManagerContent() {
                               variant="ghost"
                               size="icon"
                               onClick={() => handleOpenEditListModal(block)}
-                              className="h-8 w-8 text-zinc-400 hover:text-white"
+                              className="h-8 w-8 text-[#A7B0C0] hover:text-white"
                               title="Editar Bloco"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
@@ -1583,7 +1652,7 @@ function MissionsManagerContent() {
                               variant="ghost"
                               size="icon"
                               onClick={() => setDeleteListTarget({ id: block.id, name: block.name })}
-                              className="h-8 w-8 text-zinc-500 hover:text-red-400"
+                              className="h-8 w-8 text-[#A7B0C0] hover:text-red-400"
                               title="Excluir Bloco"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -1622,15 +1691,15 @@ function MissionsManagerContent() {
                           {blockMissions.map((m, idx) => (
                             <div
                               key={m.id}
-                              className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-white/20 flex items-center justify-between gap-3 transition-all"
+                              className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 flex items-center justify-between gap-3 transition-all min-w-0"
                             >
-                              <div className="flex items-center gap-3 min-w-0">
+                              <div className="flex items-center gap-3 min-w-0 flex-1">
                                 <div className="h-7 w-7 rounded-lg bg-[#121722] border border-[#252D3B] text-[#A7B0C0] font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
                                   #{idx + 1}
                                 </div>
-                                <div className="min-w-0">
+                                <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-1.5 flex-wrap">
-                                    <p className="font-bold text-xs sm:text-sm text-white truncate">
+                                    <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] truncate max-w-[180px] sm:max-w-xs md:max-w-md">
                                       {m.title}
                                     </p>
                                     {m.is_bonus && (
@@ -1644,7 +1713,7 @@ function MissionsManagerContent() {
                                       </Badge>
                                     )}
                                   </div>
-                                  <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-zinc-400">
+                                  <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-[#A7B0C0]">
                                     <span className="text-[#75A7FF] font-bold">+{m.points_rewarded} XP</span>
                                     <span>•</span>
                                     <span>
@@ -1659,7 +1728,7 @@ function MissionsManagerContent() {
                                     {m.requires_cooldown && (
                                       <>
                                         <span>•</span>
-                                        <span className="text-zinc-300">Limite 1/dia</span>
+                                        <span className="text-[#F4F6FA]">Limite 1/dia</span>
                                       </>
                                     )}
                                   </div>
@@ -1671,7 +1740,7 @@ function MissionsManagerContent() {
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleOpenEditModal(m)}
-                                  className="h-8 px-2 text-xs text-zinc-400 hover:text-white"
+                                  className="h-8 px-2 text-xs text-[#A7B0C0] hover:text-white"
                                 >
                                   <Edit3 className="h-3.5 w-3.5" />
                                 </Button>
@@ -1679,7 +1748,7 @@ function MissionsManagerContent() {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => setDeleteMissionTarget({ id: m.id, title: m.title })}
-                                  className="h-8 w-8 text-zinc-500 hover:text-red-400"
+                                  className="h-8 w-8 text-[#A7B0C0] hover:text-red-400"
                                   title="Excluir Missão"
                                 >
                                   <Trash2 className="h-3.5 w-3.5" />

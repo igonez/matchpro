@@ -30,6 +30,7 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { AchievementsGrid } from '@/components/student/achievements-grid';
 import { getStudentAchievementsWithProgress, StudentAchievementStatus, DEFAULT_ACHIEVEMENTS } from '@/lib/achievements';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 export default function StudentProfilePage() {
   const router = useRouter();
@@ -272,14 +273,17 @@ export default function StudentProfilePage() {
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-black text-white tracking-tight">Meu Perfil</h1>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleSignOut}
-          className="h-11 min-h-[44px] px-3.5 text-xs text-zinc-400 hover:text-white hover:bg-white/10"
-        >
-          <LogOut className="h-4 w-4 mr-1.5" /> Sair
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSignOut}
+            className="h-11 min-h-[44px] px-3.5 text-xs text-zinc-400 hover:text-white hover:bg-white/10"
+          >
+            <LogOut className="h-4 w-4 mr-1.5" /> Sair
+          </Button>
+          <StudentMenuTrigger />
+        </div>
       </div>
 
       {/* Card Principal do Usuário */}

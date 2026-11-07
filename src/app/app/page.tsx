@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { NotificationsDrawer } from '@/components/student/notifications-drawer';
 import { PushNotificationBanner } from '@/components/student/push-notification-manager';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { checkStreakRisk, sendBrowserNotification } from '@/lib/notifications';
 
 export default function StudentHomePage() {
@@ -42,6 +43,7 @@ export default function StudentHomePage() {
   const [pendingChallenge, setPendingChallenge] = useState<any>(null);
   const [standing, setStanding] = useState<any>(null);
   const [rank, setRank] = useState('1º');
+  const [totalAthletes, setTotalAthletes] = useState<number>(1);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [inviteCodeInput, setInviteCodeInput] = useState('');
   const [currentStreak, setCurrentStreak] = useState<number>(1);
@@ -247,9 +249,11 @@ export default function StudentHomePage() {
 
           const allStandings = allStandingsRes.data;
           if (allStandings && allStandings.length > 0) {
+            setTotalAthletes(allStandings.length);
             const idx = allStandings.findIndex((s: any) => s.student_id === user.id);
             setRank(idx !== -1 ? `${idx + 1}º` : `${allStandings.length + 1}º`);
           } else {
+            setTotalAthletes(1);
             setRank('1º');
           }
 
@@ -432,9 +436,28 @@ export default function StudentHomePage() {
   };
 
   // Cálculo dinâmico do Dia e Semana reais da turma
+  const todayFormatted = useMemo(() => {
+    const d = new Date();
+    const weekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+    return `${weekDays[d.getDay()]}, ${d.getDate()} de ${months[d.getMonth()]}`;
+  }, []);
+
+  const coachInfo = useMemo(() => {
+    if (!challenge) return null;
+    const profObj = Array.isArray(challenge.professionals)
+      ? challenge.professionals[0]
+      : challenge.professionals;
+    if (!profObj) return null;
+    return {
+      name: profObj.brand_name || profObj.full_name || 'Treinador Oficial',
+      avatar: profObj.brand_logo_url || profObj.avatar_url || null,
+    };
+  }, [challenge]);
+
   const challengeTimeline = useMemo(() => {
     if (!challenge?.start_date) {
-      return { currentDay: 1, totalDays: 30, currentWeek: 1 };
+      return { currentDay: 1, totalDays: 30, currentWeek: 1, totalWeeks: 4, daysLeft: 30 };
     }
     const start = new Date(challenge.start_date + 'T00:00:00');
     const end = challenge.end_date
@@ -445,9 +468,13 @@ export default function StudentHomePage() {
     const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / 86400000));
     const elapsedDays = Math.floor((now.getTime() - start.getTime()) / 86400000) + 1;
     const currentDay = Math.min(totalDays, Math.max(1, elapsedDays));
-    const currentWeek = Math.max(1, Math.ceil(currentDay / 7));
+    const daysLeft = Math.max(0, totalDays - currentDay);
 
-    return { currentDay, totalDays, currentWeek };
+    const weeksArr = Array.isArray(challenge.challenge_weeks) ? challenge.challenge_weeks : [];
+    const totalWeeks = Math.max(4, weeksArr.length || Math.ceil(totalDays / 7));
+    const currentWeek = Math.min(totalWeeks, Math.max(1, Math.ceil(currentDay / 7)));
+
+    return { currentDay, totalDays, currentWeek, totalWeeks, daysLeft };
   }, [challenge]);
 
   const totalWeeklyGoals =
@@ -618,10 +645,10 @@ export default function StudentHomePage() {
         data-tour="student-welcome-header"
         className="flex items-center justify-between pt-2 sm:pt-3 relative z-10"
       >
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <Link href="/app/profile">
-            <div className="relative h-12 w-12 rounded-2xl bg-gradient-to-b from-[#3478F6] via-zinc-400 to-[#121722] p-px shadow-[0_0_15px_rgba(52,120,246,0.25)] active:scale-95 transition-all cursor-pointer">
-              <div className="h-full w-full bg-[#080A0F] rounded-[15px] flex items-center justify-center font-bold text-white text-base overflow-hidden">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <Link href="/app/profile" className="shrink-0" title="Ver Meu Perfil">
+            <div className="relative h-12 w-12 rounded-2xl bg-[#121722] border border-[#252D3B] p-0.5 shadow-md hover:border-[#3478F6]/50 active:scale-95 transition-all cursor-pointer">
+              <div className="h-full w-full bg-[#080A0F] rounded-[14px] flex items-center justify-center font-bold text-white text-base overflow-hidden">
                 {student?.avatar_url ? (
                   <img
                     src={student.avatar_url}
@@ -632,52 +659,47 @@ export default function StudentHomePage() {
                   student?.full_name?.charAt(0) || 'A'
                 )}
               </div>
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-[#080A0F]" />
             </div>
           </Link>
 
-          <div>
-            {(() => {
-              const profObj = Array.isArray(challenge?.professionals)
-                ? challenge?.professionals[0]
-                : challenge?.professionals;
-              const coachName = profObj?.brand_name || profObj?.full_name || null;
-              return (
-                <span className="text-xs text-[#A7B0C0] font-medium block">
-                  {coachName
-                    ? `${coachName} • ${challenge?.title || 'Turma Ativa'}`
-                    : challenge?.title || 'Olá, atleta'}
-                </span>
-              );
-            })()}
-            <h1 className="text-base sm:text-lg font-black text-[#F4F6FA] leading-tight">
-              {student?.full_name?.split(' ')[0] || 'Atleta'}
+          <div className="min-w-0">
+            <h1 className="text-base sm:text-lg font-black text-[#F4F6FA] tracking-tight truncate leading-tight">
+              Olá, {student?.full_name?.split(' ')[0] || 'Atleta'} 👋
             </h1>
+            <p className="text-xs text-[#A7B0C0] font-medium truncate mt-0.5">
+              {todayFormatted} • Metas de hoje
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Badge Streak */}
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#121722] border border-[#252D3B] shrink-0" title="Dias Consecutivos de Ofensiva">
+            <Flame className="h-4 w-4 text-amber-400 fill-amber-400/20" />
+            <span className="text-xs font-mono font-black text-[#F4F6FA] tracking-wider">
+              {currentStreak}D
+            </span>
+          </div>
+
           {/* Sino de Notificações com Badge */}
           <button
             type="button"
             onClick={() => setIsNotificationsOpen(true)}
-            className="relative h-10 w-10 rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-all cursor-pointer active:scale-95 shrink-0"
+            className="relative h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-all cursor-pointer active:scale-95 shrink-0"
             title="Notificações e Alertas"
+            aria-label="Abrir Notificações"
           >
-            <Bell className="h-4 w-4" />
+            <Bell className="h-5 w-5" />
             {unreadNotifsCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-[#3478F6] text-white text-[11px] font-mono font-black flex items-center justify-center shadow-[0_0_10px_rgba(52,120,246,0.6)]">
+              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-[#3478F6] text-white text-[10px] font-mono font-black flex items-center justify-center shadow-[0_0_10px_rgba(52,120,246,0.6)]">
                 {unreadNotifsCount > 9 ? '9+' : unreadNotifsCount}
               </span>
             )}
           </button>
 
-          {/* Badge Streak Tipográfico */}
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#121722] border border-[#252D3B] shrink-0">
-            <span className="h-2 w-2 rounded-full bg-[#3478F6]" />
-            <span className="text-xs font-mono font-bold text-[#F4F6FA] tracking-wider">
-              {currentStreak}D OFENSIVA
-            </span>
-          </div>
+          {/* Menu Sanduíche Intuitivo do Aluno */}
+          <StudentMenuTrigger />
         </div>
       </div>
 
@@ -804,7 +826,145 @@ export default function StudentHomePage() {
             </div>
           )}
 
-          {/* 2. CARD DE AÇÃO FOCAL: O Próximo Passo de Hoje */}
+          {/* 2. CARD DESTAQUE: SUA TURMA ATUAL */}
+          <div className="relative z-10">
+            <div className="p-5 sm:p-6 rounded-3xl bg-[#121722] border border-[#252D3B] shadow-[0_12px_40px_rgba(0,0,0,0.6)] space-y-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3 flex-wrap">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[11px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF] flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse" />
+                      SUA TURMA ATUAL
+                    </span>
+                    <span className="text-[11px] font-mono font-bold text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-2 py-0.5 rounded-full">
+                      Semana {challengeTimeline.currentWeek} de {challengeTimeline.totalWeeks}
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight leading-tight">
+                    {challenge.title}
+                  </h2>
+                </div>
+
+                {/* Treinador Responsável */}
+                {coachInfo && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] shrink-0">
+                    <div className="h-8 w-8 rounded-xl bg-[#080A0F] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0">
+                      {coachInfo.avatar ? (
+                        <img src={coachInfo.avatar} alt={coachInfo.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="text-xs font-black text-[#75A7FF]">
+                          {coachInfo.name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-left">
+                      <span className="text-[10px] font-mono text-[#A7B0C0] uppercase block leading-none">TREINADOR</span>
+                      <span className="text-xs font-bold text-[#F4F6FA] leading-tight block truncate max-w-[120px] sm:max-w-[160px]">
+                        {coachInfo.name}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Grid 4 Indicadores Rápidos da Turma */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                {/* 1. Cronograma */}
+                <div className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">CRONOGRAMA</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-base sm:text-lg font-black font-mono text-[#F4F6FA]">
+                      Dia {challengeTimeline.currentDay}
+                    </span>
+                    <span className="text-xs font-mono text-[#A7B0C0]">/{challengeTimeline.totalDays}</span>
+                  </div>
+                  <span className="text-[11px] text-[#75A7FF] font-mono block font-medium">
+                    {challengeTimeline.daysLeft} {challengeTimeline.daysLeft === 1 ? 'dia restante' : 'dias restantes'}
+                  </span>
+                </div>
+
+                {/* 2. Ranking */}
+                <Link
+                  href="/app/leaderboard"
+                  className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors space-y-1 block group"
+                  title="Ver ranking da turma"
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] group-hover:text-white block">SUA POSIÇÃO</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-base sm:text-lg font-black font-mono text-[#75A7FF]">
+                      {rank}
+                    </span>
+                    <span className="text-xs font-mono text-[#A7B0C0]">lugar</span>
+                  </div>
+                  <span className="text-[11px] text-[#A7B0C0] font-mono block truncate">
+                    {totalAthletes} {totalAthletes === 1 ? 'atleta na turma' : 'atletas na disputa'}
+                  </span>
+                </Link>
+
+                {/* 3. Pontuação XP */}
+                <div className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">SEU XP TOTAL</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-base sm:text-lg font-black font-mono text-[#F4F6FA]">
+                      {standing?.total_points || 0}
+                    </span>
+                    <span className="text-xs font-mono text-[#75A7FF]">XP</span>
+                  </div>
+                  <span className="text-[11px] text-[#A7B0C0] font-mono block truncate">
+                    {totalWeeklyDone}/{totalWeeklyGoals} metas da semana
+                  </span>
+                </div>
+
+                {/* 4. Materiais & Apoio */}
+                <Link
+                  href="/app/materials"
+                  className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors space-y-1 block group"
+                  title="Ver materiais da turma"
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] group-hover:text-white block">APOIO & GUIAS</span>
+                  <div className="flex items-center gap-1 text-sm sm:text-base font-black font-mono text-[#F4F6FA] pt-0.5">
+                    <span>PDFs & Aulas</span>
+                  </div>
+                  <span className="text-[11px] text-[#75A7FF] font-mono block flex items-center gap-0.5">
+                    <span>Acessar</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </span>
+                </Link>
+              </div>
+
+              {/* Barra de Progresso Semanal */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-[#A7B0C0]">Progresso da Semana {challengeTimeline.currentWeek}</span>
+                  <span className="font-bold text-[#F4F6FA]">{weeklyPercentage}% concluído</span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-[#1B2330] overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-[#3478F6] shadow-[0_0_12px_rgba(52,120,246,0.6)] transition-all duration-700"
+                    style={{ width: `${Math.max(4, weeklyPercentage)}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Botões Rápidos de Ação da Turma */}
+              <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#252D3B]">
+                <Link href="/app/leaderboard" className="block">
+                  <button className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                    <Trophy className="w-3.5 h-3.5 text-[#75A7FF]" />
+                    <span>Placar Geral</span>
+                  </button>
+                </Link>
+                <Link href="/app/feed" className="block">
+                  <button className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                    <Sparkles className="w-3.5 h-3.5 text-[#75A7FF]" />
+                    <span>Mural & Feed</span>
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. CARD DE AÇÃO FOCAL: O Próximo Passo de Hoje */}
           {focalTask ? (
             <div className="relative z-10">
               <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] shadow-[0_15px_40px_rgba(0,0,0,0.8)] space-y-3.5">
@@ -902,69 +1062,6 @@ export default function StudentHomePage() {
               </div>
             </div>
           )}
-
-          {/* 3. RADAR DE PROGRESSO SEMANAL & PLACAR */}
-          <div className="relative z-10">
-            <div className="p-4 sm:p-5 rounded-3xl border border-[#252D3B] bg-[#121722] space-y-3.5">
-              <div className="flex items-center justify-between text-xs sm:text-sm">
-                <div>
-                  <span className="text-xs font-mono tracking-widest text-[#A7B0C0] uppercase block">JORNADA SEMANAL</span>
-                  <span className="font-bold text-[#F4F6FA] mt-0.5 block">
-                    Semana {challengeTimeline.currentWeek} • Dia {challengeTimeline.currentDay}/{challengeTimeline.totalDays}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-lg sm:text-xl font-black font-mono text-[#F4F6FA]">
-                    {weeklyPercentage}%
-                  </span>
-                  <span className="text-xs text-[#A7B0C0] block font-mono">
-                    {totalWeeklyDone}/{totalWeeklyGoals} METAS
-                  </span>
-                </div>
-              </div>
-
-              {/* Barra de Progresso Minimalista */}
-              <div className="w-full h-1.5 rounded-full bg-[#1B2330] overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-[#3478F6] shadow-[0_0_10px_rgba(52,120,246,0.5)] transition-all duration-700"
-                  style={{ width: `${Math.max(4, weeklyPercentage)}%` }}
-                />
-              </div>
-
-              {/* 3 Métricas Rápidas */}
-              <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-[#252D3B]">
-                <div className="p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-center">
-                  <span className="text-[11px] text-[#A7B0C0] block uppercase font-mono tracking-wider">PONTOS</span>
-                  <span className="text-sm sm:text-base font-black text-[#F4F6FA] font-mono block mt-0.5">
-                    {standing?.total_points || 0}
-                  </span>
-                </div>
-
-                <Link
-                  href="/app/leaderboard"
-                  className="p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-center hover:border-[#3478F6]/40 transition-colors block group"
-                  title="Ver Classificação Geral"
-                >
-                  <span className="text-[11px] text-[#A7B0C0] block uppercase font-mono tracking-wider group-hover:text-white">POSIÇÃO</span>
-                  <span className="text-sm sm:text-base font-black text-[#75A7FF] font-mono block mt-0.5">
-                    {rank}
-                  </span>
-                </Link>
-
-                <Link
-                  href="/app/materials"
-                  className="p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-center hover:border-[#3478F6]/40 transition-colors block group"
-                  title="Ver Arquivos do Treinador"
-                >
-                  <span className="text-[11px] text-[#A7B0C0] block uppercase font-mono tracking-wider group-hover:text-white">GUIA/PDF</span>
-                  <span className="inline-flex items-center justify-center gap-1 text-xs sm:text-sm font-black text-[#F4F6FA] font-mono mt-1">
-                    <span>ACESSAR</span>
-                    <ArrowRight className="w-3 h-3 shrink-0" />
-                  </span>
-                </Link>
-              </div>
-            </div>
-          </div>
 
           {/* 4. BLOCOS DE MISSÕES DE HOJE */}
           <div className="space-y-4 relative z-10">

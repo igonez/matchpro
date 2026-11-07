@@ -26,6 +26,7 @@ import {
   Check,
   Layers,
 } from 'lucide-react';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 export default function StudentMissionsWeeklyPage() {
   return (
@@ -844,6 +845,7 @@ function StudentMissionsContent() {
             );
           })()}
         </div>
+        <StudentMenuTrigger />
       </div>
 
       {/* BLOCO 1: Seletor de Semanas (1 a 4) + Aviso Cronológico da Semana */}

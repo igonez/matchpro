@@ -24,6 +24,7 @@ import {
   Share2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 interface LeaderboardItem {
   id: string;
@@ -376,13 +377,16 @@ export default function LeaderboardPage() {
             </p>
           </div>
         </div>
-        <Link
-          href="/app"
-          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330] transition-colors flex items-center gap-1.5 shrink-0"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          VOLTAR
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/app"
+            className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330] transition-colors flex items-center gap-1.5 shrink-0"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            VOLTAR
+          </Link>
+          <StudentMenuTrigger />
+        </div>
       </div>
 
       {/* BLOCO 1: Painel Pessoal de Performance & Alvo de Ultrapassagem */}

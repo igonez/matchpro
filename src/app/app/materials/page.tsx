@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 function StudentMaterialsContent() {
   const supabase = createClient();
@@ -212,13 +213,16 @@ function StudentMaterialsContent() {
             </h1>
           </div>
         </div>
-        <Link
-          href="/app"
-          className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-colors flex items-center gap-1.5 shrink-0"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          VOLTAR
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/app"
+            className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-colors flex items-center gap-1.5 shrink-0"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            VOLTAR
+          </Link>
+          <StudentMenuTrigger />
+        </div>
       </div>
 
       {/* Seletor Principal: Arquivos vs Mural de Avisos */}

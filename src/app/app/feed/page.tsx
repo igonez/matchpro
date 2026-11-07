@@ -18,6 +18,7 @@ import {
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { createStudentNotification } from '@/lib/notifications';
+import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 
 type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
 
@@ -635,6 +636,7 @@ export default function StudentSocialFeedPage() {
             <p className="text-xs text-[#A7B0C0]">Interaja com seus colegas de desafio em tempo real</p>
           </div>
         </div>
+        <StudentMenuTrigger />
       </div>
 
       {/* Abas Superiores: Feed de Fotos vs Mural da Turma */}

@@ -195,7 +195,7 @@ export default function PrivacyPage() {
                 <p className="text-xs text-zinc-400">Exerça seus direitos em menos de 1 minuto e receba um número de protocolo com resposta em até 15 dias úteis.</p>
               </div>
               <Link href="/lgpd" className="shrink-0 w-full sm:w-auto">
-                <button className="px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-zinc-200 transition-colors w-full sm:w-auto cursor-pointer">
+                <button className="px-5 py-2.5 rounded-xl bg-[#3478F6] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#2563EB] transition-colors w-full sm:w-auto cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.3)]">
                   Acessar Formulário LGPD
                 </button>
               </Link>
@@ -205,7 +205,7 @@ export default function PrivacyPage() {
           {/* Seção 5 */}
           <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
-              <Lock className="h-4 w-4 text-amber-400" /> 5. Cookies e Tecnologias de Sessão
+              <Lock className="h-4 w-4 text-[#75A7FF]" /> 5. Cookies e Tecnologias de Sessão
             </h2>
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
               O ArenaFitPro respeita integralmente a sua privacidade e não comercializa dados pessoais com terceiros sob nenhuma hipótese. Nossos cookies dividem-se em:

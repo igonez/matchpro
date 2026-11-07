@@ -217,8 +217,8 @@ export default function VipCapturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-amber-400">
-                  <Trophy className="w-4 h-4 text-amber-400" />
+                <div className="w-8 h-8 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center shrink-0 mt-0.5 text-[#75A7FF]">
+                  <Trophy className="w-4 h-4 text-[#75A7FF]" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-bold text-white tracking-tight">Pódio, Squads e Ranking Oficial</h4>
@@ -231,8 +231,8 @@ export default function VipCapturePage() {
             </div>
 
             {/* Bônus de Lançamento VIP */}
-            <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/10 text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
-              <span className="h-2 w-2 rounded-full bg-amber-400 shrink-0 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+            <div className="p-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-[#3478F6] shrink-0 shadow-[0_0_8px_#3478F6]" />
               <div>
                 <strong className="text-white font-mono uppercase text-xs block">Vantagem de Fundador:</strong>
                 Garantia de <strong>taxa de split reduzida</strong> para os primeiros 100 profissionais + Template de Desafio de 21 Dias validado.
@@ -348,15 +348,15 @@ export default function VipCapturePage() {
                       </div>
                     </div>
 
-                    {/* Primary Button — Optical White Pill (Padrão DESIGN.md) */}
+                    {/* Primary Button — Electric Blue Pill */}
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px]"
+                      className="w-full rounded-full bg-[#3478F6] hover:bg-[#2563EB] text-white font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(52,120,246,0.35)] active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
                     >
                       {loading ? (
                         <span className="flex items-center gap-2">
-                          <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                           Reservando Vaga...
                         </span>
                       ) : (
@@ -436,7 +436,7 @@ export default function VipCapturePage() {
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Repasse Pix Instantâneo</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-amber-400 block">Alta</span>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-[#75A7FF] block">Alta</span>
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Adesão com Gamificação</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">

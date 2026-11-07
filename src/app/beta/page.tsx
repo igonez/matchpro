@@ -230,8 +230,8 @@ export default function BetaTestersPage() {
             </div>
 
             {/* Aviso de Transparência Beta */}
-            <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/10 text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
-              <span className="h-2 w-2 rounded-full bg-cyan-400 shrink-0 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+            <div className="p-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-[#3478F6] shrink-0 shadow-[0_0_8px_#3478F6]" />
               <div>
                 <strong className="text-white font-mono uppercase text-xs block">Espírito de Co-criação:</strong>
                 O app já está 100% funcional. Buscamos profissionais comprometidos que valorizem fazer parte da construção de um produto de alto nível.
@@ -369,15 +369,15 @@ export default function BetaTestersPage() {
                       </div>
                     </div>
 
-                    {/* Botão Primário Monocromático Pill */}
+                    {/* Botão Primário Electric Blue Pill */}
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full rounded-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(255,255,255,0.18)] active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px]"
+                      className="w-full rounded-full bg-[#3478F6] hover:bg-[#2563EB] text-white font-black uppercase text-xs sm:text-sm tracking-wider py-4 transition-all shadow-[0_10px_25px_rgba(52,120,246,0.35)] active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px] cursor-pointer"
                     >
                       {loading ? (
                         <span className="flex items-center gap-2">
-                          <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                           Enviando Candidatura...
                         </span>
                       ) : (
@@ -474,7 +474,7 @@ export default function BetaTestersPage() {
             </div>
 
             <div className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-2">
-              <div className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider">
+              <div className="text-xs font-mono font-bold text-[#75A7FF] uppercase tracking-wider">
                 03 • Feedback & Reconhecimento
               </div>
               <h4 className="text-base font-bold text-white">Benefícios Eternos</h4>

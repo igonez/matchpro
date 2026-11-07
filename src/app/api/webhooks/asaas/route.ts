@@ -82,20 +82,33 @@ export async function POST(request: Request) {
         .update(updateData)
         .eq('asaas_payment_id', payment.id)
         .select('challenge_id, student_id, professional_id')
-        .single();
+        .maybeSingle();
 
       if (paymentUpdateError) {
         console.error('[Asaas Webhook] Erro ao atualizar status de pagamento:', paymentUpdateError);
       }
 
+      // Fallback de auto-recuperação: extrair challenge_id e student_id de externalReference caso o registro em payments tenha atrasado/falhado
+      let resolvedChallengeId = updatedPayment?.challenge_id || null;
+      let resolvedStudentId = updatedPayment?.student_id || null;
+
+      if ((!resolvedChallengeId || !resolvedStudentId) && typeof payment?.externalReference === 'string') {
+        const refMatch = payment.externalReference.match(/^chal_([0-9a-fA-F-]+)_stud_([0-9a-fA-F-]+)$/);
+        if (refMatch) {
+          resolvedChallengeId = refMatch[1];
+          resolvedStudentId = refMatch[2];
+          console.log(`[Asaas Webhook] Auto-recuperação via externalReference acionada: desafio ${resolvedChallengeId}, aluno ${resolvedStudentId}`);
+        }
+      }
+
       // 3.2. Se for inscrição de aluno em desafio, garantir liberação imediata
-      if (updatedPayment?.challenge_id && updatedPayment?.student_id) {
+      if (resolvedChallengeId && resolvedStudentId) {
         const { error: partError } = await supabaseAdmin
           .from('challenge_participants')
           .upsert(
             {
-              challenge_id: updatedPayment.challenge_id,
-              student_id: updatedPayment.student_id,
+              challenge_id: resolvedChallengeId,
+              student_id: resolvedStudentId,
               payment_status: 'paid',
             },
             { onConflict: 'challenge_id,student_id' }
@@ -104,14 +117,14 @@ export async function POST(request: Request) {
         if (partError) {
           console.error('[Asaas Webhook] Erro ao liberar participante do desafio:', partError);
         } else {
-          console.log(`[Asaas Webhook] Acesso liberado: aluno ${updatedPayment.student_id} no desafio ${updatedPayment.challenge_id}`);
+          console.log(`[Asaas Webhook] Acesso liberado: aluno ${resolvedStudentId} no desafio ${resolvedChallengeId}`);
           // Garantir presença imediata no ranking da turma
           await supabaseAdmin
             .from('leaderboard_standings')
             .upsert(
               {
-                challenge_id: updatedPayment.challenge_id,
-                student_id: updatedPayment.student_id,
+                challenge_id: resolvedChallengeId,
+                student_id: resolvedStudentId,
                 total_points: 0,
               },
               { onConflict: 'challenge_id,student_id', ignoreDuplicates: true }

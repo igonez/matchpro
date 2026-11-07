@@ -366,7 +366,7 @@ export default function LgpdRequestPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-2xl bg-white text-black hover:bg-zinc-200 font-bold text-sm uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-4 rounded-2xl bg-[#3478F6] text-white hover:bg-[#2563EB] font-bold text-sm uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(52,120,246,0.35)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <>

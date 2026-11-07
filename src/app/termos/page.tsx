@@ -86,7 +86,7 @@ export default function TermsPage() {
             <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-white/10 text-white px-3 py-1 rounded-full border border-white/20">
               DOCUMENTO LEGAL v2.4
             </span>
-            <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-amber-400/10 text-amber-300 px-3 py-1 rounded-full border border-amber-400/20">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
               CONTRATO DE ADESÃO SAAS
             </span>
           </div>

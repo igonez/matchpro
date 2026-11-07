@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
 
   const url = request.nextUrl.clone();
 
-  // Rotas públicas de login e auth não redirecionam
+  // Rotas públicas de login, jurídicas e páginas de captura não redirecionam
   if (
     url.pathname.startsWith('/login') || 
     url.pathname.startsWith('/mestre') || 
@@ -45,7 +45,10 @@ export async function updateSession(request: NextRequest) {
     url.pathname.startsWith('/vip') ||
     url.pathname.startsWith('/beta') ||
     url.pathname.startsWith('/privacidade') ||
-    url.pathname.startsWith('/termos')
+    url.pathname.startsWith('/termos') ||
+    url.pathname.startsWith('/lgpd') ||
+    url.pathname.startsWith('/ajuda') ||
+    url.pathname.startsWith('/r/')
   ) {
     return supabaseResponse;
   }
@@ -55,6 +58,8 @@ export async function updateSession(request: NextRequest) {
     url.pathname.startsWith('/api/finance') ||
     url.pathname.startsWith('/api/ai') ||
     url.pathname.startsWith('/api/submissions') ||
+    url.pathname.startsWith('/api/audit') ||
+    url.pathname.startsWith('/api/checkout') ||
     url.pathname.startsWith('/api/master') ||
     url.pathname.startsWith('/api/admin')
   )) {

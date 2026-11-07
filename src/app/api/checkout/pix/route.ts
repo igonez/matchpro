@@ -179,7 +179,7 @@ export async function POST(request: Request) {
       : feePlatform;
 
     // 7. Registrar a transação pendente no Supabase de forma segura com Service Role
-    await supabaseAdmin.from('payments').insert({
+    const { error: paymentInsertError } = await supabaseAdmin.from('payments').insert({
       challenge_id: challengeId,
       student_id: user.id,
       professional_id: challenge.professional_id,
@@ -192,6 +192,10 @@ export async function POST(request: Request) {
       pix_code: pixData.payload,
       pix_qr_url: pixData.encodedImage,
     });
+
+    if (paymentInsertError) {
+      console.error('[Checkout Pix] Erro ao persistir cobrança na tabela payments:', paymentInsertError);
+    }
 
     return NextResponse.json({
       success: true,

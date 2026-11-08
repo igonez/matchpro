@@ -156,6 +156,19 @@ function MissionsManagerContent() {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  const toTitleCase = (str: string): string => {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map((word, idx) => {
+        const lowerConjunctions = ['de', 'da', 'do', 'das', 'dos', 'em', 'e', 'a', '&', '•'];
+        if (idx > 0 && lowerConjunctions.includes(word)) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+  };
+
   // 1. Carregar lista de desafios exclusivos do profissional
   useEffect(() => {
     async function fetchChallenges() {
@@ -1102,16 +1115,16 @@ function MissionsManagerContent() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
+        <div className="flex items-center gap-2.5 flex-wrap w-full sm:w-auto min-w-0">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 flex-1 sm:flex-initial rounded-xl border border-[#252D3B] bg-[#1B2330] px-3.5 text-xs font-bold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6] font-mono"
+              className="h-11 w-full sm:w-auto sm:max-w-xs flex-1 rounded-2xl border border-[#252D3B] bg-[#121722] px-3.5 text-xs sm:text-sm font-semibold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6] truncate min-w-0 cursor-pointer shadow-sm transition-all"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.title} {c.is_active ? '(Ativo)' : ''}
+                  {toTitleCase(c.title)} {c.is_active ? '• Ativo' : ''}
                 </option>
               ))}
             </select>
@@ -1122,7 +1135,7 @@ function MissionsManagerContent() {
             onClick={handleOpenCreateListModal}
             disabled={!selectedChallengeId}
             variant="outline"
-            className="w-full sm:w-auto rounded-xl h-10 px-3.5 text-xs font-mono font-bold"
+            className="w-full sm:w-auto rounded-2xl h-11 px-4 text-xs font-semibold border-[#252D3B] bg-[#121722] text-[#F4F6FA] hover:border-[#3478F6]/40 shrink-0 shadow-sm"
           >
             <ListPlus className="h-4 w-4 mr-1.5 text-[#75A7FF]" />
             Novo Bloco

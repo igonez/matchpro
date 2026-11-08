@@ -33,6 +33,19 @@ export default function FiscalizacaoPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  const toTitleCase = (str: string): string => {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map((word, idx) => {
+        const lowerConjunctions = ['de', 'da', 'do', 'das', 'dos', 'em', 'e', 'a', '&', '•'];
+        if (idx > 0 && lowerConjunctions.includes(word)) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -412,17 +425,17 @@ export default function FiscalizacaoPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap w-full sm:w-auto">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs px-3 font-mono focus:outline-none focus:border-white/30"
+              className="h-11 w-full sm:w-auto sm:max-w-xs rounded-2xl bg-[#121722] border border-[#252D3B] text-[#F4F6FA] text-xs sm:text-sm font-semibold px-3.5 focus:outline-none focus:border-[#3478F6] truncate cursor-pointer shadow-sm transition-all"
             >
-              <option value="all">TODAS AS TURMAS ({challenges.length})</option>
+              <option value="all">Todas as Turmas ({challenges.length})</option>
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.title.toUpperCase()}
+                  {toTitleCase(c.title)}
                 </option>
               ))}
             </select>

@@ -64,6 +64,22 @@ export function StudentBottomNav() {
   const [studentInfo, setStudentInfo] = useState<any>(null);
   const [isProfessional, setIsProfessional] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY + 8 && currentScrollY > 40) {
+        setIsScrolledDown(true);
+      } else if (currentScrollY < lastScrollY - 8 || currentScrollY <= 20) {
+        setIsScrolledDown(false);
+      }
+      lastScrollY = currentScrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -374,9 +390,11 @@ export function StudentBottomNav() {
 
   return (
     <>
-      {/* 1. Menu Inferior Horizontal 100% Simétrico (Hoje, Missões | Check-in | Ranking, Feed) */}
-      <nav className="fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-40 transition-all">
-        <div className="bg-[#121722]/90 backdrop-blur-xl rounded-full px-3 sm:px-4 py-1.5 flex items-center justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] border border-[#252D3B]">
+      {/* 1. Menu Inferior Horizontal 100% Simétrico - Frosted Glass Instagram Style */}
+      <nav className={`fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-[60] transition-all duration-300 ease-out ${
+        isScrolledDown ? 'scale-[0.93] translate-y-1 opacity-90' : 'scale-100 translate-y-0 opacity-100'
+      }`}>
+        <div className="bg-[#080A0F]/75 backdrop-blur-2xl rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_20px_60px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] border border-white/[0.12]">
           
           {/* Lado Esquerdo (Hoje, Missões) */}
           <div className="flex items-center justify-around flex-1 gap-1">
@@ -384,9 +402,9 @@ export function StudentBottomNav() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all rounded-full whitespace-nowrap ${
+                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all duration-200 rounded-full whitespace-nowrap active:scale-90 ${
                   tab.active
-                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
                     : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06]'
                 }`}
               >
@@ -399,14 +417,14 @@ export function StudentBottomNav() {
           <div className="px-2 shrink-0 -my-2.5">
             <button
               onClick={() => setShowQuickSheet(true)}
-              className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer"
+              className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer active:scale-90 transition-transform duration-200"
               title={activeSession ? 'Sessão Ativa em Andamento' : 'Registrar Check-in'}
             >
               <div
-                className={`h-12 w-12 rounded-full p-px transition-all ${
+                className={`h-12 w-12 rounded-full p-px transition-all duration-300 ${
                   activeSession
                     ? 'bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#121722] shadow-[0_0_25px_rgba(52,120,246,0.6)] scale-105'
-                    : 'bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105 active:scale-95'
+                    : 'bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105'
                 }`}
               >
                 <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center text-white relative">
@@ -434,9 +452,9 @@ export function StudentBottomNav() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all rounded-full whitespace-nowrap ${
+                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all duration-200 rounded-full whitespace-nowrap active:scale-90 ${
                   tab.active
-                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
                     : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06]'
                 }`}
               >

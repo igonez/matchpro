@@ -192,71 +192,80 @@ export function HeroInteractiveMockup() {
 
                 {activeTab === 'stories_share' && (
                   <div className="space-y-3.5 animate-in fade-in duration-300">
-                    {/* Preview do Card 9:16 com Marca do Personal no Topo */}
-                    <div className="relative rounded-2xl overflow-hidden border border-[#252D3B] bg-gradient-to-b from-[#1B2330] via-[#121722] to-[#080A0F] p-4 text-center space-y-2.5 shadow-[0_0_25px_rgba(52,120,246,0.1)]">
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/30 text-xs font-mono text-[#75A7FF] font-bold">
-                        <span>SUA MARCA NO TOPO</span>
-                      </div>
+                    {/* Preview do Card 9:16 com Foto Real da Aluna e Marca do Personal no Topo */}
+                    <div className="relative rounded-2xl overflow-hidden border border-[#252D3B] p-4 text-center space-y-2.5 shadow-[0_0_25px_rgba(52,120,246,0.1)]">
+                      <img
+                        src="/images/mockups/student-workout-selfie.jpg"
+                        alt="Foto pós-treino da aluna"
+                        className="absolute inset-0 w-full h-full object-cover z-0 brightness-[0.55] contrast-[1.08]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-[#080A0F]/70 to-[#080A0F]/50 z-0" />
 
-                      <div className="flex flex-col items-center">
-                        <div className="w-9 h-9 rounded-xl border border-[#3478F6] bg-[#121722] flex items-center justify-center text-xs font-black text-[#F4F6FA] mb-1">
-                          TS
+                      <div className="relative z-10 space-y-2.5">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-xs font-mono text-[#75A7FF] font-bold">
+                          <span>SUA MARCA NO TOPO</span>
                         </div>
-                        <div className="text-xs font-extrabold text-[#F4F6FA] tracking-[2px] uppercase">
-                          TEAM SILVA
-                        </div>
-                        <div className="text-xs text-[#A7B0C0]">Desafio 30 Dias Shape</div>
-                      </div>
 
-                      <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center py-2 border-b border-[#252D3B]">
-                        <div>
-                          <div className="text-base font-black text-amber-400">3º</div>
-                          <div className="text-xs text-[#A7B0C0]">posição</div>
+                        <div className="flex flex-col items-center">
+                          <div className="w-9 h-9 rounded-xl border border-[#3478F6] bg-[#121722] flex items-center justify-center text-xs font-black text-[#F4F6FA] mb-1 shadow-md">
+                            TS
+                          </div>
+                          <div className="text-xs font-extrabold text-[#F4F6FA] tracking-[2px] uppercase">
+                            TEAM SILVA
+                          </div>
+                          <div className="text-xs text-[#A7B0C0]">Desafio 30 Dias Shape</div>
                         </div>
-                        <div className="w-px h-6 bg-[#252D3B]" />
-                        <div>
-                          <div className="text-base font-black text-amber-300">1110</div>
-                          <div className="text-xs text-[#A7B0C0]">pontos</div>
-                        </div>
-                        <div className="w-px h-6 bg-[#252D3B]" />
-                        <div>
-                          <div className="text-base font-black text-[#F4F6FA]">de 42</div>
-                          <div className="text-xs text-[#A7B0C0]">atletas</div>
-                        </div>
-                      </div>
 
-                      <div className="space-y-1.5 text-left text-xs">
-                        <div className="flex items-center justify-between text-[#F4F6FA] px-1.5 py-0.5">
-                          <span className="flex items-center gap-1.5 font-semibold">
-                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-400/20 border border-amber-400/50 text-[10px] font-mono font-black text-amber-300">
-                              1º
+                        <div className="grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center py-2 border-b border-white/10">
+                          <div>
+                            <div className="text-base font-black text-amber-400">3º</div>
+                            <div className="text-xs text-[#A7B0C0]">posição</div>
+                          </div>
+                          <div className="w-px h-6 bg-[#252D3B]" />
+                          <div>
+                            <div className="text-base font-black text-amber-300">1110</div>
+                            <div className="text-xs text-[#A7B0C0]">pontos</div>
+                          </div>
+                          <div className="w-px h-6 bg-[#252D3B]" />
+                          <div>
+                            <div className="text-base font-black text-[#F4F6FA]">de 42</div>
+                            <div className="text-xs text-[#A7B0C0]">atletas</div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1.5 text-left text-xs">
+                          <div className="flex items-center justify-between text-[#F4F6FA] px-1.5 py-0.5">
+                            <span className="flex items-center gap-1.5 font-semibold">
+                              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-400/20 border border-amber-400/50 text-[10px] font-mono font-black text-amber-300">
+                                1º
+                              </span>
+                              <span>Ana Clara</span>
                             </span>
-                            <span>Ana Clara</span>
-                          </span>
-                          <span className="text-amber-300 font-mono font-bold">1280 XP</span>
-                        </div>
-                        <div className="flex items-center justify-between text-[#F4F6FA] px-1.5 py-0.5">
-                          <span className="flex items-center gap-1.5 font-medium">
-                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-300/20 border border-slate-300/50 text-[10px] font-mono font-black text-slate-200">
-                              2º
+                            <span className="text-amber-300 font-mono font-bold">1280 XP</span>
+                          </div>
+                          <div className="flex items-center justify-between text-[#F4F6FA] px-1.5 py-0.5">
+                            <span className="flex items-center gap-1.5 font-medium">
+                              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-300/20 border border-slate-300/50 text-[10px] font-mono font-black text-slate-200">
+                                2º
+                              </span>
+                              <span>Bruno M.</span>
                             </span>
-                            <span>Bruno M.</span>
-                          </span>
-                          <span className="text-slate-200 font-mono font-bold">1195 XP</span>
-                        </div>
-                        <div className="flex items-center justify-between text-[#F4F6FA] font-extrabold bg-[#3478F6]/15 border border-[#3478F6]/35 rounded-lg px-2 py-1">
-                          <span className="flex items-center gap-1.5">
-                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-700/35 border border-amber-500/60 text-[10px] font-mono font-black text-amber-400">
-                              3º
+                            <span className="text-slate-200 font-mono font-bold">1195 XP</span>
+                          </div>
+                          <div className="flex items-center justify-between text-[#F4F6FA] font-extrabold bg-[#3478F6]/20 border border-[#3478F6]/40 rounded-lg px-2 py-1 backdrop-blur-xs">
+                            <span className="flex items-center gap-1.5">
+                              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-700/35 border border-amber-500/60 text-[10px] font-mono font-black text-amber-400">
+                                3º
+                              </span>
+                              <span>Carla S. (Você)</span>
                             </span>
-                            <span>Carla S. (Você)</span>
-                          </span>
-                          <span className="text-amber-400 font-mono">1110 XP</span>
+                            <span className="text-amber-400 font-mono">1110 XP</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="pt-1 text-xs font-mono tracking-widest text-[#A7B0C0] uppercase">
-                        ✦ ARENAFITPRO
+                        <div className="pt-1 text-xs font-mono tracking-widest text-[#A7B0C0] uppercase">
+                          ✦ ARENAFITPRO
+                        </div>
                       </div>
                     </div>
 

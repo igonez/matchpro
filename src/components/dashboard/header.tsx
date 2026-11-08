@@ -36,6 +36,22 @@ export function DashboardHeader() {
   const { startTour } = useWalkthrough();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coachProfile, setCoachProfile] = useState<{ fullName: string; avatarUrl: string | null } | null>(null);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY + 8 && currentScrollY > 40) {
+        setIsScrolledDown(true);
+      } else if (currentScrollY < lastScrollY - 8 || currentScrollY <= 20) {
+        setIsScrolledDown(false);
+      }
+      lastScrollY = currentScrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     async function loadCoach() {
@@ -365,14 +381,16 @@ export function DashboardHeader() {
         </div>
       )}
 
-      {/* 3. Dock Inferior Mobile para o Coach (Visível apenas em telas menores que md) */}
-      <nav className="md:hidden fixed safe-bottom-nav inset-x-0 mx-auto max-w-[430px] w-[94%] z-30">
-        <div className="bg-[#121722]/95 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.95)] border border-[#252D3B]">
+      {/* 3. Dock Inferior Mobile para o Coach - Frosted Glass Instagram Style */}
+      <nav className={`md:hidden fixed safe-bottom-nav inset-x-0 mx-auto max-w-[430px] w-[94%] z-[60] transition-all duration-300 ease-out ${
+        isScrolledDown ? 'scale-[0.93] translate-y-1 opacity-90' : 'scale-100 translate-y-0 opacity-100'
+      }`}>
+        <div className="bg-[#080A0F]/75 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_60px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] border border-white/[0.12]">
           <Link
             href="/dashboard"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
               pathname === '/dashboard'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
                 : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
@@ -382,9 +400,9 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/audit"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
               pathname === '/dashboard/audit'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
                 : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
@@ -394,9 +412,9 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/students"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
               pathname === '/dashboard/students'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
                 : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
@@ -406,9 +424,9 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/finance"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
               pathname === '/dashboard/finance'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_15px_rgba(52,120,246,0.35)]'
+                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
                 : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
             }`}
           >
@@ -418,7 +436,7 @@ export function DashboardHeader() {
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] transition-all"
+            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] transition-all duration-200 active:scale-90"
           >
             <Menu className="h-4 w-4 mb-0.5" />
             <span>Menu</span>

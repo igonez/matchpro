@@ -274,13 +274,18 @@ export function ViralStoriesShowcase() {
                       }
                 }
               >
-                {/* Simulação visual de ambiente de treino ao fundo quando modo Foto */}
+                {/* Foto real pós-treino da aluna de academia ao fundo quando modo Foto */}
                 {bgMode === 'photo' && (
                   <>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1B2330]/30 via-[#121722]/60 to-[#080A0F] z-0" />
-                    <div className="absolute top-12 inset-x-0 flex flex-col items-center z-10 opacity-80">
-                      <span className="px-2.5 py-0.5 rounded-full bg-black/60 border border-[#252D3B] text-[11px] font-mono text-[#A7B0C0]">
-                        Foto Pós-Treino do Aluno
+                    <img
+                      src="/images/mockups/student-workout-selfie.jpg"
+                      alt="Foto pós-treino da aluna na academia"
+                      className="absolute inset-0 w-full h-full object-cover z-0 brightness-[0.70] contrast-[1.08]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-[#080A0F]/65 to-[#080A0F]/45 z-0 pointer-events-none" />
+                    <div className="absolute top-12 inset-x-0 flex flex-col items-center z-10 opacity-90">
+                      <span className="px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-[11px] font-mono text-[#F4F6FA] shadow-md">
+                        Foto Pós-Treino Real da Aluna
                       </span>
                     </div>
                   </>
@@ -295,7 +300,13 @@ export function ViralStoriesShowcase() {
                 )}
 
                 {/* Conteúdo Fiel ao RankingShareCard */}
-                <div className="relative z-20 flex flex-col items-center text-center w-full">
+                <div
+                  className={`relative z-20 flex flex-col items-center text-center w-full transition-all duration-200 ${
+                    bgMode === 'photo'
+                      ? 'p-3.5 sm:p-4 rounded-2xl bg-[#080A0F]/85 backdrop-blur-md border border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.8)]'
+                      : ''
+                  }`}
+                >
                   {/* Logo do Personal no Topo */}
                   <div
                     className="w-11 h-11 rounded-xl border-2 border-[#3478F6] bg-[#121722] flex items-center justify-center text-sm font-black text-white shadow-lg mb-2"

@@ -13,10 +13,52 @@ import { Copy, ArrowRight, Clock } from 'lucide-react';
 export default function DashboardOverviewPage() {
   const supabase = createClient();
 
-  const [loading, setLoading] = useState(true);
   const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return !sessionStorage.getItem('arena_booted');
+  });
+
+  const [stats, setStats] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('arena_coach_stats');
+        if (cached) return JSON.parse(cached);
+      } catch (_) {}
+    }
+    return {
+      activeStudents: 0,
+      totalRevenue: 0,
+      pendingSubmissions: 0,
+      activeChallenges: 0,
+    };
+  });
+
+  const [challenges, setChallenges] = useState<any[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('arena_coach_challenges');
+        if (cached) return JSON.parse(cached);
+      } catch (_) {}
+    }
+    return [];
+  });
+
+  const [atRiskStudents, setAtRiskStudents] = useState<any[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('arena_coach_at_risk');
+        if (cached) return JSON.parse(cached);
+      } catch (_) {}
+    }
+    return [];
+  });
+
+  // Se já temos cache ou o app já deu boot uma vez, não bloqueia a interface
+  const [loading, setLoading] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    const hasBooted = sessionStorage.getItem('arena_booted');
+    const hasCachedStats = sessionStorage.getItem('arena_coach_stats');
+    return !hasBooted && !hasCachedStats;
   });
 
   useEffect(() => {
@@ -24,15 +66,6 @@ export default function DashboardOverviewPage() {
       sessionStorage.setItem('arena_booted', 'true');
     }
   }, []);
-
-  const [stats, setStats] = useState({
-    activeStudents: 0,
-    totalRevenue: 0,
-    pendingSubmissions: 0,
-    activeChallenges: 0,
-  });
-  const [challenges, setChallenges] = useState<any[]>([]);
-  const [atRiskStudents, setAtRiskStudents] = useState<any[]>([]);
 
   // Modal Customizado de Publicar Aviso (Substitui o prompt() nativo)
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
@@ -177,15 +210,24 @@ export default function DashboardOverviewPage() {
             return acc + (priceMap.get(curr.challenge_id) || 0);
           }, 0);
 
-        setStats({
+        const newStats = {
           activeStudents: confirmedParticipants.length,
           totalRevenue: calculatedRevenue,
           pendingSubmissions: pendingCount || 0,
           activeChallenges: safeChallenges.filter((c: any) => c.is_active).length,
-        });
+        };
 
+        setStats(newStats);
         setAtRiskStudents(atRiskRes.data || []);
 
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('arena_booted', 'true');
+          sessionStorage.setItem('arena_coach_stats', JSON.stringify(newStats));
+          sessionStorage.setItem('arena_coach_challenges', JSON.stringify(safeChallenges));
+          if (atRiskRes.data) {
+            sessionStorage.setItem('arena_coach_at_risk', JSON.stringify(atRiskRes.data));
+          }
+        }
       } catch (err) {
         console.error('Erro ao buscar dados do dashboard:', err);
       } finally {
@@ -231,7 +273,8 @@ export default function DashboardOverviewPage() {
     }
   };
 
-  if (loading) {
+  // Exibir tela de boot completo com logo ArenaFitPro apenas no primeiro carregamento do app
+  if (loading && isInitialBoot) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
 

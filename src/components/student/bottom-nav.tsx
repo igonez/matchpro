@@ -394,7 +394,10 @@ export function StudentBottomNav() {
       <nav className={`fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-[60] transition-all duration-300 ease-out ${
         isScrolledDown ? 'scale-[0.93] translate-y-1 opacity-90' : 'scale-100 translate-y-0 opacity-100'
       }`}>
-        <div className="bg-[#080A0F]/75 backdrop-blur-2xl rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_20px_60px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] border border-white/[0.12]">
+        {/* Difusor Atmosférico Sub-Glass: Mantém o efeito de vidro ofuscado e visível a todo momento */}
+        <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-[#3478F6]/20 via-white/[0.08] to-[#3478F6]/20 blur-xl opacity-80 pointer-events-none" />
+
+        <div className="relative bg-gradient-to-b from-[#161D2B]/85 via-[#101623]/80 to-[#0A0E17]/85 backdrop-blur-3xl rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.16]">
           
           {/* Lado Esquerdo (Hoje, Missões) */}
           <div className="flex items-center justify-around flex-1 gap-1">
@@ -402,10 +405,10 @@ export function StudentBottomNav() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all duration-200 rounded-full whitespace-nowrap active:scale-90 ${
+                className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
                   tab.active
-                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
-                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06]'
+                    ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
+                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06] scale-[0.97]'
                 }`}
               >
                 {tab.name}
@@ -413,11 +416,11 @@ export function StudentBottomNav() {
             ))}
           </div>
 
-          {/* Botão Central de Check-in em Cromo Puro */}
+          {/* Botão Central de Check-in em Cromo Puro com Spring Fluido */}
           <div className="px-2 shrink-0 -my-2.5">
             <button
               onClick={() => setShowQuickSheet(true)}
-              className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer active:scale-90 transition-transform duration-200"
+              className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer active:scale-[0.84] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
               title={activeSession ? 'Sessão Ativa em Andamento' : 'Registrar Check-in'}
             >
               <div
@@ -452,10 +455,10 @@ export function StudentBottomNav() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-3 sm:px-4 text-xs font-medium transition-all duration-200 rounded-full whitespace-nowrap active:scale-90 ${
+                className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
                   tab.active
-                    ? 'text-white font-semibold bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
-                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06]'
+                    ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
+                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06] scale-[0.97]'
                 }`}
               >
                 {tab.name}

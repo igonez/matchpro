@@ -40,16 +40,48 @@ export default function StudentHomePage() {
   const supabase = createClient();
   const { activeSession, startSession } = useWorkoutSession();
 
-  const [student, setStudent] = useState<any>(null);
-  const [challenge, setChallenge] = useState<any>(null);
+  const [student, setStudent] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const c = sessionStorage.getItem('arena_student_profile');
+        if (c) return JSON.parse(c);
+      } catch (_) {}
+    }
+    return null;
+  });
+  const [challenge, setChallenge] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const c = sessionStorage.getItem('arena_student_challenge');
+        if (c) return JSON.parse(c);
+      } catch (_) {}
+    }
+    return null;
+  });
   const [pendingChallenge, setPendingChallenge] = useState<any>(null);
-  const [standing, setStanding] = useState<any>(null);
+  const [standing, setStanding] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const c = sessionStorage.getItem('arena_student_standing');
+        if (c) return JSON.parse(c);
+      } catch (_) {}
+    }
+    return null;
+  });
   const [rank, setRank] = useState('1º');
   const [totalAthletes, setTotalAthletes] = useState<number>(1);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [inviteCodeInput, setInviteCodeInput] = useState('');
   const [currentStreak, setCurrentStreak] = useState<number>(1);
-  const [todayTasks, setTodayTasks] = useState<any[]>([]);
+  const [todayTasks, setTodayTasks] = useState<any[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const c = sessionStorage.getItem('arena_student_today_tasks');
+        if (c) return JSON.parse(c);
+      } catch (_) {}
+    }
+    return [];
+  });
   const [missionLists, setMissionLists] = useState<any[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -63,11 +95,19 @@ export default function StudentHomePage() {
     cardio: false,
   });
 
-  const [categoryCounts, setCategoryCounts] = useState({
-    treinos: { done: 0, total: 0 },
-    cardios: { done: 0, total: 0 },
-    refeicoes: { done: 0, total: 0 },
-    habitos: { done: 0, total: 0 },
+  const [categoryCounts, setCategoryCounts] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const c = sessionStorage.getItem('arena_student_counts');
+        if (c) return JSON.parse(c);
+      } catch (_) {}
+    }
+    return {
+      treinos: { done: 0, total: 0 },
+      cardios: { done: 0, total: 0 },
+      refeicoes: { done: 0, total: 0 },
+      habitos: { done: 0, total: 0 },
+    };
   });
   const [listCounts, setListCounts] = useState<Record<string, { done: number; total: number }>>({});
   const [totalWeekMissionsCount, setTotalWeekMissionsCount] = useState(0);
@@ -77,11 +117,24 @@ export default function StudentHomePage() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [unreadNotifsCount, setUnreadNotifsCount] = useState(0);
 
-  const [loading, setLoading] = useState(true);
   const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return !sessionStorage.getItem('arena_booted');
   });
+
+  // Se já temos cache ou o app já deu boot uma vez, não bloqueia a interface
+  const [loading, setLoading] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    const hasBooted = sessionStorage.getItem('arena_booted');
+    const hasCachedProfile = sessionStorage.getItem('arena_student_profile');
+    return !hasBooted && !hasCachedProfile;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
+      sessionStorage.setItem('arena_booted', 'true');
+    }
+  }, []);
 
   // Carregar contagem de notificações não lidas em tempo real
   useEffect(() => {
@@ -417,7 +470,28 @@ export default function StudentHomePage() {
           }
         });
 
-        setTodayTasks([...Object.values(nextByCat), ...availableDailyTasks]);
+        const finalTasks = [...Object.values(nextByCat), ...availableDailyTasks];
+        setTodayTasks(finalTasks);
+
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('arena_booted', 'true');
+          if (studentData) {
+            sessionStorage.setItem('arena_student_profile', JSON.stringify(studentData));
+          }
+          if (challengeData) {
+            sessionStorage.setItem('arena_student_challenge', JSON.stringify(challengeData));
+          }
+          sessionStorage.setItem('arena_student_today_tasks', JSON.stringify(finalTasks));
+          sessionStorage.setItem(
+            'arena_student_counts',
+            JSON.stringify({
+              treinos: { done: tDone, total: tTot },
+              cardios: { done: cDone, total: cTot },
+              refeicoes: { done: rDone, total: rTot },
+              habitos: { done: hDone, total: hTot },
+            })
+          );
+        }
       } catch (err) {
         console.error('Erro na tela de início:', err);
       } finally {
@@ -631,7 +705,8 @@ export default function StudentHomePage() {
     return `${mins}min`;
   };
 
-  if (loading) {
+  // Exibir splash de boot completo com logo ArenaFitPro apenas no primeiro carregamento do app
+  if (loading && isInitialBoot) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
 

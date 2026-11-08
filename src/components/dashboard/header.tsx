@@ -385,13 +385,16 @@ export function DashboardHeader() {
       <nav className={`md:hidden fixed safe-bottom-nav inset-x-0 mx-auto max-w-[430px] w-[94%] z-[60] transition-all duration-300 ease-out ${
         isScrolledDown ? 'scale-[0.93] translate-y-1 opacity-90' : 'scale-100 translate-y-0 opacity-100'
       }`}>
-        <div className="bg-[#080A0F]/75 backdrop-blur-2xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_60px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] border border-white/[0.12]">
+        {/* Difusor Atmosférico Sub-Glass: Mantém o efeito de vidro ofuscado e visível a todo momento */}
+        <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-[#3478F6]/20 via-white/[0.08] to-[#3478F6]/20 blur-xl opacity-80 pointer-events-none" />
+
+        <div className="relative bg-gradient-to-b from-[#161D2B]/85 via-[#101623]/80 to-[#0A0E17]/85 backdrop-blur-3xl rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.16]">
           <Link
             href="/dashboard"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
             }`}
           >
             <LayoutDashboard className="h-4 w-4 mb-0.5" />
@@ -400,10 +403,10 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/audit"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard/audit'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
             }`}
           >
             <CheckSquare className="h-4 w-4 mb-0.5" />
@@ -412,10 +415,10 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/students"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard/students'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
             }`}
           >
             <Users className="h-4 w-4 mb-0.5" />
@@ -424,10 +427,10 @@ export function DashboardHeader() {
 
           <Link
             href="/dashboard/finance"
-            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-200 active:scale-90 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard/finance'
-                ? 'text-white font-black bg-[#3478F6] shadow-[0_0_16px_rgba(52,120,246,0.45)]'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
+                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
             }`}
           >
             <Wallet className="h-4 w-4 mb-0.5" />
@@ -436,7 +439,7 @@ export function DashboardHeader() {
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] transition-all duration-200 active:scale-90"
+            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] scale-[0.97]"
           >
             <Menu className="h-4 w-4 mb-0.5" />
             <span>Menu</span>

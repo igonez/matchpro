@@ -48,7 +48,7 @@ export function MobileLoadingScreen({
   return (
     <div
       className={`${
-        fullScreen ? 'fixed inset-0 z-50' : 'w-full min-h-[60vh]'
+        fullScreen ? 'fixed inset-0 z-[100]' : 'w-full min-h-[60vh]'
       } bg-black flex items-center justify-center p-6 select-none transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isFadingOut
           ? 'opacity-0 scale-[1.03] pointer-events-none'

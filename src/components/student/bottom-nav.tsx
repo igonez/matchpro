@@ -65,6 +65,11 @@ export function StudentBottomNav() {
   const [isProfessional, setIsProfessional] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
@@ -390,88 +395,93 @@ export function StudentBottomNav() {
 
   return (
     <>
-      {/* 1. Menu Inferior Horizontal 100% Simétrico - Frosted Glass Instagram Style */}
-      <nav className={`fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-[60] transition-all duration-300 ease-out ${
-        isScrolledDown ? 'scale-[0.93] translate-y-1 opacity-90' : 'scale-100 translate-y-0 opacity-100'
-      }`}>
-        {/* Difusor Atmosférico Sub-Glass: Mantém o efeito de vidro ofuscado e visível a todo momento */}
-        <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-[#3478F6]/20 via-white/[0.08] to-[#3478F6]/20 blur-xl opacity-80 pointer-events-none" />
+      {/* 1. Menu Inferior Horizontal 100% Simétrico - Frosted Glass Instagram Style com Opacidade Constante */}
+      {mounted && (
+        <nav
+          className={`fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-[60] transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            showVerticalMenu || showQuickSheet
+              ? 'opacity-0 pointer-events-none translate-y-12 scale-95'
+              : isScrolledDown
+              ? 'scale-[0.91] translate-y-1 opacity-100 pointer-events-auto'
+              : 'scale-100 translate-y-0 opacity-100 pointer-events-auto'
+          }`}
+        >
+          <div className="relative bg-[#101522]/90 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_16px_36px_rgba(0,0,0,0.75),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.14]">
+            
+            {/* Lado Esquerdo (Hoje, Missões) */}
+            <div className="flex items-center justify-around flex-1 gap-1">
+              {leftTabs.map((tab) => (
+                <Link
+                  key={tab.name}
+                  href={tab.href}
+                  className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
+                    tab.active
+                      ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
+                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.04] scale-[0.97]'
+                  }`}
+                >
+                  {tab.name}
+                </Link>
+              ))}
+            </div>
 
-        <div className="relative bg-gradient-to-b from-[#161D2B]/85 via-[#101623]/80 to-[#0A0E17]/85 backdrop-blur-3xl rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.16]">
-          
-          {/* Lado Esquerdo (Hoje, Missões) */}
-          <div className="flex items-center justify-around flex-1 gap-1">
-            {leftTabs.map((tab) => (
-              <Link
-                key={tab.name}
-                href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
-                  tab.active
-                    ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
-                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06] scale-[0.97]'
-                }`}
+            {/* Botão Central de Check-in em Cromo Puro com Spring Fluido */}
+            <div className="px-2 shrink-0 -my-2.5">
+              <button
+                onClick={() => setShowQuickSheet(true)}
+                className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer active:scale-[0.84] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                title={activeSession ? 'Sessão Ativa em Andamento' : 'Registrar Check-in'}
               >
-                {tab.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* Botão Central de Check-in em Cromo Puro com Spring Fluido */}
-          <div className="px-2 shrink-0 -my-2.5">
-            <button
-              onClick={() => setShowQuickSheet(true)}
-              className="flex flex-col items-center justify-center group focus:outline-none cursor-pointer active:scale-[0.84] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-              title={activeSession ? 'Sessão Ativa em Andamento' : 'Registrar Check-in'}
-            >
-              <div
-                className={`h-12 w-12 rounded-full p-px transition-all duration-300 ${
-                  activeSession
-                    ? 'bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#121722] shadow-[0_0_25px_rgba(52,120,246,0.6)] scale-105'
-                    : 'bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105'
-                }`}
-              >
-                <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center text-white relative">
-                  {activeSession ? (
-                    <Play className="w-4 h-4 text-[#75A7FF] fill-[#75A7FF] animate-pulse" />
-                  ) : (
-                    <svg className="w-5 h-5 text-[#3478F6] group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <circle cx="12" cy="12" r="3" strokeWidth="2.2" />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2.2"
-                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                      />
-                    </svg>
-                  )}
+                <div
+                  className={`h-12 w-12 rounded-full p-px transition-all duration-300 ${
+                    activeSession
+                      ? 'bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#121722] shadow-[0_0_25px_rgba(52,120,246,0.6)] scale-105'
+                      : 'bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105'
+                  }`}
+                >
+                  <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center text-white relative">
+                    {activeSession ? (
+                      <Play className="w-4 h-4 text-[#75A7FF] fill-[#75A7FF] animate-pulse" />
+                    ) : (
+                      <svg className="w-5 h-5 text-[#3478F6] group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3" strokeWidth="2.2" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2.2"
+                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                        />
+                      </svg>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </button>
-          </div>
+              </button>
+            </div>
 
-          {/* Lado Direito (Ranking, Feed) */}
-          <div className="flex items-center justify-around flex-1 gap-1">
-            {rightTabs.map((tab) => (
-              <Link
-                key={tab.name}
-                href={tab.href}
-                className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
-                  tab.active
-                    ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_20px_rgba(52,120,246,0.5)] scale-100'
-                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.06] scale-[0.97]'
-                }`}
-              >
-                {tab.name}
-              </Link>
-            ))}
-          </div>
+            {/* Lado Direito (Ranking, Feed) */}
+            <div className="flex items-center justify-around flex-1 gap-1">
+              {rightTabs.map((tab) => (
+                <Link
+                  key={tab.name}
+                  href={tab.href}
+                  className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
+                    tab.active
+                      ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
+                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.04] scale-[0.97]'
+                  }`}
+                >
+                  {tab.name}
+                </Link>
+              ))}
+            </div>
 
-        </div>
-      </nav>
+          </div>
+        </nav>
+      )}
 
       {/* 2. Menu Vertical Completo na Esquerda (Side Drawer Deslizante Padrão Universal - Mesma estética do Treinador) */}
       {showVerticalMenu && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-[70] flex">
           {/* Backdrop Glass */}
           <div 
             onClick={() => setShowVerticalMenu(false)}
@@ -664,7 +674,7 @@ export function StudentBottomNav() {
 
       {/* 3. Bottom Sheet Rápido de Check-in ao tocar na Câmera */}
       {showQuickSheet && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end items-center">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[70] flex flex-col justify-end items-center">
           <div className="bg-[#121722] w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 safe-bottom-drawer space-y-4 max-h-[85vh] flex flex-col border-t border-[#252D3B]">
             {/* Header do Sheet */}
             <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">

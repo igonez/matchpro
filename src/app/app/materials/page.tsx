@@ -172,11 +172,11 @@ function StudentMaterialsContent() {
   const getTypeBadge = (type: string) => {
     switch (type) {
       case 'video':
-        return <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 font-mono text-[10px] uppercase">Vídeo / Aula</Badge>;
+        return <Badge className="bg-white/[0.06] text-[#D4D4D8] border-white/10 font-mono text-[10px] uppercase">Vídeo / Aula</Badge>;
       case 'cardapio':
-        return <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 font-mono text-[10px] uppercase">Cardápio & Dieta</Badge>;
+        return <Badge className="bg-white/[0.06] text-[#D4D4D8] border-white/10 font-mono text-[10px] uppercase">Cardápio & Dieta</Badge>;
       default:
-        return <Badge className="bg-[#1B2330] text-[#F4F6FA] border-[#252D3B] font-mono text-[10px] uppercase">PDF & Guia</Badge>;
+        return <Badge className="bg-[#18181B] text-[#FAFAFA] border-[#27272A] font-mono text-[10px] uppercase">PDF & Guia</Badge>;
     }
   };
 
@@ -198,17 +198,17 @@ function StudentMaterialsContent() {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-4 w-full pb-28 relative text-[#F4F6FA]">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-4 w-full pb-28 relative text-[#FAFAFA]">
       <Monochrome3DBackground />
 
       {/* Header */}
       <div className="flex items-center justify-between pt-1 relative z-10">
         <div className="flex items-center gap-2.5">
           <div>
-            <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+            <span className="text-xs text-[#A1A1AA] font-medium block truncate max-w-[280px]">
               {activeChallenge?.title ? `Turma Ativa • ${activeChallenge.title}` : 'Central do Aluno'}
             </span>
-            <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] flex items-center gap-2 tracking-tight mt-0.5">
+            <h1 className="text-xl sm:text-2xl font-black text-[#FAFAFA] flex items-center gap-2 tracking-tight mt-0.5">
               Materiais & Avisos
             </h1>
           </div>
@@ -216,7 +216,7 @@ function StudentMaterialsContent() {
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/app"
-            className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-colors flex items-center gap-1.5 shrink-0"
+            className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 transition-colors flex items-center gap-1.5 shrink-0"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             VOLTAR
@@ -226,13 +226,13 @@ function StudentMaterialsContent() {
       </div>
 
       {/* Seletor Principal: Arquivos vs Mural de Avisos */}
-      <div className="grid grid-cols-2 p-1 rounded-2xl bg-[#080A0F] border border-[#252D3B] relative z-10 font-mono">
+      <div className="grid grid-cols-2 p-1 rounded-2xl bg-[#000000] border border-[#27272A] relative z-10 font-mono">
         <button
           onClick={() => setMainTab('materiais')}
           className={`py-2.5 min-h-[44px] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             mainTab === 'materiais'
               ? 'bg-[#3478F6] text-white shadow-md'
-              : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+              : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
           }`}
         >
           <BookOpen className="h-3.5 w-3.5" />
@@ -243,7 +243,7 @@ function StudentMaterialsContent() {
           className={`py-2.5 min-h-[44px] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
             mainTab === 'avisos'
               ? 'bg-[#3478F6] text-white shadow-md'
-              : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+              : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
           }`}
         >
           <Megaphone className="h-3.5 w-3.5" />
@@ -253,7 +253,7 @@ function StudentMaterialsContent() {
 
       {/* Barra de Busca Instantânea */}
       <div className="relative z-10">
-        <Search className="h-4 w-4 text-[#A7B0C0] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search className="h-4 w-4 text-[#A1A1AA] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={searchQuery}
@@ -263,7 +263,7 @@ function StudentMaterialsContent() {
               ? 'Buscar cardápio, treino, vídeo ou PDF...'
               : 'Buscar comunicados do treinador...'
           }
-          className="w-full h-11 min-h-[44px] pl-10 pr-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-mono"
+          className="w-full h-11 min-h-[44px] pl-10 pr-4 rounded-2xl bg-[#0E0E10] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6] font-mono"
         />
       </div>
 
@@ -276,7 +276,7 @@ function StudentMaterialsContent() {
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'all'
                   ? 'bg-[#3478F6] text-white shadow-md'
-                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
+                  : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
               }`}
             >
               Todos ({materials.length})
@@ -286,7 +286,7 @@ function StudentMaterialsContent() {
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'pdf'
                   ? 'bg-[#3478F6] text-white shadow-md'
-                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
+                  : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
               }`}
             >
               PDFs & Guias
@@ -296,7 +296,7 @@ function StudentMaterialsContent() {
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'video'
                   ? 'bg-[#3478F6] text-white shadow-md'
-                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
+                  : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
               }`}
             >
               Vídeos & Aulas
@@ -306,7 +306,7 @@ function StudentMaterialsContent() {
               className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 filter === 'cardapio'
                   ? 'bg-[#3478F6] text-white shadow-md'
-                  : 'bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA]'
+                  : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
               }`}
             >
               Cardápios
@@ -314,15 +314,15 @@ function StudentMaterialsContent() {
           </div>
 
           {loading ? (
-            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono relative z-10">
+            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono relative z-10">
               <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               CARREGANDO MATERIAIS...
             </div>
           ) : filteredMaterials.length === 0 ? (
-            <div className="bg-[#121722] border border-dashed border-[#252D3B] p-10 rounded-3xl text-center relative z-10">
-              <BookOpen className="h-10 w-10 mx-auto text-[#A7B0C0]/60 mb-2" />
-              <p className="font-semibold text-xs text-[#F4F6FA]">Nenhum material encontrado nesta seção</p>
-              <p className="text-[11px] text-[#A7B0C0] mt-1">
+            <div className="bg-[#0E0E10] border border-dashed border-[#27272A] p-10 rounded-3xl text-center relative z-10">
+              <BookOpen className="h-10 w-10 mx-auto text-[#A1A1AA]/60 mb-2" />
+              <p className="font-semibold text-xs text-[#FAFAFA]">Nenhum material encontrado nesta seção</p>
+              <p className="text-[11px] text-[#A1A1AA] mt-1">
                 Seu treinador adicionará novos arquivos, guias e vídeos ao longo do desafio.
               </p>
             </div>
@@ -331,17 +331,17 @@ function StudentMaterialsContent() {
               {filteredMaterials.map((mat) => (
                 <div
                   key={mat.id}
-                  className="bg-[#121722] p-4 rounded-2xl border border-[#252D3B] hover:border-[#3478F6]/40 transition-all flex flex-col justify-between gap-3 shadow-md"
+                  className="bg-[#0E0E10] p-4 rounded-2xl border border-[#27272A] hover:border-[#3478F6]/40 transition-all flex flex-col justify-between gap-3 shadow-md"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center shrink-0 text-[#3478F6]">
+                      <div className="h-10 w-10 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center shrink-0 text-[#3478F6]">
                         {getTypeIcon(mat.type)}
                       </div>
                       <div>
-                        <h3 className="font-black text-sm text-[#F4F6FA]">{mat.title}</h3>
+                        <h3 className="font-black text-sm text-[#FAFAFA]">{mat.title}</h3>
                         {mat.description && (
-                          <p className="text-xs text-[#A7B0C0] mt-0.5 line-clamp-2">{mat.description}</p>
+                          <p className="text-xs text-[#A1A1AA] mt-0.5 line-clamp-2">{mat.description}</p>
                         )}
                       </div>
                     </div>
@@ -350,12 +350,12 @@ function StudentMaterialsContent() {
                   </div>
 
                   {/* Botões de Ação (Visualizar no App / Abrir Externo) */}
-                  <div className="pt-2 border-t border-[#252D3B] flex items-center justify-end gap-2">
+                  <div className="pt-2 border-t border-[#27272A] flex items-center justify-end gap-2">
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => setPreviewMaterial(mat)}
-                      className="h-11 min-h-[44px] px-3.5 text-xs font-mono font-bold border-[#252D3B] bg-[#1B2330] hover:bg-[#252D3B] text-[#F4F6FA] rounded-xl"
+                      className="h-11 min-h-[44px] px-3.5 text-xs font-mono font-bold border-[#27272A] bg-[#18181B] hover:bg-[#27272A] text-[#FAFAFA] rounded-xl"
                     >
                       Detalhes
                     </Button>
@@ -387,15 +387,15 @@ function StudentMaterialsContent() {
         /* ABA DE MURAL DE AVISOS DO TREINADOR */
         <div className="space-y-3 relative z-10">
           {loading ? (
-            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono">
               <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
               SINCRONIZANDO MURAL DE AVISOS...
             </div>
           ) : filteredAnnouncements.length === 0 ? (
-            <div className="bg-[#121722] border border-dashed border-[#252D3B] p-10 rounded-3xl text-center">
-              <Megaphone className="h-10 w-10 mx-auto text-[#A7B0C0]/60 mb-2" />
-              <p className="font-semibold text-xs text-[#F4F6FA]">Nenhum comunicado publicado ainda</p>
-              <p className="text-[11px] text-[#A7B0C0] mt-1">
+            <div className="bg-[#0E0E10] border border-dashed border-[#27272A] p-10 rounded-3xl text-center">
+              <Megaphone className="h-10 w-10 mx-auto text-[#A1A1AA]/60 mb-2" />
+              <p className="font-semibold text-xs text-[#FAFAFA]">Nenhum comunicado publicado ainda</p>
+              <p className="text-[11px] text-[#A1A1AA] mt-1">
                 Avisos importantes e orientações semanais do seu treinador aparecerão aqui.
               </p>
             </div>
@@ -403,34 +403,34 @@ function StudentMaterialsContent() {
             filteredAnnouncements.map((ann) => (
               <div
                 key={ann.id}
-                className={`bg-[#121722] p-4 rounded-2xl border transition-all space-y-2 ${
+                className={`bg-[#0E0E10] p-4 rounded-2xl border transition-all space-y-2 ${
                   ann.is_pinned
                     ? 'border-[#3478F6]/50 shadow-lg shadow-[#3478F6]/5'
-                    : 'border-[#252D3B]'
+                    : 'border-[#27272A]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     {ann.is_pinned ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-white/[0.06] text-[#D4D4D8] border border-white/10">
                         <Pin className="h-2.5 w-2.5" /> Fixado pelo Treinador
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B]">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#18181B] text-[#A1A1AA] border border-[#27272A]">
                         <Megaphone className="h-2.5 w-2.5 text-[#3478F6]" /> Comunicado Oficial
                       </span>
                     )}
                   </div>
                   {ann.created_at && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1B2330] border border-[#252D3B] text-[10px] font-mono font-bold text-[#75A7FF]">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#18181B] border border-[#27272A] text-[10px] font-mono font-bold text-[#D4D4D8]">
                       <Clock className="h-3 w-3 shrink-0 text-[#3478F6]" />
                       <span>Expira em {formatRemaining24h(ann.created_at)}</span>
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-sm font-black text-[#F4F6FA]">{ann.title}</h3>
-                <p className="text-xs text-[#A7B0C0] whitespace-pre-line leading-relaxed">
+                <h3 className="text-sm font-black text-[#FAFAFA]">{ann.title}</h3>
+                <p className="text-xs text-[#A1A1AA] whitespace-pre-line leading-relaxed">
                   {ann.content}
                 </p>
               </div>
@@ -450,20 +450,20 @@ function StudentMaterialsContent() {
             <div className="flex items-center justify-between">
               {getTypeBadge(previewMaterial.type)}
               {previewMaterial.created_at && (
-                <span className="text-[10px] font-mono text-[#A7B0C0]">
+                <span className="text-[10px] font-mono text-[#A1A1AA]">
                   Publicado em {new Date(previewMaterial.created_at).toLocaleDateString('pt-BR')}
                 </span>
               )}
             </div>
 
             {previewMaterial.description && (
-              <p className="text-xs text-[#A7B0C0] leading-relaxed whitespace-pre-line">
+              <p className="text-xs text-[#A1A1AA] leading-relaxed whitespace-pre-line">
                 {previewMaterial.description}
               </p>
             )}
 
             {previewMaterial.type === 'video' && getEmbedVideoUrl(previewMaterial.file_url) && (
-              <div className="aspect-video w-full rounded-2xl overflow-hidden border border-[#252D3B] bg-[#080A0F]">
+              <div className="aspect-video w-full rounded-2xl overflow-hidden border border-[#27272A] bg-[#000000]">
                 <iframe
                   src={getEmbedVideoUrl(previewMaterial.file_url) || ''}
                   title={previewMaterial.title}
@@ -498,7 +498,7 @@ export default function StudentMaterialsPage() {
   return (
     <Suspense
       fallback={
-        <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+        <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono">
           <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
           CARREGANDO CENTRAL DE MATERIAIS...
         </div>

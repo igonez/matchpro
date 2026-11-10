@@ -35,7 +35,7 @@ export function StickyMobileCta() {
 
   return (
     <div 
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 p-3 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] bg-[#080A0F]/95 backdrop-blur-2xl border-t border-[#252D3B] shadow-[0_-10px_30px_rgba(0,0,0,0.8)] animate-in slide-in-from-bottom-4 duration-300"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 p-3 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] bg-[#000000]/95 backdrop-blur-2xl border-t border-[#27272A] shadow-[0_-10px_30px_rgba(0,0,0,0.8)] animate-in slide-in-from-bottom-4 duration-300"
       role="region"
       aria-label="Barra de Ação Rápida Mobile"
     >
@@ -48,7 +48,7 @@ export function StickyMobileCta() {
           <button 
             type="button"
             aria-label="Entrar como Aluno"
-            className="h-12 w-12 rounded-xl bg-[#121722] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6] active:scale-95 transition-all cursor-pointer"
+            className="h-12 w-12 rounded-xl bg-[#0E0E10] border border-[#27272A] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6] active:scale-95 transition-all cursor-pointer"
           >
             <Smartphone className="w-5 h-5 text-[#3478F6]" />
           </button>

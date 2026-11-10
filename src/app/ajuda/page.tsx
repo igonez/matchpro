@@ -86,7 +86,7 @@ export default function HelpFaqPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] relative overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] relative overflow-x-hidden font-sans">
       <JsonLd data={helpFaqSchema} />
       <JsonLd data={helpBreadcrumbSchema} />
 
@@ -94,35 +94,35 @@ export default function HelpFaqPage() {
         <div className="mb-8">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors px-3.5 py-2.5 min-h-[44px] rounded-xl bg-[#121722] border border-[#252D3B]"
+            className="inline-flex items-center gap-2 text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors px-3.5 py-2.5 min-h-[44px] rounded-xl bg-[#0E0E10] border border-[#27272A]"
           >
             <ArrowLeft className="h-4 w-4" /> Voltar ao Início
           </Link>
         </div>
 
         <div className="space-y-6">
-          <div className="space-y-2 border-b border-[#252D3B] pb-6">
+          <div className="space-y-2 border-b border-[#27272A] pb-6">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
+              <span className="text-xs font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10">
                 SUPORTE & CONHECIMENTO
               </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#F4F6FA]">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#FAFAFA]">
               Central de Ajuda & FAQ
             </h1>
-            <p className="text-xs sm:text-sm text-[#A7B0C0] font-mono">
+            <p className="text-xs sm:text-sm text-[#A1A1AA] font-mono">
               Tire suas dúvidas sobre o funcionamento do ArenaFitPro para treinadores e atletas.
             </p>
           </div>
 
           {/* Campo de Busca */}
           <div className="relative">
-            <Search className="h-4 w-4 absolute left-3.5 top-3.5 text-[#A7B0C0]" />
+            <Search className="h-4 w-4 absolute left-3.5 top-3.5 text-[#A1A1AA]" />
             <Input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar dúvida ou tópico (ex: Pix, câmera, squads, calorias)..."
-              className="pl-10 h-12 bg-[#121722] border-[#252D3B] text-[#F4F6FA] rounded-2xl text-xs placeholder:text-[#A7B0C0]/60 focus:border-[#3478F6]"
+              className="pl-10 h-12 bg-[#0E0E10] border-[#27272A] text-[#FAFAFA] rounded-2xl text-xs placeholder:text-[#A1A1AA]/60 focus:border-[#3478F6]"
             />
           </div>
 
@@ -133,24 +133,24 @@ export default function HelpFaqPage() {
               return (
                 <div
                   key={idx}
-                  className="rounded-2xl border border-[#252D3B] bg-[#121722] overflow-hidden transition-all"
+                  className="rounded-2xl border border-[#27272A] bg-[#0E0E10] overflow-hidden transition-all"
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : idx)}
-                    className="w-full p-4 min-h-[48px] text-left flex items-center justify-between gap-4 hover:bg-[#181F2E] transition-colors cursor-pointer"
+                    className="w-full p-4 min-h-[48px] text-left flex items-center justify-between gap-4 hover:bg-[#141416] transition-colors cursor-pointer"
                   >
-                    <span className="text-sm font-bold text-[#F4F6FA] flex items-center gap-2">
-                      <HelpCircle className="h-4 w-4 text-[#75A7FF] shrink-0" />
+                    <span className="text-sm font-bold text-[#FAFAFA] flex items-center gap-2">
+                      <HelpCircle className="h-4 w-4 text-[#D4D4D8] shrink-0" />
                       {faq.q}
                     </span>
                     {isOpen ? (
-                      <ChevronUp className="h-4 w-4 text-[#75A7FF] shrink-0" />
+                      <ChevronUp className="h-4 w-4 text-[#D4D4D8] shrink-0" />
                     ) : (
-                      <ChevronDown className="h-4 w-4 text-[#A7B0C0] shrink-0" />
+                      <ChevronDown className="h-4 w-4 text-[#A1A1AA] shrink-0" />
                     )}
                   </button>
                   {isOpen && (
-                    <div className="px-4 pb-4 pt-2 text-xs text-[#A7B0C0] leading-relaxed border-t border-[#252D3B] bg-[#080A0F]/60">
+                    <div className="px-4 pb-4 pt-2 text-xs text-[#A1A1AA] leading-relaxed border-t border-[#27272A] bg-[#000000]/60">
                       {faq.a}
                     </div>
                   )}
@@ -160,10 +160,10 @@ export default function HelpFaqPage() {
           </div>
 
           {/* Card de Atendimento Direto */}
-          <div className="p-6 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+          <div className="p-6 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
             <div>
-              <h3 className="text-sm font-bold text-[#F4F6FA] font-mono">Ainda precisa de auxílio?</h3>
-              <p className="text-xs text-[#A7B0C0] mt-0.5">
+              <h3 className="text-sm font-bold text-[#FAFAFA] font-mono">Ainda precisa de auxílio?</h3>
+              <p className="text-xs text-[#A1A1AA] mt-0.5">
                 Nossa equipe técnica atende treinadores e alunos em horário comercial.
               </p>
             </div>

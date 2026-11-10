@@ -195,7 +195,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-hidden">
       {/* Schemas JSON-LD independentes para Rich Results */}
       <JsonLd data={websiteSchema} />
       <JsonLd data={softwareApplicationSchema} />
@@ -215,9 +215,9 @@ export default function HomePage() {
 
       {/* 2. Header / Floating Navbar com Navegação Arejada e Alinhamento Perfeito */}
       <header className="sticky top-0 z-50 px-3 sm:px-6 safe-top-header">
-        <div className="max-w-6xl mx-auto bg-[#080A0F]/90 backdrop-blur-xl border border-[#252D3B] rounded-full px-4 sm:px-6 h-15 sm:h-16 flex items-center justify-between shadow-2xl">
+        <div className="max-w-6xl mx-auto bg-[#000000]/90 backdrop-blur-xl border border-[#27272A] rounded-full px-4 sm:px-6 h-15 sm:h-16 flex items-center justify-between shadow-2xl">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl overflow-hidden border border-[#252D3B] shadow-[0_0_15px_rgba(52,120,246,0.2)] group-hover:scale-105 group-hover:border-[#3478F6] transition-all bg-[#121722] shrink-0 flex items-center justify-center">
+            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl overflow-hidden border border-[#27272A] shadow-[0_0_15px_rgba(52,120,246,0.2)] group-hover:scale-105 group-hover:border-[#3478F6] transition-all bg-[#0E0E10] shrink-0 flex items-center justify-center">
               <img
                 src="/app-logo.png"
                 alt="ArenaFitPro Logo"
@@ -225,17 +225,17 @@ export default function HomePage() {
               />
             </div>
             <div className="text-left">
-              <span className="font-extrabold text-sm sm:text-base tracking-tight text-[#F4F6FA] block leading-tight">
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-[#FAFAFA] block leading-tight">
                 ArenaFitPro
               </span>
-              <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-widest text-[#A7B0C0] block">
+              <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-widest text-[#A1A1AA] block">
                 SaaS Fitness
               </span>
             </div>
           </Link>
 
           {/* Links desktop com espaçamento equilibrado (gap-7) e alta legibilidade */}
-          <nav className="hidden lg:flex items-center gap-7 text-[13px] font-medium tracking-normal text-[#A7B0C0]">
+          <nav className="hidden lg:flex items-center gap-7 text-[13px] font-medium tracking-normal text-[#A1A1AA]">
             {navLinks.map((item) => (
               <a
                 key={item.href}
@@ -243,7 +243,7 @@ export default function HomePage() {
                 className={`transition-colors py-2 ${
                   item.highlight
                     ? 'text-[#3478F6] font-bold hover:text-[#75A7FF]'
-                    : 'hover:text-[#F4F6FA]'
+                    : 'hover:text-[#FAFAFA]'
                 }`}
               >
                 {item.label}
@@ -255,7 +255,7 @@ export default function HomePage() {
             <Link
               href="/login?role=student"
               onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Navbar Sou Aluno' })}
-              className="hidden sm:inline-flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-[#A7B0C0] hover:text-[#F4F6FA] px-3 py-2 rounded-full hover:bg-[#121722] transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 min-h-[44px] text-xs sm:text-sm font-semibold text-[#A1A1AA] hover:text-[#FAFAFA] px-3 py-2 rounded-full hover:bg-[#0E0E10] transition-colors"
             >
               <span>Sou Aluno</span>
             </Link>
@@ -273,7 +273,7 @@ export default function HomePage() {
               type="button"
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
               aria-label="Abrir menu de navegação"
-              className="lg:hidden h-10 w-10 sm:h-11 sm:w-11 min-h-[40px] min-w-[40px] rounded-full bg-[#121722] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] active:scale-95 transition-all cursor-pointer"
+              className="lg:hidden h-10 w-10 sm:h-11 sm:w-11 min-h-[40px] min-w-[40px] rounded-full bg-[#0E0E10] border border-[#27272A] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] active:scale-95 transition-all cursor-pointer"
             >
               {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -287,21 +287,21 @@ export default function HomePage() {
               className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1] animate-in fade-in duration-200"
               onClick={() => setMobileNavOpen(false)}
             />
-            <div className="lg:hidden max-w-6xl mx-auto mt-2 p-5 rounded-3xl bg-[#121722]/98 border border-[#252D3B] backdrop-blur-2xl shadow-2xl space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="lg:hidden max-w-6xl mx-auto mt-2 p-5 rounded-3xl bg-[#0E0E10]/98 border border-[#27272A] backdrop-blur-2xl shadow-2xl space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="grid grid-cols-2 gap-2">
                 {navLinks.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileNavOpen(false)}
-                    className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs sm:text-sm font-semibold text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6] flex items-center justify-between transition-colors"
+                    className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[#18181B] border border-[#27272A] text-xs sm:text-sm font-semibold text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6] flex items-center justify-between transition-colors"
                   >
                     <span>{item.label}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#3478F6]" />
                   </a>
                 ))}
               </div>
-              <div className="pt-3 border-t border-[#252D3B] flex flex-col sm:flex-row gap-2.5">
+              <div className="pt-3 border-t border-[#27272A] flex flex-col sm:flex-row gap-2.5">
                 <Link
                   href="/login?role=student"
                   onClick={() => {
@@ -310,7 +310,7 @@ export default function HomePage() {
                   }}
                   className="flex-1"
                 >
-                  <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer border-[#252D3B] text-[#F4F6FA]">
+                  <button className="mono-button-secondary w-full min-h-[46px] text-sm font-bold flex items-center justify-center gap-2 cursor-pointer border-[#27272A] text-[#FAFAFA]">
                     <Smartphone className="w-4 h-4 text-[#3478F6]" />
                     <span>Sou Aluno (Tenho Código)</span>
                   </button>
@@ -340,26 +340,26 @@ export default function HomePage() {
           
           <div className="max-w-4xl w-full">
             {/* Kicker Pill Focado no Posicionamento Profissional */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#252D3B] bg-[#121722] text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#A7B0C0] mb-4 sm:mb-6 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#27272A] bg-[#0E0E10] text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#A1A1AA] mb-4 sm:mb-6 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
               <span>Para Treinadores e Nutricionistas • Comece Grátis</span>
             </div>
 
             {/* Headline de Alto Impacto (32px no mobile, 64px desktop) */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[#F4F6FA] leading-[1.08] mb-4 sm:mb-6 text-balance">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[#FAFAFA] leading-[1.08] mb-4 sm:mb-6 text-balance">
               Transforme grupos mortos de WhatsApp em{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F4F6FA] via-[#75A7FF] to-[#3478F6]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FAFAFA] via-[#75A7FF] to-[#3478F6]">
                 Desafios que Engajam, Viralizam e Faturam no Pix
               </span>
             </h1>
 
             {/* Subtítulo Conciso com Excelente Ritmo de Leitura */}
-            <p className="text-sm sm:text-lg md:text-xl text-[#A7B0C0] max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 font-normal text-pretty">
+            <p className="text-sm sm:text-lg md:text-xl text-[#A1A1AA] max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 font-normal text-pretty">
               Continue prescrevendo seus treinos e dietas como já faz hoje. A ArenaFitPro automatiza o{' '}
-              <strong className="text-[#F4F6FA]">Pódio ao Vivo</strong>, a{' '}
-              <strong className="text-[#F4F6FA]">Câmera Antifraude com IA</strong> e os{' '}
+              <strong className="text-[#FAFAFA]">Pódio ao Vivo</strong>, a{' '}
+              <strong className="text-[#FAFAFA]">Câmera Antifraude com IA</strong> e os{' '}
               <strong className="text-[#3478F6]">Cards 9:16 com a sua marca para os Stories</strong> — para seus alunos cumprirem o plano até o fim e você faturar de{' '}
-              <strong className="text-[#F4F6FA]">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
+              <strong className="text-[#FAFAFA]">R$ 1.500 a R$ 10.000+ por turma</strong> sem trabalho manual.
             </p>
 
             {/* CTAs Otimizados para Mobile First: Primário Dominante + Grid Secundário Ergonômico */}
@@ -384,7 +384,7 @@ export default function HomePage() {
                   onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Simular Lucro' })}
                   className="w-full"
                 >
-                  <button className="mono-button-secondary w-full min-h-[46px] px-3 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer border border-[#252D3B] bg-[#121722] text-[#F4F6FA] active:scale-[0.98]">
+                  <button className="mono-button-secondary w-full min-h-[46px] px-3 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer border border-[#27272A] bg-[#0E0E10] text-[#FAFAFA] active:scale-[0.98]">
                     <Calculator className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
                     <span>Simular Lucro</span>
                   </button>
@@ -395,8 +395,8 @@ export default function HomePage() {
                   onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Sou Aluno' })}
                   className="w-full"
                 >
-                  <button className="mono-button-secondary w-full min-h-[46px] px-3 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B] bg-[#121722] active:scale-[0.98]">
-                    <Smartphone className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
+                  <button className="mono-button-secondary w-full min-h-[46px] px-3 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer text-[#A1A1AA] hover:text-[#FAFAFA] border border-[#27272A] bg-[#0E0E10] active:scale-[0.98]">
+                    <Smartphone className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0" />
                     <span>Sou Aluno</span>
                   </button>
                 </Link>
@@ -408,7 +408,7 @@ export default function HomePage() {
                   href="#calculadora"
                   onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Simular Lucro' })}
                 >
-                  <button className="mono-button-secondary min-h-[54px] px-6 py-4 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer border border-[#252D3B] bg-[#121722] hover:bg-[#1B2330] hover:border-[#3478F6] text-[#F4F6FA]">
+                  <button className="mono-button-secondary min-h-[54px] px-6 py-4 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer border border-[#27272A] bg-[#0E0E10] hover:bg-[#18181B] hover:border-[#3478F6] text-[#FAFAFA]">
                     <Calculator className="w-4 h-4 text-[#3478F6] shrink-0" />
                     <span>Simular Lucro</span>
                   </button>
@@ -418,8 +418,8 @@ export default function HomePage() {
                   href="/login?role=student"
                   onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Hero Sou Aluno' })}
                 >
-                  <button className="mono-button-secondary min-h-[54px] px-6 py-4 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer text-[#A7B0C0] hover:text-[#F4F6FA]">
-                    <Smartphone className="w-4 h-4 text-[#A7B0C0] shrink-0" />
+                  <button className="mono-button-secondary min-h-[54px] px-6 py-4 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer text-[#A1A1AA] hover:text-[#FAFAFA]">
+                    <Smartphone className="w-4 h-4 text-[#A1A1AA] shrink-0" />
                     <span>Sou Aluno</span>
                   </button>
                 </Link>
@@ -427,25 +427,25 @@ export default function HomePage() {
             </div>
 
             {/* Micro-copy de Redução de Fricção */}
-            <p className="text-[11px] sm:text-xs font-mono text-[#A7B0C0] mb-5 sm:mb-8">
+            <p className="text-[11px] sm:text-xs font-mono text-[#A1A1AA] mb-5 sm:mb-8">
               ✓ Sem cartão de crédito • ✓ Lançamento em 3 minutos • ✓ Taxa 0% no Plano Pro
             </p>
 
             {/* Badges de Diferenciais: Grid 2x2 no mobile, Flex no desktop */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-x-8 sm:gap-y-3 text-xs sm:text-sm text-[#A7B0C0] font-mono text-left sm:text-center">
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#121722] sm:bg-transparent border sm:border-0 border-[#252D3B]">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-x-8 sm:gap-y-3 text-xs sm:text-sm text-[#A1A1AA] font-mono text-left sm:text-center">
+              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
                 <span className="truncate">Stories 9:16 White-Label</span>
               </span>
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#121722] sm:bg-transparent border sm:border-0 border-[#252D3B]">
+              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
                 <span className="truncate">Zero digitação de fichas</span>
               </span>
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#121722] sm:bg-transparent border sm:border-0 border-[#252D3B]">
+              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
                 <span className="truncate">Split Pix D+0 na conta</span>
               </span>
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#121722] sm:bg-transparent border sm:border-0 border-[#252D3B]">
+              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
                 <span className="truncate">Câmera Antifraude + IA</span>
               </span>
@@ -463,21 +463,21 @@ export default function HomePage() {
       {/* 4. Metrics & Impact Bar — Destaque em Números e Legibilidade */}
       <section className="px-3 sm:px-6 py-6 sm:py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
+          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] backdrop-blur-2xl shadow-lg">
             <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#3478F6] mb-1 font-mono">9:16</div>
-            <div className="text-[10px] sm:text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Stories com a Sua Marca</div>
+            <div className="text-[10px] sm:text-xs font-mono text-[#A1A1AA] uppercase tracking-wider">Stories com a Sua Marca</div>
           </div>
-          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
+          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] backdrop-blur-2xl shadow-lg">
             <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#3478F6] mb-1 font-mono">D+0</div>
-            <div className="text-[10px] sm:text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Liberação Pix na Conta</div>
+            <div className="text-[10px] sm:text-xs font-mono text-[#A1A1AA] uppercase tracking-wider">Liberação Pix na Conta</div>
           </div>
-          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
-            <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#F4F6FA] mb-1 font-mono">0 min</div>
-            <div className="text-[10px] sm:text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Digitando Fichas ou Dietas</div>
+          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] backdrop-blur-2xl shadow-lg">
+            <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#FAFAFA] mb-1 font-mono">0 min</div>
+            <div className="text-[10px] sm:text-xs font-mono text-[#A1A1AA] uppercase tracking-wider">Digitando Fichas ou Dietas</div>
           </div>
-          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-lg">
-            <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#F4F6FA] mb-1 font-mono">0%</div>
-            <div className="text-[10px] sm:text-xs font-mono text-[#A7B0C0] uppercase tracking-wider">Fotos Falsas de Galeria</div>
+          <div className="text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] backdrop-blur-2xl shadow-lg">
+            <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#FAFAFA] mb-1 font-mono">0%</div>
+            <div className="text-[10px] sm:text-xs font-mono text-[#A1A1AA] uppercase tracking-wider">Fotos Falsas de Galeria</div>
           </div>
         </div>
       </section>
@@ -491,74 +491,74 @@ export default function HomePage() {
       </div>
 
       {/* 7. Como Funciona em 3 Passos — Composição Editorial Arejada e Conectiva */}
-      <section id="fluxo" className="py-14 sm:py-28 px-4 sm:px-6 relative border-t border-[#252D3B]">
+      <section id="fluxo" className="py-14 sm:py-28 px-4 sm:px-6 relative border-t border-[#27272A]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-20">
             <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 sm:mb-3 block font-bold">
               PASSO A PASSO EM 3 MINUTOS
             </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#F4F6FA] tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#FAFAFA] tracking-tight mb-3 sm:mb-4">
               Como você lança seu desafio sem mudar sua rotina
             </h2>
-            <p className="text-[#A7B0C0] text-sm sm:text-lg leading-relaxed">
+            <p className="text-[#A1A1AA] text-sm sm:text-lg leading-relaxed">
               Sem downloads pesados de 150MB e sem precisar redigitar treinos. Veja como sua turma entra em ação:
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 text-left">
             {/* Passo 1 */}
-            <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] flex flex-col justify-between space-y-5 sm:space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
+            <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] flex flex-col justify-between space-y-5 sm:space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
               <div>
                 <div className="text-2xl sm:text-4xl font-mono font-black text-[#3478F6] mb-3 sm:mb-4">
                   01
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#F4F6FA] mb-2.5 flex items-center gap-2">
+                <h3 className="text-lg sm:text-xl font-bold text-[#FAFAFA] mb-2.5 flex items-center gap-2">
                   <KeyRound className="w-5 h-5 text-[#3478F6] shrink-0" />
                   <span>Seu Método + Seu Link</span>
                 </h3>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
                   Você entrega seu treino ou dieta como já faz hoje (PDF, WhatsApp ou app habitual). Na ArenaFitPro, você cria o desafio em 3 minutos e envia o código exclusivo ou link direto para a turma.
                 </p>
               </div>
-              <div className="pt-3.5 border-t border-[#252D3B] text-xs font-mono text-[#3478F6] font-bold">
+              <div className="pt-3.5 border-t border-[#27272A] text-xs font-mono text-[#3478F6] font-bold">
                 ✓ Setup em 3 minutos
               </div>
             </div>
 
             {/* Passo 2 */}
-            <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] flex flex-col justify-between space-y-5 sm:space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
+            <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] flex flex-col justify-between space-y-5 sm:space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
               <div>
                 <div className="text-2xl sm:text-4xl font-mono font-black text-[#3478F6] mb-3 sm:mb-4">
                   02
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#F4F6FA] mb-2.5 flex items-center gap-2">
+                <h3 className="text-lg sm:text-xl font-bold text-[#FAFAFA] mb-2.5 flex items-center gap-2">
                   <Smartphone className="w-5 h-5 text-[#3478F6] shrink-0" />
                   <span>Entrada em 10s (Sem Loja)</span>
                 </h3>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
                   O aluno entra com 1 toque no navegador do celular (iPhone ou Android) sem baixar nada na App Store. Se for um desafio pago, o Pix D+0 libera o acesso na hora.
                 </p>
               </div>
-              <div className="pt-3.5 border-t border-[#252D3B] text-xs font-mono text-[#3478F6] font-bold">
+              <div className="pt-3.5 border-t border-[#27272A] text-xs font-mono text-[#3478F6] font-bold">
                 ✓ 1 Toque no Navegador
               </div>
             </div>
 
             {/* Passo 3 */}
-            <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] flex flex-col justify-between space-y-5 sm:space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
+            <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] flex flex-col justify-between space-y-5 sm:space-y-6 shadow-md hover:border-[#3478F6]/40 transition-colors">
               <div>
                 <div className="text-2xl sm:text-4xl font-mono font-black text-[#3478F6] mb-3 sm:mb-4">
                   03
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#F4F6FA] mb-2.5 flex items-center gap-2">
+                <h3 className="text-lg sm:text-xl font-bold text-[#FAFAFA] mb-2.5 flex items-center gap-2">
                   <Share2 className="w-5 h-5 text-[#3478F6] shrink-0" />
                   <span>Pódio, IA e Stories 9:16</span>
                 </h3>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
                   Alunos comprovam treinos ao vivo na câmera, disputam o pódio e postam o Ranking 9:16 nos Stories com a SUA marca no topo — atraindo novos alunos no piloto automático.
                 </p>
               </div>
-              <div className="pt-3.5 border-t border-[#252D3B] text-xs font-mono text-[#3478F6] font-bold">
+              <div className="pt-3.5 border-t border-[#27272A] text-xs font-mono text-[#3478F6] font-bold">
                 ✓ Divulgação Orgânica Diária
               </div>
             </div>
@@ -567,106 +567,106 @@ export default function HomePage() {
       </section>
 
       {/* 8. Bento Grid de Retenção & Fintech — Cartões Respiráveis com Hierarquia Clara */}
-      <section id="gamificacao" className="py-14 sm:py-28 px-4 sm:px-6 relative border-t border-[#252D3B]">
+      <section id="gamificacao" className="py-14 sm:py-28 px-4 sm:px-6 relative border-t border-[#27272A]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-20">
             <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 sm:mb-3 block font-bold">
               TECNOLOGIA DE RETENÇÃO & ESCALA
             </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#F4F6FA] tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#FAFAFA] tracking-tight mb-3 sm:mb-4">
               Tudo o que mantém seus alunos viciados em cumprir o plano
             </h2>
-            <p className="text-[#A7B0C0] text-sm sm:text-lg leading-relaxed">
+            <p className="text-[#A1A1AA] text-sm sm:text-lg leading-relaxed">
               Combinamos psicologia de jogos, visão computacional por IA e pagamentos instantâneos para você escalar de 10 para 500 alunos sem aumentar seu trabalho.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 text-left">
             {/* Card 1: Antifraude Câmera e IA Nutricional */}
-            <SpotlightCard3D className="md:col-span-7 p-6 sm:p-8 min-h-[300px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <SpotlightCard3D className="md:col-span-7 p-6 sm:p-8 min-h-[300px] flex flex-col justify-between border-[#27272A] bg-[#0E0E10]">
               <div>
-                <div className="flex items-center justify-between pb-4 border-b border-[#252D3B]">
-                  <span className="text-xs font-mono text-[#75A7FF] font-bold flex items-center gap-2">
+                <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
+                  <span className="text-xs font-mono text-[#D4D4D8] font-bold flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
                     AUDITORIA AUTOMÁTICA
                   </span>
-                  <span className="text-xs font-mono text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-3 py-1 rounded-full">
+                  <span className="text-xs font-mono text-[#A1A1AA] bg-[#18181B] border border-[#27272A] px-3 py-1 rounded-full">
                     100% Ao Vivo
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-bold text-[#F4F6FA] tracking-tight mt-6 mb-3">
+                <h3 className="text-2xl font-bold text-[#FAFAFA] tracking-tight mt-6 mb-3">
                   Câmera Antifraude & Leitura de Pratos por IA
                 </h3>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
+                <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
                   Chega de passar a noite abrindo 300 fotos no WhatsApp. O aluno bate a foto ao vivo na câmera (sem fotos da galeria) e a IA Nutricional estima proteínas, carboidratos e calorias liberando os pontos na hora.
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+              <div className="pt-6 mt-6 border-t border-[#27272A] flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
                 <span>Sensor Óptico + IA de Macros</span>
                 <span className="text-[#3478F6] font-bold">Zero Fraudes</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 2: Split Pix D+0 no Asaas */}
-            <SpotlightCard3D className="md:col-span-5 p-6 sm:p-8 min-h-[300px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <SpotlightCard3D className="md:col-span-5 p-6 sm:p-8 min-h-[300px] flex flex-col justify-between border-[#27272A] bg-[#0E0E10]">
               <div>
-                <div className="flex items-center justify-between pb-4 border-b border-[#252D3B]">
-                  <span className="text-xs font-mono text-[#75A7FF] font-bold flex items-center gap-1.5">
+                <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
+                  <span className="text-xs font-mono text-[#D4D4D8] font-bold flex items-center gap-1.5">
                     <Zap className="w-3.5 h-3.5 text-[#3478F6]" />
                     SPLIT PIX D+0
                   </span>
                   <span className="text-xs font-mono text-[#3478F6] font-bold">Instantâneo</span>
                 </div>
 
-                <h3 className="text-2xl font-bold text-[#F4F6FA] tracking-tight mt-6 mb-3">
+                <h3 className="text-2xl font-bold text-[#FAFAFA] tracking-tight mt-6 mb-3">
                   Checkout Pix com Lucro Direto na Conta
                 </h3>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
+                <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
                   Sem cobrar comprovante no privado e sem risco de estorno de cartão. O aluno paga via Pix, entra na turma na hora e o dinheiro cai na sua conta no mesmo dia com 0% de taxa no Pro.
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+              <div className="pt-6 mt-6 border-t border-[#27272A] flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
                 <span>Integrado ao Asaas</span>
                 <span className="text-[#3478F6] font-bold">Taxa 0% no Pro</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 3: Squads e Times Cooperativos */}
-            <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between border-[#27272A] bg-[#0E0E10]">
               <div>
-                <div className="text-xs font-mono text-[#75A7FF] font-bold mb-3 flex items-center gap-2">
+                <div className="text-xs font-mono text-[#D4D4D8] font-bold mb-3 flex items-center gap-2">
                   <Users className="w-4 h-4 text-[#3478F6]" /> PRESSÃO SOCIAL POSITIVA
                 </div>
-                <h4 className="text-xl sm:text-2xl font-bold text-[#F4F6FA] mb-2.5">
+                <h4 className="text-xl sm:text-2xl font-bold text-[#FAFAFA] mb-2.5">
                   Squads em Equipe & Escudos de Streak
                 </h4>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
+                <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
                   Divida sua turma em equipes cooperativas onde a pontuação de todos soma. Alunos cobram uns aos outros para treinar todo dia e ninguém deixa o time na mão.
                 </p>
               </div>
-              <div className="pt-4 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+              <div className="pt-4 border-t border-[#27272A] flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
                 <span>Gamificação Cooperativa</span>
                 <span className="text-[#3478F6] font-bold">94.8% Retenção</span>
               </div>
             </SpotlightCard3D>
 
             {/* Card 4: Radar Anti-Churn & Resgate WhatsApp */}
-            <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between border-[#252D3B] bg-[#121722]">
+            <SpotlightCard3D className="md:col-span-6 p-6 sm:p-8 min-h-[260px] flex flex-col justify-between border-[#27272A] bg-[#0E0E10]">
               <div>
-                <div className="text-xs font-mono text-[#75A7FF] font-bold mb-3 flex items-center gap-2">
+                <div className="text-xs font-mono text-[#D4D4D8] font-bold mb-3 flex items-center gap-2">
                   <Activity className="w-4 h-4 text-[#3478F6]" /> RESGATE ATIVO 24H
                 </div>
-                <h4 className="text-xl sm:text-2xl font-bold text-[#F4F6FA] mb-2.5">
+                <h4 className="text-xl sm:text-2xl font-bold text-[#FAFAFA] mb-2.5">
                   Radar Anti-Churn 48h em 1 Toque
                 </h4>
-                <p className="text-sm sm:text-base text-[#A7B0C0] leading-relaxed">
+                <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
                   O painel identifica automaticamente qualquer aluno que fique mais de 48 horas sem bater ponto, permitindo que você envie uma mensagem de resgate no WhatsApp com 1 clique.
                 </p>
               </div>
-              <div className="pt-4 border-t border-[#252D3B] flex items-center justify-between text-xs font-mono text-[#A7B0C0]">
+              <div className="pt-4 border-t border-[#27272A] flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
                 <span>Alerta Automático</span>
                 <span className="text-[#3478F6] font-bold">Resgate em 1 Toque</span>
               </div>
@@ -676,31 +676,31 @@ export default function HomePage() {
       </section>
 
       {/* 9. Calculadora Interativa de Lucro Real */}
-      <section id="calculadora" className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative">
+      <section id="calculadora" className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#27272A] relative">
         <div className="max-w-5xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
             <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 sm:mb-3 block font-bold">
               SIMULADOR DE LUCRO REAL
             </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#F4F6FA] tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#FAFAFA] tracking-tight mb-3 sm:mb-4">
               Veja quanto dinheiro você coloca no bolso em cada desafio
             </h2>
-            <p className="text-[#A7B0C0] text-sm sm:text-lg leading-relaxed">
+            <p className="text-[#A1A1AA] text-sm sm:text-lg leading-relaxed">
               Arraste os seletores abaixo para simular a quantidade de alunos e o valor da inscrição da sua próxima turma:
             </p>
           </div>
 
-          <div className="p-5 sm:p-10 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722] backdrop-blur-2xl shadow-2xl">
+          <div className="p-5 sm:p-10 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10] backdrop-blur-2xl shadow-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center">
               
               {/* Sliders de Controle */}
               <div className="lg:col-span-7 space-y-6 sm:space-y-7">
                 <div>
                   <div className="flex justify-between items-center gap-2 mb-3">
-                    <label htmlFor="students-range" className="text-sm sm:text-base font-semibold text-[#F4F6FA]">
+                    <label htmlFor="students-range" className="text-sm sm:text-base font-semibold text-[#FAFAFA]">
                       Quantidade de Alunos no Desafio
                     </label>
-                    <span className="text-sm sm:text-lg font-mono font-bold text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-3 sm:px-4 py-1 rounded-xl shrink-0">
+                    <span className="text-sm sm:text-lg font-mono font-bold text-[#3478F6] bg-[#18181B] border border-[#27272A] px-3 sm:px-4 py-1 rounded-xl shrink-0">
                       {studentsCount} alunos
                     </span>
                   </div>
@@ -712,9 +712,9 @@ export default function HomePage() {
                     step="5"
                     value={studentsCount}
                     onChange={(e) => setStudentsCount(Number(e.target.value))}
-                    className="w-full accent-[#3478F6] h-3 bg-[#1B2330] rounded-lg cursor-pointer py-1"
+                    className="w-full accent-[#3478F6] h-3 bg-[#18181B] rounded-lg cursor-pointer py-1"
                   />
-                  <div className="flex justify-between text-xs font-mono text-[#A7B0C0] mt-2">
+                  <div className="flex justify-between text-xs font-mono text-[#A1A1AA] mt-2">
                     <span>10 alunos</span>
                     <span>50 alunos</span>
                     <span>150 alunos</span>
@@ -723,10 +723,10 @@ export default function HomePage() {
 
                 <div>
                   <div className="flex justify-between items-center gap-2 mb-3">
-                    <label htmlFor="ticket-range" className="text-sm sm:text-base font-semibold text-[#F4F6FA]">
+                    <label htmlFor="ticket-range" className="text-sm sm:text-base font-semibold text-[#FAFAFA]">
                       Valor da Inscrição por Aluno
                     </label>
-                    <span className="text-sm sm:text-lg font-mono font-bold text-[#3478F6] bg-[#1B2330] border border-[#252D3B] px-3 sm:px-4 py-1 rounded-xl shrink-0">
+                    <span className="text-sm sm:text-lg font-mono font-bold text-[#3478F6] bg-[#18181B] border border-[#27272A] px-3 sm:px-4 py-1 rounded-xl shrink-0">
                       R$ {ticketPrice},00
                     </span>
                   </div>
@@ -738,19 +738,19 @@ export default function HomePage() {
                     step="10"
                     value={ticketPrice}
                     onChange={(e) => setTicketPrice(Number(e.target.value))}
-                    className="w-full accent-[#3478F6] h-3 bg-[#1B2330] rounded-lg cursor-pointer py-1"
+                    className="w-full accent-[#3478F6] h-3 bg-[#18181B] rounded-lg cursor-pointer py-1"
                   />
-                  <div className="flex justify-between text-xs font-mono text-[#A7B0C0] mt-2">
+                  <div className="flex justify-between text-xs font-mono text-[#A1A1AA] mt-2">
                     <span>R$ 47</span>
                     <span>R$ 147</span>
                     <span>R$ 297</span>
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+                <div className="p-4 sm:p-5 rounded-2xl bg-[#18181B] border border-[#27272A] text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
                   <p>
-                    <strong className="text-[#F4F6FA]">Economia Real no Plano Pro:</strong> Ao migrar da taxa de 15% para a <strong className="text-[#3478F6]">Taxa ZERO (0%)</strong> com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
-                    <strong className="text-[#75A7FF] font-bold">
+                    <strong className="text-[#FAFAFA]">Economia Real no Plano Pro:</strong> Ao migrar da taxa de 15% para a <strong className="text-[#3478F6]">Taxa ZERO (0%)</strong> com {studentsCount} alunos a R$ {ticketPrice}, você economiza{' '}
+                    <strong className="text-[#D4D4D8] font-bold">
                       +R$ {proAdvantage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>{' '}
                     diretamente no seu bolso. A assinatura de R$ 49,90 se paga sozinha já nas primeiras inscrições!
@@ -759,34 +759,34 @@ export default function HomePage() {
               </div>
 
               {/* Card de Resultados */}
-              <div className="lg:col-span-5 p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#080A0F] border border-[#252D3B] space-y-5 sm:space-y-6">
-                <div className="text-center pb-4 sm:pb-5 border-b border-[#252D3B]">
-                  <span className="text-xs font-mono uppercase text-[#A7B0C0] block mb-1">
+              <div className="lg:col-span-5 p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#000000] border border-[#27272A] space-y-5 sm:space-y-6">
+                <div className="text-center pb-4 sm:pb-5 border-b border-[#27272A]">
+                  <span className="text-xs font-mono uppercase text-[#A1A1AA] block mb-1">
                     Faturamento Bruto da Turma
                   </span>
-                  <div className="text-2xl sm:text-4xl font-black text-[#F4F6FA] font-mono">
+                  <div className="text-2xl sm:text-4xl font-black text-[#FAFAFA] font-mono">
                     R$ {grossRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </div>
                 </div>
 
                 <div className="space-y-3 font-mono text-xs sm:text-sm">
-                  <div className="flex justify-between items-center p-3 sm:p-3.5 rounded-xl bg-[#121722] border border-[#252D3B]">
+                  <div className="flex justify-between items-center p-3 sm:p-3.5 rounded-xl bg-[#0E0E10] border border-[#27272A]">
                     <div>
-                      <span className="text-[#F4F6FA] block font-sans text-xs sm:text-sm font-medium">Plano Starter (Taxa 15%)</span>
-                      <span className="text-xs text-[#A7B0C0]">Mensalidade R$ 0</span>
+                      <span className="text-[#FAFAFA] block font-sans text-xs sm:text-sm font-medium">Plano Starter (Taxa 15%)</span>
+                      <span className="text-xs text-[#A1A1AA]">Mensalidade R$ 0</span>
                     </div>
-                    <span className="text-xs sm:text-base font-bold text-[#A7B0C0]">
+                    <span className="text-xs sm:text-base font-bold text-[#A1A1AA]">
                       R$ {netStarter.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 sm:p-3.5 rounded-xl bg-[#1B2330] border border-[#3478F6]/50 shadow-[0_0_25px_rgba(52,120,246,0.15)]">
+                  <div className="flex justify-between items-center p-3 sm:p-3.5 rounded-xl bg-[#18181B] border border-[#3478F6]/50 shadow-[0_0_25px_rgba(52,120,246,0.15)]">
                     <div>
-                      <span className="text-[#F4F6FA] font-sans text-xs sm:text-sm font-bold flex flex-wrap items-center gap-1.5">
+                      <span className="text-[#FAFAFA] font-sans text-xs sm:text-sm font-bold flex flex-wrap items-center gap-1.5">
                         Plano Pro (Taxa ZERO • 0%)
                         <span className="text-[10px] sm:text-[11px] bg-[#3478F6] text-white px-1.5 py-0.5 rounded font-bold">100% SEU</span>
                       </span>
-                      <span className="text-xs text-[#A7B0C0]">R$ 49,90/mês</span>
+                      <span className="text-xs text-[#A1A1AA]">R$ 49,90/mês</span>
                     </div>
                     <span className="text-xs sm:text-base font-bold text-[#3478F6] shrink-0">
                       R$ {netPro.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
@@ -808,16 +808,16 @@ export default function HomePage() {
 
             </div>
 
-            <div className="mt-8 pt-5 border-t border-[#252D3B] max-w-3xl mx-auto space-y-2 text-center font-mono">
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs text-[#A7B0C0]">
-                <span className="inline-flex items-center gap-1.5 bg-[#1B2330] text-[#75A7FF] px-3 sm:px-3.5 py-1 rounded-full border border-[#252D3B]">
+            <div className="mt-8 pt-5 border-t border-[#27272A] max-w-3xl mx-auto space-y-2 text-center font-mono">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs text-[#A1A1AA]">
+                <span className="inline-flex items-center gap-1.5 bg-[#18181B] text-[#D4D4D8] px-3 sm:px-3.5 py-1 rounded-full border border-[#27272A]">
                   <Zap className="w-3.5 h-3.5 text-[#3478F6]" /> Pix D+0 (Sem Chargeback)
                 </span>
-                <span className="inline-flex items-center gap-1.5 bg-[#121722] text-[#A7B0C0] px-3 sm:px-3.5 py-1 rounded-full border border-[#252D3B]">
+                <span className="inline-flex items-center gap-1.5 bg-[#0E0E10] text-[#A1A1AA] px-3 sm:px-3.5 py-1 rounded-full border border-[#27272A]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#3478F6]" /> Tarifa Fixa Asaas: R$ 0,99
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-[#A7B0C0]/80 leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-[#A1A1AA]/80 leading-relaxed">
                 * Transparência Financeira: No plano Pro, a taxa da ArenaFitPro é 0% (você retém 100% do valor da inscrição deduzida apenas a tarifa bancária fixa do gateway de pagamento Asaas). Os alunos pagam via Pix à vista, eliminando estornos e inadimplência.
               </p>
             </div>
@@ -826,27 +826,27 @@ export default function HomePage() {
       </section>
 
       {/* 10. Seção de Preços & Planos — Destaque Cirúrgico no Pro Coach e Tabela Dark Matrix Arejada */}
-      <section id="planos" className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative">
+      <section id="planos" className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#27272A] relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
             <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 sm:mb-3 block font-bold">
               INVESTIMENTO TRANSPARENTE
             </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#F4F6FA] tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#FAFAFA] tracking-tight mb-3 sm:mb-4">
               Comece grátis hoje e escale com Taxa ZERO
             </h2>
-            <p className="text-[#A7B0C0] text-sm sm:text-lg leading-relaxed">
+            <p className="text-[#A1A1AA] text-sm sm:text-lg leading-relaxed">
               Crie sua conta sem cartão de crédito no Starter ou ative o Pro Coach para ficar com 100% do lucro das inscrições.
             </p>
 
             {/* Toggle Mensal / Anual */}
-            <div className="mt-8 inline-flex items-center p-1.5 rounded-full border border-[#252D3B] bg-[#121722] shadow-xl">
+            <div className="mt-8 inline-flex items-center p-1.5 rounded-full border border-[#27272A] bg-[#0E0E10] shadow-xl">
               <button
                 onClick={() => setBillingCycle('monthly')}
                 className={`min-h-[42px] px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   billingCycle === 'monthly'
                     ? 'bg-[#3478F6] text-white shadow-lg'
-                    : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                    : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                 }`}
               >
                 Mensal
@@ -856,12 +856,12 @@ export default function HomePage() {
                 className={`min-h-[42px] px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
                   billingCycle === 'yearly'
                     ? 'bg-[#3478F6] text-white shadow-lg'
-                    : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                    : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                 }`}
               >
                 <span>Anual</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full font-extrabold ${
-                  billingCycle === 'yearly' ? 'bg-[#080A0F] text-white' : 'bg-[#1B2330] text-[#75A7FF]'
+                  billingCycle === 'yearly' ? 'bg-[#000000] text-white' : 'bg-[#18181B] text-[#D4D4D8]'
                 }`}>
                   20% OFF
                 </span>
@@ -873,53 +873,53 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
             
             {/* PLANO 1: Starter Coach */}
-            <SpotlightCard3D className="p-7 sm:p-9 flex flex-col justify-between border-[#252D3B] bg-[#121722] rounded-3xl">
+            <SpotlightCard3D className="p-7 sm:p-9 flex flex-col justify-between border-[#27272A] bg-[#0E0E10] rounded-3xl">
               <div>
                 <div className="flex justify-between items-center mb-5">
-                  <span className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0]">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#A1A1AA]">
                     Para Começar Agora
                   </span>
-                  <span className="text-xs font-mono px-3.5 py-1 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] font-bold">
+                  <span className="text-xs font-mono px-3.5 py-1 rounded-full bg-[#18181B] border border-[#27272A] text-[#A1A1AA] font-bold">
                     GRÁTIS
                   </span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] mb-2">Starter Coach</h3>
-                <p className="text-sm text-[#A7B0C0] mb-6 leading-relaxed">
+                <h3 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] mb-2">Starter Coach</h3>
+                <p className="text-sm text-[#A1A1AA] mb-6 leading-relaxed">
                   Perfeito para validar seu primeiro desafio online com zero custo fixo e sem cartão de crédito.
                 </p>
 
-                <div className="mb-6 pb-6 border-b border-[#252D3B]">
+                <div className="mb-6 pb-6 border-b border-[#27272A]">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-black text-[#F4F6FA] font-mono">R$ 0</span>
-                    <span className="text-sm text-[#A7B0C0] font-mono">/mês</span>
+                    <span className="text-5xl font-black text-[#FAFAFA] font-mono">R$ 0</span>
+                    <span className="text-sm text-[#A1A1AA] font-mono">/mês</span>
                   </div>
-                  <div className="text-xs sm:text-sm font-mono text-[#A7B0C0] mt-3 flex items-center gap-1.5">
+                  <div className="text-xs sm:text-sm font-mono text-[#A1A1AA] mt-3 flex items-center gap-1.5">
                     <Percent className="w-4 h-4 text-[#3478F6] shrink-0" />
-                    <span>Taxa de split: <strong className="text-[#F4F6FA]">15% apenas quando vender</strong></span>
+                    <span>Taxa de split: <strong className="text-[#FAFAFA]">15% apenas quando vender</strong></span>
                   </div>
-                  <div className="text-xs font-mono text-[#A7B0C0]/80 mt-1">
+                  <div className="text-xs font-mono text-[#A1A1AA]/80 mt-1">
                     + tarifa bancária Asaas por Pix recebido D+0
                   </div>
                 </div>
 
                 {/* Lista O que vem com espaçamento vertical respirável */}
                 <div className="space-y-3.5 mb-8">
-                  <div className="text-xs font-mono uppercase text-[#F4F6FA] font-bold">
+                  <div className="text-xs font-mono uppercase text-[#FAFAFA] font-bold">
                     O que está incluído:
                   </div>
-                  <ul className="space-y-3 text-xs sm:text-sm text-[#A7B0C0]">
+                  <ul className="space-y-3 text-xs sm:text-sm text-[#A1A1AA]">
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
-                      <span><strong className="text-[#F4F6FA]">1 Desafio ativo</strong> (até <strong className="text-[#F4F6FA]">10 alunos</strong>)</span>
+                      <span><strong className="text-[#FAFAFA]">1 Desafio ativo</strong> (até <strong className="text-[#FAFAFA]">10 alunos</strong>)</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
-                      <span><strong className="text-[#F4F6FA]">Stories 9:16 White-Label</strong> com sua Marca no topo</span>
+                      <span><strong className="text-[#FAFAFA]">Stories 9:16 White-Label</strong> com sua Marca no topo</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
-                      <span>Acesso rápido por <strong className="text-[#F4F6FA]">Código de Convite</strong> & Link</span>
+                      <span>Acesso rápido por <strong className="text-[#FAFAFA]">Código de Convite</strong> & Link</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
@@ -927,7 +927,7 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
-                      <span><strong className="text-[#F4F6FA]">Pódio Ao Vivo & Feed Social</strong> da Turma</span>
+                      <span><strong className="text-[#FAFAFA]">Pódio Ao Vivo & Feed Social</strong> da Turma</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
@@ -937,25 +937,25 @@ export default function HomePage() {
                 </div>
 
                 {/* Lista O que NÃO vem */}
-                <div className="space-y-2.5 mb-8 pt-5 border-t border-[#252D3B]">
-                  <div className="text-xs font-mono uppercase text-[#A7B0C0]">
+                <div className="space-y-2.5 mb-8 pt-5 border-t border-[#27272A]">
+                  <div className="text-xs font-mono uppercase text-[#A1A1AA]">
                     Exclusivo do Pro Coach:
                   </div>
-                  <ul className="space-y-2.5 text-xs sm:text-sm text-[#A7B0C0]/70">
+                  <ul className="space-y-2.5 text-xs sm:text-sm text-[#A1A1AA]/70">
                     <li className="flex items-center gap-3">
-                      <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
+                      <X className="w-4 h-4 text-[#A1A1AA]/50 shrink-0" />
                       <span>Taxa ZERO (0%) sobre as inscrições</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
+                      <X className="w-4 h-4 text-[#A1A1AA]/50 shrink-0" />
                       <span>IA Nutricional (Cálculo de Calorias e Macros)</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
+                      <X className="w-4 h-4 text-[#A1A1AA]/50 shrink-0" />
                       <span>Squads Cooperativos & Radar Anti-Churn 48h</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <X className="w-4 h-4 text-[#A7B0C0]/50 shrink-0" />
+                      <X className="w-4 h-4 text-[#A1A1AA]/50 shrink-0" />
                       <span>Até 5 desafios e 100 alunos por turma</span>
                     </li>
                   </ul>
@@ -967,7 +967,7 @@ export default function HomePage() {
                 onClick={() => trackMarketingEvent('Lead', { content_name: 'Plano Starter Treinador' })}
                 className="block w-full"
               >
-                <button className="mono-button-secondary w-full min-h-[50px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2 border-[#252D3B] text-[#F4F6FA] hover:border-[#3478F6]">
+                <button className="mono-button-secondary w-full min-h-[50px] py-3.5 text-xs sm:text-sm font-bold cursor-pointer flex items-center justify-center gap-2 border-[#27272A] text-[#FAFAFA] hover:border-[#3478F6]">
                   <Sparkles className="w-4 h-4 text-[#3478F6]" />
                   <span>Criar Conta Grátis no Starter</span>
                   <ArrowRight className="w-4 h-4" />
@@ -976,7 +976,7 @@ export default function HomePage() {
             </SpotlightCard3D>
 
             {/* PLANO 2: Pro Coach (DESTAQUE COM AZUL ELÉTRICO #3478F6) */}
-            <SpotlightCard3D className="p-7 sm:p-9 flex flex-col justify-between border-2 border-[#3478F6] bg-[#121722] shadow-[0_0_50px_rgba(52,120,246,0.22)] relative md:scale-[1.03] rounded-3xl">
+            <SpotlightCard3D className="p-7 sm:p-9 flex flex-col justify-between border-2 border-[#3478F6] bg-[#0E0E10] shadow-[0_0_50px_rgba(52,120,246,0.22)] relative md:scale-[1.03] rounded-3xl">
               {/* Badge Flutuante no Topo em Azul Elétrico */}
               <div className="inline-flex self-start mb-4 bg-[#3478F6] text-white px-4 py-1.5 rounded-full text-xs font-mono font-black uppercase tracking-wider shadow-lg items-center gap-2">
                 <Flame className="w-3.5 h-3.5 text-white shrink-0" />
@@ -985,46 +985,46 @@ export default function HomePage() {
 
               <div>
                 <div className="flex justify-between items-center mb-5">
-                  <span className="text-xs font-mono uppercase tracking-wider text-[#75A7FF] font-bold">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#D4D4D8] font-bold">
                     Escala Profissional
                   </span>
-                  <span className="text-xs font-mono px-3.5 py-1 rounded-full bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] font-extrabold">
+                  <span className="text-xs font-mono px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[#D4D4D8] font-extrabold">
                     PRO
                   </span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] mb-2">Pro Coach</h3>
-                <p className="text-sm text-[#A7B0C0] mb-6 leading-relaxed">
+                <h3 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] mb-2">Pro Coach</h3>
+                <p className="text-sm text-[#A1A1AA] mb-6 leading-relaxed">
                   Para personais e nutricionistas que querem ficar com 100% do lucro das inscrições e liberar a IA Nutricional.
                 </p>
 
-                <div className="mb-6 pb-6 border-b border-[#252D3B]">
+                <div className="mb-6 pb-6 border-b border-[#27272A]">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-black text-[#F4F6FA] font-mono">
+                    <span className="text-5xl font-black text-[#FAFAFA] font-mono">
                       R$ {billingCycle === 'monthly' ? '49,90' : '39,90'}
                     </span>
-                    <span className="text-sm text-[#A7B0C0] font-mono">/mês</span>
+                    <span className="text-sm text-[#A1A1AA] font-mono">/mês</span>
                   </div>
                   {billingCycle === 'yearly' && (
-                    <span className="text-xs font-mono text-[#75A7FF] block mt-2 font-bold">
+                    <span className="text-xs font-mono text-[#D4D4D8] block mt-2 font-bold">
                       Cobrado anualmente (economia de R$ 120/ano)
                     </span>
                   )}
-                  <div className="text-xs sm:text-sm font-mono text-[#75A7FF] mt-3 flex items-center gap-1.5 font-bold">
+                  <div className="text-xs sm:text-sm font-mono text-[#D4D4D8] mt-3 flex items-center gap-1.5 font-bold">
                     <Percent className="w-4 h-4 text-[#3478F6] shrink-0" />
                     <span>Taxa ZERO da plataforma: 0% (100% do lucro é seu!)</span>
                   </div>
-                  <div className="text-xs font-mono text-[#A7B0C0]/80 mt-1">
+                  <div className="text-xs font-mono text-[#A1A1AA]/80 mt-1">
                     Deduzida apenas a tarifa bancária Asaas (a partir de R$ 0,99 fixo/Pix D+0)
                   </div>
                 </div>
 
                 {/* Lista O que vem */}
                 <div className="space-y-3.5 mb-8">
-                  <div className="text-xs font-mono uppercase text-[#F4F6FA] font-bold">
+                  <div className="text-xs font-mono uppercase text-[#FAFAFA] font-bold">
                     Tudo do Starter, mais:
                   </div>
-                  <ul className="space-y-3 text-xs sm:text-sm text-[#F4F6FA]">
+                  <ul className="space-y-3 text-xs sm:text-sm text-[#FAFAFA]">
                     <li className="flex items-center gap-3">
                       <Check className="w-4 h-4 text-[#3478F6] shrink-0" />
                       <span>Até <strong className="text-white">5 Desafios simultâneos</strong> (até <strong className="text-white">100 alunos/cada</strong>)</span>
@@ -1077,98 +1077,98 @@ export default function HomePage() {
           {/* 10.1 Tabela Comparativa Detalhada Estilo Dark Matrix Arejada */}
           <div className="mt-16 sm:mt-24">
             <div className="text-center mb-8 sm:mb-10">
-              <h3 className="text-2xl sm:text-3xl font-black text-[#F4F6FA]">
+              <h3 className="text-2xl sm:text-3xl font-black text-[#FAFAFA]">
                 Comparativo Detalhado de Recursos
               </h3>
-              <p className="text-sm sm:text-base text-[#A7B0C0] mt-1.5">
+              <p className="text-sm sm:text-base text-[#A1A1AA] mt-1.5">
                 Transparência total em cada etapa da sua evolução
               </p>
             </div>
 
             {/* Dica de scroll no mobile */}
-            <div className="sm:hidden flex items-center justify-center gap-1.5 text-xs font-mono text-[#75A7FF] mb-3 bg-[#121722] py-2 px-3 rounded-full border border-[#252D3B] w-fit mx-auto">
+            <div className="sm:hidden flex items-center justify-center gap-1.5 text-xs font-mono text-[#D4D4D8] mb-3 bg-[#0E0E10] py-2 px-3 rounded-full border border-[#27272A] w-fit mx-auto">
               <span>← Deslize para o lado para comparar →</span>
             </div>
 
-            <div className="overflow-x-auto rounded-3xl border border-[#252D3B] bg-[#121722]/90 backdrop-blur-xl shadow-xl">
+            <div className="overflow-x-auto rounded-3xl border border-[#27272A] bg-[#0E0E10]/90 backdrop-blur-xl shadow-xl">
               <table className="w-full text-left border-collapse text-xs sm:text-sm min-w-[560px]">
                 <thead>
-                  <tr className="border-b border-[#252D3B] bg-[#1B2330]">
-                    <th className="p-5 font-mono text-[#A7B0C0] uppercase tracking-wider text-xs">Recursos & Capacidade</th>
-                    <th className="p-5 font-bold text-center text-[#F4F6FA]">Starter Coach</th>
-                    <th className="p-5 font-bold text-center text-[#75A7FF] bg-[#3478F6]/10">Pro Coach</th>
+                  <tr className="border-b border-[#27272A] bg-[#18181B]">
+                    <th className="p-5 font-mono text-[#A1A1AA] uppercase tracking-wider text-xs">Recursos & Capacidade</th>
+                    <th className="p-5 font-bold text-center text-[#FAFAFA]">Starter Coach</th>
+                    <th className="p-5 font-bold text-center text-[#D4D4D8] bg-white/[0.06]">Pro Coach</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#252D3B]">
+                <tbody className="divide-y divide-[#27272A]">
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Mensalidade</td>
-                    <td className="p-5 text-center text-[#A7B0C0] font-mono font-bold">R$ 0</td>
-                    <td className="p-5 text-center text-[#3478F6] font-mono font-bold bg-[#3478F6]/10">R$ 49,90/mês</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Mensalidade</td>
+                    <td className="p-5 text-center text-[#A1A1AA] font-mono font-bold">R$ 0</td>
+                    <td className="p-5 text-center text-[#3478F6] font-mono font-bold bg-white/[0.06]">R$ 49,90/mês</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Taxa de Split da Plataforma</td>
-                    <td className="p-5 text-center text-[#A7B0C0] font-mono">15%</td>
-                    <td className="p-5 text-center text-[#3478F6] font-mono font-bold bg-[#3478F6]/10">0% (Taxa ZERO)</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Taxa de Split da Plataforma</td>
+                    <td className="p-5 text-center text-[#A1A1AA] font-mono">15%</td>
+                    <td className="p-5 text-center text-[#3478F6] font-mono font-bold bg-white/[0.06]">0% (Taxa ZERO)</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Compartilhamento Stories 9:16 com Sua Marca (White-Label)</td>
-                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Completo (Foto + Sticker PNG)</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Compartilhamento Stories 9:16 com Sua Marca (White-Label)</td>
+                    <td className="p-5 text-center text-[#FAFAFA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓ Completo (Foto + Sticker PNG)</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Entrada por Código de Convite & Link</td>
-                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Entrada por Código de Convite & Link</td>
+                    <td className="p-5 text-center text-[#FAFAFA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Desafios Ativos Simultâneos</td>
-                    <td className="p-5 text-center text-[#A7B0C0]">1 Desafio</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">Até 5 Desafios</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Desafios Ativos Simultâneos</td>
+                    <td className="p-5 text-center text-[#A1A1AA]">1 Desafio</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">Até 5 Desafios</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Limite de Alunos por Desafio</td>
-                    <td className="p-5 text-center text-[#A7B0C0]">Até 10 alunos</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">Até 100 alunos</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Limite de Alunos por Desafio</td>
+                    <td className="p-5 text-center text-[#A1A1AA]">Até 10 alunos</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">Até 100 alunos</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Câmera Nativa Antifraude & GPS</td>
-                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Câmera Nativa Antifraude & GPS</td>
+                    <td className="p-5 text-center text-[#FAFAFA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Pódio Ao Vivo & Feed Social da Turma</td>
-                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Pódio Ao Vivo & Feed Social da Turma</td>
+                    <td className="p-5 text-center text-[#FAFAFA] font-bold">✓</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
-                    <td className="p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">IA Nutricional (Estimativa de Macros/Kcal)</td>
+                    <td className="p-5 text-center text-[#A1A1AA]/50 font-bold">✗</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Saque Pix D+0 no Asaas</td>
-                    <td className="p-5 text-center text-[#F4F6FA] font-bold">✓ Imediato</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Imediato</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Saque Pix D+0 no Asaas</td>
+                    <td className="p-5 text-center text-[#FAFAFA] font-bold">✓ Imediato</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓ Imediato</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Tarifa Bancária do Gateway (Asaas)</td>
-                    <td className="p-5 text-center text-[#A7B0C0] font-mono text-xs">Tarifa fixa Asaas (R$ 0,99/Pix)</td>
-                    <td className="p-5 text-center text-[#A7B0C0] font-mono text-xs bg-[#3478F6]/10">Tarifa fixa Asaas (R$ 0,99/Pix)</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Tarifa Bancária do Gateway (Asaas)</td>
+                    <td className="p-5 text-center text-[#A1A1AA] font-mono text-xs">Tarifa fixa Asaas (R$ 0,99/Pix)</td>
+                    <td className="p-5 text-center text-[#A1A1AA] font-mono text-xs bg-white/[0.06]">Tarifa fixa Asaas (R$ 0,99/Pix)</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Squads & Times Cooperativos</td>
-                    <td className="p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Squads & Times Cooperativos</td>
+                    <td className="p-5 text-center text-[#A1A1AA]/50 font-bold">✗</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Radar Anti-Churn 48h & Resgate WhatsApp</td>
-                    <td className="p-5 text-center text-[#A7B0C0]/50 font-bold">✗</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">✓ Liberado</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Radar Anti-Churn 48h & Resgate WhatsApp</td>
+                    <td className="p-5 text-center text-[#A1A1AA]/50 font-bold">✗</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">✓ Liberado</td>
                   </tr>
                   <tr>
-                    <td className="p-5 text-[#F4F6FA] font-medium">Canal de Suporte</td>
-                    <td className="p-5 text-center text-[#A7B0C0]">Central de Ajuda</td>
-                    <td className="p-5 text-center text-[#3478F6] font-bold bg-[#3478F6]/10">WhatsApp Prioritário</td>
+                    <td className="p-5 text-[#FAFAFA] font-medium">Canal de Suporte</td>
+                    <td className="p-5 text-center text-[#A1A1AA]">Central de Ajuda</td>
+                    <td className="p-5 text-center text-[#3478F6] font-bold bg-white/[0.06]">WhatsApp Prioritário</td>
                   </tr>
                 </tbody>
               </table>
@@ -1179,16 +1179,16 @@ export default function HomePage() {
       </section>
 
       {/* 11. Seção FAQ com Accordion Interativo */}
-      <section id="faq" className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative">
+      <section id="faq" className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#27272A] relative">
         <div className="max-w-4xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-[#3478F6] mb-2 sm:mb-3 flex items-center justify-center gap-1.5 font-bold">
               <HelpCircle className="w-4 h-4 text-[#3478F6]" /> DÚVIDAS FREQUENTES
             </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#F4F6FA] tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#FAFAFA] tracking-tight mb-3 sm:mb-4">
               Perguntas e Respostas
             </h2>
-            <p className="text-[#A7B0C0] text-sm sm:text-lg leading-relaxed">
+            <p className="text-[#A1A1AA] text-sm sm:text-lg leading-relaxed">
               Tudo o que você precisa saber antes de criar sua conta grátis e lançar sua primeira turma.
             </p>
           </div>
@@ -1199,21 +1199,21 @@ export default function HomePage() {
               return (
                 <div
                   key={index}
-                  className="rounded-2xl border border-[#252D3B] bg-[#121722] overflow-hidden transition-colors hover:border-[#3478F6]/50"
+                  className="rounded-2xl border border-[#27272A] bg-[#0E0E10] overflow-hidden transition-colors hover:border-[#3478F6]/50"
                 >
                   <button
                     onClick={() => toggleFaq(index)}
-                    className="w-full p-4 sm:p-6 text-left flex items-center justify-between gap-3 sm:gap-4 font-bold text-sm sm:text-base text-[#F4F6FA] hover:text-[#75A7FF] transition-colors cursor-pointer"
+                    className="w-full p-4 sm:p-6 text-left flex items-center justify-between gap-3 sm:gap-4 font-bold text-sm sm:text-base text-[#FAFAFA] hover:text-[#75A7FF] transition-colors cursor-pointer"
                   >
                     <span>{item.q}</span>
                     <ChevronDown
-                      className={`w-5 h-5 text-[#A7B0C0] shrink-0 transition-transform duration-200 ${
+                      className={`w-5 h-5 text-[#A1A1AA] shrink-0 transition-transform duration-200 ${
                         isOpen ? 'rotate-180 text-[#3478F6]' : ''
                       }`}
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-0 text-xs sm:text-base text-[#A7B0C0] leading-relaxed border-t border-[#252D3B]">
+                    <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-0 text-xs sm:text-base text-[#A1A1AA] leading-relaxed border-t border-[#27272A]">
                       <p className="pt-3.5 sm:pt-4">{item.a}</p>
                     </div>
                   )}
@@ -1222,8 +1222,8 @@ export default function HomePage() {
             })}
           </div>
 
-          <div className="mt-8 sm:mt-12 text-center p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#252D3B] bg-[#121722]">
-            <p className="text-xs sm:text-base text-[#A7B0C0]">
+          <div className="mt-8 sm:mt-12 text-center p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#27272A] bg-[#0E0E10]">
+            <p className="text-xs sm:text-base text-[#A1A1AA]">
               Ainda tem alguma dúvida específica para o seu modelo de desafio?
             </p>
             <Link
@@ -1238,21 +1238,21 @@ export default function HomePage() {
       </section>
 
       {/* 12. Grand Final CTA Section — Alto Contraste e Ação Clara */}
-      <section className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#252D3B] relative bg-gradient-to-b from-[#121722] to-[#080A0F]">
+      <section className="py-14 sm:py-28 px-4 sm:px-6 border-t border-[#27272A] relative bg-gradient-to-b from-[#0E0E10] to-[#000000]">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#3478F6]/30 bg-[#3478F6]/10 text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#75A7FF] mb-5 sm:mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.06] text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#D4D4D8] mb-5 sm:mb-6">
             <Trophy className="w-3.5 h-3.5 text-[#3478F6]" />
             <span>Comece Agora em Menos de 3 Minutos</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-[#F4F6FA] tracking-tight mb-4 sm:mb-6 leading-tight text-balance">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-[#FAFAFA] tracking-tight mb-4 sm:mb-6 leading-tight text-balance">
             Lote sua próxima turma e coloque{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F4F6FA] via-[#75A7FF] to-[#3478F6]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FAFAFA] via-[#75A7FF] to-[#3478F6]">
               sua marca nos Stories de cada aluno
             </span>
           </h2>
 
-          <p className="text-[#A7B0C0] text-sm sm:text-lg max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed">
+          <p className="text-[#A1A1AA] text-sm sm:text-lg max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed">
             Crie sua conta grátis sem cartão de crédito, configure seu desafio em 3 minutos e receba inscrições via Pix D+0 com a tecnologia mais desejada do mercado fitness.
           </p>
 
@@ -1273,14 +1273,14 @@ export default function HomePage() {
               onClick={() => trackMarketingEvent('ViewContent', { content_name: 'Footer Sou Aluno' })}
               className="w-full sm:w-auto"
             >
-              <button className="mono-button-secondary w-full sm:w-auto min-h-[50px] sm:min-h-[54px] px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer border-[#252D3B] text-[#F4F6FA] active:scale-[0.98] transition-all">
+              <button className="mono-button-secondary w-full sm:w-auto min-h-[50px] sm:min-h-[54px] px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold flex items-center justify-center gap-2 cursor-pointer border-[#27272A] text-[#FAFAFA] active:scale-[0.98] transition-all">
                 <Smartphone className="w-4 h-4 text-[#3478F6]" />
                 <span>Sou Aluno • Entrar na Turma</span>
               </button>
             </Link>
           </div>
 
-          <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm font-mono text-[#A7B0C0]">
+          <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm font-mono text-[#A1A1AA]">
             <span>• Zero digitação de treinos</span>
             <span>• Sem cartão para criar conta</span>
             <span>• Saque Pix D+0 imediato</span>

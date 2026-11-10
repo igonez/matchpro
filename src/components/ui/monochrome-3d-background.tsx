@@ -62,7 +62,7 @@ export function Monochrome3DBackground() {
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
 
-      ctx.fillStyle = '#080A0F';
+      ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, width, height);
 
       // 1. Grid 3D de Horizonte em Perspectiva (Obsidian & Cobalt Floor)
@@ -109,7 +109,7 @@ export function Monochrome3DBackground() {
       );
       glowGrad.addColorStop(0, 'rgba(52, 120, 246, 0.045)');
       glowGrad.addColorStop(0.5, 'rgba(52, 120, 246, 0.015)');
-      glowGrad.addColorStop(1, 'rgba(8, 10, 15, 0)');
+      glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, width, height);
 

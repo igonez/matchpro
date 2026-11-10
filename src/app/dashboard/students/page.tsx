@@ -235,15 +235,15 @@ export default function DashboardFinanceAndStudentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+            <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
               Alunos & Turmas
             </span>
-            <span className="text-xs text-[#A7B0C0] font-medium">Matrículas oficiais via Checkout</span>
+            <span className="text-xs text-[#A1A1AA] font-medium">Matrículas oficiais via Checkout</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] tracking-tight">
             Gestão de Alunos
           </h1>
-          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
             Matrículas oficiais, status de pagamento e controle de presença dos atletas. Compartilhe o link de convite da turma para novos alunos entrarem.
           </p>
         </div>
@@ -253,7 +253,7 @@ export default function DashboardFinanceAndStudentsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="rounded-2xl h-10 px-3.5 text-xs font-semibold text-[#F4F6FA] border-[#252D3B] hover:border-[#3478F6]/40 hover:text-white bg-[#121722]"
+              className="rounded-2xl h-10 px-3.5 text-xs font-semibold text-[#FAFAFA] border-[#27272A] hover:border-[#3478F6]/40 hover:text-white bg-[#0E0E10]"
             >
               <CreditCard className="h-4 w-4 mr-1.5 text-[#3478F6]" /> Aba Financeiro →
             </Button>
@@ -273,56 +273,56 @@ export default function DashboardFinanceAndStudentsPage() {
 
       {/* Grid de Métricas Operacionais de Alunos */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
-        <SpotlightCard3D className="p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
+            <span className="text-xs font-semibold tracking-wide text-[#A1A1AA]">
               Total de Matriculados
             </span>
             <Users className="h-4 w-4 text-[#3478F6]" />
           </div>
-          <div className="text-3xl font-black text-[#F4F6FA] font-mono">
+          <div className="text-3xl font-black text-[#FAFAFA] font-mono">
             {filteredParticipants.length}
           </div>
-          <p className="text-xs text-[#A7B0C0] mt-1">
+          <p className="text-xs text-[#A1A1AA] mt-1">
             {selectedChallengeId === 'all' ? 'Soma de todas as turmas' : 'Alunos nesta turma'}
           </p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
+            <span className="text-xs font-semibold tracking-wide text-[#A1A1AA]">
               Inscrições Confirmadas
             </span>
-            <CheckCircle2 className="h-4 w-4 text-[#75A7FF]" />
+            <CheckCircle2 className="h-4 w-4 text-[#D4D4D8]" />
           </div>
-          <div className="text-3xl font-black text-[#F4F6FA] font-mono">
+          <div className="text-3xl font-black text-[#FAFAFA] font-mono">
             {filteredParticipants.filter((p) => p.payment_status === 'paid').length}
           </div>
-          <p className="text-xs text-[#A7B0C0] mt-1">Pagamento confirmado via plataforma</p>
+          <p className="text-xs text-[#A1A1AA] mt-1">Pagamento confirmado via plataforma</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-3">
-            <span className="text-xs font-semibold tracking-wide text-[#A7B0C0]">
+            <span className="text-xs font-semibold tracking-wide text-[#A1A1AA]">
               Aguardando Confirmação Pix
             </span>
             <Clock className="h-4 w-4 text-amber-400" />
           </div>
-          <div className="text-3xl font-black text-[#F4F6FA] font-mono">
+          <div className="text-3xl font-black text-[#FAFAFA] font-mono">
             {filteredParticipants.filter((p) => p.payment_status === 'pending').length}
           </div>
-          <p className="text-xs text-[#A7B0C0] mt-1">Checkout iniciado no aplicativo</p>
+          <p className="text-xs text-[#A1A1AA] mt-1">Checkout iniciado no aplicativo</p>
         </SpotlightCard3D>
       </div>
 
       {/* Barra de Filtros e Busca de Alunos */}
-      <div className="p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 relative z-10 border border-[#252D3B] bg-[#121722]">
+      <div className="p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 relative z-10 border border-[#27272A] bg-[#0E0E10]">
         <div className="flex flex-col sm:flex-row flex-1 items-stretch sm:items-center gap-2.5">
           {/* Seletor de Desafio */}
           <select
             value={selectedChallengeId}
             onChange={(e) => setSelectedChallengeId(e.target.value)}
-            className="h-11 min-h-[44px] w-full sm:w-auto rounded-xl border border-[#252D3B] bg-[#1B2330] px-3 text-xs font-mono font-bold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6]"
+            className="h-11 min-h-[44px] w-full sm:w-auto rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-mono font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6]"
           >
             <option value="all">Todas as Turmas ({challenges.length})</option>
             {challenges.map((c) => (
@@ -334,12 +334,12 @@ export default function DashboardFinanceAndStudentsPage() {
 
           {/* Campo de Busca */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3.5 h-4 w-4 text-[#A7B0C0]" />
+            <Search className="absolute left-3 top-3.5 h-4 w-4 text-[#A1A1AA]" />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar atleta por nome ou WhatsApp..."
-              className="pl-9 h-11 min-h-[44px] text-xs font-mono bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 rounded-xl focus:border-[#3478F6]"
+              className="pl-9 h-11 min-h-[44px] text-xs font-mono bg-[#18181B] border-[#27272A] text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 rounded-xl focus:border-[#3478F6]"
             />
           </div>
         </div>
@@ -351,7 +351,7 @@ export default function DashboardFinanceAndStudentsPage() {
             className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all shrink-0 ${
               filterPayment === 'all'
                 ? 'bg-[#3478F6] text-white shadow-md'
-                : 'bg-[#1B2330] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
+                : 'bg-[#18181B] text-[#A1A1AA] hover:text-[#FAFAFA] border border-[#27272A]'
             }`}
           >
             Todos ({participants.length})
@@ -361,7 +361,7 @@ export default function DashboardFinanceAndStudentsPage() {
             className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all shrink-0 ${
               filterPayment === 'paid'
                 ? 'bg-[#3478F6] text-white shadow-md'
-                : 'bg-[#1B2330] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
+                : 'bg-[#18181B] text-[#A1A1AA] hover:text-[#FAFAFA] border border-[#27272A]'
             }`}
           >
             Confirmados
@@ -371,7 +371,7 @@ export default function DashboardFinanceAndStudentsPage() {
             className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all shrink-0 ${
               filterPayment === 'pending'
                 ? 'bg-[#3478F6] text-white shadow-md'
-                : 'bg-[#1B2330] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
+                : 'bg-[#18181B] text-[#A1A1AA] hover:text-[#FAFAFA] border border-[#27272A]'
             }`}
           >
             Pendentes
@@ -380,35 +380,35 @@ export default function DashboardFinanceAndStudentsPage() {
       </div>
 
       {/* Tabela Estruturada de Alunos Inscritos */}
-      <div className="bg-[#121722] rounded-3xl overflow-hidden border border-[#252D3B] relative z-10 shadow-md">
-        <div className="p-4 sm:p-5 border-b border-[#252D3B] flex items-center justify-between">
+      <div className="bg-[#0E0E10] rounded-3xl overflow-hidden border border-[#27272A] relative z-10 shadow-md">
+        <div className="p-4 sm:p-5 border-b border-[#27272A] flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-[#F4F6FA] tracking-tight">
+            <h3 className="text-base font-bold text-[#FAFAFA] tracking-tight">
               Alunos Inscritos
             </h3>
-            <p className="text-xs text-[#A7B0C0]">
+            <p className="text-xs text-[#A1A1AA]">
               {filteredParticipants.length} atleta(s) localizado(s)
             </p>
           </div>
 
-          <span className="text-xs text-[#A7B0C0] font-medium font-mono">
+          <span className="text-xs text-[#A1A1AA] font-medium font-mono">
             Ordenado por data
           </span>
         </div>
 
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs">
+          <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs">
             <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
             Carregando lista de alunos...
           </div>
         ) : filteredParticipants.length === 0 ? (
-          <div className="py-16 text-center text-xs text-[#A7B0C0]">
+          <div className="py-16 text-center text-xs text-[#A1A1AA]">
             Nenhum atleta encontrado para os filtros selecionados.
           </div>
         ) : (
-          <div className="divide-y divide-[#252D3B] overflow-x-auto">
+          <div className="divide-y divide-[#27272A] overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#1B2330]/70 text-[#A7B0C0] text-xs font-semibold border-b border-[#252D3B]">
+              <thead className="bg-[#18181B]/70 text-[#A1A1AA] text-xs font-semibold border-b border-[#27272A]">
                 <tr>
                   <th className="py-3 px-4">Atleta</th>
                   <th className="py-3 px-4">Turma</th>
@@ -417,7 +417,7 @@ export default function DashboardFinanceAndStudentsPage() {
                   <th className="py-3 px-4 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#252D3B] text-[#F4F6FA]">
+              <tbody className="divide-y divide-[#27272A] text-[#FAFAFA]">
                 {filteredParticipants.map((p) => {
                   const challengeObj = challenges.find((c) => c.id === p.challenge_id);
                   const cleanPhone = p.student.phone?.replace(/\D/g, '') || '';
@@ -426,28 +426,28 @@ export default function DashboardFinanceAndStudentsPage() {
                   const isPending = p.payment_status === 'pending';
 
                   return (
-                    <tr key={p.id} className="hover:bg-[#1B2330]/50 transition-colors">
+                    <tr key={p.id} className="hover:bg-[#18181B]/50 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#75A7FF] font-bold shrink-0">
+                          <div className="h-8 w-8 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#D4D4D8] font-bold shrink-0">
                             {p.student.full_name.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <span className="font-bold text-[#F4F6FA] block">
+                            <span className="font-bold text-[#FAFAFA] block">
                               {p.student.full_name}
                             </span>
-                            <span className="text-[11px] text-[#A7B0C0]">
+                            <span className="text-[11px] text-[#A1A1AA]">
                               Matrícula: {p.student_id.slice(0, 8)}...
                             </span>
                           </div>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-[#F4F6FA] font-semibold">
+                      <td className="py-3 px-4 text-[#FAFAFA] font-semibold">
                         {challengeObj?.title || 'Turma Ativa'}
                       </td>
 
-                      <td className="py-3 px-4 text-[#A7B0C0] text-xs">
+                      <td className="py-3 px-4 text-[#A1A1AA] text-xs">
                         {new Date(p.joined_at).toLocaleDateString('pt-BR')}
                       </td>
 
@@ -455,7 +455,7 @@ export default function DashboardFinanceAndStudentsPage() {
                         {isPaid && (challengeObj?.price || 0) > 0 && (
                           <Badge
                             variant="outline"
-                            className="border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/15 text-xs font-semibold font-mono"
+                            className="border-white/10 text-[#D4D4D8] bg-white/[0.06] text-xs font-semibold font-mono"
                           >
                             ● Pago via App
                           </Badge>
@@ -463,7 +463,7 @@ export default function DashboardFinanceAndStudentsPage() {
                         {isPaid && (challengeObj?.price || 0) === 0 && (
                           <Badge
                             variant="outline"
-                            className="border-[#252D3B] text-[#F4F6FA] bg-[#1B2330] text-xs font-semibold font-mono"
+                            className="border-[#27272A] text-[#FAFAFA] bg-[#18181B] text-xs font-semibold font-mono"
                           >
                             ● Gratuito (App)
                           </Badge>
@@ -479,7 +479,7 @@ export default function DashboardFinanceAndStudentsPage() {
                         {!isPaid && !isPending && (
                           <Badge
                             variant="outline"
-                            className="border-[#252D3B] text-[#A7B0C0] bg-[#1B2330] text-[10px] font-mono uppercase tracking-wider"
+                            className="border-[#27272A] text-[#A1A1AA] bg-[#18181B] text-[10px] font-mono uppercase tracking-wider"
                           >
                             ATIVO
                           </Badge>
@@ -493,7 +493,7 @@ export default function DashboardFinanceAndStudentsPage() {
                               href={waLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 text-[11px]"
+                              className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 text-[11px]"
                               title="Chamar no WhatsApp"
                             >
                               <Phone className="h-3.5 w-3.5" />
@@ -503,7 +503,7 @@ export default function DashboardFinanceAndStudentsPage() {
                           <button
                             type="button"
                             onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
-                            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-[#A7B0C0] hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center justify-center"
+                            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center justify-center"
                             title="Remover matrícula da turma"
                           >
                             <Trash2 className="h-4 w-4" />

@@ -75,7 +75,7 @@ export default function ArenaFitMotionPlayer() {
       </div>
 
       {/* Dispositivo Estilo 9:16 - Titânio Monocromático */}
-      <div className="relative w-full max-w-[380px] h-[680px] bg-[#080A0F] rounded-[44px] border border-white/[0.12] shadow-[0_25px_80px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.2)] overflow-hidden flex flex-col z-10">
+      <div className="relative w-full max-w-[380px] h-[680px] bg-[#000000] rounded-[44px] border border-white/[0.12] shadow-[0_25px_80px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.2)] overflow-hidden flex flex-col z-10">
         
         {/* Dynamic Island / Notch */}
         <div className="absolute top-3 inset-x-0 h-6 z-50 flex items-center justify-center">

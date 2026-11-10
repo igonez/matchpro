@@ -354,24 +354,24 @@ export default function LeaderboardPage() {
       {/* Header Editorial com Status Ao Vivo */}
       <div 
         data-tour="student-ranking-card"
-        className="flex items-start justify-between pt-2 relative z-10 border-b border-[#252D3B] pb-4 gap-3"
+        className="flex items-start justify-between pt-2 relative z-10 border-b border-[#27272A] pb-4 gap-3"
       >
         <div className="flex items-start gap-3 min-w-0">
           <div className="min-w-0">
-            <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+            <span className="text-xs text-[#A1A1AA] font-medium block truncate max-w-[280px]">
               Ranking Oficial • {currentChallenge?.title || 'Turma Ativa'}
             </span>
             <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight truncate">
+              <h1 className="text-xl sm:text-2xl font-black text-[#FAFAFA] tracking-tight truncate">
                 Tabela de Classificação
               </h1>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#3478F6]/10 border border-[#3478F6]/25 text-[10px] font-mono font-bold text-[#75A7FF] uppercase">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[10px] font-mono font-bold text-[#D4D4D8] uppercase">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_6px_#3478F6]" />
                 AO VIVO
               </span>
             </div>
-            <p className="text-xs text-[#A7B0C0] mt-0.5 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
+            <p className="text-xs text-[#A1A1AA] mt-0.5 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
               Pontuação auditada por integridade de check-ins.
             </p>
           </div>
@@ -379,7 +379,7 @@ export default function LeaderboardPage() {
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/app"
-            className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330] transition-colors flex items-center gap-1.5 shrink-0"
+            className="h-11 min-h-[44px] px-3.5 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18181B] transition-colors flex items-center gap-1.5 shrink-0"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             VOLTAR
@@ -390,7 +390,7 @@ export default function LeaderboardPage() {
 
       {/* BLOCO 1: Painel Pessoal de Performance & Alvo de Ultrapassagem */}
       {!loading && myStanding && myRank && (
-        <SpotlightCard3D className="p-4 rounded-3xl border border-[#252D3B] bg-[#121722] relative z-10 shadow-[0_12px_36px_rgba(0,0,0,0.55)]">
+        <SpotlightCard3D className="p-4 rounded-3xl border border-[#27272A] bg-[#0E0E10] relative z-10 shadow-[0_12px_36px_rgba(0,0,0,0.55)]">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div className="flex items-center gap-3 min-w-0">
               <div
@@ -401,7 +401,7 @@ export default function LeaderboardPage() {
                     ? 'bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 text-black shadow-[0_0_20px_rgba(203,213,225,0.2)]'
                     : myRank === 3
                     ? 'bg-gradient-to-br from-amber-500 via-amber-600 to-amber-800 text-white shadow-[0_0_20px_rgba(180,83,9,0.2)]'
-                    : 'bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA]'
+                    : 'bg-[#18181B] border border-[#27272A] text-[#FAFAFA]'
                 }`}
               >
                 <span className="text-[8px] font-black uppercase leading-none opacity-75">RANK</span>
@@ -409,22 +409,22 @@ export default function LeaderboardPage() {
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-black text-[#F4F6FA] uppercase tracking-wide">Seu Desempenho</span>
-                  <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B]">
+                  <span className="text-xs font-black text-[#FAFAFA] uppercase tracking-wide">Seu Desempenho</span>
+                  <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-[#18181B] text-[#A1A1AA] border border-[#27272A]">
                     {myRank <= 3 ? 'ZONA DE PÓDIO' : 'COMPETIDOR ATIVO'}
                   </span>
                 </div>
-                <p className="text-[11px] font-mono text-[#A7B0C0] mt-1">
+                <p className="text-[11px] font-mono text-[#A1A1AA] mt-1">
                   {myRank === 1 ? (
                     <span>
-                      Você lidera a turma com <strong className="text-[#F4F6FA]">+{leadMargin} XP</strong> de vantagem!
+                      Você lidera a turma com <strong className="text-[#FAFAFA]">+{leadMargin} XP</strong> de vantagem!
                     </span>
                   ) : pointsToOvertake === 0 ? (
                     `Empatado com #${myRank - 1} (${nextRankUp?.students?.full_name?.split(' ')[0] || 'Atleta'})`
                   ) : (
                     <>
-                      Faltam <strong className="text-[#F4F6FA]">{pointsToOvertake} XP</strong> para ultrapassar{' '}
-                      <strong className="text-[#F4F6FA]">
+                      Faltam <strong className="text-[#FAFAFA]">{pointsToOvertake} XP</strong> para ultrapassar{' '}
+                      <strong className="text-[#FAFAFA]">
                         #{myRank - 1} {nextRankUp?.students?.full_name?.split(' ')[0] || 'Atleta'}
                       </strong>
                     </>
@@ -434,25 +434,25 @@ export default function LeaderboardPage() {
             </div>
 
             <div className="text-right shrink-0">
-              <span className="text-xl font-mono font-black text-[#F4F6FA] block leading-none">
+              <span className="text-xl font-mono font-black text-[#FAFAFA] block leading-none">
                 {myStanding.total_points}
               </span>
-              <span className="text-[9px] font-mono text-[#A7B0C0] font-bold uppercase mt-1 block tracking-wider">
+              <span className="text-[9px] font-mono text-[#A1A1AA] font-bold uppercase mt-1 block tracking-wider">
                 XP TOTAL
               </span>
             </div>
           </div>
 
           {/* Barra de Progresso de Ultrapassagem */}
-          <div className="space-y-1.5 pt-2 border-t border-[#252D3B]">
+          <div className="space-y-1.5 pt-2 border-t border-[#27272A]">
             <div className="flex items-center justify-between text-[10px] font-mono">
-              <span className="text-[#A7B0C0] uppercase flex items-center gap-1">
-                <Target className="w-3 h-3 text-[#75A7FF]" />
+              <span className="text-[#A1A1AA] uppercase flex items-center gap-1">
+                <Target className="w-3 h-3 text-[#D4D4D8]" />
                 {myRank === 1 ? 'Domínio da Liderança' : `Progresso até #${myRank - 1}`}
               </span>
-              <span className="text-[#F4F6FA] font-bold">{overtakeProgressPct}%</span>
+              <span className="text-[#FAFAFA] font-bold">{overtakeProgressPct}%</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden p-0.5">
+            <div className="w-full h-2 rounded-full bg-[#000000] border border-[#27272A] overflow-hidden p-0.5">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[#2055BD] via-[#3478F6] to-[#75A7FF] transition-all duration-700"
                 style={{ width: `${overtakeProgressPct}%` }}
@@ -463,9 +463,9 @@ export default function LeaderboardPage() {
               <button
                 type="button"
                 onClick={() => setShowStoryShare(true)}
-                className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-mono font-bold text-[#FAFAFA] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
-                <Share2 className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
+                <Share2 className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
                 <span>Compartilhar Pódio & Ranking (Stories / WhatsApp)</span>
               </button>
             </div>
@@ -476,37 +476,37 @@ export default function LeaderboardPage() {
       {/* BLOCO 2: Métricas Rápidas da Turma (3 Pilares) */}
       {!loading && (
         <div className="grid grid-cols-3 gap-2.5 relative z-10">
-          <div className="p-3 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0] uppercase">
+          <div className="p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between">
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#A1A1AA] uppercase">
               <span>ATLETAS</span>
-              <Users className="w-3.5 h-3.5 text-[#75A7FF]" />
+              <Users className="w-3.5 h-3.5 text-[#D4D4D8]" />
             </div>
-            <div className="text-base font-black font-mono text-[#F4F6FA] mt-1.5">
+            <div className="text-base font-black font-mono text-[#FAFAFA] mt-1.5">
               {standings.length}
             </div>
-            <span className="text-[9px] font-mono text-[#A7B0C0] truncate">Na disputa</span>
+            <span className="text-[9px] font-mono text-[#A1A1AA] truncate">Na disputa</span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0] uppercase">
+          <div className="p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between">
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#A1A1AA] uppercase">
               <span>MÉDIA TURMA</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#75A7FF]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#D4D4D8]" />
             </div>
-            <div className="text-base font-black font-mono text-[#F4F6FA] mt-1.5">
-              {classAveragePoints} <span className="text-[9px] text-[#A7B0C0] font-normal">XP</span>
+            <div className="text-base font-black font-mono text-[#FAFAFA] mt-1.5">
+              {classAveragePoints} <span className="text-[9px] text-[#A1A1AA] font-normal">XP</span>
             </div>
-            <span className="text-[9px] font-mono text-[#A7B0C0] truncate">Ritmo coletivo</span>
+            <span className="text-[9px] font-mono text-[#A1A1AA] truncate">Ritmo coletivo</span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-[#121722] border border-[#252D3B] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#A7B0C0] uppercase">
+          <div className="p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between">
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#A1A1AA] uppercase">
               <span>TOP STREAK</span>
-              <Flame className="w-3.5 h-3.5 text-[#75A7FF]" />
+              <Flame className="w-3.5 h-3.5 text-[#D4D4D8]" />
             </div>
-            <div className="text-base font-black font-mono text-[#F4F6FA] mt-1.5">
+            <div className="text-base font-black font-mono text-[#FAFAFA] mt-1.5">
               {topStreakStudent ? `${topStreakStudent.streak}d` : '0d'}
             </div>
-            <span className="text-[9px] font-mono text-[#A7B0C0] truncate">
+            <span className="text-[9px] font-mono text-[#A1A1AA] truncate">
               {topStreakStudent ? topStreakStudent.name : 'Sem ofensiva'}
             </span>
           </div>
@@ -516,14 +516,14 @@ export default function LeaderboardPage() {
       {/* Seletor Segmented: Individual vs Squads */}
       <div 
         data-tour="student-squad-card"
-        className="grid grid-cols-2 p-1.5 rounded-2xl bg-[#080A0F] border border-[#252D3B] relative z-10"
+        className="grid grid-cols-2 p-1.5 rounded-2xl bg-[#000000] border border-[#27272A] relative z-10"
       >
         <button
           onClick={() => setActiveTab('individual')}
           className={`py-2.5 min-h-[44px] text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === 'individual'
               ? 'bg-[#3478F6] text-white font-black rounded-xl shadow-[0_0_20px_rgba(52,120,246,0.35)]'
-              : 'text-[#A7B0C0] hover:text-white font-medium'
+              : 'text-[#A1A1AA] hover:text-white font-medium'
           }`}
         >
           <Trophy className="w-3.5 h-3.5" />
@@ -534,7 +534,7 @@ export default function LeaderboardPage() {
           className={`py-2.5 min-h-[44px] text-xs font-mono tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === 'squads'
               ? 'bg-[#3478F6] text-white font-black rounded-xl shadow-[0_0_20px_rgba(52,120,246,0.35)]'
-              : 'text-[#A7B0C0] hover:text-white font-medium'
+              : 'text-[#A1A1AA] hover:text-white font-medium'
           }`}
         >
           <Users className="w-3.5 h-3.5" />
@@ -544,15 +544,15 @@ export default function LeaderboardPage() {
 
       {/* BLOCO 3: Pódio 3D Olímpico (Ouro, Prata, Bronze restritos às medalhas e pedestais) */}
       {!loading && activeTab === 'individual' && !searchQuery && standings.length > 0 && (
-        <div className="relative z-10 p-5 rounded-3xl border border-[#252D3B] bg-[#121722] overflow-hidden shadow-2xl">
+        <div className="relative z-10 p-5 rounded-3xl border border-[#27272A] bg-[#0E0E10] overflow-hidden shadow-2xl">
           <div className="flex items-center justify-between mb-6 relative z-10 gap-2">
             <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-[#75A7FF]" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
+              <Award className="w-4 h-4 text-[#D4D4D8]" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A1A1AA]">
                 PÓDIO DE ELITE • TOP 3
               </span>
             </div>
-            <span className="text-[10px] font-mono text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-mono text-[#A1A1AA] bg-[#18181B] border border-[#27272A] px-2.5 py-1 rounded-full">
               MEDALHAS OFICIAIS
             </span>
           </div>
@@ -563,8 +563,8 @@ export default function LeaderboardPage() {
               {top2 ? (
                 <>
                   <div className="relative mb-2">
-                    <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border-2 border-slate-300/70 p-0.5 shadow-[0_0_20px_rgba(203,213,225,0.2)]">
-                      <div className="w-full h-full rounded-[12px] bg-[#080A0F] flex items-center justify-center font-bold text-sm text-slate-200 overflow-hidden">
+                    <div className="h-14 w-14 rounded-2xl bg-[#18181B] border-2 border-slate-300/70 p-0.5 shadow-[0_0_20px_rgba(203,213,225,0.2)]">
+                      <div className="w-full h-full rounded-[12px] bg-[#000000] flex items-center justify-center font-bold text-sm text-slate-200 overflow-hidden">
                         {top2.students?.avatar_url ? (
                           <img src={top2.students.avatar_url} alt="2º" className="w-full h-full object-cover" />
                         ) : (
@@ -576,19 +576,19 @@ export default function LeaderboardPage() {
                       <SilverMedalBadge size={24} />
                     </div>
                   </div>
-                  <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[90px] mt-1">
+                  <p className="text-xs font-bold text-[#FAFAFA] truncate max-w-[90px] mt-1">
                     {top2.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-[11px] font-mono font-bold text-slate-300">
                     {top2.total_points} XP
                   </span>
-                  <div className="w-full h-20 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-slate-800/30 to-slate-400/20 border-t border-x border-slate-400/40 mt-2.5 flex flex-col items-center justify-center p-2">
+                  <div className="w-full h-20 rounded-t-2xl bg-gradient-to-t from-[#000000] via-slate-800/30 to-slate-400/20 border-t border-x border-slate-400/40 mt-2.5 flex flex-col items-center justify-center p-2">
                     <span className="font-mono font-black text-slate-200 text-lg leading-none">2º</span>
                     <span className="text-[8px] font-mono uppercase tracking-widest text-slate-400 mt-1">PRATA</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#252D3B] flex flex-col items-center justify-center text-[#A7B0C0] font-mono text-[10px]">
+                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center text-[#A1A1AA] font-mono text-[10px]">
                   <span>2º VAGO</span>
                 </div>
               )}
@@ -603,7 +603,7 @@ export default function LeaderboardPage() {
                       <Crown className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-bounce" />
                     </div>
                     <div className="h-[72px] w-[72px] rounded-2xl bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-[0_0_30px_rgba(251,191,36,0.35)]">
-                      <div className="w-full h-full rounded-[14px] bg-[#080A0F] flex items-center justify-center font-black text-lg text-amber-300 overflow-hidden">
+                      <div className="w-full h-full rounded-[14px] bg-[#000000] flex items-center justify-center font-black text-lg text-amber-300 overflow-hidden">
                         {top1.students?.avatar_url ? (
                           <img src={top1.students.avatar_url} alt="1º" className="w-full h-full object-cover" />
                         ) : (
@@ -615,13 +615,13 @@ export default function LeaderboardPage() {
                       <GoldMedalBadge size={28} />
                     </div>
                   </div>
-                  <p className="text-xs font-black text-[#F4F6FA] truncate max-w-[100px] mt-1">
+                  <p className="text-xs font-black text-[#FAFAFA] truncate max-w-[100px] mt-1">
                     {top1.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-xs font-mono font-black text-amber-300">
                     {top1.total_points} XP
                   </span>
-                  <div className="w-full h-28 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-amber-500/20 to-amber-400/30 border-t border-x border-amber-400/60 mt-2.5 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_12px_rgba(251,191,36,0.2)]">
+                  <div className="w-full h-28 rounded-t-2xl bg-gradient-to-t from-[#000000] via-amber-500/20 to-amber-400/30 border-t border-x border-amber-400/60 mt-2.5 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_12px_rgba(251,191,36,0.2)]">
                     <span className="font-mono font-black text-amber-300 text-2xl leading-none">1º</span>
                     <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-amber-200 mt-1">
                       LÍDER OURO
@@ -636,8 +636,8 @@ export default function LeaderboardPage() {
               {top3 ? (
                 <>
                   <div className="relative mb-2">
-                    <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border-2 border-amber-700/70 p-0.5 shadow-[0_0_20px_rgba(180,83,9,0.2)]">
-                      <div className="w-full h-full rounded-[12px] bg-[#080A0F] flex items-center justify-center font-bold text-sm text-amber-500 overflow-hidden">
+                    <div className="h-14 w-14 rounded-2xl bg-[#18181B] border-2 border-amber-700/70 p-0.5 shadow-[0_0_20px_rgba(180,83,9,0.2)]">
+                      <div className="w-full h-full rounded-[12px] bg-[#000000] flex items-center justify-center font-bold text-sm text-amber-500 overflow-hidden">
                         {top3.students?.avatar_url ? (
                           <img src={top3.students.avatar_url} alt="3º" className="w-full h-full object-cover" />
                         ) : (
@@ -649,19 +649,19 @@ export default function LeaderboardPage() {
                       <BronzeMedalBadge size={24} />
                     </div>
                   </div>
-                  <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[90px] mt-1">
+                  <p className="text-xs font-bold text-[#FAFAFA] truncate max-w-[90px] mt-1">
                     {top3.students?.full_name?.split(' ')[0] || 'Atleta'}
                   </p>
                   <span className="text-[11px] font-mono font-bold text-amber-500">
                     {top3.total_points} XP
                   </span>
-                  <div className="w-full h-16 rounded-t-2xl bg-gradient-to-t from-[#080A0F] via-amber-900/25 to-amber-700/25 border-t border-x border-amber-700/50 mt-2.5 flex flex-col items-center justify-center p-2">
+                  <div className="w-full h-16 rounded-t-2xl bg-gradient-to-t from-[#000000] via-amber-900/25 to-amber-700/25 border-t border-x border-amber-700/50 mt-2.5 flex flex-col items-center justify-center p-2">
                     <span className="font-mono font-black text-amber-500 text-base leading-none">3º</span>
                     <span className="text-[8px] font-mono uppercase tracking-widest text-amber-600 mt-1">BRONZE</span>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-16 rounded-t-2xl border border-dashed border-[#252D3B] flex flex-col items-center justify-center text-[#A7B0C0] font-mono text-[10px]">
+                <div className="w-full h-16 rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center text-[#A1A1AA] font-mono text-[10px]">
                   <span>3º VAGO</span>
                 </div>
               )}
@@ -673,13 +673,13 @@ export default function LeaderboardPage() {
       {/* Busca Rápida de Atletas */}
       {activeTab === 'individual' && standings.length > 2 && (
         <div className="relative z-10">
-          <Search className="w-4 h-4 text-[#A7B0C0] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#A1A1AA] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Buscar atleta pelo nome na classificação..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#121722] border border-[#252D3B] rounded-2xl pl-10 pr-4 py-3 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0] focus:outline-none focus:border-[#3478F6] font-mono transition-colors"
+            className="w-full bg-[#0E0E10] border border-[#27272A] rounded-2xl pl-10 pr-4 py-3 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#3478F6] font-mono transition-colors"
           />
         </div>
       )}
@@ -687,26 +687,26 @@ export default function LeaderboardPage() {
       {/* BLOCO 4: Classificação Completa com Barras de Progresso Relativo */}
       <div className="space-y-2.5 relative z-10">
         <div className="flex items-center justify-between px-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A1A1AA]">
             {activeTab === 'individual' ? 'TABELA GERAL DE ATLETAS' : 'CLASSIFICAÇÃO DE SQUADS'}
           </span>
-          <span className="text-[10px] font-mono text-[#A7B0C0]">
+          <span className="text-[10px] font-mono text-[#A1A1AA]">
             {activeTab === 'individual' ? `${filteredStandings.length} competidores` : `${squadStandings.length} equipes`}
           </span>
         </div>
 
         {loading ? (
-          <div className="py-16 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
+          <div className="py-16 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2">
             <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs font-mono text-[#A7B0C0] uppercase tracking-widest">
+            <p className="text-xs font-mono text-[#A1A1AA] uppercase tracking-widest">
               SINCRONIZANDO CLASSIFICAÇÃO...
             </p>
           </div>
         ) : activeTab === 'individual' ? (
           filteredStandings.length === 0 ? (
-            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
-              <Trophy className="w-8 h-8 text-[#A7B0C0]/50 mx-auto" />
-              <p className="text-xs font-mono text-[#A7B0C0]">
+            <div className="p-8 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2">
+              <Trophy className="w-8 h-8 text-[#A1A1AA]/50 mx-auto" />
+              <p className="text-xs font-mono text-[#A1A1AA]">
                 {searchQuery ? 'NENHUM ATLETA ENCONTRADO.' : 'NENHUMA PONTUAÇÃO COMPUTADA NESTA TURMA.'}
               </p>
             </div>
@@ -725,15 +725,15 @@ export default function LeaderboardPage() {
                   ? 'bg-slate-300/20 text-slate-200 border-slate-300/40'
                   : actualRank === 3
                   ? 'bg-amber-700/20 text-amber-500 border-amber-700/40'
-                  : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]';
+                  : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A]';
 
               return (
                 <div
                   key={item.id}
                   className={`p-3.5 rounded-2xl border transition-all ${
                     isMe
-                      ? 'bg-[#121722] border-[#3478F6]/45 shadow-[0_0_20px_rgba(52,120,246,0.12)]'
-                      : 'bg-[#121722] border-[#252D3B] hover:border-white/15'
+                      ? 'bg-[#0E0E10] border-[#3478F6]/45 shadow-[0_0_20px_rgba(52,120,246,0.12)]'
+                      : 'bg-[#0E0E10] border-[#27272A] hover:border-white/15'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -744,7 +744,7 @@ export default function LeaderboardPage() {
                         #{String(actualRank).padStart(2, '0')}
                       </div>
 
-                      <div className="h-10 w-10 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center font-mono font-bold text-xs text-[#F4F6FA] overflow-hidden shrink-0">
+                      <div className="h-10 w-10 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center font-mono font-bold text-xs text-[#FAFAFA] overflow-hidden shrink-0">
                         {item.students?.avatar_url ? (
                           <img src={item.students.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                         ) : (
@@ -754,17 +754,17 @@ export default function LeaderboardPage() {
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <p className="text-xs font-bold text-[#F4F6FA] truncate max-w-[135px]">
+                          <p className="text-xs font-bold text-[#FAFAFA] truncate max-w-[135px]">
                             {item.students?.full_name || 'Atleta'}
                           </p>
                           {isMe && (
-                            <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 shrink-0">
+                            <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-white/[0.06] text-[#D4D4D8] border border-white/10 shrink-0">
                               VOCÊ
                             </span>
                           )}
                           {athleteStreak >= 2 && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B] shrink-0">
-                              <Flame className="w-2.5 h-2.5 text-[#75A7FF]" />
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#18181B] text-[#A1A1AA] border border-[#27272A] shrink-0">
+                              <Flame className="w-2.5 h-2.5 text-[#D4D4D8]" />
                               {athleteStreak}d
                             </span>
                           )}
@@ -772,7 +772,7 @@ export default function LeaderboardPage() {
 
                         {/* Barra de progresso relativa ao líder */}
                         <div className="mt-2 flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded-full bg-[#000000] border border-[#27272A] overflow-hidden">
                             <div
                               className={`h-full rounded-full transition-all duration-500 ${
                                 isMe
@@ -782,18 +782,18 @@ export default function LeaderboardPage() {
                               style={{ width: `${relativePct}%` }}
                             />
                           </div>
-                          <span className="text-[9px] font-mono text-[#A7B0C0] shrink-0">{relativePct}%</span>
+                          <span className="text-[9px] font-mono text-[#A1A1AA] shrink-0">{relativePct}%</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end shrink-0">
-                      <span className="font-mono text-sm font-black text-[#F4F6FA] leading-none">
+                      <span className="font-mono text-sm font-black text-[#FAFAFA] leading-none">
                         {item.total_points}
                       </span>
                       <div className="flex items-center gap-1 mt-1">
                         {delta && delta.direction === 'up' && (
-                          <span className="inline-flex items-center text-[9px] font-mono font-bold text-[#75A7FF]">
+                          <span className="inline-flex items-center text-[9px] font-mono font-bold text-[#D4D4D8]">
                             <TrendingUp className="w-2.5 h-2.5 mr-0.5" />+{delta.value}
                           </span>
                         )}
@@ -803,7 +803,7 @@ export default function LeaderboardPage() {
                           </span>
                         )}
                         {(!delta || delta.direction === 'same') && (
-                          <span className="text-[9px] font-mono text-[#A7B0C0] font-bold uppercase">
+                          <span className="text-[9px] font-mono text-[#A1A1AA] font-bold uppercase">
                             XP
                           </span>
                         )}
@@ -817,10 +817,10 @@ export default function LeaderboardPage() {
         ) : (
           /* Ranking de Squads */
           squadStandings.length === 0 ? (
-            <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
-              <Users className="w-8 h-8 text-[#A7B0C0]/50 mx-auto" />
-              <p className="text-xs font-mono text-[#A7B0C0]">NENHUM SQUAD ATIVO NESTA TURMA.</p>
-              <p className="text-[11px] text-[#A7B0C0]/70">
+            <div className="p-8 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2">
+              <Users className="w-8 h-8 text-[#A1A1AA]/50 mx-auto" />
+              <p className="text-xs font-mono text-[#A1A1AA]">NENHUM SQUAD ATIVO NESTA TURMA.</p>
+              <p className="text-[11px] text-[#A1A1AA]/70">
                 Quando o treinador dividir a turma em equipes cooperativas, o placar de squads aparecerá aqui.
               </p>
             </div>
@@ -832,7 +832,7 @@ export default function LeaderboardPage() {
               return (
                 <div
                   key={sq.id}
-                  className="p-4 rounded-2xl border border-[#252D3B] bg-[#121722] space-y-3"
+                  className="p-4 rounded-2xl border border-[#27272A] bg-[#0E0E10] space-y-3"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -848,29 +848,29 @@ export default function LeaderboardPage() {
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-black text-[#F4F6FA] truncate">{sq.name}</h3>
+                          <h3 className="text-sm font-black text-[#FAFAFA] truncate">{sq.name}</h3>
                           {idx === 0 && (
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 uppercase">
+                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/[0.06] text-[#D4D4D8] border border-white/10 uppercase">
                               SQUAD LÍDER
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] font-mono text-[#A7B0C0] uppercase mt-0.5">
+                        <p className="text-[10px] font-mono text-[#A1A1AA] uppercase mt-0.5">
                           {sq.member_count} INTEGRANTES • MÉDIA {sq.average_points} XP/ATLETA
                         </p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="font-mono text-base font-black text-[#F4F6FA] block leading-none">
+                      <span className="font-mono text-base font-black text-[#FAFAFA] block leading-none">
                         {sq.total_points}
                       </span>
-                      <span className="text-[9px] font-mono text-[#A7B0C0] font-bold uppercase mt-1 block">
+                      <span className="text-[9px] font-mono text-[#A1A1AA] font-bold uppercase mt-1 block">
                         XP TOTAL
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-full h-1.5 rounded-full bg-[#080A0F] border border-[#252D3B] overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-[#000000] border border-[#27272A] overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${sqPct}%`, backgroundColor: sq.color }}

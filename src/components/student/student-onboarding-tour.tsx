@@ -181,13 +181,13 @@ export function StudentOnboardingTour() {
   return (
     <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-lg rounded-3xl bg-[#121722] border border-[#252D3B] p-6 sm:p-7 shadow-[0_20px_70px_rgba(0,0,0,0.95)] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-lg rounded-3xl bg-[#0E0E10] border border-[#27272A] p-6 sm:p-7 shadow-[0_20px_70px_rgba(0,0,0,0.95)] animate-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
         aria-labelledby="student-tour-title"
       >
         {/* Barra de Progresso Animada */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#1B2330] rounded-t-3xl overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#18181B] rounded-t-3xl overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-[#3478F6] via-[#75A7FF] to-[#3478F6] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -197,7 +197,7 @@ export function StudentOnboardingTour() {
         {/* Botão Fechar */}
         <button
           onClick={handleClose}
-          className="absolute top-5 right-5 p-2 rounded-full text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-full text-[#A1A1AA] hover:text-[#FAFAFA] bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors cursor-pointer"
           aria-label="Pular Tour"
           title="Pular Tour"
         >
@@ -207,20 +207,20 @@ export function StudentOnboardingTour() {
         {/* Header do Passo */}
         <div className="space-y-3 mb-5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider bg-[#3478F6]/15 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/30 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10 font-bold">
               {currentStep.tag}
             </span>
-            <span className="text-xs font-mono text-[#A7B0C0]">
+            <span className="text-xs font-mono text-[#A1A1AA]">
               Passo {currentStep.stepNumber} de {STUDENT_TOUR_STEPS.length}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-2xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF] shrink-0 shadow-inner">
+            <div className="h-11 w-11 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#D4D4D8] shrink-0 shadow-inner">
               <StepIcon className="w-5 h-5 text-[#3478F6]" />
             </div>
             <div>
-              <h2 id="student-tour-title" className="text-lg sm:text-xl font-black text-[#F4F6FA] tracking-tight">
+              <h2 id="student-tour-title" className="text-lg sm:text-xl font-black text-[#FAFAFA] tracking-tight">
                 {currentStep.title}
               </h2>
             </div>
@@ -228,20 +228,20 @@ export function StudentOnboardingTour() {
         </div>
 
         {/* Descrição & Destaque */}
-        <div className="space-y-3.5 mb-5 text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+        <div className="space-y-3.5 mb-5 text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
           <p>{currentStep.description}</p>
 
-          <div className="p-3 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 text-[#75A7FF] font-medium flex items-start gap-2.5">
+          <div className="p-3 rounded-2xl bg-white/[0.06] border border-white/10 text-[#D4D4D8] font-medium flex items-start gap-2.5">
             <Zap className="w-4 h-4 text-[#3478F6] shrink-0 mt-0.5" />
             <p className="text-xs leading-snug">{currentStep.highlightText}</p>
           </div>
 
           {/* Bullets */}
-          <ul className="space-y-1.5 pt-2 border-t border-[#252D3B] text-[#A7B0C0]">
+          <ul className="space-y-1.5 pt-2 border-t border-[#27272A] text-[#A1A1AA]">
             {currentStep.bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-center gap-2 text-xs">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
-                <span className="text-[#F4F6FA]">{bullet}</span>
+                <span className="text-[#FAFAFA]">{bullet}</span>
               </li>
             ))}
           </ul>
@@ -252,20 +252,20 @@ export function StudentOnboardingTour() {
           <Button
             onClick={() => handleNavigate(currentStep.actionHref)}
             variant="outline"
-            className="w-full min-h-[42px] border-[#252D3B] bg-[#1B2330] hover:bg-[#252D3B] text-[#F4F6FA] font-bold text-xs flex items-center justify-center gap-2 rounded-xl cursor-pointer"
+            className="w-full min-h-[42px] border-[#27272A] bg-[#18181B] hover:bg-[#27272A] text-[#FAFAFA] font-bold text-xs flex items-center justify-center gap-2 rounded-xl cursor-pointer"
           >
             <span>{currentStep.actionLabel}</span>
-            <ExternalLink className="w-3.5 h-3.5 text-[#A7B0C0]" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#A1A1AA]" />
           </Button>
         </div>
 
         {/* Rodapé de Navegação */}
-        <div className="flex items-center justify-between pt-3.5 border-t border-[#252D3B]">
+        <div className="flex items-center justify-between pt-3.5 border-t border-[#27272A]">
           <button
             onClick={handlePrev}
             disabled={currentStepIndex === 0}
             className={`flex items-center gap-1 text-xs font-mono font-bold transition-colors cursor-pointer ${
-              currentStepIndex === 0 ? 'text-[#A7B0C0]/40 cursor-not-allowed' : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+              currentStepIndex === 0 ? 'text-[#A1A1AA]/40 cursor-not-allowed' : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -281,7 +281,7 @@ export function StudentOnboardingTour() {
                 className={`h-2 rounded-full transition-all cursor-pointer ${
                   idx === currentStepIndex
                     ? 'w-5 bg-[#3478F6]'
-                    : 'w-2 bg-[#252D3B] hover:bg-[#3478F6]/50'
+                    : 'w-2 bg-[#27272A] hover:bg-[#3478F6]/50'
                 }`}
                 aria-label={`Ir para passo ${idx + 1}`}
               />

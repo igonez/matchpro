@@ -388,13 +388,13 @@ function CameraCaptureContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer bg-[#080A0F] text-[#F4F6FA] relative max-w-xl mx-auto w-full selection:bg-[#3478F6] selection:text-white">
+    <div className="min-h-screen flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer bg-[#000000] text-[#FAFAFA] relative max-w-xl mx-auto w-full selection:bg-[#3478F6] selection:text-white">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Bar Monocromático com Safe Area */}
       <div className="flex items-center justify-between z-10">
-        <Link href="/app" className="px-3.5 py-2 min-h-[44px] h-11 inline-flex items-center gap-1.5 rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-colors">
+        <Link href="/app" className="px-3.5 py-2 min-h-[44px] h-11 inline-flex items-center gap-1.5 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 transition-colors">
           <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
           <span>Voltar</span>
         </Link>
@@ -402,10 +402,10 @@ function CameraCaptureContent() {
           <span className="text-[9px] font-mono uppercase tracking-widest text-[#3478F6] block font-bold">
             OPTICAL_SENSOR_HUD
           </span>
-          <p className="text-xs font-black text-[#F4F6FA] line-clamp-1">{mission?.title || 'Check-in de Missão'}</p>
+          <p className="text-xs font-black text-[#FAFAFA] line-clamp-1">{mission?.title || 'Check-in de Missão'}</p>
         </div>
         <div className="w-12 text-right">
-          <span className="text-[10px] font-mono text-[#75A7FF] font-bold">
+          <span className="text-[10px] font-mono text-[#D4D4D8] font-bold">
             +{mission?.points_rewarded || 10}P
           </span>
         </div>
@@ -414,7 +414,7 @@ function CameraCaptureContent() {
       {/* Área do Visor Técnico (HUD da Câmera) */}
       <div className="flex-1 flex flex-col items-center justify-center my-4 z-10">
         {previewUrl ? (
-          <div className="relative w-full aspect-[3/4] max-h-[60vh] rounded-3xl overflow-hidden border border-[#252D3B] bg-[#080A0F] shadow-2xl">
+          <div className="relative w-full aspect-[3/4] max-h-[60vh] rounded-3xl overflow-hidden border border-[#27272A] bg-[#000000] shadow-2xl">
             <img
               src={previewUrl}
               alt="Foto Capturada"
@@ -446,42 +446,42 @@ function CameraCaptureContent() {
               <div
                 className={`absolute top-3 inset-x-3 p-3 rounded-2xl backdrop-blur-xl border text-xs font-mono space-y-1.5 z-20 ${
                   aiAnalysisResult && !aiAnalysisResult.isValid
-                    ? 'bg-[#121722]/95 border-amber-500/30 text-amber-200'
-                    : 'bg-[#121722]/95 border-[#252D3B] text-[#F4F6FA]'
+                    ? 'bg-[#0E0E10]/95 border-amber-500/30 text-amber-200'
+                    : 'bg-[#0E0E10]/95 border-[#27272A] text-[#FAFAFA]'
                 }`}
               >
                 {analyzingAi ? (
-                  <div className="flex items-center gap-2 text-[#75A7FF]">
+                  <div className="flex items-center gap-2 text-[#D4D4D8]">
                     <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-ping" />
                     <span className="text-[11px] font-bold">IA MULTIMODAL ESCANEANDO PRATO...</span>
                   </div>
                 ) : aiMacros && aiAnalysisResult?.isValid ? (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-[#75A7FF] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="text-[10px] text-[#D4D4D8] font-bold uppercase tracking-wider flex items-center gap-1.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6]" />
                         REFEIÇÃO IDENTIFICADA
                       </span>
-                      <span className="text-xs font-black text-white bg-[#3478F6]/20 px-2 py-0.5 rounded-md border border-[#3478F6]/30">
+                      <span className="text-xs font-black text-white bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10">
                         {aiMacros.calories}
                       </span>
                     </div>
-                    <div className="grid grid-cols-3 gap-1 pt-1 border-t border-[#252D3B] text-[10px] text-center">
-                      <div className="bg-[#1B2330] rounded p-1">
-                        <span className="text-[#A7B0C0] block text-[8px]">PROTEÍNAS</span>
-                        <strong className="text-[#F4F6FA]">{aiMacros.protein}</strong>
+                    <div className="grid grid-cols-3 gap-1 pt-1 border-t border-[#27272A] text-[10px] text-center">
+                      <div className="bg-[#18181B] rounded p-1">
+                        <span className="text-[#A1A1AA] block text-[8px]">PROTEÍNAS</span>
+                        <strong className="text-[#FAFAFA]">{aiMacros.protein}</strong>
                       </div>
-                      <div className="bg-[#1B2330] rounded p-1">
-                        <span className="text-[#A7B0C0] block text-[8px]">CARBOS</span>
-                        <strong className="text-[#F4F6FA]">{aiMacros.carbs}</strong>
+                      <div className="bg-[#18181B] rounded p-1">
+                        <span className="text-[#A1A1AA] block text-[8px]">CARBOS</span>
+                        <strong className="text-[#FAFAFA]">{aiMacros.carbs}</strong>
                       </div>
-                      <div className="bg-[#1B2330] rounded p-1">
-                        <span className="text-[#A7B0C0] block text-[8px]">GORDURAS</span>
-                        <strong className="text-[#F4F6FA]">{aiMacros.fats}</strong>
+                      <div className="bg-[#18181B] rounded p-1">
+                        <span className="text-[#A1A1AA] block text-[8px]">GORDURAS</span>
+                        <strong className="text-[#FAFAFA]">{aiMacros.fats}</strong>
                       </div>
                     </div>
                     {aiMacros.summary && (
-                      <p className="text-[9px] text-[#A7B0C0] font-sans truncate pt-0.5">
+                      <p className="text-[9px] text-[#A1A1AA] font-sans truncate pt-0.5">
                         {aiMacros.summary}
                       </p>
                     )}
@@ -491,7 +491,7 @@ function CameraCaptureContent() {
                     <div className="flex items-center gap-1.5 text-amber-300 font-bold text-[11px]">
                       <span>⚠️ NENHUM ALIMENTO IDENTIFICADO</span>
                     </div>
-                    <p className="text-[10px] text-[#A7B0C0] font-sans leading-relaxed">
+                    <p className="text-[10px] text-[#A1A1AA] font-sans leading-relaxed">
                       {aiMacros.summary || 'Aponte a câmera diretamente para o prato de comida para estimar calorias e macros.'}
                     </p>
                   </div>
@@ -500,40 +500,40 @@ function CameraCaptureContent() {
             )}
 
             {/* Metadados Antifraude Gravados */}
-            <div className="absolute bottom-3 inset-x-3 p-3 rounded-2xl bg-[#121722]/90 backdrop-blur-xl border border-[#252D3B] font-mono text-[10px] space-y-1">
+            <div className="absolute bottom-3 inset-x-3 p-3 rounded-2xl bg-[#0E0E10]/90 backdrop-blur-xl border border-[#27272A] font-mono text-[10px] space-y-1">
               {durationSeconds && (
-                <div className="flex justify-between text-[#A7B0C0] pb-1 mb-1 border-b border-[#252D3B]">
+                <div className="flex justify-between text-[#A1A1AA] pb-1 mb-1 border-b border-[#27272A]">
                   <span>TEMPO DE SESSÃO:</span>
-                  <span className="text-[#75A7FF] font-black">
+                  <span className="text-[#D4D4D8] font-black">
                     {Math.floor(durationSeconds / 60)} MIN {durationSeconds % 60} SEG
                   </span>
                 </div>
               )}
-              <div className="flex justify-between text-[#A7B0C0]">
+              <div className="flex justify-between text-[#A1A1AA]">
                 <span>TIMESTAMP:</span>
-                <span className="text-[#F4F6FA] font-bold">
+                <span className="text-[#FAFAFA] font-bold">
                   {captureTime?.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                 </span>
               </div>
-              <div className="flex justify-between text-[#A7B0C0]">
+              <div className="flex justify-between text-[#A1A1AA]">
                 <span>COORDINATES:</span>
-                <span className="text-[#F4F6FA] font-bold">{location?.text || 'CALCULANDO...'}</span>
+                <span className="text-[#FAFAFA] font-bold">{location?.text || 'CALCULANDO...'}</span>
               </div>
             </div>
           </div>
         ) : (
-          <div className="w-full aspect-[3/4] max-h-[60vh] rounded-3xl border border-dashed border-[#252D3B] bg-[#121722]/80 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center transition-colors relative group">
+          <div className="w-full aspect-[3/4] max-h-[60vh] rounded-3xl border border-dashed border-[#27272A] bg-[#0E0E10]/80 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center transition-colors relative group">
             {/* Mirante Vetorial SVG */}
-            <div className="h-16 w-16 rounded-2xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform text-[#3478F6]">
+            <div className="h-16 w-16 rounded-2xl bg-[#18181B] border border-[#27272A] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform text-[#3478F6]">
               <svg className="w-8 h-8 text-[#3478F6]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="3" strokeWidth="2" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
               </svg>
             </div>
-            <h3 className="font-bold text-sm text-[#F4F6FA] font-mono uppercase tracking-wider">
+            <h3 className="font-bold text-sm text-[#FAFAFA] font-mono uppercase tracking-wider">
               REGISTRO DE CHECK-IN AO VIVO
             </h3>
-            <p className="text-xs text-[#A7B0C0] max-w-xs mt-1 mb-5">
+            <p className="text-xs text-[#A1A1AA] max-w-xs mt-1 mb-5">
               Tire a foto em tempo real com sensor óptico antifraude e carimbo de horário automático. O envio via galeria foi desabilitado para garantir a integridade dos pontos.
             </p>
             <div className="flex flex-col gap-2.5 w-full max-w-xs">
@@ -573,7 +573,7 @@ function CameraCaptureContent() {
               placeholder="Adicione uma nota sobre a execução..."
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              className="h-11 rounded-2xl bg-[#121722] border-[#252D3B] text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:border-[#3478F6]"
+              className="h-11 rounded-2xl bg-[#0E0E10] border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:border-[#3478F6]"
             />
 
             <div className="flex gap-2">
@@ -585,7 +585,7 @@ function CameraCaptureContent() {
                   setLocation(null);
                 }}
                 disabled={uploading}
-                className="flex-1 h-11 text-xs font-mono font-bold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] transition-colors"
+                className="flex-1 h-11 text-xs font-mono font-bold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] transition-colors"
               >
                 RECAPTURAR
               </button>

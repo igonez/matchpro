@@ -704,7 +704,7 @@ export function ShareRankingSheet({
       role="dialog"
       aria-modal="true"
       aria-labelledby="share-ranking-title"
-      className="fixed inset-0 z-50 bg-[#080A0F]/95 backdrop-blur-xl flex flex-col items-center justify-between overflow-y-auto font-sans"
+      className="fixed inset-0 z-50 bg-[#000000]/95 backdrop-blur-xl flex flex-col items-center justify-between overflow-y-auto font-sans"
     >
       {/* Container offscreen 1080x1920 para renderização PNG */}
       <div
@@ -782,31 +782,31 @@ export function ShareRankingSheet({
             toast.tone === 'error'
               ? 'bg-rose-950/95 border-rose-500/40 text-rose-200'
               : toast.tone === 'info'
-              ? 'bg-[#121722] border-[#252D3B] text-[#A7B0C0]'
-              : 'bg-[#121722] border-[#3478F6]/40 text-[#F4F6FA]'
+              ? 'bg-[#0E0E10] border-[#27272A] text-[#A1A1AA]'
+              : 'bg-[#0E0E10] border-white/10 text-[#FAFAFA]'
           }`}
         >
-          <Check className="w-3.5 h-3.5 text-[#75A7FF] shrink-0" />
+          <Check className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
           <span>{toast.message}</span>
         </div>
       )}
 
       {/* Câmera ao vivo */}
       {cameraModalOpen && (
-        <div className="fixed inset-0 z-[65] bg-[#080A0F] flex flex-col justify-between p-4">
+        <div className="fixed inset-0 z-[65] bg-[#000000] flex flex-col justify-between p-4">
           <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={handleCancelLiveCamera}
-              className="min-h-[40px] px-4 rounded-full bg-[#1B2330] border border-[#252D3B] text-xs font-medium text-[#F4F6FA] cursor-pointer"
+              className="min-h-[40px] px-4 rounded-full bg-[#18181B] border border-[#27272A] text-xs font-medium text-[#FAFAFA] cursor-pointer"
             >
               Cancelar
             </button>
-            <span className="text-xs font-semibold text-[#F4F6FA]">Câmera</span>
+            <span className="text-xs font-semibold text-[#FAFAFA]">Câmera</span>
             <div className="w-20" />
           </div>
 
-          <div className="flex-1 flex items-center justify-center my-4 overflow-hidden rounded-3xl border border-[#252D3B] bg-[#121722]">
+          <div className="flex-1 flex items-center justify-center my-4 overflow-hidden rounded-3xl border border-[#27272A] bg-[#0E0E10]">
             <video
               ref={videoRef}
               playsInline
@@ -833,7 +833,7 @@ export function ShareRankingSheet({
           <button
             type="button"
             onClick={onClose}
-            className="min-h-[38px] px-3 rounded-full bg-[#121722] hover:bg-[#1B2330] border border-[#252D3B] text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="min-h-[38px] px-3 rounded-full bg-[#0E0E10] hover:bg-[#18181B] border border-[#27272A] text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
             <span>Fechar</span>
@@ -841,7 +841,7 @@ export function ShareRankingSheet({
 
           <h1
             id="share-ranking-title"
-            className="text-sm sm:text-base font-semibold text-[#F4F6FA] tracking-tight"
+            className="text-sm sm:text-base font-semibold text-[#FAFAFA] tracking-tight"
           >
             Compartilhar ranking
           </h1>
@@ -849,7 +849,7 @@ export function ShareRankingSheet({
           <div className="w-[68px] flex justify-end">
             {isPreparing && (
               <Loader2
-                className="w-4 h-4 text-[#75A7FF] animate-spin"
+                className="w-4 h-4 text-[#D4D4D8] animate-spin"
                 aria-label="Carregando"
               />
             )}
@@ -857,9 +857,9 @@ export function ShareRankingSheet({
         </header>
 
         {isEmptyRanking ? (
-          <div className="my-auto p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
-            <p className="text-sm font-semibold text-[#F4F6FA]">Ainda não há participantes pontuados</p>
-            <p className="text-xs text-[#A7B0C0]">
+          <div className="my-auto p-8 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2">
+            <p className="text-sm font-semibold text-[#FAFAFA]">Ainda não há participantes pontuados</p>
+            <p className="text-xs text-[#A1A1AA]">
               Assim que os primeiros pontos forem registrados, você poderá compartilhar o ranking.
             </p>
           </div>
@@ -884,18 +884,18 @@ export function ShareRankingSheet({
                       <div
                         data-testid={`preview-card-${variant}`}
                         data-checkerboard={showCheckerboard ? 'true' : 'false'}
-                        className="relative rounded-2xl overflow-hidden border border-[#252D3B] shadow-2xl"
+                        className="relative rounded-2xl overflow-hidden border border-[#27272A] shadow-2xl"
                         style={{
                           width: `${PREVIEW_WIDTH}px`,
                           height: `${PREVIEW_HEIGHT}px`,
                           backgroundImage: showCheckerboard
-                            ? 'linear-gradient(45deg, #1B2330 25%, transparent 25%), linear-gradient(-45deg, #1B2330 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1B2330 75%), linear-gradient(-45deg, transparent 75%, #1B2330 75%)'
+                            ? 'linear-gradient(45deg, #18181B 25%, transparent 25%), linear-gradient(-45deg, #18181B 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #18181B 75%), linear-gradient(-45deg, transparent 75%, #18181B 75%)'
                             : undefined,
                           backgroundSize: showCheckerboard ? '20px 20px' : undefined,
                           backgroundPosition: showCheckerboard
                             ? '0 0, 0 10px, 10px -10px, -10px 0'
                             : undefined,
-                          backgroundColor: showCheckerboard ? '#121722' : '#080A0F',
+                          backgroundColor: showCheckerboard ? '#0E0E10' : '#000000',
                         }}
                       >
                         <div
@@ -923,8 +923,8 @@ export function ShareRankingSheet({
                         </div>
 
                         {isPreparing && idx === activeSlide && (
-                          <div className="absolute inset-0 bg-[#080A0F]/60 backdrop-blur-xs flex items-center justify-center">
-                            <Loader2 className="w-6 h-6 text-[#75A7FF] animate-spin" />
+                          <div className="absolute inset-0 bg-[#000000]/60 backdrop-blur-xs flex items-center justify-center">
+                            <Loader2 className="w-6 h-6 text-[#D4D4D8] animate-spin" />
                           </div>
                         )}
                       </div>
@@ -941,7 +941,7 @@ export function ShareRankingSheet({
                   aria-label="Card 1"
                   aria-current={activeSlide === 0}
                   className={`h-2 rounded-full transition-all cursor-pointer ${
-                    activeSlide === 0 ? 'w-6 bg-[#3478F6]' : 'w-2 bg-[#252D3B] hover:bg-[#3478F6]/50'
+                    activeSlide === 0 ? 'w-6 bg-[#3478F6]' : 'w-2 bg-[#27272A] hover:bg-[#3478F6]/50'
                   }`}
                 />
                 <button
@@ -950,7 +950,7 @@ export function ShareRankingSheet({
                   aria-label="Card 2"
                   aria-current={activeSlide === 1}
                   className={`h-2 rounded-full transition-all cursor-pointer ${
-                    activeSlide === 1 ? 'w-6 bg-[#3478F6]' : 'w-2 bg-[#252D3B] hover:bg-[#3478F6]/50'
+                    activeSlide === 1 ? 'w-6 bg-[#3478F6]' : 'w-2 bg-[#27272A] hover:bg-[#3478F6]/50'
                   }`}
                 />
               </div>
@@ -960,20 +960,20 @@ export function ShareRankingSheet({
             {isCoachView ? (
               <section className="space-y-1.5">
                 <div className="flex items-center justify-between px-1">
-                  <span className="text-xs font-medium text-[#A7B0C0]">
+                  <span className="text-xs font-medium text-[#A1A1AA]">
                     Marca superior (Personal)
                   </span>
-                  <span className="text-[11px] text-[#A7B0C0]">
+                  <span className="text-[11px] text-[#A1A1AA]">
                     Rodapé: ArenaFitPro
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-[#121722] border border-[#252D3B]">
+                <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-[#0E0E10] border border-[#27272A]">
                   <button
                     type="button"
                     onClick={() => coachLogoInputRef.current?.click()}
                     title="Alterar foto/logo do treinador"
-                    className="relative h-10 w-10 rounded-xl bg-[#1B2330] border border-[#3478F6]/40 flex items-center justify-center overflow-hidden shrink-0 group cursor-pointer"
+                    className="relative h-10 w-10 rounded-xl bg-[#18181B] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 group cursor-pointer"
                   >
                     {customCoachLogo ? (
                       <img
@@ -982,7 +982,7 @@ export function ShareRankingSheet({
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <Upload className="w-4 h-4 text-[#75A7FF]" />
+                      <Upload className="w-4 h-4 text-[#D4D4D8]" />
                     )}
                     <span className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Upload className="w-3.5 h-3.5 text-white" />
@@ -997,13 +997,13 @@ export function ShareRankingSheet({
                     onBlur={() => persistBrandToCoachProfile(customBrandName, undefined)}
                     placeholder="Nome de exibição (ex: Personal / Consultoria)"
                     aria-label="Nome de exibição do personal"
-                    className="flex-1 bg-transparent text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none px-1"
+                    className="flex-1 bg-transparent text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none px-1"
                   />
 
                   <button
                     type="button"
                     onClick={() => coachLogoInputRef.current?.click()}
-                    className="text-[11px] font-medium text-[#75A7FF] hover:text-white px-2.5 py-1.5 rounded-lg bg-[#3478F6]/15 border border-[#3478F6]/30 cursor-pointer shrink-0 transition-colors"
+                    className="text-[11px] font-medium text-[#D4D4D8] hover:text-white px-2.5 py-1.5 rounded-lg bg-white/[0.06] border border-white/10 cursor-pointer shrink-0 transition-colors"
                   >
                     Trocar Foto
                   </button>
@@ -1011,20 +1011,20 @@ export function ShareRankingSheet({
               </section>
             ) : (
               (customCoachLogo || debouncedBrandName) && (
-                <section className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl bg-[#121722] border border-[#252D3B]">
+                <section className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl bg-[#0E0E10] border border-[#27272A]">
                   <div className="flex items-center gap-2.5 min-w-0">
                     {customCoachLogo && (
                       <img
                         src={customCoachLogo}
                         alt={debouncedBrandName || 'Treinador'}
-                        className="h-7 w-7 rounded-lg object-cover border border-[#3478F6]/40 shrink-0"
+                        className="h-7 w-7 rounded-lg object-cover border border-white/10 shrink-0"
                       />
                     )}
-                    <span className="text-xs font-bold text-[#F4F6FA] truncate">
+                    <span className="text-xs font-bold text-[#FAFAFA] truncate">
                       {debouncedBrandName || challengeTitle}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-[#75A7FF] uppercase shrink-0">
+                  <span className="text-[10px] font-mono text-[#D4D4D8] uppercase shrink-0">
                     Turma Oficial
                   </span>
                 </section>
@@ -1033,14 +1033,14 @@ export function ShareRankingSheet({
 
             {/* 3. Seção "Plano de fundo": Transparente, Galeria, Câmera */}
             <section className="space-y-1.5">
-              <span className="text-xs font-medium text-[#A7B0C0] px-1 block">
+              <span className="text-xs font-medium text-[#A1A1AA] px-1 block">
                 Plano de fundo
               </span>
 
               <div
                 role="radiogroup"
                 aria-label="Plano de fundo"
-                className="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-[#121722] border border-[#252D3B]"
+                className="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-[#0E0E10] border border-[#27272A]"
               >
                 <button
                   type="button"
@@ -1050,7 +1050,7 @@ export function ShareRankingSheet({
                   className={`min-h-[40px] py-2 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     bgMode === 'transparent'
                       ? 'bg-[#3478F6] text-white font-semibold shadow-xs'
-                      : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                   }`}
                 >
                   <Grid className="w-3.5 h-3.5 shrink-0" />
@@ -1065,7 +1065,7 @@ export function ShareRankingSheet({
                   className={`min-h-[40px] py-2 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     bgMode === 'gallery'
                       ? 'bg-[#3478F6] text-white font-semibold shadow-xs'
-                      : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                   }`}
                 >
                   <ImageIcon className="w-3.5 h-3.5 shrink-0" />
@@ -1080,7 +1080,7 @@ export function ShareRankingSheet({
                   className={`min-h-[40px] py-2 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     bgMode === 'camera'
                       ? 'bg-[#3478F6] text-white font-semibold shadow-xs'
-                      : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                   }`}
                 >
                   <Camera className="w-3.5 h-3.5 shrink-0" />
@@ -1089,7 +1089,7 @@ export function ShareRankingSheet({
               </div>
 
               {bgMode === 'transparent' && (
-                <p className="text-[11px] text-[#A7B0C0] text-center pt-0.5">
+                <p className="text-[11px] text-[#A1A1AA] text-center pt-0.5">
                   Para usar como sticker no Instagram, salve a imagem e adicione da galeria no Story.
                 </p>
               )}
@@ -1097,7 +1097,7 @@ export function ShareRankingSheet({
 
             {/* 4. Seção "Compartilhar com": Copiar, Salvar, Story, Mais */}
             <section className="space-y-1.5">
-              <span className="text-xs font-medium text-[#A7B0C0] px-1 block">
+              <span className="text-xs font-medium text-[#A1A1AA] px-1 block">
                 Compartilhar com
               </span>
 
@@ -1106,31 +1106,31 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleCopyAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#121722] hover:bg-[#1B2330] border border-[#252D3B] disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#0E0E10] hover:bg-[#18181B] border border-[#27272A] disabled:opacity-50 transition-colors cursor-pointer"
                 >
-                  <div className="h-10 w-10 rounded-full bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#F4F6FA]">
+                  <div className="h-10 w-10 rounded-full bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#FAFAFA]">
                     <Copy className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-medium text-[#F4F6FA]">Copiar</span>
+                  <span className="text-xs font-medium text-[#FAFAFA]">Copiar</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleSaveAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#121722] hover:bg-[#1B2330] border border-[#252D3B] disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#0E0E10] hover:bg-[#18181B] border border-[#27272A] disabled:opacity-50 transition-colors cursor-pointer"
                 >
-                  <div className="h-10 w-10 rounded-full bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#F4F6FA]">
+                  <div className="h-10 w-10 rounded-full bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#FAFAFA]">
                     <Download className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-medium text-[#F4F6FA]">Salvar</span>
+                  <span className="text-xs font-medium text-[#FAFAFA]">Salvar</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleStoryAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#121722] hover:bg-[#1B2330] border border-[#252D3B] disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#0E0E10] hover:bg-[#18181B] border border-[#27272A] disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <div className="h-10 w-10 rounded-full bg-[#3478F6] flex items-center justify-center text-white shadow-[0_0_15px_rgba(52,120,246,0.35)]">
                     <svg
@@ -1148,19 +1148,19 @@ export function ShareRankingSheet({
                       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                     </svg>
                   </div>
-                  <span className="text-xs font-medium text-[#F4F6FA]">Story</span>
+                  <span className="text-xs font-medium text-[#FAFAFA]">Story</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleMoreAction}
                   disabled={isPreparing || Boolean(exportError)}
-                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#121722] hover:bg-[#1B2330] border border-[#252D3B] disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl bg-[#0E0E10] hover:bg-[#18181B] border border-[#27272A] disabled:opacity-50 transition-colors cursor-pointer"
                 >
-                  <div className="h-10 w-10 rounded-full bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#F4F6FA]">
+                  <div className="h-10 w-10 rounded-full bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#FAFAFA]">
                     <MoreHorizontal className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-medium text-[#F4F6FA]">Mais</span>
+                  <span className="text-xs font-medium text-[#FAFAFA]">Mais</span>
                 </button>
               </div>
             </section>
@@ -1172,7 +1172,7 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleRevokeLink}
                   disabled={revokingLink}
-                  className="text-[11px] text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
+                  className="text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
                 >
                   {revokingLink ? 'Desativando link…' : 'Desativar link público'}
                 </button>
@@ -1180,7 +1180,7 @@ export function ShareRankingSheet({
                 <button
                   type="button"
                   onClick={() => createOrRefreshShareLink(true)}
-                  className="text-[11px] text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
+                  className="text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
                 >
                   Reativar link público
                 </button>

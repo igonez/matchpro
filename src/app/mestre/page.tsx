@@ -75,20 +75,20 @@ export default function MasterLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white font-sans flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white font-sans flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden">
       {/* Background 3D Animado igual à área de login de treinador/aluno */}
       <Monochrome3DBackground />
 
       {/* Top Bar Minimalista */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between pt-2 z-10">
         <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
-          <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+          <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#27272A] bg-[#0E0E10] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
-          <span className="font-extrabold text-base tracking-tight text-[#F4F6FA]">ArenaFitPro</span>
+          <span className="font-extrabold text-base tracking-tight text-[#FAFAFA]">ArenaFitPro</span>
         </Link>
 
-        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors">
+        <Link href="/" className="inline-flex items-center px-3 py-2 min-h-[44px] rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
           ← Início
         </Link>
       </div>
@@ -102,13 +102,13 @@ export default function MasterLoginPage() {
         <SpotlightCard3D className="p-6 sm:p-7">
           {/* Header do Card */}
           <div className="text-center mb-5">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] block mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4D4D8] block mb-1">
               PAINEL ADMINISTRATIVO
             </span>
-            <h1 className="text-2xl font-black text-[#F4F6FA] tracking-tight">
+            <h1 className="text-2xl font-black text-[#FAFAFA] tracking-tight">
               Acesso Mestre
             </h1>
-            <p className="text-xs text-[#A7B0C0] mt-1">
+            <p className="text-xs text-[#A1A1AA] mt-1">
               Cockpit de gestão e operações globais da plataforma
             </p>
           </div>
@@ -121,7 +121,7 @@ export default function MasterLoginPage() {
 
           <form onSubmit={handleMasterSignIn} className="space-y-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA]">
                 E-mail de Administrador
               </label>
               <Input
@@ -130,12 +130,12 @@ export default function MasterLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu.email@arenafitpro.com.br"
-                className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA]">
                 Senha de Acesso
               </label>
               <Input
@@ -144,7 +144,7 @@ export default function MasterLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
               />
             </div>
 
@@ -163,8 +163,8 @@ export default function MasterLoginPage() {
               )}
             </button>
 
-            <p className="text-[11px] text-[#A7B0C0] text-center flex items-center justify-center gap-1.5 pt-1">
-              <Lock className="w-3 h-3 text-[#75A7FF]" /> Acesso restrito ao administrador fundador
+            <p className="text-[11px] text-[#A1A1AA] text-center flex items-center justify-center gap-1.5 pt-1">
+              <Lock className="w-3 h-3 text-[#D4D4D8]" /> Acesso restrito ao administrador fundador
             </p>
           </form>
         </SpotlightCard3D>
@@ -172,7 +172,7 @@ export default function MasterLoginPage() {
 
       {/* Rodapé Minimalista */}
       <div className="max-w-md w-full mx-auto text-center z-10 pb-2">
-        <span className="text-[11px] text-[#A7B0C0] font-mono">
+        <span className="text-[11px] text-[#A1A1AA] font-mono">
           ArenaFitPro • Painel Mestre
         </span>
       </div>

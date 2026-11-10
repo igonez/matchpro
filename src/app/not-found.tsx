@@ -4,20 +4,20 @@ import { Compass, ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex items-center justify-center p-6 font-sans">
-      <div className="max-w-md w-full p-6 sm:p-8 rounded-3xl bg-[#121722] border border-[#252D3B] text-center space-y-5 shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
-        <div className="w-14 h-14 rounded-2xl bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF] flex items-center justify-center mx-auto">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] flex items-center justify-center p-6 font-sans">
+      <div className="max-w-md w-full p-6 sm:p-8 rounded-3xl bg-[#0E0E10] border border-[#27272A] text-center space-y-5 shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+        <div className="w-14 h-14 rounded-2xl bg-white/[0.06] border border-white/10 text-[#D4D4D8] flex items-center justify-center mx-auto">
           <Compass className="w-7 h-7" />
         </div>
 
         <div className="space-y-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold block">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4D4D8] font-bold block">
             Erro 404 • Rota Não Localizada
           </span>
-          <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#F4F6FA]">
+          <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#FAFAFA]">
             Página não encontrada
           </h1>
-          <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
             O endereço acessado não existe ou foi movido. Retorne à página inicial do ArenaFitPro.
           </p>
         </div>

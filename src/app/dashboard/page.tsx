@@ -300,13 +300,13 @@ export default function DashboardOverviewPage() {
       >
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+            <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
               Visão Geral
             </span>
-            <span className="text-xs text-[#A7B0C0] font-medium">Dados em tempo real</span>
+            <span className="text-xs text-[#A1A1AA] font-medium">Dados em tempo real</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">Operação dos Desafios</h1>
-          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] tracking-tight">Operação dos Desafios</h1>
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
             Métricas em tempo real, fila de auditoria e radar de retenção ativa.
           </p>
         </div>
@@ -326,14 +326,14 @@ export default function DashboardOverviewPage() {
           {/* 2. Publicar Aviso */}
           <button
             onClick={() => setIsNoticeModalOpen(true)}
-            className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] hover:text-[#75A7FF] transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] hover:text-[#75A7FF] transition-colors cursor-pointer"
           >
             Publicar Aviso
           </button>
 
           {/* 3. Auditar Fotos */}
           <Link href="/dashboard/audit" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#252D3B] transition-colors cursor-pointer">
+            <button className="w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#27272A] transition-colors cursor-pointer">
               <span>Auditar Fotos</span>
               <span className="text-[11px] font-mono text-[#3478F6] font-bold">({stats.pendingSubmissions})</span>
             </button>
@@ -345,18 +345,18 @@ export default function DashboardOverviewPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         {/* Card 1: Turmas Ativas */}
         <Link href="/dashboard/challenges" className="block group">
-          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#121722] border border-[#252D3B]">
+          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#0E0E10] border border-[#27272A]">
             <div className="flex items-center justify-between pb-3">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A1A1AA] group-hover:text-[#FAFAFA] transition-colors">
                 <span>Turmas Ativas</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-[#3478F6]" />
               </span>
-              <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-2 py-0.5 rounded-full font-mono">
+              <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] border border-white/10 px-2 py-0.5 rounded-full font-mono">
                 Em Andamento
               </span>
             </div>
-            <div className="text-3xl font-black text-[#F4F6FA] font-mono">{stats.activeChallenges}</div>
-            <p className="text-xs text-[#A7B0C0] mt-1 flex items-center justify-between">
+            <div className="text-3xl font-black text-[#FAFAFA] font-mono">{stats.activeChallenges}</div>
+            <p className="text-xs text-[#A1A1AA] mt-1 flex items-center justify-between">
               <span>Desafios em execução</span>
               <span className="text-[#3478F6] text-[11px] font-mono group-hover:underline">Ver turmas →</span>
             </p>
@@ -365,16 +365,16 @@ export default function DashboardOverviewPage() {
 
         {/* Card 2: Alunos Inscritos */}
         <Link href="/dashboard/students" className="block group">
-          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#121722] border border-[#252D3B]">
+          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#0E0E10] border border-[#27272A]">
             <div className="flex items-center justify-between pb-3">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A1A1AA] group-hover:text-[#FAFAFA] transition-colors">
                 <span>Alunos Inscritos</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-[#3478F6]" />
               </span>
               <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             </div>
-            <div className="text-3xl font-black text-[#F4F6FA] font-mono">{stats.activeStudents}</div>
-            <p className="text-xs text-[#A7B0C0] mt-1 flex items-center justify-between">
+            <div className="text-3xl font-black text-[#FAFAFA] font-mono">{stats.activeStudents}</div>
+            <p className="text-xs text-[#A1A1AA] mt-1 flex items-center justify-between">
               <span>Atletas nas turmas ativas</span>
               <span className="text-[#3478F6] text-[11px] font-mono group-hover:underline">Gerenciar →</span>
             </p>
@@ -383,22 +383,22 @@ export default function DashboardOverviewPage() {
 
         {/* Card 3: Fila de Revisão */}
         <Link href="/dashboard/audit" className="block group">
-          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#121722] border border-[#252D3B]">
+          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#0E0E10] border border-[#27272A]">
             <div className="flex items-center justify-between pb-3">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A1A1AA] group-hover:text-[#FAFAFA] transition-colors">
                 <span>Fila de Revisão</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-[#3478F6]" />
               </span>
               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full font-mono ${
                 stats.pendingSubmissions > 0
-                  ? 'text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30'
+                  ? 'text-[#D4D4D8] bg-white/[0.06] border border-white/10'
                   : 'text-zinc-400 bg-white/5 border border-white/10'
               }`}>
                 {stats.pendingSubmissions > 0 ? 'Pendente' : 'Em dia'}
               </span>
             </div>
-            <div className="text-3xl font-black text-[#F4F6FA] font-mono">{stats.pendingSubmissions}</div>
-            <p className="text-xs text-[#A7B0C0] mt-1 flex items-center justify-between">
+            <div className="text-3xl font-black text-[#FAFAFA] font-mono">{stats.pendingSubmissions}</div>
+            <p className="text-xs text-[#A1A1AA] mt-1 flex items-center justify-between">
               <span>{stats.pendingSubmissions > 0 ? 'Fotos aguardando auditoria' : 'Nenhuma foto pendente'}</span>
               <span className="text-[#3478F6] text-[11px] font-mono group-hover:underline">Auditar fotos →</span>
             </p>
@@ -407,16 +407,16 @@ export default function DashboardOverviewPage() {
 
         {/* Card 4: Total de Desafios */}
         <Link href="/dashboard/challenges" className="block group">
-          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#121722] border border-[#252D3B]">
+          <SpotlightCard3D className="p-5 group-hover:border-[#3478F6]/50 group-hover:shadow-[0_0_25px_rgba(52,120,246,0.15)] transition-all cursor-pointer bg-[#0E0E10] border border-[#27272A]">
             <div className="flex items-center justify-between pb-3">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A7B0C0] group-hover:text-[#F4F6FA] transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#A1A1AA] group-hover:text-[#FAFAFA] transition-colors">
                 <span>Total de Desafios</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-[#3478F6]" />
               </span>
-              <span className="text-[11px] font-mono text-[#75A7FF]">Ativos: {stats.activeChallenges}</span>
+              <span className="text-[11px] font-mono text-[#D4D4D8]">Ativos: {stats.activeChallenges}</span>
             </div>
-            <div className="text-3xl font-black text-[#F4F6FA] font-mono">{challenges.length}</div>
-            <p className="text-xs text-[#A7B0C0] mt-1 flex items-center justify-between">
+            <div className="text-3xl font-black text-[#FAFAFA] font-mono">{challenges.length}</div>
+            <p className="text-xs text-[#A1A1AA] mt-1 flex items-center justify-between">
               <span>Histórico de turmas</span>
               <span className="text-[#3478F6] text-[11px] font-mono group-hover:underline">Histórico →</span>
             </p>
@@ -428,11 +428,11 @@ export default function DashboardOverviewPage() {
       <div className="space-y-3 relative z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-[#F4F6FA] tracking-tight flex items-center gap-2">
+            <h2 className="text-base font-bold text-[#FAFAFA] tracking-tight flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-rose-500 animate-ping" />
               Radar de Frequência (Inativos há +48h)
             </h2>
-            <p className="text-xs text-[#A7B0C0]">
+            <p className="text-xs text-[#A1A1AA]">
               Alunos que precisam de resgate via WhatsApp antes de abandonarem a rotina.
             </p>
           </div>
@@ -442,14 +442,14 @@ export default function DashboardOverviewPage() {
         </div>
 
         {atRiskStudents.length === 0 ? (
-          <div className="p-4 rounded-2xl flex items-center justify-between border border-[#3478F6]/25 bg-[#121722]">
+          <div className="p-4 rounded-2xl flex items-center justify-between border border-white/10 bg-[#0E0E10]">
             <div>
-              <p className="text-xs font-bold text-[#75A7FF] flex items-center gap-2">
+              <p className="text-xs font-bold text-[#D4D4D8] flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span> 100% de Presença na Turma
               </p>
-              <p className="text-xs text-[#A7B0C0]">Nenhum aluno está inativo há mais de 48 horas.</p>
+              <p className="text-xs text-[#A1A1AA]">Nenhum aluno está inativo há mais de 48 horas.</p>
             </div>
-            <span className="text-xs font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="text-xs font-mono font-bold text-[#D4D4D8] bg-white/[0.06] border border-white/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
               Em dia
             </span>
           </div>
@@ -471,7 +471,7 @@ export default function DashboardOverviewPage() {
               return (
                 <div
                   key={item.student_id}
-                  className="bg-[#121722] p-4 rounded-2xl flex flex-col justify-between border border-rose-500/30 bg-rose-950/10"
+                  className="bg-[#0E0E10] p-4 rounded-2xl flex flex-col justify-between border border-rose-500/30 bg-rose-950/10"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
@@ -479,16 +479,16 @@ export default function DashboardOverviewPage() {
                         <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                         {item.days_inactive} dias sem foto
                       </span>
-                      <span className="text-xs text-[#A7B0C0] font-medium">{item.challenge_title}</span>
+                      <span className="text-xs text-[#A1A1AA] font-medium">{item.challenge_title}</span>
                     </div>
 
-                    <h4 className="text-sm font-black text-[#F4F6FA]">{item.student_name}</h4>
-                    <p className="text-xs text-[#A7B0C0] mt-0.5">
+                    <h4 className="text-sm font-black text-[#FAFAFA]">{item.student_name}</h4>
+                    <p className="text-xs text-[#A1A1AA] mt-0.5">
                       Última foto: {new Date(item.last_activity_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#252D3B]">
+                  <div className="mt-4 pt-3 border-t border-[#27272A]">
                     {waLink ? (
                       <a
                         href={waLink}
@@ -505,7 +505,7 @@ export default function DashboardOverviewPage() {
                           navigator.clipboard.writeText(decodeURIComponent(message));
                           showToast('Mensagem de resgate copiada com sucesso!');
                         }}
-                        className="w-full h-11 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B]"
+                        className="w-full h-11 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A]"
                       >
                         Copiar texto de resgate
                       </button>
@@ -531,9 +531,9 @@ export default function DashboardOverviewPage() {
         </div>
 
         {challenges.length === 0 && !loading ? (
-          <div className="bg-[#121722] p-8 rounded-3xl text-center border border-dashed border-[#252D3B]">
-            <p className="font-bold text-[#F4F6FA] text-sm">Nenhum desafio criado ainda</p>
-            <p className="text-xs text-[#A7B0C0] mt-1 mb-4">
+          <div className="bg-[#0E0E10] p-8 rounded-3xl text-center border border-dashed border-[#27272A]">
+            <p className="font-bold text-[#FAFAFA] text-sm">Nenhum desafio criado ainda</p>
+            <p className="text-xs text-[#A1A1AA] mt-1 mb-4">
               Crie seu primeiro desafio para cadastrar missões e convidar alunos.
             </p>
             <Link href="/dashboard/challenges/new">
@@ -545,7 +545,7 @@ export default function DashboardOverviewPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {challenges.map((c) => (
-              <div key={c.id} className="bg-[#121722] border border-[#252D3B] p-5 rounded-3xl flex flex-col justify-between shadow-md">
+              <div key={c.id} className="bg-[#0E0E10] border border-[#27272A] p-5 rounded-3xl flex flex-col justify-between shadow-md">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <button
@@ -553,45 +553,45 @@ export default function DashboardOverviewPage() {
                       title="Clique para alternar status da turma"
                       className={`text-xs px-3 py-1.5 min-h-[36px] rounded-full border transition-all ${
                         c.is_active
-                          ? 'border-[#3478F6]/30 bg-[#3478F6]/15 text-[#75A7FF] hover:bg-[#3478F6]/25'
-                          : 'border-[#252D3B] bg-[#080A0F] text-[#A7B0C0] hover:text-[#F4F6FA]'
+                          ? 'border-white/10 bg-white/[0.06] text-[#D4D4D8] hover:bg-[#3478F6]/25'
+                          : 'border-[#27272A] bg-[#000000] text-[#A1A1AA] hover:text-[#FAFAFA]'
                       }`}
                     >
                       {c.is_active ? '● Ativo' : '○ Encerrado'}
                     </button>
-                    <span className="text-xs font-mono font-black text-[#F4F6FA]">
+                    <span className="text-xs font-mono font-black text-[#FAFAFA]">
                       R$ {Number(c.price).toFixed(2)}
                     </span>
                   </div>
-                  <h3 className="text-base font-black text-[#F4F6FA] line-clamp-1">
+                  <h3 className="text-base font-black text-[#FAFAFA] line-clamp-1">
                     {c.title}
                   </h3>
-                  <p className="text-xs text-[#A7B0C0] mt-1">
+                  <p className="text-xs text-[#A1A1AA] mt-1">
                     {new Date(c.start_date).toLocaleDateString('pt-BR')} até{' '}
                     {new Date(c.end_date).toLocaleDateString('pt-BR')}
                   </p>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-[#252D3B]">
-                  <div className="flex items-center justify-between text-xs text-[#A7B0C0] mb-3">
+                <div className="pt-4 mt-4 border-t border-[#27272A]">
+                  <div className="flex items-center justify-between text-xs text-[#A1A1AA] mb-3">
                     <span>Missões ativas:</span>
-                    <span className="font-bold text-[#75A7FF] font-mono">
+                    <span className="font-bold text-[#D4D4D8] font-mono">
                       {c.missionsCount ?? (c.missions?.length || 0)}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href={`/dashboard/missions?challengeId=${c.id}`}>
-                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] transition-colors">
+                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] transition-colors">
                         Missões ({c.missionsCount ?? (c.missions?.length || 0)})
                       </button>
                     </Link>
                     <Link href={`/dashboard/leaderboard?challengeId=${c.id}`}>
-                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:text-[#75A7FF] hover:bg-[#252D3B] transition-colors">
+                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:text-[#75A7FF] hover:bg-[#27272A] transition-colors">
                         Ranking
                       </button>
                     </Link>
                     <Link href={`/dashboard/challenges/${c.id}/edit`}>
-                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#252D3B] transition-colors">
+                      <button className="w-full py-2 min-h-[44px] text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] transition-colors">
                         Ver / Editar
                       </button>
                     </Link>
@@ -624,13 +624,13 @@ export default function DashboardOverviewPage() {
         <div className="space-y-3.5">
           {challenges.length > 1 && (
             <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                 Turma / Desafio Destino
               </label>
               <select
                 value={noticeChallengeId || (challenges[0]?.id || '')}
                 onChange={(e) => setNoticeChallengeId(e.target.value)}
-                className="w-full h-10 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 font-mono focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-10 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 font-mono focus:outline-none focus:border-[#3478F6]"
               >
                 {challenges.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -642,19 +642,19 @@ export default function DashboardOverviewPage() {
           )}
 
           <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+            <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
               Título do Aviso
             </label>
             <Input
               placeholder="Ex: Treino Extra de Sábado às 08h"
               value={noticeTitle}
               onChange={(e) => setNoticeTitle(e.target.value)}
-              className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs h-10 focus:border-[#3478F6]"
+              className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl text-xs h-10 focus:border-[#3478F6]"
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+            <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
               Mensagem / Comunicado
             </label>
             <textarea
@@ -662,7 +662,7 @@ export default function DashboardOverviewPage() {
               value={noticeContent}
               onChange={(e) => setNoticeContent(e.target.value)}
               rows={4}
-              className="w-full bg-[#1B2330] border border-[#252D3B] rounded-xl p-3 text-xs text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-sans"
+              className="w-full bg-[#18181B] border border-[#27272A] rounded-xl p-3 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6] font-sans"
             />
           </div>
 
@@ -671,14 +671,14 @@ export default function DashboardOverviewPage() {
               type="checkbox"
               checked={noticeIsPinned}
               onChange={(e) => setNoticeIsPinned(e.target.checked)}
-              className="rounded bg-[#1B2330] border-[#252D3B] text-[#3478F6] focus:ring-0"
+              className="rounded bg-[#18181B] border-[#27272A] text-[#3478F6] focus:ring-0"
             />
-            <span className="text-xs font-mono text-[#A7B0C0]">
+            <span className="text-xs font-mono text-[#A1A1AA]">
               Fixar este aviso no topo do mural dos alunos
             </span>
           </label>
 
-          <div className="p-3 rounded-xl bg-[#3478F6]/10 border border-[#3478F6]/25 text-[11px] font-mono text-[#75A7FF] leading-relaxed flex items-start gap-2">
+          <div className="p-3 rounded-xl bg-white/[0.06] border border-white/10 text-[11px] font-mono text-[#D4D4D8] leading-relaxed flex items-start gap-2">
             <Clock className="w-4 h-4 text-[#3478F6] shrink-0 mt-0.5" />
             <span>
               Duração Automática de 24h: este aviso exibirá um cronômetro regressivo de 24 horas para os alunos e desaparecerá automaticamente após o término do tempo.
@@ -699,14 +699,14 @@ export default function DashboardOverviewPage() {
         >
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                 Link Público do Desafio
               </label>
               <div className="flex gap-2">
                 <Input
                   readOnly
                   value={typeof window !== 'undefined' ? `${window.location.origin}/join/${inviteModalChallenge.id}` : ''}
-                  className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs font-mono select-all"
+                  className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl text-xs font-mono select-all"
                 />
                 <button
                   type="button"
@@ -722,10 +722,10 @@ export default function DashboardOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono">
-              <span className="text-[#A7B0C0]">Código de Acesso Rápido:</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#18181B] border border-[#27272A] text-xs font-mono">
+              <span className="text-[#A1A1AA]">Código de Acesso Rápido:</span>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[#F4F6FA] tracking-widest uppercase bg-[#121722] px-2.5 py-1 rounded-lg border border-[#252D3B]">
+                <span className="font-bold text-[#FAFAFA] tracking-widest uppercase bg-[#0E0E10] px-2.5 py-1 rounded-lg border border-[#27272A]">
                   {inviteModalChallenge.id.slice(0, 8).toUpperCase()}
                 </span>
                 <button
@@ -734,7 +734,7 @@ export default function DashboardOverviewPage() {
                     navigator.clipboard.writeText(inviteModalChallenge.id.slice(0, 8).toUpperCase());
                     showToast('Código rápido copiado!');
                   }}
-                  className="text-[#A7B0C0] hover:text-[#F4F6FA] p-1 transition-colors cursor-pointer"
+                  className="text-[#A1A1AA] hover:text-[#FAFAFA] p-1 transition-colors cursor-pointer"
                   title="Copiar código curto"
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -742,11 +742,11 @@ export default function DashboardOverviewPage() {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
-              <span className="text-[10px] font-mono text-[#A7B0C0] uppercase tracking-wider block">
+            <div className="p-3.5 rounded-xl border border-[#27272A] bg-[#18181B] space-y-2">
+              <span className="text-[10px] font-mono text-[#A1A1AA] uppercase tracking-wider block">
                 Disparo Rápido no WhatsApp
               </span>
-              <p className="text-xs text-[#F4F6FA]">
+              <p className="text-xs text-[#FAFAFA]">
                 Envie o convite formatado direto nos seus grupos ou no privado de cada atleta:
               </p>
               <a
@@ -763,11 +763,11 @@ export default function DashboardOverviewPage() {
             </div>
 
             {/* QR Code para Stories / Balcão */}
-            <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#080A0F] flex flex-col items-center justify-center text-center space-y-3">
-              <span className="text-[10px] font-mono text-[#A7B0C0] uppercase tracking-wider">
+            <div className="p-3.5 rounded-xl border border-[#27272A] bg-[#000000] flex flex-col items-center justify-center text-center space-y-3">
+              <span className="text-[10px] font-mono text-[#A1A1AA] uppercase tracking-wider">
                 QR CODE • STORIES & BALCÃO DA ACADEMIA
               </span>
-              <div className="p-2 bg-[#121722] border border-[#252D3B] rounded-2xl shadow-inner">
+              <div className="p-2 bg-[#0E0E10] border border-[#27272A] rounded-2xl shadow-inner">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
@@ -778,12 +778,12 @@ export default function DashboardOverviewPage() {
                   loading="lazy"
                 />
               </div>
-              <p className="text-[11px] text-[#A7B0C0] font-mono">
+              <p className="text-[11px] text-[#A1A1AA] font-mono">
                 Peça para o aluno apontar a câmera do celular para entrar na hora.
               </p>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] font-mono text-[#A7B0C0] pt-1 border-t border-[#252D3B]">
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#A1A1AA] pt-1 border-t border-[#27272A]">
               <span>Inscrição: R$ {Number(inviteModalChallenge.price).toFixed(2)}</span>
               <span>Status: {inviteModalChallenge.is_active ? 'Turma Aberta' : 'Encerrada'}</span>
             </div>

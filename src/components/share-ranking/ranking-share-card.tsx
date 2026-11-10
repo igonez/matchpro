@@ -127,7 +127,7 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
           height: '1920px',
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: isTransparent ? 'transparent' : '#080A0F',
+          backgroundColor: isTransparent ? 'transparent' : '#000000',
           color: '#ffffff',
           fontFamily:
             '"Plus Jakarta Sans", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -466,7 +466,7 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
                       ? 'rgba(226, 232, 240, 0.20)'
                       : rank === 3
                       ? 'rgba(217, 119, 6, 0.28)'
-                      : 'rgba(27, 35, 48, 0.75)';
+                      : 'rgba(24, 24, 27, 0.75)';
 
                   const rankBadgeBorder =
                     rank === 1

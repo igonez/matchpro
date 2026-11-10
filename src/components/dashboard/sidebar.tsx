@@ -141,11 +141,11 @@ export function DashboardSidebar() {
   };
 
   return (
-    <aside className="hidden md:flex w-64 border-r border-[#252D3B] bg-[#080A0F] backdrop-blur-2xl flex-col h-screen sticky top-0 z-30 shrink-0">
+    <aside className="hidden md:flex w-64 border-r border-[#27272A] bg-[#000000] backdrop-blur-2xl flex-col h-screen sticky top-0 z-30 shrink-0">
       {/* Top Header & Brand */}
       <div className="p-5 pb-3 shrink-0">
         <Link href="/dashboard" className="flex items-center gap-3 px-1 py-1 group">
-          <div className="h-9 w-9 rounded-xl overflow-hidden border border-[#252D3B] shadow-[0_0_15px_rgba(52,120,246,0.15)] group-hover:scale-105 transition-transform bg-[#121722] shrink-0">
+          <div className="h-9 w-9 rounded-xl overflow-hidden border border-[#27272A] shadow-[0_0_15px_rgba(52,120,246,0.15)] group-hover:scale-105 transition-transform bg-[#0E0E10] shrink-0">
             <img
               src="/app-logo.png"
               alt="ArenaFitPro"
@@ -153,10 +153,10 @@ export function DashboardSidebar() {
             />
           </div>
           <div>
-            <span className="font-extrabold text-lg tracking-tight text-[#F4F6FA] block leading-none">
+            <span className="font-extrabold text-lg tracking-tight text-[#FAFAFA] block leading-none">
               ArenaFitPro
             </span>
-            <span className="text-[11px] text-[#A7B0C0] font-medium block mt-1">
+            <span className="text-[11px] text-[#A1A1AA] font-medium block mt-1">
               Painel do Treinador
             </span>
           </div>
@@ -175,13 +175,13 @@ export function DashboardSidebar() {
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.title)}
-                  className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A7B0C0] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.03] transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A1A1AA] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.03] transition-colors"
                 >
-                  <span className={hasActiveChild ? 'text-[#75A7FF]' : ''}>
+                  <span className={hasActiveChild ? 'text-[#D4D4D8]' : ''}>
                     {group.title}
                   </span>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 text-[#A7B0C0] transition-transform duration-200 ${
+                    className={`w-3.5 h-3.5 text-[#A1A1AA] transition-transform duration-200 ${
                       isOpen ? 'transform rotate-0' : '-rotate-90'
                     }`}
                   />
@@ -199,7 +199,7 @@ export function DashboardSidebar() {
                             className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
                               item.active
                                 ? 'bg-[#3478F6] text-white font-black shadow-[0_0_20px_rgba(52,120,246,0.35)]'
-                                : 'bg-[#3478F6]/15 hover:bg-[#3478F6] text-[#75A7FF] hover:text-white font-bold border border-[#3478F6]/30'
+                                : 'bg-white/[0.06] hover:bg-[#3478F6] text-[#D4D4D8] hover:text-white font-bold border border-white/10'
                             }`}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -217,15 +217,15 @@ export function DashboardSidebar() {
                           href={item.href}
                           className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs tracking-wide transition-all ${
                             item.active
-                              ? 'bg-[#3478F6]/15 text-[#75A7FF] font-semibold border border-[#3478F6]/30 shadow-sm'
-                              : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] font-medium'
+                              ? 'bg-white/[0.07] text-white font-semibold border border-white/10 shadow-sm'
+                              : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] font-medium'
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-[#75A7FF]' : 'text-[#A7B0C0]'}`} />
+                            <Icon className={`w-4 h-4 shrink-0 ${item.active ? 'text-[#3478F6]' : 'text-[#A1A1AA]'}`} />
                             <span className="truncate">{item.name}</span>
                             {item.badge && (
-                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#3478F6]/10 text-[#75A7FF] border border-[#3478F6]/25 opacity-90 shrink-0">
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/[0.06] text-[#D4D4D8] border border-white/10 opacity-90 shrink-0">
                                 {item.badge}
                               </span>
                             )}
@@ -243,34 +243,34 @@ export function DashboardSidebar() {
       </div>
 
       {/* Footer / Guia do App, Visão do Aluno & Logout (FIXO NO RODAPÉ) */}
-      <div className="p-5 pt-3 border-t border-[#252D3B] bg-[#080A0F] space-y-1.5 shrink-0">
+      <div className="p-5 pt-3 border-t border-[#27272A] bg-[#000000] space-y-1.5 shrink-0">
         <button
           type="button"
           onClick={() => startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY)}
-          className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] rounded-xl transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] rounded-xl transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-4 h-4 text-[#A7B0C0]" />
+            <Sparkles className="w-4 h-4 text-[#A1A1AA]" />
             <span>Guia do App</span>
           </div>
         </button>
 
         <Link
           href="/app?preview=true"
-          className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] rounded-xl transition-colors"
+          className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] rounded-xl transition-colors"
         >
           <div className="flex items-center gap-2.5">
-            <Smartphone className="w-4 h-4 text-[#A7B0C0]" />
+            <Smartphone className="w-4 h-4 text-[#A1A1AA]" />
             <span>Visão do Aluno</span>
           </div>
-          <ExternalLink className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
+          <ExternalLink className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0" />
         </Link>
 
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] rounded-xl transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] rounded-xl transition-colors cursor-pointer"
         >
-          <LogOut className="w-4 h-4 text-[#A7B0C0]" />
+          <LogOut className="w-4 h-4 text-[#A1A1AA]" />
           <span>Sair da Conta</span>
         </button>
       </div>

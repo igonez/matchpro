@@ -32,7 +32,7 @@ export default function StudentMissionsWeeklyPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-8 text-center text-[#A7B0C0] text-xs font-mono">
+        <div className="p-8 text-center text-[#A1A1AA] text-xs font-mono">
           CARREGANDO CRONOGRAMA DE MISSÕES...
         </div>
       }
@@ -505,8 +505,8 @@ function StudentMissionsContent() {
       const list = missionLists.find((l) => l.id === mission.list_id);
       if (list) {
         return (
-          <span className="text-[10px] font-mono text-[#F4F6FA] bg-[#1B2330] px-2 py-0.5 rounded-md border border-[#252D3B] font-bold flex items-center gap-1 uppercase">
-            <Layers className="w-3 h-3 text-[#A7B0C0]" /> {list.name}
+          <span className="text-[10px] font-mono text-[#FAFAFA] bg-[#18181B] px-2 py-0.5 rounded-md border border-[#27272A] font-bold flex items-center gap-1 uppercase">
+            <Layers className="w-3 h-3 text-[#A1A1AA]" /> {list.name}
           </span>
         );
       }
@@ -515,25 +515,25 @@ function StudentMissionsContent() {
     switch (mission.category) {
       case 'treino':
         return (
-          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10 font-bold flex items-center gap-1 uppercase">
             <Dumbbell className="w-3 h-3" /> Treino (1/dia)
           </span>
         );
       case 'cardio':
         return (
-          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10 font-bold flex items-center gap-1 uppercase">
             <Activity className="w-3 h-3" /> Cardio (1/dia)
           </span>
         );
       case 'refeicao':
         return (
-          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10 font-bold flex items-center gap-1 uppercase">
             <Utensils className="w-3 h-3" /> Nutrição IA
           </span>
         );
       case 'habito':
         return (
-          <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-0.5 rounded-md border border-[#3478F6]/25 font-bold flex items-center gap-1 uppercase">
+          <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10 font-bold flex items-center gap-1 uppercase">
             <Droplets className="w-3 h-3" /> Hábito
           </span>
         );
@@ -639,19 +639,19 @@ function StudentMissionsContent() {
         onClick={() => (isActionable || mission.isFutureWeek) && handleMissionClick(mission)}
         className={`group p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
           mission.isApproved
-            ? 'border-[#3478F6]/30 bg-[#3478F6]/10 opacity-90'
+            ? 'border-white/10 bg-white/[0.06] opacity-90'
             : mission.isPending
             ? 'border-amber-500/25 bg-amber-950/15'
             : mission.isLocked
-            ? 'border-[#252D3B] bg-[#121722]/60 opacity-65'
-            : 'border-[#252D3B] bg-[#1B2330] hover:bg-[#1B2330]/90 hover:border-[#3478F6]/40 active:scale-[0.99] cursor-pointer shadow-sm'
+            ? 'border-[#27272A] bg-[#0E0E10]/60 opacity-65'
+            : 'border-[#27272A] bg-[#18181B] hover:bg-[#18181B]/90 hover:border-[#3478F6]/40 active:scale-[0.99] cursor-pointer shadow-sm'
         }`}
       >
         <div className="flex items-center gap-3 min-w-0 flex-1">
           {/* Status Indicator Left */}
           <div className="shrink-0">
             {mission.isApproved ? (
-              <div className="h-9 w-9 rounded-xl bg-[#3478F6]/20 border border-[#3478F6]/40 flex items-center justify-center text-[#3478F6]">
+              <div className="h-9 w-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#3478F6]">
                 <CheckCircle2 className="h-4 w-4" />
               </div>
             ) : mission.isPending ? (
@@ -659,11 +659,11 @@ function StudentMissionsContent() {
                 <Clock className="h-4 w-4" />
               </div>
             ) : mission.isLocked ? (
-              <div className="h-9 w-9 rounded-xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center text-[#A7B0C0]">
+              <div className="h-9 w-9 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#A1A1AA]">
                 <Lock className="h-4 w-4" />
               </div>
             ) : (
-              <div className="h-9 w-9 rounded-xl bg-[#121722] border border-[#252D3B] group-hover:border-[#3478F6]/40 group-hover:bg-[#121722]/80 flex items-center justify-center text-[#3478F6] transition-colors">
+              <div className="h-9 w-9 rounded-xl bg-[#0E0E10] border border-[#27272A] group-hover:border-[#3478F6]/40 group-hover:bg-[#0E0E10]/80 flex items-center justify-center text-[#3478F6] transition-colors">
                 {getCategoryIcon(mission.category, 'w-4 h-4')}
               </div>
             )}
@@ -674,13 +674,13 @@ function StudentMissionsContent() {
             <div className="flex items-center gap-1.5 flex-wrap">
               <span
                 className={`text-xs font-bold truncate ${
-                  mission.isApproved ? 'line-through text-[#A7B0C0]' : 'text-[#F4F6FA]'
+                  mission.isApproved ? 'line-through text-[#A1A1AA]' : 'text-[#FAFAFA]'
                 }`}
               >
                 {mission.title}
               </span>
               {mission.is_bonus && (
-                <span className="text-[9px] font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-1.5 py-0.5 rounded uppercase">
+                <span className="text-[9px] font-mono font-bold text-[#D4D4D8] bg-white/[0.06] border border-white/10 px-1.5 py-0.5 rounded uppercase">
                   BÔNUS
                 </span>
               )}
@@ -688,7 +688,7 @@ function StudentMissionsContent() {
 
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               {getCategoryBadge(mission)}
-              <span className="text-[10px] font-mono font-bold text-[#75A7FF]">
+              <span className="text-[10px] font-mono font-bold text-[#D4D4D8]">
                 +{mission.points_rewarded} XP
               </span>
             </div>
@@ -698,7 +698,7 @@ function StudentMissionsContent() {
         {/* Action / State Right */}
         <div className="shrink-0 flex items-center gap-2">
           {mission.isApproved && (
-            <span className="text-[10px] font-mono text-[#75A7FF] font-bold uppercase px-2 py-1 rounded-lg bg-[#3478F6]/15 border border-[#3478F6]/30">
+            <span className="text-[10px] font-mono text-[#D4D4D8] font-bold uppercase px-2 py-1 rounded-lg bg-white/[0.06] border border-white/10">
               {mission.isDaily ? 'Concluída hoje' : 'Concluída'}
             </span>
           )}
@@ -716,11 +716,11 @@ function StudentMissionsContent() {
                   Em {selectedWeekMeta.daysUntilStart}d
                 </span>
               ) : mission.isDailyLocked ? (
-                <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/10 px-2 py-1 rounded-lg border border-[#3478F6]/25 flex items-center gap-1">
+                <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-1 rounded-lg border border-white/10 flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {timeUntilMidnight || 'Amanhã'}
                 </span>
               ) : (
-                <span className="text-[10px] font-mono text-[#A7B0C0] px-2 py-1 rounded-lg bg-[#121722] border border-[#252D3B] block">
+                <span className="text-[10px] font-mono text-[#A1A1AA] px-2 py-1 rounded-lg bg-[#0E0E10] border border-[#27272A] block">
                   Na fila
                 </span>
               )}
@@ -765,9 +765,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Treinos de Força',
       subtitle: 'Limite fisiológico de 1 treino validado por dia',
       Icon: Dumbbell,
-      accentBorder: 'border-[#3478F6]/30',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
-      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
+      accentBorder: 'border-white/10',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
       ruleLabel: isWorkoutDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
     },
     {
@@ -775,9 +775,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Sessões de Cardio',
       subtitle: 'Condicionamento aeróbico • Limite de 1 sessão por dia',
       Icon: Activity,
-      accentBorder: 'border-[#3478F6]/30',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
-      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
+      accentBorder: 'border-white/10',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
       ruleLabel: isCardioDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
     },
     {
@@ -785,9 +785,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Nutrição & Dieta',
       subtitle: '4 refeições diárias auditadas por IA • Reseta diariamente',
       Icon: Utensils,
-      accentBorder: 'border-[#3478F6]/30',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
-      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
+      accentBorder: 'border-white/10',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
       ruleLabel: `${pillarStats.refeicao.todayDone || 0}/4 concluídas hoje`,
     },
     {
@@ -795,9 +795,9 @@ function StudentMissionsContent() {
       title: 'Bloco de Hábitos & Metas',
       subtitle: 'Hidratação, rotina e disciplina diária da turma',
       Icon: Droplets,
-      accentBorder: 'border-[#3478F6]/30',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#121722] to-[#121722]',
-      badgeColor: 'text-[#75A7FF] bg-[#3478F6]/15 border-[#3478F6]/30',
+      accentBorder: 'border-white/10',
+      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
       ruleLabel:
         pillarStats.habito.dailyCount > 0
           ? `${pillarStats.habito.todayDone || 0}/${pillarStats.habito.dailyCount} concluídos hoje • Reset diário`
@@ -810,7 +810,7 @@ function StudentMissionsContent() {
       <Monochrome3DBackground />
 
       {/* Header */}
-      <div className="flex items-start justify-between pt-1 relative z-10 border-b border-[#252D3B] pb-3.5">
+      <div className="flex items-start justify-between pt-1 relative z-10 border-b border-[#27272A] pb-3.5">
         <div className="flex items-center gap-3">
           {(() => {
             const profObj = Array.isArray(challenge?.professionals)
@@ -822,24 +822,24 @@ function StudentMissionsContent() {
             return (
               <>
                 {coachName && (
-                  <div className="h-11 w-11 rounded-2xl bg-[#121722] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0 shadow-md">
+                  <div className="h-11 w-11 rounded-2xl bg-[#0E0E10] border border-[#27272A] overflow-hidden flex items-center justify-center shrink-0 shadow-md">
                     {coachLogo ? (
                       <img src={coachLogo} alt={coachName} className="h-full w-full object-cover" />
                     ) : (
-                      <span className="text-sm font-mono font-black text-[#75A7FF]">
+                      <span className="text-sm font-mono font-black text-[#D4D4D8]">
                         {coachName.charAt(0).toUpperCase()}
                       </span>
                     )}
                   </div>
                 )}
                 <div>
-                  <span className="text-xs text-[#A7B0C0] font-medium block truncate max-w-[280px]">
+                  <span className="text-xs text-[#A1A1AA] font-medium block truncate max-w-[280px]">
                     {coachName ? `${coachName} • ` : ''}{challenge?.title || 'Turma Ativa'}
                   </span>
-                  <h1 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight mt-0.5">
+                  <h1 className="text-xl sm:text-2xl font-black text-[#FAFAFA] tracking-tight mt-0.5">
                     Cronograma de Missões
                   </h1>
-                  <p className="text-xs text-[#A7B0C0] mt-0.5">
+                  <p className="text-xs text-[#A1A1AA] mt-0.5">
                     Missões organizadas em blocos por pilar e semana oficial do desafio.
                   </p>
                 </div>
@@ -869,8 +869,8 @@ function StudentMissionsContent() {
                   isSelected
                     ? 'border-[#3478F6] bg-[#3478F6] text-white shadow-[0_0_20px_rgba(52,120,246,0.35)]'
                     : meta?.isCurrent
-                    ? 'border-[#3478F6]/40 bg-[#3478F6]/15 text-white hover:border-[#3478F6]'
-                    : 'border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/30'
+                    ? 'border-white/10 bg-white/[0.06] text-white hover:border-[#3478F6]'
+                    : 'border-[#27272A] bg-[#0E0E10] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/30'
                 }`}
               >
                 <span className="text-xs font-mono font-black tracking-tight">
@@ -881,8 +881,8 @@ function StudentMissionsContent() {
                     isSelected
                       ? 'bg-black/20 text-white font-bold'
                       : meta?.isCurrent
-                      ? 'text-[#75A7FF] font-bold'
-                      : 'text-[#A7B0C0]'
+                      ? 'text-[#D4D4D8] font-bold'
+                      : 'text-[#A1A1AA]'
                   }`}
                 >
                   {meta?.isCurrent
@@ -901,8 +901,8 @@ function StudentMissionsContent() {
           <div
             className={`p-4 rounded-3xl border relative overflow-hidden ${
               selectedWeekMeta.isCurrent
-                ? 'border-[#3478F6]/30 bg-[#121722]'
-                : 'border-[#252D3B] bg-[#121722]'
+                ? 'border-white/10 bg-[#0E0E10]'
+                : 'border-[#27272A] bg-[#0E0E10]'
             }`}
           >
             <div className="flex items-start justify-between gap-3">
@@ -910,8 +910,8 @@ function StudentMissionsContent() {
                 <div
                   className={`h-10 w-10 rounded-2xl border flex items-center justify-center shrink-0 ${
                     selectedWeekMeta.isCurrent
-                      ? 'bg-[#3478F6]/20 border-[#3478F6]/40 text-[#75A7FF]'
-                      : 'bg-[#1B2330] border-[#252D3B] text-[#A7B0C0]'
+                      ? 'bg-white/[0.06] border-white/10 text-[#D4D4D8]'
+                      : 'bg-[#18181B] border-[#27272A] text-[#A1A1AA]'
                   }`}
                 >
                   {selectedWeekMeta.isFuture ? (
@@ -928,8 +928,8 @@ function StudentMissionsContent() {
                     <span
                       className={`text-[10px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${
                         selectedWeekMeta.isCurrent
-                          ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/30'
-                          : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
+                          ? 'bg-white/[0.06] text-[#D4D4D8] border-white/10'
+                          : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A]'
                       }`}
                     >
                       {selectedWeekMeta.isFuture
@@ -938,20 +938,20 @@ function StudentMissionsContent() {
                         ? `SEMANA ${selectedWeekNumber} EM ANDAMENTO`
                         : `SEMANA ${selectedWeekNumber} ENCERRADA`}
                     </span>
-                    <span className="text-[10px] font-mono text-[#A7B0C0]">
+                    <span className="text-[10px] font-mono text-[#A1A1AA]">
                       {selectedWeekMeta.formattedRange}
                     </span>
                   </div>
 
                   {selectedWeekMeta.isFuture ? (
                     <>
-                      <h2 className="text-base font-black text-[#F4F6FA] tracking-tight">
+                      <h2 className="text-base font-black text-[#FAFAFA] tracking-tight">
                         Semana {selectedWeekNumber} começa em {selectedWeekMeta.daysUntilStart}{' '}
                         {selectedWeekMeta.daysUntilStart === 1 ? 'dia' : 'dias'}
                       </h2>
-                      <p className="text-xs text-[#A7B0C0] leading-relaxed">
+                      <p className="text-xs text-[#A1A1AA] leading-relaxed">
                         As missões da Semana {selectedWeekNumber} serão desbloqueadas automaticamente no dia{' '}
-                        <strong className="text-[#F4F6FA]">
+                        <strong className="text-[#FAFAFA]">
                           {selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}
                         </strong>
                         . Concentre seus check-ins na{' '}
@@ -961,7 +961,7 @@ function StudentMissionsContent() {
                             setSelectedWeekNumber(weekScheduleInfo.activeWeekNum);
                             setPreviewFutureMissions(false);
                           }}
-                          className="underline text-[#75A7FF] font-bold cursor-pointer"
+                          className="underline text-[#D4D4D8] font-bold cursor-pointer"
                         >
                           Semana {weekScheduleInfo.activeWeekNum} (Atual)
                         </button>
@@ -970,20 +970,20 @@ function StudentMissionsContent() {
                     </>
                   ) : selectedWeekMeta.isCurrent ? (
                     <>
-                      <h2 className="text-base font-black text-[#F4F6FA] tracking-tight">
+                      <h2 className="text-base font-black text-[#FAFAFA] tracking-tight">
                         Cronograma Liberado • {completedMissionsCount}/{missions.length} missões cumpridas
                       </h2>
-                      <p className="text-xs text-[#A7B0C0]">
+                      <p className="text-xs text-[#A1A1AA]">
                         Complete todas as tarefas da semana para conquistar{' '}
-                        <strong className="text-[#75A7FF]">+{selectedWeek?.bonus_points || 20} XP Bônus</strong>.
+                        <strong className="text-[#D4D4D8]">+{selectedWeek?.bonus_points || 20} XP Bônus</strong>.
                       </p>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-base font-black text-[#F4F6FA] tracking-tight">
+                      <h2 className="text-base font-black text-[#FAFAFA] tracking-tight">
                         Ciclo da Semana {selectedWeekNumber} Concluído
                       </h2>
-                      <p className="text-xs text-[#A7B0C0]">
+                      <p className="text-xs text-[#A1A1AA]">
                         Você completou {completedMissionsCount} de {missions.length} missões registradas nesta semana.
                       </p>
                     </>
@@ -994,14 +994,14 @@ function StudentMissionsContent() {
 
             {/* Barra de Progresso da Semana */}
             {!selectedWeekMeta.isFuture && missions.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-[#252D3B] space-y-1.5">
+              <div className="mt-3 pt-3 border-t border-[#27272A] space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-mono">
-                  <span className="text-[#A7B0C0] uppercase">META DE BÔNUS DA SEMANA {selectedWeekNumber}</span>
-                  <span className="text-[#F4F6FA] font-bold">
+                  <span className="text-[#A1A1AA] uppercase">META DE BÔNUS DA SEMANA {selectedWeekNumber}</span>
+                  <span className="text-[#FAFAFA] font-bold">
                     {Math.round((completedMissionsCount / missions.length) * 100)}%
                   </span>
                 </div>
-                <div className="w-full bg-[#1B2330] h-2 rounded-full overflow-hidden border border-[#252D3B]">
+                <div className="w-full bg-[#18181B] h-2 rounded-full overflow-hidden border border-[#27272A]">
                   <div
                     className="h-full rounded-full transition-all duration-500 bg-[#3478F6] shadow-[0_0_10px_rgba(52,120,246,0.5)]"
                     style={{
@@ -1017,9 +1017,9 @@ function StudentMissionsContent() {
 
       {/* Banner de Regra Diária com Cronômetro Regressivo até 00:00 */}
       {!selectedWeekMeta?.isFuture && (isWorkoutDailyLocked || isCardioDailyLocked) && (
-        <div className="p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs relative z-10 border border-[#252D3B] bg-[#121722]">
+        <div className="p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs relative z-10 border border-[#27272A] bg-[#0E0E10]">
           <div className="space-y-0.5">
-            <p className="font-bold text-[#F4F6FA] text-xs flex items-center gap-1.5">
+            <p className="font-bold text-[#FAFAFA] text-xs flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-[#3478F6] shrink-0" />
               {isWorkoutDailyLocked && isCardioDailyLocked
                 ? 'Treino & Cardio de hoje concluídos!'
@@ -1027,13 +1027,13 @@ function StudentMissionsContent() {
                 ? 'Treino de hoje concluído!'
                 : 'Cardio de hoje concluído!'}
             </p>
-            <p className="text-[11px] text-[#A7B0C0]">
+            <p className="text-[11px] text-[#A1A1AA]">
               Próxima liberação automática na virada do dia.
             </p>
           </div>
-          <div className="text-right shrink-0 bg-[#1B2330] border border-[#252D3B] px-2.5 py-1.5 rounded-xl">
-            <span className="text-[9px] font-mono text-[#A7B0C0] uppercase block">Libera em</span>
-            <span className="text-xs font-mono font-black text-[#75A7FF] flex items-center gap-1">
+          <div className="text-right shrink-0 bg-[#18181B] border border-[#27272A] px-2.5 py-1.5 rounded-xl">
+            <span className="text-[9px] font-mono text-[#A1A1AA] uppercase block">Libera em</span>
+            <span className="text-xs font-mono font-black text-[#D4D4D8] flex items-center gap-1">
               <Clock className="h-3 w-3" /> {timeUntilMidnight || '00:00:00'}
             </span>
           </div>
@@ -1049,28 +1049,28 @@ function StudentMissionsContent() {
               label: 'TREINOS',
               Icon: Dumbbell,
               stats: pillarStats.treino,
-              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
+              color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]',
             },
             {
               id: 'cardio',
               label: 'CARDIOS',
               Icon: Activity,
               stats: pillarStats.cardio,
-              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
+              color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]',
             },
             {
               id: 'refeicao',
               label: 'NUTRIÇÃO',
               Icon: Utensils,
               stats: pillarStats.refeicao,
-              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
+              color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]',
             },
             {
               id: 'habito',
               label: 'HÁBITOS',
               Icon: Droplets,
               stats: pillarStats.habito,
-              color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10',
+              color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]',
             },
           ].map((p) => {
             const isSelected = selectedCategory === p.id;
@@ -1085,8 +1085,8 @@ function StudentMissionsContent() {
                 }}
                 className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
                   isSelected
-                    ? 'border-[#3478F6] bg-[#1B2330] shadow-lg'
-                    : 'border-[#252D3B] bg-[#121722] hover:border-[#3478F6]/40'
+                    ? 'border-[#3478F6] bg-[#18181B] shadow-lg'
+                    : 'border-[#27272A] bg-[#0E0E10] hover:border-[#3478F6]/40'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -1094,15 +1094,15 @@ function StudentMissionsContent() {
                     <IconComp className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono font-black text-[#F4F6FA] block tracking-wider">
+                    <span className="text-[10px] font-mono font-black text-[#FAFAFA] block tracking-wider">
                       {p.label}
                     </span>
-                    <span className="text-[10px] font-mono text-[#A7B0C0] block">
+                    <span className="text-[10px] font-mono text-[#A1A1AA] block">
                       {p.stats.done}/{p.stats.total} feitas
                     </span>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-[#75A7FF] shrink-0">
+                <span className="text-[10px] font-mono font-bold text-[#D4D4D8] shrink-0">
                   {p.stats.totalXp} XP
                 </span>
               </button>
@@ -1113,14 +1113,14 @@ function StudentMissionsContent() {
 
       {/* Filtro rápido de visualização */}
       {selectedCategory !== 'all' && (!selectedWeekMeta?.isFuture || previewFutureMissions) && (
-        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#121722] border border-[#252D3B] text-xs relative z-10">
-          <span className="font-mono text-[#A7B0C0]">
-            Exibindo apenas o bloco: <strong className="text-[#F4F6FA] uppercase">{selectedCategory}</strong>
+        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs relative z-10">
+          <span className="font-mono text-[#A1A1AA]">
+            Exibindo apenas o bloco: <strong className="text-[#FAFAFA] uppercase">{selectedCategory}</strong>
           </span>
           <button
             type="button"
             onClick={() => setSelectedCategory('all')}
-            className="text-[10px] font-mono font-bold text-[#75A7FF] hover:underline cursor-pointer uppercase"
+            className="text-[10px] font-mono font-bold text-[#D4D4D8] hover:underline cursor-pointer uppercase"
           >
             Mostrar Todos os Blocos
           </button>
@@ -1129,30 +1129,30 @@ function StudentMissionsContent() {
 
       {/* BLOCO 3: Container de Missões Organizado em Blocos por Categoria */}
       {loading || loadingMissions ? (
-        <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono relative z-10">
+        <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono relative z-10">
           <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
           SINCRONIZANDO BLOCOS DA SEMANA {selectedWeekNumber}...
         </div>
       ) : selectedWeekMeta?.isFuture && !previewFutureMissions ? (
         /* Card Dedicado para Semana Futura (não mantém as missões da Semana 1 na tela) */
-        <SpotlightCard3D className="p-7 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-4 relative z-10 shadow-xl">
-          <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center mx-auto">
+        <SpotlightCard3D className="p-7 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-4 relative z-10 shadow-xl">
+          <div className="h-14 w-14 rounded-2xl bg-[#18181B] border border-[#27272A] text-[#D4D4D8] flex items-center justify-center mx-auto">
             <Lock className="w-7 h-7" />
           </div>
           <div className="space-y-1.5">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A7B0C0] block">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#A1A1AA] block">
               CRONOGRAMA FUTURO • {selectedWeekMeta.formattedRange}
             </span>
-            <h3 className="text-lg font-black text-[#F4F6FA]">
+            <h3 className="text-lg font-black text-[#FAFAFA]">
               A Semana {selectedWeekNumber} começa daqui a {selectedWeekMeta.daysUntilStart}{' '}
               {selectedWeekMeta.daysUntilStart === 1 ? 'dia' : 'dias'}
             </h3>
-            <p className="text-xs text-[#A7B0C0] max-w-xs mx-auto leading-relaxed">
+            <p className="text-xs text-[#A1A1AA] max-w-xs mx-auto leading-relaxed">
               As missões da Semana {selectedWeekNumber} ficarão disponíveis para check-in assim que o ciclo iniciar em{' '}
-              <strong className="text-[#F4F6FA]">{selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}</strong>.
+              <strong className="text-[#FAFAFA]">{selectedWeekMeta.startDate.toLocaleDateString('pt-BR')}</strong>.
             </p>
             {missions.length > 0 && (
-              <p className="text-[11px] font-mono text-[#75A7FF] pt-1">
+              <p className="text-[11px] font-mono text-[#D4D4D8] pt-1">
                 {missions.length} missões já estão programadas pelo treinador para esta semana.
               </p>
             )}
@@ -1172,7 +1172,7 @@ function StudentMissionsContent() {
               <button
                 type="button"
                 onClick={() => setPreviewFutureMissions(true)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#252D3B] bg-[#1B2330] text-[#F4F6FA] font-mono font-bold text-xs hover:bg-[#252D3B] transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#27272A] bg-[#18181B] text-[#FAFAFA] font-mono font-bold text-xs hover:bg-[#27272A] transition-colors cursor-pointer"
               >
                 Ver Prévia das Missões ({missions.length})
               </button>
@@ -1180,12 +1180,12 @@ function StudentMissionsContent() {
           </div>
         </SpotlightCard3D>
       ) : filteredMissions.length === 0 ? (
-        <div className="p-8 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2 relative z-10">
-          <AlertCircle className="w-7 h-7 text-[#A7B0C0] mx-auto" />
-          <p className="text-xs font-mono text-[#F4F6FA] font-bold">
+        <div className="p-8 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2 relative z-10">
+          <AlertCircle className="w-7 h-7 text-[#A1A1AA] mx-auto" />
+          <p className="text-xs font-mono text-[#FAFAFA] font-bold">
             Nenhuma missão cadastrada para a Semana {selectedWeekNumber}.
           </p>
-          <p className="text-[11px] text-[#A7B0C0] max-w-xs mx-auto">
+          <p className="text-[11px] text-[#A1A1AA] max-w-xs mx-auto">
             O seu treinador ainda não publicou missões neste bloco para a Semana {selectedWeekNumber}.
           </p>
         </div>
@@ -1213,19 +1213,19 @@ function StudentMissionsContent() {
                 className={`p-4 rounded-3xl border ${block.accentBorder} bg-gradient-to-br ${block.accentBg} space-y-3 shadow-lg w-full min-w-0 max-w-full overflow-hidden`}
               >
                 {/* Header do Bloco */}
-                <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-[#252D3B]">
+                <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-[#27272A]">
                   <div className="flex items-center gap-2.5">
                     <div className={`h-9 w-9 rounded-xl border flex items-center justify-center shrink-0 ${block.badgeColor}`}>
                       <BlockIcon className="w-4 h-4" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-sm font-black text-[#F4F6FA] tracking-tight">{block.title}</h3>
-                        <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#1B2330] text-[#A7B0C0] border border-[#252D3B] uppercase">
+                        <h3 className="text-sm font-black text-[#FAFAFA] tracking-tight">{block.title}</h3>
+                        <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#18181B] text-[#A1A1AA] border border-[#27272A] uppercase">
                           {doneCount}/{allBlockMissions.length} feitas
                         </span>
                       </div>
-                      <p className="text-[11px] text-[#A7B0C0] mt-0.5">{block.subtitle}</p>
+                      <p className="text-[11px] text-[#A1A1AA] mt-0.5">{block.subtitle}</p>
                     </div>
                   </div>
 
@@ -1236,8 +1236,8 @@ function StudentMissionsContent() {
 
                 {/* Lista de Missões do Bloco */}
                 {blockMissions.length === 0 ? (
-                  <div className="p-3.5 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 flex items-center justify-between text-xs">
-                    <span className="text-[#75A7FF] font-bold flex items-center gap-2">
+                  <div className="p-3.5 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-between text-xs">
+                    <span className="text-[#D4D4D8] font-bold flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-[#3478F6]" />
                       Todas as missões deste bloco foram concluídas na Semana {selectedWeekNumber}!
                     </span>
@@ -1253,34 +1253,34 @@ function StudentMissionsContent() {
 
           {/* BLOCO 4: Histórico de Concluídas na Semana (Colapsável) */}
           {completedMissions.length > 0 && (
-            <div className="p-4 rounded-3xl border border-[#3478F6]/25 bg-[#121722]/90 space-y-3">
+            <div className="p-4 rounded-3xl border border-white/10 bg-[#0E0E10]/90 space-y-3">
               <button
                 type="button"
                 onClick={() => setShowCompletedSection((prev) => !prev)}
                 className="w-full flex items-center justify-between text-left cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF]">
+                  <div className="h-8 w-8 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#D4D4D8]">
                     <CheckCircle2 className="w-4 h-4 text-[#3478F6]" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-black text-[#F4F6FA] uppercase font-mono tracking-wider">
+                    <h4 className="text-xs font-black text-[#FAFAFA] uppercase font-mono tracking-wider">
                       Bloco de Missões Concluídas ({completedMissions.length})
                     </h4>
-                    <p className="text-[10px] text-[#A7B0C0] font-mono">
+                    <p className="text-[10px] text-[#A1A1AA] font-mono">
                       Pontos já auditados e somados ao seu ranking na Semana {selectedWeekNumber}
                     </p>
                   </div>
                 </div>
                 {showCompletedSection ? (
-                  <ChevronUp className="h-4 w-4 text-[#A7B0C0]" />
+                  <ChevronUp className="h-4 w-4 text-[#A1A1AA]" />
                 ) : (
-                  <ChevronDown className="h-4 w-4 text-[#A7B0C0]" />
+                  <ChevronDown className="h-4 w-4 text-[#A1A1AA]" />
                 )}
               </button>
 
               {showCompletedSection && (
-                <div className="space-y-2 pt-2 border-t border-[#252D3B]">
+                <div className="space-y-2 pt-2 border-t border-[#27272A]">
                   {completedMissions.map(renderMissionCard)}
                 </div>
               )}
@@ -1291,7 +1291,7 @@ function StudentMissionsContent() {
 
       {/* Floating Instant Toast */}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#121722] text-[#F4F6FA] border border-[#252D3B] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#0E0E10] text-[#FAFAFA] border border-[#27272A] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
           <CheckCircle2 className="w-4 h-4 text-[#3478F6] shrink-0" />
           <span>{toastMessage}</span>
         </div>

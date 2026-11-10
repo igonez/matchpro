@@ -9,10 +9,10 @@ export function Badge({
   variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
 }) {
   const variants = {
-    default: 'bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30',
-    secondary: 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]',
+    default: 'bg-white/[0.06] text-[#D4D4D8] border-white/10',
+    secondary: 'bg-[#18181B] text-[#A1A1AA] border-[#27272A]',
     destructive: 'bg-rose-500/15 text-rose-300 border-rose-500/35',
-    outline: 'text-[#F4F6FA] border-[#252D3B]',
+    outline: 'text-[#FAFAFA] border-[#27272A]',
     success: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
     warning: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
   };

@@ -591,7 +591,7 @@ function SceneCameraReal3D() {
           style={{ transform: 'translateZ(75px) rotateY(-14deg)' }}
           className="absolute -right-14 top-36 px-3 py-2 rounded-2xl bg-zinc-950/90 border border-[#3478F6]/60 shadow-[0_15px_35px_rgba(0,0,0,0.9)] text-left backdrop-blur-md"
         >
-          <p className="text-[8px] font-mono text-[#75A7FF] tracking-wider">IA NUTRICIONAL</p>
+          <p className="text-[8px] font-mono text-[#D4D4D8] tracking-wider">IA NUTRICIONAL</p>
           <p className="text-xs font-black text-white">580 KCAL ✓</p>
         </motion.div>
 
@@ -672,7 +672,7 @@ function SceneLeaderboardReal3D() {
         >
           <p className="text-[8px] font-mono text-zinc-400">GABRIEL • XP TOTAL</p>
           <p className="text-base font-black text-amber-400">1.865 XP</p>
-          <p className="text-[9px] font-bold text-[#75A7FF]">▲ PASSOU PARA #03</p>
+          <p className="text-[9px] font-bold text-[#D4D4D8]">▲ PASSOU PARA #03</p>
         </motion.div>
       </div>
 
@@ -694,7 +694,7 @@ function SceneFinanceReal3D() {
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div className="mb-2 z-20">
-        <span className="text-[9px] font-mono tracking-[0.25em] text-[#75A7FF] uppercase">
+        <span className="text-[9px] font-mono tracking-[0.25em] text-[#D4D4D8] uppercase">
           ⚡ SPLIT PIX D+0 • ASAAS
         </span>
         <motion.div
@@ -706,7 +706,7 @@ function SceneFinanceReal3D() {
           R$ 4.750,00
         </motion.div>
         <p className="text-[11px] text-zinc-400 font-semibold">
-          na sua conta. <span className="text-[#75A7FF] font-bold">0% de taxa</span> no PRO.
+          na sua conta. <span className="text-[#D4D4D8] font-bold">0% de taxa</span> no PRO.
         </p>
       </div>
 

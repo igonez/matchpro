@@ -164,11 +164,11 @@ export function DashboardHeader() {
 
   return (
     <>
-      <header className="min-h-[5rem] h-auto border-b border-[#252D3B] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-[#080A0F]/90 backdrop-blur-2xl sticky top-0 z-40 safe-top-header pb-3.5">
+      <header className="min-h-[5rem] h-auto border-b border-[#27272A] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-[#000000]/90 backdrop-blur-2xl sticky top-0 z-40 safe-top-header pb-3.5">
         <div className="flex items-center gap-3.5">
           {/* Logo do App + Brand ArenaFitPro (sem botão hambúrguer) */}
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-[#252D3B] shadow-[0_0_15px_rgba(52,120,246,0.15)] group-hover:scale-105 transition-transform shrink-0 bg-[#121722]">
+            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-[#27272A] shadow-[0_0_15px_rgba(52,120,246,0.15)] group-hover:scale-105 transition-transform shrink-0 bg-[#0E0E10]">
               <img
                 src="/app-logo.png"
                 alt="ArenaFitPro Logo"
@@ -176,17 +176,17 @@ export function DashboardHeader() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#F4F6FA] leading-none">
+              <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#FAFAFA] leading-none">
                 ArenaFitPro
               </span>
-              <span className="text-[10px] uppercase font-medium tracking-wider text-[#A7B0C0] mt-1 block">
+              <span className="text-[10px] uppercase font-medium tracking-wider text-[#A1A1AA] mt-1 block">
                 Painel do Treinador
               </span>
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-[#252D3B]">
-            <span className="text-xs uppercase tracking-widest text-[#A7B0C0] font-bold">Painel de Controle</span>
+          <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-[#27272A]">
+            <span className="text-xs uppercase tracking-widest text-[#A1A1AA] font-bold">Painel de Controle</span>
           </div>
         </div>
 
@@ -194,10 +194,10 @@ export function DashboardHeader() {
           {coachProfile && (
             <Link
               href="/dashboard/profile"
-              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[42px] rounded-full bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors"
+              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[42px] rounded-full bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors"
               title="Meu Perfil & Identidade"
             >
-              <div className="h-7 w-7 rounded-full bg-[#1B2330] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0">
+              <div className="h-7 w-7 rounded-full bg-[#18181B] border border-[#27272A] overflow-hidden flex items-center justify-center shrink-0">
                 {coachProfile.avatarUrl ? (
                   <img
                     src={coachProfile.avatarUrl}
@@ -205,12 +205,12 @@ export function DashboardHeader() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-[11px] font-mono font-black text-[#75A7FF]">
+                  <span className="text-[11px] font-mono font-black text-[#D4D4D8]">
                     {coachProfile.fullName.charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
-              <span className="text-xs font-bold text-[#F4F6FA] max-w-[140px] truncate hidden xs:inline">
+              <span className="text-xs font-bold text-[#FAFAFA] max-w-[140px] truncate hidden xs:inline">
                 {coachProfile.fullName}
               </span>
             </Link>
@@ -219,10 +219,10 @@ export function DashboardHeader() {
           <Link
             href="/app?preview=true"
             target="_blank"
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 transition-colors"
           >
             <span>Ver como Aluno</span>
-            <ExternalLink className="h-3.5 w-3.5 text-[#A7B0C0]" />
+            <ExternalLink className="h-3.5 w-3.5 text-[#A1A1AA]" />
           </Link>
         </div>
       </header>
@@ -237,24 +237,24 @@ export function DashboardHeader() {
           />
 
           {/* Drawer Content */}
-          <div className="relative w-4/5 max-w-xs bg-[#080A0F] border-r border-[#252D3B] flex flex-col h-full shadow-2xl z-10">
+          <div className="relative w-4/5 max-w-xs bg-[#000000] border-r border-[#27272A] flex flex-col h-full shadow-2xl z-10">
             {/* Header / Brand Mobile */}
-            <div className="p-5 pb-3.5 safe-top-drawer border-b border-[#252D3B] shrink-0">
+            <div className="p-5 pb-3.5 safe-top-drawer border-b border-[#27272A] shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center shrink-0">
+                  <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#27272A] bg-[#0E0E10] flex items-center justify-center shrink-0">
                     <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="font-extrabold text-sm tracking-tight text-[#F4F6FA] block">ArenaFitPro</span>
-                    <span className="text-[11px] text-[#A7B0C0] font-medium">Painel do Treinador</span>
+                    <span className="font-extrabold text-sm tracking-tight text-[#FAFAFA] block">ArenaFitPro</span>
+                    <span className="text-[11px] text-[#A1A1AA] font-medium">Painel do Treinador</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setMobileMenuOpen(false)}
                   aria-label="Fechar menu do painel"
-                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center justify-center"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -273,13 +273,13 @@ export function DashboardHeader() {
                       <button
                         type="button"
                         onClick={() => toggleMobileGroup(group.title)}
-                        className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A7B0C0] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.04] transition-colors"
+                        className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A1A1AA] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.04] transition-colors"
                       >
-                        <span className={hasActiveChild ? 'text-[#75A7FF]' : ''}>
+                        <span className={hasActiveChild ? 'text-[#D4D4D8]' : ''}>
                           {group.title}
                         </span>
                         <ChevronDown
-                          className={`w-3.5 h-3.5 text-[#A7B0C0] transition-transform duration-200 ${
+                          className={`w-3.5 h-3.5 text-[#A1A1AA] transition-transform duration-200 ${
                             isOpen ? 'transform rotate-0' : '-rotate-90'
                           }`}
                         />
@@ -298,7 +298,7 @@ export function DashboardHeader() {
                                   className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-black tracking-wide transition-all ${
                                     item.active
                                       ? 'bg-[#3478F6] text-white shadow-lg'
-                                      : 'bg-[#3478F6]/15 hover:bg-[#3478F6] text-[#75A7FF] hover:text-white border border-[#3478F6]/30'
+                                      : 'bg-white/[0.06] hover:bg-[#3478F6] text-[#D4D4D8] hover:text-white border border-white/10'
                                   }`}
                                 >
                                   <div className="flex items-center gap-2.5 min-w-0">
@@ -317,18 +317,18 @@ export function DashboardHeader() {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide transition-all ${
                                   item.active
-                                    ? 'bg-[#3478F6]/15 text-[#75A7FF] font-semibold border border-[#3478F6]/30 shadow-md'
-                                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722]'
+                                    ? 'bg-white/[0.06] text-[#D4D4D8] font-semibold border border-white/10 shadow-md'
+                                    : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10]'
                                 }`}
                               >
                                 <div className="flex items-center gap-2.5 min-w-0">
-                                  <Icon className={`h-4 w-4 shrink-0 ${item.active ? 'text-[#75A7FF]' : 'text-[#A7B0C0]'}`} />
+                                  <Icon className={`h-4 w-4 shrink-0 ${item.active ? 'text-[#D4D4D8]' : 'text-[#A1A1AA]'}`} />
                                   <span className="truncate">{item.name}</span>
                                   {item.badge && (
                                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
                                       item.active
-                                        ? 'bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30'
-                                        : 'bg-white/5 text-[#A7B0C0] border border-white/10'
+                                        ? 'bg-white/[0.06] text-[#D4D4D8] border border-white/10'
+                                        : 'bg-white/5 text-[#A1A1AA] border border-white/10'
                                     }`}>
                                       {item.badge}
                                     </span>
@@ -347,36 +347,36 @@ export function DashboardHeader() {
             </div>
 
             {/* Ações Rápidas Mobile (FIXO NO RODAPÉ DO DRAWER) */}
-            <div className="p-5 pt-3 safe-bottom-drawer border-t border-[#252D3B] bg-[#080A0F] space-y-2 shrink-0">
+            <div className="p-5 pt-3 safe-bottom-drawer border-t border-[#27272A] bg-[#000000] space-y-2 shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   startTour(COACH_WALKTHROUGH_STEPS, COACH_TOUR_STORAGE_KEY);
                 }}
-                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#121722] border border-[#252D3B] active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] bg-[#0E0E10] border border-[#27272A] active:scale-[0.98] transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
-                  <Sparkles className="h-4 w-4 text-[#A7B0C0]" />
+                  <Sparkles className="h-4 w-4 text-[#A1A1AA]" />
                   <span>Guia do App</span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#A7B0C0]" />
+                <ChevronRight className="h-4 w-4 text-[#A1A1AA]" />
               </button>
 
               <Link
                 href="/app?preview=true"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#121722] border border-[#252D3B] active:scale-[0.98] transition-all"
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] bg-[#0E0E10] border border-[#27272A] active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-2.5">
-                  <Smartphone className="h-4 w-4 text-[#A7B0C0]" />
+                  <Smartphone className="h-4 w-4 text-[#A1A1AA]" />
                   <span>Visão do Aluno</span>
                 </div>
-                <ExternalLink className="h-3.5 w-3.5 text-[#A7B0C0]" />
+                <ExternalLink className="h-3.5 w-3.5 text-[#A1A1AA]" />
               </Link>
               <button
                 onClick={handleSignOut}
-                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A7B0C0] hover:text-white hover:bg-[#121722] rounded-xl transition-colors cursor-pointer"
+                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A1A1AA] hover:text-white hover:bg-[#0E0E10] rounded-xl transition-colors cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sair da Conta</span>
@@ -403,7 +403,7 @@ export function DashboardHeader() {
             className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard'
                 ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA] scale-[0.97]'
             }`}
           >
             <LayoutDashboard className="h-4 w-4 mb-0.5" />
@@ -415,7 +415,7 @@ export function DashboardHeader() {
             className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard/audit'
                 ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA] scale-[0.97]'
             }`}
           >
             <CheckSquare className="h-4 w-4 mb-0.5" />
@@ -427,7 +427,7 @@ export function DashboardHeader() {
             className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard/students'
                 ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA] scale-[0.97]'
             }`}
           >
             <Users className="h-4 w-4 mb-0.5" />
@@ -439,7 +439,7 @@ export function DashboardHeader() {
             className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
               pathname === '/dashboard/finance'
                 ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA] scale-[0.97]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA] scale-[0.97]'
             }`}
           >
             <Wallet className="h-4 w-4 mb-0.5" />
@@ -448,7 +448,7 @@ export function DashboardHeader() {
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-[#A7B0C0] hover:text-[#F4F6FA] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] scale-[0.97]"
+            className="flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider text-[#A1A1AA] hover:text-[#FAFAFA] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] scale-[0.97]"
           >
             <Menu className="h-4 w-4 mb-0.5" />
             <span>Menu</span>

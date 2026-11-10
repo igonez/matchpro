@@ -184,7 +184,7 @@ export default function LgpdRequestPage() {
         {/* Cabeçalho Editorial */}
         <div className="space-y-3 border-b border-white/10 pb-8 text-left">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25 flex items-center gap-1.5">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_6px_#3478F6]" />
               Canal de Requisições Legais
             </span>
@@ -382,13 +382,13 @@ export default function LgpdRequestPage() {
             </button>
           </form>
         ) : (
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#121722] border border-[#3478F6]/30 text-center space-y-6 animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 flex items-center justify-center mx-auto text-[#75A7FF]">
+          <div className="p-8 sm:p-10 rounded-3xl bg-[#0E0E10] border border-white/10 text-center space-y-6 animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center mx-auto text-[#D4D4D8]">
               <CheckCircle2 className="w-8 h-8 text-[#3478F6]" />
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
+              <span className="text-xs font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10">
                 Protocolo Registrado com Sucesso
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-white">
@@ -399,10 +399,10 @@ export default function LgpdRequestPage() {
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#1B2330] border border-[#252D3B] max-w-md mx-auto flex items-center justify-between gap-4 font-mono">
+            <div className="p-4 rounded-2xl bg-[#18181B] border border-[#27272A] max-w-md mx-auto flex items-center justify-between gap-4 font-mono">
               <div className="text-left">
                 <span className="text-[10px] text-zinc-500 uppercase block">Número do Protocolo:</span>
-                <span className="text-base sm:text-lg font-bold text-[#75A7FF]">{successProtocol}</span>
+                <span className="text-base sm:text-lg font-bold text-[#D4D4D8]">{successProtocol}</span>
               </div>
               <button
                 type="button"

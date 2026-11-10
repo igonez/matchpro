@@ -289,7 +289,7 @@ export default function MasterDashboardPage() {
             <SpotlightCard3D glowIntensity={0.12} className="p-5 space-y-3">
               <div className="flex items-center justify-between text-zinc-400">
                 <span className="text-[11px] font-mono uppercase tracking-wider">Treinadores Cadastrados</span>
-                <Users className="w-4 h-4 text-[#75A7FF]" />
+                <Users className="w-4 h-4 text-[#D4D4D8]" />
               </div>
               <div>
                 <span className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight">
@@ -343,7 +343,7 @@ export default function MasterDashboardPage() {
 
             <div className="p-6 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <Megaphone className="w-4 h-4 text-[#75A7FF]" /> Aquisição & Tráfego (Resumo)
+                <Megaphone className="w-4 h-4 text-[#D4D4D8]" /> Aquisição & Tráfego (Resumo)
               </h3>
               <div className="space-y-3 text-xs">
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
@@ -352,11 +352,11 @@ export default function MasterDashboardPage() {
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
                   <span className="text-zinc-400">CAC (Custo por Treinador):</span>
-                  <span className="font-mono font-bold text-[#75A7FF]">R$ {Number(financial.cac).toFixed(2)}</span>
+                  <span className="font-mono font-bold text-[#D4D4D8]">R$ {Number(financial.cac).toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5">
                   <span className="text-zinc-400">Lucro Operacional Líquido:</span>
-                  <span className={`font-mono font-bold ${financial.netProfit >= 0 ? 'text-[#75A7FF]' : 'text-red-400'}`}>
+                  <span className={`font-mono font-bold ${financial.netProfit >= 0 ? 'text-[#D4D4D8]' : 'text-red-400'}`}>
                     R$ {Number(financial.netProfit).toFixed(2)}
                   </span>
                 </div>
@@ -414,7 +414,7 @@ export default function MasterDashboardPage() {
 
             <div className="p-5 rounded-3xl bg-zinc-950 border border-white/[0.08] space-y-2">
               <span className="text-[11px] font-mono uppercase text-zinc-400 block">CAC Real por Coach</span>
-              <span className="text-2xl font-black font-mono text-[#75A7FF]">
+              <span className="text-2xl font-black font-mono text-[#D4D4D8]">
                 R$ {Number(financial.cac).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
               <p className="text-[11px] text-zinc-500">Custo para adquirir 1 treinador</p>
@@ -422,7 +422,7 @@ export default function MasterDashboardPage() {
 
             <div className="p-5 rounded-3xl bg-zinc-950 border border-white/[0.08] space-y-2">
               <span className="text-[11px] font-mono uppercase text-zinc-400 block">ROI Geral</span>
-              <span className={`text-2xl font-black font-mono ${financial.roi >= 0 ? 'text-[#75A7FF]' : 'text-red-400'}`}>
+              <span className={`text-2xl font-black font-mono ${financial.roi >= 0 ? 'text-[#D4D4D8]' : 'text-red-400'}`}>
                 {Number(financial.roi).toFixed(1)}%
               </span>
               <p className="text-[11px] text-zinc-500">Retorno sobre o capital investido</p>
@@ -482,7 +482,7 @@ export default function MasterDashboardPage() {
                           </span>
                         </td>
                         <td className="py-3 px-3 text-white font-medium">{spend.campaign_name || 'Geral'}</td>
-                        <td className="py-3 px-3 font-mono font-bold text-[#75A7FF]">
+                        <td className="py-3 px-3 font-mono font-bold text-[#D4D4D8]">
                           R$ {Number(spend.amount).toFixed(2)}
                         </td>
                         <td className="py-3 px-3 text-zinc-400 max-w-xs truncate">{spend.notes || '-'}</td>
@@ -563,7 +563,7 @@ export default function MasterDashboardPage() {
                       </td>
                       <td className="py-3 px-3 font-mono">
                         {coach.asaas_wallet_id ? (
-                          <span className="text-[#75A7FF] flex items-center gap-1">
+                          <span className="text-[#D4D4D8] flex items-center gap-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-[#3478F6]" /> Vinculada
                           </span>
                         ) : (
@@ -661,7 +661,7 @@ export default function MasterDashboardPage() {
                           <td className="py-3 px-3">
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono uppercase border ${
                               lead.utm_medium === 'beta_tester'
-                                ? 'bg-[#3478F6]/10 text-[#75A7FF] border-[#3478F6]/25'
+                                ? 'bg-white/[0.06] text-[#D4D4D8] border-white/10'
                                 : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                             }`}>
                               {lead.utm_medium === 'beta_tester' ? 'Beta Tester' : 'Lista VIP'}
@@ -675,7 +675,7 @@ export default function MasterDashboardPage() {
                               href={`https://wa.me/55${cleanPhone}?text=Ol%C3%A1%20${encodeURIComponent(lead.name.split(' ')[0])}%2C%20aqui%20%C3%A9%20o%20Igor%20da%20ArenaFitPro!%20Vi%20sua%20inscri%C3%A7%C3%A3o%20para%20o%20Beta.`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3478F6]/15 hover:bg-[#3478F6]/25 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-mono font-bold transition-all"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-[#3478F6]/25 border border-white/10 text-[#D4D4D8] text-xs font-mono font-bold transition-all"
                             >
                               <MessageCircle className="w-3.5 h-3.5" /> Chamar WhatsApp
                             </a>
@@ -698,7 +698,7 @@ export default function MasterDashboardPage() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-md bg-zinc-950 border border-white/15 rounded-3xl p-6 sm:p-7 space-y-5 shadow-2xl animate-in fade-in zoom-in duration-200">
             <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] block font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4D4D8] block font-bold">
                 Tráfego Pago & Performance
               </span>
               <h3 className="text-xl font-black text-white">Registrar Gasto de Anúncios</h3>

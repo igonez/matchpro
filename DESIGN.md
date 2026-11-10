@@ -12,16 +12,27 @@
 
 ---
 
-## 2. Color Palette & Functional Roles
-* **Pitch OLED Black (`#000000`):** Full screen backdrop, eliminating canvas boundaries on mobile and desktop OLED displays.
-* **Deep Titanium Charcoal (`#09090b` / `zinc-950`):** Squircle container backing, providing tactile volume and card elevation.
-* **Zinc Surface Muted (`#18181b` / `zinc-900`):** Secondary container surface and nested badge background.
-* **Whisper Platinum Glow (`rgba(255, 255, 255, 0.05)` to `rgba(255, 255, 255, 0.16)`): Diffused volumetric backglow simulating ambient light reflected off polished titanium.
-* **Specular White Highlight (`rgba(255, 255, 255, 0.50)`): Hairline border illumination and interactive rim glow.
-* **Pure Optical White (`#ffffff`):** Primary action buttons, headline text, and critical contrast highlights.
-* **Emerald Precision (`#34d399` / `emerald-400`):** Fintech verification, Pix split confirmations, approved missions, and positive streaks.
-* **Amber Aureum (`#fbbf24` / `amber-400`):** XP points, 1st place crown, Mystery Box rewards, and active streak flames.
-* **Cyan Cryogenic (`#22d3ee` / `cyan-400`):** Freeze Shield protection, cardio track telemetry, and timer HUD.
+## 2. Color Palette & Functional Roles (V4 — Monochrome + Blue Accent)
+> Rule: the app is predominantly black / gray / white. Blue is reserved for actions and subtle details. Never use blue-tinted grays.
+
+**Neutrals (pure, no blue tint)**
+* **Background (`#000000`):** Full screen backdrop.
+* **Surface (`#0E0E10`):** Page sections, drawers, nav bars.
+* **Card / Elevated (`#18181B`):** Cards, inputs, sheets.
+* **Border (`#27272A`) / Hairline (`border-white/10`):** Dividers and card/badge outlines.
+* **Text Primary (`#FAFAFA`)**, **Text Secondary (`#D4D4D8`)**, **Text Muted (`#A1A1AA`)**.
+* **Neutral chip background:** `bg-white/[0.06]`.
+
+**Accent — Electric Blue (`#3478F6`, hover `#75A7FF`)** — use ONLY for:
+* Primary buttons (`bg-[#3478F6]`), active tabs, selected states (solid border).
+* Focus rings, hover borders/text, active-nav icon and indicator dot.
+* Small icons and progress fills as subtle details.
+* Do NOT use blue for card borders, chip backgrounds, eyebrow labels or body text.
+
+**Semantic colors (kept)**
+* **Red / Rose:** Anti-churn radar, risk alerts, errors.
+* **Amber / Gold, Silver, Bronze:** Ranking podium, XP, rewards, streaks.
+* **Emerald:** Payment confirmations and approvals.
 
 ---
 

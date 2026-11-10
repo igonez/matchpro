@@ -44,7 +44,7 @@ export function StudentMenuTrigger({ className = '' }: { className?: string }) {
       onClick={openStudentMenu}
       aria-label="Abrir Menu"
       title="Menu Geral"
-      className={`h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-all cursor-pointer active:scale-95 shrink-0 ${className}`}
+      className={`h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] transition-all cursor-pointer active:scale-95 shrink-0 ${className}`}
     >
       <Menu className="h-5 w-5 stroke-[2]" />
     </button>
@@ -417,7 +417,7 @@ export function StudentBottomNav() {
                   className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
                     tab.active
                       ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.04] scale-[0.97]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04] scale-[0.97]'
                   }`}
                 >
                   {tab.name}
@@ -435,13 +435,13 @@ export function StudentBottomNav() {
                 <div
                   className={`h-12 w-12 rounded-full p-px transition-all duration-300 ${
                     activeSession
-                      ? 'bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#121722] shadow-[0_0_25px_rgba(52,120,246,0.6)] scale-105'
-                      : 'bg-gradient-to-b from-[#3478F6] via-[#1B2330] to-[#080A0F] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105'
+                      ? 'bg-gradient-to-b from-[#75A7FF] via-[#3478F6] to-[#0E0E10] shadow-[0_0_25px_rgba(52,120,246,0.6)] scale-105'
+                      : 'bg-gradient-to-b from-[#3478F6] via-[#18181B] to-[#000000] shadow-[0_0_25px_rgba(52,120,246,0.35)] group-hover:scale-105'
                   }`}
                 >
-                  <div className="h-full w-full bg-[#080A0F] rounded-full flex items-center justify-center text-white relative">
+                  <div className="h-full w-full bg-[#000000] rounded-full flex items-center justify-center text-white relative">
                     {activeSession ? (
-                      <Play className="w-4 h-4 text-[#75A7FF] fill-[#75A7FF] animate-pulse" />
+                      <Play className="w-4 h-4 text-[#D4D4D8] fill-[#75A7FF] animate-pulse" />
                     ) : (
                       <svg className="w-5 h-5 text-[#3478F6] group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <circle cx="12" cy="12" r="3" strokeWidth="2.2" />
@@ -467,7 +467,7 @@ export function StudentBottomNav() {
                   className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
                     tab.active
                       ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-white/[0.04] scale-[0.97]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04] scale-[0.97]'
                   }`}
                 >
                   {tab.name}
@@ -489,24 +489,24 @@ export function StudentBottomNav() {
           />
 
           {/* Drawer Content */}
-          <div className="relative w-4/5 max-w-xs bg-[#080A0F] border-r border-[#252D3B] flex flex-col h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
+          <div className="relative w-4/5 max-w-xs bg-[#000000] border-r border-[#27272A] flex flex-col h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
             {/* Header / Brand Mobile */}
-            <div className="p-5 pb-3.5 safe-top-drawer border-b border-[#252D3B] shrink-0">
+            <div className="p-5 pb-3.5 safe-top-drawer border-b border-[#27272A] shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center shrink-0">
+                  <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#27272A] bg-[#0E0E10] flex items-center justify-center shrink-0">
                     <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="font-extrabold text-sm tracking-tight text-[#F4F6FA] block">ArenaFitPro</span>
-                    <span className="text-[11px] text-[#A7B0C0] font-medium">Painel do Aluno</span>
+                    <span className="font-extrabold text-sm tracking-tight text-[#FAFAFA] block">ArenaFitPro</span>
+                    <span className="text-[11px] text-[#A1A1AA] font-medium">Painel do Aluno</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setShowVerticalMenu(false)}
                   aria-label="Fechar menu do aluno"
-                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#121722] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center cursor-pointer"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center justify-center cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -518,27 +518,27 @@ export function StudentBottomNav() {
               <Link
                 href="/app/profile"
                 onClick={() => setShowVerticalMenu(false)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors"
                 title="Meu Perfil"
               >
-                <div className="h-8 w-8 rounded-full bg-[#1B2330] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0">
+                <div className="h-8 w-8 rounded-full bg-[#18181B] border border-[#27272A] overflow-hidden flex items-center justify-center shrink-0">
                   {studentInfo?.avatar_url ? (
                     <img src={studentInfo.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-[11px] font-mono font-black text-[#75A7FF]">
+                    <span className="text-[11px] font-mono font-black text-[#D4D4D8]">
                       {studentInfo?.full_name?.charAt(0) || 'A'}
                     </span>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-xs font-bold text-[#F4F6FA] truncate block leading-tight">
+                  <span className="text-xs font-bold text-[#FAFAFA] truncate block leading-tight">
                     {studentInfo?.full_name || 'Atleta'}
                   </span>
-                  <span className="text-[10px] text-[#A7B0C0] font-mono uppercase block mt-0.5">
+                  <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mt-0.5">
                     Turma Ativa • Ver Perfil
                   </span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0] shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0" />
               </Link>
             </div>
 
@@ -554,13 +554,13 @@ export function StudentBottomNav() {
                       <button
                         type="button"
                         onClick={() => toggleMobileGroup(group.category)}
-                        className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A7B0C0] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.04] transition-colors"
+                        className="w-full flex items-center justify-between px-3 py-1 text-[10px] uppercase tracking-wider text-[#A1A1AA] hover:text-white font-bold select-none cursor-pointer rounded-lg hover:bg-white/[0.04] transition-colors"
                       >
-                        <span className={hasActiveChild ? 'text-[#75A7FF]' : ''}>
+                        <span className={hasActiveChild ? 'text-[#D4D4D8]' : ''}>
                           {group.category}
                         </span>
                         <ChevronDown
-                          className={`w-3.5 h-3.5 text-[#A7B0C0] transition-transform duration-200 ${
+                          className={`w-3.5 h-3.5 text-[#A1A1AA] transition-transform duration-200 ${
                             isOpen ? 'transform rotate-0' : '-rotate-90'
                           }`}
                         />
@@ -579,18 +579,18 @@ export function StudentBottomNav() {
                                     setShowVerticalMenu(false);
                                     item.onClick?.();
                                   }}
-                                  className="w-full flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722] transition-all text-left cursor-pointer"
+                                  className="w-full flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] transition-all text-left cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2.5 min-w-0">
                                     <Icon className="h-4 w-4 shrink-0" />
                                     <span className="truncate">{item.title}</span>
                                   </div>
                                   {item.badge ? (
-                                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30">
+                                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/[0.06] text-[#D4D4D8] border border-white/10">
                                       {item.badge}
                                     </span>
                                   ) : (
-                                    <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0]/60 shrink-0" />
+                                    <ChevronRight className="w-3.5 h-3.5 text-[#A1A1AA]/60 shrink-0" />
                                   )}
                                 </button>
                               );
@@ -603,20 +603,20 @@ export function StudentBottomNav() {
                                 onClick={() => setShowVerticalMenu(false)}
                                 className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium tracking-wide transition-all ${
                                   item.active
-                                    ? 'bg-[#3478F6]/15 text-[#75A7FF] font-semibold border border-[#3478F6]/30 shadow-md'
-                                    : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#121722]'
+                                    ? 'bg-white/[0.07] text-white font-semibold border border-white/10 shadow-md'
+                                    : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10]'
                                 }`}
                               >
                                 <div className="flex items-center gap-2.5 min-w-0">
-                                  <Icon className="h-4 w-4 shrink-0" />
+                                  <Icon className={`h-4 w-4 shrink-0 ${item.active ? 'text-[#3478F6]' : ''}`} />
                                   <span className="truncate">{item.title}</span>
                                 </div>
                                 {item.badge ? (
-                                  <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30">
+                                  <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/[0.06] text-[#D4D4D8] border border-white/10">
                                     {item.badge}
                                   </span>
                                 ) : (
-                                  <ChevronRight className="w-3.5 h-3.5 text-[#A7B0C0]/60 shrink-0" />
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#A1A1AA]/60 shrink-0" />
                                 )}
                               </Link>
                             );
@@ -630,27 +630,27 @@ export function StudentBottomNav() {
             </div>
 
             {/* Ações Rápidas Mobile (FIXO NO RODAPÉ DO DRAWER - Mesma estética do Treinador) */}
-            <div className="p-5 pt-3 safe-bottom-drawer border-t border-[#252D3B] bg-[#080A0F] space-y-2 shrink-0">
+            <div className="p-5 pt-3 safe-bottom-drawer border-t border-[#27272A] bg-[#000000] space-y-2 shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   setShowVerticalMenu(false);
                   triggerStudentTour();
                 }}
-                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] bg-[#121722] border border-[#252D3B] active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] bg-[#0E0E10] border border-[#27272A] active:scale-[0.98] transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
-                  <Sparkles className="h-4 w-4 text-[#A7B0C0]" />
+                  <Sparkles className="h-4 w-4 text-[#A1A1AA]" />
                   <span>Guia do App</span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#A7B0C0]" />
+                <ChevronRight className="h-4 w-4 text-[#A1A1AA]" />
               </button>
 
               {isProfessional && (
                 <Link
                   href="/dashboard"
                   onClick={() => setShowVerticalMenu(false)}
-                  className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#75A7FF] hover:text-white bg-[#3478F6]/15 hover:bg-[#3478F6] border border-[#3478F6]/30 active:scale-[0.98] transition-all"
+                  className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#D4D4D8] hover:text-white bg-white/[0.06] hover:bg-[#3478F6] border border-white/10 active:scale-[0.98] transition-all"
                 >
                   <div className="flex items-center gap-2.5">
                     <ArrowLeft className="h-4 w-4 shrink-0" />
@@ -662,7 +662,7 @@ export function StudentBottomNav() {
 
               <button
                 onClick={handleSignOut}
-                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A7B0C0] hover:text-white hover:bg-[#121722] rounded-xl transition-colors cursor-pointer"
+                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A1A1AA] hover:text-white hover:bg-[#0E0E10] rounded-xl transition-colors cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sair da Conta</span>
@@ -675,22 +675,22 @@ export function StudentBottomNav() {
       {/* 3. Bottom Sheet Rápido de Check-in ao tocar na Câmera */}
       {showQuickSheet && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[70] flex flex-col justify-end items-center">
-          <div className="bg-[#121722] w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 safe-bottom-drawer space-y-4 max-h-[85vh] flex flex-col border-t border-[#252D3B]">
+          <div className="bg-[#0E0E10] w-full max-w-md sm:max-w-xl md:max-w-2xl mx-auto rounded-t-[32px] p-6 safe-bottom-drawer space-y-4 max-h-[85vh] flex flex-col border-t border-[#27272A]">
             {/* Header do Sheet */}
-            <div className="flex items-center justify-between pb-3 border-b border-[#252D3B]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#27272A]">
               <div>
-                <h3 className="font-bold text-sm sm:text-base text-[#F4F6FA] flex items-center gap-2">
+                <h3 className="font-bold text-sm sm:text-base text-[#FAFAFA] flex items-center gap-2">
                   <span>Check-in Rápido</span>
-                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF]">
+                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[#D4D4D8]">
                     {pendingMissions.length} pendente{pendingMissions.length !== 1 ? 's' : ''}
                   </span>
                 </h3>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">Escolha a atividade para comprovar sua meta de hoje</p>
+                <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">Escolha a atividade para comprovar sua meta de hoje</p>
               </div>
               <button
                 onClick={() => setShowQuickSheet(false)}
                 aria-label="Fechar check-in rápido"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center transition-colors cursor-pointer"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -698,16 +698,16 @@ export function StudentBottomNav() {
 
             {/* Destaque de Sessão Ativa (se houver treino ou cardio rodando) */}
             {activeSession && (
-              <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#3478F6]/40 flex items-center justify-between gap-3 shadow-[0_0_20px_rgba(52,120,246,0.15)]">
+              <div className="p-3.5 rounded-2xl bg-[#18181B] border border-white/10 flex items-center justify-between gap-3 shadow-[0_0_20px_rgba(52,120,246,0.15)]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-9 w-9 rounded-xl bg-[#3478F6]/20 border border-[#3478F6]/40 flex items-center justify-center text-[#75A7FF] font-bold text-xs shrink-0 animate-pulse">
+                  <div className="h-9 w-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#D4D4D8] font-bold text-xs shrink-0 animate-pulse">
                     <Play className="w-3.5 h-3.5 fill-[#75A7FF]" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[11px] font-mono text-[#75A7FF] uppercase tracking-wider block font-bold">
+                    <span className="text-[11px] font-mono text-[#D4D4D8] uppercase tracking-wider block font-bold">
                       Sessão em Andamento
                     </span>
-                    <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] truncate">
+                    <p className="font-bold text-xs sm:text-sm text-[#FAFAFA] truncate">
                       {activeSession.missionTitle}
                     </p>
                   </div>
@@ -736,17 +736,17 @@ export function StudentBottomNav() {
             <div className="space-y-2.5 overflow-y-auto flex-1 py-1">
               {pendingMissions.length === 0 && !activeSession ? (
                 <div className="text-center py-8 space-y-3">
-                  <div className="h-12 w-12 rounded-full bg-[#3478F6]/10 border border-[#3478F6]/30 flex items-center justify-center text-[#3478F6] mx-auto">
+                  <div className="h-12 w-12 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#3478F6] mx-auto">
                     <CheckCircle className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
-                    <p className="text-xs text-[#A7B0C0] mt-1">Excelente disciplina. Seu streak e XP estão garantidos.</p>
+                    <p className="font-bold text-xs sm:text-sm text-[#FAFAFA] uppercase tracking-wider">Todas as metas de hoje cumpridas</p>
+                    <p className="text-xs text-[#A1A1AA] mt-1">Excelente disciplina. Seu streak e XP estão garantidos.</p>
                   </div>
                   <Link
                     href="/app/missions"
                     onClick={() => setShowQuickSheet(false)}
-                    className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2.5 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono text-[#F4F6FA] hover:border-[#3478F6]/50 transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2.5 rounded-xl bg-[#18181B] border border-[#27272A] text-xs font-mono text-[#FAFAFA] hover:border-[#3478F6]/50 transition-colors"
                   >
                     <span>Ver cronograma da semana</span>
                     <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -762,13 +762,13 @@ export function StudentBottomNav() {
                   const isTimer = valType === 'timer' || (!m.validation_type && (m.category === 'treino' || m.category === 'cardio'));
 
                   const catMeta: Record<string, { Icon: any; label: string; color: string }> = {
-                    treino: { Icon: Dumbbell, label: 'Treino', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
-                    cardio: { Icon: Activity, label: 'Cardio', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
-                    refeicao: { Icon: Utensils, label: 'Nutrição', color: 'border-[#3478F6]/30 text-[#3478F6] bg-[#3478F6]/10' },
-                    habito: { Icon: Droplets, label: 'Hábito', color: 'border-[#3478F6]/30 text-[#75A7FF] bg-[#3478F6]/10' },
+                    treino: { Icon: Dumbbell, label: 'Treino', color: 'border-white/10 text-[#D4D4D8] bg-white/[0.06]' },
+                    cardio: { Icon: Activity, label: 'Cardio', color: 'border-white/10 text-[#D4D4D8] bg-white/[0.06]' },
+                    refeicao: { Icon: Utensils, label: 'Nutrição', color: 'border-white/10 text-[#3478F6] bg-white/[0.06]' },
+                    habito: { Icon: Droplets, label: 'Hábito', color: 'border-white/10 text-[#D4D4D8] bg-white/[0.06]' },
                   };
 
-                  const currentMeta = catMeta[m.category] || { Icon: Target, label: m.category, color: 'border-[#252D3B] text-[#F4F6FA] bg-[#121722]' };
+                  const currentMeta = catMeta[m.category] || { Icon: Target, label: m.category, color: 'border-[#27272A] text-[#FAFAFA] bg-[#0E0E10]' };
                   const CategoryIcon = currentMeta.Icon;
                   const listLabel = customList?.name || currentMeta.label;
 
@@ -776,19 +776,19 @@ export function StudentBottomNav() {
                     <div
                       key={m.id}
                       onClick={() => handleQuickRegister(m)}
-                      className="w-full p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]/90 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
+                      className="w-full p-3.5 rounded-2xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/90 flex items-center justify-between gap-3 text-left transition-all active:scale-[0.99] cursor-pointer group"
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div className={`h-10 w-10 rounded-xl border flex items-center justify-center shrink-0 transition-colors ${currentMeta.color}`}>
                           <CategoryIcon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] truncate">{m.title}</p>
+                          <p className="font-bold text-xs sm:text-sm text-[#FAFAFA] truncate">{m.title}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] bg-[#121722] px-2 py-0.5 rounded border border-[#252D3B]">
+                            <span className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] bg-[#0E0E10] px-2 py-0.5 rounded border border-[#27272A]">
                               {listLabel}
                             </span>
-                            <span className="text-xs font-mono font-bold text-[#75A7FF]">
+                            <span className="text-xs font-mono font-bold text-[#D4D4D8]">
                               +{m.points_rewarded} XP
                             </span>
                           </div>
@@ -812,7 +812,7 @@ export function StudentBottomNav() {
                             Iniciar Sessão
                           </span>
                         ) : (
-                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-[#121722] text-[#F4F6FA] font-mono font-medium text-xs border border-[#252D3B] flex items-center gap-1 group-hover:border-[#3478F6]/40 transition-colors uppercase tracking-wider">
+                          <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-[#0E0E10] text-[#FAFAFA] font-mono font-medium text-xs border border-[#27272A] flex items-center gap-1 group-hover:border-[#3478F6]/40 transition-colors uppercase tracking-wider">
                             Foto
                           </span>
                         )}
@@ -828,7 +828,7 @@ export function StudentBottomNav() {
 
       {/* Toast Flutuante da Barra */}
       {toastMessage && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-[#121722] border border-[#3478F6]/40 text-[#F4F6FA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-[#0E0E10] border border-white/10 text-[#FAFAFA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span>
           <span>{toastMessage}</span>
         </div>

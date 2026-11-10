@@ -95,7 +95,7 @@ export function SilverMedalBadge({ className = '', size = 28 }: MedalProps) {
         <linearGradient id="silver-rim" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#F8FAFC" />
           <stop offset="50%" stopColor="#94A3B8" />
-          <stop offset="100%" stopColor="#1E293B" />
+          <stop offset="100%" stopColor="#27272A" />
         </linearGradient>
       </defs>
       <circle cx="16" cy="16" r="14.5" fill="url(#silver-radial)" stroke="url(#silver-rim)" strokeWidth="1.5" />

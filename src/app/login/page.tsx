@@ -289,20 +289,20 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white font-sans flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer relative overflow-hidden">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white font-sans flex flex-col justify-between p-4 sm:p-6 safe-top-drawer safe-bottom-drawer relative overflow-hidden">
       {/* 1. Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Bar Minimalista */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between pt-1 z-10">
         <Link href="/" className="flex items-center gap-2 group min-h-[44px]">
-          <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#252D3B] bg-[#121722] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+          <div className="h-8 w-8 rounded-xl overflow-hidden border border-[#27272A] bg-[#0E0E10] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <img src="/app-logo.png" alt="ArenaFitPro" className="w-full h-full object-cover" />
           </div>
-          <span className="font-extrabold text-base tracking-tight text-[#F4F6FA]">ArenaFitPro</span>
+          <span className="font-extrabold text-base tracking-tight text-[#FAFAFA]">ArenaFitPro</span>
         </Link>
 
-        <Link href="/" className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl bg-[#121722] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors">
+        <Link href="/" className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
           <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
           <span>Início</span>
         </Link>
@@ -317,13 +317,13 @@ function LoginContent() {
         <SpotlightCard3D className="p-6 sm:p-7">
           {/* Header do Card */}
           <div className="text-center mb-5">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] block mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4D4D8] block mb-1">
               PORTAL DE ACESSO
             </span>
-            <h1 className="text-2xl font-black text-[#F4F6FA] tracking-tight">
+            <h1 className="text-2xl font-black text-[#FAFAFA] tracking-tight">
               {role === 'student' ? 'Área do Atleta' : 'Portal do Treinador'}
             </h1>
-            <p className="text-xs text-[#A7B0C0] mt-1">
+            <p className="text-xs text-[#A1A1AA] mt-1">
               {role === 'student'
                 ? 'Entre na turma do seu coach e dispute o ranking oficial'
                 : 'Cockpit de gestão, auditoria de check-ins e financeiro'}
@@ -331,7 +331,7 @@ function LoginContent() {
           </div>
 
           {/* Seletor de Perfil: Sou Aluno vs Sou Profissional */}
-          <div className="grid grid-cols-2 p-1 rounded-2xl bg-[#080A0F] border border-[#252D3B] mb-4">
+          <div className="grid grid-cols-2 p-1 rounded-2xl bg-[#000000] border border-[#27272A] mb-4">
             <button
               type="button"
               onClick={() => {
@@ -341,7 +341,7 @@ function LoginContent() {
               className={`py-2 min-h-[44px] text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 role === 'student'
                   ? 'bg-[#3478F6] text-white shadow-md'
-                  : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                  : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
               }`}
             >
               Sou Aluno
@@ -355,7 +355,7 @@ function LoginContent() {
               className={`py-2 min-h-[44px] text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 role === 'professional'
                   ? 'bg-[#3478F6] text-white shadow-md'
-                  : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                  : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
               }`}
             >
               Sou Treinador
@@ -369,7 +369,7 @@ function LoginContent() {
             </div>
           )}
           {successMessage && (
-            <div className="p-3 mb-4 rounded-xl border border-[#3478F6]/30 bg-[#3478F6]/10 text-xs font-mono text-[#75A7FF] animate-in fade-in">
+            <div className="p-3 mb-4 rounded-xl border border-white/10 bg-white/[0.06] text-xs font-mono text-[#D4D4D8] animate-in fade-in">
               {successMessage}
             </div>
           )}
@@ -380,7 +380,7 @@ function LoginContent() {
           {role === 'student' && (
             <div className="space-y-4">
               {/* Sub-abas do Aluno: Tenho um Código vs Já sou da Turma */}
-              <div className="grid grid-cols-2 p-1 rounded-xl bg-[#080A0F] border border-[#252D3B]">
+              <div className="grid grid-cols-2 p-1 rounded-xl bg-[#000000] border border-[#27272A]">
                 <button
                   type="button"
                   onClick={() => {
@@ -389,8 +389,8 @@ function LoginContent() {
                   }}
                   className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     studentMode === 'code'
-                      ? 'bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] shadow'
-                      : 'text-[#A7B0C0] hover:text-white'
+                      ? 'bg-white/[0.06] border border-white/10 text-[#D4D4D8] shadow'
+                      : 'text-[#A1A1AA] hover:text-white'
                   }`}
                 >
                   <Sparkles className="h-3 w-3" />
@@ -404,8 +404,8 @@ function LoginContent() {
                   }}
                   className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     studentMode === 'signin'
-                      ? 'bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] shadow'
-                      : 'text-[#A7B0C0] hover:text-white'
+                      ? 'bg-white/[0.06] border border-white/10 text-[#D4D4D8] shadow'
+                      : 'text-[#A1A1AA] hover:text-white'
                   }`}
                 >
                   <User className="h-3 w-3" />
@@ -420,13 +420,13 @@ function LoginContent() {
                     <div className="space-y-3">
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA]">
                             Código do Desafio ou Link
                           </label>
                           <button
                             type="button"
                             onClick={handlePasteCode}
-                            className="text-[10px] font-mono text-[#75A7FF] hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                            className="text-[10px] font-mono text-[#D4D4D8] hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             <Clipboard className="h-3 w-3" /> Colar link
                           </button>
@@ -440,7 +440,7 @@ function LoginContent() {
                               setInviteCode(e.target.value);
                               setCodeError(null);
                             }}
-                            className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs pr-10 font-mono"
+                            className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs pr-10 font-mono"
                           />
                         </div>
                       </div>
@@ -465,16 +465,16 @@ function LoginContent() {
                         )}
                       </button>
 
-                      <p className="text-[11px] text-[#A7B0C0] text-center">
+                      <p className="text-[11px] text-[#A1A1AA] text-center">
                         Recebeu um link pelo WhatsApp? Cole acima para entrar na turma do seu personal.
                       </p>
                     </div>
                   ) : (
                     /* CARD DA TURMA RECONHECIDA + ENTRADA RÁPIDA */
                     <div className="space-y-4 animate-in fade-in duration-300">
-                      <div className="p-4 rounded-2xl bg-[#1B2330] border border-[#3478F6]/40 space-y-2">
+                      <div className="p-4 rounded-2xl bg-[#18181B] border border-white/10 space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 px-2 py-0.5 rounded-full border border-[#3478F6]/30">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-full border border-white/10">
                             <Check className="w-3 h-3 shrink-0" />
                             <span>TURMA ENCONTRADA</span>
                           </span>
@@ -484,17 +484,17 @@ function LoginContent() {
                               setValidatedChallenge(null);
                               setInviteCode('');
                             }}
-                            className="text-[10px] font-mono text-[#A7B0C0] hover:text-white underline cursor-pointer"
+                            className="text-[10px] font-mono text-[#A1A1AA] hover:text-white underline cursor-pointer"
                           >
                             Trocar turma
                           </button>
                         </div>
                         <div>
-                          <h3 className="text-sm font-black text-[#F4F6FA]">{validatedChallenge.title}</h3>
-                          <p className="text-xs text-[#A7B0C0] mt-0.5">
+                          <h3 className="text-sm font-black text-[#FAFAFA]">{validatedChallenge.title}</h3>
+                          <p className="text-xs text-[#A1A1AA] mt-0.5">
                             Coach: <strong className="text-white">{validatedChallenge.professionalName}</strong>
                           </p>
-                          <p className="text-[11px] text-[#75A7FF] font-mono mt-1 font-semibold">
+                          <p className="text-[11px] text-[#D4D4D8] font-mono mt-1 font-semibold">
                             Inscrição: {Number(validatedChallenge.price) === 0 ? 'Gratuita' : `R$ ${Number(validatedChallenge.price).toFixed(2)}`}
                           </p>
                         </div>
@@ -505,7 +505,7 @@ function LoginContent() {
                         type="button"
                         disabled={loading}
                         onClick={() => handleOAuthSignIn('student', validatedChallenge.id)}
-                        className="w-full h-11 rounded-xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#F4F6FA] shadow-sm group cursor-pointer"
+                        className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
                       >
                         <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                           <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -518,8 +518,8 @@ function LoginContent() {
 
                       {/* Divisor */}
                       <div className="relative flex items-center justify-center my-3">
-                        <div className="border-t border-[#252D3B] w-full" />
-                        <span className="bg-[#121722] px-3 text-[10px] font-mono uppercase text-[#A7B0C0] absolute">
+                        <div className="border-t border-[#27272A] w-full" />
+                        <span className="bg-[#0E0E10] px-3 text-[10px] font-mono uppercase text-[#A1A1AA] absolute">
                           ou informe seus dados
                         </span>
                       </div>
@@ -527,7 +527,7 @@ function LoginContent() {
                       {/* Opção 2: Formulário com e-mail */}
                       <form onSubmit={handleEmailAuth} className="space-y-3">
                         <div>
-                          <label className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                          <label className="text-xs font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                             Seu Nome Completo
                           </label>
                           <Input
@@ -536,12 +536,12 @@ function LoginContent() {
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
                             required
-                            className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                            className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                           />
                         </div>
 
                         <div>
-                          <label className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                          <label className="text-xs font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                             WhatsApp (para rankings e avisos do coach)
                           </label>
                           <Input
@@ -550,13 +550,13 @@ function LoginContent() {
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             required
-                            className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                            className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                           />
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                            <label className="text-xs font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                               E-mail
                             </label>
                             <Input
@@ -565,11 +565,11 @@ function LoginContent() {
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               required
-                              className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                              className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                             />
                           </div>
                           <div>
-                            <label className="text-xs font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                            <label className="text-xs font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                               Senha
                             </label>
                             <Input
@@ -578,7 +578,7 @@ function LoginContent() {
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
                               required
-                              className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                              className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                             />
                           </div>
                         </div>
@@ -603,7 +603,7 @@ function LoginContent() {
                     type="button"
                     disabled={loading}
                     onClick={() => handleOAuthSignIn('student')}
-                    className="w-full h-11 rounded-xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#F4F6FA] shadow-sm group cursor-pointer"
+                    className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
                   >
                     <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -615,15 +615,15 @@ function LoginContent() {
                   </button>
 
                   <div className="relative flex items-center justify-center my-3">
-                    <div className="border-t border-[#252D3B] w-full" />
-                    <span className="bg-[#121722] px-3 text-[10px] font-mono uppercase text-[#A7B0C0] absolute">
+                    <div className="border-t border-[#27272A] w-full" />
+                    <span className="bg-[#0E0E10] px-3 text-[10px] font-mono uppercase text-[#A1A1AA] absolute">
                       ou com e-mail cadastrado
                     </span>
                   </div>
 
                   <form onSubmit={handleEmailAuth} className="space-y-3">
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         E-mail
                       </label>
                       <Input
@@ -632,12 +632,12 @@ function LoginContent() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         Senha
                       </label>
                       <Input
@@ -646,7 +646,7 @@ function LoginContent() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                       />
                     </div>
 
@@ -673,7 +673,7 @@ function LoginContent() {
                 type="button"
                 disabled={loading}
                 onClick={() => handleOAuthSignIn('professional')}
-                className="w-full h-11 rounded-xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#F4F6FA] shadow-sm group cursor-pointer"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
               >
                 <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -685,8 +685,8 @@ function LoginContent() {
               </button>
 
               <div className="relative flex items-center justify-center my-3">
-                <div className="border-t border-[#252D3B] w-full" />
-                <span className="bg-[#121722] px-3 text-[10px] font-mono uppercase text-[#A7B0C0] absolute">
+                <div className="border-t border-[#27272A] w-full" />
+                <span className="bg-[#0E0E10] px-3 text-[10px] font-mono uppercase text-[#A1A1AA] absolute">
                   ou com credenciais
                 </span>
               </div>
@@ -696,7 +696,7 @@ function LoginContent() {
                 {coachMode === 'signup' && (
                   <>
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         Nome Completo
                       </label>
                       <Input
@@ -705,12 +705,12 @@ function LoginContent() {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         WhatsApp Profissional *
                       </label>
                       <Input
@@ -719,18 +719,18 @@ function LoginContent() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         required
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         Especialidade
                       </label>
                       <select
                         value={specialty}
                         onChange={(e: any) => setSpecialty(e.target.value)}
-                        className="w-full bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] rounded-xl px-3 h-11 text-xs focus:outline-none focus:border-[#3478F6]"
+                        className="w-full bg-[#18181B] border border-[#27272A] text-[#FAFAFA] rounded-xl px-3 h-11 text-xs focus:outline-none focus:border-[#3478F6]"
                       >
                         <option value="personal_trainer">Personal Trainer</option>
                         <option value="nutritionist">Nutricionista</option>
@@ -742,7 +742,7 @@ function LoginContent() {
                 )}
 
                 <div>
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                  <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                     E-mail Profissional
                   </label>
                   <Input
@@ -751,12 +751,12 @@ function LoginContent() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                    className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                  <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                     Senha
                   </label>
                   <Input
@@ -765,7 +765,7 @@ function LoginContent() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
+                    className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs"
                   />
                 </div>
 
@@ -783,9 +783,9 @@ function LoginContent() {
               </form>
 
               {/* Toggle Sign In / Sign Up do Coach */}
-              <div className="mt-4 text-center pt-3 border-t border-[#252D3B]">
+              <div className="mt-4 text-center pt-3 border-t border-[#27272A]">
                 {coachMode === 'signin' ? (
-                  <p className="text-xs text-[#A7B0C0]">
+                  <p className="text-xs text-[#A1A1AA]">
                     Novo treinador?{' '}
                     <button
                       type="button"
@@ -796,7 +796,7 @@ function LoginContent() {
                     </button>
                   </p>
                 ) : (
-                  <p className="text-xs text-[#A7B0C0]">
+                  <p className="text-xs text-[#A1A1AA]">
                     Já possui conta de coach?{' '}
                     <button
                       type="button"
@@ -814,7 +814,7 @@ function LoginContent() {
       </div>
 
       {/* Footer */}
-      <div className="max-w-md w-full mx-auto text-center text-xs text-[#A7B0C0] z-10 pb-2 font-mono">
+      <div className="max-w-md w-full mx-auto text-center text-xs text-[#A1A1AA] z-10 pb-2 font-mono">
         ArenaFitPro • Gamificação para Personal Trainers & Atletas
       </div>
     </div>
@@ -825,7 +825,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#080A0F] flex items-center justify-center text-[#A7B0C0] text-xs font-mono">
+        <div className="min-h-screen bg-[#000000] flex items-center justify-center text-[#A1A1AA] text-xs font-mono">
           Carregando portal...
         </div>
       }

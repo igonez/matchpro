@@ -401,7 +401,7 @@ export default function ProfessionalProfilePage() {
 
   if (loading) {
     return (
-      <div className="py-24 flex flex-col items-center justify-center gap-3 text-[#A7B0C0] font-mono text-xs">
+      <div className="py-24 flex flex-col items-center justify-center gap-3 text-[#A1A1AA] font-mono text-xs">
         <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
         <span>CARREGANDO_DADOS_DO_PERFIL...</span>
       </div>
@@ -411,23 +411,23 @@ export default function ProfessionalProfilePage() {
   return (
     <div className="space-y-6 max-w-4xl pb-16">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#252D3B] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#27272A] pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30 font-mono">
+            <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10 font-mono">
               COACH IDENTITY & KYC
             </span>
-            <span className="text-xs text-[#A7B0C0] font-medium">Configurações da Conta</span>
+            <span className="text-xs text-[#A1A1AA] font-medium">Configurações da Conta</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">Meu Perfil Profissional</h1>
-          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] tracking-tight">Meu Perfil Profissional</h1>
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
             Gerencie sua identidade pública, credenciais de segurança e selos de verificação.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/dashboard/finance">
-            <div className="px-3.5 py-2 rounded-xl bg-[#121722] border border-[#252D3B] text-xs text-[#F4F6FA] flex items-center gap-2 hover:border-[#3478F6]/40 transition-colors">
+            <div className="px-3.5 py-2 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs text-[#FAFAFA] flex items-center gap-2 hover:border-[#3478F6]/40 transition-colors">
               <Sparkles className="h-3.5 w-3.5 text-[#3478F6]" />
               <span className="font-mono uppercase font-bold">Plano: {planTier.toUpperCase()}</span>
             </div>
@@ -437,32 +437,32 @@ export default function ProfessionalProfilePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Card 1: Avatar e Identidade Visual */}
-        <Card className="border-[#252D3B] bg-[#121722] rounded-2xl">
+        <Card className="border-[#27272A] bg-[#0E0E10] rounded-2xl">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+            <CardTitle className="text-base font-bold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
               <Camera className="h-4 w-4 text-[#3478F6]" /> Foto de Perfil & Presença
             </CardTitle>
-            <CardDescription className="text-xs text-[#A7B0C0]">
+            <CardDescription className="text-xs text-[#A1A1AA]">
               Sua foto será exibida no cabeçalho do cockpit e nas missões para seus alunos.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row items-center gap-6">
               <div className="relative group">
-                <div className="h-24 w-24 rounded-2xl bg-[#1B2330] border-2 border-[#252D3B] overflow-hidden flex items-center justify-center shadow-xl">
+                <div className="h-24 w-24 rounded-2xl bg-[#18181B] border-2 border-[#27272A] overflow-hidden flex items-center justify-center shadow-xl">
                   {avatarUrl ? (
                     <img src={avatarUrl} alt={fullName} className="h-full w-full object-cover" />
                   ) : (
-                    <User className="h-10 w-10 text-[#A7B0C0]" />
+                    <User className="h-10 w-10 text-[#A1A1AA]" />
                   )}
                 </div>
 
                 <label 
                   htmlFor="coach-avatar-input"
-                  className="absolute inset-0 bg-[#080A0F]/75 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center rounded-2xl cursor-pointer"
+                  className="absolute inset-0 bg-[#000000]/75 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center rounded-2xl cursor-pointer"
                 >
-                  <Camera className="h-5 w-5 text-[#75A7FF] mb-1" />
-                  <span className="text-[9px] font-mono text-[#F4F6FA] font-bold uppercase">Trocar</span>
+                  <Camera className="h-5 w-5 text-[#D4D4D8] mb-1" />
+                  <span className="text-[9px] font-mono text-[#FAFAFA] font-bold uppercase">Trocar</span>
                 </label>
                 <input
                   id="coach-avatar-input"
@@ -477,23 +477,23 @@ export default function ProfessionalProfilePage() {
               <div className="space-y-3 text-center sm:text-left flex-1 w-full">
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                    <h3 className="text-base font-bold text-[#F4F6FA] font-mono">
+                    <h3 className="text-base font-bold text-[#FAFAFA] font-mono">
                       {brandName.trim() || fullName || 'Treinador ArenaFit'}
                     </h3>
                     {documentVerified && (
-                      <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono">
+                      <Badge className="bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px] font-mono">
                         <ShieldCheck className="h-3 w-3 mr-1" /> CONTA VERIFICADA
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-[#A7B0C0]">{userEmail}</p>
-                  <p className="text-[10px] font-mono text-[#A7B0C0]">
+                  <p className="text-xs text-[#A1A1AA]">{userEmail}</p>
+                  <p className="text-[10px] font-mono text-[#A1A1AA]">
                     {uploadingAvatar ? 'Enviando imagem...' : 'Formatos aceitos: JPG, PNG, WEBP até 5MB.'}
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-[#252D3B] text-left max-w-md">
-                  <label className="text-[11px] font-mono uppercase tracking-wider text-[#75A7FF] font-bold block mb-1.5">
+                <div className="pt-2 border-t border-[#27272A] text-left max-w-md">
+                  <label className="text-[11px] font-mono uppercase tracking-wider text-[#D4D4D8] font-bold block mb-1.5">
                     Nome de Exibição / Marca (Compartilhar Ranking & Missões)
                   </label>
                   <Input
@@ -502,9 +502,9 @@ export default function ProfessionalProfilePage() {
                     onChange={(e) => setBrandName(e.target.value)}
                     placeholder={fullName || 'Ex: Team Coach Igor • Consultoria'}
                     maxLength={42}
-                    className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-10 text-xs font-bold"
+                    className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-10 text-xs font-bold"
                   />
-                  <span className="text-[10px] text-[#A7B0C0] font-mono mt-1 block">
+                  <span className="text-[10px] text-[#A1A1AA] font-mono mt-1 block">
                     Este nome e sua foto aparecerão no topo do card de Compartilhar Ranking (Stories 9:16) e nas missões dos alunos.
                   </span>
                 </div>
@@ -514,23 +514,23 @@ export default function ProfessionalProfilePage() {
         </Card>
 
         {/* Card 2: Status de Verificação KYC e Confiabilidade (Item 3) */}
-        <Card className="border-[#252D3B] bg-[#121722] rounded-2xl">
+        <Card className="border-[#27272A] bg-[#0E0E10] rounded-2xl">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+            <CardTitle className="text-base font-bold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
               <ShieldCheck className="h-4 w-4 text-[#3478F6]" /> Status de Verificação e Segurança
             </CardTitle>
-            <CardDescription className="text-xs text-[#A7B0C0]">
+            <CardDescription className="text-xs text-[#A1A1AA]">
               Contas verificadas contam com saques Pix liberados em D+0 e maior conversão de vendas.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Item 1: Documento Oficial */}
-              <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
+              <div className="p-4 rounded-xl border border-[#27272A] bg-[#18181B] space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase text-[#A7B0C0] font-bold">Documento (KYC)</span>
+                  <span className="text-[11px] font-mono uppercase text-[#A1A1AA] font-bold">Documento (KYC)</span>
                   {documentVerified ? (
-                    <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono uppercase tracking-wider">
+                    <Badge className="bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px] font-mono uppercase tracking-wider">
                       VERIFICADO
                     </Badge>
                   ) : (
@@ -539,20 +539,20 @@ export default function ProfessionalProfilePage() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-[#F4F6FA] font-mono">
+                <p className="text-xs text-[#FAFAFA] font-mono">
                   {documentNumber ? `${documentType}: ${documentNumber}` : 'Nenhum documento preenchido'}
                 </p>
-                <p className="text-[10px] text-[#A7B0C0]">
+                <p className="text-[10px] text-[#A1A1AA]">
                   {documentVerified ? 'Identidade confirmada para transações financeiras.' : 'Preencha seu CPF ou CNPJ abaixo para verificar.'}
                 </p>
               </div>
 
               {/* Item 2: Telefone / WhatsApp */}
-              <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
+              <div className="p-4 rounded-xl border border-[#27272A] bg-[#18181B] space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase text-[#A7B0C0] font-bold">Telefone Celular</span>
+                  <span className="text-[11px] font-mono uppercase text-[#A1A1AA] font-bold">Telefone Celular</span>
                   {phoneVerified ? (
-                    <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono uppercase tracking-wider">
+                    <Badge className="bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px] font-mono uppercase tracking-wider">
                       VERIFICADO
                     </Badge>
                   ) : (
@@ -561,7 +561,7 @@ export default function ProfessionalProfilePage() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-[#F4F6FA] font-mono">
+                <p className="text-xs text-[#FAFAFA] font-mono">
                   {phone || 'Nenhum telefone'}
                 </p>
                 <div className="pt-1">
@@ -569,44 +569,44 @@ export default function ProfessionalProfilePage() {
                     <button
                       type="button"
                       onClick={() => setPhoneModalOpen(true)}
-                      className="text-[11px] font-mono font-bold text-[#75A7FF] underline hover:text-white flex items-center gap-1"
+                      className="text-[11px] font-mono font-bold text-[#D4D4D8] underline hover:text-white flex items-center gap-1"
                     >
                       <Smartphone className="h-3 w-3" /> Validar por Código
                     </button>
                   ) : (
-                    <span className="text-[10px] text-[#75A7FF] font-mono">Número validado</span>
+                    <span className="text-[10px] text-[#D4D4D8] font-mono">Número validado</span>
                   )}
                 </div>
               </div>
 
               {/* Item 3: E-mail de Acesso */}
-              <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] space-y-2">
+              <div className="p-4 rounded-xl border border-[#27272A] bg-[#18181B] space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase text-[#A7B0C0] font-bold">E-mail de Login</span>
-                  <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-mono uppercase tracking-wider">
+                  <span className="text-[11px] font-mono uppercase text-[#A1A1AA] font-bold">E-mail de Login</span>
+                  <Badge className="bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px] font-mono uppercase tracking-wider">
                     VERIFICADO
                   </Badge>
                 </div>
-                <p className="text-xs text-[#F4F6FA] font-mono truncate">
+                <p className="text-xs text-[#FAFAFA] font-mono truncate">
                   {userEmail}
                 </p>
-                <p className="text-[10px] text-[#A7B0C0]">
+                <p className="text-[10px] text-[#A1A1AA]">
                   Protegido via Supabase Auth com MFA.
                 </p>
               </div>
             </div>
 
             {/* Inputs de Documento, Registro e Chave Pix */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-[#252D3B]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-[#27272A]">
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Documento Pessoal / Empresa *
                 </label>
                 <div className="flex gap-2">
                   <select
                     value={documentType}
                     onChange={(e: any) => setDocumentType(e.target.value)}
-                    className="w-24 bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] rounded-xl px-2 h-11 text-xs focus:outline-none focus:border-[#3478F6] font-mono"
+                    className="w-24 bg-[#18181B] border border-[#27272A] text-[#FAFAFA] rounded-xl px-2 h-11 text-xs focus:outline-none focus:border-[#3478F6] font-mono"
                   >
                     <option value="CPF">CPF</option>
                     <option value="CNPJ">CNPJ</option>
@@ -620,13 +620,13 @@ export default function ProfessionalProfilePage() {
                     className="flex-1 text-xs font-mono"
                   />
                 </div>
-                <span className="text-[10px] text-[#A7B0C0] font-mono mt-1 block">
+                <span className="text-[10px] text-[#A1A1AA] font-mono mt-1 block">
                   Sincronizado com a Área Financeira.
                 </span>
               </div>
 
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5 flex items-center gap-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5 flex items-center gap-1.5">
                   <CreditCard className="h-3.5 w-3.5 text-[#3478F6]" />
                   <span>Chave Pix de Recebimento</span>
                 </label>
@@ -637,13 +637,13 @@ export default function ProfessionalProfilePage() {
                   placeholder="E-mail, CPF, celular ou aleatória"
                   className="text-xs font-mono"
                 />
-                <span className="text-[10px] text-[#A7B0C0] font-mono mt-1 block">
+                <span className="text-[10px] text-[#A1A1AA] font-mono mt-1 block">
                   Para recebimento de repasses e saques.
                 </span>
               </div>
 
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5 flex items-center gap-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5 flex items-center gap-1.5">
                   <Award className="h-3.5 w-3.5 text-[#3478F6]" />
                   <span>Registro Profissional (CREF / CRN)</span>
                 </label>
@@ -654,7 +654,7 @@ export default function ProfessionalProfilePage() {
                   placeholder="Ex: CREF 012345-G/SP"
                   className="text-xs font-mono"
                 />
-                <span className="text-[10px] text-[#A7B0C0] font-mono mt-1 block">
+                <span className="text-[10px] text-[#A1A1AA] font-mono mt-1 block">
                   Exibido aos alunos como garantia técnica.
                 </span>
               </div>
@@ -663,48 +663,48 @@ export default function ProfessionalProfilePage() {
         </Card>
 
         {/* Card: Assinatura do Treinador & Subconta Asaas (Split) */}
-        <Card className="border-[#252D3B] bg-[#121722] rounded-2xl">
+        <Card className="border-[#27272A] bg-[#0E0E10] rounded-2xl">
           <CardHeader className="pb-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+                <CardTitle className="text-base font-bold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
                   <Wallet className="h-4 w-4 text-[#3478F6]" /> Assinatura do Coach & Subconta Asaas
                 </CardTitle>
-                <CardDescription className="text-xs text-[#A7B0C0]">
+                <CardDescription className="text-xs text-[#A1A1AA]">
                   Status da sua assinatura da plataforma e subconta para recebimento de repasses (Split).
                 </CardDescription>
               </div>
               <Link href="/dashboard/finance">
                 <Button type="button" variant="outline" size="sm" className="h-8 text-xs font-mono flex items-center gap-1.5">
                   <span>Central Financeira</span>
-                  <ExternalLink className="w-3 h-3 text-[#75A7FF]" />
+                  <ExternalLink className="w-3 h-3 text-[#D4D4D8]" />
                 </Button>
               </Link>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#1B2330]">
-                <span className="text-[10px] font-mono uppercase text-[#A7B0C0] font-bold block mb-1">Plano Atual</span>
+              <div className="p-3.5 rounded-xl border border-[#27272A] bg-[#18181B]">
+                <span className="text-[10px] font-mono uppercase text-[#A1A1AA] font-bold block mb-1">Plano Atual</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-black text-[#F4F6FA] font-mono">{planTier.toUpperCase()}</span>
+                  <span className="text-lg font-black text-[#FAFAFA] font-mono">{planTier.toUpperCase()}</span>
                   <Badge className="text-[10px]">
                     Taxa: {PLAN_CONFIG[planTier as PlanTier]?.platformFeePercent || 15}%
                   </Badge>
                 </div>
-                <p className="text-[10px] text-[#A7B0C0] mt-1 font-mono">
+                <p className="text-[10px] text-[#A1A1AA] mt-1 font-mono">
                   Renovação: {currentPeriodEnd ? new Date(currentPeriodEnd).toLocaleDateString('pt-BR') : 'Mensal ativo'}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#1B2330]">
-                <span className="text-[10px] font-mono uppercase text-[#A7B0C0] font-bold block mb-1">Subconta Asaas (Split)</span>
+              <div className="p-3.5 rounded-xl border border-[#27272A] bg-[#18181B]">
+                <span className="text-[10px] font-mono uppercase text-[#A1A1AA] font-bold block mb-1">Subconta Asaas (Split)</span>
                 {asaasWalletId ? (
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs text-[#75A7FF] font-mono font-bold">
+                    <div className="flex items-center gap-1.5 text-xs text-[#D4D4D8] font-mono font-bold">
                       <Check className="w-3.5 h-3.5 text-[#3478F6]" /> ATIVA PARA SPLIT
                     </div>
-                    <p className="text-[10px] text-[#A7B0C0] font-mono truncate mt-1">
+                    <p className="text-[10px] text-[#A1A1AA] font-mono truncate mt-1">
                       ID: {asaasWalletId}
                     </p>
                   </div>
@@ -713,19 +713,19 @@ export default function ProfessionalProfilePage() {
                     <div className="flex items-center gap-1.5 text-xs text-amber-400 font-mono font-bold">
                       <AlertCircle className="w-3.5 h-3.5" /> PENDENTE
                     </div>
-                    <p className="text-[10px] text-[#A7B0C0] mt-1">
+                    <p className="text-[10px] text-[#A1A1AA] mt-1">
                       Preencha o endereço abaixo para ativar repasses automáticos.
                     </p>
                   </div>
                 )}
               </div>
 
-              <div className="p-3.5 rounded-xl border border-[#252D3B] bg-[#1B2330]">
-                <span className="text-[10px] font-mono uppercase text-[#A7B0C0] font-bold block mb-1">Chave Pix de Saque</span>
-                <p className="text-xs text-[#F4F6FA] font-mono font-bold truncate">
+              <div className="p-3.5 rounded-xl border border-[#27272A] bg-[#18181B]">
+                <span className="text-[10px] font-mono uppercase text-[#A1A1AA] font-bold block mb-1">Chave Pix de Saque</span>
+                <p className="text-xs text-[#FAFAFA] font-mono font-bold truncate">
                   {asaasPixKey || 'Não cadastrada'}
                 </p>
-                <p className="text-[10px] text-[#A7B0C0] mt-1">
+                <p className="text-[10px] text-[#A1A1AA] mt-1">
                   {asaasPixKey ? 'Saques Pix D+0 liberados' : 'Cadastre para receber saques'}
                 </p>
               </div>
@@ -734,12 +734,12 @@ export default function ProfessionalProfilePage() {
         </Card>
 
         {/* Card: Endereço do Treinador (Exigido pelo Asaas / BACEN) */}
-        <Card className="border-[#252D3B] bg-[#121722] rounded-2xl">
+        <Card className="border-[#27272A] bg-[#0E0E10] rounded-2xl">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+            <CardTitle className="text-base font-bold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
               <MapPin className="h-4 w-4 text-[#3478F6]" /> Endereço & Dados de Cadastro Asaas
             </CardTitle>
-            <CardDescription className="text-xs text-[#A7B0C0]">
+            <CardDescription className="text-xs text-[#A1A1AA]">
               Esses dados são exigidos pelas normas regulatórias do BACEN e Asaas para emissão de subcontas e repasses.
             </CardDescription>
           </CardHeader>
@@ -748,11 +748,11 @@ export default function ProfessionalProfilePage() {
               {/* CEP */}
               <div className="sm:col-span-2">
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+                  <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA]">
                     CEP
                   </label>
                   {loadingCep && (
-                    <span className="text-[10px] font-mono text-[#75A7FF] flex items-center gap-1">
+                    <span className="text-[10px] font-mono text-[#D4D4D8] flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" /> Buscando...
                     </span>
                   )}
@@ -769,7 +769,7 @@ export default function ProfessionalProfilePage() {
 
               {/* Logradouro */}
               <div className="sm:col-span-3">
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Logradouro / Rua / Avenida
                 </label>
                 <Input
@@ -783,7 +783,7 @@ export default function ProfessionalProfilePage() {
 
               {/* Número */}
               <div className="sm:col-span-1">
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Número
                 </label>
                 <Input
@@ -797,7 +797,7 @@ export default function ProfessionalProfilePage() {
 
               {/* Bairro */}
               <div className="sm:col-span-2">
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Bairro
                 </label>
                 <Input
@@ -811,7 +811,7 @@ export default function ProfessionalProfilePage() {
 
               {/* Cidade */}
               <div className="sm:col-span-2">
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Cidade
                 </label>
                 <Input
@@ -825,7 +825,7 @@ export default function ProfessionalProfilePage() {
 
               {/* UF */}
               <div className="sm:col-span-1">
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   UF
                 </label>
                 <Input
@@ -840,7 +840,7 @@ export default function ProfessionalProfilePage() {
 
               {/* Data de Nascimento (para CPF) */}
               <div className="sm:col-span-1">
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Nascimento
                 </label>
                 <Input
@@ -855,19 +855,19 @@ export default function ProfessionalProfilePage() {
         </Card>
 
         {/* Card 3: Dados Profissionais & Biografia */}
-        <Card className="border-[#252D3B] bg-[#121722] rounded-2xl">
+        <Card className="border-[#27272A] bg-[#0E0E10] rounded-2xl">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold text-[#F4F6FA] flex items-center gap-2 tracking-tight">
+            <CardTitle className="text-base font-bold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
               <Briefcase className="h-4 w-4 text-[#3478F6]" /> Dados Públicos & Atuação
             </CardTitle>
-            <CardDescription className="text-xs text-[#A7B0C0]">
+            <CardDescription className="text-xs text-[#A1A1AA]">
               Esses dados personalizam a página de vendas e os canais de suporte da sua turma.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Nome Completo *
                 </label>
                 <Input
@@ -881,13 +881,13 @@ export default function ProfessionalProfilePage() {
               </div>
 
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5">
                   Especialidade de Atuação
                 </label>
                 <select
                   value={specialty}
                   onChange={(e: any) => setSpecialty(e.target.value)}
-                  className="w-full bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] rounded-xl px-3 h-11 text-xs focus:outline-none focus:border-[#3478F6]"
+                  className="w-full bg-[#18181B] border border-[#27272A] text-[#FAFAFA] rounded-xl px-3 h-11 text-xs focus:outline-none focus:border-[#3478F6]"
                 >
                   <option value="personal_trainer">Personal Trainer</option>
                   <option value="nutritionist">Nutricionista</option>
@@ -899,7 +899,7 @@ export default function ProfessionalProfilePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5 flex items-center gap-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5 flex items-center gap-1.5">
                   <Phone className="h-3 w-3 text-[#3478F6]" />
                   <span>WhatsApp de Atendimento *</span>
                 </label>
@@ -914,7 +914,7 @@ export default function ProfessionalProfilePage() {
               </div>
 
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5 flex items-center gap-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5 flex items-center gap-1.5">
                   <svg className="h-3 w-3 text-[#3478F6] fill-none stroke-currentColor stroke-2" viewBox="0 0 24 24">
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
@@ -933,7 +933,7 @@ export default function ProfessionalProfilePage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1.5 flex items-center gap-1.5">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1.5 flex items-center gap-1.5">
                 <FileText className="h-3 w-3 text-[#3478F6]" />
                 <span>Mini Bio / Manifesto do Treinador</span>
               </label>
@@ -942,7 +942,7 @@ export default function ProfessionalProfilePage() {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Ex: Treinador há mais de 8 anos focado em transformação corporal definitiva, disciplina inabalável e hipertrofia sem atalhos."
-                className="w-full bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 rounded-xl p-3 text-xs focus:outline-none focus:border-[#3478F6] resize-none font-sans"
+                className="w-full bg-[#18181B] border border-[#27272A] text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 rounded-xl p-3 text-xs focus:outline-none focus:border-[#3478F6] resize-none font-sans"
               />
             </div>
           </CardContent>
@@ -981,7 +981,7 @@ export default function ProfessionalProfilePage() {
             className="text-center font-mono text-lg tracking-[0.5em] h-12 rounded-xl"
             autoFocus
           />
-          <p className="text-[10px] text-[#A7B0C0] font-mono text-center mt-2">
+          <p className="text-[10px] text-[#A1A1AA] font-mono text-center mt-2">
             Em ambiente de testes, utilize o PIN de demonstração: 1234
           </p>
         </div>
@@ -990,7 +990,7 @@ export default function ProfessionalProfilePage() {
       {/* Toast Flutuante */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#27272A] bg-[#0E0E10] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#FAFAFA]">
             <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             <span>{toastMessage}</span>
           </div>

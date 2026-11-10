@@ -59,12 +59,12 @@ export function ReturnToCoachBanner() {
   }
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-[#121722]/95 backdrop-blur-xl border-b border-[#252D3B] px-3.5 safe-top-header pb-3 flex items-center justify-between shadow-2xl">
+    <div className="sticky top-0 z-50 w-full bg-[#0E0E10]/95 backdrop-blur-xl border-b border-[#27272A] px-3.5 safe-top-header pb-3 flex items-center justify-between shadow-2xl">
       <div className="flex items-center gap-2">
-        <div className="h-5 w-5 rounded-md bg-[#1B2330] border border-[#252D3B] flex items-center justify-center">
-          <Shield className="h-3 w-3 text-[#75A7FF]" />
+        <div className="h-5 w-5 rounded-md bg-[#18181B] border border-[#27272A] flex items-center justify-center">
+          <Shield className="h-3 w-3 text-[#D4D4D8]" />
         </div>
-        <span className="text-[10px] font-mono uppercase tracking-widest text-[#A7B0C0] font-bold">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-[#A1A1AA] font-bold">
           Modo Simulação
         </span>
       </div>

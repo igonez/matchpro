@@ -363,7 +363,7 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
                     {currentStepIndex + 1} de {steps.length}
                   </span>
                   {currentStep.badge && (
-                    <span className="px-2 py-0.5 rounded-full bg-[#3478F6]/20 text-[#75A7FF] border border-[#3478F6]/30 text-[10px] font-bold uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded-full bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px] font-bold uppercase tracking-wider">
                       {currentStep.badge}
                     </span>
                   )}

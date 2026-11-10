@@ -57,7 +57,7 @@ export function SpotlightCard3D({
         transition: isHovered ? 'transform 0.12s ease-out' : 'transform 0.6s ease-out',
         transformStyle: 'preserve-3d',
       }}
-      className={`relative rounded-3xl overflow-hidden border border-[#252D3B] bg-[#121722]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-shadow duration-300 ${
+      className={`relative rounded-3xl overflow-hidden border border-[#27272A] bg-[#0E0E10]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-shadow duration-300 ${
         isHovered ? 'shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_20px_rgba(52,120,246,0.08)]' : ''
       } ${className}`}
     >

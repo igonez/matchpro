@@ -11,7 +11,7 @@ export default function DashboardLayout({
 }) {
   return (
     <WalkthroughProvider>
-      <div className="flex min-h-screen bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white">
+      <div className="flex min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white">
         <DashboardSidebar />
         <div className="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden">
           <DashboardHeader />

@@ -28,7 +28,7 @@ export default async function OpengraphImage({
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#080A0F',
+            backgroundColor: '#000000',
             color: '#ffffff',
             padding: '60px',
             fontFamily: 'sans-serif',
@@ -76,7 +76,7 @@ export default async function OpengraphImage({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          backgroundColor: '#080A0F',
+          backgroundColor: '#000000',
           backgroundImage:
             'radial-gradient(circle at 20% 15%, rgba(251, 191, 36, 0.22), transparent 55%), radial-gradient(circle at 85% 80%, rgba(52, 120, 246, 0.22), transparent 50%)',
           color: '#ffffff',

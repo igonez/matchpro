@@ -230,7 +230,7 @@ export default function BetaTestersPage() {
             </div>
 
             {/* Aviso de Transparência Beta */}
-            <div className="p-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
+            <div className="p-4 rounded-2xl bg-[#0E0E10] border border-[#27272A] text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-[#3478F6] shrink-0 shadow-[0_0_8px_#3478F6]" />
               <div>
                 <strong className="text-white font-mono uppercase text-xs block">Espírito de Co-criação:</strong>
@@ -267,7 +267,7 @@ export default function BetaTestersPage() {
                         href={CONTACT_CONFIG.getDirectWhatsappUrl(`Olá, tentei me candidatar ao Beta Fechado da ArenaFitPro mas tive uma falha. Meu nome é ${name || ''}.`)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[11px] text-[#75A7FF] font-semibold hover:underline"
+                        className="inline-flex items-center gap-1.5 text-[11px] text-[#D4D4D8] font-semibold hover:underline"
                       >
                         <MessageCircle className="w-3.5 h-3.5 text-[#3478F6]" /> Falar direto com o fundador no WhatsApp
                       </a>
@@ -400,7 +400,7 @@ export default function BetaTestersPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
+                    <span className="text-[11px] font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10">
                       Candidatura Recebida
                     </span>
                     <h3 className="text-2xl font-black text-white tracking-tight">
@@ -464,7 +464,7 @@ export default function BetaTestersPage() {
             </div>
 
             <div className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-2">
-              <div className="text-xs font-mono font-bold text-[#75A7FF] uppercase tracking-wider">
+              <div className="text-xs font-mono font-bold text-[#D4D4D8] uppercase tracking-wider">
                 02 • Piloto com Alunos
               </div>
               <h4 className="text-base font-bold text-white">Validação Real em Campo</h4>
@@ -474,7 +474,7 @@ export default function BetaTestersPage() {
             </div>
 
             <div className="p-5 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-2">
-              <div className="text-xs font-mono font-bold text-[#75A7FF] uppercase tracking-wider">
+              <div className="text-xs font-mono font-bold text-[#D4D4D8] uppercase tracking-wider">
                 03 • Feedback & Reconhecimento
               </div>
               <h4 className="text-base font-bold text-white">Benefícios Eternos</h4>

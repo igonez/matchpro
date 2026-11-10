@@ -84,7 +84,7 @@ export default function PrivacyPage() {
         {/* Cabeçalho */}
         <div className="space-y-3 border-b border-white/10 pb-8">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25 flex items-center gap-1.5">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_6px_#3478F6]" />
               Conformidade LGPD (Lei 13.709/2018)
             </span>
@@ -151,15 +151,15 @@ export default function PrivacyPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <span className="text-[11px] font-mono text-[#75A7FF] block mb-1 uppercase font-bold">Execução Contratual</span>
+                <span className="text-[11px] font-mono text-[#D4D4D8] block mb-1 uppercase font-bold">Execução Contratual</span>
                 <p className="text-xs text-zinc-400">Prestação do serviço de gamificação e acesso às turmas contratadas.</p>
               </div>
               <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <span className="text-[11px] font-mono text-[#75A7FF] block mb-1 uppercase font-bold">Consentimento</span>
+                <span className="text-[11px] font-mono text-[#D4D4D8] block mb-1 uppercase font-bold">Consentimento</span>
                 <p className="text-xs text-zinc-400">Acesso pontual à câmera e submissão opcional de fotos do Cofre.</p>
               </div>
               <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <span className="text-[11px] font-mono text-[#75A7FF] block mb-1 uppercase font-bold">Legítimo Interesse</span>
+                <span className="text-[11px] font-mono text-[#D4D4D8] block mb-1 uppercase font-bold">Legítimo Interesse</span>
                 <p className="text-xs text-zinc-400">Auditoria antifraude e proteção da integridade dos rankings.</p>
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function PrivacyPage() {
           {/* Seção 5 */}
           <div className="p-6 sm:p-7 rounded-3xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-white font-mono flex items-center gap-2">
-              <Lock className="h-4 w-4 text-[#75A7FF]" /> 5. Cookies e Tecnologias de Sessão
+              <Lock className="h-4 w-4 text-[#D4D4D8]" /> 5. Cookies e Tecnologias de Sessão
             </h2>
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
               O ArenaFitPro respeita integralmente a sua privacidade e não comercializa dados pessoais com terceiros sob nenhuma hipótese. Nossos cookies dividem-se em:

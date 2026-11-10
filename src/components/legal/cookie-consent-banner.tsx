@@ -66,33 +66,33 @@ export function CookieConsentBanner() {
       aria-label="Consentimento de Cookies e Privacidade"
       className="fixed bottom-0 inset-x-0 z-[100] p-3 sm:p-5 pointer-events-none"
     >
-      <div className="max-w-4xl mx-auto bg-[#121722]/95 border border-[#252D3B] backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] p-5 sm:p-6 text-[#F4F6FA] pointer-events-auto transition-all animate-in fade-in slide-in-from-bottom-4 duration-300">
+      <div className="max-w-4xl mx-auto bg-[#0E0E10]/95 border border-[#27272A] backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] p-5 sm:p-6 text-[#FAFAFA] pointer-events-auto transition-all animate-in fade-in slide-in-from-bottom-4 duration-300">
         {!showPreferences ? (
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
             <div className="space-y-2 flex-1">
               <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-lg bg-[#3478F6]/15 text-[#75A7FF] shrink-0">
+                <span className="p-1.5 rounded-lg bg-white/[0.06] text-[#D4D4D8] shrink-0">
                   <Cookie className="w-4 h-4" />
                 </span>
-                <h2 className="text-sm sm:text-base font-bold tracking-tight text-[#F4F6FA]">
+                <h2 className="text-sm sm:text-base font-bold tracking-tight text-[#FAFAFA]">
                   Controle de Cookies & Privacidade
                 </h2>
-                <span className="text-[10px] font-mono uppercase bg-[#3478F6]/15 text-[#75A7FF] px-2 py-0.5 rounded-full border border-[#3478F6]/30">
+                <span className="text-[10px] font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-2 py-0.5 rounded-full border border-white/10">
                   LGPD
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed font-normal">
                 Utilizamos cookies essenciais para autenticação segura e cookies analíticos/de atribuição para medir o desempenho das nossas campanhas, sem jamais vender seus dados. Saiba mais em nossa{' '}
                 <Link
                   href="/privacidade"
-                  className="text-[#75A7FF] underline underline-offset-2 hover:text-white font-medium focus-visible:ring-2 focus-visible:ring-[#3478F6] rounded"
+                  className="text-[#D4D4D8] underline underline-offset-2 hover:text-white font-medium focus-visible:ring-2 focus-visible:ring-[#3478F6] rounded"
                 >
                   Política de Privacidade
                 </Link>{' '}
                 ou exerça seus direitos no{' '}
                 <Link
                   href="/lgpd"
-                  className="text-[#75A7FF] underline underline-offset-2 hover:text-white font-medium focus-visible:ring-2 focus-visible:ring-[#3478F6] rounded"
+                  className="text-[#D4D4D8] underline underline-offset-2 hover:text-white font-medium focus-visible:ring-2 focus-visible:ring-[#3478F6] rounded"
                 >
                   Canal LGPD
                 </Link>.
@@ -103,7 +103,7 @@ export function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => setShowPreferences(true)}
-                className="px-3.5 py-2.5 rounded-xl bg-[#181F2E] border border-[#252D3B] text-[#A7B0C0] hover:text-white text-xs font-mono uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-[#3478F6] cursor-pointer w-full sm:w-auto"
+                className="px-3.5 py-2.5 rounded-xl bg-[#141416] border border-[#27272A] text-[#A1A1AA] hover:text-white text-xs font-mono uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-[#3478F6] cursor-pointer w-full sm:w-auto"
               >
                 <Settings2 className="w-3.5 h-3.5" />
                 <span>Preferências</span>
@@ -112,7 +112,7 @@ export function CookieConsentBanner() {
               <button
                 type="button"
                 onClick={() => saveConsent('essential')}
-                className="px-4 py-2.5 rounded-xl bg-[#181F2E] border border-[#252D3B] text-[#F4F6FA] hover:bg-[#1B2330] text-xs font-mono uppercase tracking-wider transition-colors focus-visible:ring-2 focus-visible:ring-[#3478F6] cursor-pointer flex-1 sm:flex-initial"
+                className="px-4 py-2.5 rounded-xl bg-[#141416] border border-[#27272A] text-[#FAFAFA] hover:bg-[#18181B] text-xs font-mono uppercase tracking-wider transition-colors focus-visible:ring-2 focus-visible:ring-[#3478F6] cursor-pointer flex-1 sm:flex-initial"
               >
                 Apenas Essenciais
               </button>

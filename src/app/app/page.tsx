@@ -713,7 +713,7 @@ export default function StudentHomePage() {
   const topAnnouncement = activeAnnouncements[0] || null;
 
   return (
-    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 bg-[#080A0F] text-[#F4F6FA] selection:bg-[#3478F6] selection:text-white w-full max-w-full overflow-x-hidden min-w-0 pb-28 relative">
+    <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white w-full max-w-full overflow-x-hidden min-w-0 pb-28 relative">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
@@ -724,8 +724,8 @@ export default function StudentHomePage() {
       >
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <Link href="/app/profile" className="shrink-0" title="Ver Meu Perfil">
-            <div className="relative h-12 w-12 rounded-2xl bg-[#121722] border border-[#252D3B] p-0.5 shadow-md hover:border-[#3478F6]/50 active:scale-95 transition-all cursor-pointer">
-              <div className="h-full w-full bg-[#080A0F] rounded-[14px] flex items-center justify-center font-bold text-white text-base overflow-hidden">
+            <div className="relative h-12 w-12 rounded-2xl bg-[#0E0E10] border border-[#27272A] p-0.5 shadow-md hover:border-[#3478F6]/50 active:scale-95 transition-all cursor-pointer">
+              <div className="h-full w-full bg-[#000000] rounded-[14px] flex items-center justify-center font-bold text-white text-base overflow-hidden">
                 {student?.avatar_url ? (
                   <img
                     src={student.avatar_url}
@@ -736,15 +736,15 @@ export default function StudentHomePage() {
                   student?.full_name?.charAt(0) || 'A'
                 )}
               </div>
-              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#3478F6] shadow-[0_0_8px_#3478F6] border-2 border-[#080A0F]" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#3478F6] shadow-[0_0_8px_#3478F6] border-2 border-[#000000]" />
             </div>
           </Link>
 
           <div className="min-w-0">
-            <h1 className="text-base sm:text-lg font-black text-[#F4F6FA] tracking-tight truncate leading-tight">
+            <h1 className="text-base sm:text-lg font-black text-[#FAFAFA] tracking-tight truncate leading-tight">
               Olá, {student?.full_name?.split(' ')[0] || 'Atleta'} 👋
             </h1>
-            <p className="text-xs text-[#A7B0C0] font-medium truncate mt-0.5">
+            <p className="text-xs text-[#A1A1AA] font-medium truncate mt-0.5">
               {todayFormatted} • Metas de hoje
             </p>
           </div>
@@ -752,9 +752,9 @@ export default function StudentHomePage() {
 
         <div className="flex items-center gap-2 shrink-0">
           {/* Badge Streak */}
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#121722] border border-[#252D3B] shrink-0" title="Dias Consecutivos de Ofensiva">
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#0E0E10] border border-[#27272A] shrink-0" title="Dias Consecutivos de Ofensiva">
             <Flame className="h-4 w-4 text-amber-400 fill-amber-400/20" />
-            <span className="text-xs font-mono font-black text-[#F4F6FA] tracking-wider">
+            <span className="text-xs font-mono font-black text-[#FAFAFA] tracking-wider">
               {currentStreak}D
             </span>
           </div>
@@ -763,7 +763,7 @@ export default function StudentHomePage() {
           <button
             type="button"
             onClick={() => setIsNotificationsOpen(true)}
-            className="relative h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330] flex items-center justify-center text-[#A7B0C0] hover:text-[#F4F6FA] transition-all cursor-pointer active:scale-95 shrink-0"
+            className="relative h-11 w-11 min-h-[44px] min-w-[44px] rounded-2xl bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] transition-all cursor-pointer active:scale-95 shrink-0"
             title="Notificações e Alertas"
             aria-label="Abrir Notificações"
           >
@@ -782,9 +782,9 @@ export default function StudentHomePage() {
 
       {loading ? (
         <div className="relative z-10 space-y-4 pt-2 animate-pulse">
-          <div className="h-44 rounded-3xl bg-[#121722] border border-[#252D3B]" />
-          <div className="h-32 rounded-3xl bg-[#121722] border border-[#252D3B]" />
-          <div className="h-48 rounded-3xl bg-[#121722] border border-[#252D3B]" />
+          <div className="h-44 rounded-3xl bg-[#0E0E10] border border-[#27272A]" />
+          <div className="h-32 rounded-3xl bg-[#0E0E10] border border-[#27272A]" />
+          <div className="h-48 rounded-3xl bg-[#0E0E10] border border-[#27272A]" />
         </div>
       ) : !challenge ? (
         /* Tela de Primeiro Acesso - Exige Convite/QR Code ou Pagamento Pendente */
@@ -797,7 +797,7 @@ export default function StudentHomePage() {
                   Inscrição Aguardando Pagamento Pix
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-[#F4F6FA]">
+              <p className="text-xs sm:text-sm text-[#FAFAFA]">
                 Você iniciou a inscrição na turma <strong>{pendingChallenge.title}</strong> (R$ {Number(pendingChallenge.price || 0).toFixed(2)}).
               </p>
               <Link href={`/join/${pendingChallenge.id}`} className="block pt-1">
@@ -810,19 +810,19 @@ export default function StudentHomePage() {
           )}
 
           <SpotlightCard3D className="p-6 sm:p-8 text-center space-y-4">
-            <div className="h-16 w-16 rounded-2xl bg-[#1B2330] border border-[#252D3B] mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(52,120,246,0.12)]">
-              <QrCode className="h-8 w-8 text-[#75A7FF]" />
+            <div className="h-16 w-16 rounded-2xl bg-[#18181B] border border-[#27272A] mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(52,120,246,0.12)]">
+              <QrCode className="h-8 w-8 text-[#D4D4D8]" />
             </div>
 
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#A7B0C0] block mb-1">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#A1A1AA] block mb-1">
                 ACESSO À ARENA
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-[#FAFAFA] tracking-tight">
                 Conecte-se à sua Turma
               </h2>
-              <p className="text-xs sm:text-sm text-[#A7B0C0] mt-2 max-w-md mx-auto leading-relaxed">
-                Digite o <strong className="text-[#F4F6FA]">Código de Convite</strong> fornecido pelo seu treinador para liberar seu cronograma de missões com auditoria por IA e disputar o pódio da sua turma.
+              <p className="text-xs sm:text-sm text-[#A1A1AA] mt-2 max-w-md mx-auto leading-relaxed">
+                Digite o <strong className="text-[#FAFAFA]">Código de Convite</strong> fornecido pelo seu treinador para liberar seu cronograma de missões com auditoria por IA e disputar o pódio da sua turma.
               </p>
             </div>
 
@@ -832,7 +832,7 @@ export default function StudentHomePage() {
                 placeholder="Ex: VERAO-2026 ou link do convite..."
                 value={inviteCodeInput}
                 onChange={(e) => setInviteCodeInput(e.target.value)}
-                className="w-full bg-[#1B2330] border border-[#252D3B] rounded-xl px-4 py-3.5 text-sm text-[#F4F6FA] placeholder:text-[#A7B0C0]/60 focus:outline-none focus:border-[#3478F6] font-mono transition-colors"
+                className="w-full bg-[#18181B] border border-[#27272A] rounded-xl px-4 py-3.5 text-sm text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6] font-mono transition-colors"
               />
               <button
                 type="button"
@@ -856,12 +856,12 @@ export default function StudentHomePage() {
 
           {/* Alerta de Urgência de Streak (Proteção das 20h) */}
           {streakRisk.isAtRisk && (
-            <div className="relative z-10 p-4 rounded-2xl bg-[#121722] border border-amber-500/40 flex items-center justify-between gap-3">
+            <div className="relative z-10 p-4 rounded-2xl bg-[#0E0E10] border border-amber-500/40 flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs sm:text-sm font-mono font-bold text-amber-300 uppercase tracking-wider">
                   OFENSIVA EM RISCO ({currentStreak} DIAS ATIVOS)
                 </p>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
+                <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
                   Faltam {streakRisk.hoursLeft}h para a meia-noite. Registre seu check-in de hoje.
                 </p>
               </div>
@@ -876,27 +876,27 @@ export default function StudentHomePage() {
           {/* 1.5 Banner de Aviso em Destaque do Treinador (Expira em 24h) */}
           {topAnnouncement && (
             <div className="relative z-10">
-              <div className="p-4 rounded-2xl border border-[#252D3B] bg-[#121722] space-y-1.5">
+              <div className="p-4 rounded-2xl border border-[#27272A] bg-[#0E0E10] space-y-1.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#A7B0C0]">
+                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#A1A1AA]">
                       {topAnnouncement.is_pinned ? 'AVISO FIXADO' : 'AVISO DO TREINADOR'}
                     </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/30 text-[10px] font-mono font-bold text-[#75A7FF]">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[10px] font-mono font-bold text-[#D4D4D8]">
                       <Clock className="w-3 h-3 shrink-0" />
                       <span>Expira em {formatRemaining24h(topAnnouncement.created_at)}</span>
                     </span>
                   </div>
                   <Link
                     href="/app/materials?tab=avisos"
-                    className="inline-flex items-center gap-1 text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA]"
+                    className="inline-flex items-center gap-1 text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA]"
                   >
                     <span>VER TODOS ({activeAnnouncements.length})</span>
                     <ArrowRight className="w-3 h-3 shrink-0" />
                   </Link>
                 </div>
-                <p className="text-sm font-bold text-[#F4F6FA] leading-tight">{topAnnouncement.title}</p>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed line-clamp-2">
+                <p className="text-sm font-bold text-[#FAFAFA] leading-tight">{topAnnouncement.title}</p>
+                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed line-clamp-2">
                   {topAnnouncement.content}
                 </p>
               </div>
@@ -905,38 +905,38 @@ export default function StudentHomePage() {
 
           {/* 2. CARD DESTAQUE: SUA TURMA ATUAL */}
           <div className="relative z-10">
-            <div className="p-5 sm:p-6 rounded-3xl bg-[#121722] border border-[#252D3B] shadow-[0_12px_40px_rgba(0,0,0,0.6)] space-y-4 relative overflow-hidden">
+            <div className="p-5 sm:p-6 rounded-3xl bg-[#0E0E10] border border-[#27272A] shadow-[0_12px_40px_rgba(0,0,0,0.6)] space-y-4 relative overflow-hidden">
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[11px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#3478F6]/15 border border-[#3478F6]/30 text-[#75A7FF] flex items-center gap-1.5">
+                    <span className="text-[11px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[#D4D4D8] flex items-center gap-1.5">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse" />
                       SUA TURMA ATUAL
                     </span>
-                    <span className="text-[11px] font-mono font-bold text-[#A7B0C0] bg-[#1B2330] border border-[#252D3B] px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] font-mono font-bold text-[#A1A1AA] bg-[#18181B] border border-[#27272A] px-2 py-0.5 rounded-full">
                       Semana {challengeTimeline.currentWeek} de {challengeTimeline.totalWeeks}
                     </span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-[#F4F6FA] tracking-tight leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-black text-[#FAFAFA] tracking-tight leading-tight">
                     {challenge.title}
                   </h2>
                 </div>
 
                 {/* Treinador Responsável */}
                 {coachInfo && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] shrink-0">
-                    <div className="h-8 w-8 rounded-xl bg-[#080A0F] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[#18181B] border border-[#27272A] shrink-0">
+                    <div className="h-8 w-8 rounded-xl bg-[#000000] border border-[#27272A] overflow-hidden flex items-center justify-center shrink-0">
                       {coachInfo.avatar ? (
                         <img src={coachInfo.avatar} alt={coachInfo.name} className="h-full w-full object-cover" />
                       ) : (
-                        <span className="text-xs font-black text-[#75A7FF]">
+                        <span className="text-xs font-black text-[#D4D4D8]">
                           {coachInfo.name.charAt(0).toUpperCase()}
                         </span>
                       )}
                     </div>
                     <div className="text-left">
-                      <span className="text-[10px] font-mono text-[#A7B0C0] uppercase block leading-none">TREINADOR</span>
-                      <span className="text-xs font-bold text-[#F4F6FA] leading-tight block truncate max-w-[120px] sm:max-w-[160px]">
+                      <span className="text-[10px] font-mono text-[#A1A1AA] uppercase block leading-none">TREINADOR</span>
+                      <span className="text-xs font-bold text-[#FAFAFA] leading-tight block truncate max-w-[120px] sm:max-w-[160px]">
                         {coachInfo.name}
                       </span>
                     </div>
@@ -947,15 +947,15 @@ export default function StudentHomePage() {
               {/* Grid 4 Indicadores Rápidos da Turma */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
                 {/* 1. Cronograma */}
-                <div className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-1">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">CRONOGRAMA</span>
+                <div className="p-3 rounded-2xl bg-[#18181B] border border-[#27272A] space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">CRONOGRAMA</span>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-base sm:text-lg font-black font-mono text-[#F4F6FA]">
+                    <span className="text-base sm:text-lg font-black font-mono text-[#FAFAFA]">
                       Dia {challengeTimeline.currentDay}
                     </span>
-                    <span className="text-xs font-mono text-[#A7B0C0]">/{challengeTimeline.totalDays}</span>
+                    <span className="text-xs font-mono text-[#A1A1AA]">/{challengeTimeline.totalDays}</span>
                   </div>
-                  <span className="text-[11px] text-[#75A7FF] font-mono block font-medium">
+                  <span className="text-[11px] text-[#D4D4D8] font-mono block font-medium">
                     {challengeTimeline.daysLeft} {challengeTimeline.daysLeft === 1 ? 'dia restante' : 'dias restantes'}
                   </span>
                 </div>
@@ -963,31 +963,31 @@ export default function StudentHomePage() {
                 {/* 2. Ranking */}
                 <Link
                   href="/app/leaderboard"
-                  className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors space-y-1 block group"
+                  className="p-3 rounded-2xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors space-y-1 block group"
                   title="Ver ranking da turma"
                 >
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] group-hover:text-white block">SUA POSIÇÃO</span>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] group-hover:text-white block">SUA POSIÇÃO</span>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-base sm:text-lg font-black font-mono text-[#75A7FF]">
+                    <span className="text-base sm:text-lg font-black font-mono text-[#D4D4D8]">
                       {rank}
                     </span>
-                    <span className="text-xs font-mono text-[#A7B0C0]">lugar</span>
+                    <span className="text-xs font-mono text-[#A1A1AA]">lugar</span>
                   </div>
-                  <span className="text-[11px] text-[#A7B0C0] font-mono block truncate">
+                  <span className="text-[11px] text-[#A1A1AA] font-mono block truncate">
                     {totalAthletes} {totalAthletes === 1 ? 'atleta na turma' : 'atletas na disputa'}
                   </span>
                 </Link>
 
                 {/* 3. Pontuação XP */}
-                <div className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-1">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">SEU XP TOTAL</span>
+                <div className="p-3 rounded-2xl bg-[#18181B] border border-[#27272A] space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">SEU XP TOTAL</span>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-base sm:text-lg font-black font-mono text-[#F4F6FA]">
+                    <span className="text-base sm:text-lg font-black font-mono text-[#FAFAFA]">
                       {standing?.total_points || 0}
                     </span>
-                    <span className="text-xs font-mono text-[#75A7FF]">XP</span>
+                    <span className="text-xs font-mono text-[#D4D4D8]">XP</span>
                   </div>
-                  <span className="text-[11px] text-[#A7B0C0] font-mono block truncate">
+                  <span className="text-[11px] text-[#A1A1AA] font-mono block truncate">
                     {totalWeeklyDone}/{totalWeeklyGoals} metas da semana
                   </span>
                 </div>
@@ -995,14 +995,14 @@ export default function StudentHomePage() {
                 {/* 4. Materiais & Apoio */}
                 <Link
                   href="/app/materials"
-                  className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 transition-colors space-y-1 block group"
+                  className="p-3 rounded-2xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors space-y-1 block group"
                   title="Ver materiais da turma"
                 >
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] group-hover:text-white block">APOIO & GUIAS</span>
-                  <div className="flex items-center gap-1 text-sm sm:text-base font-black font-mono text-[#F4F6FA] pt-0.5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] group-hover:text-white block">APOIO & GUIAS</span>
+                  <div className="flex items-center gap-1 text-sm sm:text-base font-black font-mono text-[#FAFAFA] pt-0.5">
                     <span>PDFs & Aulas</span>
                   </div>
-                  <span className="text-[11px] text-[#75A7FF] font-mono block flex items-center gap-0.5">
+                  <span className="text-[11px] text-[#D4D4D8] font-mono block flex items-center gap-0.5">
                     <span>Acessar</span>
                     <ChevronRight className="w-3 h-3" />
                   </span>
@@ -1012,10 +1012,10 @@ export default function StudentHomePage() {
               {/* Barra de Progresso Semanal */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-[#A7B0C0]">Progresso da Semana {challengeTimeline.currentWeek}</span>
-                  <span className="font-bold text-[#F4F6FA]">{weeklyPercentage}% concluído</span>
+                  <span className="text-[#A1A1AA]">Progresso da Semana {challengeTimeline.currentWeek}</span>
+                  <span className="font-bold text-[#FAFAFA]">{weeklyPercentage}% concluído</span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-[#1B2330] overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-[#18181B] overflow-hidden">
                   <div
                     className="h-full rounded-full bg-[#3478F6] shadow-[0_0_12px_rgba(52,120,246,0.6)] transition-all duration-700"
                     style={{ width: `${Math.max(4, weeklyPercentage)}%` }}
@@ -1024,16 +1024,16 @@ export default function StudentHomePage() {
               </div>
 
               {/* Botões Rápidos de Ação da Turma */}
-              <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#252D3B]">
+              <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#27272A]">
                 <Link href="/app/leaderboard" className="block">
-                  <button className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
-                    <Trophy className="w-3.5 h-3.5 text-[#75A7FF]" />
+                  <button className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#FAFAFA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                    <Trophy className="w-3.5 h-3.5 text-[#D4D4D8]" />
                     <span>Placar Geral</span>
                   </button>
                 </Link>
                 <Link href="/app/feed" className="block">
-                  <button className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
-                    <Sparkles className="w-3.5 h-3.5 text-[#75A7FF]" />
+                  <button className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#FAFAFA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                    <Sparkles className="w-3.5 h-3.5 text-[#D4D4D8]" />
                     <span>Mural & Feed</span>
                   </button>
                 </Link>
@@ -1044,10 +1044,10 @@ export default function StudentHomePage() {
           {/* 3. CARD DE AÇÃO FOCAL: O Próximo Passo de Hoje */}
           {focalTask ? (
             <div className="relative z-10">
-              <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] shadow-[0_15px_40px_rgba(0,0,0,0.8)] space-y-3.5">
+              <div className="p-5 sm:p-6 rounded-3xl border border-[#27272A] bg-[#0E0E10] shadow-[0_15px_40px_rgba(0,0,0,0.8)] space-y-3.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded border border-[#3478F6]/30 bg-[#3478F6]/10 text-[#75A7FF]">
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded border border-white/10 bg-white/[0.06] text-[#D4D4D8]">
                       PRÓXIMA AÇÃO
                     </span>
                     {activeSession?.missionId === focalTask.id && (
@@ -1056,16 +1056,16 @@ export default function StudentHomePage() {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs sm:text-sm font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 border border-[#3478F6]/30 px-3 py-1 rounded-full">
+                  <span className="text-xs sm:text-sm font-mono font-bold text-[#D4D4D8] bg-white/[0.06] border border-white/10 px-3 py-1 rounded-full">
                     +{focalTask.points_rewarded} XP
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-lg sm:text-xl font-black text-[#F4F6FA] tracking-tight leading-snug">
+                  <h3 className="text-lg sm:text-xl font-black text-[#FAFAFA] tracking-tight leading-snug">
                     {focalTask.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
                     {focalTask.category === 'treino'
                       ? 'Inicie o cronômetro oficial e comprove a execução com a câmera antifraude ao terminar.'
                       : focalTask.category === 'cardio'
@@ -1109,22 +1109,22 @@ export default function StudentHomePage() {
             </div>
           ) : totalWeekMissionsCount > 0 ? (
             <div className="relative z-10">
-              <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-1.5">
+              <div className="p-5 sm:p-6 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-1.5">
                 <span className="text-xs font-mono tracking-widest text-[#3478F6] uppercase font-bold block">
                   TODAS AS METAS DE HOJE CONCLUÍDAS
                 </span>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] max-w-sm mx-auto">
+                <p className="text-xs sm:text-sm text-[#A1A1AA] max-w-sm mx-auto">
                   Excelente consistência. Seu streak está seguro e seus pontos foram computados.
                 </p>
               </div>
             </div>
           ) : (
             <div className="relative z-10">
-              <div className="p-5 sm:p-6 rounded-3xl border border-[#252D3B] bg-[#121722] text-center space-y-2">
-                <span className="text-xs font-mono tracking-widest text-[#75A7FF] uppercase font-bold block">
+              <div className="p-5 sm:p-6 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2">
+                <span className="text-xs font-mono tracking-widest text-[#D4D4D8] uppercase font-bold block">
                   CRONOGRAMA DA SEMANA EM PREPARAÇÃO
                 </span>
-                <p className="text-xs sm:text-sm text-[#A7B0C0] max-w-sm mx-auto">
+                <p className="text-xs sm:text-sm text-[#A1A1AA] max-w-sm mx-auto">
                   Nenhuma missão ativa foi localizada para esta semana ainda. Confira o cronograma completo de semanas na aba Missões.
                 </p>
                 <div className="pt-1">
@@ -1143,10 +1143,10 @@ export default function StudentHomePage() {
           {/* 4. BLOCOS DE MISSÕES DE HOJE */}
           <div className="space-y-4 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#A7B0C0] font-mono">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA] font-mono">
                 BLOCOS DE EXECUÇÃO DE HOJE
               </span>
-              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#75A7FF] hover:text-white transition-colors font-mono font-bold tracking-wider">
+              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#D4D4D8] hover:text-white transition-colors font-mono font-bold tracking-wider">
                 <span>VER SEMANAS 1 A 4</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
@@ -1162,8 +1162,8 @@ export default function StudentHomePage() {
                   categories: ['treino'],
                   listId: null,
                   Icon: Dumbbell,
-                  borderClass: 'border-[#252D3B]',
-                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                  borderClass: 'border-[#27272A]',
+                  badgeClass: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
                 },
                 {
                   id: 'bloco-cardio',
@@ -1172,8 +1172,8 @@ export default function StudentHomePage() {
                   categories: ['cardio'],
                   listId: null,
                   Icon: Activity,
-                  borderClass: 'border-[#252D3B]',
-                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                  borderClass: 'border-[#27272A]',
+                  badgeClass: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
                 },
                 {
                   id: 'bloco-nutricao',
@@ -1182,8 +1182,8 @@ export default function StudentHomePage() {
                   categories: ['refeicao'],
                   listId: null,
                   Icon: Utensils,
-                  borderClass: 'border-[#252D3B]',
-                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                  borderClass: 'border-[#27272A]',
+                  badgeClass: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
                 },
                 {
                   id: 'bloco-habitos',
@@ -1192,8 +1192,8 @@ export default function StudentHomePage() {
                   categories: ['habito'],
                   listId: null,
                   Icon: Droplets,
-                  borderClass: 'border-[#252D3B]',
-                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                  borderClass: 'border-[#27272A]',
+                  badgeClass: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
                 },
               ];
 
@@ -1207,8 +1207,8 @@ export default function StudentHomePage() {
                   categories: [l.category_key || 'treino'],
                   listId: l.id,
                   Icon: Target,
-                  borderClass: 'border-[#252D3B]',
-                  badgeClass: 'text-[#75A7FF] bg-[#3478F6]/10 border-[#3478F6]/30',
+                  borderClass: 'border-[#27272A]',
+                  badgeClass: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
                 }));
 
               const allBlocks = [...standardBlocks, ...customBlocks];
@@ -1228,18 +1228,18 @@ export default function StudentHomePage() {
                 return (
                   <div
                     key={group.id}
-                    className={`p-4 sm:p-5 rounded-3xl bg-[#121722] border ${group.borderClass} space-y-3 w-full min-w-0 max-w-full shadow-lg`}
+                    className={`p-4 sm:p-5 rounded-3xl bg-[#0E0E10] border ${group.borderClass} space-y-3 w-full min-w-0 max-w-full shadow-lg`}
                   >
-                    <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#252D3B]">
+                    <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#27272A]">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="h-8 w-8 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center shrink-0">
+                        <div className="h-8 w-8 rounded-xl bg-[#18181B] border border-[#27272A] text-[#D4D4D8] flex items-center justify-center shrink-0">
                           <GroupIcon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0">
-                          <h4 className="text-sm sm:text-base font-black text-[#F4F6FA] tracking-tight truncate">
+                          <h4 className="text-sm sm:text-base font-black text-[#FAFAFA] tracking-tight truncate">
                             {group.title}
                           </h4>
-                          <p className="text-xs text-[#A7B0C0] truncate">{group.subtitle}</p>
+                          <p className="text-xs text-[#A1A1AA] truncate">{group.subtitle}</p>
                         </div>
                       </div>
                       <span className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase shrink-0 ${group.badgeClass}`}>
@@ -1256,16 +1256,16 @@ export default function StudentHomePage() {
 
                       const customList = task.list_id ? missionLists.find((l) => l.id === task.list_id) : null;
                       const catMeta: Record<string, { label: string; color: string }> = {
-                        treino: { label: 'TREINO', color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10' },
-                        cardio: { label: 'CARDIO', color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10' },
-                        refeicao: { label: 'NUTRIÇÃO', color: 'text-[#3478F6] border-[#3478F6]/30 bg-[#3478F6]/10' },
-                        habito: { label: 'HÁBITO', color: 'text-[#75A7FF] border-[#3478F6]/30 bg-[#3478F6]/10' },
+                        treino: { label: 'TREINO', color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]' },
+                        cardio: { label: 'CARDIO', color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]' },
+                        refeicao: { label: 'NUTRIÇÃO', color: 'text-[#3478F6] border-white/10 bg-white/[0.06]' },
+                        habito: { label: 'HÁBITO', color: 'text-[#D4D4D8] border-white/10 bg-white/[0.06]' },
                       };
                       const defaultMeta = catMeta[task.category] || catMeta.habito;
                       const meta = customList
                         ? {
                             label: customList.name.toUpperCase(),
-                            color: 'text-[#A7B0C0] border-[#252D3B] bg-[#121722]',
+                            color: 'text-[#A1A1AA] border-[#27272A] bg-[#0E0E10]',
                           }
                         : defaultMeta;
 
@@ -1273,12 +1273,12 @@ export default function StudentHomePage() {
                         <div
                           key={task.id}
                           onClick={() => handleTaskClick(task)}
-                          className={`p-3.5 rounded-2xl bg-[#1B2330] border flex items-center justify-between gap-3 transition-all cursor-pointer ${
+                          className={`p-3.5 rounded-2xl bg-[#18181B] border flex items-center justify-between gap-3 transition-all cursor-pointer ${
                             isDailyLocked
-                              ? 'opacity-50 border-[#252D3B]'
+                              ? 'opacity-50 border-[#27272A]'
                               : isRunningThis
                               ? 'border-[#3478F6] shadow-lg'
-                              : 'border-[#252D3B] hover:border-[#3478F6]/40'
+                              : 'border-[#27272A] hover:border-[#3478F6]/40'
                           }`}
                         >
                           <div className="min-w-0 flex-1">
@@ -1286,11 +1286,11 @@ export default function StudentHomePage() {
                               <span className={`text-[11px] font-mono tracking-wider font-bold px-2 py-0.5 rounded border ${meta.color}`}>
                                 {meta.label}
                               </span>
-                              <span className="text-xs font-mono font-bold text-[#75A7FF]">
+                              <span className="text-xs font-mono font-bold text-[#D4D4D8]">
                                 +{task.points_rewarded} XP
                               </span>
                             </div>
-                            <p className={`text-xs sm:text-sm font-bold truncate ${isDailyLocked ? 'line-through text-[#A7B0C0]' : 'text-[#F4F6FA]'}`}>
+                            <p className={`text-xs sm:text-sm font-bold truncate ${isDailyLocked ? 'line-through text-[#A1A1AA]' : 'text-[#FAFAFA]'}`}>
                               {task.title}
                             </p>
                           </div>
@@ -1301,7 +1301,7 @@ export default function StudentHomePage() {
                                 CONCLUÍDO
                               </span>
                             ) : isRunningThis ? (
-                              <span className="text-[11px] font-mono font-bold text-[#75A7FF] tracking-wider uppercase animate-pulse">
+                              <span className="text-[11px] font-mono font-bold text-[#D4D4D8] tracking-wider uppercase animate-pulse">
                                 EM ANDAMENTO
                               </span>
                             ) : (
@@ -1324,10 +1324,10 @@ export default function StudentHomePage() {
           {/* 5. PROGRESSO POR PILAR / LISTAS DE MISSÕES */}
           <div className="space-y-3 relative z-10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#A7B0C0] font-mono">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA] font-mono">
                 {missionLists.length > 0 ? 'PROGRESSO POR LISTA' : 'PROGRESSO POR PILAR'}
               </span>
-              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#A7B0C0] hover:text-white transition-colors font-mono tracking-wider">
+              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#A1A1AA] hover:text-white transition-colors font-mono tracking-wider">
                 <span>VER TODOS</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
@@ -1345,16 +1345,16 @@ export default function StudentHomePage() {
                   const pct = c.total > 0 ? Math.min(100, Math.round((c.done / c.total) * 100)) : 0;
                   return (
                     <Link key={list.id} href={`/app/missions?cat=${list.key || 'all'}`}>
-                      <div className="p-3.5 rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-all space-y-2">
+                      <div className="p-3.5 rounded-2xl bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-[#F4F6FA] text-xs truncate uppercase tracking-wider">
+                          <span className="font-bold text-[#FAFAFA] text-xs truncate uppercase tracking-wider">
                             {list.name}
                           </span>
-                          <span className="text-xs font-mono text-[#A7B0C0] font-bold shrink-0">
+                          <span className="text-xs font-mono text-[#A1A1AA] font-bold shrink-0">
                             {c.done}/{c.total}
                           </span>
                         </div>
-                        <div className="w-full h-1.5 rounded-full bg-[#1B2330] overflow-hidden">
+                        <div className="w-full h-1.5 rounded-full bg-[#18181B] overflow-hidden">
                           <div
                             className="h-full rounded-full bg-[#3478F6] transition-all duration-500"
                             style={{ width: `${pct}%` }}
@@ -1374,14 +1374,14 @@ export default function StudentHomePage() {
                   const pct = cat.total > 0 ? Math.min(100, Math.round((cat.done / cat.total) * 100)) : 0;
                   return (
                     <Link key={cat.key} href={`/app/missions?cat=${cat.key}`}>
-                      <div className="p-3.5 rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 transition-all space-y-2">
+                      <div className="p-3.5 rounded-2xl bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 transition-all space-y-2">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-[#F4F6FA] text-xs font-mono tracking-wider">{cat.title}</span>
-                          <span className="text-xs font-mono text-[#A7B0C0] font-bold">
+                          <span className="font-bold text-[#FAFAFA] text-xs font-mono tracking-wider">{cat.title}</span>
+                          <span className="text-xs font-mono text-[#A1A1AA] font-bold">
                             {cat.done}/{cat.total}
                           </span>
                         </div>
-                        <div className="w-full h-1.5 rounded-full bg-[#1B2330] overflow-hidden">
+                        <div className="w-full h-1.5 rounded-full bg-[#18181B] overflow-hidden">
                           <div
                             className="h-full rounded-full bg-[#3478F6] transition-all duration-500"
                             style={{ width: `${pct}%` }}
@@ -1399,7 +1399,7 @@ export default function StudentHomePage() {
 
       {/* Floating Instant Toast */}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#121722] border border-[#3478F6]/40 text-[#F4F6FA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#0E0E10] border border-white/10 text-[#FAFAFA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span>
           <span>{toastMessage}</span>
         </div>

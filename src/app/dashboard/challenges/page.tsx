@@ -338,7 +338,7 @@ export default function ChallengesManagementPage() {
 
       {/* Toast flutuante */}
       {toastMessage && (
-        <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-[#F4F6FA] font-mono text-xs shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4">
+        <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-[#0E0E10] border border-[#27272A] text-[#FAFAFA] font-mono text-xs shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             <span>{toastMessage}</span>
@@ -352,20 +352,20 @@ export default function ChallengesManagementPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center gap-1 transition-colors"
+              className="text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center gap-1 transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Início</span>
             </Link>
-            <span className="text-[#252D3B] font-mono">•</span>
-            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30 font-mono">
+            <span className="text-[#27272A] font-mono">•</span>
+            <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10 font-mono">
               TURMAS & DESAFIOS
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] tracking-tight">
             Gerenciar Desafios
           </h1>
-          <p className="text-xs sm:text-sm text-[#A7B0C0]">
+          <p className="text-xs sm:text-sm text-[#A1A1AA]">
             Acompanhe todas as turmas ativas e anteriores, matrículas, missões e links de convite.
           </p>
         </div>
@@ -381,55 +381,55 @@ export default function ChallengesManagementPage() {
 
       {/* 2. Grid de Métricas de Resumo em 3D */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-10">
-        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Turmas Ativas</span>
+            <span className="text-[11px] font-mono uppercase text-[#A1A1AA]">Turmas Ativas</span>
             <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#F4F6FA] font-mono">{activeCount}</div>
-          <p className="text-[10px] text-[#A7B0C0] mt-1">{challenges.length} turmas no total</p>
+          <div className="text-2xl sm:text-3xl font-black text-[#FAFAFA] font-mono">{activeCount}</div>
+          <p className="text-[10px] text-[#A1A1AA] mt-1">{challenges.length} turmas no total</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Alunos Ativos</span>
+            <span className="text-[11px] font-mono uppercase text-[#A1A1AA]">Alunos Ativos</span>
             <Users className="h-4 w-4 text-[#3478F6]" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#F4F6FA] font-mono">{totalStudents}</div>
-          <p className="text-[10px] text-[#A7B0C0] mt-1">Inscritos nas turmas</p>
+          <div className="text-2xl sm:text-3xl font-black text-[#FAFAFA] font-mono">{totalStudents}</div>
+          <p className="text-[10px] text-[#A1A1AA] mt-1">Inscritos nas turmas</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Faturamento</span>
+            <span className="text-[11px] font-mono uppercase text-[#A1A1AA]">Faturamento</span>
             <DollarSign className="h-4 w-4 text-[#3478F6]" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#F4F6FA] font-mono">
+          <div className="text-2xl sm:text-3xl font-black text-[#FAFAFA] font-mono">
             R$ {totalProjectedRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}
           </div>
-          <p className="text-[10px] text-[#A7B0C0] mt-1">Valor consolidado</p>
+          <p className="text-[10px] text-[#A1A1AA] mt-1">Valor consolidado</p>
         </SpotlightCard3D>
 
-        <SpotlightCard3D className="p-4 sm:p-5 bg-[#121722] border-[#252D3B]">
+        <SpotlightCard3D className="p-4 sm:p-5 bg-[#0E0E10] border-[#27272A]">
           <div className="flex items-center justify-between pb-2">
-            <span className="text-[11px] font-mono uppercase text-[#A7B0C0]">Encerradas</span>
-            <span className="text-[10px] font-mono text-[#A7B0C0]">Histórico</span>
+            <span className="text-[11px] font-mono uppercase text-[#A1A1AA]">Encerradas</span>
+            <span className="text-[10px] font-mono text-[#A1A1AA]">Histórico</span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#A7B0C0] font-mono">{endedCount}</div>
-          <p className="text-[10px] text-[#A7B0C0] mt-1">Turmas finalizadas</p>
+          <div className="text-2xl sm:text-3xl font-black text-[#A1A1AA] font-mono">{endedCount}</div>
+          <p className="text-[10px] text-[#A1A1AA] mt-1">Turmas finalizadas</p>
         </SpotlightCard3D>
       </div>
 
       {/* 3. Barra de Filtros e Busca */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 relative z-10 font-mono">
         {/* Tabs de Filtro */}
-        <div className="flex items-center p-1 rounded-2xl bg-[#121722] border border-[#252D3B] self-start">
+        <div className="flex items-center p-1 rounded-2xl bg-[#0E0E10] border border-[#27272A] self-start">
           <button
             onClick={() => setFilterTab('active')}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
               filterTab === 'active'
                 ? 'bg-[#3478F6] text-white shadow-md'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
             }`}
           >
             Ativos ({activeCount})
@@ -439,7 +439,7 @@ export default function ChallengesManagementPage() {
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
               filterTab === 'all'
                 ? 'bg-[#3478F6] text-white shadow-md'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
             }`}
           >
             Todos ({challenges.length})
@@ -449,7 +449,7 @@ export default function ChallengesManagementPage() {
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
               filterTab === 'ended'
                 ? 'bg-[#3478F6] text-white shadow-md'
-                : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
             }`}
           >
             Encerrados ({endedCount})
@@ -458,30 +458,30 @@ export default function ChallengesManagementPage() {
 
         {/* Input de Busca */}
         <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A7B0C0]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A1A1AA]" />
           <Input
             type="text"
             placeholder="Buscar por nome..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-10 bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs font-mono focus:border-[#3478F6]"
+            className="pl-9 h-10 bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl text-xs font-mono focus:border-[#3478F6]"
           />
         </div>
       </div>
 
       {/* 4. Lista dos Desafios */}
       {loading ? (
-        <div className="py-20 text-center font-mono text-[#A7B0C0] text-sm">
+        <div className="py-20 text-center font-mono text-[#A1A1AA] text-sm">
           Carregando turmas e métricas em tempo real...
         </div>
       ) : filteredChallenges.length === 0 ? (
-        <div className="mono-glass-card p-10 sm:p-14 rounded-3xl text-center border-dashed border-[#252D3B] bg-[#121722] relative z-10 space-y-4">
-          <div className="h-12 w-12 rounded-2xl bg-[#1B2330] border border-[#252D3B] flex items-center justify-center mx-auto text-[#75A7FF]">
+        <div className="mono-glass-card p-10 sm:p-14 rounded-3xl text-center border-dashed border-[#27272A] bg-[#0E0E10] relative z-10 space-y-4">
+          <div className="h-12 w-12 rounded-2xl bg-[#18181B] border border-[#27272A] flex items-center justify-center mx-auto text-[#D4D4D8]">
             <Trophy className="h-6 w-6" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-[#F4F6FA]">Nenhum desafio encontrado</h3>
-            <p className="text-xs text-[#A7B0C0] max-w-sm mx-auto">
+            <h3 className="text-base font-bold text-[#FAFAFA]">Nenhum desafio encontrado</h3>
+            <p className="text-xs text-[#A1A1AA] max-w-sm mx-auto">
               {searchQuery
                 ? 'Nenhuma turma corresponde à sua busca atual.'
                 : filterTab === 'ended'
@@ -505,7 +505,7 @@ export default function ChallengesManagementPage() {
             return (
               <div
                 key={c.id}
-                className="bg-[#121722] p-5 sm:p-6 rounded-3xl flex flex-col justify-between border border-[#252D3B] hover:border-[#3478F6]/40 transition-all group shadow-md"
+                className="bg-[#0E0E10] p-5 sm:p-6 rounded-3xl flex flex-col justify-between border border-[#27272A] hover:border-[#3478F6]/40 transition-all group shadow-md"
               >
                 <div className="space-y-4">
                   {/* Topo do Card: Badge de Status e Preço / Split */}
@@ -515,8 +515,8 @@ export default function ChallengesManagementPage() {
                       title="Clique para alternar status da turma"
                       className={`text-xs px-2.5 py-0.5 rounded-full border transition-all cursor-pointer font-mono font-bold ${
                         c.is_active
-                          ? 'border-[#3478F6]/30 bg-[#3478F6]/15 text-[#75A7FF] hover:bg-[#3478F6]/25'
-                          : 'border-[#252D3B] bg-[#080A0F] text-[#A7B0C0] hover:text-[#F4F6FA]'
+                          ? 'border-white/10 bg-white/[0.06] text-[#D4D4D8] hover:bg-[#3478F6]/25'
+                          : 'border-[#27272A] bg-[#000000] text-[#A1A1AA] hover:text-[#FAFAFA]'
                       }`}
                     >
                       {c.is_active ? '● Ativo' : '○ Encerrado'}
@@ -525,15 +525,15 @@ export default function ChallengesManagementPage() {
                     <div className="flex items-center gap-1.5">
                       {c.price > 0 ? (
                         <>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#3478F6]/15 text-[#75A7FF] border border-[#3478F6]/30 font-bold">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] text-[#D4D4D8] border border-white/10 font-bold">
                             Split Asaas
                           </span>
-                          <span className="text-sm font-mono font-black text-[#F4F6FA]">
+                          <span className="text-sm font-mono font-black text-[#FAFAFA]">
                             R$ {c.price.toFixed(2).replace('.', ',')}
                           </span>
                         </>
                       ) : (
-                        <span className="text-xs font-mono font-bold text-[#A7B0C0] bg-[#1B2330] px-2.5 py-0.5 rounded-full border border-[#252D3B]">
+                        <span className="text-xs font-mono font-bold text-[#A1A1AA] bg-[#18181B] px-2.5 py-0.5 rounded-full border border-[#27272A]">
                           Gratuito
                         </span>
                       )}
@@ -542,34 +542,34 @@ export default function ChallengesManagementPage() {
 
                   {/* Título e Período */}
                   <div>
-                    <h3 className="text-base sm:text-lg font-black text-[#F4F6FA] tracking-tight line-clamp-1 group-hover:text-[#75A7FF] transition-colors">
+                    <h3 className="text-base sm:text-lg font-black text-[#FAFAFA] tracking-tight line-clamp-1 group-hover:text-[#75A7FF] transition-colors">
                       {c.title}
                     </h3>
-                    <div className="flex items-center gap-1.5 text-xs font-mono text-[#A7B0C0] mt-1">
+                    <div className="flex items-center gap-1.5 text-xs font-mono text-[#A1A1AA] mt-1">
                       <Calendar className="h-3.5 w-3.5 text-[#3478F6] shrink-0" />
                       <span>{startFormatted} até {endFormatted}</span>
                     </div>
                   </div>
 
                   {/* Grid de Métricas da Turma (Alunos, Missões e Líquido) */}
-                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#252D3B]">
-                    <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center">
-                      <span className="text-[10px] font-mono uppercase text-[#A7B0C0] block">Alunos</span>
-                      <span className="text-base font-black text-[#F4F6FA] font-mono block mt-0.5">
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#27272A]">
+                    <div className="p-2.5 rounded-2xl bg-[#18181B] border border-[#27272A] text-center">
+                      <span className="text-[10px] font-mono uppercase text-[#A1A1AA] block">Alunos</span>
+                      <span className="text-base font-black text-[#FAFAFA] font-mono block mt-0.5">
                         {c.studentsCount}
                       </span>
                     </div>
 
-                    <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center">
-                      <span className="text-[10px] font-mono uppercase text-[#A7B0C0] block">Missões</span>
+                    <div className="p-2.5 rounded-2xl bg-[#18181B] border border-[#27272A] text-center">
+                      <span className="text-[10px] font-mono uppercase text-[#A1A1AA] block">Missões</span>
                       <span className="text-base font-black text-[#3478F6] font-mono block mt-0.5">
                         {c.missionsCount}
                       </span>
                     </div>
 
-                    <div className="p-2.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center">
-                      <span className="text-[10px] font-mono uppercase text-[#A7B0C0] block">Líquido</span>
-                      <span className="text-base font-black text-[#75A7FF] font-mono block mt-0.5 truncate">
+                    <div className="p-2.5 rounded-2xl bg-[#18181B] border border-[#27272A] text-center">
+                      <span className="text-[10px] font-mono uppercase text-[#A1A1AA] block">Líquido</span>
+                      <span className="text-base font-black text-[#D4D4D8] font-mono block mt-0.5 truncate">
                         R$ {c.netRevenue > 0 ? c.netRevenue.toFixed(0) : '0'}
                       </span>
                     </div>
@@ -577,7 +577,7 @@ export default function ChallengesManagementPage() {
                 </div>
 
                 {/* Rodapé do Card com Ações */}
-                <div className="pt-5 mt-4 border-t border-[#252D3B] space-y-2.5">
+                <div className="pt-5 mt-4 border-t border-[#27272A] space-y-2.5">
                   {/* Botão de Convidar / Compartilhar */}
                   <button
                     onClick={() => setInviteModalChallenge(c)}
@@ -591,7 +591,7 @@ export default function ChallengesManagementPage() {
                   <div className="grid grid-cols-3 gap-2">
                     <Link
                       href={`/dashboard/challenges/${c.id}/edit`}
-                      className="w-full text-center py-2 px-1 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[11px] font-mono font-bold text-[#F4F6FA] transition-all truncate"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-[11px] font-mono font-bold text-[#FAFAFA] transition-all truncate"
                     >
                       Editar
                     </Link>
@@ -599,7 +599,7 @@ export default function ChallengesManagementPage() {
                     <button
                       onClick={() => handleDuplicateChallenge(c.id)}
                       disabled={duplicatingId === c.id}
-                      className="w-full text-center py-2 px-1 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[11px] font-mono font-bold text-[#F4F6FA] transition-all flex items-center justify-center gap-1 disabled:opacity-50 cursor-pointer"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-[11px] font-mono font-bold text-[#FAFAFA] transition-all flex items-center justify-center gap-1 disabled:opacity-50 cursor-pointer"
                       title="Clonar esta turma com todas as missões"
                     >
                       {duplicatingId === c.id ? (
@@ -612,7 +612,7 @@ export default function ChallengesManagementPage() {
 
                     <Link
                       href={`/dashboard/missions?challengeId=${c.id}`}
-                      className="w-full text-center py-2 px-1 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[11px] font-mono font-bold text-[#F4F6FA] transition-all flex items-center justify-center gap-0.5"
+                      className="w-full text-center py-2 px-1 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-[11px] font-mono font-bold text-[#FAFAFA] transition-all flex items-center justify-center gap-0.5"
                     >
                       <span>Missões</span>
                       <ChevronRight className="h-3 w-3 text-[#3478F6]" />
@@ -637,7 +637,7 @@ export default function ChallengesManagementPage() {
         >
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                 Link Público do Desafio
               </label>
               <div className="flex gap-2">
@@ -648,7 +648,7 @@ export default function ChallengesManagementPage() {
                       ? `${window.location.origin}/join/${inviteModalChallenge.id}`
                       : ''
                   }
-                  className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl text-xs font-mono select-all"
+                  className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl text-xs font-mono select-all"
                 />
                 <button
                   type="button"
@@ -665,10 +665,10 @@ export default function ChallengesManagementPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-xs font-mono">
-              <span className="text-[#A7B0C0]">Código de Acesso Rápido:</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#18181B] border border-[#27272A] text-xs font-mono">
+              <span className="text-[#A1A1AA]">Código de Acesso Rápido:</span>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[#F4F6FA] tracking-widest uppercase bg-[#121722] px-2.5 py-1 rounded-lg border border-[#252D3B]">
+                <span className="font-bold text-[#FAFAFA] tracking-widest uppercase bg-[#0E0E10] px-2.5 py-1 rounded-lg border border-[#27272A]">
                   {inviteModalChallenge.id.slice(0, 8).toUpperCase()}
                 </span>
                 <button
@@ -677,7 +677,7 @@ export default function ChallengesManagementPage() {
                     navigator.clipboard.writeText(inviteModalChallenge.id.slice(0, 8).toUpperCase());
                     showToast('Código rápido copiado!');
                   }}
-                  className="text-[#A7B0C0] hover:text-[#F4F6FA] p-1 transition-colors cursor-pointer"
+                  className="text-[#A1A1AA] hover:text-[#FAFAFA] p-1 transition-colors cursor-pointer"
                   title="Copiar código curto"
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -714,16 +714,16 @@ export default function ChallengesManagementPage() {
                     '_blank'
                   );
                 }}
-                className="w-full py-2.5 px-3 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] font-mono font-bold text-xs flex items-center justify-center gap-2 hover:text-white hover:bg-[#252D3B] hover:border-[#3478F6]/40 transition-colors"
+                className="w-full py-2.5 px-3 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] font-mono font-bold text-xs flex items-center justify-center gap-2 hover:text-white hover:bg-[#27272A] hover:border-[#3478F6]/40 transition-colors"
               >
-                <QrCode className="h-3.5 w-3.5 text-[#75A7FF]" />
+                <QrCode className="h-3.5 w-3.5 text-[#D4D4D8]" />
                 <span>Ver QR Code Grande</span>
               </button>
             </div>
 
             {/* QR Code de Projeção Preview */}
-            <div className="p-4 rounded-2xl bg-[#080A0F] border border-[#252D3B] flex flex-col items-center justify-center space-y-2">
-              <span className="text-[10px] font-mono uppercase text-[#A7B0C0]">
+            <div className="p-4 rounded-2xl bg-[#000000] border border-[#27272A] flex flex-col items-center justify-center space-y-2">
+              <span className="text-[10px] font-mono uppercase text-[#A1A1AA]">
                 QR Code de Acesso Rápido
               </span>
               <div className="bg-white p-2 rounded-xl">
@@ -737,7 +737,7 @@ export default function ChallengesManagementPage() {
                   className="w-36 h-36"
                 />
               </div>
-              <p className="text-[10px] font-mono text-[#A7B0C0] text-center">
+              <p className="text-[10px] font-mono text-[#A1A1AA] text-center">
                 Aponte a câmera do celular para abrir o checkout e matrícula da turma.
               </p>
             </div>

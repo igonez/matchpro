@@ -1015,26 +1015,26 @@ function MissionsManagerContent() {
     switch (key) {
       case 'treino':
         return {
-          border: 'border-[#3478F6]/25',
-          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
+          border: 'border-white/10',
+          headerBg: 'bg-white/[0.06] border-white/10 text-[#D4D4D8]',
           label: 'Treino',
         };
       case 'cardio':
         return {
-          border: 'border-[#3478F6]/25',
-          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
+          border: 'border-white/10',
+          headerBg: 'bg-white/[0.06] border-white/10 text-[#D4D4D8]',
           label: 'Cardio',
         };
       case 'refeicao':
         return {
-          border: 'border-[#3478F6]/25',
-          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
+          border: 'border-white/10',
+          headerBg: 'bg-white/[0.06] border-white/10 text-[#D4D4D8]',
           label: 'Nutrição',
         };
       case 'habito':
         return {
-          border: 'border-[#3478F6]/25',
-          headerBg: 'bg-[#3478F6]/10 border-[#3478F6]/25 text-[#75A7FF]',
+          border: 'border-white/10',
+          headerBg: 'bg-white/[0.06] border-white/10 text-[#D4D4D8]',
           label: 'Hábito',
         };
       default:
@@ -1082,10 +1082,10 @@ function MissionsManagerContent() {
   return (
     <div className="space-y-6 pb-16 max-w-full overflow-x-hidden">
       {/* Header com Seletor de Desafio e Ações Globais */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#252D3B] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#27272A] pb-5">
         <div className="flex items-start gap-3.5">
           {coachIdentity.name && (
-            <div className="h-11 w-11 rounded-2xl bg-[#121722] border border-[#252D3B] overflow-hidden flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+            <div className="h-11 w-11 rounded-2xl bg-[#0E0E10] border border-[#27272A] overflow-hidden flex items-center justify-center shrink-0 mt-0.5 shadow-md">
               {coachIdentity.avatarUrl ? (
                 <img
                   src={coachIdentity.avatarUrl}
@@ -1093,7 +1093,7 @@ function MissionsManagerContent() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-mono font-black text-[#75A7FF]">
+                <span className="text-sm font-mono font-black text-[#D4D4D8]">
                   {coachIdentity.name.charAt(0).toUpperCase()}
                 </span>
               )}
@@ -1101,15 +1101,15 @@ function MissionsManagerContent() {
           )}
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+              <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
                 Cronograma
               </span>
-              <span className="text-xs text-[#A7B0C0] font-medium">Missões em Blocos • 4 Semanas</span>
+              <span className="text-xs text-[#A1A1AA] font-medium">Missões em Blocos • 4 Semanas</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] tracking-tight">
               Gestão de Missões em Blocos
             </h1>
-            <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
+            <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
               Organize as tarefas da turma em blocos visuais de Treino, Cardio, Nutrição e Hábitos para cada semana.
             </p>
           </div>
@@ -1120,7 +1120,7 @@ function MissionsManagerContent() {
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-11 w-full sm:w-auto sm:max-w-xs flex-1 rounded-2xl border border-[#252D3B] bg-[#121722] px-3.5 text-xs sm:text-sm font-semibold text-[#F4F6FA] focus:outline-none focus:border-[#3478F6] truncate min-w-0 cursor-pointer shadow-sm transition-all"
+              className="h-11 w-full sm:w-auto sm:max-w-xs flex-1 rounded-2xl border border-[#27272A] bg-[#0E0E10] px-3.5 text-xs sm:text-sm font-semibold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] truncate min-w-0 cursor-pointer shadow-sm transition-all"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -1135,9 +1135,9 @@ function MissionsManagerContent() {
             onClick={handleOpenCreateListModal}
             disabled={!selectedChallengeId}
             variant="outline"
-            className="w-full sm:w-auto rounded-2xl h-11 px-4 text-xs font-semibold border-[#252D3B] bg-[#121722] text-[#F4F6FA] hover:border-[#3478F6]/40 shrink-0 shadow-sm"
+            className="w-full sm:w-auto rounded-2xl h-11 px-4 text-xs font-semibold border-[#27272A] bg-[#0E0E10] text-[#FAFAFA] hover:border-[#3478F6]/40 shrink-0 shadow-sm"
           >
-            <ListPlus className="h-4 w-4 mr-1.5 text-[#75A7FF]" />
+            <ListPlus className="h-4 w-4 mr-1.5 text-[#D4D4D8]" />
             Novo Bloco
           </Button>
         </div>
@@ -1171,8 +1171,8 @@ function MissionsManagerContent() {
                     isSelected
                       ? 'border-[#3478F6] bg-[#3478F6] text-white shadow-[0_8px_20px_rgba(52,120,246,0.3)]'
                       : meta?.isCurrent
-                      ? 'border-[#3478F6]/40 bg-[#3478F6]/10 text-[#F4F6FA] hover:border-[#3478F6]'
-                      : 'border-[#252D3B] bg-[#121722] text-[#A7B0C0] hover:border-[#3478F6]/40 hover:text-[#F4F6FA]'
+                      ? 'border-white/10 bg-white/[0.06] text-[#FAFAFA] hover:border-[#3478F6]'
+                      : 'border-[#27272A] bg-[#0E0E10] text-[#A1A1AA] hover:border-[#3478F6]/40 hover:text-[#FAFAFA]'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
@@ -1184,8 +1184,8 @@ function MissionsManagerContent() {
                         isSelected
                           ? 'bg-white/20 text-white'
                           : meta?.isCurrent
-                          ? 'bg-[#3478F6]/20 text-[#75A7FF]'
-                          : 'bg-[#1B2330] text-[#A7B0C0]'
+                          ? 'bg-white/[0.06] text-[#D4D4D8]'
+                          : 'bg-[#18181B] text-[#A1A1AA]'
                       }`}
                     >
                       {meta?.isCurrent
@@ -1206,9 +1206,9 @@ function MissionsManagerContent() {
             <button
               type="button"
               onClick={handleCreateNewWeek}
-              className="p-3.5 rounded-2xl border border-dashed border-[#252D3B] bg-[#121722]/60 text-[#A7B0C0] hover:text-[#F4F6FA] hover:border-[#3478F6]/40 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer text-xs font-mono"
+              className="p-3.5 rounded-2xl border border-dashed border-[#27272A] bg-[#0E0E10]/60 text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer text-xs font-mono"
             >
-              <Plus className="h-4 w-4 text-[#75A7FF]" />
+              <Plus className="h-4 w-4 text-[#D4D4D8]" />
               <span>+ Nova Semana</span>
             </button>
           </div>
@@ -1218,16 +1218,16 @@ function MissionsManagerContent() {
             <div
               className={`p-5 rounded-3xl border flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                 selectedWeekMeta.isCurrent
-                  ? 'border-[#3478F6]/35 bg-gradient-to-r from-[#3478F6]/15 via-[#121722] to-[#121722]'
-                  : 'border-[#252D3B] bg-[#121722]'
+                  ? 'border-white/10 bg-gradient-to-r from-[#3478F6]/15 via-[#0E0E10] to-[#0E0E10]'
+                  : 'border-[#27272A] bg-[#0E0E10]'
               }`}
             >
               <div className="flex items-start gap-3.5">
                 <div
                   className={`h-11 w-11 rounded-2xl border flex items-center justify-center shrink-0 ${
                     selectedWeekMeta.isCurrent
-                      ? 'bg-[#3478F6]/20 border-[#3478F6]/40 text-[#75A7FF]'
-                      : 'bg-[#1B2330] border-[#252D3B] text-[#A7B0C0]'
+                      ? 'bg-white/[0.06] border-white/10 text-[#D4D4D8]'
+                      : 'bg-[#18181B] border-[#27272A] text-[#A1A1AA]'
                   }`}
                 >
                   {selectedWeekMeta.isFuture ? (
@@ -1244,8 +1244,8 @@ function MissionsManagerContent() {
                     <span
                       className={`text-[10px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${
                         selectedWeekMeta.isCurrent
-                          ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/30'
-                          : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
+                          ? 'bg-white/[0.06] text-[#D4D4D8] border-white/10'
+                          : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A]'
                       }`}
                     >
                       {selectedWeekMeta.isFuture
@@ -1304,9 +1304,9 @@ function MissionsManagerContent() {
                     variant="outline"
                     onClick={handleCopyFromWeek1}
                     disabled={copyingFromWeek1}
-                    className="h-9 px-3 rounded-xl text-xs font-mono font-bold border-[#252D3B] bg-[#1B2330] text-[#F4F6FA] hover:bg-[#252D3B]"
+                    className="h-9 px-3 rounded-xl text-xs font-mono font-bold border-[#27272A] bg-[#18181B] text-[#FAFAFA] hover:bg-[#27272A]"
                   >
-                    <Copy className="w-3.5 h-3.5 mr-1.5 text-[#75A7FF]" />
+                    <Copy className="w-3.5 h-3.5 mr-1.5 text-[#D4D4D8]" />
                     {copyingFromWeek1 ? 'Copiando...' : `Copiar da Semana 1`}
                   </Button>
                 )}
@@ -1317,7 +1317,7 @@ function MissionsManagerContent() {
                       value={newWeekTitle}
                       onChange={(e) => setNewWeekTitle(e.target.value)}
                       placeholder="Título da semana..."
-                      className="h-9 w-44 text-xs bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl"
+                      className="h-9 w-44 text-xs bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl"
                     />
                     <Button
                       size="sm"
@@ -1346,7 +1346,7 @@ function MissionsManagerContent() {
                 {editingWeekBonus ? (
                   <div 
                     data-tour="missions-bonus-card"
-                    className="flex items-center gap-1.5 p-1 rounded-xl bg-[#1B2330] border border-[#3478F6]/40 shadow-sm animate-in fade-in duration-150"
+                    className="flex items-center gap-1.5 p-1 rounded-xl bg-[#18181B] border border-white/10 shadow-sm animate-in fade-in duration-150"
                   >
                     <Input
                       type="number"
@@ -1355,7 +1355,7 @@ function MissionsManagerContent() {
                       value={newWeekBonus}
                       onChange={(e) => setNewWeekBonus(e.target.value)}
                       placeholder="XP"
-                      className="h-8 w-20 text-xs bg-[#121722] border-[#252D3B] text-[#75A7FF] font-mono font-bold rounded-lg px-2"
+                      className="h-8 w-20 text-xs bg-[#0E0E10] border-[#27272A] text-[#D4D4D8] font-mono font-bold rounded-lg px-2"
                     />
                     <label className="flex items-center gap-1 text-[10px] font-mono text-zinc-300 pr-1 cursor-pointer select-none">
                       <input
@@ -1393,7 +1393,7 @@ function MissionsManagerContent() {
                       setApplyBonusToAll(false);
                       setEditingWeekBonus(true);
                     }}
-                    className="h-9 px-3 rounded-xl text-xs border-[#3478F6]/30 bg-[#3478F6]/10 text-[#75A7FF] hover:bg-[#3478F6]/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                    className="h-9 px-3 rounded-xl text-xs border-white/10 bg-white/[0.06] text-[#D4D4D8] hover:bg-[#3478F6]/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
                     title="Editar a quantidade de XP concedida aos alunos que completarem 100% das missões desta semana"
                   >
                     <Trophy className="w-3.5 h-3.5 text-[#3478F6]" />
@@ -1431,15 +1431,15 @@ function MissionsManagerContent() {
           <button
             type="button"
             onClick={() => setIsBlockMenuOpen((prev) => !prev)}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-[#121722] border border-[#252D3B] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#F4F6FA] flex items-center justify-between gap-3 transition-all cursor-pointer shadow-lg"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#FAFAFA] flex items-center justify-between gap-3 transition-all cursor-pointer shadow-lg"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               {selectedBlockFilter === 'all' ? (
-                <div className="h-6 w-6 rounded-lg bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] flex items-center justify-center shrink-0">
+                <div className="h-6 w-6 rounded-lg bg-white/[0.06] border border-white/10 text-[#D4D4D8] flex items-center justify-center shrink-0">
                   <Layers className="w-3.5 h-3.5" />
                 </div>
               ) : (
-                <div className="h-6 w-6 rounded-lg bg-[#3478F6]/20 border border-[#3478F6]/40 text-[#75A7FF] flex items-center justify-center shrink-0">
+                <div className="h-6 w-6 rounded-lg bg-white/[0.06] border border-white/10 text-[#D4D4D8] flex items-center justify-center shrink-0">
                   {getBlockIcon(selectedBlockFilter, 'w-3.5 h-3.5')}
                 </div>
               )}
@@ -1456,8 +1456,8 @@ function MissionsManagerContent() {
               </span>
             </div>
             <ChevronDown
-              className={`w-4 h-4 text-[#A7B0C0] transition-transform duration-200 shrink-0 ${
-                isBlockMenuOpen ? 'rotate-180 text-[#75A7FF]' : ''
+              className={`w-4 h-4 text-[#A1A1AA] transition-transform duration-200 shrink-0 ${
+                isBlockMenuOpen ? 'rotate-180 text-[#D4D4D8]' : ''
               }`}
             />
           </button>
@@ -1469,8 +1469,8 @@ function MissionsManagerContent() {
                 className="fixed inset-0 z-40"
                 onClick={() => setIsBlockMenuOpen(false)}
               />
-              <div className="absolute left-0 top-full mt-2 w-full sm:w-80 rounded-2xl bg-[#121722] border border-[#252D3B] p-2 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(52,120,246,0.15)] z-50 space-y-1 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+              <div className="absolute left-0 top-full mt-2 w-full sm:w-80 rounded-2xl bg-[#0E0E10] border border-[#27272A] p-2 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(52,120,246,0.15)] z-50 space-y-1 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA]">
                   Filtrar Exibição de Blocos
                 </div>
 
@@ -1483,7 +1483,7 @@ function MissionsManagerContent() {
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                     selectedBlockFilter === 'all'
                       ? 'bg-[#3478F6] text-white shadow-md'
-                      : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18181B]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -1495,7 +1495,7 @@ function MissionsManagerContent() {
                   </span>
                 </button>
 
-                <div className="h-px bg-[#252D3B] my-1" />
+                <div className="h-px bg-[#27272A] my-1" />
 
                 {visualBlocks.map((block) => {
                   const count = missions.filter((m) =>
@@ -1516,7 +1516,7 @@ function MissionsManagerContent() {
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-[#3478F6] text-white shadow-md'
-                          : 'text-[#A7B0C0] hover:text-[#F4F6FA] hover:bg-[#1B2330]'
+                          : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18181B]'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
@@ -1552,13 +1552,13 @@ function MissionsManagerContent() {
       ) : missions.length === 0 ? (
         <Card 
           data-tour="missions-list-card"
-          className="border-[#252D3B] bg-[#121722] rounded-3xl p-8 text-center space-y-4"
+          className="border-[#27272A] bg-[#0E0E10] rounded-3xl p-8 text-center space-y-4"
         >
-          <div className="h-14 w-14 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center mx-auto">
+          <div className="h-14 w-14 rounded-2xl bg-[#18181B] border border-[#27272A] text-[#D4D4D8] flex items-center justify-center mx-auto">
             <Calendar className="w-7 h-7" />
           </div>
           <div className="space-y-1 max-w-md mx-auto">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#75A7FF] font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4D4D8] font-bold">
               SEMANA {selectedWeekNumber} SEM MISSÕES CADASTRADAS
             </span>
             <h3 className="text-lg font-black text-white">
@@ -1618,10 +1618,10 @@ function MissionsManagerContent() {
               return (
                 <Card
                   key={block.id}
-                  className={`border ${accent.border} bg-[#121722] rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl w-full min-w-0 max-w-full`}
+                  className={`border ${accent.border} bg-[#0E0E10] rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl w-full min-w-0 max-w-full`}
                 >
                   <div>
-                    <CardHeader className="pb-3.5 border-b border-[#252D3B] flex flex-col sm:flex-row sm:items-start justify-between gap-3 min-w-0">
+                    <CardHeader className="pb-3.5 border-b border-[#27272A] flex flex-col sm:flex-row sm:items-start justify-between gap-3 min-w-0">
                       <div className="flex items-start gap-3 min-w-0 flex-1">
                         <div
                           className={`h-10 w-10 rounded-2xl border flex items-center justify-center shrink-0 ${accent.headerBg}`}
@@ -1630,20 +1630,20 @@ function MissionsManagerContent() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <CardTitle className="text-base font-black text-[#F4F6FA] tracking-tight">
+                            <CardTitle className="text-base font-black text-[#FAFAFA] tracking-tight">
                               {block.name}
                             </CardTitle>
-                            <Badge className="bg-[#1B2330] text-[#A7B0C0] border-[#252D3B] text-[10px] font-mono">
+                            <Badge className="bg-[#18181B] text-[#A1A1AA] border-[#27272A] text-[10px] font-mono">
                               Semana {selectedWeekNumber}
                             </Badge>
-                            <Badge className="bg-[#1B2330] text-[#A7B0C0] border-[#252D3B] text-[10px] font-mono">
+                            <Badge className="bg-[#18181B] text-[#A1A1AA] border-[#27272A] text-[10px] font-mono">
                               {blockMissions.length} {blockMissions.length === 1 ? 'missão' : 'missões'}
                             </Badge>
-                            <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[10px] font-mono">
+                            <Badge className="bg-white/[0.06] text-[#D4D4D8] border-white/10 text-[10px] font-mono">
                               {blockTotalXp} XP
                             </Badge>
                           </div>
-                          <CardDescription className="text-xs text-[#A7B0C0] mt-1">
+                          <CardDescription className="text-xs text-[#A1A1AA] mt-1">
                             {block.description}
                           </CardDescription>
                         </div>
@@ -1656,7 +1656,7 @@ function MissionsManagerContent() {
                               variant="ghost"
                               size="icon"
                               onClick={() => handleOpenEditListModal(block)}
-                              className="h-8 w-8 text-[#A7B0C0] hover:text-white"
+                              className="h-8 w-8 text-[#A1A1AA] hover:text-white"
                               title="Editar Bloco"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
@@ -1665,7 +1665,7 @@ function MissionsManagerContent() {
                               variant="ghost"
                               size="icon"
                               onClick={() => setDeleteListTarget({ id: block.id, name: block.name })}
-                              className="h-8 w-8 text-[#A7B0C0] hover:text-red-400"
+                              className="h-8 w-8 text-[#A1A1AA] hover:text-red-400"
                               title="Excluir Bloco"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -1685,8 +1685,8 @@ function MissionsManagerContent() {
 
                     <CardContent className="p-4">
                       {blockMissions.length === 0 ? (
-                        <div className="py-8 text-center space-y-2 border border-dashed border-[#252D3B] rounded-2xl bg-[#1B2330]/35">
-                          <p className="text-xs font-mono text-[#A7B0C0]">
+                        <div className="py-8 text-center space-y-2 border border-dashed border-[#27272A] rounded-2xl bg-[#18181B]/35">
+                          <p className="text-xs font-mono text-[#A1A1AA]">
                             Nenhuma missão neste bloco para a Semana {selectedWeekNumber}.
                           </p>
                           <Button
@@ -1704,30 +1704,30 @@ function MissionsManagerContent() {
                           {blockMissions.map((m, idx) => (
                             <div
                               key={m.id}
-                              className="p-3 rounded-2xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 flex items-center justify-between gap-3 transition-all min-w-0"
+                              className="p-3 rounded-2xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 flex items-center justify-between gap-3 transition-all min-w-0"
                             >
                               <div className="flex items-center gap-3 min-w-0 flex-1">
-                                <div className="h-7 w-7 rounded-lg bg-[#121722] border border-[#252D3B] text-[#A7B0C0] font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
+                                <div className="h-7 w-7 rounded-lg bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
                                   #{idx + 1}
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-1.5 flex-wrap">
-                                    <p className="font-bold text-xs sm:text-sm text-[#F4F6FA] truncate max-w-[180px] sm:max-w-xs md:max-w-md">
+                                    <p className="font-bold text-xs sm:text-sm text-[#FAFAFA] truncate max-w-[180px] sm:max-w-xs md:max-w-md">
                                       {m.title}
                                     </p>
                                     {m.is_bonus && (
-                                      <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[9px] font-mono uppercase">
+                                      <Badge className="bg-white/[0.06] text-[#D4D4D8] border-white/10 text-[9px] font-mono uppercase">
                                         BÔNUS
                                       </Badge>
                                     )}
                                     {(m.is_daily_reset || m.category === 'refeicao') && (
-                                      <Badge className="bg-[#3478F6]/15 text-[#75A7FF] border-[#3478F6]/30 text-[9px] font-mono uppercase">
+                                      <Badge className="bg-white/[0.06] text-[#D4D4D8] border-white/10 text-[9px] font-mono uppercase">
                                         RESET DIÁRIO (7X)
                                       </Badge>
                                     )}
                                   </div>
-                                  <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-[#A7B0C0]">
-                                    <span className="text-[#75A7FF] font-bold">+{m.points_rewarded} XP</span>
+                                  <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-[#A1A1AA]">
+                                    <span className="text-[#D4D4D8] font-bold">+{m.points_rewarded} XP</span>
                                     <span>•</span>
                                     <span>
                                       {m.validation_type === 'timer'
@@ -1741,7 +1741,7 @@ function MissionsManagerContent() {
                                     {m.requires_cooldown && (
                                       <>
                                         <span>•</span>
-                                        <span className="text-[#F4F6FA]">Limite 1/dia</span>
+                                        <span className="text-[#FAFAFA]">Limite 1/dia</span>
                                       </>
                                     )}
                                   </div>
@@ -1753,7 +1753,7 @@ function MissionsManagerContent() {
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleOpenEditModal(m)}
-                                  className="h-8 px-2 text-xs text-[#A7B0C0] hover:text-white"
+                                  className="h-8 px-2 text-xs text-[#A1A1AA] hover:text-white"
                                 >
                                   <Edit3 className="h-3.5 w-3.5" />
                                 </Button>
@@ -1761,7 +1761,7 @@ function MissionsManagerContent() {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => setDeleteMissionTarget({ id: m.id, title: m.title })}
-                                  className="h-8 w-8 text-[#A7B0C0] hover:text-red-400"
+                                  className="h-8 w-8 text-[#A1A1AA] hover:text-red-400"
                                   title="Excluir Missão"
                                 >
                                   <Trash2 className="h-3.5 w-3.5" />
@@ -1789,7 +1789,7 @@ function MissionsManagerContent() {
       >
         <form onSubmit={handleSaveList} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Nome do Bloco</label>
+            <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Nome do Bloco</label>
             <Input
               value={listName}
               onChange={(e) => setListName(e.target.value)}
@@ -1799,10 +1799,10 @@ function MissionsManagerContent() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#A7B0C0] block mb-1.5">
+            <label className="text-xs font-semibold text-[#A1A1AA] block mb-1.5">
               Pilar / Categoria do Bloco
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 rounded-xl bg-[#1B2330] border border-[#252D3B]">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 rounded-xl bg-[#18181B] border border-[#27272A]">
               {LIST_CATEGORY_OPTIONS.map((opt) => (
                 <button
                   key={opt.key}
@@ -1811,7 +1811,7 @@ function MissionsManagerContent() {
                   className={`h-9 px-2 rounded-lg flex items-center justify-center font-mono font-bold text-xs transition-all cursor-pointer ${
                     listCategoryKey === opt.key
                       ? 'bg-[#3478F6] text-white shadow-sm'
-                      : 'bg-[#121722] text-[#A7B0C0] hover:text-[#F4F6FA] border border-[#252D3B]'
+                      : 'bg-[#0E0E10] text-[#A1A1AA] hover:text-[#FAFAFA] border border-[#27272A]'
                   }`}
                 >
                   {opt.label}
@@ -1822,11 +1822,11 @@ function MissionsManagerContent() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Comprovação Padrão</label>
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Comprovação Padrão</label>
               <select
                 value={listValidationType}
                 onChange={(e: any) => setListValidationType(e.target.value)}
-                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="photo">Foto Obrigatória</option>
                 <option value="timer">Cronômetro de Sessão</option>
@@ -1836,11 +1836,11 @@ function MissionsManagerContent() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Limite Diário</label>
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Limite Diário</label>
               <select
                 value={listDailyLimit}
                 onChange={(e) => setListDailyLimit(e.target.value)}
-                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="1">1 vez ao dia (trava até 00:00)</option>
                 <option value="0">Ilimitado (livre)</option>
@@ -1881,7 +1881,7 @@ function MissionsManagerContent() {
       >
         <form onSubmit={handleSaveMission} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Título da Missão</label>
+            <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Título da Missão</label>
             <Input
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
@@ -1892,7 +1892,7 @@ function MissionsManagerContent() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Bloco de Destino</label>
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Bloco de Destino</label>
               <select
                 value={formListId}
                 onChange={(e) => {
@@ -1905,7 +1905,7 @@ function MissionsManagerContent() {
                     );
                   }
                 }}
-                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 {visualBlocks.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -1916,11 +1916,11 @@ function MissionsManagerContent() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Comprovação</label>
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Comprovação</label>
               <select
                 value={formValidationType}
                 onChange={(e: any) => setFormValidationType(e.target.value)}
-                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="photo">Foto Obrigatória</option>
                 <option value="timer">Cronômetro de Sessão</option>
@@ -1932,7 +1932,7 @@ function MissionsManagerContent() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1 font-mono">Pontos (XP)</label>
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1 font-mono">Pontos (XP)</label>
               <Input
                 type="number"
                 min={1}
@@ -1943,14 +1943,14 @@ function MissionsManagerContent() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">Limite Diário</label>
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">Limite Diário</label>
               <select
                 value={formDailyLimit}
                 onChange={(e) => {
                   setFormDailyLimit(e.target.value);
                   setFormRequiresCooldown(e.target.value === '1');
                 }}
-                className="w-full h-9 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="1">1 vez ao dia (trava 00:00)</option>
                 <option value="0">Ilimitado (livre)</option>
@@ -1961,8 +1961,8 @@ function MissionsManagerContent() {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-[#1B2330] border border-[#252D3B] space-y-3">
-            <label className="flex items-start gap-2.5 cursor-pointer text-xs font-bold text-[#F4F6FA]">
+          <div className="p-3.5 rounded-2xl bg-[#18181B] border border-[#27272A] space-y-3">
+            <label className="flex items-start gap-2.5 cursor-pointer text-xs font-bold text-[#FAFAFA]">
               <input
                 type="checkbox"
                 checked={formIsDailyReset}
@@ -1974,32 +1974,32 @@ function MissionsManagerContent() {
                     setFormRequiresCooldown(true);
                   }
                 }}
-                className="mt-0.5 rounded bg-[#121722] border-[#252D3B] text-[#3478F6] focus:ring-[#3478F6] h-4 w-4"
+                className="mt-0.5 rounded bg-[#0E0E10] border-[#27272A] text-[#3478F6] focus:ring-[#3478F6] h-4 w-4"
               />
               <div className="space-y-0.5">
-                <span className="text-[#F4F6FA] block font-black">Reset Diário (Meta Recorrente todos os dias)</span>
-                <span className="text-[11px] font-normal text-[#A7B0C0] block leading-relaxed">
+                <span className="text-[#FAFAFA] block font-black">Reset Diário (Meta Recorrente todos os dias)</span>
+                <span className="text-[11px] font-normal text-[#A1A1AA] block leading-relaxed">
                   O aluno poderá cumprir e pontuar 1 vez por dia durante toda a semana, resetando às 00:00 (Meta semanal calculada para 7 dias). Ideal para hábitos diários (água, leitura, vácuo) e refeições.
                 </span>
               </div>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#F4F6FA] pt-2 border-t border-[#252D3B]">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#FAFAFA] pt-2 border-t border-[#27272A]">
               <input
                 type="checkbox"
                 checked={formRequiresCooldown}
                 onChange={(e) => setFormRequiresCooldown(e.target.checked)}
-                className="rounded bg-[#121722] border-[#252D3B] text-[#3478F6] focus:ring-[#3478F6]"
+                className="rounded bg-[#0E0E10] border-[#27272A] text-[#3478F6] focus:ring-[#3478F6]"
               />
               <span>Bloquear após o check-in até a virada de meia-noite</span>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#F4F6FA] pt-1 border-t border-[#252D3B]">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#FAFAFA] pt-1 border-t border-[#27272A]">
               <input
                 type="checkbox"
                 checked={formIsBonus}
                 onChange={(e) => setFormIsBonus(e.target.checked)}
-                className="rounded bg-[#121722] border-[#252D3B] text-[#3478F6] focus:ring-[#3478F6]"
+                className="rounded bg-[#0E0E10] border-[#27272A] text-[#3478F6] focus:ring-[#3478F6]"
               />
               <span>Marcar como Missão Extra / Bônus</span>
             </label>
@@ -2064,7 +2064,7 @@ function MissionsManagerContent() {
       {/* Toast Flutuante */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#27272A] bg-[#0E0E10] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#FAFAFA]">
             <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
             <span>{toastMessage}</span>
           </div>

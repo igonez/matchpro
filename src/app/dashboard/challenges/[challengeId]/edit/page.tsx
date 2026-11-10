@@ -171,7 +171,7 @@ export default function EditChallengePage({
 
   if (loading) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A7B0C0] text-xs font-mono">
+      <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono">
         <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
         Carregando dados do desafio...
       </div>
@@ -183,7 +183,7 @@ export default function EditChallengePage({
       {/* Toast Notificação */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#27272A] bg-[#0E0E10] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#FAFAFA]">
             <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
             <span>{toastMessage}</span>
           </div>
@@ -198,8 +198,8 @@ export default function EditChallengePage({
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-black text-[#F4F6FA]">Editar Desafio</h1>
-            <p className="text-xs text-[#A7B0C0]">Atualize título, datas, preço ou encerre a turma.</p>
+            <h1 className="text-2xl font-black text-[#FAFAFA]">Editar Desafio</h1>
+            <p className="text-xs text-[#A1A1AA]">Atualize título, datas, preço ou encerre a turma.</p>
           </div>
         </div>
 
@@ -216,17 +216,17 @@ export default function EditChallengePage({
         </Button>
       </div>
 
-      <Card className="border-[#252D3B] bg-[#121722]">
+      <Card className="border-[#27272A] bg-[#0E0E10]">
         <CardHeader>
-          <CardTitle className="text-lg text-[#F4F6FA] font-black tracking-tight">Configurações Gerais</CardTitle>
-          <CardDescription className="text-xs text-[#A7B0C0]">
+          <CardTitle className="text-lg text-[#FAFAFA] font-black tracking-tight">Configurações Gerais</CardTitle>
+          <CardDescription className="text-xs text-[#A1A1AA]">
             Altere as informações do desafio visíveis para os alunos.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
                 Título do Desafio
               </label>
               <Input
@@ -239,7 +239,7 @@ export default function EditChallengePage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
+                <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
                   Data de Início
                 </label>
                 <Input
@@ -250,7 +250,7 @@ export default function EditChallengePage({
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
+                <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
                   Data de Término
                 </label>
                 <Input
@@ -264,7 +264,7 @@ export default function EditChallengePage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-[#A7B0C0] block mb-1 font-mono">
+                <label className="text-xs font-semibold text-[#A1A1AA] block mb-1 font-mono">
                   Preço de Inscrição (R$)
                 </label>
                 <Input
@@ -276,13 +276,13 @@ export default function EditChallengePage({
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
+                <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
                   Status da Turma
                 </label>
                 <select
                   value={isActive ? 'active' : 'inactive'}
                   onChange={(e) => setIsActive(e.target.value === 'active')}
-                  className="w-full h-11 rounded-xl bg-[#1B2330] border border-[#252D3B] text-[#F4F6FA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                  className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
                 >
                   <option value="active">Em Andamento (Ativo)</option>
                   <option value="inactive">Encerrado</option>
@@ -315,18 +315,18 @@ export default function EditChallengePage({
       </Card>
 
       {/* Missões & Semanas Desta Turma */}
-      <Card className="border-[#252D3B] bg-[#121722]">
+      <Card className="border-[#27272A] bg-[#0E0E10]">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-lg text-[#F4F6FA] font-black tracking-tight">
+              <CardTitle className="text-lg text-[#FAFAFA] font-black tracking-tight">
                 Missões & Semanas da Turma
               </CardTitle>
               <Badge className="text-[10px] font-mono">
                 {missions.length} {missions.length === 1 ? 'missão' : 'missões'}
               </Badge>
             </div>
-            <CardDescription className="text-xs text-[#A7B0C0] mt-1">
+            <CardDescription className="text-xs text-[#A1A1AA] mt-1">
               Missões salvas e ativas que aparecem para os alunos no aplicativo.
             </CardDescription>
           </div>
@@ -339,7 +339,7 @@ export default function EditChallengePage({
                 size="sm"
                 className="text-xs"
               >
-                <Trophy className="h-3.5 w-3.5 mr-1 text-[#75A7FF]" />
+                <Trophy className="h-3.5 w-3.5 mr-1 text-[#D4D4D8]" />
                 Ver Ranking
               </Button>
             </Link>
@@ -358,8 +358,8 @@ export default function EditChallengePage({
 
         <CardContent className="space-y-4">
           {weeks.length === 0 && missions.length === 0 ? (
-            <div className="p-6 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-center space-y-2">
-              <p className="text-xs font-mono text-[#A7B0C0]">Nenhuma missão cadastrada nesta turma ainda.</p>
+            <div className="p-6 rounded-2xl bg-[#18181B] border border-[#27272A] text-center space-y-2">
+              <p className="text-xs font-mono text-[#A1A1AA]">Nenhuma missão cadastrada nesta turma ainda.</p>
               <Link href={`/dashboard/missions?challengeId=${challengeId}`}>
                 <Button size="sm" className="mt-2 text-xs font-bold">
                   <Plus className="h-3.5 w-3.5 mr-1" /> Cadastrar Primeiras Missões
@@ -373,27 +373,27 @@ export default function EditChallengePage({
                 return (
                   <div
                     key={week.id}
-                    className="p-4 rounded-2xl bg-[#1B2330]/55 border border-[#252D3B] space-y-3"
+                    className="p-4 rounded-2xl bg-[#18181B]/55 border border-[#27272A] space-y-3"
                   >
-                    <div className="flex items-center justify-between pb-2 border-b border-[#252D3B]">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#27272A]">
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full bg-[#3478F6]" />
-                        <h3 className="text-xs font-bold text-[#F4F6FA] uppercase tracking-wider font-mono">
+                        <h3 className="text-xs font-bold text-[#FAFAFA] uppercase tracking-wider font-mono">
                           {week.title}
                         </h3>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono text-[#75A7FF] bg-[#3478F6]/15 px-2 py-0.5 rounded-full border border-[#3478F6]/30 font-bold">
+                        <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-full border border-white/10 font-bold">
                           +{week.bonus_points || 20} XP Bônus
                         </span>
-                        <span className="text-[10px] font-mono text-[#A7B0C0] bg-[#121722] px-2 py-0.5 rounded-full border border-[#252D3B]">
+                        <span className="text-[10px] font-mono text-[#A1A1AA] bg-[#0E0E10] px-2 py-0.5 rounded-full border border-[#27272A]">
                           {weekMissions.length} {weekMissions.length === 1 ? 'missão ativa' : 'missões ativas'}
                         </span>
                       </div>
                     </div>
 
                     {weekMissions.length === 0 ? (
-                      <p className="text-[11px] text-[#A7B0C0] italic py-1">
+                      <p className="text-[11px] text-[#A1A1AA] italic py-1">
                         Nenhuma missão cadastrada para esta semana.
                       </p>
                     ) : (
@@ -401,22 +401,22 @@ export default function EditChallengePage({
                         {weekMissions.map((m) => (
                           <div
                             key={m.id}
-                            className="p-3 rounded-xl bg-[#121722] border border-[#252D3B] flex items-center justify-between gap-2"
+                            className="p-3 rounded-xl bg-[#0E0E10] border border-[#27272A] flex items-center justify-between gap-2"
                           >
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <span className="font-bold text-xs text-[#F4F6FA] truncate">{m.title}</span>
+                                <span className="font-bold text-xs text-[#FAFAFA] truncate">{m.title}</span>
                                 {m.is_bonus && (
                                   <Badge className="text-[9px]">
                                     Bônus
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-[10px] text-[#A7B0C0] capitalize mt-0.5 font-mono">
+                              <p className="text-[10px] text-[#A1A1AA] capitalize mt-0.5 font-mono">
                                 {m.category || 'treino'} • {m.requires_cooldown ? '1x por dia' : 'Livre'}
                               </p>
                             </div>
-                            <span className="text-xs font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 px-2 py-0.5 rounded-lg border border-[#3478F6]/30 shrink-0">
+                            <span className="text-xs font-mono font-bold text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-lg border border-white/10 shrink-0">
                               +{m.points_rewarded}P
                             </span>
                           </div>
@@ -429,12 +429,12 @@ export default function EditChallengePage({
 
               {/* Missões sem semana associada (se houver) */}
               {missions.filter((m) => !m.week_id).length > 0 && (
-                <div className="p-4 rounded-2xl bg-[#1B2330]/55 border border-[#252D3B] space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-[#252D3B]">
-                    <h3 className="text-xs font-bold text-[#F4F6FA] uppercase tracking-wider font-mono">
+                <div className="p-4 rounded-2xl bg-[#18181B]/55 border border-[#27272A] space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#27272A]">
+                    <h3 className="text-xs font-bold text-[#FAFAFA] uppercase tracking-wider font-mono">
                       Missões Gerais / Sem Semana
                     </h3>
-                    <span className="text-[10px] font-mono text-[#A7B0C0]">
+                    <span className="text-[10px] font-mono text-[#A1A1AA]">
                       {missions.filter((m) => !m.week_id).length} missões
                     </span>
                   </div>
@@ -442,13 +442,13 @@ export default function EditChallengePage({
                     {missions.filter((m) => !m.week_id).map((m) => (
                       <div
                         key={m.id}
-                        className="p-3 rounded-xl bg-[#121722] border border-[#252D3B] flex items-center justify-between gap-2"
+                        className="p-3 rounded-xl bg-[#0E0E10] border border-[#27272A] flex items-center justify-between gap-2"
                       >
                         <div className="min-w-0">
-                          <span className="font-bold text-xs text-[#F4F6FA] truncate block">{m.title}</span>
-                          <span className="text-[10px] text-[#A7B0C0] capitalize font-mono">{m.category}</span>
+                          <span className="font-bold text-xs text-[#FAFAFA] truncate block">{m.title}</span>
+                          <span className="text-[10px] text-[#A1A1AA] capitalize font-mono">{m.category}</span>
                         </div>
-                        <span className="text-xs font-mono font-bold text-[#75A7FF] bg-[#3478F6]/15 px-2 py-0.5 rounded-lg border border-[#3478F6]/30">
+                        <span className="text-xs font-mono font-bold text-[#D4D4D8] bg-white/[0.06] px-2 py-0.5 rounded-lg border border-white/10">
                           +{m.points_rewarded}P
                         </span>
                       </div>
@@ -474,8 +474,8 @@ export default function EditChallengePage({
         isLoading={deleting}
       >
         <div className="space-y-3">
-          <p className="text-xs text-[#A7B0C0] font-mono">
-            Para confirmar, digite <span className="font-bold text-[#F4F6FA] bg-[#1B2330] border border-[#252D3B] px-1.5 py-0.5 rounded">excluir</span> abaixo:
+          <p className="text-xs text-[#A1A1AA] font-mono">
+            Para confirmar, digite <span className="font-bold text-[#FAFAFA] bg-[#18181B] border border-[#27272A] px-1.5 py-0.5 rounded">excluir</span> abaixo:
           </p>
           <Input
             value={confirmDeleteText}

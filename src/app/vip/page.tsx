@@ -217,8 +217,8 @@ export default function VipCapturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5 hover:border-white/20 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center shrink-0 mt-0.5 text-[#75A7FF]">
-                  <Trophy className="w-4 h-4 text-[#75A7FF]" />
+                <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-[#D4D4D8]">
+                  <Trophy className="w-4 h-4 text-[#D4D4D8]" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-bold text-white tracking-tight">Pódio, Squads e Ranking Oficial</h4>
@@ -231,7 +231,7 @@ export default function VipCapturePage() {
             </div>
 
             {/* Bônus de Lançamento VIP */}
-            <div className="p-4 rounded-2xl bg-[#121722] border border-[#252D3B] text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
+            <div className="p-4 rounded-2xl bg-[#0E0E10] border border-[#27272A] text-xs sm:text-sm text-zinc-300 flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-[#3478F6] shrink-0 shadow-[0_0_8px_#3478F6]" />
               <div>
                 <strong className="text-white font-mono uppercase text-xs block">Vantagem de Fundador:</strong>
@@ -379,7 +379,7 @@ export default function VipCapturePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-[11px] font-mono uppercase bg-[#3478F6]/10 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/25">
+                    <span className="text-[11px] font-mono uppercase bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10">
                       Inscrição VIP Confirmada
                     </span>
                     <h3 className="text-2xl font-black text-white tracking-tight">
@@ -409,7 +409,7 @@ export default function VipCapturePage() {
                       <MessageCircle className="w-4 h-4 text-white" /> Entrar no Grupo VIP de Treinadores
                     </a>
                   ) : (
-                    <div className="p-3.5 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/20 text-xs text-[#75A7FF] flex items-center justify-center gap-2 font-mono">
+                    <div className="p-3.5 rounded-2xl bg-white/[0.06] border border-white/10 text-xs text-[#D4D4D8] flex items-center justify-center gap-2 font-mono">
                       <span className="w-2 h-2 rounded-full bg-[#3478F6] animate-pulse" />
                       Você será notificado prioritariamente no WhatsApp cadastrado.
                     </div>
@@ -436,7 +436,7 @@ export default function VipCapturePage() {
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Repasse Pix Instantâneo</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-[#75A7FF] block">Alta</span>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-[#D4D4D8] block">Alta</span>
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Adesão com Gamificação</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
@@ -444,7 +444,7 @@ export default function VipCapturePage() {
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Auditoria ao Vivo Antifraude</p>
           </div>
           <div className="p-4 rounded-2xl bg-zinc-950/60 border border-white/5 space-y-1">
-            <span className="text-2xl sm:text-3xl font-black font-mono text-[#75A7FF] block">R$ 0</span>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-[#D4D4D8] block">R$ 0</span>
             <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">Mensalidade no Starter</p>
           </div>
         </div>

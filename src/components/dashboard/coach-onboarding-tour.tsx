@@ -209,7 +209,7 @@ export function CoachOnboardingTour() {
         aria-labelledby="tour-modal-title"
       >
         {/* Barra de Progresso no Topo */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#1B2330] rounded-t-3xl overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#18181B] rounded-t-3xl overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-[#3478F6] via-[#75A7FF] to-[#3478F6] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -229,7 +229,7 @@ export function CoachOnboardingTour() {
         {/* Header do Passo */}
         <div className="space-y-3 mb-6">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider bg-[#3478F6]/15 text-[#75A7FF] px-3 py-1 rounded-full border border-[#3478F6]/30 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider bg-white/[0.06] text-[#D4D4D8] px-3 py-1 rounded-full border border-white/10 font-bold">
               {currentStep.tag}
             </span>
             <span className="text-xs font-mono text-zinc-400">
@@ -238,7 +238,7 @@ export function CoachOnboardingTour() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF] shrink-0 shadow-inner">
+            <div className="h-12 w-12 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#D4D4D8] shrink-0 shadow-inner">
               <StepIcon className="w-6 h-6 text-[#3478F6]" />
             </div>
             <div>
@@ -253,7 +253,7 @@ export function CoachOnboardingTour() {
         <div className="space-y-4 mb-6 text-xs sm:text-sm text-zinc-300 leading-relaxed">
           <p>{currentStep.description}</p>
 
-          <div className="p-3.5 rounded-2xl bg-[#3478F6]/10 border border-[#3478F6]/25 text-[#75A7FF] font-medium flex items-start gap-2.5">
+          <div className="p-3.5 rounded-2xl bg-white/[0.06] border border-white/10 text-[#D4D4D8] font-medium flex items-start gap-2.5">
             <ShieldCheck className="w-5 h-5 text-[#3478F6] shrink-0 mt-0.5" />
             <p className="text-xs sm:text-sm leading-snug">{currentStep.highlightText}</p>
           </div>

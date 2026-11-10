@@ -404,7 +404,7 @@ export default function NewChallengePage() {
       {/* Toast Notificação */}
       {toastMessage && (
         <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top duration-300">
-          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#252D3B] bg-[#121722] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F4F6FA]">
+          <div className="mono-glass-card px-4 py-2.5 rounded-2xl border border-[#27272A] bg-[#0E0E10] shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#FAFAFA]">
             <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]" />
             <span>{toastMessage}</span>
           </div>
@@ -419,13 +419,13 @@ export default function NewChallengePage() {
         </Link>
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30">
+            <span className="text-[11px] font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
               Novo Desafio
             </span>
-            <span className="text-xs text-[#A7B0C0] font-medium">Configuração da Turma</span>
+            <span className="text-xs text-[#A1A1AA] font-medium">Configuração da Turma</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#F4F6FA] tracking-tight">Criar Novo Desafio Fitness</h1>
-          <p className="text-xs sm:text-sm text-[#A7B0C0] mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#FAFAFA] tracking-tight">Criar Novo Desafio Fitness</h1>
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
             Escolha um modelo pronto em 1 clique ou personalize cada detalhe da sua turma.
           </p>
         </div>
@@ -434,12 +434,12 @@ export default function NewChallengePage() {
       {/* SELETOR DE TEMPLATES EM 1 CLIQUE */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#F4F6FA] flex items-center gap-1.5">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FAFAFA] flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#3478F6]" />
             Modelos Prontos ou Personalizado
           </span>
           {selectedPresetId !== 'custom' && (
-            <span className="text-[11px] font-mono text-[#A7B0C0]">
+            <span className="text-[11px] font-mono text-[#A1A1AA]">
               Dica: clique no selecionado para desmarcar
             </span>
           )}
@@ -456,15 +456,15 @@ export default function NewChallengePage() {
                 onClick={() => handleTogglePreset(preset)}
                 className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2.5 ${
                   isSelected
-                    ? 'bg-[#3478F6]/10 border-[#3478F6] shadow-[0_0_25px_rgba(52,120,246,0.22)] ring-1 ring-[#3478F6]'
-                    : 'bg-[#121722] border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]'
+                    ? 'bg-white/[0.06] border-[#3478F6] shadow-[0_0_25px_rgba(52,120,246,0.22)] ring-1 ring-[#3478F6]'
+                    : 'bg-[#0E0E10] border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                     isSelected 
-                      ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/40' 
-                      : 'bg-[#1B2330] text-[#A7B0C0] border-[#252D3B]'
+                      ? 'bg-white/[0.06] text-[#D4D4D8] border-white/10' 
+                      : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A]'
                   }`}>
                     {preset.badge}
                   </span>
@@ -473,20 +473,20 @@ export default function NewChallengePage() {
                       <Check className="w-3 h-3 stroke-[3]" />
                     </span>
                   ) : (
-                    <Icon className="w-4 h-4 text-[#A7B0C0]" />
+                    <Icon className="w-4 h-4 text-[#A1A1AA]" />
                   )}
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-black text-[#F4F6FA]">{preset.name}</h3>
-                  <p className="text-[11px] text-[#A7B0C0] leading-relaxed mt-0.5">
+                  <h3 className="text-sm font-black text-[#FAFAFA]">{preset.name}</h3>
+                  <p className="text-[11px] text-[#A1A1AA] leading-relaxed mt-0.5">
                     {preset.summary}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-[#252D3B] text-[11px] font-mono text-[#A7B0C0]">
+                <div className="flex items-center justify-between pt-2 border-t border-[#27272A] text-[11px] font-mono text-[#A1A1AA]">
                   <span>Duração: {preset.durationDays} dias</span>
-                  <span className="font-bold text-[#75A7FF]">
+                  <span className="font-bold text-[#D4D4D8]">
                     {Number(preset.suggestedPrice) === 0 ? 'GRÁTIS' : `R$ ${preset.suggestedPrice}`}
                   </span>
                 </div>
@@ -500,15 +500,15 @@ export default function NewChallengePage() {
             onClick={handleSelectCustom}
             className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2.5 sm:col-span-2 ${
               selectedPresetId === 'custom'
-                ? 'bg-[#3478F6]/10 border-[#3478F6] shadow-[0_0_25px_rgba(52,120,246,0.22)] ring-1 ring-[#3478F6]'
-                : 'bg-[#121722] border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#1B2330]'
+                ? 'bg-white/[0.06] border-[#3478F6] shadow-[0_0_25px_rgba(52,120,246,0.22)] ring-1 ring-[#3478F6]'
+                : 'bg-[#0E0E10] border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]'
             }`}
           >
             <div className="flex items-center justify-between gap-2">
               <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                 selectedPresetId === 'custom'
-                  ? 'bg-[#3478F6]/20 text-[#75A7FF] border-[#3478F6]/40'
-                  : 'bg-[#1B2330] text-[#75A7FF] border-[#252D3B]'
+                  ? 'bg-white/[0.06] text-[#D4D4D8] border-white/10'
+                  : 'bg-[#18181B] text-[#D4D4D8] border-[#27272A]'
               }`}>
                 100% PERSONALIZADO • DO ZERO
               </span>
@@ -517,23 +517,23 @@ export default function NewChallengePage() {
                   <Check className="w-3 h-3 stroke-[3]" />
                 </span>
               ) : (
-                <SlidersHorizontal className="w-4 h-4 text-[#75A7FF]" />
+                <SlidersHorizontal className="w-4 h-4 text-[#D4D4D8]" />
               )}
             </div>
 
             <div>
-              <h3 className="text-sm font-black text-[#F4F6FA] flex items-center gap-2">
+              <h3 className="text-sm font-black text-[#FAFAFA] flex items-center gap-2">
                 <span>Personalize seu Próprio Desafio</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3478F6]/20 text-[#75A7FF] font-normal border border-[#3478F6]/30">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.06] text-[#D4D4D8] font-normal border border-white/10">
                   Campos Vazios
                 </span>
               </h3>
-              <p className="text-[11px] text-[#A7B0C0] leading-relaxed mt-0.5">
+              <p className="text-[11px] text-[#A1A1AA] leading-relaxed mt-0.5">
                 Não quer usar modelos prontos? Esta opção limpa o formulário para você definir seu próprio título, período, valor e criar suas missões do zero sem precisar apagar nada.
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-[#252D3B] text-[11px] font-mono text-[#A7B0C0]">
+            <div className="flex items-center justify-between pt-2 border-t border-[#27272A] text-[11px] font-mono text-[#A1A1AA]">
               <span>Duração: Você decide livremente</span>
               <span className="font-bold text-[#3478F6]">Valor: Você define</span>
             </div>
@@ -541,12 +541,12 @@ export default function NewChallengePage() {
         </div>
       </div>
 
-      <Card data-tour="challenge-form-card" className="border-[#252D3B] bg-[#121722]">
+      <Card data-tour="challenge-form-card" className="border-[#27272A] bg-[#0E0E10]">
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <CardTitle className="text-lg text-[#F4F6FA]">Dados do Desafio</CardTitle>
-              <CardDescription className="text-xs text-[#A7B0C0]">
+              <CardTitle className="text-lg text-[#FAFAFA]">Dados do Desafio</CardTitle>
+              <CardDescription className="text-xs text-[#A1A1AA]">
                 {selectedPresetId === 'custom'
                   ? 'Modo Personalizado: Defina livremente título, período e valor da turma.'
                   : 'Revise ou edite livremente o título, período e valor de inscrição da turma.'}
@@ -556,14 +556,14 @@ export default function NewChallengePage() {
               <button
                 type="button"
                 onClick={handleSelectCustom}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-xs font-mono text-[#75A7FF] hover:text-white transition-colors self-start sm:self-auto cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-mono text-[#D4D4D8] hover:text-white transition-colors self-start sm:self-auto cursor-pointer"
                 title="Limpar campos e criar desafio totalmente personalizado"
               >
                 <RotateCcw className="w-3.5 h-3.5 text-[#3478F6]" />
                 <span>Limpar campos / Criar do zero</span>
               </button>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#3478F6]/10 border border-[#3478F6]/30 text-xs font-mono text-[#75A7FF] self-start sm:self-auto">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.06] border border-white/10 text-xs font-mono text-[#D4D4D8] self-start sm:self-auto">
                 <SlidersHorizontal className="w-3.5 h-3.5 text-[#3478F6]" />
                 <span>Modo Personalizado Ativo</span>
               </span>
@@ -573,7 +573,7 @@ export default function NewChallengePage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
                 Título do Desafio
               </label>
               <Input
@@ -582,14 +582,14 @@ export default function NewChallengePage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] placeholder:text-[#A7B0C0]/50 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
+                className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
               />
             </div>
 
             {/* Datas de Início e Encerramento com largura travada dentro do container */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full min-w-0">
               <div className="w-full min-w-0 space-y-1">
-                <label className="text-xs font-semibold text-[#A7B0C0] block">
+                <label className="text-xs font-semibold text-[#A1A1AA] block">
                   Data de Início
                 </label>
                 <div className="w-full min-w-0 relative">
@@ -598,12 +598,12 @@ export default function NewChallengePage() {
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     required
-                    className="block w-full min-w-0 max-w-full box-border [color-scheme:dark] bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] text-xs sm:text-sm px-3.5 h-11 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
+                    className="block w-full min-w-0 max-w-full box-border [color-scheme:dark] bg-[#18181B] border-[#27272A] text-[#FAFAFA] text-xs sm:text-sm px-3.5 h-11 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
                   />
                 </div>
               </div>
               <div className="w-full min-w-0 space-y-1">
-                <label className="text-xs font-semibold text-[#A7B0C0] block">
+                <label className="text-xs font-semibold text-[#A1A1AA] block">
                   Data de Encerramento
                 </label>
                 <div className="w-full min-w-0 relative">
@@ -612,18 +612,18 @@ export default function NewChallengePage() {
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     required
-                    className="block w-full min-w-0 max-w-full box-border [color-scheme:dark] bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] text-xs sm:text-sm px-3.5 h-11 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
+                    className="block w-full min-w-0 max-w-full box-border [color-scheme:dark] bg-[#18181B] border-[#27272A] text-[#FAFAFA] text-xs sm:text-sm px-3.5 h-11 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A7B0C0] block mb-1">
+              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
                 Valor da Inscrição (R$)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-3 text-[#A7B0C0] font-bold text-sm">R$</span>
+                <span className="absolute left-3.5 top-3 text-[#A1A1AA] font-bold text-sm">R$</span>
                 <Input
                   type="number"
                   step="0.01"
@@ -635,23 +635,23 @@ export default function NewChallengePage() {
                   required
                 />
               </div>
-              <p className="text-[11px] text-[#A7B0C0] mt-1">
+              <p className="text-[11px] text-[#A1A1AA] mt-1">
                 Digite 0.00 para desafio gratuito entre seus alunos.
               </p>
             </div>
 
             {/* Gamificação: Bônus por Semana 100% Concluída */}
-            <div className="p-3.5 rounded-2xl border border-[#252D3B] bg-[#1B2330] space-y-2">
+            <div className="p-3.5 rounded-2xl border border-[#27272A] bg-[#18181B] space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-[#F4F6FA] flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-[#FAFAFA] flex items-center gap-1.5">
                   <Trophy className="w-4 h-4 text-[#3478F6]" />
                   Bônus por Semana 100% Concluída
                 </label>
-                <span className="text-xs font-mono text-[#75A7FF] font-bold">
+                <span className="text-xs font-mono text-[#D4D4D8] font-bold">
                   +{weeklyBonusPoints || 0} XP por semana
                 </span>
               </div>
-              <p className="text-[11px] text-[#A7B0C0] leading-relaxed">
+              <p className="text-[11px] text-[#A1A1AA] leading-relaxed">
                 Pontuação extra que o aluno conquista ao completar 100% das missões da semana. Você também poderá calibrar cada semana individualmente na tela de Missões.
               </p>
               <div className="relative">
@@ -676,7 +676,7 @@ export default function NewChallengePage() {
                     <p className="font-bold text-amber-300 font-mono">
                       Atenção: Configure seus dados bancários para receber
                     </p>
-                    <p className="text-[#F4F6FA] mt-1 leading-relaxed">
+                    <p className="text-[#FAFAFA] mt-1 leading-relaxed">
                       Para lançar desafios pagos e receber os pagamentos dos alunos via Split automático no Pix, configure seus dados fiscais e bancários na Central Financeira.
                     </p>
                   </div>
@@ -697,7 +697,7 @@ export default function NewChallengePage() {
             )}
 
             {parseFloat(price) > 0 && !checkingWallet && hasWalletId === true && (
-              <div className="p-3.5 rounded-xl border border-[#3478F6]/30 bg-[#3478F6]/10 text-[#75A7FF] text-xs flex items-center gap-2.5">
+              <div className="p-3.5 rounded-xl border border-white/10 bg-white/[0.06] text-[#D4D4D8] text-xs flex items-center gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-[#3478F6] shrink-0" />
                 <span className="font-mono">
                   Split de Pagamentos ativo: As inscrições pagas serão transferidas automaticamente para sua carteira.
@@ -706,13 +706,13 @@ export default function NewChallengePage() {
             )}
 
             {/* Checkout Placeholder / Informação Gateway */}
-            <div className="p-4 rounded-xl border border-[#252D3B] bg-[#1B2330] flex items-start gap-3">
-              <div className="h-8 w-8 rounded-lg bg-[#121722] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center shrink-0">
+            <div className="p-4 rounded-xl border border-[#27272A] bg-[#18181B] flex items-start gap-3">
+              <div className="h-8 w-8 rounded-lg bg-[#0E0E10] border border-[#27272A] text-[#D4D4D8] flex items-center justify-center shrink-0">
                 <CreditCard className="h-4 w-4" />
               </div>
               <div className="text-xs">
-                <p className="font-bold text-[#F4F6FA] font-mono">Gateway de Pagamento Integrado</p>
-                <p className="text-[#A7B0C0] mt-0.5">
+                <p className="font-bold text-[#FAFAFA] font-mono">Gateway de Pagamento Integrado</p>
+                <p className="text-[#A1A1AA] mt-0.5">
                   Ao publicar, os links de checkout automatizados ficam disponíveis para repasse direto na sua conta bancária.
                 </p>
               </div>

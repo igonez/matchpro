@@ -105,7 +105,7 @@ export function useSlidingIndicator(activeKey: string | null) {
 
 /** Estilos compartilhados da tab bar (vidro com opacidade constante). */
 export const TAB_BAR_GLASS_STYLE: CSSProperties = {
-  backgroundColor: 'rgba(18, 23, 34, 0.72)',
+  backgroundColor: 'rgba(14, 14, 16, 0.72)',
   backdropFilter: 'blur(24px) saturate(180%)',
   WebkitBackdropFilter: 'blur(24px) saturate(180%)',
 };

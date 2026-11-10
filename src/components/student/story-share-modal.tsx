@@ -91,7 +91,7 @@ export function StoryShareModal({
       // 1. Fundo Base OLED Dark Titanium
       const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
       bgGrad.addColorStop(0, '#000000');
-      bgGrad.addColorStop(0.2, '#080A0F');
+      bgGrad.addColorStop(0.2, '#000000');
       bgGrad.addColorStop(0.6, '#040405');
       bgGrad.addColorStop(1, '#000000');
       ctx.fillStyle = bgGrad;
@@ -334,7 +334,7 @@ export function StoryShareModal({
         const perfGrad = ctx.createLinearGradient(50, perfY, 1030, perfY + perfH);
         perfGrad.addColorStop(0, 'rgba(251, 191, 36, 0.14)');
         perfGrad.addColorStop(0.5, 'rgba(15, 15, 20, 0.96)');
-        perfGrad.addColorStop(1, 'rgba(8, 10, 15, 0.98)');
+        perfGrad.addColorStop(1, 'rgba(0, 0, 0, 0.98)');
         ctx.fillStyle = perfGrad;
         drawRoundedRect(ctx, 50, perfY, 980, perfH, 28);
         ctx.fill();
@@ -502,7 +502,7 @@ export function StoryShareModal({
 
         metricCards.forEach((mc, idx) => {
           const mx = 50 + idx * 333;
-          ctx.fillStyle = '#080A0F';
+          ctx.fillStyle = '#000000';
           drawRoundedRect(ctx, mx, metricY, 314, 108, 22);
           ctx.fill();
           ctx.strokeStyle = 'rgba(255,255,255,0.09)';
@@ -531,7 +531,7 @@ export function StoryShareModal({
         // 4. BLOCO 3: PÓDIO 3D OLÍMPICO DOS TOP 3 (Y = 570, H = 480)
         const podY = 570;
         const podH = 480;
-        ctx.fillStyle = '#080A0F';
+        ctx.fillStyle = '#000000';
         drawRoundedRect(ctx, 50, podY, 980, podH, 30);
         ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,0.12)';
@@ -666,7 +666,7 @@ export function StoryShareModal({
           ctx.arc(medalX, medalY, medalR, 0, Math.PI * 2);
           ctx.fillStyle = accentColor;
           ctx.fill();
-          ctx.strokeStyle = '#080A0F';
+          ctx.strokeStyle = '#000000';
           ctx.lineWidth = 3;
           ctx.stroke();
 
@@ -766,7 +766,7 @@ export function StoryShareModal({
             Math.min(100, Math.round((entry.item.points / leaderPoints) * 100))
           );
 
-          ctx.fillStyle = isMe ? '#18181b' : '#080A0F';
+          ctx.fillStyle = isMe ? '#18181b' : '#000000';
           drawRoundedRect(ctx, 50, rowY, 980, rowH, 24);
           ctx.fill();
 
@@ -863,7 +863,7 @@ export function StoryShareModal({
         });
 
         // 6. RODAPÉ OFICIAL ARENAFITPRO (Y = 1715..1850)
-        ctx.fillStyle = '#080A0F';
+        ctx.fillStyle = '#000000';
         drawRoundedRect(ctx, 50, 1690, 980, 140, 32);
         ctx.fill();
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
@@ -979,7 +979,7 @@ export function StoryShareModal({
         {/* Topo */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-[#3478F6]/15 border border-[#3478F6]/30 flex items-center justify-center text-[#75A7FF]">
+            <div className="h-9 w-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#D4D4D8]">
               {data.mode === 'checkin' ? <CheckCircle2 className="w-5 h-5 text-[#3478F6]" /> : <Trophy className="w-5 h-5" />}
             </div>
             <div>
@@ -990,7 +990,7 @@ export function StoryShareModal({
                   ? 'Compartilhar Ranking da Turma'
                   : 'Compartilhar Pódio & Ranking'}
               </h3>
-              <p className="text-[11px] text-[#A7B0C0]">
+              <p className="text-[11px] text-[#A1A1AA]">
                 Pódio Top 3 + Tabela Oficial em alta definição (9:16)
               </p>
             </div>
@@ -1000,18 +1000,18 @@ export function StoryShareModal({
             type="button"
             onClick={onClose}
             aria-label="Fechar modal"
-            className="h-10 w-10 rounded-full bg-[#1B2330] border border-[#252D3B] text-[#A7B0C0] hover:text-[#F4F6FA] flex items-center justify-center cursor-pointer"
+            className="h-10 w-10 rounded-full bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center justify-center cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Preview do Card 9:16 */}
-        <div className="relative w-full max-w-[260px] aspect-[9/16] mx-auto rounded-2xl overflow-hidden border border-[#252D3B] bg-[#080A0F] shadow-2xl flex items-center justify-center">
+        <div className="relative w-full max-w-[260px] aspect-[9/16] mx-auto rounded-2xl overflow-hidden border border-[#27272A] bg-[#000000] shadow-2xl flex items-center justify-center">
           {rendering || !renderedImageUrl ? (
             <div className="text-center space-y-2 p-4">
               <Sparkles className="w-6 h-6 text-amber-300 animate-spin mx-auto" />
-              <p className="text-xs font-mono text-[#A7B0C0]">MONTANDO PÓDIO E RANKING 9:16...</p>
+              <p className="text-xs font-mono text-[#A1A1AA]">MONTANDO PÓDIO E RANKING 9:16...</p>
             </div>
           ) : (
             <img
@@ -1051,7 +1051,7 @@ export function StoryShareModal({
               <button
                 type="button"
                 onClick={handleShareWhatsAppText}
-                className="min-h-[42px] py-2 px-3 rounded-xl bg-[#3478F6]/15 hover:bg-[#3478F6]/25 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="min-h-[42px] py-2 px-3 rounded-xl bg-white/[0.06] hover:bg-[#3478F6]/25 border border-white/10 text-[#D4D4D8] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <MessageCircle className="w-3.5 h-3.5 shrink-0" />
                 <span>Enviar no WhatsApp</span>
@@ -1060,12 +1060,12 @@ export function StoryShareModal({
               <button
                 type="button"
                 onClick={handleCopyRankingText}
-                className="min-h-[42px] py-2 px-3 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-[#F4F6FA] text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="min-h-[42px] py-2 px-3 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-[#FAFAFA] text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 {copiedText ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
-                    <span className="text-[#75A7FF]">Placar Copiado!</span>
+                    <span className="text-[#D4D4D8]">Placar Copiado!</span>
                   </>
                 ) : (
                   <>
@@ -1081,7 +1081,7 @@ export function StoryShareModal({
             <button
               type="button"
               onClick={onPrimaryAction}
-              className="w-full min-h-[44px] py-2.5 rounded-xl bg-[#1B2330] hover:bg-[#252D3B] border border-[#252D3B] text-xs font-mono text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
+              className="w-full min-h-[44px] py-2.5 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
             >
               {primaryActionLabel || 'Voltar para a Arena'}
             </button>

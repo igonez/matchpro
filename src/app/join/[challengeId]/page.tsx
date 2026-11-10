@@ -414,7 +414,7 @@ function JoinChallengeContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080A0F] flex flex-col items-center justify-center text-[#A7B0C0] gap-3 font-mono text-xs">
+      <div className="min-h-screen bg-[#000000] flex flex-col items-center justify-center text-[#A1A1AA] gap-3 font-mono text-xs">
         <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
         CARREGANDO CREDENCIAL DO DESAFIO...
       </div>
@@ -424,16 +424,16 @@ function JoinChallengeContent() {
   // Se o desafio falhou ao carregar (código inexistente ou encerrado)
   if (pageError || !challenge) {
     return (
-      <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex items-center justify-center p-4">
-        <div className="bg-[#121722] max-w-md w-full p-8 text-center rounded-3xl space-y-4 border border-[#252D3B] shadow-2xl">
-          <div className="w-12 h-12 rounded-2xl bg-[#1B2330] border border-[#252D3B] text-[#75A7FF] flex items-center justify-center mx-auto">
+      <div className="min-h-screen bg-[#000000] text-[#FAFAFA] flex items-center justify-center p-4">
+        <div className="bg-[#0E0E10] max-w-md w-full p-8 text-center rounded-3xl space-y-4 border border-[#27272A] shadow-2xl">
+          <div className="w-12 h-12 rounded-2xl bg-[#18181B] border border-[#27272A] text-[#D4D4D8] flex items-center justify-center mx-auto">
             <AlertCircle className="w-6 h-6" />
           </div>
           <div className="space-y-1.5">
-            <p className="font-bold text-sm text-[#F4F6FA] font-mono uppercase tracking-wider">
+            <p className="font-bold text-sm text-[#FAFAFA] font-mono uppercase tracking-wider">
               Convite Indisponível
             </p>
-            <p className="text-xs text-[#A7B0C0] leading-relaxed font-sans">
+            <p className="text-xs text-[#A1A1AA] leading-relaxed font-sans">
               {pageError || 'O link pode estar incompleto, com código expirado ou a turma foi arquivada pelo treinador.'}
             </p>
           </div>
@@ -458,25 +458,25 @@ function JoinChallengeContent() {
   const isPaidChallenge = Number(challenge.price) > 0;
 
   return (
-    <div className="min-h-screen bg-[#080A0F] text-[#F4F6FA] flex flex-col justify-between selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] flex flex-col justify-between selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-hidden">
       {/* Background 3D Animado */}
       <Monochrome3DBackground />
 
       {/* Top Navbar */}
-      <header className="border-b border-[#252D3B] bg-[#080A0F]/80 backdrop-blur-md sticky top-0 z-50 safe-top-header pb-2">
+      <header className="border-b border-[#27272A] bg-[#000000]/80 backdrop-blur-md sticky top-0 z-50 safe-top-header pb-2">
         <div className="max-w-4xl mx-auto px-6 min-h-[3.5rem] flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-8 w-8 rounded-lg bg-[#121722] border border-[#252D3B] flex items-center justify-center text-white group-hover:scale-105 transition-transform">
+            <div className="h-8 w-8 rounded-lg bg-[#0E0E10] border border-[#27272A] flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <svg className="w-4 h-4 text-[#3478F6]" viewBox="0 0 24 24" fill="none">
                 <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
               </svg>
             </div>
-            <span className="font-extrabold text-base tracking-tight text-[#F4F6FA]">ArenaFitPro</span>
+            <span className="font-extrabold text-base tracking-tight text-[#FAFAFA]">ArenaFitPro</span>
           </Link>
 
           <button
             onClick={copyLink}
-            className="text-xs font-medium text-[#A7B0C0] hover:text-[#F4F6FA] transition-colors cursor-pointer"
+            className="text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
           >
             {copied ? 'Link copiado!' : 'Copiar link'}
           </button>
@@ -491,16 +491,16 @@ function JoinChallengeContent() {
 
         <SpotlightCard3D className="p-7 sm:p-9 space-y-6">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#252D3B] mb-4">
-              <span className="text-xs font-semibold text-[#A7B0C0]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#27272A] mb-4">
+              <span className="text-xs font-semibold text-[#A1A1AA]">
                 Convite Oficial
               </span>
-              <span className="text-xs font-semibold text-[#75A7FF] bg-[#3478F6]/15 px-2.5 py-0.5 rounded-full border border-[#3478F6]/30 font-mono">
+              <span className="text-xs font-semibold text-[#D4D4D8] bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10 font-mono">
                 {isPaidChallenge ? `R$ ${Number(challenge.price).toFixed(2)}` : 'Gratuito'}
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black text-[#F4F6FA] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#FAFAFA] tracking-tight">
               {challenge.title}
             </h1>
             <div className="flex items-center gap-2 mt-2">
@@ -511,27 +511,27 @@ function JoinChallengeContent() {
                   className="h-6 w-6 rounded-full object-cover border border-[#3478F6]/50"
                 />
               )}
-              <p className="text-xs text-[#A7B0C0] font-medium">
-                Treinador: <strong className="text-[#F4F6FA]">{challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Coach Certificado'}</strong>
+              <p className="text-xs text-[#A1A1AA] font-medium">
+                Treinador: <strong className="text-[#FAFAFA]">{challenge.professionals?.brand_name || challenge.professionals?.full_name || 'Coach Certificado'}</strong>
               </p>
             </div>
           </div>
 
-          <p className="text-xs sm:text-sm text-[#A7B0C0] leading-relaxed font-sans">
+          <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed font-sans">
             {challenge.description || 'Desafio fitness focado em disciplina, consistência diária e evolução física com auditoria em tempo real.'}
           </p>
 
           {/* Cronograma */}
-          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-[#080A0F] border border-[#252D3B] text-xs">
+          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-[#000000] border border-[#27272A] text-xs">
             <div>
-              <span className="text-xs text-[#A7B0C0] block font-medium">Início Oficial</span>
-              <span className="font-bold text-[#F4F6FA] font-mono">
+              <span className="text-xs text-[#A1A1AA] block font-medium">Início Oficial</span>
+              <span className="font-bold text-[#FAFAFA] font-mono">
                 {challenge.start_date ? new Date(challenge.start_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
               </span>
             </div>
             <div>
-              <span className="text-xs text-[#A7B0C0] block font-medium">Término</span>
-              <span className="font-bold text-[#F4F6FA] font-mono">
+              <span className="text-xs text-[#A1A1AA] block font-medium">Término</span>
+              <span className="font-bold text-[#FAFAFA] font-mono">
                 {challenge.end_date ? new Date(challenge.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : '--'}
               </span>
             </div>
@@ -540,14 +540,14 @@ function JoinChallengeContent() {
           {/* Resumo de Missões */}
           {missionsList.length > 0 && (
             <div className="space-y-2 pt-2">
-              <span className="text-xs font-semibold tracking-wide text-[#A7B0C0] block">
+              <span className="text-xs font-semibold tracking-wide text-[#A1A1AA] block">
                 Grade de Missões ({missionsList.length})
               </span>
               <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {missionsList.map((m: any) => (
-                  <div key={m.id} className="p-3 rounded-xl bg-[#080A0F]/70 border border-[#252D3B] flex items-center justify-between text-xs">
-                    <span className="text-[#F4F6FA] font-medium">{m.title}</span>
-                    <span className="text-[#75A7FF] font-bold font-mono">+{m.points_rewarded} pts</span>
+                  <div key={m.id} className="p-3 rounded-xl bg-[#000000]/70 border border-[#27272A] flex items-center justify-between text-xs">
+                    <span className="text-[#FAFAFA] font-medium">{m.title}</span>
+                    <span className="text-[#D4D4D8] font-bold font-mono">+{m.points_rewarded} pts</span>
                   </div>
                 ))}
               </div>
@@ -563,7 +563,7 @@ function JoinChallengeContent() {
           )}
 
           {/* Área de Ação / Cadastro Direto */}
-          <div className="pt-4 border-t border-[#252D3B]">
+          <div className="pt-4 border-t border-[#27272A]">
             {alreadyJoined ? (
               <Link href="/app" className="block">
                 <button className="w-full h-12 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-semibold cursor-pointer shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all">
@@ -574,7 +574,7 @@ function JoinChallengeContent() {
               <div className="space-y-3">
                 {isPaidChallenge && (
                   <div className="text-left space-y-1">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
                       CPF do Pagador (Obrigatório para emissão do Pix)
                     </label>
                     <Input
@@ -583,7 +583,7 @@ function JoinChallengeContent() {
                       value={cpf}
                       onChange={(e) => setCpf(formatCpf(e.target.value))}
                       required
-                      className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs font-mono"
+                      className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs font-mono"
                     />
                   </div>
                 )}
@@ -602,13 +602,13 @@ function JoinChallengeContent() {
             ) : (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#A7B0C0]">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA]">
                     Crie sua conta para entrar na turma
                   </span>
                 </div>
 
                 {/* Alternador: Criar Conta vs Já Tenho Conta */}
-                <div className="grid grid-cols-2 p-1 rounded-xl bg-[#080A0F] border border-[#252D3B]">
+                <div className="grid grid-cols-2 p-1 rounded-xl bg-[#000000] border border-[#27272A]">
                   <button
                     type="button"
                     onClick={() => {
@@ -618,7 +618,7 @@ function JoinChallengeContent() {
                     className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signup'
                         ? 'bg-[#3478F6] text-white shadow'
-                        : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                        : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                     }`}
                   >
                     <Sparkles className="h-3.5 w-3.5" />
@@ -633,7 +633,7 @@ function JoinChallengeContent() {
                     className={`py-2 min-h-[44px] text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signin'
                         ? 'bg-[#3478F6] text-white shadow'
-                        : 'text-[#A7B0C0] hover:text-[#F4F6FA]'
+                        : 'text-[#A1A1AA] hover:text-[#FAFAFA]'
                     }`}
                   >
                     <User className="h-3.5 w-3.5" />
@@ -646,7 +646,7 @@ function JoinChallengeContent() {
                   type="button"
                   disabled={joining}
                   onClick={handleGoogleQuickJoin}
-                  className="w-full h-11 min-h-[44px] rounded-xl bg-[#1B2330] border border-[#252D3B] hover:border-[#3478F6]/40 hover:bg-[#252D3B] active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#F4F6FA] shadow-sm group cursor-pointer"
+                  className="w-full h-11 min-h-[44px] rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#27272A] active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
                 >
                   <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -658,8 +658,8 @@ function JoinChallengeContent() {
                 </button>
 
                 <div className="relative flex items-center justify-center my-2">
-                  <div className="border-t border-[#252D3B] w-full" />
-                  <span className="bg-[#121722] px-3 text-[10px] font-mono uppercase text-[#A7B0C0] absolute">
+                  <div className="border-t border-[#27272A] w-full" />
+                  <span className="bg-[#0E0E10] px-3 text-[10px] font-mono uppercase text-[#A1A1AA] absolute">
                     ou preencha abaixo
                   </span>
                 </div>
@@ -669,7 +669,7 @@ function JoinChallengeContent() {
                   {authMode === 'signup' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                           Seu Nome Completo
                         </label>
                         <Input
@@ -678,11 +678,11 @@ function JoinChallengeContent() {
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           required
-                          className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
+                          className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                           WhatsApp
                         </label>
                         <Input
@@ -691,7 +691,7 @@ function JoinChallengeContent() {
                           value={phone}
                           onChange={(e) => setPhone(formatWhatsapp(e.target.value))}
                           required
-                          className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
+                          className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                         />
                       </div>
                     </div>
@@ -700,7 +700,7 @@ function JoinChallengeContent() {
                   {/* Campo CPF quando o desafio é pago */}
                   {isPaidChallenge && (
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         CPF do Pagador (Obrigatório para emissão do Pix)
                       </label>
                       <Input
@@ -709,14 +709,14 @@ function JoinChallengeContent() {
                         value={cpf}
                         onChange={(e) => setCpf(formatCpf(e.target.value))}
                         required
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs font-mono"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs font-mono"
                       />
                     </div>
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         E-mail
                       </label>
                       <Input
@@ -725,11 +725,11 @@ function JoinChallengeContent() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A7B0C0] block mb-1">
+                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
                         Senha
                       </label>
                       <Input
@@ -739,7 +739,7 @@ function JoinChallengeContent() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength={6}
-                        className="bg-[#1B2330] border-[#252D3B] text-[#F4F6FA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
+                        className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 min-h-[44px] text-xs"
                       />
                     </div>
                   </div>
@@ -822,7 +822,7 @@ function JoinChallengeContent() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#3478F6]/10 border border-[#3478F6]/30 text-[#75A7FF] text-xs font-mono">
+          <div className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/[0.06] border border-white/10 text-[#D4D4D8] text-xs font-mono">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3478F6] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#3478F6]"></span>
@@ -830,7 +830,7 @@ function JoinChallengeContent() {
             <span>Aguardando liquidação bancária em tempo real...</span>
           </div>
 
-          <div className="text-[11px] text-[#A7B0C0] font-mono pt-1">
+          <div className="text-[11px] text-[#A1A1AA] font-mono pt-1">
             A confirmação é instantânea. Assim que o Pix for aprovado pelo seu banco, sua tela abrirá automaticamente.
           </div>
 

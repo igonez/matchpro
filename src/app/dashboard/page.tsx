@@ -13,58 +13,33 @@ import { Copy, ArrowRight, Clock } from 'lucide-react';
 export default function DashboardOverviewPage() {
   const supabase = createClient();
 
-  const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return !sessionStorage.getItem('arena_booted');
+  const [isInitialBoot] = useState<boolean>(false);
+
+  const [stats, setStats] = useState({
+    activeStudents: 0,
+    totalRevenue: 0,
+    pendingSubmissions: 0,
+    activeChallenges: 0,
   });
 
-  const [stats, setStats] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = sessionStorage.getItem('arena_coach_stats');
-        if (cached) return JSON.parse(cached);
-      } catch (_) {}
-    }
-    return {
-      activeStudents: 0,
-      totalRevenue: 0,
-      pendingSubmissions: 0,
-      activeChallenges: 0,
-    };
-  });
+  const [challenges, setChallenges] = useState<any[]>([]);
 
-  const [challenges, setChallenges] = useState<any[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = sessionStorage.getItem('arena_coach_challenges');
-        if (cached) return JSON.parse(cached);
-      } catch (_) {}
-    }
-    return [];
-  });
+  const [atRiskStudents, setAtRiskStudents] = useState<any[]>([]);
 
-  const [atRiskStudents, setAtRiskStudents] = useState<any[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = sessionStorage.getItem('arena_coach_at_risk');
-        if (cached) return JSON.parse(cached);
-      } catch (_) {}
-    }
-    return [];
-  });
-
-  // Se já temos cache ou o app já deu boot uma vez, não bloqueia a interface
-  const [loading, setLoading] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    const hasBooted = sessionStorage.getItem('arena_booted');
-    const hasCachedStats = sessionStorage.getItem('arena_coach_stats');
-    return !hasBooted && !hasCachedStats;
-  });
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
-      sessionStorage.setItem('arena_booted', 'true');
-    }
+    try {
+      const cachedStats = sessionStorage.getItem('arena_coach_stats');
+      if (cachedStats) setStats(JSON.parse(cachedStats));
+      const cachedChallenges = sessionStorage.getItem('arena_coach_challenges');
+      if (cachedChallenges) setChallenges(JSON.parse(cachedChallenges));
+      const cachedAtRisk = sessionStorage.getItem('arena_coach_at_risk');
+      if (cachedAtRisk) setAtRiskStudents(JSON.parse(cachedAtRisk));
+      if (!sessionStorage.getItem('arena_booted')) {
+        sessionStorage.setItem('arena_booted', 'true');
+      }
+    } catch (_) {}
   }, []);
 
   // Modal Customizado de Publicar Aviso (Substitui o prompt() nativo)

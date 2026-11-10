@@ -340,9 +340,9 @@ export default function HomePage() {
           
           <div className="max-w-4xl w-full">
             {/* Kicker Pill Focado no Posicionamento Profissional */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#27272A] bg-[#0E0E10] text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#A1A1AA] mb-4 sm:mb-6 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse" />
-              <span>Para Treinadores e Nutricionistas • Comece Grátis</span>
+            <div className="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-full border border-[#27272A] bg-[#0E0E10] text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#A1A1AA] mb-4 sm:mb-6 shadow-sm max-w-full">
+              <span className="h-2 w-2 rounded-full bg-[#3478F6] animate-pulse shrink-0" />
+              <span className="text-center leading-snug">Para Treinadores e Nutricionistas • Comece Grátis</span>
             </div>
 
             {/* Headline de Alto Impacto (32px no mobile, 64px desktop) */}
@@ -432,22 +432,22 @@ export default function HomePage() {
             </p>
 
             {/* Badges de Diferenciais: Grid 2x2 no mobile, Flex no desktop */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-x-8 sm:gap-y-3 text-xs sm:text-sm text-[#A1A1AA] font-mono text-left sm:text-center">
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-stretch sm:items-center justify-center gap-2 sm:gap-x-8 sm:gap-y-3 text-[11px] sm:text-sm text-[#A1A1AA] font-mono text-left sm:text-center">
+              <span className="flex items-center gap-2 p-2.5 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
-                <span className="truncate">Stories 9:16 White-Label</span>
+                <span className="leading-tight">Stories 9:16 White-Label</span>
               </span>
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
+              <span className="flex items-center gap-2 p-2.5 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
-                <span className="truncate">Zero digitação de fichas</span>
+                <span className="leading-tight">Zero digitação de fichas</span>
               </span>
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
+              <span className="flex items-center gap-2 p-2.5 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
-                <span className="truncate">Split Pix D+0 na conta</span>
+                <span className="leading-tight">Split Pix D+0 na conta</span>
               </span>
-              <span className="flex items-center gap-1.5 p-2 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
+              <span className="flex items-center gap-2 p-2.5 sm:p-0 rounded-xl sm:rounded-none bg-[#0E0E10] sm:bg-transparent border sm:border-0 border-[#27272A]">
                 <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3478F6] shrink-0" /> 
-                <span className="truncate">Câmera Antifraude + IA</span>
+                <span className="leading-tight">Câmera Antifraude + IA</span>
               </span>
             </div>
           </div>

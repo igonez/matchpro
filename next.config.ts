@@ -34,7 +34,7 @@ const securityHeaders = [
   // 7. Content Security Policy (CSP)
   {
     key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' data: blob: https://*.supabase.co wss://*.supabase.co https://*.asaas.com https://generativelanguage.googleapis.com; frame-ancestors 'self';",
+    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://connect.facebook.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' data: blob: https://*.supabase.co wss://*.supabase.co https://*.asaas.com https://generativelanguage.googleapis.com https://www.facebook.com https://connect.facebook.net https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-ancestors 'self';",
   },
   // 8. Proteção XSS legada para navegadores mais antigos
   {

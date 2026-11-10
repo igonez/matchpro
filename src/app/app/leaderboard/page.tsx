@@ -475,11 +475,11 @@ export default function LeaderboardPage() {
 
       {/* BLOCO 2: Métricas Rápidas da Turma (3 Pilares) */}
       {!loading && (
-        <div className="grid grid-cols-3 gap-2.5 relative z-10">
-          <div className="p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#A1A1AA] uppercase">
-              <span>ATLETAS</span>
-              <Users className="w-3.5 h-3.5 text-[#D4D4D8]" />
+        <div className="grid grid-cols-3 gap-2 relative z-10">
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between min-w-0">
+            <div className="flex items-center justify-between gap-1 text-[9px] font-mono text-[#A1A1AA] uppercase">
+              <span className="truncate">ATLETAS</span>
+              <Users className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
             </div>
             <div className="text-base font-black font-mono text-[#FAFAFA] mt-1.5">
               {standings.length}
@@ -487,10 +487,10 @@ export default function LeaderboardPage() {
             <span className="text-[9px] font-mono text-[#A1A1AA] truncate">Na disputa</span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#A1A1AA] uppercase">
-              <span>MÉDIA TURMA</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#D4D4D8]" />
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between min-w-0">
+            <div className="flex items-center justify-between gap-1 text-[9px] font-mono text-[#A1A1AA] uppercase">
+              <span className="truncate">MÉDIA</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
             </div>
             <div className="text-base font-black font-mono text-[#FAFAFA] mt-1.5">
               {classAveragePoints} <span className="text-[9px] text-[#A1A1AA] font-normal">XP</span>
@@ -498,10 +498,10 @@ export default function LeaderboardPage() {
             <span className="text-[9px] font-mono text-[#A1A1AA] truncate">Ritmo coletivo</span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between">
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#A1A1AA] uppercase">
-              <span>TOP STREAK</span>
-              <Flame className="w-3.5 h-3.5 text-[#D4D4D8]" />
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-[#0E0E10] border border-[#27272A] flex flex-col justify-between min-w-0">
+            <div className="flex items-center justify-between gap-1 text-[9px] font-mono text-[#A1A1AA] uppercase">
+              <span className="truncate">STREAK</span>
+              <Flame className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
             </div>
             <div className="text-base font-black font-mono text-[#FAFAFA] mt-1.5">
               {topStreakStudent ? `${topStreakStudent.streak}d` : '0d'}

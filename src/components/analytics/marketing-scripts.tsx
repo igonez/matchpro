@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, useRef, Suspense } from 'react';
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
@@ -17,9 +17,20 @@ const META_PIXEL_ID = DEFAULT_META_PIXEL_ID;
 function RouteTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const initialPathRef = useRef<string | null>(null);
 
   useEffect(() => {
     captureAttributionParams();
+
+    const currentRoute =
+      pathname +
+      (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+
+    // Evita duplicar o PageView inicial já disparado pelo snippet base do Meta Pixel / gtag
+    if (initialPathRef.current === null) {
+      initialPathRef.current = currentRoute;
+      return;
+    }
 
     if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
       window.fbq('track', 'PageView');
@@ -31,9 +42,7 @@ function RouteTracker() {
       GA4_ID
     ) {
       window.gtag('config', GA4_ID, {
-        page_path:
-          pathname +
-          (searchParams?.toString() ? `?${searchParams.toString()}` : ''),
+        page_path: currentRoute,
       });
     }
   }, [pathname, searchParams]);

@@ -2,6 +2,21 @@ import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { sendMetaConversionEvent } from '@/lib/analytics/meta-capi';
 
+function extractTrackingContext(request: Request) {
+  const cookieHeader = request.headers.get('cookie') || '';
+  const readCookie = (name: string) => {
+    const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
+    return match ? decodeURIComponent(match[1]) : undefined;
+  };
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  return {
+    clientIpAddress: forwardedFor ? forwardedFor.split(',')[0].trim() : undefined,
+    clientUserAgent: request.headers.get('user-agent') || undefined,
+    fbp: readCookie('_fbp'),
+    fbc: readCookie('_fbc'),
+  };
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
@@ -74,7 +89,8 @@ export async function GET(request: Request) {
           });
 
           // Disparo de novo cadastro de Treinador via Google OAuth (Server-Side CAPI)
-          sendMetaConversionEvent({
+          const tracking = extractTrackingContext(request);
+          await sendMetaConversionEvent({
             eventName: 'CompleteRegistration',
             eventId: `reg_oauth_prof_${user.id}`,
             contentName: 'Cadastro Treinador (Google OAuth)',
@@ -82,8 +98,9 @@ export async function GET(request: Request) {
             user: {
               email: user.email,
               externalId: user.id,
+              ...tracking,
             },
-          }).catch(() => {});
+          });
         }
         await supabase.auth.updateUser({
           data: { role: 'professional' }
@@ -100,7 +117,8 @@ export async function GET(request: Request) {
           });
 
           // Disparo de novo cadastro de Aluno via Google OAuth (Server-Side CAPI)
-          sendMetaConversionEvent({
+          const tracking = extractTrackingContext(request);
+          await sendMetaConversionEvent({
             eventName: 'CompleteRegistration',
             eventId: `reg_oauth_student_${user.id}`,
             contentName: 'Cadastro Aluno (Google OAuth)',
@@ -108,8 +126,9 @@ export async function GET(request: Request) {
             user: {
               email: user.email,
               externalId: user.id,
+              ...tracking,
             },
-          }).catch(() => {});
+          });
         }
         await supabase.auth.updateUser({
           data: { role: 'student' }

@@ -405,7 +405,7 @@ export default function FiscalizacaoPage() {
   }, [handleKeyDown]);
 
   return (
-    <div className="space-y-8 relative pb-24 max-w-6xl mx-auto">
+    <div className="space-y-8 relative pb-24 max-w-6xl w-full min-w-0 mx-auto overflow-x-clip">
       <Monochrome3DBackground />
 
       {/* Header Editorial */}
@@ -425,12 +425,12 @@ export default function FiscalizacaoPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap w-full sm:w-auto">
+        <div className="flex items-center gap-2.5 flex-wrap w-full min-w-0 sm:w-auto">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-11 w-full sm:w-auto sm:max-w-xs rounded-2xl bg-[#0E0E10] border border-[#27272A] text-[#FAFAFA] text-xs sm:text-sm font-semibold px-3.5 focus:outline-none focus:border-[#3478F6] truncate cursor-pointer shadow-sm transition-all"
+              className="h-11 w-full max-w-full min-w-0 sm:w-auto sm:max-w-xs rounded-2xl bg-[#0E0E10] border border-[#27272A] text-[#FAFAFA] text-xs sm:text-sm font-semibold px-3.5 focus:outline-none focus:border-[#3478F6] truncate cursor-pointer shadow-sm transition-all"
             >
               <option value="all">Todas as Turmas ({challenges.length})</option>
               {challenges.map((c) => (
@@ -561,7 +561,7 @@ export default function FiscalizacaoPage() {
         </div>
       ) : viewMode === 'swipe' ? (
         /* ==================== MODO SWIPE (MINIMALISTA) ==================== */
-        <div className="relative z-10 max-w-lg mx-auto w-full pt-2">
+        <div className="relative z-10 max-w-lg mx-auto w-full min-w-0 pt-2">
           {/* Telemetria do Deck */}
           <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-[#A1A1AA]">
             <span>
@@ -620,7 +620,7 @@ export default function FiscalizacaoPage() {
                 <div
                   key={sub.id}
                   data-tour="audit-swipe-container"
-                  className={`p-5 rounded-3xl bg-[#0E0E10] border transition-all ${
+                  className={`p-4 sm:p-5 rounded-3xl bg-[#0E0E10] border w-full max-w-full min-w-0 overflow-hidden transition-all ${
                     isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'border-[#27272A]'
                   }`}
                 >
@@ -695,7 +695,7 @@ export default function FiscalizacaoPage() {
                     )}
 
                     {sub.caption && (
-                      <div className="p-3 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] italic text-xs leading-relaxed">
+                      <div className="p-3 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] italic text-xs leading-relaxed break-words overflow-hidden">
                         "{sub.caption}"
                       </div>
                     )}
@@ -707,9 +707,9 @@ export default function FiscalizacaoPage() {
                       type="button"
                       onClick={() => handleAnalyzeWithAI(sub)}
                       disabled={analyzingId === sub.id}
-                      className="w-full py-2.5 px-3 rounded-xl border border-[#27272A] bg-[#18181B] hover:bg-[#27272A] text-[#FAFAFA] text-xs font-mono tracking-wider flex items-center justify-between transition-colors cursor-pointer"
+                      className="w-full min-w-0 min-h-[44px] py-2.5 px-3 rounded-xl border border-[#27272A] bg-[#18181B] hover:bg-[#27272A] text-[#FAFAFA] text-xs font-mono tracking-wider flex items-center justify-between gap-2 text-left transition-colors cursor-pointer"
                     >
-                      <span>
+                      <span className="min-w-0 leading-snug">
                         {analyzingId === sub.id
                           ? 'PROCESSANDO VISÃO COMPUTACIONAL...'
                           : aiAnalysisMap[sub.id]

@@ -396,18 +396,18 @@ export function DashboardHeader() {
         </div>
       )}
 
-      {/* 3. Dock Inferior Mobile para o Coach - Frosted Glass Instagram Style com Opacidade Constante */}
+      {/* 3. Dock Inferior Mobile para o Coach - Frosted Glass Neutro */}
       {mounted && (
         <nav
-          className={`md:hidden fixed safe-bottom-nav inset-x-0 mx-auto max-w-[430px] w-[94%] z-[60] transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-            mobileMenuOpen
+          className={`md:hidden fixed safe-bottom-nav inset-x-0 mx-auto max-w-[430px] w-[94%] z-30 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            mobileMenuOpen || pathname?.includes('/camera') || pathname?.includes('/join')
               ? 'opacity-0 pointer-events-none translate-y-12 scale-95'
               : isScrolledDown
               ? 'scale-[0.91] translate-y-1 opacity-100 pointer-events-auto'
               : 'scale-100 translate-y-0 opacity-100 pointer-events-auto'
           }`}
         >
-        <div className="relative bg-[#101520]/90 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_16px_36px_rgba(0,0,0,0.75),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.14]">
+        <div className="relative bg-[#0E0E10]/95 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_16px_36px_rgba(0,0,0,0.85),inset_0_1px_1.5px_rgba(255,255,255,0.12),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-[#27272A]">
           <Link
             href="/dashboard"
             className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${

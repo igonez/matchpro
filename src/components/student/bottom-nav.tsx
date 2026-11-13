@@ -402,8 +402,8 @@ export function StudentBottomNav() {
       {/* 1. Menu Inferior Horizontal 100% Simétrico - Frosted Glass Instagram Style com Opacidade Constante */}
       {mounted && (
         <nav
-          className={`fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-[60] transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-            showVerticalMenu || showQuickSheet
+          className={`fixed safe-bottom-nav inset-x-0 mx-auto max-w-[440px] sm:max-w-md w-[92%] sm:w-[88%] z-30 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            showVerticalMenu || showQuickSheet || pathname?.includes('/camera') || pathname?.includes('/join')
               ? 'opacity-0 pointer-events-none translate-y-12 scale-95'
               : isScrolledDown
               ? 'scale-[0.91] translate-y-1 opacity-100 pointer-events-auto'

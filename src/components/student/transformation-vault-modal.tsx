@@ -295,7 +295,7 @@ export function TransformationVaultModal({
                         <Button
                           size="sm"
                           onClick={() => setActiveTab('upload_before')}
-                          className="w-full h-9 rounded-xl text-[11px] font-bold bg-[#3478F6] text-white hover:bg-[#75A7FF]"
+                          className="w-full min-h-[44px] h-11 rounded-xl text-[11px] font-bold bg-[#3478F6] text-white hover:bg-[#75A7FF]"
                         >
                           Tirar Foto 1
                         </Button>
@@ -313,7 +313,7 @@ export function TransformationVaultModal({
                         <Button
                           size="sm"
                           onClick={() => setActiveTab('upload_after')}
-                          className="w-full h-9 rounded-xl text-[11px] font-black bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-md"
+                          className="w-full min-h-[44px] h-11 rounded-xl text-[11px] font-black bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-md"
                         >
                           Enviar Foto 2
                         </Button>
@@ -337,12 +337,13 @@ export function TransformationVaultModal({
                   {activeTab === 'upload_before' ? 'Foto de Início (Dia 1)' : 'Foto de Conclusão (Dia 30)'}
                 </span>
                 <button
+                  type="button"
                   onClick={() => {
                     setActiveTab('view');
                     setFile(null);
                     setPreviewUrl(null);
                   }}
-                  className="text-xs text-[#A1A1AA] hover:text-[#FAFAFA] cursor-pointer"
+                  className="min-h-[44px] px-3 inline-flex items-center text-xs text-[#A1A1AA] hover:text-[#FAFAFA] cursor-pointer"
                 >
                   Cancelar
                 </button>

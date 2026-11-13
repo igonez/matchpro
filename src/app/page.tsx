@@ -195,7 +195,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white font-sans relative overflow-x-clip w-full">
       {/* Schemas JSON-LD independentes para Rich Results */}
       <JsonLd data={websiteSchema} />
       <JsonLd data={softwareApplicationSchema} />

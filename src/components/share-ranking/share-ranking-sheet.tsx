@@ -320,7 +320,7 @@ export function ShareRankingSheet({
         return null;
       }
     },
-    [challengeId, standings.length, showToast]
+    [challengeId, standings.length, showToast, setShareLink, setLinkRevoked]
   );
 
   useEffect(() => {
@@ -1177,7 +1177,7 @@ export function ShareRankingSheet({
                   type="button"
                   onClick={handleRevokeLink}
                   disabled={revokingLink}
-                  className="text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
+                  className="min-h-[44px] min-w-[44px] px-4 inline-flex items-center justify-center rounded-xl text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04] transition-colors cursor-pointer"
                 >
                   {revokingLink ? 'Desativando link…' : 'Desativar link público'}
                 </button>
@@ -1193,7 +1193,7 @@ export function ShareRankingSheet({
                       setIsReactivating(false);
                     }
                   }}
-                  className="text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  className="min-h-[44px] min-w-[44px] px-4 inline-flex items-center justify-center rounded-xl text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
                   {isReactivating ? 'Reativando link…' : 'Reativar link público'}
                 </button>

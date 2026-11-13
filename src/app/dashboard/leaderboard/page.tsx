@@ -41,6 +41,14 @@ function CoachLeaderboardContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [showStoryShare, setShowStoryShare] = useState(false);
+  const [copiedInvite, setCopiedInvite] = useState(false);
+
+  const handleCopyInviteLink = () => {
+    if (!selectedChallengeId || typeof window === 'undefined') return;
+    navigator.clipboard?.writeText(`${window.location.origin}/join/${selectedChallengeId}`);
+    setCopiedInvite(true);
+    setTimeout(() => setCopiedInvite(false), 2500);
+  };
   const [coachProfile, setCoachProfile] = useState<{
     id: string;
     fullName: string | null;
@@ -455,9 +463,15 @@ function CoachLeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-24 rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex flex-col items-center justify-center gap-0.5 text-xs font-mono text-[#A1A1AA] px-2 text-center">
+                <div className="w-full min-h-[96px] rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex flex-col items-center justify-center gap-1 text-xs font-mono text-[#A1A1AA] px-2 py-2 text-center">
                   <span className="font-bold">2º VAGO</span>
-                  <span className="text-[10px] text-[#A1A1AA]/70">Em disputa</span>
+                  <button
+                    type="button"
+                    onClick={handleCopyInviteLink}
+                    className="min-h-[44px] px-2.5 inline-flex items-center justify-center text-[10px] font-bold text-[#3478F6] hover:text-[#75A7FF] transition-colors cursor-pointer"
+                  >
+                    {copiedInvite ? 'Link copiado!' : '+ Convidar aluno'}
+                  </button>
                 </div>
               )}
             </div>
@@ -541,9 +555,15 @@ function CoachLeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex flex-col items-center justify-center gap-0.5 text-xs font-mono text-[#A1A1AA] px-2 text-center">
+                <div className="w-full min-h-[84px] rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex flex-col items-center justify-center gap-1 text-xs font-mono text-[#A1A1AA] px-2 py-2 text-center">
                   <span className="font-bold">3º VAGO</span>
-                  <span className="text-[10px] text-[#A1A1AA]/70">Em disputa</span>
+                  <button
+                    type="button"
+                    onClick={handleCopyInviteLink}
+                    className="min-h-[44px] px-2.5 inline-flex items-center justify-center text-[10px] font-bold text-[#3478F6] hover:text-[#75A7FF] transition-colors cursor-pointer"
+                  >
+                    {copiedInvite ? 'Link copiado!' : '+ Convidar aluno'}
+                  </button>
                 </div>
               )}
             </div>

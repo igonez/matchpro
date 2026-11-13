@@ -284,7 +284,21 @@ function LoginContent() {
         }
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Erro ao processar autenticação.');
+      const raw = String(err?.message || '');
+      const lower = raw.toLowerCase();
+      let friendly = raw || 'Erro ao processar autenticação.';
+      if (lower.includes('invalid login credentials')) {
+        friendly = 'E-mail ou senha incorretos. Verifique seus dados e tente novamente.';
+      } else if (lower.includes('email not confirmed')) {
+        friendly = 'E-mail ainda não confirmado. Verifique sua caixa de entrada.';
+      } else if (lower.includes('user already registered')) {
+        friendly = 'Este e-mail já está cadastrado. Tente fazer login.';
+      } else if (lower.includes('password should be at least')) {
+        friendly = 'A senha deve ter pelo menos 6 caracteres.';
+      } else if (lower.includes('rate limit') || lower.includes('too many requests')) {
+        friendly = 'Muitas tentativas em sequência. Aguarde alguns instantes e tente novamente.';
+      }
+      setErrorMessage(friendly);
     } finally {
       setLoading(false);
     }
@@ -428,7 +442,7 @@ function LoginContent() {
                           <button
                             type="button"
                             onClick={handlePasteCode}
-                            className="text-[10px] font-mono text-[#D4D4D8] hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                            className="min-h-[44px] min-w-[44px] px-2.5 -mr-2 text-[10px] font-mono text-[#D4D4D8] hover:text-white inline-flex items-center justify-center gap-1 rounded-lg hover:bg-white/[0.04] transition-colors cursor-pointer"
                           >
                             <Clipboard className="h-3 w-3" /> Colar link
                           </button>
@@ -439,7 +453,11 @@ function LoginContent() {
                             placeholder="Cole o link ou código da turma..."
                             value={inviteCode}
                             onChange={(e) => {
-                              setInviteCode(e.target.value);
+                              let val = e.target.value;
+                              if (val.includes('/join/')) {
+                                val = val.split('/join/')[1].split('?')[0].split('/')[0].trim();
+                              }
+                              setInviteCode(val);
                               setCodeError(null);
                             }}
                             className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl focus:border-[#3478F6] h-11 text-xs pr-10 font-mono"

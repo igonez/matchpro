@@ -586,10 +586,10 @@ export default function FinanceDashboardPage() {
           <div className="mb-6 p-4 rounded-2xl bg-[#18181B] border border-[#27272A] flex items-start gap-3">
             <Info className="w-5 h-5 text-[#3478F6] shrink-0 mt-0.5" />
             <div className="text-xs text-[#FAFAFA] space-y-2">
-              <p className="font-semibold text-white flex items-center gap-2">
+              <div className="font-semibold text-white flex items-center gap-2">
                 <span>Como funciona o Split, Subconta e Liquidação Pix?</span>
                 <Badge className="bg-white/[0.06] text-[#D4D4D8] border-0 text-[10px] font-mono">D+0 IMEDIATO</Badge>
-              </p>
+              </div>
               <p className="text-[#A1A1AA] leading-relaxed">
                 Ao preencher seus dados abaixo, nossa integração cria automaticamente a sua subconta no Asaas. Quando um aluno adquire seu desafio, o valor é dividido (Split) instantaneamente no nível bancário e cai na sua carteira. Você não precisa criar conta manualmente no site do Asaas!
               </p>
@@ -934,7 +934,11 @@ export default function FinanceDashboardPage() {
           </div>
 
           {loading ? (
-            <div className="py-12 text-center text-[#A1A1AA] text-sm">Carregando transações financeiras...</div>
+            <div className="space-y-3 animate-pulse">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-12 rounded-xl bg-[#18181B] border border-[#27272A]" />
+              ))}
+            </div>
           ) : payments.length === 0 ? (
             <div className="py-12 text-center text-[#A1A1AA] text-sm">
               Nenhuma transação registrada ainda. Assim que os alunos comprarem seus desafios, as entradas e splits aparecerão aqui em tempo real.

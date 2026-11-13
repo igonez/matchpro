@@ -126,6 +126,7 @@ export default function NewChallengePage() {
   const supabase = createClient();
 
   const [selectedPresetId, setSelectedPresetId] = useState<string>('seca_21');
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [title, setTitle] = useState(CHALLENGE_PRESETS[0].defaultTitle);
   const [startDate, setStartDate] = useState(() => computeDateOffset(1));
   const [endDate, setEndDate] = useState(() => computeDateOffset(22));
@@ -434,7 +435,36 @@ export default function NewChallengePage() {
         </div>
       </div>
 
-      {/* SELETOR DE TEMPLATES EM 1 CLIQUE */}
+      {/* Indicador de Etapas (Lei de Miller: 3 blocos claros) */}
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { step: 1 as const, label: '1. Modelo & Nome' },
+          { step: 2 as const, label: '2. Datas & Valor' },
+          { step: 3 as const, label: '3. Regras & Publicar' },
+        ].map((item) => {
+          const isCurrent = currentStep === item.step;
+          const isDone = currentStep > item.step;
+          return (
+            <button
+              key={item.step}
+              type="button"
+              onClick={() => setCurrentStep(item.step)}
+              className={`min-h-[44px] px-3 py-2 rounded-xl border text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center text-center ${
+                isCurrent
+                  ? 'bg-[#3478F6]/15 border-[#3478F6] text-[#FAFAFA]'
+                  : isDone
+                  ? 'bg-[#18181B] border-white/15 text-[#D4D4D8]'
+                  : 'bg-[#0E0E10] border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* SELETOR DE TEMPLATES EM 1 CLIQUE (ETAPA 1) */}
+      {currentStep === 1 && (
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FAFAFA] flex items-center gap-1.5">
@@ -543,6 +573,7 @@ export default function NewChallengePage() {
           </button>
         </div>
       </div>
+      )}
 
       <Card data-tour="challenge-form-card" className="border-[#27272A] bg-[#0E0E10]">
         <CardHeader>
@@ -575,20 +606,42 @@ export default function NewChallengePage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
-                Título do Desafio
-              </label>
-              <Input
-                type="text"
-                placeholder={selectedPresetId === 'custom' ? "Digite o nome do seu desafio personalizado..." : "Ex: Desafio Seca 21 Dias - Turma Oficial"}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
-              />
-            </div>
+            {currentStep === 1 && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-semibold text-[#A1A1AA] block mb-1">
+                    Título do Desafio
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder={selectedPresetId === 'custom' ? "Digite o nome do seu desafio personalizado..." : "Ex: Desafio Seca 21 Dias - Turma Oficial"}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6]"
+                  />
+                </div>
+                <div className="flex justify-end pt-2">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (!title.trim()) {
+                        setError('Informe um título para o desafio.');
+                        return;
+                      }
+                      setError(null);
+                      setCurrentStep(2);
+                    }}
+                    className="min-h-[44px] w-full sm:w-auto font-mono bg-[#3478F6] hover:bg-[#75A7FF] text-white"
+                  >
+                    Continuar: Datas & Valor →
+                  </Button>
+                </div>
+              </div>
+            )}
 
+            {currentStep === 2 && (
+            <div className="space-y-4">
             {/* Datas de Início e Encerramento com largura travada dentro do container */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full min-w-0">
               <div className="w-full min-w-0 space-y-1">
@@ -643,6 +696,23 @@ export default function NewChallengePage() {
               </p>
             </div>
 
+            <div className="flex flex-col-reverse sm:flex-row justify-between gap-2 pt-2">
+              <Button type="button" variant="ghost" onClick={() => setCurrentStep(1)} className="min-h-[44px] w-full sm:w-auto">
+                ← Voltar
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setCurrentStep(3)}
+                className="min-h-[44px] w-full sm:w-auto font-mono bg-[#3478F6] hover:bg-[#75A7FF] text-white"
+              >
+                Continuar: Regras & Publicar →
+              </Button>
+            </div>
+            </div>
+            )}
+
+            {currentStep === 3 && (
+            <div className="space-y-4">
             {/* Gamificação: Bônus por Semana 100% Concluída */}
             <div className="p-3.5 rounded-2xl border border-[#27272A] bg-[#18181B] space-y-2">
               <div className="flex items-center justify-between">
@@ -689,7 +759,7 @@ export default function NewChallengePage() {
                     <Button
                       type="button"
                       size="sm"
-                      className="bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold text-xs h-8 flex items-center gap-1.5"
+                      className="min-h-[44px] bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold text-xs h-11 flex items-center gap-1.5"
                     >
                       Configurar Recebimento na Central Financeira
                       <ExternalLink className="h-3 w-3" />
@@ -727,16 +797,20 @@ export default function NewChallengePage() {
               </div>
             )}
 
-            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row justify-between gap-2 sm:gap-3 pt-2">
+              <Button type="button" variant="ghost" onClick={() => setCurrentStep(2)} className="min-h-[44px] w-full sm:w-auto">
+                ← Voltar
+              </Button>
+              <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
               <Link href="/dashboard" className="w-full sm:w-auto">
-                <Button type="button" variant="ghost" className="w-full sm:w-auto">
+                <Button type="button" variant="ghost" className="min-h-[44px] w-full sm:w-auto">
                   Cancelar
                 </Button>
               </Link>
               <Button 
                 type="submit" 
                 disabled={loading} 
-                className="w-full sm:w-auto font-mono bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-[0_0_20px_rgba(52,120,246,0.25)]"
+                className="min-h-[44px] w-full sm:w-auto font-mono bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-[0_0_20px_rgba(52,120,246,0.25)]"
               >
                 {loading 
                   ? 'Configurando Turma...' 
@@ -744,7 +818,10 @@ export default function NewChallengePage() {
                     ? 'Criar Desafio Personalizado' 
                     : 'Criar Desafio com Modelo Pronto'}
               </Button>
+              </div>
             </div>
+            </div>
+            )}
           </form>
         </CardContent>
       </Card>

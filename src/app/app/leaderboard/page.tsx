@@ -584,9 +584,11 @@ function LeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center gap-0.5 text-[#A1A1AA] font-mono text-[10px] px-2 text-center">
+                <div className="w-full min-h-[80px] rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center gap-0.5 text-[#A1A1AA] font-mono text-[10px] px-2 py-1.5 text-center">
                   <span className="font-bold">2º VAGO</span>
-                  <span className="text-[9px] text-[#A1A1AA]/70">Em disputa</span>
+                  <Link href="/app/missions" className="min-h-[44px] inline-flex items-center justify-center text-[9px] font-bold text-[#3478F6] hover:text-[#75A7FF]">
+                    Pontuar agora →
+                  </Link>
                 </div>
               )}
             </div>
@@ -658,8 +660,11 @@ function LeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-16 rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center text-[#A1A1AA] font-mono text-[10px]">
-                  <span>3º VAGO</span>
+                <div className="w-full min-h-[72px] rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center gap-0.5 text-[#A1A1AA] font-mono text-[10px] px-2 py-1.5 text-center">
+                  <span className="font-bold">3º VAGO</span>
+                  <Link href="/app/missions" className="min-h-[44px] inline-flex items-center justify-center text-[9px] font-bold text-[#3478F6] hover:text-[#75A7FF]">
+                    Pontuar agora →
+                  </Link>
                 </div>
               )}
             </div>

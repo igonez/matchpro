@@ -381,7 +381,7 @@ export default function DashboardMaterialsPage() {
                           href={m.file_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-[#D4D4D8] hover:text-white flex items-center gap-1 font-semibold px-2 py-1 font-mono"
+                          className="min-h-[44px] min-w-[44px] px-3 text-xs text-[#D4D4D8] hover:text-white inline-flex items-center justify-center gap-1 font-semibold font-mono rounded-xl hover:bg-white/[0.04]"
                         >
                           Acessar <ExternalLink className="h-3 w-3" />
                         </a>
@@ -389,7 +389,7 @@ export default function DashboardMaterialsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEditClick(m)}
-                          className="h-8 px-2 text-xs"
+                          className="min-h-[44px] px-3 text-xs"
                           title="Editar material"
                         >
                           <Edit3 className="h-3.5 w-3.5 mr-1" /> Editar
@@ -398,8 +398,9 @@ export default function DashboardMaterialsPage() {
                           variant="ghost"
                           size="icon"
                           onClick={() => setDeleteTarget({ id: m.id, title: m.title })}
-                          className="h-8 w-8 text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 rounded"
+                          className="h-11 w-11 min-h-[44px] min-w-[44px] text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 rounded-xl"
                           title="Excluir material"
+                          aria-label="Excluir material"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

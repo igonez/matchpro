@@ -101,8 +101,8 @@ export function DashboardSidebar() {
     {
       title: 'ENGAJAMENTO & MODERAÇÃO',
       items: [
-        { name: 'Auditoria Swipe', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
-        { name: 'Feed Social da Turma', href: '/dashboard/feed', icon: Activity, active: pathname === '/dashboard/feed' },
+        { name: 'Auditoria de Fotos', href: '/dashboard/audit', icon: CheckSquare, active: pathname === '/dashboard/audit' },
+        { name: 'Feed da Turma', href: '/dashboard/feed', icon: Activity, active: pathname === '/dashboard/feed' },
         { name: 'Ranking da Turma', href: '/dashboard/leaderboard', icon: Trophy, active: pathname === '/dashboard/leaderboard', badge: 'AO VIVO' },
         { name: 'Mural de Avisos', href: '/dashboard/announcements', icon: Bell, active: pathname === '/dashboard/announcements' },
         { name: 'Materiais de Apoio', href: '/dashboard/materials', icon: BookOpen, active: pathname === '/dashboard/materials' },
@@ -111,13 +111,13 @@ export function DashboardSidebar() {
     {
       title: 'RECURSOS PRO',
       items: [
-        { name: 'Squads (Equipes)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
+        { name: 'Equipes (Squads)', href: '/dashboard/squads', icon: Users, active: pathname === '/dashboard/squads', badge: 'PRO' },
       ],
     },
     {
       title: 'FINANÇAS & CONTA',
       items: [
-        { name: 'Central Financeira', href: '/dashboard/finance', icon: Wallet, active: pathname === '/dashboard/finance', badge: 'PIX D+0' },
+        { name: 'Central Financeira', href: '/dashboard/finance', icon: Wallet, active: pathname === '/dashboard/finance', badge: 'PIX NA HORA' },
         { name: 'Meu Perfil & Fiscais', href: '/dashboard/profile', icon: User, active: pathname === '/dashboard/profile' },
       ],
     },
@@ -125,17 +125,18 @@ export function DashboardSidebar() {
       {
         title: 'ADMINISTRAÇÃO MESTRE',
         items: [
-          { name: 'Cockpit do Fundador', href: '/dashboard/master', icon: Crown, active: pathname === '/dashboard/master', badge: 'MESTRE' },
+          { name: 'Cockpit do Fundador', href: '/admin', icon: Crown, active: pathname === '/admin', badge: 'MESTRE' },
         ],
       }
     ] : []),
   ];
 
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(() => {
-    // Inicializar aberto para o grupo que contém o item ativo, e os demais abertos por padrão
     const initial: Record<string, boolean> = {};
     navGroups.forEach((g) => {
-      initial[g.title] = true;
+      const hasActive = g.items.some((it) => it.active);
+      const isSecondary = g.title === 'RECURSOS PRO' || g.title === 'ADMINISTRAÇÃO MESTRE';
+      initial[g.title] = hasActive || !isSecondary;
     });
     return initial;
   });

@@ -231,12 +231,12 @@ export default function AnnouncementsManagerPage() {
             <div className="flex items-center gap-3">
               <span className={`h-2.5 w-2.5 rounded-full ${currentCh.is_active !== false ? 'bg-[#3478F6] animate-pulse shadow-[0_0_8px_#3478F6]' : 'bg-[#A1A1AA]'}`} />
               <div>
-                <p className="text-xs font-bold text-[#FAFAFA] flex items-center gap-2">
+                <div className="text-xs font-bold text-[#FAFAFA] flex items-center gap-2">
                   <span>Turma Conectada: {currentCh.title}</span>
                   <Badge className={currentCh.is_active !== false ? 'text-[10px] font-mono' : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A] text-[10px] font-mono'}>
                     {currentCh.is_active !== false ? 'DESAFIO ATIVO' : 'ENCERRADO'}
                   </Badge>
-                </p>
+                </div>
                 {currentCh.start_date && (
                   <p className="text-[11px] text-[#A1A1AA] font-mono mt-0.5">
                     Período: {new Date(currentCh.start_date + 'T00:00:00').toLocaleDateString('pt-BR')} até {currentCh.end_date ? new Date(currentCh.end_date + 'T00:00:00').toLocaleDateString('pt-BR') : 'Contínuo'}
@@ -275,7 +275,7 @@ export default function AnnouncementsManagerPage() {
                 {isEditing ? 'Editar Comunicado' : 'Novo Comunicado'}
               </CardTitle>
               {isEditing && (
-                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-7 text-xs">
+                <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="min-h-[44px] px-3 text-xs">
                   <X className="h-3.5 w-3.5 mr-1" /> Cancelar
                 </Button>
               )}
@@ -383,19 +383,21 @@ export default function AnnouncementsManagerPage() {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleEditClick(a)}
-                            className="h-7 w-7"
+                            className="h-11 w-11 min-h-[44px] min-w-[44px]"
                             title="Editar aviso"
+                            aria-label="Editar aviso"
                           >
-                            <Edit3 className="h-3.5 w-3.5" />
+                            <Edit3 className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => setDeleteTarget({ id: a.id, title: a.title })}
-                            className="h-7 w-7 text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 rounded"
+                            className="h-11 w-11 min-h-[44px] min-w-[44px] text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 rounded-xl"
                             title="Excluir aviso"
+                            aria-label="Excluir aviso"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>

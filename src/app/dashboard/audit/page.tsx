@@ -717,7 +717,7 @@ export default function FiscalizacaoPage() {
                           : 'ANALISAR NUTRIÇÃO & CONFORMIDADE (IA)'}
                       </span>
                       <span className="text-[10px] text-[#D4D4D8]">
-                        {aiAnalysisMap[sub.id] ? (expandedAnalysis[sub.id] ? 'FECHAR' : 'EXPANDIR') : 'GEMINI'}
+                        {aiAnalysisMap[sub.id] ? (expandedAnalysis[sub.id] ? 'FECHAR' : 'EXPANDIR') : 'IA'}
                       </span>
                     </button>
 
@@ -741,25 +741,25 @@ export default function FiscalizacaoPage() {
                         {aiAnalysisMap[sub.id].estimatedMacros && (
                           <div className="grid grid-cols-4 gap-2 pt-1 border-t border-[#27272A]">
                             <div className="text-center p-2 rounded-lg bg-[#0E0E10] border border-[#27272A]">
-                              <span className="text-[8px] font-mono text-[#A1A1AA] uppercase block">CALORIAS</span>
+                              <span className="text-[11px] font-mono text-[#A1A1AA] uppercase block">CALORIAS</span>
                               <span className="text-[#FAFAFA] font-mono font-bold text-xs mt-0.5 block">
                                 {String(aiAnalysisMap[sub.id]?.estimatedMacros?.calories ?? '').replace(/kcal/i, '').trim() || '-'}
                               </span>
                             </div>
                             <div className="text-center p-2 rounded-lg bg-[#0E0E10] border border-[#27272A]">
-                              <span className="text-[8px] font-mono text-[#A1A1AA] uppercase block">PROTEÍNA</span>
+                              <span className="text-[11px] font-mono text-[#A1A1AA] uppercase block">PROTEÍNA</span>
                               <span className="text-[#FAFAFA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.protein || '-'}
                               </span>
                             </div>
                             <div className="text-center p-2 rounded-lg bg-[#0E0E10] border border-[#27272A]">
-                              <span className="text-[8px] font-mono text-[#A1A1AA] uppercase block">CARBOS</span>
+                              <span className="text-[11px] font-mono text-[#A1A1AA] uppercase block">CARBOS</span>
                               <span className="text-[#FAFAFA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.carbs || '-'}
                               </span>
                             </div>
                             <div className="text-center p-2 rounded-lg bg-[#0E0E10] border border-[#27272A]">
-                              <span className="text-[8px] font-mono text-[#A1A1AA] uppercase block">GORDURAS</span>
+                              <span className="text-[11px] font-mono text-[#A1A1AA] uppercase block">GORDURAS</span>
                               <span className="text-[#FAFAFA] font-mono font-bold text-xs mt-0.5 block">
                                 {aiAnalysisMap[sub.id].estimatedMacros.fats || '-'}
                               </span>

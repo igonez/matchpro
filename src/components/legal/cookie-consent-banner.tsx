@@ -174,7 +174,7 @@ export function CookieConsentBanner() {
                       onChange={(e) => setFunctionalAllowed(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#3478F6] peer-checked:after:bg-white"></div>
+                    <div className="w-8 h-4 bg-[#18181B] border border-[#27272A] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#3478F6] peer-checked:after:bg-white"></div>
                   </label>
                 </div>
                 <p className="text-[#A1A1AA] leading-relaxed text-[11px]">
@@ -195,7 +195,7 @@ export function CookieConsentBanner() {
                       onChange={(e) => setAnalyticsAllowed(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#3478F6] peer-checked:after:bg-white"></div>
+                    <div className="w-8 h-4 bg-[#18181B] border border-[#27272A] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#3478F6] peer-checked:after:bg-white"></div>
                   </label>
                 </div>
                 <p className="text-[#A1A1AA] leading-relaxed text-[11px]">

@@ -416,7 +416,7 @@ export default function EditChallengePage({
                         </p>
                         <Link
                           href={`/dashboard/missions?challenge=${challengeId}`}
-                          className="text-[11px] font-mono font-bold text-[#3478F6] hover:text-[#75A7FF] transition-colors"
+                          className="min-h-[44px] px-3 inline-flex items-center rounded-xl text-[11px] font-mono font-bold text-[#3478F6] hover:text-[#75A7FF] hover:bg-white/[0.04] transition-colors"
                         >
                           + Adicionar Missão nesta Semana
                         </Link>

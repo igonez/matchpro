@@ -206,12 +206,12 @@ export default function AnnouncementsManagerPage() {
         </div>
 
         {challenges.length > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-[#A1A1AA] font-mono">Desafio Ativo:</span>
+          <div className="flex items-center gap-2 flex-wrap w-full min-w-0 sm:w-auto">
+            <span className="text-xs font-semibold text-[#A1A1AA] font-mono shrink-0">Desafio Ativo:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] font-mono"
+              className="h-11 w-full max-w-full min-w-0 sm:w-auto sm:max-w-xs rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] font-mono truncate"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>

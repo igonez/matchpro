@@ -404,12 +404,12 @@ export default function DashboardFeedPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full min-w-0 sm:w-auto">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-mono font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6]"
+              className="h-11 w-full max-w-full min-w-0 sm:w-auto sm:max-w-xs rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-mono font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] truncate"
             >
               <option value="all">Todas as Turmas ({challenges.length})</option>
               {challenges.map((c) => (

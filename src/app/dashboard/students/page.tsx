@@ -317,12 +317,12 @@ export default function DashboardFinanceAndStudentsPage() {
 
       {/* Barra de Filtros e Busca de Alunos */}
       <div className="p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 relative z-10 border border-[#27272A] bg-[#0E0E10]">
-        <div className="flex flex-col sm:flex-row flex-1 items-stretch sm:items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row flex-1 min-w-0 max-w-full items-stretch sm:items-center gap-2.5">
           {/* Seletor de Desafio */}
           <select
             value={selectedChallengeId}
             onChange={(e) => setSelectedChallengeId(e.target.value)}
-            className="h-11 min-h-[44px] w-full sm:w-auto rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-mono font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6]"
+            className="h-11 min-h-[44px] w-full max-w-full min-w-0 sm:w-auto sm:max-w-xs rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-mono font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] truncate"
           >
             <option value="all">Todas as Turmas ({challenges.length})</option>
             {challenges.map((c) => (

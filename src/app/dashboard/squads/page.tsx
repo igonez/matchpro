@@ -238,7 +238,7 @@ export default function SquadsManagerPage() {
         <select
           value={selectedChallengeId}
           onChange={(e) => setSelectedChallengeId(e.target.value)}
-          className="h-10 w-full sm:w-auto rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6] font-mono"
+          className="h-11 w-full max-w-full min-w-0 sm:w-auto sm:max-w-xs rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6] font-mono truncate"
         >
           {challenges.map((c) => (
             <option key={c.id} value={c.id}>

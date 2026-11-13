@@ -308,12 +308,12 @@ function CoachLeaderboardContent() {
         </div>
 
         {/* Seletor de Desafio */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full min-w-0 sm:w-auto">
           {challenges.length > 0 && (
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 rounded-xl border border-[#27272A] bg-[#0E0E10] px-3.5 text-xs font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] font-mono"
+              className="h-11 w-full max-w-full min-w-0 sm:w-auto sm:max-w-xs rounded-xl border border-[#27272A] bg-[#0E0E10] px-3.5 text-xs font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] font-mono truncate"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>

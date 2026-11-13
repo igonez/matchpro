@@ -221,12 +221,12 @@ export default function DashboardMaterialsPage() {
         </div>
 
         {challenges.length > 0 && (
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs font-semibold text-[#A1A1AA] font-mono">Turma:</span>
+          <div className="flex items-center gap-2 w-full min-w-0 max-w-full sm:w-auto">
+            <span className="text-xs font-semibold text-[#A1A1AA] font-mono shrink-0">Turma:</span>
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-10 flex-1 sm:flex-initial rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] font-mono"
+              className="h-11 w-full max-w-full min-w-0 flex-1 sm:flex-initial sm:max-w-xs rounded-xl border border-[#27272A] bg-[#18181B] px-3 text-xs font-bold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] font-mono truncate"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>

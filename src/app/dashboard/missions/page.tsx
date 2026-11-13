@@ -1120,7 +1120,7 @@ function MissionsManagerContent() {
             <select
               value={selectedChallengeId}
               onChange={(e) => setSelectedChallengeId(e.target.value)}
-              className="h-11 w-full sm:w-auto sm:max-w-xs flex-1 rounded-2xl border border-[#27272A] bg-[#0E0E10] px-3.5 text-xs sm:text-sm font-semibold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] truncate min-w-0 cursor-pointer shadow-sm transition-all"
+              className="h-11 w-full max-w-full sm:w-auto sm:max-w-xs flex-1 rounded-2xl border border-[#27272A] bg-[#0E0E10] px-3.5 text-xs sm:text-sm font-semibold text-[#FAFAFA] focus:outline-none focus:border-[#3478F6] truncate min-w-0 cursor-pointer shadow-sm transition-all"
             >
               {challenges.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -1425,7 +1425,7 @@ function MissionsManagerContent() {
       )}
 
       {/* BLOCO 2: Menu Expansível de Filtro de Blocos da Semana */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-30">
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative ${isBlockMenuOpen ? 'z-40' : 'z-20'}`}>
         <div className="relative w-full sm:w-auto">
           {/* Botão Gatilho do Menu Expansível */}
           <button

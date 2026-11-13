@@ -72,19 +72,24 @@ export async function POST(request: Request) {
       if (listByTitle && listByTitle.length > 0) {
         challengeData = listByTitle[0];
       } else {
-        // 2. Se for um prefixo de UUID (ex: primeiros 8 caracteres)
-        const cleanHex = rawCode.replace(/[^0-9a-fA-F]/g, '');
-        if (cleanHex.length >= 6) {
-          const { data: allActive } = await supabaseAdmin
+        // 2. Se for um prefixo de UUID (ex: primeiros 6 a 32 caracteres hex)
+        const cleanHex = rawCode.replace(/[^0-9a-fA-F]/g, '').toLowerCase();
+        if (cleanHex.length >= 6 && cleanHex.length <= 32) {
+          const toUuid = (hex32: string) =>
+            `${hex32.slice(0, 8)}-${hex32.slice(8, 12)}-${hex32.slice(12, 16)}-${hex32.slice(16, 20)}-${hex32.slice(20, 32)}`;
+          const minUuid = toUuid(cleanHex.padEnd(32, '0'));
+          const maxUuid = toUuid(cleanHex.padEnd(32, 'f'));
+
+          const { data: matchedRows } = await supabaseAdmin
             .from('challenges')
             .select(baseSelect)
-            .limit(50);
+            .gte('id', minUuid)
+            .lte('id', maxUuid)
+            .order('is_active', { ascending: false })
+            .limit(1);
 
-          const matched = (allActive || []).find((c: any) =>
-            c.id.replace(/-/g, '').toLowerCase().startsWith(cleanHex.toLowerCase())
-          );
-          if (matched) {
-            challengeData = matched;
+          if (matchedRows && matchedRows.length > 0) {
+            challengeData = matchedRows[0];
           }
         }
       }

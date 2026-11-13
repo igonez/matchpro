@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
@@ -45,8 +46,10 @@ interface SquadLeaderboardItem {
   average_points: number;
 }
 
-export default function LeaderboardPage() {
+function LeaderboardContent() {
   const supabase = createClient();
+  const searchParams = useSearchParams();
+  const requestedChallengeId = searchParams.get('challenge');
   const [standings, setStandings] = useState<LeaderboardItem[]>([]);
   const [squadStandings, setSquadStandings] = useState<SquadLeaderboardItem[]>([]);
   const [currentChallenge, setCurrentChallenge] = useState<any>(null);
@@ -69,11 +72,6 @@ export default function LeaderboardPage() {
       setCurrentUserId(user.id);
 
       // 1. Identificar turma do atleta (respeitando deep link ?challenge=<id> se presente)
-      const requestedChallengeId =
-        typeof window !== 'undefined'
-          ? new URLSearchParams(window.location.search).get('challenge')
-          : null;
-
       let participationQuery = supabase
         .from('challenge_participants')
         .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
@@ -232,9 +230,9 @@ export default function LeaderboardPage() {
 
         // Snapshot diário
         const todayStr = new Date().toISOString().split('T')[0];
-        safeStandings.slice(0, 50).forEach(async (s: any, idx: number) => {
-          try {
-            await supabase.from('leaderboard_history').upsert(
+        await Promise.allSettled(
+          safeStandings.slice(0, 50).map((s: any, idx: number) =>
+            supabase.from('leaderboard_history').upsert(
               {
                 challenge_id: challengeId,
                 student_id: s.student_id,
@@ -243,11 +241,9 @@ export default function LeaderboardPage() {
                 recorded_date: todayStr,
               },
               { onConflict: 'challenge_id,student_id,recorded_date' }
-            );
-          } catch {
-            // Silencioso se conflito
-          }
-        });
+            )
+          )
+        );
       }
     } catch (err) {
       console.error('Erro ao buscar leaderboard:', err);
@@ -588,8 +584,9 @@ export default function LeaderboardPage() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center text-[#A1A1AA] font-mono text-[10px]">
-                  <span>2º VAGO</span>
+                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] flex flex-col items-center justify-center gap-0.5 text-[#A1A1AA] font-mono text-[10px] px-2 text-center">
+                  <span className="font-bold">2º VAGO</span>
+                  <span className="text-[9px] text-[#A1A1AA]/70">Em disputa</span>
                 </div>
               )}
             </div>
@@ -696,11 +693,10 @@ export default function LeaderboardPage() {
         </div>
 
         {loading ? (
-          <div className="py-16 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2">
-            <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs font-mono text-[#A1A1AA] uppercase tracking-widest">
-              SINCRONIZANDO CLASSIFICAÇÃO...
-            </p>
+          <div className="space-y-2.5 animate-pulse">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 rounded-2xl border border-[#27272A] bg-[#0E0E10]" />
+            ))}
           </div>
         ) : activeTab === 'individual' ? (
           filteredStandings.length === 0 ? (
@@ -910,5 +906,21 @@ export default function LeaderboardPage() {
         );
       })()}
     </div>
+  );
+}
+
+export default function LeaderboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-4 space-y-3 animate-pulse max-w-xl mx-auto">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-16 rounded-2xl border border-[#27272A] bg-[#0E0E10]" />
+          ))}
+        </div>
+      }
+    >
+      <LeaderboardContent />
+    </Suspense>
   );
 }

@@ -61,12 +61,13 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
     },
     ref
   ) {
-    const totalParticipants = standings.length;
+    const safeStandings = Array.isArray(standings) ? standings : [];
+    const totalParticipants = safeStandings.length;
     const myIdx = currentUserId
-      ? standings.findIndex((p) => p.studentId === currentUserId)
+      ? safeStandings.findIndex((p) => p.studentId === currentUserId)
       : -1;
-    const myRank = myIdx >= 0 ? myIdx + 1 : standings.length > 0 ? 1 : null;
-    const myStanding = myIdx >= 0 ? standings[myIdx] : standings[0] || null;
+    const myRank = myIdx >= 0 ? myIdx + 1 : safeStandings.length > 0 ? 1 : null;
+    const myStanding = myIdx >= 0 ? safeStandings[myIdx] : safeStandings[0] || null;
     const myPoints = myStanding ? myStanding.points : 0;
 
     const hasPhotoBg =
@@ -103,15 +104,15 @@ export const RankingShareCard = forwardRef<HTMLDivElement, RankingShareCardProps
     // Top 5 participantes existentes (sem placeholders vazios).
     // Se o usuário estiver abaixo do 5º lugar, exibe os 4 primeiros + o usuário na 5ª linha.
     const topFiveEntries: Array<{ item: ShareParticipantItem; rank: number }> = (() => {
-      const top5 = standings.slice(0, 5).map((item, index) => ({
+      const top5 = safeStandings.slice(0, 5).map((item, index) => ({
         item,
         rank: index + 1,
       }));
-      if (!isCoachView && myIdx >= 5 && standings[myIdx]) {
+      if (!isCoachView && myIdx >= 5 && safeStandings[myIdx]) {
         return [
           ...top5.slice(0, 4),
           {
-            item: standings[myIdx],
+            item: safeStandings[myIdx],
             rank: myIdx + 1,
           },
         ];

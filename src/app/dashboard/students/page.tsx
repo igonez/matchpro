@@ -397,9 +397,10 @@ export default function DashboardFinanceAndStudentsPage() {
         </div>
 
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs">
-            <div className="h-6 w-6 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
-            Carregando lista de alunos...
+          <div className="p-4 space-y-3 animate-pulse">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-14 rounded-2xl bg-[#18181B] border border-[#27272A]" />
+            ))}
           </div>
         ) : filteredParticipants.length === 0 ? (
           <div className="py-16 text-center text-xs text-[#A1A1AA]">
@@ -407,7 +408,7 @@ export default function DashboardFinanceAndStudentsPage() {
           </div>
         ) : (
           <div className="divide-y divide-[#27272A] overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[640px] text-left text-xs">
               <thead className="bg-[#18181B]/70 text-[#A1A1AA] text-xs font-semibold border-b border-[#27272A]">
                 <tr>
                   <th className="py-3 px-4">Atleta</th>
@@ -430,14 +431,14 @@ export default function DashboardFinanceAndStudentsPage() {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="h-8 w-8 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#D4D4D8] font-bold shrink-0">
-                            {p.student.full_name.charAt(0).toUpperCase()}
+                            {p.student?.full_name?.charAt(0)?.toUpperCase() || 'A'}
                           </div>
                           <div>
                             <span className="font-bold text-[#FAFAFA] block">
-                              {p.student.full_name}
+                              {p.student?.full_name || 'Aluno'}
                             </span>
                             <span className="text-[11px] text-[#A1A1AA]">
-                              Matrícula: {p.student_id.slice(0, 8)}...
+                              Matrícula: {p.student_id ? `${p.student_id.slice(0, 8)}...` : '---'}
                             </span>
                           </div>
                         </div>

@@ -80,7 +80,13 @@ function MasterDashboardContent() {
 
   // Modal de Novo Gasto em Ads
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
-  const [adSpendDate, setAdSpendDate] = useState(new Date().toISOString().split('T')[0]);
+  const [adSpendDate, setAdSpendDate] = useState(() => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
   const [adPlatform, setAdPlatform] = useState('meta_ads');
   const [adAmount, setAdAmount] = useState('');
   const [adCampaign, setAdCampaign] = useState('');
@@ -1500,7 +1506,19 @@ function MasterDashboardContent() {
 
 export default function MasterDashboardPage() {
   return (
-    <Suspense fallback={<div className="text-xs text-zinc-500 font-mono p-8">Carregando Terminal Mestre...</div>}>
+    <Suspense
+      fallback={
+        <div className="space-y-6 animate-pulse p-6 sm:p-8 max-w-7xl mx-auto">
+          <div className="h-10 w-64 bg-[#18181B] rounded-2xl" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-28 bg-[#0E0E10] rounded-3xl border border-[#27272A]" />
+            ))}
+          </div>
+          <div className="h-80 bg-[#0E0E10] rounded-3xl border border-[#27272A]" />
+        </div>
+      }
+    >
       <MasterDashboardContent />
     </Suspense>
   );

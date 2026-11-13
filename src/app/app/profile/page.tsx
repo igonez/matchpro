@@ -264,6 +264,31 @@ export default function StudentProfilePage() {
     router.push('/login');
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full pb-28 relative animate-pulse">
+        <div className="flex items-center justify-between pt-1">
+          <div className="space-y-2">
+            <div className="h-3 w-32 bg-[#18181B] rounded" />
+            <div className="h-7 w-40 bg-[#18181B] rounded-xl" />
+          </div>
+          <div className="h-11 w-24 bg-[#18181B] rounded-xl" />
+        </div>
+        <div className="bg-[#0E0E10] border border-[#27272A] p-5 rounded-3xl flex flex-col items-center space-y-3">
+          <div className="w-24 h-24 rounded-full bg-[#18181B]" />
+          <div className="h-5 w-44 bg-[#18181B] rounded-lg" />
+          <div className="h-3 w-36 bg-[#18181B] rounded" />
+          <div className="grid grid-cols-3 gap-2 w-full mt-4 pt-4 border-t border-[#27272A]">
+            <div className="h-14 bg-[#18181B] rounded-2xl" />
+            <div className="h-14 bg-[#18181B] rounded-2xl" />
+            <div className="h-14 bg-[#18181B] rounded-2xl" />
+          </div>
+        </div>
+        <div className="h-48 bg-[#0E0E10] border border-[#27272A] rounded-3xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full pb-28 relative">
       <Monochrome3DBackground />

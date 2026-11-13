@@ -89,10 +89,10 @@ export function SocialProofTestimonials() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {comparisons.map((item, index) => {
+          {comparisons.map((item) => {
             const Icon = item.icon;
             return (
-              <SpotlightCard3D key={index} className="p-6 sm:p-8 flex flex-col justify-between border-white/10 bg-zinc-950/80 backdrop-blur-xl">
+              <SpotlightCard3D key={item.title || item.badge} className="p-6 sm:p-8 flex flex-col justify-between border-white/10 bg-zinc-950/80 backdrop-blur-xl">
                 <div>
                   {/* Top Header Card */}
                   <div className="flex items-center justify-between gap-3 mb-6">

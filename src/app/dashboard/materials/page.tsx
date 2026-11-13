@@ -348,7 +348,13 @@ export default function DashboardMaterialsPage() {
             </CardHeader>
 
             <CardContent>
-              {materials.length === 0 ? (
+              {loading && materials.length === 0 ? (
+                <div className="space-y-3 animate-pulse">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="h-16 rounded-2xl bg-[#18181B] border border-[#27272A]" />
+                  ))}
+                </div>
+              ) : materials.length === 0 ? (
                 <div className="text-center py-12 text-[#A1A1AA] text-xs">
                   <BookOpen className="h-8 w-8 mx-auto mb-2 text-[#D4D4D8] opacity-60" />
                   Nenhum material cadastrado ainda. Use o formulário ao lado para liberar conteúdos.

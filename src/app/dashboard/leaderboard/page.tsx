@@ -73,10 +73,16 @@ function CoachLeaderboardContent() {
       ]);
 
       const meta = user.user_metadata || {};
-      const localBrandName =
-        typeof window !== 'undefined' ? window.localStorage.getItem('arena_coach_brand_name') : null;
-      const localLogoUrl =
-        typeof window !== 'undefined' ? window.localStorage.getItem('arena_coach_logo_url') : null;
+      let localBrandName: string | null = null;
+      let localLogoUrl: string | null = null;
+      if (typeof window !== 'undefined') {
+        try {
+          localBrandName = window.localStorage.getItem('arena_coach_brand_name');
+          localLogoUrl = window.localStorage.getItem('arena_coach_logo_url');
+        } catch {
+          // Navegação privada / Storage restrito
+        }
+      }
 
       setCoachProfile({
         id: user.id,
@@ -449,8 +455,9 @@ function CoachLeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-24 rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex items-center justify-center text-xs font-mono text-[#A1A1AA]">
-                  2º VAGO
+                <div className="w-full h-24 rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex flex-col items-center justify-center gap-0.5 text-xs font-mono text-[#A1A1AA] px-2 text-center">
+                  <span className="font-bold">2º VAGO</span>
+                  <span className="text-[10px] text-[#A1A1AA]/70">Em disputa</span>
                 </div>
               )}
             </div>
@@ -534,8 +541,9 @@ function CoachLeaderboardContent() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex items-center justify-center text-xs font-mono text-[#A1A1AA]">
-                  3º VAGO
+                <div className="w-full h-20 rounded-t-2xl border border-dashed border-[#27272A] bg-[#18181B]/35 flex flex-col items-center justify-center gap-0.5 text-xs font-mono text-[#A1A1AA] px-2 text-center">
+                  <span className="font-bold">3º VAGO</span>
+                  <span className="text-[10px] text-[#A1A1AA]/70">Em disputa</span>
                 </div>
               )}
             </div>
@@ -604,7 +612,13 @@ function CoachLeaderboardContent() {
           </CardHeader>
 
           <CardContent className="p-0">
-            {filteredStandings.length === 0 ? (
+            {loading && standings.length === 0 ? (
+              <div className="p-4 space-y-3 animate-pulse">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-14 rounded-2xl bg-[#18181B] border border-[#27272A]" />
+                ))}
+              </div>
+            ) : filteredStandings.length === 0 ? (
               <div className="p-10 text-center space-y-2">
                 <Trophy className="h-8 w-8 text-[#D4D4D8] opacity-60 mx-auto" />
                 <p className="text-xs font-mono text-[#A1A1AA]">

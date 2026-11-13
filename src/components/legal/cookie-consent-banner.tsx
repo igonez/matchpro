@@ -174,10 +174,10 @@ export function CookieConsentBanner() {
                       onChange={(e) => setFunctionalAllowed(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-white peer-checked:after:bg-black"></div>
+                    <div className="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#3478F6] peer-checked:after:bg-white"></div>
                   </label>
                 </div>
-                <p className="text-zinc-400 leading-relaxed text-[11px]">
+                <p className="text-[#A1A1AA] leading-relaxed text-[11px]">
                   Memorização de tema, preferências de áudio e visualização de turmas.
                 </p>
               </div>
@@ -185,7 +185,7 @@ export function CookieConsentBanner() {
               {/* Desempenho / Métricas */}
               <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white uppercase font-mono text-[11px]">
+                  <span className="font-bold text-[#FAFAFA] uppercase font-mono text-[11px]">
                     3. Métricas Internas
                   </span>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -195,10 +195,10 @@ export function CookieConsentBanner() {
                       onChange={(e) => setAnalyticsAllowed(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-white peer-checked:after:bg-black"></div>
+                    <div className="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#3478F6] peer-checked:after:bg-white"></div>
                   </label>
                 </div>
-                <p className="text-zinc-400 leading-relaxed text-[11px]">
+                <p className="text-[#A1A1AA] leading-relaxed text-[11px]">
                   Métricas agregadas anônimas para identificar lentidão ou erros técnicos.
                 </p>
               </div>

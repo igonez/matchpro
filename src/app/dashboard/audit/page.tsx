@@ -547,8 +547,12 @@ export default function FiscalizacaoPage() {
 
       {/* Conteúdo Principal */}
       {loading ? (
-        <div className="py-28 text-center text-xs font-mono text-[#A1A1AA] tracking-widest uppercase relative z-10">
-          SINCRONIZANDO REGISTROS DE AUDITORIA...
+        <div className="max-w-lg mx-auto w-full pt-2 space-y-4 animate-pulse relative z-10">
+          <div className="h-96 rounded-3xl border border-[#27272A] bg-[#0E0E10]" />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="h-12 rounded-2xl bg-[#18181B]" />
+            <div className="h-12 rounded-2xl bg-[#18181B]" />
+          </div>
         </div>
       ) : filteredSubmissions.length === 0 ? (
         <div className="p-16 rounded-3xl border border-[#27272A] bg-[#0E0E10] text-center space-y-2 relative z-10">
@@ -739,7 +743,7 @@ export default function FiscalizacaoPage() {
                             <div className="text-center p-2 rounded-lg bg-[#0E0E10] border border-[#27272A]">
                               <span className="text-[8px] font-mono text-[#A1A1AA] uppercase block">CALORIAS</span>
                               <span className="text-[#FAFAFA] font-mono font-bold text-xs mt-0.5 block">
-                                {aiAnalysisMap[sub.id].estimatedMacros.calories?.replace('kcal', '').trim() || '-'}
+                                {String(aiAnalysisMap[sub.id]?.estimatedMacros?.calories ?? '').replace(/kcal/i, '').trim() || '-'}
                               </span>
                             </div>
                             <div className="text-center p-2 rounded-lg bg-[#0E0E10] border border-[#27272A]">
@@ -777,7 +781,7 @@ export default function FiscalizacaoPage() {
                     <button
                       onClick={() => setInvalidateTarget(sub)}
                       disabled={isProcessing}
-                      className="py-3.5 px-4 rounded-2xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 font-mono text-xs tracking-wider font-bold transition-all cursor-pointer"
+                      className="py-3.5 px-4 rounded-2xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none font-mono text-xs tracking-wider font-bold transition-all cursor-pointer"
                     >
                       INVALIDAR (←)
                     </button>
@@ -788,7 +792,7 @@ export default function FiscalizacaoPage() {
                         setSwipeIndex((prev) => prev + 1);
                       }}
                       disabled={isProcessing}
-                      className="py-3.5 px-4 rounded-2xl bg-[#3478F6] text-white hover:bg-[#75A7FF] font-mono text-xs tracking-wider font-black transition-all shadow-lg shadow-[#3478F6]/20 cursor-pointer"
+                      className="py-3.5 px-4 rounded-2xl bg-[#3478F6] text-white hover:bg-[#75A7FF] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none font-mono text-xs tracking-wider font-black transition-all shadow-lg shadow-[#3478F6]/20 cursor-pointer"
                     >
                       APROVAR (→)
                     </button>

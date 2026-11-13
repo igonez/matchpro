@@ -34,6 +34,7 @@ export function DashboardSidebar() {
   const supabase = createClient();
   const { startTour } = useWalkthrough();
   const [isMaster, setIsMaster] = React.useState(false);
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
   React.useEffect(() => {
     async function checkMaster() {
@@ -57,8 +58,14 @@ export function DashboardSidebar() {
   }, [supabase]);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      router.push('/login');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   interface NavItem {
@@ -267,11 +274,13 @@ export function DashboardSidebar() {
         </Link>
 
         <button
+          type="button"
+          disabled={isLoggingOut}
           onClick={handleSignOut}
-          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] rounded-xl transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#0E0E10] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors cursor-pointer"
         >
           <LogOut className="w-4 h-4 text-[#A1A1AA]" />
-          <span>Sair da Conta</span>
+          <span>{isLoggingOut ? 'Saindo...' : 'Sair da Conta'}</span>
         </button>
       </div>
     </aside>

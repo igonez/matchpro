@@ -13,8 +13,6 @@ import { Copy, ArrowRight, Clock } from 'lucide-react';
 export default function DashboardOverviewPage() {
   const supabase = createClient();
 
-  const [isInitialBoot] = useState<boolean>(false);
-
   const [stats, setStats] = useState({
     activeStudents: 0,
     totalRevenue: 0,
@@ -26,7 +24,7 @@ export default function DashboardOverviewPage() {
 
   const [atRiskStudents, setAtRiskStudents] = useState<any[]>([]);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     try {
@@ -36,6 +34,9 @@ export default function DashboardOverviewPage() {
       if (cachedChallenges) setChallenges(JSON.parse(cachedChallenges));
       const cachedAtRisk = sessionStorage.getItem('arena_coach_at_risk');
       if (cachedAtRisk) setAtRiskStudents(JSON.parse(cachedAtRisk));
+      if (cachedStats || cachedChallenges) {
+        setLoading(false);
+      }
       if (!sessionStorage.getItem('arena_booted')) {
         sessionStorage.setItem('arena_booted', 'true');
       }
@@ -248,9 +249,18 @@ export default function DashboardOverviewPage() {
     }
   };
 
-  // Exibir tela de boot completo com logo ArenaFitPro apenas no primeiro carregamento do app
-  if (loading && isInitialBoot) {
-    return <MobileLoadingScreen fullScreen={true} />;
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse p-4 max-w-7xl mx-auto">
+        <div className="h-10 w-64 bg-[#18181B] rounded-2xl" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-32 bg-[#0E0E10] rounded-3xl border border-[#27272A]" />
+          ))}
+        </div>
+        <div className="h-80 bg-[#0E0E10] rounded-3xl border border-[#27272A]" />
+      </div>
+    );
   }
 
   return (

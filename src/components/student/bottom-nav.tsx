@@ -393,6 +393,10 @@ export function StudentBottomNav() {
     }));
   };
 
+  if (pathname?.startsWith('/app/camera')) {
+    return null;
+  }
+
   return (
     <>
       {/* 1. Menu Inferior Horizontal 100% Simétrico - Frosted Glass Instagram Style com Opacidade Constante */}
@@ -406,7 +410,7 @@ export function StudentBottomNav() {
               : 'scale-100 translate-y-0 opacity-100 pointer-events-auto'
           }`}
         >
-          <div className="relative bg-[#101522]/90 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_16px_36px_rgba(0,0,0,0.75),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.14]">
+          <div className="relative bg-[#0E0E10]/90 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_16px_36px_rgba(0,0,0,0.75),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.14]">
             
             {/* Lado Esquerdo (Hoje, Missões) */}
             <div className="flex items-center justify-around flex-1 gap-1">

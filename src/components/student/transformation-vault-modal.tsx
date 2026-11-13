@@ -105,19 +105,23 @@ export function TransformationVaultModal({
         updatePayload.is_revealed = true;
       }
 
-      if (vaultData?.id) {
-        await supabase
-          .from('student_transformation_vault')
-          .update(updatePayload)
-          .eq('id', vaultData.id);
-      } else {
-        await supabase
-          .from('student_transformation_vault')
-          .insert({
-            student_id: studentId,
-            challenge_id: challengeId,
-            ...updatePayload,
-          });
+      const { error: vaultError } = vaultData?.id
+        ? await supabase
+            .from('student_transformation_vault')
+            .update(updatePayload)
+            .eq('id', vaultData.id)
+        : await supabase
+            .from('student_transformation_vault')
+            .insert({
+              student_id: studentId,
+              challenge_id: challengeId,
+              ...updatePayload,
+            });
+
+      if (vaultError) {
+        console.error('Erro ao salvar registro no cofre:', vaultError);
+        showStatus('Erro ao salvar no cofre: ' + vaultError.message);
+        return;
       }
 
       setFile(null);
@@ -251,16 +255,11 @@ export function TransformationVaultModal({
                     </div>
                   </div>
 
-                  {/* Botão de Compartilhar nos Stories */}
-                  <Button
-                    onClick={() => {
-                      showStatus('Story pronto para exportação!');
-                    }}
-                    className="w-full h-11 rounded-xl text-xs font-black bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <Share2 className="h-4 w-4" />
-                    Compartilhar nos Stories
-                  </Button>
+                  <div className="p-3 rounded-xl bg-[#0E0E10] border border-[#27272A] text-center">
+                    <p className="text-[11px] font-mono text-[#A1A1AA]">
+                      Comparativo de evolução desbloqueado com segurança no seu cofre.
+                    </p>
+                  </div>
                 </div>
               ) : (
                 /* ESTADO TRANCADO OU PARCIAL */

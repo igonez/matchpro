@@ -175,19 +175,21 @@ function LoginContent() {
           }
 
           // Criar registro na tabela students
-          await supabase.from('students').insert({
+          const { error: studentError } = await supabase.from('students').insert({
             id: authData.user.id,
             full_name: fullName || 'Aluno ArenaFitPro',
             phone: phone || null,
           });
+          if (studentError) throw studentError;
 
           // Matricular o aluno na turma validada
           const isFree = Number(validatedChallenge.price || 0) === 0;
-          await supabase.from('challenge_participants').upsert({
+          const { error: participantError } = await supabase.from('challenge_participants').upsert({
             challenge_id: validatedChallenge.id,
             student_id: authData.user.id,
             payment_status: isFree ? 'paid' : 'pending',
           });
+          if (participantError) throw participantError;
 
           trackMarketingEvent('CompleteRegistration', {
             content_name: 'Cadastro Aluno',
@@ -453,7 +455,7 @@ function LoginContent() {
                         type="button"
                         onClick={() => handleValidateCode()}
                         disabled={validatingCode || !inviteCode.trim()}
-                        className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
+                        className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none text-white text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
                       >
                         {validatingCode ? (
                           <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -586,7 +588,7 @@ function LoginContent() {
                         <button
                           type="submit"
                           disabled={loading}
-                          className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-bold mt-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
+                          className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none text-white text-xs font-bold mt-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
                         >
                           {loading ? 'Confirmando inscrição...' : 'Entrar na Turma Agora'}
                         </button>
@@ -603,7 +605,7 @@ function LoginContent() {
                     type="button"
                     disabled={loading}
                     onClick={() => handleOAuthSignIn('student')}
-                    className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
+                    className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
                   >
                     <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -653,7 +655,7 @@ function LoginContent() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-bold mt-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
+                      className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none text-white text-xs font-bold mt-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
                     >
                       {loading ? 'Acessando...' : 'Acessar Meu App'}
                     </button>
@@ -673,7 +675,7 @@ function LoginContent() {
                 type="button"
                 disabled={loading}
                 onClick={() => handleOAuthSignIn('professional')}
-                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/40 hover:bg-[#18181B]/80 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-[#FAFAFA] shadow-sm group cursor-pointer"
               >
                 <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -772,7 +774,7 @@ function LoginContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-bold mt-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
+                  className="w-full h-11 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none text-white text-xs font-bold mt-2 shadow-[0_0_20px_rgba(52,120,246,0.35)] transition-all cursor-pointer"
                 >
                   {loading
                     ? 'Processando...'

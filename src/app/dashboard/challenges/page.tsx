@@ -471,8 +471,10 @@ export default function ChallengesManagementPage() {
 
       {/* 4. Lista dos Desafios */}
       {loading ? (
-        <div className="py-20 text-center font-mono text-[#A1A1AA] text-sm">
-          Carregando turmas e métricas em tempo real...
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-52 rounded-3xl border border-[#27272A] bg-[#0E0E10]" />
+          ))}
         </div>
       ) : filteredChallenges.length === 0 ? (
         <div className="mono-glass-card p-10 sm:p-14 rounded-3xl text-center border-dashed border-[#27272A] bg-[#0E0E10] relative z-10 space-y-4">

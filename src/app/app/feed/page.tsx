@@ -83,6 +83,7 @@ export default function StudentSocialFeedPage() {
   const [currentChallengeId, setCurrentChallengeId] = useState<string | null>(null);
   const [challengeTitle, setChallengeTitle] = useState<string>('Turma');
   const [loading, setLoading] = useState(true);
+  const [feedError, setFeedError] = useState<string | null>(null);
 
   // Efeito Delícia de Reação Rápida / Double Tap
   const [burstReaction, setBurstReaction] = useState<{ postId: string; emoji: string } | null>(null);
@@ -202,13 +203,16 @@ export default function StudentSocialFeedPage() {
         query = query.eq('challenge_id', challengeId);
       }
 
-      const { data: submissionsData } = await query
+      const { data: submissionsData, error: feedQueryError } = await query
         .order('submitted_at', { ascending: false })
         .limit(50);
 
+      if (feedQueryError) throw feedQueryError;
+      setFeedError(null);
       setPosts(submissionsData || []);
     } catch (err) {
       console.error('Erro ao carregar feed social:', err);
+      setFeedError('Não foi possível carregar o feed da turma.');
     } finally {
       setLoading(false);
     }
@@ -672,9 +676,33 @@ export default function StudentSocialFeedPage() {
       {activeTab === 'feed' && (
         <>
           {loading ? (
-            <div className="py-16 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs relative z-10">
-              <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
-              Carregando publicações...
+            <div className="space-y-4 max-w-xl mx-auto w-full relative z-10 animate-pulse">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="rounded-3xl border border-[#27272A] bg-[#0E0E10] p-4 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-full bg-[#18181B]" />
+                    <div className="space-y-1.5 flex-1">
+                      <div className="h-3.5 w-32 bg-[#18181B] rounded" />
+                      <div className="h-2.5 w-20 bg-[#18181B] rounded" />
+                    </div>
+                  </div>
+                  <div className="h-56 w-full rounded-2xl bg-[#18181B]" />
+                </div>
+              ))}
+            </div>
+          ) : feedError ? (
+            <div className="bg-[#0E0E10] rounded-3xl border border-[#27272A] p-8 text-center space-y-3 relative z-10">
+              <p className="text-xs text-[#A1A1AA]">{feedError}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoading(true);
+                  fetchFeed();
+                }}
+                className="min-h-[40px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors cursor-pointer"
+              >
+                Tentar Novamente
+              </button>
             </div>
           ) : posts.length === 0 ? (
             <div className="bg-[#0E0E10] rounded-3xl border border-[#27272A] p-10 text-center text-xs text-[#A1A1AA] relative z-10">

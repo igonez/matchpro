@@ -466,16 +466,21 @@ export default function FinanceDashboardPage() {
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3">
-              R$ {availableBalance.toFixed(2)}
-            </div>
+            {loading ? (
+              <div className="h-9 w-36 bg-[#18181B] animate-pulse rounded-xl mb-3" />
+            ) : (
+              <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3">
+                R$ {availableBalance.toFixed(2)}
+              </div>
+            )}
             <div className="flex items-center justify-between pt-2 border-t border-[#27272A]">
               <span className="text-[11px] text-[#A1A1AA] font-mono">Pix Imediato (D+0)</span>
               <Button 
                 data-tour="finance-withdraw-btn"
                 size="sm" 
+                disabled={loading}
                 onClick={() => setWithdrawModalOpen(true)}
-                className="h-8 text-xs bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold px-3.5 rounded-xl shadow-md"
+                className="h-8 text-xs bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 text-white font-bold px-3.5 rounded-xl shadow-md"
               >
                 Sacar Pix
               </Button>
@@ -490,9 +495,13 @@ export default function FinanceDashboardPage() {
                 <TrendingUp className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
-              R$ {totalNet.toFixed(2)}
-            </div>
+            {loading ? (
+              <div className="h-9 w-36 bg-[#18181B] animate-pulse rounded-xl mb-3" />
+            ) : (
+              <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
+                R$ {totalNet.toFixed(2)}
+              </div>
+            )}
             <div className="text-[11px] text-[#A1A1AA] font-mono pt-2 border-t border-[#27272A]">
               Livre de taxas (Já no seu bolso)
             </div>
@@ -506,9 +515,13 @@ export default function FinanceDashboardPage() {
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
-              R$ {totalGross.toFixed(2)}
-            </div>
+            {loading ? (
+              <div className="h-9 w-36 bg-[#18181B] animate-pulse rounded-xl mb-3" />
+            ) : (
+              <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
+                R$ {totalGross.toFixed(2)}
+              </div>
+            )}
             <div className="text-[11px] text-[#A1A1AA] font-mono pt-2 border-t border-[#27272A]">
               Total vendido em inscrições
             </div>
@@ -522,9 +535,13 @@ export default function FinanceDashboardPage() {
                 <ShieldCheck className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
-              {coachProfile?.platform_fee_percent || planDetails.platformFeePercent}%
-            </div>
+            {loading ? (
+              <div className="h-9 w-24 bg-[#18181B] animate-pulse rounded-xl mb-3" />
+            ) : (
+              <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
+                {coachProfile?.platform_fee_percent || planDetails.platformFeePercent}%
+              </div>
+            )}
             <div className="text-[11px] text-[#A1A1AA] font-mono pt-2 border-t border-[#27272A] flex items-center justify-between">
               <span>Retido pelo ArenaFit</span>
               <span className="text-[#D4D4D8]">R$ {totalFees.toFixed(2)}</span>
@@ -924,7 +941,7 @@ export default function FinanceDashboardPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[640px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-[#27272A] text-[11px] font-mono text-[#A1A1AA] uppercase">
                     <th className="py-3 px-4">Data</th>
@@ -970,7 +987,13 @@ export default function FinanceDashboardPage() {
                           </Badge>
                         ) : (
                           <Badge className="bg-rose-500/10 text-rose-400 border-rose-500/20 text-[10px] font-mono">
-                            {p.status}
+                            {p.status === 'OVERDUE'
+                              ? 'VENCIDO'
+                              : p.status === 'REFUNDED'
+                              ? 'ESTORNADO'
+                              : p.status === 'RECEIVED_IN_CASH'
+                              ? 'PAGO EM DINHEIRO'
+                              : p.status || 'PENDENTE'}
                           </Badge>
                         )}
                       </td>

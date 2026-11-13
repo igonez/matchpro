@@ -5,18 +5,19 @@ import { Award, Lock, CheckCircle2, ChevronRight, X, Sparkles, Trophy } from 'lu
 import { StudentAchievementStatus } from '@/lib/achievements';
 
 interface AchievementsGridProps {
-  achievements: StudentAchievementStatus[];
+  achievements?: StudentAchievementStatus[] | null;
 }
 
-export function AchievementsGrid({ achievements }: AchievementsGridProps) {
+export function AchievementsGrid({ achievements = [] }: AchievementsGridProps) {
+  const safeAchievements = Array.isArray(achievements) ? achievements : [];
   const [selectedAchievement, setSelectedAchievement] = useState<StudentAchievementStatus | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  const unlockedCount = achievements.filter((a) => a.isUnlocked).length;
-  const totalPoints = achievements.filter((a) => a.isUnlocked).reduce((acc, curr) => acc + curr.points_reward, 0);
+  const unlockedCount = safeAchievements.filter((a) => a.isUnlocked).length;
+  const totalPoints = safeAchievements.filter((a) => a.isUnlocked).reduce((acc, curr) => acc + curr.points_reward, 0);
 
   const categories = [
-    { id: 'all', label: `Todas (${achievements.length})` },
+    { id: 'all', label: `Todas (${safeAchievements.length})` },
     { id: 'streak', label: 'Ofensiva' },
     { id: 'workout', label: 'Treino' },
     { id: 'cardio', label: 'Cardio' },
@@ -37,8 +38,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
   };
 
   const filtered = activeCategory === 'all'
-    ? achievements
-    : achievements.filter((a) => a.category === activeCategory);
+    ? safeAchievements
+    : safeAchievements.filter((a) => a.category === activeCategory);
 
   return (
     <div className="space-y-4">
@@ -56,7 +57,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
               </span>
             </h4>
             <p className="text-[11px] text-[#A1A1AA]">
-              {unlockedCount} de {achievements.length} medalhas conquistadas
+              {unlockedCount} de {safeAchievements.length} medalhas conquistadas
             </p>
           </div>
         </div>
@@ -64,7 +65,7 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
         {/* Mini Barra de Progresso Circular ou Pílula */}
         <div className="text-right">
           <span className="text-sm font-black font-mono text-[#FAFAFA]">
-            {Math.round((unlockedCount / (achievements.length || 1)) * 100)}%
+            {Math.round((unlockedCount / (safeAchievements.length || 1)) * 100)}%
           </span>
           <span className="text-[9px] font-mono text-[#A1A1AA] block uppercase tracking-widest">
             Completude
@@ -90,8 +91,16 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
       </div>
 
       {/* Grid de Medalhas */}
-      <div className="grid grid-cols-2 gap-2.5">
-        {filtered.map((ach) => {
+      {filtered.length === 0 ? (
+        <div className="p-6 rounded-2xl border border-dashed border-[#27272A] bg-[#0E0E10] text-center space-y-2">
+          <Trophy className="w-6 h-6 text-[#A1A1AA]/60 mx-auto" />
+          <p className="text-xs text-[#A1A1AA]">
+            Nenhuma medalha nesta categoria ainda. Continue treinando para desbloquear!
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2.5">
+          {filtered.map((ach) => {
           return (
             <div
               key={ach.id}
@@ -157,7 +166,8 @@ export function AchievementsGrid({ achievements }: AchievementsGridProps) {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* Modal de Detalhes da Conquista */}
       {selectedAchievement && (

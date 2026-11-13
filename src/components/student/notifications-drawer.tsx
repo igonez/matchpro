@@ -87,7 +87,11 @@ export function NotificationsDrawer({
     };
   }, [studentId]);
 
+  const [isMarkingAll, setIsMarkingAll] = useState(false);
+
   const handleMarkAllAsRead = async () => {
+    if (isMarkingAll) return;
+    setIsMarkingAll(true);
     try {
       await supabase
         .from('student_notifications')
@@ -98,6 +102,8 @@ export function NotificationsDrawer({
       setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
     } catch (e) {
       console.warn('Erro ao marcar notificações como lidas:', e);
+    } finally {
+      setIsMarkingAll(false);
     }
   };
 
@@ -172,12 +178,14 @@ export function NotificationsDrawer({
           <div className="flex items-center gap-1.5">
             {unreadCount > 0 && (
               <button
+                type="button"
+                disabled={isMarkingAll}
                 onClick={handleMarkAllAsRead}
-                className="text-[11px] font-mono text-[#A1A1AA] hover:text-[#FAFAFA] flex items-center gap-1 px-3 py-2 min-h-[44px] rounded-xl hover:bg-[#0E0E10] transition-colors cursor-pointer"
+                className="text-[11px] font-mono text-[#A1A1AA] hover:text-[#FAFAFA] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 px-3 py-2 min-h-[44px] rounded-xl hover:bg-[#0E0E10] transition-colors cursor-pointer"
                 title="Marcar todas como lidas"
               >
                 <CheckCheck className="h-3.5 w-3.5 text-[#3478F6]" />
-                <span>Ler todas</span>
+                <span>{isMarkingAll ? 'Lendo...' : 'Ler todas'}</span>
               </button>
             )}
 

@@ -178,6 +178,23 @@ export default function EditChallengePage({
     );
   }
 
+  if (error && !title) {
+    return (
+      <div className="max-w-md mx-auto py-16 px-4">
+        <div className="p-6 rounded-3xl bg-[#0E0E10] border border-[#27272A] text-center space-y-4">
+          <h2 className="text-lg font-black text-[#FAFAFA]">Desafio não encontrado</h2>
+          <p className="text-xs text-[#A1A1AA]">{error}</p>
+          <Link
+            href="/dashboard/challenges"
+            className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors"
+          >
+            Voltar para Meus Desafios
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto space-y-6 relative">
       {/* Toast Notificação */}
@@ -393,9 +410,17 @@ export default function EditChallengePage({
                     </div>
 
                     {weekMissions.length === 0 ? (
-                      <p className="text-[11px] text-[#A1A1AA] italic py-1">
-                        Nenhuma missão cadastrada para esta semana.
-                      </p>
+                      <div className="flex flex-wrap items-center justify-between gap-2 py-1">
+                        <p className="text-[11px] text-[#A1A1AA] italic">
+                          Nenhuma missão cadastrada para esta semana.
+                        </p>
+                        <Link
+                          href={`/dashboard/missions?challenge=${challengeId}`}
+                          className="text-[11px] font-mono font-bold text-[#3478F6] hover:text-[#75A7FF] transition-colors"
+                        >
+                          + Adicionar Missão nesta Semana
+                        </Link>
+                      </div>
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {weekMissions.map((m) => (

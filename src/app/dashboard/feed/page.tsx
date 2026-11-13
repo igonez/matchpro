@@ -229,6 +229,8 @@ export default function DashboardFeedPage() {
     const existing = currentLikes.find((l: any) => l.student_id === currentUser.id);
     const isSameType = existing && (existing.reaction_type || 'fire') === reactionType;
 
+    const previousPosts = posts;
+
     // Otimista
     setPosts((prev) =>
       prev.map((p) => {
@@ -255,29 +257,35 @@ export default function DashboardFeedPage() {
     );
 
     try {
+      let reactionError: any = null;
       if (isSameType) {
-        await supabase
+        const { error } = await supabase
           .from('submission_likes')
           .delete()
           .eq('submission_id', postId)
           .eq('student_id', currentUser.id);
+        reactionError = error;
       } else if (existing) {
-        await supabase
+        const { error } = await supabase
           .from('submission_likes')
           .update({ reaction_type: reactionType })
           .eq('submission_id', postId)
           .eq('student_id', currentUser.id);
+        reactionError = error;
       } else {
-        await supabase
+        const { error } = await supabase
           .from('submission_likes')
           .insert({
             submission_id: postId,
             student_id: currentUser.id,
             reaction_type: reactionType,
           });
+        reactionError = error;
       }
+      if (reactionError) throw reactionError;
     } catch (e) {
-      console.warn('Erro ao atualizar reação:', e);
+      console.warn('Erro ao atualizar reação, revertendo:', e);
+      setPosts(previousPosts);
     }
   };
 

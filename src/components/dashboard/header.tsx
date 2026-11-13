@@ -87,9 +87,17 @@ export function DashboardHeader() {
     loadCoach();
   }, [supabase]);
 
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      router.push('/login');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   interface NavItem {
@@ -375,11 +383,13 @@ export function DashboardHeader() {
                 <ExternalLink className="h-3.5 w-3.5 text-[#A1A1AA]" />
               </Link>
               <button
+                type="button"
+                disabled={isLoggingOut}
                 onClick={handleSignOut}
-                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A1A1AA] hover:text-white hover:bg-[#0E0E10] rounded-xl transition-colors cursor-pointer"
+                className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-[#A1A1AA] hover:text-white hover:bg-[#0E0E10] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
-                <span>Sair da Conta</span>
+                <span>{isLoggingOut ? 'Saindo...' : 'Sair da Conta'}</span>
               </button>
             </div>
           </div>

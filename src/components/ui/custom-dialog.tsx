@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 
 interface CustomDialogProps {
@@ -36,14 +36,35 @@ export function CustomDialog({
   hideFooter = false,
   tag = 'SISTEMA_DIALOG',
 }: CustomDialogProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isLoading) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isLoading, onClose]);
+
   if (!isOpen) return null;
 
   const resolvedConfirmLabel = confirmText || confirmLabel || 'Confirmar';
   const resolvedCancelLabel = cancelText || cancelLabel || (onConfirm ? 'Cancelar' : 'Fechar');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#000000]/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="mono-glass-card max-w-md w-full p-6 sm:p-7 rounded-3xl border border-[#27272A] bg-[#0E0E10] shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative space-y-5 animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isLoading) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#000000]/85 backdrop-blur-md animate-in fade-in duration-200"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="custom-dialog-title"
+        className="mono-glass-card max-w-md w-full p-6 sm:p-7 rounded-3xl border border-[#27272A] bg-[#0E0E10] shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative space-y-5 animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto"
+      >
         
         {/* Cabeçalho */}
         <div className="flex items-start justify-between pb-3 border-b border-[#27272A]">
@@ -51,7 +72,7 @@ export function CustomDialog({
             <span className="text-[9px] font-mono uppercase tracking-widest text-[#A1A1AA] block mb-0.5">
               {tag}
             </span>
-            <h3 className="text-base sm:text-lg font-black text-[#FAFAFA] font-mono tracking-tight">
+            <h3 id="custom-dialog-title" className="text-base sm:text-lg font-black text-[#FAFAFA] font-mono tracking-tight">
               {title}
             </h3>
             {description && (

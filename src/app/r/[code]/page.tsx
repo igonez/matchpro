@@ -12,11 +12,17 @@ interface SharePageProps {
 
 export async function generateMetadata({ params }: SharePageProps): Promise<Metadata> {
   const { code } = await params;
-  const result = await getPublicShareByCode(code);
   const origin = getPublicAppOrigin();
   const pageUrl = `${origin}/r/${code}`;
 
-  if (result.status !== 'ok' || !result.record) {
+  let result: Awaited<ReturnType<typeof getPublicShareByCode>> | null = null;
+  try {
+    result = await getPublicShareByCode(code);
+  } catch (err) {
+    console.error('[PublicRankingSharePage] Erro ao gerar metadata:', err);
+  }
+
+  if (!result || result.status !== 'ok' || !result.record) {
     return {
       title: 'Link de Ranking Expirado • ArenaFitPro',
       description: 'Este link compartilhado expirou ou foi desativado pelo atleta. Acesse o ArenaFitPro para acompanhar os desafios ao vivo.',
@@ -72,7 +78,13 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
 
 export default async function PublicRankingSharePage({ params }: SharePageProps) {
   const { code } = await params;
-  const result = await getPublicShareByCode(code);
+  let result: Awaited<ReturnType<typeof getPublicShareByCode>>;
+  try {
+    result = await getPublicShareByCode(code);
+  } catch (err) {
+    console.error('[PublicRankingSharePage] Erro ao carregar ranking público:', err);
+    notFound();
+  }
 
   if (result.status === 'not_found') {
     notFound();

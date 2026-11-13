@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -19,7 +20,8 @@ export interface LeadPayload {
   status?: string;
 }
 
-const BACKUP_DIR = path.join(process.cwd(), 'data');
+const BACKUP_DIR =
+  process.env.NODE_ENV === 'production' ? os.tmpdir() : path.join(process.cwd(), 'data');
 const BACKUP_FILE = path.join(BACKUP_DIR, 'leads_backup.json');
 
 async function ensureDirectory(): Promise<void> {

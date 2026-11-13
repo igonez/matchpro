@@ -262,7 +262,7 @@ export default function SquadsManagerPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className={`grid grid-cols-1 lg:grid-cols-3 gap-8 ${challenges.length === 0 && !loading ? 'opacity-50 pointer-events-none select-none' : ''}`}>
         {/* Formulário de Criação e Alocação */}
         <div className="lg:col-span-1 space-y-6">
           {/* Card 1: Criar Squad */}

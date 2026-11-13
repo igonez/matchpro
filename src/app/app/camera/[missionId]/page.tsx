@@ -68,28 +68,32 @@ function CameraCaptureContent() {
   useEffect(() => {
     async function getMission() {
       if (!missionId) return;
-      const { data } = await supabase
+      const { data, error: missionError } = await supabase
         .from('missions')
         .select('*')
         .eq('id', missionId)
         .single();
       
-      if (data) {
-        if (!data.challenge_id && data.week_id) {
-          const { data: weekData } = await supabase
-            .from('challenge_weeks')
-            .select('challenge_id')
-            .eq('id', data.week_id)
-            .maybeSingle();
-          if (weekData?.challenge_id) {
-            data.challenge_id = weekData.challenge_id;
-          }
-        }
-        setMission(data);
+      if (missionError || !data) {
+        setError('Missão não encontrada ou indisponível.');
+        router.replace('/app');
+        return;
       }
+
+      if (!data.challenge_id && data.week_id) {
+        const { data: weekData } = await supabase
+          .from('challenge_weeks')
+          .select('challenge_id')
+          .eq('id', data.week_id)
+          .maybeSingle();
+        if (weekData?.challenge_id) {
+          data.challenge_id = weekData.challenge_id;
+        }
+      }
+      setMission(data);
     }
     getMission();
-  }, [missionId, supabase]);
+  }, [missionId, supabase, router]);
 
   const captureGeolocation = () => {
     if (!navigator.geolocation) {
@@ -173,12 +177,18 @@ function CameraCaptureContent() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (file) {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       setCaptureTime(new Date());
       captureGeolocation();
       setError(null);
+      setAiMacros(null);
+      setAiAnalysisResult(null);
 
       // Se a missão for de refeição ou hábitos nutricionais, analisar calorias
       const isMeal = mission?.category === 'refeicao' || 
@@ -351,7 +361,7 @@ function CameraCaptureContent() {
         const fallbackPayload = {
           mission_id: missionId,
           student_id: user.id,
-          challenge_id: mission?.challenge_id || null,
+          challenge_id: resolvedChallengeId,
           photo_url: publicUrl,
           caption: finalCaption || null,
           status: calculatedStatus,
@@ -400,7 +410,7 @@ function CameraCaptureContent() {
         </Link>
         <div className="text-center">
           <span className="text-[9px] font-mono uppercase tracking-widest text-[#3478F6] block font-bold">
-            OPTICAL_SENSOR_HUD
+            CÂMERA DE VALIDAÇÃO
           </span>
           <p className="text-xs font-black text-[#FAFAFA] line-clamp-1">{mission?.title || 'Check-in de Missão'}</p>
         </div>
@@ -533,18 +543,9 @@ function CameraCaptureContent() {
             <h3 className="font-bold text-sm text-[#FAFAFA] font-mono uppercase tracking-wider">
               REGISTRO DE CHECK-IN AO VIVO
             </h3>
-            <p className="text-xs text-[#A1A1AA] max-w-xs mt-1 mb-5">
+            <p className="text-xs text-[#A1A1AA] max-w-xs mt-1">
               Tire a foto em tempo real com sensor óptico antifraude e carimbo de horário automático. O envio via galeria foi desabilitado para garantir a integridade dos pontos.
             </p>
-            <div className="flex flex-col gap-2.5 w-full max-w-xs">
-              <button
-                type="button"
-                onClick={() => cameraInputRef.current?.click()}
-                className="w-full py-3.5 text-xs font-mono font-bold rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white transition-all shadow-lg shadow-[#3478F6]/20 active:scale-95"
-              >
-                Tirar Foto Agora (Câmera)
-              </button>
-            </div>
           </div>
         )}
 
@@ -578,33 +579,43 @@ function CameraCaptureContent() {
 
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={() => {
+                  if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                  }
                   setSelectedFile(null);
                   setPreviewUrl(null);
                   setCaptureTime(null);
                   setLocation(null);
+                  setAiMacros(null);
+                  setAiAnalysisResult(null);
+                  setAnalyzingAi(false);
+                  setError(null);
                 }}
                 disabled={uploading}
-                className="flex-1 h-11 text-xs font-mono font-bold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] transition-colors"
+                className="flex-1 h-11 text-xs font-mono font-bold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] transition-colors cursor-pointer"
               >
                 RECAPTURAR
               </button>
 
               <button
+                type="button"
                 onClick={handleUploadSubmission}
-                disabled={uploading}
-                className="flex-1 h-11 text-xs font-mono font-bold rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-[#3478F6]/20"
+                disabled={uploading || analyzingAi}
+                className="flex-1 h-11 text-xs font-mono font-bold rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-60 text-white flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-[#3478F6]/20 cursor-pointer"
               >
-                <span>{uploading ? 'ENVIANDO...' : 'CONFIRMAR CHECK-IN'}</span>
-                {!uploading && <ArrowRight className="w-3.5 h-3.5 shrink-0" />}
+                <span>{uploading ? 'ENVIANDO...' : analyzingAi ? 'ANALISANDO...' : 'CONFIRMAR CHECK-IN'}</span>
+                {!uploading && !analyzingAi && <ArrowRight className="w-3.5 h-3.5 shrink-0" />}
               </button>
             </div>
           </div>
         ) : (
           <div className="w-full">
             <button
+              type="button"
               onClick={() => cameraInputRef.current?.click()}
-              className="w-full h-12 text-xs font-mono font-bold rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#3478F6]/20 active:scale-95"
+              className="w-full h-12 text-xs font-mono font-bold rounded-2xl bg-[#3478F6] hover:bg-[#75A7FF] text-white flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#3478F6]/20 active:scale-95 cursor-pointer"
             >
               <span>ABRIR CÂMERA AO VIVO (ANTIFRAUDE)</span>
               <ArrowRight className="w-4 h-4 shrink-0" />

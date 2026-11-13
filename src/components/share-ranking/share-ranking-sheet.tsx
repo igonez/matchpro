@@ -68,6 +68,7 @@ export function ShareRankingSheet({
     camera: null,
   });
   const [photoVersion, setPhotoVersion] = useState(0);
+  const [isReactivating, setIsReactivating] = useState(false);
 
   // Estado do Logo do Personal + Nome de escolha (topo do card)
   const [customBrandName, setCustomBrandName] = useState<string>(coachBrandName || '');
@@ -177,9 +178,13 @@ export function ShareRankingSheet({
             window.localStorage.setItem(`${storageKeyPrefix}_logo`, data.publicUrl);
             window.localStorage.setItem('arena_coach_logo_url', data.publicUrl);
           }
+          showToast('Foto e logo do treinador sincronizadas!', 'success');
+        } else {
+          showToast(data?.error || 'Erro ao sincronizar logo do treinador.', 'error');
         }
+      } else {
+        showToast('Logo atualizada localmente!', 'success');
       }
-      showToast('Foto e logo do treinador sincronizadas!', 'success');
     } catch (err: any) {
       showToast(err?.message || 'Não foi possível carregar o logo.', 'error');
     }
@@ -1179,10 +1184,18 @@ export function ShareRankingSheet({
               ) : linkRevoked ? (
                 <button
                   type="button"
-                  onClick={() => createOrRefreshShareLink(true)}
-                  className="text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
+                  disabled={isReactivating}
+                  onClick={async () => {
+                    setIsReactivating(true);
+                    try {
+                      await createOrRefreshShareLink(true);
+                    } finally {
+                      setIsReactivating(false);
+                    }
+                  }}
+                  className="text-[11px] text-[#A1A1AA] hover:text-[#FAFAFA] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
-                  Reativar link público
+                  {isReactivating ? 'Reativando link…' : 'Reativar link público'}
                 </button>
               ) : null}
             </div>

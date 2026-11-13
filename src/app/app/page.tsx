@@ -40,48 +40,16 @@ export default function StudentHomePage() {
   const supabase = createClient();
   const { activeSession, startSession } = useWorkoutSession();
 
-  const [student, setStudent] = useState<any>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const c = sessionStorage.getItem('arena_student_profile');
-        if (c) return JSON.parse(c);
-      } catch (_) {}
-    }
-    return null;
-  });
-  const [challenge, setChallenge] = useState<any>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const c = sessionStorage.getItem('arena_student_challenge');
-        if (c) return JSON.parse(c);
-      } catch (_) {}
-    }
-    return null;
-  });
+  const [student, setStudent] = useState<any>(null);
+  const [challenge, setChallenge] = useState<any>(null);
   const [pendingChallenge, setPendingChallenge] = useState<any>(null);
-  const [standing, setStanding] = useState<any>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const c = sessionStorage.getItem('arena_student_standing');
-        if (c) return JSON.parse(c);
-      } catch (_) {}
-    }
-    return null;
-  });
+  const [standing, setStanding] = useState<any>(null);
   const [rank, setRank] = useState('1º');
   const [totalAthletes, setTotalAthletes] = useState<number>(1);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [inviteCodeInput, setInviteCodeInput] = useState('');
   const [currentStreak, setCurrentStreak] = useState<number>(1);
-  const [todayTasks, setTodayTasks] = useState<any[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const c = sessionStorage.getItem('arena_student_today_tasks');
-        if (c) return JSON.parse(c);
-      } catch (_) {}
-    }
-    return [];
-  });
+  const [todayTasks, setTodayTasks] = useState<any[]>([]);
   const [missionLists, setMissionLists] = useState<any[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -95,19 +63,11 @@ export default function StudentHomePage() {
     cardio: false,
   });
 
-  const [categoryCounts, setCategoryCounts] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const c = sessionStorage.getItem('arena_student_counts');
-        if (c) return JSON.parse(c);
-      } catch (_) {}
-    }
-    return {
-      treinos: { done: 0, total: 0 },
-      cardios: { done: 0, total: 0 },
-      refeicoes: { done: 0, total: 0 },
-      habitos: { done: 0, total: 0 },
-    };
+  const [categoryCounts, setCategoryCounts] = useState({
+    treinos: { done: 0, total: 0 },
+    cardios: { done: 0, total: 0 },
+    refeicoes: { done: 0, total: 0 },
+    habitos: { done: 0, total: 0 },
   });
   const [listCounts, setListCounts] = useState<Record<string, { done: number; total: number }>>({});
   const [totalWeekMissionsCount, setTotalWeekMissionsCount] = useState(0);
@@ -117,23 +77,36 @@ export default function StudentHomePage() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [unreadNotifsCount, setUnreadNotifsCount] = useState(0);
 
-  const [isInitialBoot, setIsInitialBoot] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return !sessionStorage.getItem('arena_booted');
-  });
-
-  // Se já temos cache ou o app já deu boot uma vez, não bloqueia a interface
-  const [loading, setLoading] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    const hasBooted = sessionStorage.getItem('arena_booted');
-    const hasCachedProfile = sessionStorage.getItem('arena_student_profile');
-    return !hasBooted && !hasCachedProfile;
-  });
+  const [isInitialBoot, setIsInitialBoot] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
-      sessionStorage.setItem('arena_booted', 'true');
-    }
+    try {
+      const hasBooted = sessionStorage.getItem('arena_booted');
+      if (!hasBooted) {
+        setIsInitialBoot(true);
+        sessionStorage.setItem('arena_booted', 'true');
+      }
+
+      const cachedProfile = sessionStorage.getItem('arena_student_profile');
+      if (cachedProfile) setStudent(JSON.parse(cachedProfile));
+
+      const cachedChallenge = sessionStorage.getItem('arena_student_challenge');
+      if (cachedChallenge) setChallenge(JSON.parse(cachedChallenge));
+
+      const cachedStanding = sessionStorage.getItem('arena_student_standing');
+      if (cachedStanding) setStanding(JSON.parse(cachedStanding));
+
+      const cachedTasks = sessionStorage.getItem('arena_student_today_tasks');
+      if (cachedTasks) setTodayTasks(JSON.parse(cachedTasks));
+
+      const cachedCounts = sessionStorage.getItem('arena_student_counts');
+      if (cachedCounts) setCategoryCounts(JSON.parse(cachedCounts));
+
+      if (hasBooted || cachedProfile) {
+        setLoading(false);
+      }
+    } catch (_) {}
   }, []);
 
   // Carregar contagem de notificações não lidas em tempo real
@@ -836,8 +809,9 @@ export default function StudentHomePage() {
               />
               <button
                 type="button"
+                disabled={!inviteCodeInput.trim()}
                 onClick={handleEnterChallengeByCode}
-                className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.2)] cursor-pointer"
+                className="mono-button-primary w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.2)] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
               >
                 <span>Validar e Entrar na Turma</span>
                 <ArrowRight className="h-4 w-4 text-white" />
@@ -865,10 +839,11 @@ export default function StudentHomePage() {
                   Faltam {streakRisk.hoursLeft}h para a meia-noite. Registre seu check-in de hoje.
                 </p>
               </div>
-              <Link href="/app/missions">
-                <button className="min-h-[40px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer">
-                  SALVAR
-                </button>
+              <Link
+                href="/app/missions"
+                className="min-h-[40px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer inline-flex items-center justify-center"
+              >
+                SALVAR
               </Link>
             </div>
           )}
@@ -1097,11 +1072,12 @@ export default function StudentHomePage() {
                       </button>
                     )
                   ) : (
-                    <Link href={`/app/camera/${focalTask.id}`} className="block w-full">
-                      <button className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-[#3478F6] text-white hover:bg-[#75A7FF] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.35)]">
-                        <span>REGISTRAR FOTO AO VIVO</span>
-                        <ArrowRight className="w-4 h-4 shrink-0" />
-                      </button>
+                    <Link
+                      href={`/app/camera/${focalTask.id}`}
+                      className="w-full min-h-[48px] py-3.5 text-xs sm:text-sm font-mono font-black tracking-wider rounded-xl bg-[#3478F6] text-white hover:bg-[#75A7FF] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,120,246,0.35)]"
+                    >
+                      <span>REGISTRAR FOTO AO VIVO</span>
+                      <ArrowRight className="w-4 h-4 shrink-0" />
                     </Link>
                   )}
                 </div>
@@ -1399,7 +1375,7 @@ export default function StudentHomePage() {
 
       {/* Floating Instant Toast */}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#0E0E10] border border-white/10 text-[#FAFAFA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[70] bg-[#0E0E10] border border-white/10 text-[#FAFAFA] px-4 py-2.5 rounded-full font-mono font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span>
           <span>{toastMessage}</span>
         </div>

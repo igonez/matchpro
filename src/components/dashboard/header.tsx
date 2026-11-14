@@ -407,7 +407,7 @@ export function DashboardHeader() {
               : 'scale-100 translate-y-0 opacity-100 pointer-events-auto'
           }`}
         >
-        <div className="relative bg-[#0E0E10]/70 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_16px_36px_rgba(0,0,0,0.7),inset_0_1px_1.5px_rgba(255,255,255,0.14),inset_0_-1px_1px_rgba(0,0,0,0.45)] border border-white/[0.12]">
+        <div className="relative bg-[#0E0E10]/50 backdrop-blur-xl backdrop-saturate-[160%] rounded-full px-2 py-1.5 flex items-center justify-around shadow-[0_16px_36px_rgba(0,0,0,0.65),inset_0_1px_1.5px_rgba(255,255,255,0.14),inset_0_-1px_1px_rgba(0,0,0,0.4)] border border-white/[0.12]">
           <Link
             href="/dashboard"
             className={`flex flex-col items-center justify-center min-h-[44px] py-1.5 px-3 rounded-full text-xs font-mono tracking-wider transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${

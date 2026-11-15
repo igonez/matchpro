@@ -273,7 +273,7 @@ function StudentMaterialsContent() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-mono relative z-10">
             <button
               onClick={() => setFilter('all')}
-              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center ${
                 filter === 'all'
                   ? 'bg-[#3478F6] text-white shadow-md'
                   : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
@@ -283,7 +283,7 @@ function StudentMaterialsContent() {
             </button>
             <button
               onClick={() => setFilter('pdf')}
-              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center ${
                 filter === 'pdf'
                   ? 'bg-[#3478F6] text-white shadow-md'
                   : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
@@ -293,7 +293,7 @@ function StudentMaterialsContent() {
             </button>
             <button
               onClick={() => setFilter('video')}
-              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center ${
                 filter === 'video'
                   ? 'bg-[#3478F6] text-white shadow-md'
                   : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
@@ -303,7 +303,7 @@ function StudentMaterialsContent() {
             </button>
             <button
               onClick={() => setFilter('cardapio')}
-              className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center ${
                 filter === 'cardapio'
                   ? 'bg-[#3478F6] text-white shadow-md'
                   : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'

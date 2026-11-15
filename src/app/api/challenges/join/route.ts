@@ -61,8 +61,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const isCoachOwner = challenge.professional_id === user.id;
     const price = Number(challenge.price || 0);
-    if (price > 0) {
+    if (price > 0 && !isCoachOwner) {
       return NextResponse.json({
         error: 'Este desafio é pago e requer liquidação via Pix.',
         requiresPayment: true,
@@ -129,8 +130,8 @@ export async function POST(req: NextRequest) {
       .upsert({
         challenge_id: challengeId,
         student_id: user.id,
-        payment_status: 'paid',
-        payment_method: 'free',
+        payment_status: isCoachOwner ? 'complimentary' : 'paid',
+        payment_method: isCoachOwner ? 'complimentary' : 'free',
         joined_at: new Date().toISOString(),
       });
 

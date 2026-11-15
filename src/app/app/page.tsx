@@ -841,7 +841,7 @@ export default function StudentHomePage() {
               </div>
               <Link
                 href="/app/missions"
-                className="min-h-[40px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer inline-flex items-center justify-center"
+                className="min-h-[44px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold shrink-0 transition-colors cursor-pointer inline-flex items-center justify-center"
               >
                 SALVAR
               </Link>
@@ -864,7 +864,7 @@ export default function StudentHomePage() {
                   </div>
                   <Link
                     href="/app/materials?tab=avisos"
-                    className="inline-flex items-center gap-1 text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA]"
+                    className="min-h-[44px] px-2 inline-flex items-center gap-1 text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA]"
                   >
                     <span>VER TODOS ({activeAnnouncements.length})</span>
                     <ArrowRight className="w-3 h-3 shrink-0" />
@@ -1106,7 +1106,7 @@ export default function StudentHomePage() {
                 <div className="pt-1">
                   <Link
                     href="/app/missions"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors"
+                    className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors"
                   >
                     <span>Ver Cronograma de Missões</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -1122,7 +1122,7 @@ export default function StudentHomePage() {
               <span className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA] font-mono">
                 BLOCOS DE EXECUÇÃO DE HOJE
               </span>
-              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#D4D4D8] hover:text-white transition-colors font-mono font-bold tracking-wider">
+              <Link href="/app/missions" className="min-h-[44px] px-2 inline-flex items-center gap-1 text-xs text-[#D4D4D8] hover:text-white transition-colors font-mono font-bold tracking-wider">
                 <span>VER SEMANAS 1 A 4</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
@@ -1303,7 +1303,7 @@ export default function StudentHomePage() {
               <span className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA] font-mono">
                 {missionLists.length > 0 ? 'PROGRESSO POR LISTA' : 'PROGRESSO POR PILAR'}
               </span>
-              <Link href="/app/missions" className="inline-flex items-center gap-1 text-xs text-[#A1A1AA] hover:text-white transition-colors font-mono tracking-wider">
+              <Link href="/app/missions" className="min-h-[44px] px-2 inline-flex items-center gap-1 text-xs text-[#A1A1AA] hover:text-white transition-colors font-mono tracking-wider">
                 <span>VER TODOS</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>

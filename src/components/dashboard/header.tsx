@@ -175,7 +175,7 @@ export function DashboardHeader() {
       <header className="min-h-[5rem] h-auto border-b border-[#27272A] px-4 sm:px-6 md:px-8 flex items-center justify-between bg-[#000000]/90 backdrop-blur-2xl sticky top-0 z-40 safe-top-header pb-3.5">
         <div className="flex items-center gap-3.5">
           {/* Logo do App + Brand ArenaFitPro (sem botão hambúrguer) */}
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group min-h-[44px]">
             <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-[#27272A] shadow-[0_0_15px_rgba(52,120,246,0.15)] group-hover:scale-105 transition-transform shrink-0 bg-[#0E0E10]">
               <img
                 src="/app-logo.png"
@@ -202,7 +202,7 @@ export function DashboardHeader() {
           {coachProfile && (
             <Link
               href="/dashboard/profile"
-              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[42px] rounded-full bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors"
+              className="flex items-center gap-2.5 px-3 py-1.5 min-h-[44px] min-w-[44px] justify-center rounded-full bg-[#0E0E10] border border-[#27272A] hover:border-[#3478F6]/40 transition-colors"
               title="Meu Perfil & Identidade"
             >
               <div className="h-7 w-7 rounded-full bg-[#18181B] border border-[#27272A] overflow-hidden flex items-center justify-center shrink-0">

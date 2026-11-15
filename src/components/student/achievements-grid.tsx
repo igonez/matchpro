@@ -79,7 +79,7 @@ export function AchievementsGrid({ achievements = [] }: AchievementsGridProps) {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all uppercase tracking-wider cursor-pointer ${
+            className={`min-h-[44px] px-3.5 py-2 flex items-center rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all uppercase tracking-wider cursor-pointer ${
               activeCategory === cat.id
                 ? 'bg-[#3478F6] text-white shadow-sm'
                 : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-white'

@@ -287,7 +287,8 @@ function CoachLeaderboardContent() {
           <div className="flex items-center gap-2 mb-1.5">
             <Link
               href="/dashboard"
-              className="h-7 w-7 rounded-lg bg-[#0E0E10] border border-[#27272A] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-[#0E0E10] border border-[#27272A] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors shrink-0"
+              aria-label="Voltar ao Painel"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
@@ -327,7 +328,7 @@ function CoachLeaderboardContent() {
             <button
               type="button"
               onClick={() => setShowStoryShare(true)}
-              className="h-10 px-4 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-[#FAFAFA] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+              className="h-11 min-h-[44px] px-4 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-[#FAFAFA] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-[#D4D4D8] shrink-0" />
               <span>Compartilhar Ranking (Stories / WhatsApp)</span>
@@ -339,7 +340,7 @@ function CoachLeaderboardContent() {
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-xl h-10 px-3.5 text-xs border-[#27272A] bg-[#0E0E10] text-[#A1A1AA] hover:text-[#FAFAFA]"
+                className="rounded-xl h-11 min-h-[44px] px-3.5 text-xs border-[#27272A] bg-[#0E0E10] text-[#A1A1AA] hover:text-[#FAFAFA]"
               >
                 Configurar Desafio
               </Button>
@@ -576,7 +577,7 @@ function CoachLeaderboardContent() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('individual')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'individual'
                 ? 'bg-[#3478F6] text-white shadow-[0_8px_20px_rgba(52,120,246,0.28)]'
                 : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40'
@@ -587,7 +588,7 @@ function CoachLeaderboardContent() {
           </button>
           <button
             onClick={() => setActiveTab('squads')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'squads'
                 ? 'bg-[#3478F6] text-white shadow-[0_8px_20px_rgba(52,120,246,0.28)]'
                 : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40'
@@ -606,7 +607,7 @@ function CoachLeaderboardContent() {
               placeholder="Filtrar aluno por nome..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 bg-[#18181B] border border-[#27272A] rounded-xl pl-9 pr-3 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6] font-mono"
+              className="w-full h-11 min-h-[44px] bg-[#18181B] border border-[#27272A] rounded-xl pl-9 pr-3 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6] font-mono"
             />
           </div>
         )}
@@ -738,10 +739,10 @@ function CoachLeaderboardContent() {
                             href={waLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="h-9 px-3 rounded-xl bg-white/[0.06] border border-white/10 text-[#D4D4D8] hover:bg-[#3478F6]/25 flex items-center gap-1.5 text-xs font-mono font-bold transition-colors"
+                            className="h-11 min-h-[44px] min-w-[44px] px-3 rounded-xl bg-white/[0.06] border border-white/10 text-[#D4D4D8] hover:bg-[#3478F6]/25 flex items-center justify-center gap-1.5 text-xs font-mono font-bold transition-colors"
                             title="Parabenizar via WhatsApp"
                           >
-                            <MessageCircle className="h-3.5 w-3.5" />
+                            <MessageCircle className="h-4 w-4" />
                             <span className="hidden sm:inline">Incentivar</span>
                           </a>
                         )}

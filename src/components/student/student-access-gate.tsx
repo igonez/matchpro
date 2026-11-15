@@ -90,6 +90,30 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
           return;
         }
 
+        // Se for o próprio treinador (dono de um desafio ativo) visualizando como aluno, vincula gratuitamente e libera o acesso
+        const { data: ownedChallenge } = await supabase
+          .from('challenges')
+          .select('id, title')
+          .eq('professional_id', user.id)
+          .eq('is_active', true)
+          .order('start_date', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (ownedChallenge?.id) {
+          await fetch('/api/challenges/join', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ challengeId: ownedChallenge.id }),
+          }).catch(() => null);
+
+          if (isMounted) {
+            setHasAccess(true);
+            setLoading(false);
+          }
+          return;
+        }
+
         // Verificar se existe inscrição pendente de pagamento
         const { data: pendingParticipation } = await supabase
           .from('challenge_participants')
@@ -310,7 +334,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
             <button
               type="submit"
               disabled={isSubmitting || !inviteInput.trim()}
-              className="w-full py-3 px-4 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 disabled:pointer-events-none text-white font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(52,120,246,0.3)] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+              className="w-full min-h-[44px] py-3 px-4 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 disabled:pointer-events-none text-white font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(52,120,246,0.3)] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
             >
               {isSubmitting ? (
                 <>
@@ -336,7 +360,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
             type="button"
             onClick={handleSignOut}
             disabled={loggingOut}
-            className="flex items-center gap-1.5 text-[#A1A1AA] hover:text-rose-400 transition-colors cursor-pointer py-1 px-2 rounded-lg hover:bg-[#0E0E10]"
+            className="min-h-[44px] flex items-center gap-1.5 text-[#A1A1AA] hover:text-rose-400 transition-colors cursor-pointer py-2 px-3 rounded-xl hover:bg-[#0E0E10]"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>{loggingOut ? 'Saindo...' : 'Sair da conta'}</span>

@@ -465,7 +465,7 @@ function JoinChallengeContent() {
       {/* Top Navbar */}
       <header className="border-b border-[#27272A] bg-[#000000]/80 backdrop-blur-md sticky top-0 z-50 safe-top-header pb-2">
         <div className="max-w-4xl mx-auto px-6 min-h-[3.5rem] flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="min-h-[44px] flex items-center gap-2 group">
             <div className="h-8 w-8 rounded-lg bg-[#0E0E10] border border-[#27272A] flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <svg className="w-4 h-4 text-[#3478F6]" viewBox="0 0 24 24" fill="none">
                 <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="currentColor" />
@@ -476,7 +476,7 @@ function JoinChallengeContent() {
 
           <button
             onClick={copyLink}
-            className="text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
+            className="min-h-[44px] px-2 flex items-center text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
           >
             {copied ? 'Link copiado!' : 'Copiar link'}
           </button>

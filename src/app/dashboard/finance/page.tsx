@@ -81,6 +81,7 @@ export default function FinanceDashboardPage() {
   const [stateInput, setStateInput] = useState('');
   const [loadingCep, setLoadingCep] = useState(false);
   const [savingAccount, setSavingAccount] = useState(false);
+  const [isEditingBankForm, setIsEditingBankForm] = useState(false);
   const [verifiedBankData, setVerifiedBankData] = useState<any>(null);
   const [withdrawing, setWithdrawing] = useState(false);
   const [totalWithdrawn, setTotalWithdrawn] = useState(0);
@@ -480,7 +481,7 @@ export default function FinanceDashboardPage() {
                 size="sm" 
                 disabled={loading}
                 onClick={() => setWithdrawModalOpen(true)}
-                className="h-8 text-xs bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 text-white font-bold px-3.5 rounded-xl shadow-md"
+                className="h-11 min-h-[44px] text-xs bg-[#3478F6] hover:bg-[#75A7FF] disabled:opacity-50 text-white font-bold px-4 rounded-xl shadow-md"
               >
                 Sacar Pix
               </Button>
@@ -610,6 +611,53 @@ export default function FinanceDashboardPage() {
             </div>
           </div>
 
+          {/* Card de Confirmação de Chave Cadastrada & Subconta (Visível no topo se ativa) */}
+          {coachProfile?.asaas_pix_key && (
+            <div className="mb-6 p-4 rounded-2xl bg-[#18181B] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.06] text-[#D4D4D8] flex items-center justify-center shrink-0 border border-white/10">
+                  <CheckCircle2 className="w-5 h-5 text-[#3478F6]" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-[#FAFAFA] flex items-center gap-2 flex-wrap">
+                    <span>Conta e Split Configurados</span>
+                    <Badge className="bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px]">
+                      ATIVA
+                    </Badge>
+                    {coachProfile.asaas_wallet_id && (
+                      <span className="text-[10px] font-mono text-[#A1A1AA] truncate">
+                        (Wallet ID: {coachProfile.asaas_wallet_id})
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[11px] text-[#A1A1AA] font-mono mt-0.5 truncate">
+                    Chave Pix: <span className="text-[#D4D4D8] font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsEditingBankForm((prev) => !prev)}
+                  className="h-11 min-h-[44px] px-3.5 border-[#27272A] bg-[#0E0E10] text-[#FAFAFA] hover:bg-[#27272A] font-bold text-xs rounded-xl"
+                >
+                  {isEditingBankForm ? 'Ocultar Formulário' : 'Editar Dados Bancários'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setWithdrawModalOpen(true)}
+                  className="h-11 min-h-[44px] px-3.5 border-white/10 text-[#D4D4D8] hover:bg-[#3478F6]/10 font-bold text-xs rounded-xl"
+                >
+                  Solicitar Saque Pix
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {(!coachProfile?.asaas_pix_key || isEditingBankForm) && (
           <div className="space-y-6">
             {/* Bloco 1: Dados do Titular e Pix */}
             <div>
@@ -627,7 +675,7 @@ export default function FinanceDashboardPage() {
                     <button
                       type="button"
                       onClick={() => handleDocTypeToggle('CPF')}
-                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
+                      className={`min-h-[44px] py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
                         docTypeInput === 'CPF'
                           ? 'bg-[#3478F6] text-white border-[#3478F6]'
                           : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A] hover:text-[#FAFAFA]'
@@ -638,7 +686,7 @@ export default function FinanceDashboardPage() {
                     <button
                       type="button"
                       onClick={() => handleDocTypeToggle('CNPJ')}
-                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
+                      className={`min-h-[44px] py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
                         docTypeInput === 'CNPJ'
                           ? 'bg-[#3478F6] text-white border-[#3478F6]'
                           : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A] hover:text-[#FAFAFA]'
@@ -668,6 +716,7 @@ export default function FinanceDashboardPage() {
                     )}
                   </div>
                   <Input
+                    inputMode="numeric"
                     value={docNumberInput}
                     onChange={(e) => handleDocChange(e.target.value)}
                     placeholder={docTypeInput === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
@@ -775,6 +824,8 @@ export default function FinanceDashboardPage() {
                     )}
                   </div>
                   <Input
+                    inputMode="numeric"
+                    autoComplete="postal-code"
                     value={cepInput}
                     onChange={(e) => handleCepChange(e.target.value)}
                     placeholder="00000-000"
@@ -792,6 +843,7 @@ export default function FinanceDashboardPage() {
                     Logradouro / Rua / Avenida
                   </label>
                   <Input
+                    autoComplete="street-address"
                     value={addressInput}
                     onChange={(e) => setAddressInput(e.target.value)}
                     placeholder="Ex: Av. Paulista"
@@ -805,6 +857,7 @@ export default function FinanceDashboardPage() {
                     Número
                   </label>
                   <Input
+                    inputMode="numeric"
                     value={numberInput}
                     onChange={(e) => setNumberInput(e.target.value)}
                     placeholder="100"
@@ -831,6 +884,7 @@ export default function FinanceDashboardPage() {
                     Cidade
                   </label>
                   <Input
+                    autoComplete="address-level2"
                     value={cityInput}
                     onChange={(e) => setCityInput(e.target.value)}
                     placeholder="São Paulo"
@@ -863,7 +917,7 @@ export default function FinanceDashboardPage() {
               <Button 
                 onClick={handleSaveBankAccount} 
                 disabled={savingAccount || !isDocValid || !pixValidation.isValid}
-                className="w-full sm:w-auto bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold px-6 py-2.5 h-auto disabled:opacity-50 rounded-2xl shadow-lg shadow-[#3478F6]/20 transition-all"
+                className="w-full sm:w-auto min-h-[44px] bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold px-6 py-2.5 h-auto disabled:opacity-50 rounded-2xl shadow-lg shadow-[#3478F6]/20 transition-all"
               >
                 {savingAccount ? (
                   <>
@@ -879,40 +933,6 @@ export default function FinanceDashboardPage() {
               </Button>
             </div>
           </div>
-
-          {/* Card de Confirmação de Chave Cadastrada & Subconta */}
-          {coachProfile?.asaas_pix_key && (
-            <div className="mt-6 p-4 rounded-2xl bg-[#18181B] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-white/[0.06] text-[#D4D4D8] flex items-center justify-center shrink-0 border border-white/10">
-                  <CheckCircle2 className="w-5 h-5 text-[#3478F6]" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-[#FAFAFA] flex items-center gap-2">
-                    Conta e Split Configurados
-                    <Badge className="bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px]">
-                      ATIVA
-                    </Badge>
-                    {coachProfile.asaas_wallet_id && (
-                      <span className="text-[10px] font-mono text-[#A1A1AA]">
-                        (Wallet ID: {coachProfile.asaas_wallet_id})
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-[11px] text-[#A1A1AA] font-mono mt-0.5">
-                    Chave Pix: <span className="text-[#D4D4D8] font-semibold">{coachProfile.asaas_pix_key}</span> • Titular: {coachProfile.document_number ? `${coachProfile.document_type}: ${coachProfile.document_number}` : 'Cadastrado'}
-                  </div>
-                </div>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setWithdrawModalOpen(true)}
-                className="border-white/10 text-[#D4D4D8] hover:bg-[#3478F6]/10 font-bold text-xs shrink-0 rounded-xl"
-              >
-                Solicitar Saque Pix
-              </Button>
-            </div>
           )}
         </SpotlightCard3D>
 

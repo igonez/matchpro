@@ -699,7 +699,7 @@ export default function StudentSocialFeedPage() {
                   setLoading(true);
                   fetchFeed();
                 }}
-                className="min-h-[40px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors cursor-pointer"
+                className="min-h-[44px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors cursor-pointer"
               >
                 Tentar Novamente
               </button>
@@ -804,7 +804,7 @@ export default function StudentSocialFeedPage() {
                                 <button
                                   key={r.key}
                                   onClick={() => handleToggleReaction(post.id, r.key)}
-                                  className={`flex items-center justify-center gap-1 px-2.5 py-1.5 min-h-[38px] rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
+                                  className={`flex items-center justify-center gap-1 px-2.5 py-2 min-h-[44px] min-w-[44px] rounded-xl text-xs font-mono font-bold transition-all cursor-pointer active:scale-90 ${
                                     isSelected
                                       ? `${r.activeBg} border ${r.activeBorder} shadow-sm scale-105`
                                       : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#27272A]'
@@ -833,7 +833,7 @@ export default function StudentSocialFeedPage() {
                               if (!currentUser) return;
                               setReportTargetPost(post);
                             }}
-                            className="text-[10px] font-mono tracking-wider text-[#A1A1AA] hover:text-rose-400 cursor-pointer uppercase transition-colors px-2.5 py-2 min-h-[40px] flex items-center"
+                            className="text-[10px] font-mono tracking-wider text-[#A1A1AA] hover:text-rose-400 cursor-pointer uppercase transition-colors px-3 py-2 min-h-[44px] flex items-center"
                             title="Sinalizar foto suspeita"
                           >
                             SINALIZAR
@@ -1064,7 +1064,7 @@ export default function StudentSocialFeedPage() {
                     key={chip}
                     type="button"
                     onClick={() => setCommentText(chip)}
-                    className="text-[11px] font-sans font-medium px-3 py-1.5 min-h-[36px] rounded-full bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 hover:bg-[#27272A] shrink-0 transition-all cursor-pointer active:scale-95"
+                    className="text-[11px] font-sans font-medium px-3.5 py-2 min-h-[44px] flex items-center rounded-full bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 hover:bg-[#27272A] shrink-0 transition-all cursor-pointer active:scale-95"
                   >
                     {chip}
                   </button>

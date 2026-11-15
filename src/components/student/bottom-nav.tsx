@@ -410,7 +410,7 @@ export function StudentBottomNav() {
               : 'scale-100 translate-y-0 opacity-100 pointer-events-auto'
           }`}
         >
-          <div className="relative bg-[#0E0E10]/90 backdrop-blur-2xl backdrop-saturate-[180%] rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_16px_36px_rgba(0,0,0,0.75),inset_0_1px_1.5px_rgba(255,255,255,0.22),inset_0_-1px_1px_rgba(0,0,0,0.5)] border border-white/[0.14]">
+          <div className="relative bg-[#0E0E10]/50 backdrop-blur-xl backdrop-saturate-[160%] rounded-full px-2.5 sm:px-3.5 py-1.5 flex items-center justify-between shadow-[0_12px_32px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.18)] border border-white/[0.12]">
             
             {/* Lado Esquerdo (Hoje, Missões) */}
             <div className="flex items-center justify-around flex-1 gap-1">
@@ -418,10 +418,10 @@ export function StudentBottomNav() {
                 <Link
                   key={tab.name}
                   href={tab.href}
-                  className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
+                  className={`min-h-[46px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
                     tab.active
                       ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04] scale-[0.97]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04]'
                   }`}
                 >
                   {tab.name}
@@ -468,10 +468,10 @@ export function StudentBottomNav() {
                 <Link
                   key={tab.name}
                   href={tab.href}
-                  className={`min-h-[42px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
+                  className={`min-h-[46px] flex items-center justify-center px-3.5 sm:px-4 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.88] ${
                     tab.active
                       ? 'text-white font-bold bg-[#3478F6] shadow-[0_0_18px_rgba(52,120,246,0.5)] scale-100'
-                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04] scale-[0.97]'
+                      : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/[0.04]'
                   }`}
                 >
                   {tab.name}

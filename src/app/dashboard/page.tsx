@@ -54,6 +54,7 @@ export default function DashboardOverviewPage() {
 
   // Modal de Convite & Compartilhamento
   const [inviteModalChallenge, setInviteModalChallenge] = useState<any | null>(null);
+  const [togglingChallengeId, setTogglingChallengeId] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -63,6 +64,8 @@ export default function DashboardOverviewPage() {
   };
 
   const handleToggleChallengeStatus = async (challengeId: string, currentStatus: boolean) => {
+    if (togglingChallengeId === challengeId) return;
+    setTogglingChallengeId(challengeId);
     try {
       const nextStatus = !currentStatus;
       const { error } = await supabase
@@ -78,6 +81,8 @@ export default function DashboardOverviewPage() {
       showToast(nextStatus ? 'Turma ativada com sucesso!' : 'Turma encerrada/pausada.');
     } catch (err: any) {
       showToast('Erro ao alterar status: ' + err.message);
+    } finally {
+      setTogglingChallengeId(null);
     }
   };
 
@@ -301,7 +306,7 @@ export default function DashboardOverviewPage() {
           <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
             <button 
               data-tour="create-challenge-cta"
-              className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-2xl shadow-[0_4px_20px_rgba(52,120,246,0.3)] hover:shadow-[0_0_25px_rgba(52,120,246,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-[#3478F6]"
+              className="w-full sm:w-auto min-h-[44px] px-5 py-3 text-xs sm:text-sm font-black bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-2xl shadow-[0_4px_20px_rgba(52,120,246,0.3)] hover:shadow-[0_0_25px_rgba(52,120,246,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-[#3478F6]"
             >
               <span className="text-base leading-none font-black text-white group-hover:rotate-90 transition-transform duration-200">+</span>
               <span>Novo Desafio</span>
@@ -311,14 +316,14 @@ export default function DashboardOverviewPage() {
           {/* 2. Publicar Aviso */}
           <button
             onClick={() => setIsNoticeModalOpen(true)}
-            className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] hover:text-[#75A7FF] transition-colors cursor-pointer"
+            className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 text-xs font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] hover:bg-[#27272A] hover:text-[#75A7FF] transition-colors cursor-pointer"
           >
             Publicar Aviso
           </button>
 
           {/* 3. Auditar Fotos */}
           <Link href="/dashboard/audit" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#27272A] transition-colors cursor-pointer">
+            <button className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 text-xs flex items-center justify-center gap-1.5 font-semibold rounded-2xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#27272A] transition-colors cursor-pointer">
               <span>Auditar Fotos</span>
               <span className="text-[11px] font-mono text-[#3478F6] font-bold">({stats.pendingSubmissions})</span>
             </button>
@@ -509,7 +514,7 @@ export default function DashboardOverviewPage() {
           <h2 className="text-base font-bold text-white tracking-tight">
             Turmas em Andamento
           </h2>
-          <Link href="/dashboard/challenges" className="text-xs text-zinc-400 hover:text-white transition-colors font-mono flex items-center gap-1 group">
+          <Link href="/dashboard/challenges" className="min-h-[44px] px-2 text-xs text-zinc-400 hover:text-white transition-colors font-mono flex items-center gap-1 group">
             <span>Gerenciar Desafios</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -535,14 +540,15 @@ export default function DashboardOverviewPage() {
                   <div className="flex items-center justify-between mb-2">
                     <button
                       onClick={() => handleToggleChallengeStatus(c.id, c.is_active)}
+                      disabled={togglingChallengeId === c.id}
                       title="Clique para alternar status da turma"
-                      className={`text-xs px-3 py-1.5 min-h-[36px] rounded-full border transition-all ${
+                      className={`text-xs px-3.5 py-2 min-h-[44px] rounded-full border transition-all disabled:opacity-50 cursor-pointer ${
                         c.is_active
                           ? 'border-white/10 bg-white/[0.06] text-[#D4D4D8] hover:bg-[#3478F6]/25'
                           : 'border-[#27272A] bg-[#000000] text-[#A1A1AA] hover:text-[#FAFAFA]'
                       }`}
                     >
-                      {c.is_active ? '● Ativo' : '○ Encerrado'}
+                      {togglingChallengeId === c.id ? 'Atualizando...' : c.is_active ? '● Ativo' : '○ Encerrado'}
                     </button>
                     <span className="text-xs font-mono font-black text-[#FAFAFA]">
                       R$ {Number(c.price).toFixed(2)}
@@ -615,7 +621,7 @@ export default function DashboardOverviewPage() {
               <select
                 value={noticeChallengeId || (challenges[0]?.id || '')}
                 onChange={(e) => setNoticeChallengeId(e.target.value)}
-                className="w-full h-10 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 font-mono focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 font-mono focus:outline-none focus:border-[#3478F6]"
               >
                 {challenges.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -634,7 +640,7 @@ export default function DashboardOverviewPage() {
               placeholder="Ex: Treino Extra de Sábado às 08h"
               value={noticeTitle}
               onChange={(e) => setNoticeTitle(e.target.value)}
-              className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl text-xs h-10 focus:border-[#3478F6]"
+              className="bg-[#18181B] border-[#27272A] text-[#FAFAFA] rounded-xl text-xs h-11 focus:border-[#3478F6]"
             />
           </div>
 
@@ -700,7 +706,7 @@ export default function DashboardOverviewPage() {
                     navigator.clipboard.writeText(link);
                     showToast('Link do convite copiado!');
                   }}
-                  className="mono-button-primary px-3 text-xs shrink-0 font-mono"
+                  className="mono-button-primary min-h-[44px] px-4 text-xs shrink-0 font-mono"
                 >
                   Copiar
                 </button>
@@ -719,7 +725,7 @@ export default function DashboardOverviewPage() {
                     navigator.clipboard.writeText(inviteModalChallenge.id.slice(0, 8).toUpperCase());
                     showToast('Código rápido copiado!');
                   }}
-                  className="text-[#A1A1AA] hover:text-[#FAFAFA] p-1 transition-colors cursor-pointer"
+                  className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors cursor-pointer"
                   title="Copiar código curto"
                 >
                   <Copy className="h-3.5 w-3.5" />

@@ -71,9 +71,9 @@ export function ReturnToCoachBanner() {
 
       <button
         onClick={handleReturnToDashboard}
-        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3478F6] text-white hover:bg-[#75A7FF] text-[11px] font-mono font-black transition-all active:scale-95 shadow-md cursor-pointer"
+        className="min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#3478F6] text-white hover:bg-[#75A7FF] text-[11px] font-mono font-black transition-all active:scale-95 shadow-md cursor-pointer"
       >
-        <ArrowLeft className="h-3 w-3 text-white" />
+        <ArrowLeft className="h-3.5 w-3.5 text-white" />
         <span>Voltar ao Painel</span>
       </button>
     </div>

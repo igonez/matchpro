@@ -133,7 +133,7 @@ export function PushNotificationBanner({
           type="button"
           onClick={handleEnableNotifications}
           disabled={activating}
-          className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors cursor-pointer shadow-md"
+          className="min-h-[44px] px-4 py-2 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white text-xs font-mono font-bold transition-colors cursor-pointer shadow-md flex items-center justify-center"
         >
           {activating ? '...' : 'Ativar'}
         </button>
@@ -144,7 +144,7 @@ export function PushNotificationBanner({
             localStorage.setItem('arena_push_banner_dismissed', 'true');
           }}
           aria-label="Dispensar"
-          className="min-h-[38px] px-2 text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] cursor-pointer flex items-center justify-center"
+          className="h-11 w-11 min-h-[44px] min-w-[44px] px-2 text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] cursor-pointer flex items-center justify-center rounded-xl hover:bg-[#18181B]"
         >
           <X className="w-3.5 h-3.5" />
         </button>

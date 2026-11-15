@@ -504,7 +504,7 @@ function LoginContent() {
                               setValidatedChallenge(null);
                               setInviteCode('');
                             }}
-                            className="text-[10px] font-mono text-[#A1A1AA] hover:text-white underline cursor-pointer"
+                            className="min-h-[36px] px-2 text-[10px] font-mono text-[#A1A1AA] hover:text-white underline cursor-pointer"
                           >
                             Trocar turma
                           </button>
@@ -552,6 +552,7 @@ function LoginContent() {
                           </label>
                           <Input
                             type="text"
+                            autoComplete="name"
                             placeholder="Ex: Matheus Oliveira"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
@@ -566,6 +567,8 @@ function LoginContent() {
                           </label>
                           <Input
                             type="tel"
+                            inputMode="tel"
+                            autoComplete="tel"
                             placeholder="(11) 99999-9999"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
@@ -581,6 +584,8 @@ function LoginContent() {
                             </label>
                             <Input
                               type="email"
+                              inputMode="email"
+                              autoComplete="email"
                               placeholder="seu@email.com"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
@@ -594,6 +599,7 @@ function LoginContent() {
                             </label>
                             <Input
                               type="password"
+                              autoComplete="new-password"
                               placeholder="••••••••"
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
@@ -648,6 +654,8 @@ function LoginContent() {
                       </label>
                       <Input
                         type="email"
+                        inputMode="email"
+                        autoComplete="email"
                         placeholder="seu@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -662,6 +670,7 @@ function LoginContent() {
                       </label>
                       <Input
                         type="password"
+                        autoComplete="current-password"
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -721,6 +730,7 @@ function LoginContent() {
                       </label>
                       <Input
                         type="text"
+                        autoComplete="name"
                         placeholder="Ex: Lucas Ferreira Coach"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
@@ -735,6 +745,8 @@ function LoginContent() {
                       </label>
                       <Input
                         type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
                         placeholder="(11) 99999-9999"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
@@ -767,6 +779,8 @@ function LoginContent() {
                   </label>
                   <Input
                     type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="coach@arenafit.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -781,6 +795,7 @@ function LoginContent() {
                   </label>
                   <Input
                     type="password"
+                    autoComplete={coachMode === 'signup' ? 'new-password' : 'current-password'}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -810,7 +825,7 @@ function LoginContent() {
                     <button
                       type="button"
                       onClick={() => setCoachMode('signup')}
-                      className="text-[#3478F6] hover:text-[#75A7FF] font-bold hover:underline cursor-pointer"
+                      className="min-h-[44px] px-2 text-[#3478F6] hover:text-[#75A7FF] font-bold hover:underline cursor-pointer"
                     >
                       Cadastre-se como Coach
                     </button>
@@ -821,7 +836,7 @@ function LoginContent() {
                     <button
                       type="button"
                       onClick={() => setCoachMode('signin')}
-                      className="text-[#3478F6] hover:text-[#75A7FF] font-bold hover:underline cursor-pointer"
+                      className="min-h-[44px] px-2 text-[#3478F6] hover:text-[#75A7FF] font-bold hover:underline cursor-pointer"
                     >
                       Fazer login
                     </button>

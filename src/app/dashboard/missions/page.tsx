@@ -1335,7 +1335,7 @@ function MissionsManagerContent() {
                       setNewWeekTitle(selectedWeek?.title || `Semana ${selectedWeekNumber}`);
                       setEditingWeekTitle(true);
                     }}
-                    className="h-9 px-3 rounded-xl text-xs"
+                    className="h-11 min-h-[44px] px-3.5 rounded-xl text-xs"
                   >
                     <Edit3 className="w-3.5 h-3.5 mr-1.5" />
                     Renomear
@@ -1355,7 +1355,7 @@ function MissionsManagerContent() {
                       value={newWeekBonus}
                       onChange={(e) => setNewWeekBonus(e.target.value)}
                       placeholder="XP"
-                      className="h-8 w-20 text-xs bg-[#0E0E10] border-[#27272A] text-[#D4D4D8] font-mono font-bold rounded-lg px-2"
+                      className="h-10 w-20 text-xs bg-[#0E0E10] border-[#27272A] text-[#D4D4D8] font-mono font-bold rounded-lg px-2"
                     />
                     <label className="flex items-center gap-1 text-[10px] font-mono text-zinc-300 pr-1 cursor-pointer select-none">
                       <input
@@ -1370,14 +1370,14 @@ function MissionsManagerContent() {
                       size="sm"
                       onClick={handleSaveWeekBonus}
                       disabled={savingWeekBonus}
-                      className="h-8 px-2.5 text-xs bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold rounded-lg cursor-pointer"
+                      className="h-10 px-3 text-xs bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold rounded-lg cursor-pointer"
                     >
                       {savingWeekBonus ? '...' : 'Salvar'}
                     </Button>
                     <button
                       type="button"
                       onClick={() => setEditingWeekBonus(false)}
-                      className="text-zinc-400 hover:text-white p-1 text-xs cursor-pointer"
+                      className="min-h-[40px] min-w-[40px] flex items-center justify-center text-zinc-400 hover:text-white p-1 text-xs cursor-pointer"
                       title="Cancelar"
                     >
                       ✕
@@ -1393,7 +1393,7 @@ function MissionsManagerContent() {
                       setApplyBonusToAll(false);
                       setEditingWeekBonus(true);
                     }}
-                    className="h-9 px-3 rounded-xl text-xs border-white/10 bg-white/[0.06] text-[#D4D4D8] hover:bg-[#3478F6]/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+                    className="h-11 min-h-[44px] px-3.5 rounded-xl text-xs border-white/10 bg-white/[0.06] text-[#D4D4D8] hover:bg-[#3478F6]/20 font-mono font-bold flex items-center gap-1.5 cursor-pointer"
                     title="Editar a quantidade de XP concedida aos alunos que completarem 100% das missões desta semana"
                   >
                     <Trophy className="w-3.5 h-3.5 text-[#3478F6]" />
@@ -1412,7 +1412,7 @@ function MissionsManagerContent() {
                         title: `Semana ${selectedWeekNumber}`,
                       })
                     }
-                    className="h-9 px-3 rounded-xl text-xs border-red-500/25 text-red-400 hover:bg-red-500/10"
+                    className="h-11 min-h-[44px] px-3.5 rounded-xl text-xs border-red-500/25 text-red-400 hover:bg-red-500/10"
                   >
                     <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                     Limpar Semana
@@ -1537,7 +1537,7 @@ function MissionsManagerContent() {
         <Button
           size="sm"
           onClick={() => handleOpenCreateModal()}
-          className="w-full sm:w-auto rounded-xl h-10 px-4 text-xs font-mono font-bold bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-md shadow-[#3478F6]/20"
+          className="w-full sm:w-auto rounded-xl h-11 min-h-[44px] px-4 text-xs font-mono font-bold bg-[#3478F6] hover:bg-[#75A7FF] text-white shadow-md shadow-[#3478F6]/20"
         >
           <Plus className="w-4 h-4 mr-1" />
           Nova Missão na Semana {selectedWeekNumber}
@@ -1656,26 +1656,26 @@ function MissionsManagerContent() {
                               variant="ghost"
                               size="icon"
                               onClick={() => handleOpenEditListModal(block)}
-                              className="h-8 w-8 text-[#A1A1AA] hover:text-white"
+                              className="h-11 w-11 min-h-[44px] min-w-[44px] text-[#A1A1AA] hover:text-white"
                               title="Editar Bloco"
                             >
-                              <Edit3 className="h-3.5 w-3.5" />
+                              <Edit3 className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="icon"
                               onClick={() => setDeleteListTarget({ id: block.id, name: block.name })}
-                              className="h-8 w-8 text-[#A1A1AA] hover:text-red-400"
+                              className="h-11 w-11 min-h-[44px] min-w-[44px] text-[#A1A1AA] hover:text-red-400"
                               title="Excluir Bloco"
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </>
                         )}
                         <Button
                           size="sm"
                           onClick={() => handleOpenCreateModal(block)}
-                          className="h-8 px-3 rounded-xl text-xs font-mono font-bold"
+                          className="h-11 min-h-[44px] px-3.5 rounded-xl text-xs font-mono font-bold"
                         >
                           <Plus className="h-3.5 w-3.5 mr-1" />
                           Adicionar
@@ -1693,7 +1693,7 @@ function MissionsManagerContent() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleOpenCreateModal(block)}
-                            className="h-8 text-xs rounded-xl"
+                            className="h-11 min-h-[44px] px-4 text-xs rounded-xl"
                           >
                             <Plus className="w-3.5 h-3.5 mr-1" />
                             Criar Missão de {accent.label}
@@ -1753,18 +1753,19 @@ function MissionsManagerContent() {
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleOpenEditModal(m)}
-                                  className="h-8 px-2 text-xs text-[#A1A1AA] hover:text-white"
+                                  className="h-11 w-11 min-h-[44px] min-w-[44px] px-0 text-xs text-[#A1A1AA] hover:text-white"
+                                  title="Editar Missão"
                                 >
-                                  <Edit3 className="h-3.5 w-3.5" />
+                                  <Edit3 className="h-4 w-4" />
                                 </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => setDeleteMissionTarget({ id: m.id, title: m.title })}
-                                  className="h-8 w-8 text-[#A1A1AA] hover:text-red-400"
+                                  className="h-11 w-11 min-h-[44px] min-w-[44px] text-[#A1A1AA] hover:text-red-400"
                                   title="Excluir Missão"
                                 >
-                                  <Trash2 className="h-3.5 w-3.5" />
+                                  <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
                             </div>
@@ -1826,7 +1827,7 @@ function MissionsManagerContent() {
               <select
                 value={listValidationType}
                 onChange={(e: any) => setListValidationType(e.target.value)}
-                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="photo">Foto Obrigatória</option>
                 <option value="timer">Cronômetro de Sessão</option>
@@ -1840,7 +1841,7 @@ function MissionsManagerContent() {
               <select
                 value={listDailyLimit}
                 onChange={(e) => setListDailyLimit(e.target.value)}
-                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="1">1 vez ao dia (trava até 00:00)</option>
                 <option value="0">Ilimitado (livre)</option>
@@ -1856,14 +1857,14 @@ function MissionsManagerContent() {
               type="button"
               variant="outline"
               onClick={() => setIsListModalOpen(false)}
-              className="flex-1 text-xs"
+              className="flex-1 h-11 text-xs"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
               disabled={submittingList}
-              className="flex-1 text-xs font-bold"
+              className="flex-1 h-11 text-xs font-bold"
             >
               {submittingList ? 'Salvando...' : 'Salvar Bloco'}
             </Button>
@@ -1905,7 +1906,7 @@ function MissionsManagerContent() {
                     );
                   }
                 }}
-                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 {visualBlocks.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -1920,7 +1921,7 @@ function MissionsManagerContent() {
               <select
                 value={formValidationType}
                 onChange={(e: any) => setFormValidationType(e.target.value)}
-                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="photo">Foto Obrigatória</option>
                 <option value="timer">Cronômetro de Sessão</option>
@@ -1935,6 +1936,7 @@ function MissionsManagerContent() {
               <label className="text-xs font-semibold text-[#A1A1AA] block mb-1 font-mono">Pontos (XP)</label>
               <Input
                 type="number"
+                inputMode="numeric"
                 min={1}
                 value={formPoints}
                 onChange={(e) => setFormPoints(e.target.value)}
@@ -1950,7 +1952,7 @@ function MissionsManagerContent() {
                   setFormDailyLimit(e.target.value);
                   setFormRequiresCooldown(e.target.value === '1');
                 }}
-                className="w-full h-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
+                className="w-full h-11 rounded-xl bg-[#18181B] border border-[#27272A] text-[#FAFAFA] text-xs px-3 focus:outline-none focus:border-[#3478F6]"
               >
                 <option value="1">1 vez ao dia (trava 00:00)</option>
                 <option value="0">Ilimitado (livre)</option>

@@ -1,60 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Shield } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { useStudentSession } from '@/lib/auth/student-session-context';
 
 export function ReturnToCoachBanner() {
   const router = useRouter();
-  const [isProfessional, setIsProfessional] = useState(false);
-  const supabase = createClient();
+  const { isPreviewMode } = useStudentSession();
+  const [exiting, setExiting] = useState(false);
 
-  useEffect(() => {
-    async function checkRole() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const isMetaProf = user.user_metadata?.role === 'professional';
-        const hasProfCookie = typeof document !== 'undefined' && document.cookie.includes('arena_role=professional');
-        const { data: prof } = await supabase
-          .from('professionals')
-          .select('id')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        const isProf = isMetaProf || hasProfCookie || !!prof;
-
-        if (isProf) {
-          const hasUrlPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === 'true';
-          const hasCookiePreview = typeof document !== 'undefined' && document.cookie.includes('arena_preview=true');
-          const isPreview = hasUrlPreview || hasCookiePreview;
-
-          if (hasUrlPreview && typeof document !== 'undefined') {
-            document.cookie = 'arena_preview=true; path=/; max-age=86400; SameSite=Lax';
-          }
-
-          // Se for profissional e não houver flag de preview explícita, redireciona para o cockpit
-          if (!isPreview) {
-            router.replace('/dashboard');
-            return;
-          }
-
-          setIsProfessional(true);
-        }
-      }
+  const handleReturnToDashboard = async () => {
+    if (exiting) return;
+    setExiting(true);
+    try {
+      await fetch('/api/auth/exit-preview', { method: 'POST' }).catch(() => null);
+      router.push('/dashboard');
+      router.refresh();
+    } finally {
+      setExiting(false);
     }
-    checkRole();
-  }, [supabase, router]);
-
-  const handleReturnToDashboard = () => {
-    if (typeof document !== 'undefined') {
-      document.cookie = 'arena_preview=; path=/; max-age=0; SameSite=Lax';
-    }
-    router.push('/dashboard');
   };
 
-  if (!isProfessional) {
+  if (!isPreviewMode) {
     return <div className="w-full safe-top-page shrink-0" aria-hidden="true" />;
   }
 
@@ -70,11 +38,13 @@ export function ReturnToCoachBanner() {
       </div>
 
       <button
+        type="button"
         onClick={handleReturnToDashboard}
-        className="min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#3478F6] text-white hover:bg-[#75A7FF] text-[11px] font-mono font-black transition-all active:scale-95 shadow-md cursor-pointer"
+        disabled={exiting}
+        className="min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#3478F6] text-white hover:bg-[#75A7FF] disabled:opacity-60 text-[11px] font-mono font-black transition-all active:scale-95 shadow-md cursor-pointer"
       >
         <ArrowLeft className="h-3.5 w-3.5 text-white" />
-        <span>Voltar ao Painel</span>
+        <span>{exiting ? 'Saindo...' : 'Voltar ao Painel'}</span>
       </button>
     </div>
   );

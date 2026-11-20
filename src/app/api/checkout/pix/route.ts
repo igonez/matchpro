@@ -107,7 +107,7 @@ export async function POST(request: Request) {
     const professional: any = challenge.professionals;
     const planTier: PlanTier = professional?.plan_tier || 'starter';
     const planLimits = PLAN_CONFIG[planTier] || PLAN_CONFIG.starter;
-    const feePercent = Number(professional?.platform_fee_percent || planLimits.platformFeePercent || 15);
+    const feePercent = Number(professional?.platform_fee_percent ?? planLimits.platformFeePercent ?? 15);
 
     // Validar se a turma atingiu a capacidade máxima do plano do treinador (apenas inscritos confirmados)
     const { count: currentStudents } = await supabaseAdmin

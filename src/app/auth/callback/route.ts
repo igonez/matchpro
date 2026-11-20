@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
 import { sendMetaConversionEvent } from '@/lib/analytics/meta-capi';
 
@@ -46,7 +47,7 @@ export async function GET(request: Request) {
       // 1. Verificar registros existentes no banco de dados (Fonte da Verdade)
       const { data: prof } = await supabase
         .from('professionals')
-        .select('id')
+        .select('id, is_master_admin')
         .eq('id', user.id)
         .maybeSingle();
 
@@ -102,9 +103,13 @@ export async function GET(request: Request) {
             },
           });
         }
-        await supabase.auth.updateUser({
-          data: { role: 'professional' }
-        });
+        await supabaseAdmin.auth.admin.updateUserById(user.id, {
+          app_metadata: {
+            ...(user.app_metadata || {}),
+            role: 'professional',
+            ...(prof?.is_master_admin ? { is_master_admin: true } : {}),
+          },
+        }).catch(() => {});
         const redirectRes = NextResponse.redirect(`${origin}${safeNext || '/dashboard'}`);
         redirectRes.cookies.set('arena_role', 'professional', cookieOptions);
         return redirectRes;
@@ -130,9 +135,12 @@ export async function GET(request: Request) {
             },
           });
         }
-        await supabase.auth.updateUser({
-          data: { role: 'student' }
-        });
+        await supabaseAdmin.auth.admin.updateUserById(user.id, {
+          app_metadata: {
+            ...(user.app_metadata || {}),
+            role: 'student',
+          },
+        }).catch(() => {});
         const redirectRes = NextResponse.redirect(`${origin}${safeNext || '/app'}`);
         redirectRes.cookies.set('arena_role', 'student', cookieOptions);
         return redirectRes;

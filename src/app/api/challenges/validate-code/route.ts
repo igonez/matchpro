@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       )
     `;
 
-    let challengeData: any = null;
+    let challengeData: Record<string, any> | null = null;
 
     if (isUUID) {
       const { data, error } = await supabaseAdmin
@@ -61,19 +61,10 @@ export async function POST(request: Request) {
         challengeData = data;
       }
     } else {
-      // 1. Tentar busca por título (ativo)
-      const { data: listByTitle } = await supabaseAdmin
-        .from('challenges')
-        .select(baseSelect)
-        .ilike('title', `%${rawCode}%`)
-        .order('is_active', { ascending: false })
-        .limit(1);
-
-      if (listByTitle && listByTitle.length > 0) {
-        challengeData = listByTitle[0];
-      } else {
-        // 2. Se for um prefixo de UUID (ex: primeiros 6 a 32 caracteres hex)
-        const cleanHex = rawCode.replace(/[^0-9a-fA-F]/g, '').toLowerCase();
+      // Aceita apenas prefixo hexadecimal de UUID (ex: primeiros 6 a 32 chars, opcionalmente com # ou hífens)
+      const stripped = rawCode.replace(/^#/, '').trim();
+      if (/^[0-9a-fA-F-]{6,36}$/.test(stripped)) {
+        const cleanHex = stripped.replace(/-/g, '').toLowerCase();
         if (cleanHex.length >= 6 && cleanHex.length <= 32) {
           const toUuid = (hex32: string) =>
             `${hex32.slice(0, 8)}-${hex32.slice(8, 12)}-${hex32.slice(12, 16)}-${hex32.slice(16, 20)}-${hex32.slice(20, 32)}`;

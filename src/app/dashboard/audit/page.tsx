@@ -1,9 +1,17 @@
 'use client';
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
+import { isValidSubmissionPhotoUrl } from '@/lib/submissions/photo-utils';
+
+const QUICK_REJECTION_REASONS = [
+  'Foto fora de foco ou escura',
+  'Não corresponde à missão',
+  'Foto duplicada / repetida',
+  'Horário ou local inválido',
+];
 
 export default function FiscalizacaoPage() {
   const supabase = createClient();
@@ -26,7 +34,12 @@ export default function FiscalizacaoPage() {
 
   // Modal Customizado de Invalidação
   const [invalidateTarget, setInvalidateTarget] = useState<any | null>(null);
+  const [rejectionReason, setRejectionReason] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Gestos Touch / Pointer no Card de Swipe
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+  const [dragOffsetX, setDragOffsetX] = useState(0);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -77,10 +90,7 @@ export default function FiscalizacaoPage() {
         ? safeChallenges.map((c: any) => c.id)
         : [selectedChallengeId];
 
-      // 2. Buscar submissões com dados do aluno e missão
-      const { data: subsData, error: subsError } = await supabase
-        .from('student_submissions')
-        .select(`
+      const selectColumnsWithReports = `
           id,
           photo_url,
           caption,
@@ -106,64 +116,112 @@ export default function FiscalizacaoPage() {
             created_at,
             reporter_student_id
           )
-        `)
-        .in('missions.challenge_id', targetChallengeIds)
-        .order('submitted_at', { ascending: false })
-        .limit(80);
+        `;
 
-      let finalSubmissions: any[] = subsData || [];
-
-      // Fallback defensivo
-      if (subsError) {
-        const { data: fallbackSubs } = await supabase
-          .from('student_submissions')
-          .select(`
+      const selectColumnsFallback = `
+          id,
+          photo_url,
+          caption,
+          status,
+          location_name,
+          client_captured_at,
+          submitted_at,
+          student_id,
+          students (
+            full_name,
+            avatar_url
+          ),
+          missions!inner (
             id,
-            photo_url,
-            caption,
-            status,
-            location_name,
-            client_captured_at,
-            submitted_at,
-            student_id,
-            students (
-              full_name,
-              avatar_url
-            ),
-            missions!inner (
-              id,
-              challenge_id,
-              title,
-              category,
-              points_rewarded
-            )
-          `)
+            challenge_id,
+            title,
+            category,
+            points_rewarded
+          )
+        `;
+
+      // 2. Buscar todas as submissões pendentes + últimas 80 já auditadas em paralelo (sem penhasco de 80 itens)
+      const [pendingRes, nonPendingRes] = await Promise.all([
+        supabase
+          .from('student_submissions')
+          .select(selectColumnsWithReports)
           .in('missions.challenge_id', targetChallengeIds)
+          .eq('status', 'pending')
+          .neq('photo_url', 'simple_click')
+          .not('photo_url', 'is', null)
+          .order('submitted_at', { ascending: false }),
+        supabase
+          .from('student_submissions')
+          .select(selectColumnsWithReports)
+          .in('missions.challenge_id', targetChallengeIds)
+          .neq('status', 'pending')
+          .neq('photo_url', 'simple_click')
+          .not('photo_url', 'is', null)
           .order('submitted_at', { ascending: false })
-          .limit(80);
+          .limit(80),
+      ]);
 
-        finalSubmissions = fallbackSubs || [];
-      }
+      const subsError = pendingRes.error || nonPendingRes.error;
+      let finalSubmissions: any[] = [];
 
-      // Carregamento resiliente das denúncias de fotos
-      if (finalSubmissions.length > 0) {
-        const subIds = finalSubmissions.map((s) => s.id);
-        const { data: directReports } = await supabase
-          .from('submission_reports')
-          .select('id, submission_id, reason, created_at, reporter_student_id')
-          .in('submission_id', subIds);
+      if (!subsError) {
+        const mergedMap = new Map<string, any>();
+        for (const item of [...(pendingRes.data || []), ...(nonPendingRes.data || [])]) {
+          if (item && isValidSubmissionPhotoUrl(item.photo_url) && !mergedMap.has(item.id)) {
+            mergedMap.set(item.id, item);
+          }
+        }
+        finalSubmissions = Array.from(mergedMap.values());
+      } else {
+        // Fallback defensivo caso o join submission_reports falhe
+        const [fallbackPending, fallbackNonPending] = await Promise.all([
+          supabase
+            .from('student_submissions')
+            .select(selectColumnsFallback)
+            .in('missions.challenge_id', targetChallengeIds)
+            .eq('status', 'pending')
+            .neq('photo_url', 'simple_click')
+            .not('photo_url', 'is', null)
+            .order('submitted_at', { ascending: false }),
+          supabase
+            .from('student_submissions')
+            .select(selectColumnsFallback)
+            .in('missions.challenge_id', targetChallengeIds)
+            .neq('status', 'pending')
+            .neq('photo_url', 'simple_click')
+            .not('photo_url', 'is', null)
+            .order('submitted_at', { ascending: false })
+            .limit(80),
+        ]);
 
-        if (directReports && directReports.length > 0) {
-          const reportsBySubId: Record<string, any[]> = {};
-          directReports.forEach((r: any) => {
-            if (!reportsBySubId[r.submission_id]) reportsBySubId[r.submission_id] = [];
-            reportsBySubId[r.submission_id].push(r);
-          });
+        const mergedMap = new Map<string, any>();
+        for (const item of [...(fallbackPending.data || []), ...(fallbackNonPending.data || [])]) {
+          if (item && isValidSubmissionPhotoUrl(item.photo_url) && !mergedMap.has(item.id)) {
+            mergedMap.set(item.id, item);
+          }
+        }
+        finalSubmissions = Array.from(mergedMap.values());
 
-          finalSubmissions = finalSubmissions.map((s) => ({
-            ...s,
-            submission_reports: reportsBySubId[s.id] || s.submission_reports || [],
-          }));
+        // Só buscar submission_reports separadamente se o join inicial tiver falhado
+        if (finalSubmissions.length > 0) {
+          const subIds = finalSubmissions.map((s) => s.id);
+          const { data: directReports } = await supabase
+            .from('submission_reports')
+            .select('id, submission_id, reason, created_at, reporter_student_id')
+            .in('submission_id', subIds);
+
+          if (directReports && directReports.length > 0) {
+            const reportsBySubId: Record<string, any[]> = {};
+            directReports.forEach((r: any) => {
+              if (!reportsBySubId[r.submission_id]) reportsBySubId[r.submission_id] = [];
+              reportsBySubId[r.submission_id].push(r);
+            });
+
+            finalSubmissions = finalSubmissions.map((s) => ({
+              ...s,
+              submission_reports: reportsBySubId[s.id] || s.submission_reports || [],
+            }));
+          }
         }
       }
 
@@ -184,6 +242,7 @@ export default function FiscalizacaoPage() {
   const filteredSubmissions = useMemo(() => {
     return submissions
       .filter((s) => {
+        if (!isValidSubmissionPhotoUrl(s.photo_url)) return false;
         const hasReport = s.submission_reports && s.submission_reports.length > 0;
         if (filter === 'pending') return s.status === 'pending';
         if (filter === 'reported') return hasReport;
@@ -199,14 +258,21 @@ export default function FiscalizacaoPage() {
       });
   }, [submissions, filter]);
 
+  // Garantir que swipeIndex nunca fique fora dos limites após aprovar/invalidar um item
+  useEffect(() => {
+    setSwipeIndex((prev) =>
+      filteredSubmissions.length === 0 ? 0 : Math.max(0, Math.min(prev, filteredSubmissions.length - 1))
+    );
+  }, [filteredSubmissions.length]);
+
   const reportedCount = useMemo(() => {
     return submissions.filter(
-      (s) => s.submission_reports && s.submission_reports.length > 0
+      (s) => isValidSubmissionPhotoUrl(s.photo_url) && s.submission_reports && s.submission_reports.length > 0
     ).length;
   }, [submissions]);
 
   const pendingCount = useMemo(() => {
-    return submissions.filter((s) => s.status === 'pending').length;
+    return submissions.filter((s) => isValidSubmissionPhotoUrl(s.photo_url) && s.status === 'pending').length;
   }, [submissions]);
 
   const handleApprovePhoto = async (sub: any) => {
@@ -232,6 +298,9 @@ export default function FiscalizacaoPage() {
           item.id === sub.id ? { ...item, status: 'approved', submission_reports: [] } : item
         )
       );
+      if (filter === 'all') {
+        setSwipeIndex((prev) => Math.max(0, Math.min(prev + 1, filteredSubmissions.length - 1)));
+      }
       setSwipeHistory((prev) => [...prev, { id: sub.id, prevStatus }]);
       showToast(`Submissão de ${sub.students?.full_name} aprovada.`);
     } catch (err: any) {
@@ -246,6 +315,7 @@ export default function FiscalizacaoPage() {
     const sub = invalidateTarget;
     setProcessingId(sub.id);
     const prevStatus = sub.status;
+    const trimmedReason = rejectionReason.trim();
     try {
       const res = await fetch('/api/audit/update-status', {
         method: 'POST',
@@ -253,6 +323,7 @@ export default function FiscalizacaoPage() {
         body: JSON.stringify({
           submissionId: sub.id,
           status: 'rejected',
+          rejectionReason: trimmedReason || undefined,
         }),
       });
 
@@ -266,9 +337,13 @@ export default function FiscalizacaoPage() {
           item.id === sub.id ? { ...item, status: 'rejected', submission_reports: [] } : item
         )
       );
+      if (filter === 'all') {
+        setSwipeIndex((prev) => Math.max(0, Math.min(prev + 1, filteredSubmissions.length - 1)));
+      }
       setSwipeHistory((prev) => [...prev, { id: sub.id, prevStatus }]);
       showToast(`Submissão de ${sub.students?.full_name} invalidada.`);
       setInvalidateTarget(null);
+      setRejectionReason('');
     } catch (err: any) {
       showToast('Erro ao invalidar: ' + err.message);
     } finally {
@@ -387,9 +462,9 @@ export default function FiscalizacaoPage() {
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         handleApprovePhoto(currentSwipeSub);
-        setSwipeIndex((prev) => prev + 1);
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
+        setRejectionReason('');
         setInvalidateTarget(currentSwipeSub);
       } else if (e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault();
@@ -398,6 +473,33 @@ export default function FiscalizacaoPage() {
     },
     [viewMode, currentSwipeSub, invalidateTarget]
   );
+
+  const handleCardPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest('button, a, input, textarea, select')) return;
+    setDragStartX(e.clientX);
+    setDragOffsetX(0);
+  };
+
+  const handleCardPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragStartX === null) return;
+    setDragOffsetX(e.clientX - dragStartX);
+  };
+
+  const handleCardPointerUp = (sub: any) => {
+    if (dragStartX === null) return;
+    const delta = dragOffsetX;
+    setDragStartX(null);
+    setDragOffsetX(0);
+
+    if (processingId === sub.id) return;
+    if (delta > 90) {
+      handleApprovePhoto(sub);
+    } else if (delta < -90) {
+      setRejectionReason('');
+      setInvalidateTarget(sub);
+    }
+  };
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -469,7 +571,7 @@ export default function FiscalizacaoPage() {
             <button
               onClick={handleBatchApprovePending}
               disabled={batchApproving || loading}
-              className="px-4 py-2 text-xs font-mono tracking-wider bg-[#3478F6] text-white hover:bg-[#75A7FF] font-black rounded-2xl transition-all shadow-md shadow-[#3478F6]/20 cursor-pointer"
+              className="min-h-[44px] px-4 py-2 text-xs font-mono tracking-wider bg-[#3478F6] text-white hover:bg-[#75A7FF] font-black rounded-2xl transition-all shadow-md shadow-[#3478F6]/20 cursor-pointer"
             >
               {batchApproving ? 'PROCESSANDO...' : `APROVAR FILA (${pendingCount})`}
             </button>
@@ -620,7 +722,22 @@ export default function FiscalizacaoPage() {
                 <div
                   key={sub.id}
                   data-tour="audit-swipe-container"
-                  className={`p-4 sm:p-5 rounded-3xl bg-[#0E0E10] border w-full max-w-full min-w-0 overflow-hidden transition-all ${
+                  onPointerDown={handleCardPointerDown}
+                  onPointerMove={handleCardPointerMove}
+                  onPointerUp={() => handleCardPointerUp(sub)}
+                  onPointerCancel={() => {
+                    setDragStartX(null);
+                    setDragOffsetX(0);
+                  }}
+                  style={
+                    dragOffsetX !== 0
+                      ? {
+                          transform: `translateX(${dragOffsetX}px) rotate(${dragOffsetX * 0.03}deg)`,
+                          transition: 'none',
+                        }
+                      : undefined
+                  }
+                  className={`p-4 sm:p-5 rounded-3xl bg-[#0E0E10] border w-full max-w-full min-w-0 overflow-hidden transition-all select-none ${
                     isReported ? 'border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'border-[#27272A]'
                   }`}
                 >
@@ -779,7 +896,10 @@ export default function FiscalizacaoPage() {
                   {/* Ações de Decisão de Swipe */}
                   <div className="pt-5 mt-5 border-t border-[#27272A] grid grid-cols-2 gap-3">
                     <button
-                      onClick={() => setInvalidateTarget(sub)}
+                      onClick={() => {
+                        setRejectionReason('');
+                        setInvalidateTarget(sub);
+                      }}
                       disabled={isProcessing}
                       className="py-3.5 px-4 rounded-2xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none font-mono text-xs tracking-wider font-bold transition-all cursor-pointer"
                     >
@@ -789,7 +909,6 @@ export default function FiscalizacaoPage() {
                     <button
                       onClick={() => {
                         handleApprovePhoto(sub);
-                        setSwipeIndex((prev) => prev + 1);
                       }}
                       disabled={isProcessing}
                       className="py-3.5 px-4 rounded-2xl bg-[#3478F6] text-white hover:bg-[#75A7FF] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none font-mono text-xs tracking-wider font-black transition-all shadow-lg shadow-[#3478F6]/20 cursor-pointer"
@@ -961,14 +1080,50 @@ export default function FiscalizacaoPage() {
       {/* Modal Customizado de Invalidação */}
       <CustomDialog
         isOpen={!!invalidateTarget}
-        onClose={() => setInvalidateTarget(null)}
+        onClose={() => {
+          setInvalidateTarget(null);
+          setRejectionReason('');
+        }}
         title="Invalidar Registro de Foto"
         description={`Confirmar a invalidação da foto de "${invalidateTarget?.students?.full_name}" na missão "${invalidateTarget?.missions?.title || 'Missão'}"? ${invalidateTarget?.missions?.points_rewarded || 10} pontos serão deduzidos do ranking do atleta.`}
         confirmLabel={processingId ? 'INVALIDANDO...' : 'CONFIRMAR INVALIDAÇÃO'}
         cancelLabel="VOLTAR"
+        variant="destructive"
         onConfirm={handleConfirmInvalidate}
         isLoading={!!processingId}
-      />
+      >
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
+              Motivos Rápidos
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {QUICK_REJECTION_REASONS.map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => setRejectionReason(chip)}
+                  className={`px-2.5 py-1.5 rounded-xl text-[11px] font-sans border transition-colors cursor-pointer ${
+                    rejectionReason === chip
+                      ? 'bg-rose-500/20 border-rose-500/50 text-rose-200 font-semibold'
+                      : 'bg-[#18181B] border-[#27272A] text-[#D4D4D8] hover:border-rose-500/30'
+                  }`}
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <textarea
+            placeholder="Informe o motivo da invalidação (opcional)..."
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            rows={3}
+            className="w-full rounded-2xl bg-[#18181B] border border-[#27272A] p-3 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-rose-500/50 resize-none"
+          />
+        </div>
+      </CustomDialog>
     </div>
   );
 }

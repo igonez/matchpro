@@ -19,12 +19,14 @@ import { CustomDialog } from '@/components/ui/custom-dialog';
 import { FeatureGate } from '@/components/ui/feature-gate';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { useCoachSession } from '@/lib/auth/coach-session-context';
 
 export default function SquadsManagerPage() {
   const supabase = createClient();
+  const { user, planTier } = useCoachSession();
 
   const [loading, setLoading] = useState(true);
-  const [coachPlan, setCoachPlan] = useState<string>('starter');
+  const [coachPlan, setCoachPlan] = useState<string>(planTier || 'starter');
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('');
   const [squads, setSquads] = useState<any[]>([]);
@@ -53,28 +55,19 @@ export default function SquadsManagerPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const currentUserId = user?.id ?? (await supabase.auth.getUser()).data.user?.id;
+      if (!currentUserId) {
         setLoading(false);
         return;
       }
 
-      // 0. Carregar plano do treinador
-      const { data: profData } = await supabase
-        .from('professionals')
-        .select('plan_tier')
-        .eq('id', user.id)
-        .single();
-
-      if (profData?.plan_tier) {
-        setCoachPlan(profData.plan_tier);
-      }
+      setCoachPlan(planTier || 'starter');
 
       // 1. Desafios exclusivos do treinador logado (Isolamento Multi-Tenant)
       const { data: challengesData } = await supabase
         .from('challenges')
         .select('id, title, is_active, start_date')
-        .eq('professional_id', user.id)
+        .eq('professional_id', currentUserId)
         .order('is_active', { ascending: false })
         .order('start_date', { ascending: false });
 

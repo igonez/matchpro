@@ -407,116 +407,226 @@ export default function DashboardFinanceAndStudentsPage() {
             Nenhum atleta encontrado para os filtros selecionados.
           </div>
         ) : (
-          <div className="divide-y divide-[#27272A] overflow-x-auto">
-            <table className="w-full min-w-[640px] text-left text-xs">
-              <thead className="bg-[#18181B]/70 text-[#A1A1AA] text-xs font-semibold border-b border-[#27272A]">
-                <tr>
-                  <th className="py-3 px-4">Atleta</th>
-                  <th className="py-3 px-4">Turma</th>
-                  <th className="py-3 px-4">Entrada</th>
-                  <th className="py-3 px-4">Status Pgto (App)</th>
-                  <th className="py-3 px-4 text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#27272A] text-[#FAFAFA]">
-                {filteredParticipants.map((p) => {
-                  const challengeObj = challenges.find((c) => c.id === p.challenge_id);
-                  const cleanPhone = p.student.phone?.replace(/\D/g, '') || '';
-                  const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}` : null;
-                  const isPaid = p.payment_status === 'paid';
-                  const isPending = p.payment_status === 'pending';
+          <>
+            {/* Cards Responsivos (Mobile < md) */}
+            <div className="md:hidden divide-y divide-[#27272A]">
+              {filteredParticipants.map((p) => {
+                const challengeObj = challenges.find((c) => c.id === p.challenge_id);
+                const cleanPhone = p.student.phone?.replace(/\D/g, '') || '';
+                const targetPhone = cleanPhone
+                  ? cleanPhone.startsWith('55') && cleanPhone.length >= 12
+                    ? cleanPhone
+                    : `55${cleanPhone}`
+                  : '';
+                const waLink = targetPhone ? `https://wa.me/${targetPhone}` : null;
+                const isPaid = p.payment_status === 'paid';
+                const isPending = p.payment_status === 'pending';
 
-                  return (
-                    <tr key={p.id} className="hover:bg-[#18181B]/50 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#D4D4D8] font-bold shrink-0">
-                            {p.student?.full_name?.charAt(0)?.toUpperCase() || 'A'}
-                          </div>
-                          <div>
-                            <span className="font-bold text-[#FAFAFA] block">
-                              {p.student?.full_name || 'Aluno'}
-                            </span>
-                            <span className="text-[11px] text-[#A1A1AA]">
-                              Matrícula: {p.student_id ? `${p.student_id.slice(0, 8)}...` : '---'}
-                            </span>
-                          </div>
+                return (
+                  <div key={p.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-9 w-9 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#D4D4D8] font-bold shrink-0">
+                          {p.student?.full_name?.charAt(0)?.toUpperCase() || 'A'}
                         </div>
-                      </td>
+                        <div className="min-w-0">
+                          <span className="font-bold text-sm text-[#FAFAFA] block truncate">
+                            {p.student?.full_name || 'Aluno'}
+                          </span>
+                          <span className="text-[11px] text-[#A1A1AA] block">
+                            Matrícula: {p.student_id ? `${p.student_id.slice(0, 8)}...` : '---'}
+                          </span>
+                        </div>
+                      </div>
 
-                      <td className="py-3 px-4 text-[#FAFAFA] font-semibold">
+                      {isPaid && (challengeObj?.price || 0) > 0 && (
+                        <Badge
+                          variant="outline"
+                          className="border-white/10 text-[#D4D4D8] bg-white/[0.06] text-[11px] font-semibold font-mono shrink-0"
+                        >
+                          ● Pago via App
+                        </Badge>
+                      )}
+                      {isPaid && (challengeObj?.price || 0) === 0 && (
+                        <Badge
+                          variant="outline"
+                          className="border-[#27272A] text-[#FAFAFA] bg-[#18181B] text-[11px] font-semibold font-mono shrink-0"
+                        >
+                          ● Gratuito (App)
+                        </Badge>
+                      )}
+                      {isPending && (
+                        <Badge
+                          variant="outline"
+                          className="border-amber-500/30 text-amber-300 bg-amber-500/10 text-[11px] font-semibold font-mono shrink-0"
+                        >
+                          ○ Aguardando Pix
+                        </Badge>
+                      )}
+                      {!isPaid && !isPending && (
+                        <Badge
+                          variant="outline"
+                          className="border-[#27272A] text-[#A1A1AA] bg-[#18181B] text-[10px] font-mono uppercase tracking-wider shrink-0"
+                        >
+                          ATIVO
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-[#A1A1AA] gap-2">
+                      <span className="text-[#FAFAFA] font-semibold truncate">
                         {challengeObj?.title || 'Turma Ativa'}
-                      </td>
+                      </span>
+                      <span className="shrink-0 font-mono text-[11px]">
+                        Entrada: {new Date(p.joined_at).toLocaleDateString('pt-BR')}
+                      </span>
+                    </div>
 
-                      <td className="py-3 px-4 text-[#A1A1AA] text-xs">
-                        {new Date(p.joined_at).toLocaleDateString('pt-BR')}
-                      </td>
+                    <div className="flex items-center justify-end gap-2 pt-1">
+                      {waLink && (
+                        <a
+                          href={waLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 py-2 rounded-xl bg-[#18181B] border border-[#27272A] text-[#D4D4D8] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 text-xs font-semibold"
+                          title="Chamar no WhatsApp"
+                        >
+                          <Phone className="h-3.5 w-3.5 text-[#3478F6]" />
+                          <span>WhatsApp</span>
+                        </a>
+                      )}
 
-                      <td className="py-3 px-4">
-                        {isPaid && (challengeObj?.price || 0) > 0 && (
-                          <Badge
-                            variant="outline"
-                            className="border-white/10 text-[#D4D4D8] bg-white/[0.06] text-xs font-semibold font-mono"
-                          >
-                            ● Pago via App
-                          </Badge>
-                        )}
-                        {isPaid && (challengeObj?.price || 0) === 0 && (
-                          <Badge
-                            variant="outline"
-                            className="border-[#27272A] text-[#FAFAFA] bg-[#18181B] text-xs font-semibold font-mono"
-                          >
-                            ● Gratuito (App)
-                          </Badge>
-                        )}
-                        {isPending && (
-                          <Badge
-                            variant="outline"
-                            className="border-amber-500/30 text-amber-300 bg-amber-500/10 text-xs font-semibold font-mono"
-                          >
-                            ○ Aguardando Pix
-                          </Badge>
-                        )}
-                        {!isPaid && !isPending && (
-                          <Badge
-                            variant="outline"
-                            className="border-[#27272A] text-[#A1A1AA] bg-[#18181B] text-[10px] font-mono uppercase tracking-wider"
-                          >
-                            ATIVO
-                          </Badge>
-                        )}
-                      </td>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
+                        className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center justify-center"
+                        title="Remover matrícula da turma"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {waLink && (
-                            <a
-                              href={waLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 text-[11px]"
-                              title="Chamar no WhatsApp"
+            {/* Tabela Desktop (>= md) */}
+            <div className="hidden md:block divide-y divide-[#27272A] overflow-x-auto">
+              <table className="w-full min-w-[640px] text-left text-xs">
+                <thead className="bg-[#18181B]/70 text-[#A1A1AA] text-xs font-semibold border-b border-[#27272A]">
+                  <tr>
+                    <th className="py-3 px-4">Atleta</th>
+                    <th className="py-3 px-4">Turma</th>
+                    <th className="py-3 px-4">Entrada</th>
+                    <th className="py-3 px-4">Status Pgto (App)</th>
+                    <th className="py-3 px-4 text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#27272A] text-[#FAFAFA]">
+                  {filteredParticipants.map((p) => {
+                    const challengeObj = challenges.find((c) => c.id === p.challenge_id);
+                    const cleanPhone = p.student.phone?.replace(/\D/g, '') || '';
+                    const targetPhone = cleanPhone
+                      ? cleanPhone.startsWith('55') && cleanPhone.length >= 12
+                        ? cleanPhone
+                        : `55${cleanPhone}`
+                      : '';
+                    const waLink = targetPhone ? `https://wa.me/${targetPhone}` : null;
+                    const isPaid = p.payment_status === 'paid';
+                    const isPending = p.payment_status === 'pending';
+
+                    return (
+                      <tr key={p.id} className="hover:bg-[#18181B]/50 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#D4D4D8] font-bold shrink-0">
+                              {p.student?.full_name?.charAt(0)?.toUpperCase() || 'A'}
+                            </div>
+                            <div>
+                              <span className="font-bold text-[#FAFAFA] block">
+                                {p.student?.full_name || 'Aluno'}
+                              </span>
+                              <span className="text-[11px] text-[#A1A1AA]">
+                                Matrícula: {p.student_id ? `${p.student_id.slice(0, 8)}...` : '---'}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-4 text-[#FAFAFA] font-semibold">
+                          {challengeObj?.title || 'Turma Ativa'}
+                        </td>
+
+                        <td className="py-3 px-4 text-[#A1A1AA] text-xs">
+                          {new Date(p.joined_at).toLocaleDateString('pt-BR')}
+                        </td>
+
+                        <td className="py-3 px-4">
+                          {isPaid && (challengeObj?.price || 0) > 0 && (
+                            <Badge
+                              variant="outline"
+                              className="border-white/10 text-[#D4D4D8] bg-white/[0.06] text-xs font-semibold font-mono"
                             >
-                              <Phone className="h-3.5 w-3.5" />
-                            </a>
+                              ● Pago via App
+                            </Badge>
                           )}
+                          {isPaid && (challengeObj?.price || 0) === 0 && (
+                            <Badge
+                              variant="outline"
+                              className="border-[#27272A] text-[#FAFAFA] bg-[#18181B] text-xs font-semibold font-mono"
+                            >
+                              ● Gratuito (App)
+                            </Badge>
+                          )}
+                          {isPending && (
+                            <Badge
+                              variant="outline"
+                              className="border-amber-500/30 text-amber-300 bg-amber-500/10 text-xs font-semibold font-mono"
+                            >
+                              ○ Aguardando Pix
+                            </Badge>
+                          )}
+                          {!isPaid && !isPending && (
+                            <Badge
+                              variant="outline"
+                              className="border-[#27272A] text-[#A1A1AA] bg-[#18181B] text-[10px] font-mono uppercase tracking-wider"
+                            >
+                              ATIVO
+                            </Badge>
+                          )}
+                        </td>
 
-                          <button
-                            type="button"
-                            onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
-                            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center justify-center"
-                            title="Remover matrícula da turma"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {waLink && (
+                              <a
+                                href={waLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center min-h-[40px] min-w-[40px] px-3 py-2 rounded-xl bg-[#18181B] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3478F6]/40 text-[11px]"
+                                title="Chamar no WhatsApp"
+                              >
+                                <Phone className="h-3.5 w-3.5" />
+                              </a>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget({ id: p.id, name: p.student.full_name })}
+                              className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center justify-center"
+                              title="Remover matrícula da turma"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 

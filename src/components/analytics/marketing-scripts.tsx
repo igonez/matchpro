@@ -14,12 +14,22 @@ const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || '';
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
 const META_PIXEL_ID = DEFAULT_META_PIXEL_ID;
 
+const PRIVATE_ROUTE_PREFIXES = ['/app', '/dashboard', '/admin'];
+
+function isPrivateRoute(pathname: string | null): boolean {
+  if (!pathname) return false;
+  return PRIVATE_ROUTE_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
+
 function RouteTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const initialPathRef = useRef<string | null>(null);
 
   useEffect(() => {
+    if (isPrivateRoute(pathname)) return;
     captureAttributionParams();
 
     const currentRoute =
@@ -93,7 +103,12 @@ function RouteTracker() {
 }
 
 export function MarketingScripts() {
+  const pathname = usePathname();
   const primaryGoogleTag = GA4_ID || GOOGLE_ADS_ID;
+
+  if (isPrivateRoute(pathname)) {
+    return null;
+  }
 
   return (
     <>
@@ -106,7 +121,7 @@ export function MarketingScripts() {
         <>
           <Script
             id="meta-pixel-base"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
                 !function(f,b,e,v,n,t,s)
@@ -141,11 +156,11 @@ export function MarketingScripts() {
           <Script
             id="google-gtag-src"
             src={`https://www.googletagmanager.com/gtag/js?id=${primaryGoogleTag}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
           <Script
             id="google-gtag-init"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];
@@ -164,7 +179,7 @@ export function MarketingScripts() {
       {GTM_ID && (
         <Script
           id="google-tag-manager"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

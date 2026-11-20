@@ -91,10 +91,11 @@ export function PwaInstallPrompt() {
     localStorage.setItem('pwa_prompt_dismissed_time', Date.now().toString());
   };
 
-  if (!showPrompt) return null;
+  if (!showPrompt && !showIosGuide) return null;
 
   return (
     <>
+      {showPrompt && (
       <div className="mx-4 mb-3 p-3.5 rounded-2xl bg-[#0E0E10] border border-[#27272A] shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-xl flex items-center justify-between gap-3 text-left">
         <div className="flex items-center gap-2.5">
           <div className="h-9 w-9 rounded-xl bg-[#18181B] border border-[#27272A] text-[#D4D4D8] flex items-center justify-center shrink-0">
@@ -122,6 +123,7 @@ export function PwaInstallPrompt() {
           </button>
         </div>
       </div>
+      )}
 
       {/* Modal Guia Especial para iPhone / iOS */}
       <CustomDialog

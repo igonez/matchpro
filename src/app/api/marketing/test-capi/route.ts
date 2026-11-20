@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sendMetaConversionEvent } from '@/lib/analytics/meta-capi';
 import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { isMasterAdmin } from '@/lib/master-auth';
 
 export async function GET(request: Request) {
@@ -10,17 +11,28 @@ export async function GET(request: Request) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { searchParams } = new URL(request.url);
-    const testCode = searchParams.get('code');
+    let authorized = isMasterAdmin(user);
+    if (!authorized && user) {
+      const { data: prof } = await supabaseAdmin
+        .from('professionals')
+        .select('is_master_admin')
+        .eq('id', user.id)
+        .maybeSingle();
 
-    // Exige código explícito de teste ou sessão autenticada de Master Admin para evitar disparos indevidos por bots
-    if (!testCode && !isMasterAdmin(user)) {
+      if (prof?.is_master_admin) {
+        authorized = true;
+      }
+    }
+
+    if (!authorized) {
       return NextResponse.json(
-        { error: 'Acesso restrito. Informe o código de teste (?code=TEST...) ou autentique-se como administrador.' },
+        { error: 'Acesso restrito. Autentique-se como administrador.' },
         { status: 403 }
       );
     }
 
+    const { searchParams } = new URL(request.url);
+    const testCode = searchParams.get('code');
     const activeTestCode = testCode || 'TEST81289';
 
     const result = await sendMetaConversionEvent({

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, MouseEvent } from 'react';
+import React, { useEffect, useRef, MouseEvent } from 'react';
 
 interface SpotlightCard3DProps {
   children: React.ReactNode;
@@ -14,59 +14,78 @@ export function SpotlightCard3D({
   glowIntensity = 0.12,
 }: SpotlightCard3DProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
 
-    setCoords({ x, y });
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
 
-    // 3D Tilt calculation - SUPER sutil e elegante ao toque
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -1.5; // max 1.5 deg tilt (super sutil)
-    const rotateY = ((x - centerX) / centerX) * 1.5;
+    rafRef.current = requestAnimationFrame(() => {
+      const el = cardRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
 
-    setTilt({ rotateX, rotateY });
-  };
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = centerY ? ((y - centerY) / centerY) * -1.5 : 0;
+      const rotateY = centerX ? ((x - centerX) / centerX) * 1.5 : 0;
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
+      el.style.setProperty('--mx', `${x}px`);
+      el.style.setProperty('--my', `${y}px`);
+      el.style.setProperty('--rx', `${rotateX}deg`);
+      el.style.setProperty('--ry', `${rotateY}deg`);
+    });
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTilt({ rotateX: 0, rotateY: 0 });
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    const el = cardRef.current;
+    if (!el) return;
+    el.style.setProperty('--rx', '0deg');
+    el.style.setProperty('--ry', '0deg');
   };
 
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{
-        transform: isHovered
-          ? `perspective(1200px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateZ(2px)`
-          : 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)',
-        transition: isHovered ? 'transform 0.12s ease-out' : 'transform 0.6s ease-out',
-        transformStyle: 'preserve-3d',
-      }}
-      className={`relative rounded-3xl overflow-hidden border border-[#27272A] bg-[#0E0E10]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-shadow duration-300 ${
-        isHovered ? 'shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_20px_rgba(52,120,246,0.08)]' : ''
-      } ${className}`}
+      style={
+        {
+          '--mx': '50%',
+          '--my': '50%',
+          '--rx': '0deg',
+          '--ry': '0deg',
+          transform: 'perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry))',
+          transition: 'transform 0.25s ease-out',
+          transformStyle: 'preserve-3d',
+        } as React.CSSProperties
+      }
+      className={`group relative rounded-3xl overflow-hidden border border-[#27272A] bg-[#0E0E10]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_20px_rgba(52,120,246,0.08)] transition-shadow duration-300 ${className}`}
     >
       {/* Spotlight Radial Follower */}
       <div
-        className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
-          opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(650px circle at ${coords.x}px ${coords.y}px, rgba(52, 120, 246, ${glowIntensity}), transparent 40%)`,
+          background: `radial-gradient(650px circle at var(--mx) var(--my), rgba(52, 120, 246, ${glowIntensity}), transparent 40%)`,
         }}
       />
 

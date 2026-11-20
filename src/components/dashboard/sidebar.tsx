@@ -23,7 +23,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { isMasterAdmin } from '@/lib/master-auth';
+import { useCoachSession } from '@/lib/auth/coach-session-context';
 import { useWalkthrough } from '@/components/ui/walkthrough-spotlight';
 import { COACH_WALKTHROUGH_STEPS } from '@/lib/walkthrough/coach-tour-steps';
 import { COACH_TOUR_STORAGE_KEY } from '@/components/dashboard/coach-tour-trigger';
@@ -33,29 +33,8 @@ export function DashboardSidebar() {
   const router = useRouter();
   const supabase = createClient();
   const { startTour } = useWalkthrough();
-  const [isMaster, setIsMaster] = React.useState(false);
+  const { isMaster } = useCoachSession();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
-
-  React.useEffect(() => {
-    async function checkMaster() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (isMasterAdmin(user)) {
-        setIsMaster(true);
-        return;
-      }
-      if (user?.id) {
-        const { data: prof } = await supabase
-          .from('professionals')
-          .select('is_master_admin')
-          .eq('id', user.id)
-          .maybeSingle();
-        if (prof?.is_master_admin) {
-          setIsMaster(true);
-        }
-      }
-    }
-    checkMaster();
-  }, [supabase]);
 
   const handleSignOut = async () => {
     if (isLoggingOut) return;

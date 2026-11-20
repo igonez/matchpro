@@ -1,8 +1,99 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { Database } from '@/types/database';
+import { isMasterAdmin } from '@/lib/master-auth';
+
+const PUBLIC_PREFIXES = [
+  '/login',
+  '/mestre',
+  '/esqueci-senha',
+  '/redefinir-senha',
+  '/vip',
+  '/beta',
+  '/privacidade',
+  '/termos',
+  '/lgpd',
+  '/ajuda',
+  '/r/',
+  '/join/',
+  '/auth',
+];
+
+function isPublicRoute(pathname: string): boolean {
+  if (pathname === '/') return true;
+  return PUBLIC_PREFIXES.some((prefix) =>
+    prefix.endsWith('/')
+      ? pathname.startsWith(prefix)
+      : pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
+
+function isProtectedApiRoute(pathname: string): boolean {
+  return (
+    pathname.startsWith('/api/finance') ||
+    pathname.startsWith('/api/ai') ||
+    pathname.startsWith('/api/submissions') ||
+    pathname.startsWith('/api/audit') ||
+    pathname.startsWith('/api/checkout') ||
+    pathname.startsWith('/api/master') ||
+    pathname.startsWith('/api/admin')
+  );
+}
+
+function isProtectedPageRoute(pathname: string): boolean {
+  return (
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/app') ||
+    pathname.startsWith('/admin')
+  );
+}
+
+function getSafeRelativeRedirect(pathname: string, search: string): string | null {
+  const raw = `${pathname}${search}`;
+  if (!raw.startsWith('/') || raw.startsWith('//') || raw.includes('\\')) {
+    return null;
+  }
+  return raw;
+}
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some(
+      (c) =>
+        c.name.startsWith('sb-') &&
+        c.name.includes('-auth-token') &&
+        !c.name.includes('code-verifier') &&
+        Boolean(c.value)
+    );
+
+  // Fast-bypass sem chamar Supabase Auth quando não há cookie de sessão
+  if (!hasAuthCookie) {
+    if (isPublicRoute(pathname)) {
+      return NextResponse.next({ request });
+    }
+    if (isProtectedApiRoute(pathname)) {
+      return NextResponse.json(
+        { error: 'Acesso negado. Autenticação obrigatória.' },
+        { status: 401 }
+      );
+    }
+    if (isProtectedPageRoute(pathname)) {
+      if (pathname.startsWith('/admin')) {
+        return NextResponse.redirect(new URL('/mestre', request.url));
+      }
+      const loginUrl = new URL('/login', request.url);
+      const safeRedirect = getSafeRelativeRedirect(pathname, request.nextUrl.search);
+      if (safeRedirect) {
+        loginUrl.searchParams.set('redirect', safeRedirect);
+      }
+      return NextResponse.redirect(loginUrl);
+    }
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -10,26 +101,22 @@ export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
-  const supabase = createServerClient<Database>(
-    supabaseUrl,
-    supabaseKey,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
+  const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
       },
-    }
-  );
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        supabaseResponse = NextResponse.next({
+          request,
+        });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          supabaseResponse.cookies.set(name, value, options)
+        );
+      },
+    },
+  });
 
   const {
     data: { user },
@@ -37,32 +124,13 @@ export async function updateSession(request: NextRequest) {
 
   const url = request.nextUrl.clone();
 
-  // Rotas públicas de login, jurídicas e páginas de captura não redirecionam
-  if (
-    url.pathname.startsWith('/login') || 
-    url.pathname.startsWith('/mestre') || 
-    url.pathname.startsWith('/auth') ||
-    url.pathname.startsWith('/vip') ||
-    url.pathname.startsWith('/beta') ||
-    url.pathname.startsWith('/privacidade') ||
-    url.pathname.startsWith('/termos') ||
-    url.pathname.startsWith('/lgpd') ||
-    url.pathname.startsWith('/ajuda') ||
-    url.pathname.startsWith('/r/')
-  ) {
+  // Rotas públicas (exceto '/' que redireciona usuários logados para o cockpit/app)
+  if (isPublicRoute(url.pathname) && url.pathname !== '/') {
     return supabaseResponse;
   }
 
   // Se não autenticado e tentando acessar rotas de API protegidas
-  if (!user && (
-    url.pathname.startsWith('/api/finance') ||
-    url.pathname.startsWith('/api/ai') ||
-    url.pathname.startsWith('/api/submissions') ||
-    url.pathname.startsWith('/api/audit') ||
-    url.pathname.startsWith('/api/checkout') ||
-    url.pathname.startsWith('/api/master') ||
-    url.pathname.startsWith('/api/admin')
-  )) {
+  if (!user && isProtectedApiRoute(url.pathname)) {
     return NextResponse.json(
       { error: 'Acesso negado. Autenticação obrigatória.' },
       { status: 401 }
@@ -70,49 +138,47 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Se não autenticado e tentando acessar páginas protegidas
-  if (!user && (
-    url.pathname.startsWith('/dashboard') || 
-    url.pathname.startsWith('/app') ||
-    url.pathname.startsWith('/admin')
-  )) {
-    // Se tentava acessar o admin, redireciona para o login do mestre
+  if (!user && isProtectedPageRoute(url.pathname)) {
     if (url.pathname.startsWith('/admin')) {
-      url.pathname = '/mestre';
-      return NextResponse.redirect(url);
+      return NextResponse.redirect(new URL('/mestre', request.url));
     }
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
+    const loginUrl = new URL('/login', request.url);
+    const safeRedirect = getSafeRelativeRedirect(request.nextUrl.pathname, request.nextUrl.search);
+    if (safeRedirect) {
+      loginUrl.searchParams.set('redirect', safeRedirect);
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
   // Verificação de Role quando usuário está logado
   if (user) {
-    const isMaster = user.email?.toLowerCase() === 'igor.feroliveira8@gmail.com' ||
-      (process.env.MASTER_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).includes(user.email?.toLowerCase() || '') ||
-      user.app_metadata?.is_master_admin === true;
-
-    // Apenas app_metadata (imutável pelo cliente) ou registro confirmado no banco
+    let isMaster = isMasterAdmin(user);
     let isProfessional = user.app_metadata?.role === 'professional';
 
-    if (!isProfessional && !isMaster) {
-      const { data: professional } = await (supabase
-        .from('professionals') as any)
+    if ((!isProfessional && !isMaster) || (!isMaster && url.pathname.startsWith('/admin'))) {
+      const { data: professional } = await (supabase.from('professionals') as any)
         .select('id, is_master_admin')
         .eq('id', user.id)
         .maybeSingle();
 
       if (professional) {
         isProfessional = true;
+        if (professional.is_master_admin === true) {
+          isMaster = true;
+        }
       }
     }
 
     const assignedRole = isMaster ? 'master' : isProfessional ? 'professional' : 'student';
-    const isProduction = process.env.NODE_ENV === 'production';
+    const isHttps =
+      request.nextUrl.protocol === 'https:' ||
+      request.headers.get('x-forwarded-proto') === 'https';
     const cookieOptions = {
       path: '/',
       maxAge: 60 * 60 * 24 * 365,
       sameSite: 'lax' as const,
       httpOnly: true,
-      secure: isProduction,
+      secure: isHttps,
     };
 
     // Bloqueio de segurança: Se NÃO for master e tentar acessar /admin
@@ -139,15 +205,19 @@ export async function updateSession(request: NextRequest) {
     // Modo de Simulação / Visão do Aluno para Profissional ou Master
     const hasPreviewParam = url.searchParams.get('preview') === 'true';
     const hasPreviewCookie = request.cookies.get('arena_preview')?.value === 'true';
-    const isPreview = hasPreviewParam || hasPreviewCookie;
+    const isPreview = (isProfessional || isMaster) && (hasPreviewParam || hasPreviewCookie);
 
-    if (hasPreviewParam && !hasPreviewCookie) {
+    if (hasPreviewParam && !hasPreviewCookie && (isProfessional || isMaster)) {
+      request.cookies.set('arena_preview', 'true');
+      const prevCookies = supabaseResponse.cookies.getAll();
+      supabaseResponse = NextResponse.next({ request });
+      prevCookies.forEach((c) => supabaseResponse.cookies.set(c));
       supabaseResponse.cookies.set('arena_preview', 'true', {
         path: '/',
         maxAge: 60 * 60 * 24, // 24 horas
         sameSite: 'lax',
         httpOnly: true,
-        secure: isProduction,
+        secure: isHttps,
       });
     }
 

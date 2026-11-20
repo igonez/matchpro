@@ -88,7 +88,12 @@ export default function DashboardOverviewPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      setLoading(true);
+      const hasCachedData =
+        typeof window !== 'undefined' &&
+        Boolean(sessionStorage.getItem('arena_coach_stats') || sessionStorage.getItem('arena_coach_challenges'));
+      if (!hasCachedData) {
+        setLoading(true);
+      }
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
@@ -99,7 +104,7 @@ export default function DashboardOverviewPage() {
         // 1. Desafios EXCLUSIVOS do profissional autenticado (Isolamento Multi-Tenant)
         const { data: challengesData } = await supabase
           .from('challenges')
-          .select('*, missions(*)')
+          .select('*')
           .eq('professional_id', user.id)
           .order('start_date', { ascending: false });
 
@@ -119,41 +124,17 @@ export default function DashboardOverviewPage() {
         }
 
         const coachChallengeIds = safeChallenges.map((c: any) => c.id);
+        const coachChallengeSet = new Set<string>(coachChallengeIds);
 
-        // Garantir contagem precisa de missões incluindo as vinculadas por semana
-        const { data: allWeeks } = await supabase
-          .from('challenge_weeks')
-          .select('id, challenge_id')
-          .in('challenge_id', coachChallengeIds);
-
-        const weekToChallenge = new Map<string, string>();
-        allWeeks?.forEach((w: any) => weekToChallenge.set(w.id, w.challenge_id));
-
-        const weekIds = allWeeks?.map((w: any) => w.id) || [];
-        let allMissionsQuery = supabase.from('missions').select('id, challenge_id, week_id');
-        if (weekIds.length > 0) {
-          allMissionsQuery = allMissionsQuery.or(`challenge_id.in.(${coachChallengeIds.join(',')}),week_id.in.(${weekIds.join(',')})`);
-        } else {
-          allMissionsQuery = allMissionsQuery.in('challenge_id', coachChallengeIds);
-        }
-        const { data: allMissionsData } = await allMissionsQuery;
-
-        const missionsCountByChallenge = new Map<string, number>();
-        allMissionsData?.forEach((m: any) => {
-          const chId = m.challenge_id || weekToChallenge.get(m.week_id);
-          if (chId) {
-            missionsCountByChallenge.set(chId, (missionsCountByChallenge.get(chId) || 0) + 1);
-          }
-        });
-
-        const augmentedChallenges = safeChallenges.map((c: any) => ({
-          ...c,
-          missionsCount: missionsCountByChallenge.get(c.id) ?? (c.missions?.length || 0),
-        }));
-        setChallenges(augmentedChallenges);
-
-        // 2, 3 e 4. Buscar participantes, contagem de auditoria e radar de risco em paralelo
-        const [participantsRes, pendingAuditRes, atRiskRes] = await Promise.all([
+        // 2. Buscar semanas, missões, participantes, contagem de auditoria e radar de risco em paralelo
+        const [weeksRes, missionsRes, participantsRes, pendingAuditRes, atRiskRes] = await Promise.all([
+          supabase
+            .from('challenge_weeks')
+            .select('id, challenge_id')
+            .in('challenge_id', coachChallengeIds),
+          supabase
+            .from('missions')
+            .select('id, challenge_id, week_id'),
           supabase
             .from('challenge_participants')
             .select('id, challenge_id, payment_status')
@@ -171,6 +152,25 @@ export default function DashboardOverviewPage() {
             .order('days_inactive', { ascending: false })
             .limit(5),
         ]);
+
+        const weekToChallenge = new Map<string, string>();
+        weeksRes.data?.forEach((w: any) => weekToChallenge.set(w.id, w.challenge_id));
+
+        const missionsCountByChallenge = new Map<string, number>();
+        missionsRes.data?.forEach((m: any) => {
+          const chId =
+            (m.challenge_id && coachChallengeSet.has(m.challenge_id) ? m.challenge_id : null) ||
+            weekToChallenge.get(m.week_id);
+          if (chId) {
+            missionsCountByChallenge.set(chId, (missionsCountByChallenge.get(chId) || 0) + 1);
+          }
+        });
+
+        const augmentedChallenges = safeChallenges.map((c: any) => ({
+          ...c,
+          missionsCount: missionsCountByChallenge.get(c.id) ?? 0,
+        }));
+        setChallenges(augmentedChallenges);
 
         const participantsList = participantsRes.data || [];
         const confirmedParticipants = participantsList.filter((p: any) =>
@@ -558,8 +558,13 @@ export default function DashboardOverviewPage() {
                     {c.title}
                   </h3>
                   <p className="text-xs text-[#A1A1AA] mt-1">
-                    {new Date(c.start_date).toLocaleDateString('pt-BR')} até{' '}
-                    {new Date(c.end_date).toLocaleDateString('pt-BR')}
+                    {c.start_date
+                      ? new Date(`${c.start_date.slice(0, 10)}T00:00:00`).toLocaleDateString('pt-BR')
+                      : '---'}{' '}
+                    até{' '}
+                    {c.end_date
+                      ? new Date(`${c.end_date.slice(0, 10)}T00:00:00`).toLocaleDateString('pt-BR')
+                      : '---'}
                   </p>
                 </div>
 

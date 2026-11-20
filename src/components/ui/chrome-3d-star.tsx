@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 
 interface Chrome3DStarProps {
   size?: number;
@@ -15,27 +14,22 @@ export function Chrome3DStar({
   delay = 0,
 }: Chrome3DStarProps) {
   return (
-    <motion.div
-      animate={{
-        y: [0, -14, 0],
-        rotateX: [0, 12, 0],
-        rotateY: [0, -18, 0],
-        rotateZ: [0, 4, 0],
-      }}
-      transition={{
-        duration: 7,
-        repeat: Infinity,
-        ease: 'easeInOut',
-        delay,
-      }}
+    <div
       style={{
         transformStyle: 'preserve-3d',
         perspective: 1000,
         width: size,
         height: size,
+        animation: `chromeStarFloat 7s ease-in-out ${delay}s infinite`,
       }}
       className={`relative inline-block pointer-events-none select-none drop-shadow-[0_20px_35px_rgba(255,255,255,0.12)] ${className}`}
     >
+      <style>{`
+        @keyframes chromeStarFloat {
+          0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+          50% { transform: translateY(-14px) rotateX(12deg) rotateY(-18deg) rotateZ(4deg); }
+        }
+      `}</style>
       <svg
         viewBox="0 0 200 200"
         fill="none"
@@ -103,6 +97,6 @@ export function Chrome3DStar({
         {/* Reflexo Central de Ponto de Luz */}
         <circle cx="100" cy="100" r="6" fill="#ffffff" filter="drop-shadow(0 0 8px #ffffff)" />
       </svg>
-    </motion.div>
+    </div>
   );
 }

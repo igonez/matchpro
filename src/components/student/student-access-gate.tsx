@@ -4,18 +4,18 @@ import React, { useEffect, useState, useTransition } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { 
-  ShieldCheck, 
-  Lock, 
-  Link2, 
-  ArrowRight, 
-  LogOut, 
-  Sparkles, 
-  Clock, 
-  HelpCircle,
+import { useStudentSession } from '@/lib/auth/student-session-context';
+import {
+  ShieldCheck,
+  Lock,
+  Link2,
+  ArrowRight,
+  LogOut,
+  Sparkles,
+  Clock,
   QrCode,
-  CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  ArrowLeft,
 } from 'lucide-react';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { StudentBottomNav } from '@/components/student/bottom-nav';
@@ -31,126 +31,33 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+  const {
+    user,
+    student,
+    hasAccess,
+    isPreviewMode,
+    pendingChallenge,
+    isReady,
+  } = useStudentSession();
 
-  const [loading, setLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [pendingChallenge, setPendingChallenge] = useState<any | null>(null);
-
-  // Formulário para colar link ou código de acesso
   const [inviteInput, setInviteInput] = useState('');
   const [inputError, setInputError] = useState<string | null>(null);
   const [isSubmitting, startTransition] = useTransition();
   const [loggingOut, setLoggingOut] = useState(false);
 
+  const userEmail = user?.email || null;
+  const userName = student?.full_name || null;
+
   useEffect(() => {
-    let isMounted = true;
-
-    async function checkStudentEnrollment() {
-      try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-        if (userError || !user) {
-          if (isMounted) {
-            router.replace('/login?role=student');
-          }
-          return;
-        }
-
-        if (isMounted) {
-          setUserEmail(user.email || null);
-        }
-
-        // Buscar perfil e matrícula ativa em paralelo
-        const [profileRes, activePartRes] = await Promise.all([
-          supabase.from('students').select('full_name').eq('id', user.id).maybeSingle(),
-          supabase
-            .from('challenge_participants')
-            .select('id, challenge_id, payment_status, challenges(id, title, is_active)')
-            .eq('student_id', user.id)
-            .in('payment_status', ['paid', 'complimentary'])
-            .order('joined_at', { ascending: false })
-            .limit(1)
-            .maybeSingle(),
-        ]);
-
-        const studentProfile = profileRes.data;
-        const activeParticipation = activePartRes.data;
-
-        if (isMounted && studentProfile?.full_name) {
-          setUserName(studentProfile.full_name);
-        }
-
-        if (activeParticipation?.challenges?.id) {
-          if (isMounted) {
-            setHasAccess(true);
-            setLoading(false);
-          }
-          return;
-        }
-
-        // Se for o próprio treinador (dono de um desafio ativo) visualizando como aluno, vincula gratuitamente e libera o acesso
-        const { data: ownedChallenge } = await supabase
-          .from('challenges')
-          .select('id, title')
-          .eq('professional_id', user.id)
-          .eq('is_active', true)
-          .order('start_date', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (ownedChallenge?.id) {
-          await fetch('/api/challenges/join', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ challengeId: ownedChallenge.id }),
-          }).catch(() => null);
-
-          if (isMounted) {
-            setHasAccess(true);
-            setLoading(false);
-          }
-          return;
-        }
-
-        // Verificar se existe inscrição pendente de pagamento
-        const { data: pendingParticipation } = await supabase
-          .from('challenge_participants')
-          .select('id, challenge_id, payment_status, challenges(id, title, price, is_active)')
-          .eq('student_id', user.id)
-          .eq('payment_status', 'pending')
-          .order('joined_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (isMounted) {
-          if (pendingParticipation?.challenges?.id) {
-            setPendingChallenge(pendingParticipation.challenges);
-          }
-          setHasAccess(false);
-          setLoading(false);
-
-          // Se o aluno sem turma estiver tentando acessar uma sub-rota (ex: /app/missions), força retorno para /app
-          if (pathname !== '/app') {
-            router.replace('/app');
-          }
-        }
-      } catch (err) {
-        console.error('Erro ao verificar acesso do aluno:', err);
-        if (isMounted) {
-          setHasAccess(false);
-          setLoading(false);
-        }
-      }
+    if (!isReady) return;
+    if (!user) {
+      router.replace('/login?role=student');
+      return;
     }
-
-    checkStudentEnrollment();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [pathname, router, supabase]);
+    if (!hasAccess && !isPreviewMode && pathname !== '/app') {
+      router.replace('/app');
+    }
+  }, [isReady, user, hasAccess, isPreviewMode, pathname, router]);
 
   const handleJoinByInput = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,7 +69,6 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
       return;
     }
 
-    // Extrair ID ou código da URL se o aluno colou o link completo
     let targetCode = raw;
     try {
       if (raw.includes('/join/')) {
@@ -190,6 +96,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
   const handleSignOut = async () => {
     try {
       setLoggingOut(true);
+      await fetch('/api/auth/exit-preview', { method: 'POST' }).catch(() => null);
       await supabase.auth.signOut();
       window.location.href = '/login?role=student';
     } catch (err) {
@@ -198,12 +105,16 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
     }
   };
 
-  // 1. Tela de Carregamento Ultra-Fluida com Estrela Motion
-  if (loading) {
+  const handleExitPreviewToNewChallenge = async () => {
+    await fetch('/api/auth/exit-preview', { method: 'POST' }).catch(() => null);
+    router.push('/dashboard/challenges/new');
+    router.refresh();
+  };
+
+  if (!isReady || !user) {
     return <MobileLoadingScreen fullScreen={true} />;
   }
 
-  // 2. Aluno com acesso liberado a uma turma ativa
   if (hasAccess) {
     return (
       <>
@@ -215,13 +126,42 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
     );
   }
 
-  // 3. Página Única Estática de Acesso Bloqueado ("Acesso à Arena / Conecte-se à sua turma")
+  // Coach em Modo Simulação sem nenhum desafio criado ainda
+  if (isPreviewMode) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:p-8 min-h-[85vh] bg-[#000000] text-[#FAFAFA] relative">
+        <Monochrome3DBackground />
+        <div className="w-full max-w-md relative z-10 p-6 rounded-2xl bg-[#0E0E10] border border-[#27272A] text-center space-y-5 shadow-2xl">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#3478F6]">
+            <Sparkles className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-xl font-black text-[#FAFAFA] tracking-tight">
+              Nenhum desafio ativo para simular
+            </h1>
+            <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
+              Crie seu primeiro desafio no painel do treinador para visualizar a experiência completa do aluno em modo somente leitura.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleExitPreviewToNewChallenge}
+            className="w-full min-h-[44px] py-3 px-4 rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Criar Primeiro Desafio</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Aluno sem turma ativa
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:p-8 min-h-[90vh] bg-[#000000] text-[#FAFAFA] relative selection:bg-[#3478F6] selection:text-white">
       <Monochrome3DBackground />
 
       <div className="w-full max-w-md relative z-10 flex flex-col items-center text-center space-y-6">
-        {/* Ícone e Emblema de Bloqueio */}
         <div className="relative">
           <div className="w-20 h-20 rounded-3xl bg-[#0E0E10] border border-[#27272A] p-0.5 shadow-[0_0_35px_rgba(52,120,246,0.25)] flex items-center justify-center relative">
             <div className="w-full h-full rounded-[22px] bg-gradient-to-b from-[#18181B] to-[#000000] flex items-center justify-center">
@@ -233,7 +173,6 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
           </div>
         </div>
 
-        {/* Título e Posicionamento */}
         <div className="space-y-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0E0E10] border border-[#27272A] text-[11px] font-mono font-bold tracking-wider uppercase text-[#3478F6]">
             <Lock className="w-3 h-3" />
@@ -248,7 +187,6 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
           </p>
         </div>
 
-        {/* Card de Inscrição Pendente de Pagamento (se houver) */}
         {pendingChallenge && (
           <div className="w-full p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-left space-y-3 shadow-lg">
             <div className="flex items-start gap-2.5">
@@ -264,7 +202,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
             </div>
             <Link
               href={`/join/${pendingChallenge.id}`}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-[0.98]"
+              className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-[0.98]"
             >
               <QrCode className="w-4 h-4" />
               <span>Concluir Matrícula no Pix</span>
@@ -273,9 +211,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
           </div>
         )}
 
-        {/* Card Principal: Instruções e Inserção de Link/Código */}
         <div className="w-full p-5 sm:p-6 rounded-2xl bg-[#0E0E10] border border-[#27272A] text-left space-y-5 shadow-2xl">
-          {/* 3 Passos Rápidos */}
           <div className="space-y-3">
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FAFAFA] flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5 text-[#3478F6]" />
@@ -305,7 +241,6 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
 
           <div className="h-px w-full bg-[#27272A]" />
 
-          {/* Campo de Código / Link */}
           <form onSubmit={handleJoinByInput} className="space-y-3">
             <label className="block text-xs font-medium text-[#FAFAFA]">
               Já tem o link ou código da sua turma?
@@ -319,7 +254,7 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
                   setInputError(null);
                 }}
                 placeholder="Cole o link ou código (ex: AFIT-XXXX)"
-                className="w-full bg-[#18181B] border border-[#27272A] rounded-xl px-3.5 py-3 text-xs sm:text-sm text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 focus:outline-none focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6] transition-all pr-10"
+                className="w-full min-h-[44px] bg-[#18181B] border border-[#27272A] rounded-xl px-3.5 py-3 text-xs sm:text-sm text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 focus:outline-none focus:border-[#3478F6] focus:ring-1 focus:ring-[#3478F6] transition-all pr-10"
               />
               <Link2 className="w-4 h-4 text-[#A1A1AA] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
@@ -351,7 +286,6 @@ export function StudentAccessGate({ children }: StudentAccessGateProps) {
           </form>
         </div>
 
-        {/* Rodapé: Informações da conta & Desconectar */}
         <div className="w-full pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A1A1AA]">
           <div className="truncate max-w-[240px]">
             <span className="text-[#FAFAFA] font-medium">{userEmail || 'atleta'}</span>

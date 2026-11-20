@@ -3,12 +3,18 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { StoryShareModal } from '@/components/student/story-share-modal';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useStudentSession } from '@/lib/auth/student-session-context';
+
+const ShareMissionSheet = dynamic(
+  () => import('@/components/share-mission/share-mission-sheet').then((m) => m.ShareMissionSheet),
+  { ssr: false }
+);
 
 export default function CameraCapturePage() {
   return (
@@ -27,6 +33,13 @@ function CameraCaptureContent() {
   const startedAtParam = searchParams.get('startedAt');
   const durationSeconds = durationParam ? parseInt(durationParam, 10) : null;
   const supabase = createClient();
+  const {
+    user: sessionUser,
+    student: sessionStudent,
+    activeChallengeId,
+    activeChallenge,
+    isPreviewMode,
+  } = useStudentSession();
 
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [mission, setMission] = useState<any>(null);
@@ -38,6 +51,9 @@ function CameraCaptureContent() {
   const [showStoryShare, setShowStoryShare] = useState(false);
   const [studentDisplayName, setStudentDisplayName] = useState('Atleta');
   const [challengeDisplayName, setChallengeDisplayName] = useState('Desafio Oficial');
+  const [coachBrandName, setCoachBrandName] = useState<string>('ArenaFitPro');
+  const [coachLogoUrl, setCoachLogoUrl] = useState<string | null>(null);
+  const [streakDays, setStreakDays] = useState<number>(1);
 
   // Metadados de Geolocalização e Horário
   const [captureTime, setCaptureTime] = useState<Date | null>(null);
@@ -197,6 +213,15 @@ function CameraCaptureContent() {
                      mission?.title?.toLowerCase().includes('jant') || 
                      mission?.title?.toLowerCase().includes('caf');
 
+      if (isPreviewMode) {
+        setError(
+          isMeal
+            ? 'Modo Simulação (somente leitura): análise nutricional por IA e envio de check-in disponíveis apenas para alunos.'
+            : 'Modo Simulação (somente leitura): pré-visualização local ativa; envio de check-in disponível apenas para alunos.'
+        );
+        return;
+      }
+
       if (isMeal) {
         setAnalyzingAi(true);
         try {
@@ -268,12 +293,16 @@ function CameraCaptureContent() {
   };
 
   const handleUploadSubmission = async () => {
+    if (isPreviewMode) {
+      setError('Modo Simulação (somente leitura): envio de check-in disponível apenas para alunos.');
+      return;
+    }
     if (!selectedFile || !missionId) return;
     setUploading(true);
     setError(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = sessionUser || (await supabase.auth.getUser()).data.user;
       if (!user) throw new Error('Usuário não autenticado.');
 
       // Validação anti-duplicação diária: prevenir envios repetidos da mesma missão no mesmo dia civil
@@ -282,9 +311,10 @@ function CameraCaptureContent() {
 
       const { data: existingToday } = await supabase
         .from('student_submissions')
-        .select('id, submitted_at, client_captured_at')
+        .select('id, submitted_at, client_captured_at, status')
         .eq('student_id', user.id)
         .eq('mission_id', missionId)
+        .neq('status', 'rejected')
         .gte('submitted_at', startOfToday.toISOString())
         .limit(1)
         .maybeSingle();
@@ -323,16 +353,7 @@ function CameraCaptureContent() {
       }
 
       // Garantir resolução do challenge_id para vincular perfeitamente ao feed do treinador
-      let resolvedChallengeId = mission?.challenge_id || null;
-      if (!resolvedChallengeId) {
-        const { data: part } = await supabase
-          .from('challenge_participants')
-          .select('challenge_id')
-          .eq('student_id', user.id)
-          .limit(1)
-          .maybeSingle();
-        resolvedChallengeId = part?.challenge_id || null;
-      }
+      const resolvedChallengeId = mission?.challenge_id || activeChallengeId || null;
 
       // Submissões fotográficas são enviadas com status 'pending' para a fila de auditoria do treinador
       const calculatedStatus = 'pending';
@@ -347,6 +368,7 @@ function CameraCaptureContent() {
         latitude: location?.latitude || null,
         longitude: location?.longitude || null,
         location_name: location?.text || null,
+        duration_seconds: durationSeconds || null,
         client_captured_at: captureTime ? captureTime.toISOString() : new Date().toISOString(),
         status: calculatedStatus,
       };
@@ -373,19 +395,64 @@ function CameraCaptureContent() {
         if (fallbackError) throw fallbackError;
       }
 
+      const [chRes, stRes, gamifRes] = await Promise.all([
+        resolvedChallengeId
+          ? supabase
+              .from('challenges')
+              .select('title, professionals(brand_name, brand_logo_url, avatar_url, full_name)')
+              .eq('id', resolvedChallengeId)
+              .maybeSingle()
+          : Promise.resolve({ data: null }),
+        supabase
+          .from('students')
+          .select('full_name')
+          .eq('id', user.id)
+          .maybeSingle(),
+        resolvedChallengeId
+          ? supabase
+              .from('student_gamification_state')
+              .select('current_streak')
+              .eq('student_id', user.id)
+              .eq('challenge_id', resolvedChallengeId)
+              .maybeSingle()
+          : Promise.resolve({ data: null }),
+      ]);
+
+      const chData: any = chRes.data;
+      const profRaw = chData?.professionals;
+      const prof = Array.isArray(profRaw) ? profRaw[0] : profRaw;
+
       setStudentDisplayName(
-        user.user_metadata?.full_name ||
+        stRes.data?.full_name ||
+          sessionStudent?.full_name ||
+          user.user_metadata?.full_name ||
           user.user_metadata?.name ||
           user.email?.split('@')[0] ||
           'Atleta'
       );
-      if (resolvedChallengeId) {
-        const { data: chData } = await supabase
-          .from('challenges')
-          .select('title')
-          .eq('id', resolvedChallengeId)
-          .maybeSingle();
-        if (chData?.title) setChallengeDisplayName(chData.title);
+
+      if (chData?.title || activeChallenge?.title) {
+        setChallengeDisplayName(chData?.title || activeChallenge?.title || 'Desafio Oficial');
+      }
+
+      setCoachBrandName(
+        prof?.brand_name ||
+          prof?.full_name ||
+          activeChallenge?.professionals?.brand_name ||
+          activeChallenge?.professionals?.full_name ||
+          'ArenaFitPro'
+      );
+      setCoachLogoUrl(
+        prof?.brand_logo_url ||
+          prof?.avatar_url ||
+          activeChallenge?.professionals?.brand_logo_url ||
+          activeChallenge?.professionals?.avatar_url ||
+          null
+      );
+      setStreakDays(Math.max(1, gamifRes.data?.current_streak || 1));
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('arena_mission_completed'));
       }
 
       setShowStoryShare(true);
@@ -625,20 +692,26 @@ function CameraCaptureContent() {
       </div>
 
       {/* Modal de Vitória & Card 9:16 para Instagram Stories */}
-      <StoryShareModal
-        isOpen={showStoryShare}
+      <ShareMissionSheet
+        open={showStoryShare}
         onClose={() => router.push('/app')}
         onPrimaryAction={() => router.push('/app')}
         primaryActionLabel="Concluir e Voltar para a Arena"
-        data={{
-          mode: 'checkin',
-          studentName: studentDisplayName,
-          challengeTitle: challengeDisplayName,
-          pointsText: `+${mission?.points_rewarded || 10} XP`,
+        celebrate={true}
+        defaultBgMode="photo"
+        mission={{
+          missionId,
           missionTitle: mission?.title || 'Check-in de Missão',
           missionCategory: mission?.category || 'treino',
-          photoDataUrl: previewUrl,
-          durationSeconds: durationSeconds,
+          pointsRewarded: mission?.points_rewarded || 10,
+          status: 'pending',
+          completedAt: (captureTime || new Date()).toISOString(),
+          studentName: studentDisplayName,
+          challengeTitle: challengeDisplayName,
+          coachBrandName,
+          coachLogoUrl,
+          streakDays,
+          durationSeconds,
           caloriesText:
             aiMacros && aiAnalysisResult?.isValid && aiMacros.calories !== 'Não identificado'
               ? aiMacros.calories
@@ -647,11 +720,8 @@ function CameraCaptureContent() {
             aiMacros && aiAnalysisResult?.isValid && aiMacros.protein !== '0g'
               ? aiMacros.protein
               : null,
-          timestampText: captureTime?.toLocaleTimeString('pt-BR', {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
           locationText: location?.text || 'CHECK-IN OFICIAL',
+          photoUrl: previewUrl,
         }}
       />
     </div>

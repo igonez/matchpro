@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { enforceRateLimit } from '@/lib/security/rate-limit';
 import { sanitizeString } from '@/lib/security/sanitize';
+import { recalculateStudentStreak } from '@/lib/gamification/update-streak.server';
 
 export async function POST(request: Request) {
   try {
@@ -21,8 +22,14 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json().catch(() => ({}));
-    const { missionId, challengeId, caption } = body;
-    const sanitizedCaption = sanitizeString(caption || 'Check-in direto de hábito confirmado').slice(0, 300);
+    const { missionId, challengeId, caption, textResponse } = body;
+    const sanitizedTextResponse =
+      typeof textResponse === 'string'
+        ? sanitizeString(textResponse).slice(0, 1000)
+        : '';
+    const sanitizedCaption = sanitizeString(
+      caption || sanitizedTextResponse || 'Check-in direto de hábito confirmado'
+    ).slice(0, 300);
 
     if (!missionId) {
       return NextResponse.json(
@@ -58,8 +65,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1.1 Garantir que apenas missões de clique simples (hábitos/check-in direto) usem esta rota
-    const allowedValidationTypes = ['simple_click', 'checkbox', 'click', null];
+    // 1.1 Garantir que apenas missões de clique simples ou texto (hábitos/check-in direto) usem esta rota
+    const allowedValidationTypes = ['simple_click', 'checkbox', 'click', 'text', null];
     const isSimpleHabit =
       allowedValidationTypes.includes(mission.validation_type) ||
       mission.category === 'habito';
@@ -67,6 +74,13 @@ export async function POST(request: Request) {
     if (!isSimpleHabit && (mission.validation_type === 'photo' || mission.validation_type === 'timer')) {
       return NextResponse.json(
         { error: 'Esta missão exige comprovação por foto ou cronômetro na câmera do app.' },
+        { status: 400 }
+      );
+    }
+
+    if (mission.validation_type === 'text' && !sanitizedTextResponse.trim()) {
+      return NextResponse.json(
+        { error: 'Digite sua resposta em texto para concluir esta missão.' },
         { status: 400 }
       );
     }
@@ -129,6 +143,7 @@ export async function POST(request: Request) {
       .select('id, status, submitted_at')
       .eq('mission_id', missionId)
       .eq('student_id', user.id)
+      .neq('status', 'rejected')
       .gte('submitted_at', todayStart.toISOString());
 
     if (existingSubmissions && existingSubmissions.length > 0) {
@@ -143,20 +158,37 @@ export async function POST(request: Request) {
 
     // 4. Inserir a submissão autorizada com status 'approved' via admin
     const nowIso = new Date().toISOString();
-    const { data: newSubmission, error: insertError } = await supabaseAdmin
+    const insertPayload: Record<string, any> = {
+      challenge_id: resolvedChallengeId || null,
+      mission_id: mission.id,
+      student_id: user.id,
+      status: 'approved',
+      photo_url: 'simple_click',
+      caption: sanitizedCaption,
+      submitted_at: nowIso,
+      client_captured_at: nowIso,
+    };
+
+    if (sanitizedTextResponse) {
+      insertPayload.text_response = sanitizedTextResponse;
+    }
+
+    let { data: newSubmission, error: insertError } = await supabaseAdmin
       .from('student_submissions')
-      .insert({
-        challenge_id: resolvedChallengeId || null,
-        mission_id: mission.id,
-        student_id: user.id,
-        status: 'approved',
-        photo_url: 'simple_click',
-        caption: sanitizedCaption,
-        submitted_at: nowIso,
-        client_captured_at: nowIso,
-      })
+      .insert(insertPayload)
       .select()
       .single();
+
+    if (insertError && insertPayload.text_response !== undefined) {
+      const { text_response: _ignored, ...fallbackPayload } = insertPayload;
+      const fallbackRes = await supabaseAdmin
+        .from('student_submissions')
+        .insert(fallbackPayload)
+        .select()
+        .single();
+      newSubmission = fallbackRes.data;
+      insertError = fallbackRes.error;
+    }
 
     if (insertError) {
       console.error('[Simple Checkin] Erro ao registrar submissão:', insertError);
@@ -166,11 +198,25 @@ export async function POST(request: Request) {
       );
     }
 
+    let currentStreak = 1;
+    if (resolvedChallengeId) {
+      try {
+        const streakResult = await recalculateStudentStreak(
+          user.id,
+          resolvedChallengeId
+        );
+        currentStreak = streakResult.currentStreak || 1;
+      } catch (streakErr) {
+        console.warn('[Simple Checkin] Aviso ao recalcular streak:', streakErr);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: `Missão "${mission.title}" concluída com sucesso!`,
       submission: newSubmission,
       pointsRewarded: mission.points_rewarded,
+      currentStreak,
     });
   } catch (error: any) {
     console.error('[Simple Checkin] Erro interno:', error);

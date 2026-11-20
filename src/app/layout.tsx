@@ -4,14 +4,12 @@ import './globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-sans',
   display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
   variable: '--font-mono',
   display: 'swap',
 });
@@ -139,7 +137,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`dark scroll-smooth ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="pt-BR"
+      data-scroll-behavior="smooth"
+      className={`dark scroll-smooth ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-white selection:text-black font-sans text-base leading-relaxed">
         {/* Escudo superior para Dynamic Island / Status Bar iOS em modo PWA e Safari */}
         <div

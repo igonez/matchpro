@@ -9,10 +9,16 @@ export function Monochrome3DBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Respeita prefers-reduced-motion e economiza bateria/CPU em telas < 768px
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || window.innerWidth < 768) {
+      return;
+    }
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
@@ -21,10 +27,20 @@ export function Monochrome3DBackground() {
     let targetMouseX = mouseX;
     let targetMouseY = mouseY;
 
+    const createVignette = (w: number, h: number) => {
+      const grad = ctx.createRadialGradient(w / 2, h / 2, h * 0.4, w / 2, h / 2, w * 0.8);
+      grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0.85)');
+      return grad;
+    };
+
+    let cachedVignette = createVignette(width, height);
+
     const handleResize = () => {
       if (!canvas) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+      cachedVignette = createVignette(width, height);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -33,7 +49,7 @@ export function Monochrome3DBackground() {
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     // Partículas em profundidade 3D
     const particleCount = 65;
@@ -58,6 +74,11 @@ export function Monochrome3DBackground() {
     }
 
     const render = () => {
+      if (document.hidden || window.innerWidth < 768) {
+        animationFrameId = null;
+        return;
+      }
+
       // Suavização do mouse
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
@@ -71,7 +92,6 @@ export function Monochrome3DBackground() {
       ctx.strokeStyle = 'rgba(52, 120, 246, 0.035)';
       ctx.lineWidth = 1;
 
-      // Linhas de perspectiva convergindo para o centro
       const vanishingX = width / 2 + (mouseX - width / 2) * 0.12;
       const vanishingY = horizonY - 120;
 
@@ -84,7 +104,6 @@ export function Monochrome3DBackground() {
         ctx.stroke();
       }
 
-      // Linhas horizontais com espaçamento geométrico exponencial (efeito profundidade)
       const numHorizLines = 16;
       for (let i = 1; i <= numHorizLines; i++) {
         const factor = Math.pow(i / numHorizLines, 2.4);
@@ -139,36 +158,51 @@ export function Monochrome3DBackground() {
         }
       }
 
-      // 4. Vinheta cinematográfica nas bordas
-      const vignette = ctx.createRadialGradient(
-        width / 2,
-        height / 2,
-        height * 0.4,
-        width / 2,
-        height / 2,
-        width * 0.8
-      );
-      vignette.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      vignette.addColorStop(1, 'rgba(0, 0, 0, 0.85)');
-      ctx.fillStyle = vignette;
+      // 4. Vinheta cinematográfica em cache nas bordas
+      ctx.fillStyle = cachedVignette;
       ctx.fillRect(0, 0, width, height);
 
       animationFrameId = requestAnimationFrame(render);
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      } else if (animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     render();
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none -z-20 w-full h-full"
-    />
+    <>
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none -z-20 md:hidden bg-black"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 50% 25%, rgba(52, 120, 246, 0.08), transparent 60%), radial-gradient(circle at 50% 80%, rgba(117, 167, 255, 0.04), transparent 55%)',
+        }}
+      />
+      <canvas
+        ref={canvasRef}
+        className="hidden md:block fixed inset-0 pointer-events-none -z-20 w-full h-full"
+      />
+    </>
   );
 }

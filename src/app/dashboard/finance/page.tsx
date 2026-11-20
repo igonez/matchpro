@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
   DollarSign, 
@@ -92,6 +92,10 @@ export default function FinanceDashboardPage() {
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [cardHolderCpfCnpj, setCardHolderCpfCnpj] = useState('');
+  const [cardHolderPostalCode, setCardHolderPostalCode] = useState('');
+  const [cardHolderAddressNumber, setCardHolderAddressNumber] = useState('');
   const [upgradeLoading, setUpgradeLoading] = useState(false);
   const [upgradePixData, setUpgradePixData] = useState<any>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -112,14 +116,36 @@ export default function FinanceDashboardPage() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
+        setUserEmail(user.email || '');
 
-        // 1. Carregar perfil do treinador
-        const { data: prof } = await supabase
-          .from('professionals')
-          .select('*')
-          .eq('id', user.id)
-          .single();
+        // 1, 2 e 3. Carregar perfil, transações e saques em paralelo
+        const [profRes, txsRes, withdrawalsRes] = await Promise.all([
+          supabase
+            .from('professionals')
+            .select('*')
+            .eq('id', user.id)
+            .single(),
+          supabase
+            .from('payments')
+            .select(`
+              *,
+              student:students(full_name, avatar_url),
+              challenge:challenges(title)
+            `)
+            .eq('professional_id', user.id)
+            .order('created_at', { ascending: false }),
+          supabase
+            .from('withdrawals')
+            .select('amount')
+            .eq('professional_id', user.id)
+            .in('status', ['COMPLETED', 'PENDING'])
+            .then((res: any) => res, (wErr: any) => {
+              console.warn('Tabela withdrawals ainda não criada ou vazia:', wErr);
+              return { data: null };
+            }),
+        ]);
 
+        const prof = profRes.data;
         if (prof) {
           setCoachProfile(prof);
           setPixKeyInput(prof.asaas_pix_key || '');
@@ -132,37 +158,31 @@ export default function FinanceDashboardPage() {
           setProvinceInput(prof.province || '');
           setCityInput(prof.city || '');
           setStateInput(prof.state || '');
+
+          const profDocDigits = cleanDigits(prof.document_number || '');
+          setCardHolderCpfCnpj(
+            profDocDigits
+              ? profDocDigits.length > 11
+                ? formatCNPJ(profDocDigits)
+                : formatCPF(profDocDigits)
+              : ''
+          );
+          const profPostalDigits = cleanDigits(prof.postal_code || '').slice(0, 8);
+          setCardHolderPostalCode(
+            profPostalDigits.length > 5
+              ? `${profPostalDigits.slice(0, 5)}-${profPostalDigits.slice(5)}`
+              : profPostalDigits
+          );
+          setCardHolderAddressNumber(prof.address_number || '');
         }
 
-        // 2. Carregar transações
-        const { data: txs } = await supabase
-          .from('payments')
-          .select(`
-            *,
-            student:students(full_name, avatar_url),
-            challenge:challenges(title)
-          `)
-          .eq('professional_id', user.id)
-          .order('created_at', { ascending: false });
-
-        if (txs) {
-          setPayments(txs as any);
+        if (txsRes.data) {
+          setPayments(txsRes.data as any);
         }
 
-        // 3. Carregar saques já solicitados
-        try {
-          const { data: pastWithdrawals } = await supabase
-            .from('withdrawals')
-            .select('amount')
-            .eq('professional_id', user.id)
-            .in('status', ['COMPLETED', 'PENDING']);
-
-          if (pastWithdrawals) {
-            const withdrawnSum = pastWithdrawals.reduce((acc: number, w: any) => acc + Number(w.amount || 0), 0);
-            setTotalWithdrawn(withdrawnSum);
-          }
-        } catch (wErr) {
-          console.warn('Tabela withdrawals ainda não criada ou vazia:', wErr);
+        if (withdrawalsRes?.data) {
+          const withdrawnSum = withdrawalsRes.data.reduce((acc: number, w: any) => acc + Number(w.amount || 0), 0);
+          setTotalWithdrawn(withdrawnSum);
         }
       } catch (err) {
         console.error('Erro ao carregar dados financeiros:', err);
@@ -178,23 +198,26 @@ export default function FinanceDashboardPage() {
   const currentPlanTier: PlanTier = (coachProfile?.plan_tier as PlanTier) || 'starter';
   const planDetails = PLAN_CONFIG[currentPlanTier];
 
-  // Faturamento bruto (total vendido)
-  const totalGross = payments
-    .filter(p => p.status === 'RECEIVED' || p.status === 'CONFIRMED')
-    .reduce((acc, curr) => acc + Number(curr.gross_value || 0), 0);
-
-  // Faturamento líquido (o que vai pro bolso do treinador)
-  const totalNet = payments
-    .filter(p => p.status === 'RECEIVED' || p.status === 'CONFIRMED')
-    .reduce((acc, curr) => acc + Number(curr.net_coach_value || 0), 0);
-
-  // Total retido pela plataforma
-  const totalFees = payments
-    .filter(p => p.status === 'RECEIVED' || p.status === 'CONFIRMED')
-    .reduce((acc, curr) => acc + Number(curr.fee_platform_value || 0), 0);
+  // Faturamento bruto, líquido e taxas retidas (memoizados)
+  const { totalGross, totalNet, totalFees } = useMemo(() => {
+    return payments.reduce(
+      (acc, p) => {
+        if (p.status === 'RECEIVED' || p.status === 'CONFIRMED') {
+          acc.totalGross += Number(p.gross_value || 0);
+          acc.totalNet += Number(p.net_coach_value || 0);
+          acc.totalFees += Number(p.fee_platform_value || 0);
+        }
+        return acc;
+      },
+      { totalGross: 0, totalNet: 0, totalFees: 0 }
+    );
+  }, [payments]);
 
   // Saldo disponível real (Total Líquido menos Saques já realizados)
-  const availableBalance = Math.max(0, Number((totalNet - totalWithdrawn).toFixed(2)));
+  const availableBalance = useMemo(
+    () => Math.max(0, Number((totalNet - totalWithdrawn).toFixed(2))),
+    [totalNet, totalWithdrawn]
+  );
 
   // Validações em tempo real
   const docDigits = cleanDigits(docNumberInput);
@@ -314,6 +337,24 @@ export default function FinanceDashboardPage() {
       }));
       setPixKeyInput(data.data.pixKey);
       setVerifiedBankData(data.data);
+
+      const savedDocDigits = cleanDigits(data.data.documentNumber || docNumberInput || '');
+      if (savedDocDigits) {
+        setCardHolderCpfCnpj(
+          savedDocDigits.length > 11 ? formatCNPJ(savedDocDigits) : formatCPF(savedDocDigits)
+        );
+      }
+      const savedPostalDigits = cleanDigits(cepInput || '').slice(0, 8);
+      if (savedPostalDigits) {
+        setCardHolderPostalCode(
+          savedPostalDigits.length > 5
+            ? `${savedPostalDigits.slice(0, 5)}-${savedPostalDigits.slice(5)}`
+            : savedPostalDigits
+        );
+      }
+      if (numberInput.trim()) {
+        setCardHolderAddressNumber(numberInput.trim());
+      }
 
       const details = [
         `Chave Pix: ${data.data.pixKey}`,
@@ -540,7 +581,7 @@ export default function FinanceDashboardPage() {
               <div className="h-9 w-24 bg-[#18181B] animate-pulse rounded-xl mb-3" />
             ) : (
               <div className="text-3xl font-black text-[#FAFAFA] tracking-tight mb-3 font-mono">
-                {coachProfile?.platform_fee_percent || planDetails.platformFeePercent}%
+                {coachProfile?.platform_fee_percent ?? planDetails.platformFeePercent}%
               </div>
             )}
             <div className="text-[11px] text-[#A1A1AA] font-mono pt-2 border-t border-[#27272A] flex items-center justify-between">
@@ -1207,53 +1248,124 @@ export default function FinanceDashboardPage() {
               </div>
 
               {/* Formulário de Cartão se Cartão estiver selecionado */}
-              {upgradePaymentMethod === 'CREDIT_CARD' && (
-                <div className="p-3.5 bg-[#18181B] border border-[#27272A] rounded-2xl space-y-2.5 text-left mb-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
-                    Dados do Cartão (Cobrança Automática Mensal)
-                  </span>
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Nome impresso no cartão"
-                      value={cardHolder}
-                      onChange={(e) => setCardHolder(e.target.value)}
-                      className="w-full bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 focus:outline-none focus:border-[#3478F6]"
-                    />
+              {upgradePaymentMethod === 'CREDIT_CARD' && (() => {
+                const holderDocDigits = cleanDigits(cardHolderCpfCnpj);
+                const holderDocValid =
+                  holderDocDigits.length === 11
+                    ? validateCPF(holderDocDigits)
+                    : holderDocDigits.length === 14
+                    ? validateCNPJ(holderDocDigits)
+                    : false;
+                const holderCepDigits = cleanDigits(cardHolderPostalCode);
+
+                return (
+                  <div className="p-3.5 bg-[#18181B] border border-[#27272A] rounded-2xl space-y-2.5 text-left mb-2">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
+                      Dados do Cartão (Cobrança Automática Mensal)
+                    </span>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Nome impresso no cartão"
+                        value={cardHolder}
+                        onChange={(e) => setCardHolder(e.target.value)}
+                        className="w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6]"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="0000 0000 0000 0000"
+                        maxLength={19}
+                        inputMode="numeric"
+                        value={cardNumber}
+                        onChange={(e) => setCardNumber(e.target.value)}
+                        className="w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 font-mono focus:outline-none focus:border-[#3478F6]"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        placeholder="MM/AA"
+                        maxLength={5}
+                        inputMode="numeric"
+                        value={cardExpiry}
+                        onChange={(e) => setCardExpiry(e.target.value)}
+                        className="w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 font-mono focus:outline-none focus:border-[#3478F6]"
+                      />
+                      <input
+                        type="password"
+                        placeholder="CVV"
+                        maxLength={4}
+                        inputMode="numeric"
+                        value={cardCvv}
+                        onChange={(e) => setCardCvv(e.target.value)}
+                        className="w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 font-mono focus:outline-none focus:border-[#3478F6]"
+                      />
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="CPF ou CNPJ do titular"
+                        maxLength={18}
+                        inputMode="numeric"
+                        value={cardHolderCpfCnpj}
+                        onChange={(e) => {
+                          const d = cleanDigits(e.target.value).slice(0, 14);
+                          setCardHolderCpfCnpj(d.length > 11 ? formatCNPJ(d) : formatCPF(d));
+                        }}
+                        className="w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 pr-8 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 font-mono focus:outline-none focus:border-[#3478F6]"
+                      />
+                      {holderDocDigits.length >= 11 && (
+                        <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                          {holderDocValid ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          ) : (
+                            <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="col-span-2 relative">
+                        <input
+                          type="text"
+                          placeholder="CEP (00000-000)"
+                          maxLength={9}
+                          inputMode="numeric"
+                          value={cardHolderPostalCode}
+                          onChange={(e) => {
+                            const d = cleanDigits(e.target.value).slice(0, 8);
+                            setCardHolderPostalCode(d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d);
+                          }}
+                          className="w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 pr-8 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 font-mono focus:outline-none focus:border-[#3478F6]"
+                        />
+                        {holderCepDigits.length > 0 && (
+                          <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                            {holderCepDigits.length === 8 ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            ) : (
+                              <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+                            )}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Número"
+                        maxLength={12}
+                        value={cardHolderAddressNumber}
+                        onChange={(e) => setCardHolderAddressNumber(e.target.value)}
+                        className="col-span-1 w-full min-h-[44px] bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 font-mono focus:outline-none focus:border-[#3478F6]"
+                      />
+                    </div>
+                    <p className="text-[10px] text-[#A1A1AA] font-mono flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0" />
+                      <span>Criptografia PCI Asaas — Renovação mensal sem bloqueio de limite</span>
+                    </p>
                   </div>
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="0000 0000 0000 0000"
-                      maxLength={19}
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 font-mono focus:outline-none focus:border-[#3478F6]"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      placeholder="MM/AA"
-                      maxLength={5}
-                      value={cardExpiry}
-                      onChange={(e) => setCardExpiry(e.target.value)}
-                      className="w-full bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 font-mono focus:outline-none focus:border-[#3478F6]"
-                    />
-                    <input
-                      type="password"
-                      placeholder="CVV"
-                      maxLength={4}
-                      value={cardCvv}
-                      onChange={(e) => setCardCvv(e.target.value)}
-                      className="w-full bg-[#0E0E10] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/50 font-mono focus:outline-none focus:border-[#3478F6]"
-                    />
-                  </div>
-                  <p className="text-[10px] text-[#A1A1AA] font-mono flex items-center gap-1">
-                    Criptografia PCI Asaas • Renovação mensal sem bloqueio de limite
-                  </p>
-                </div>
-              )}
+                );
+              })()}
 
               <p className="text-xs text-[#A1A1AA]">
                 Escolha o plano ideal para a sua estrutura. A contratação é imediata.
@@ -1344,16 +1456,59 @@ export default function FinanceDashboardPage() {
                     }
 
                     if (upgradePaymentMethod === 'CREDIT_CARD') {
-                      if (!cardNumber.trim() || !cardHolder.trim()) {
+                      const cleanCardDigits = cleanDigits(cardNumber);
+                      const expiryMatch = cardExpiry.trim().match(/^(\d{2})\/(\d{2}|\d{4})$/);
+                      const expMonth = expiryMatch ? Number(expiryMatch[1]) : 0;
+                      const cleanCvv = cleanDigits(cardCvv);
+                      const cleanCpfCnpj = cleanDigits(cardHolderCpfCnpj);
+                      const isCardHolderDocValid =
+                        cleanCpfCnpj.length === 11
+                          ? validateCPF(cleanCpfCnpj)
+                          : cleanCpfCnpj.length === 14
+                          ? validateCNPJ(cleanCpfCnpj)
+                          : false;
+                      const cleanPostalCode = cleanDigits(cardHolderPostalCode);
+                      const cleanAddressNumber = cardHolderAddressNumber.trim();
+
+                      if (!cardHolder.trim() || cleanCardDigits.length < 13) {
                         setDialogNotice({
                           title: 'Dados do Cartão Incompletos',
-                          description: 'Preencha os dados do cartão de crédito para continuar.',
+                          description: 'Informe o nome do titular e o número completo do cartão.',
                         });
                         return;
                       }
+                      if (!expiryMatch || expMonth < 1 || expMonth > 12 || cleanCvv.length < 3) {
+                        setDialogNotice({
+                          title: 'Validade ou CVV Inválido',
+                          description: 'Informe a validade no formato MM/AA e o código de segurança (CVV).',
+                        });
+                        return;
+                      }
+                      if (!isCardHolderDocValid) {
+                        setDialogNotice({
+                          title: 'CPF/CNPJ do Titular Inválido',
+                          description: 'Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido para o titular do cartão.',
+                        });
+                        return;
+                      }
+                      if (cleanPostalCode.length !== 8) {
+                        setDialogNotice({
+                          title: 'CEP Inválido',
+                          description: 'Informe um CEP válido com 8 dígitos para cobrança.',
+                        });
+                        return;
+                      }
+                      if (!cleanAddressNumber) {
+                        setDialogNotice({
+                          title: 'Número do Endereço Obrigatório',
+                          description: 'Informe o número do endereço de cobrança do titular.',
+                        });
+                        return;
+                      }
+
                       setUpgradeLoading(true);
                       try {
-                        const expiryParts = cardExpiry.split('/');
+                        const expYearRaw = expiryMatch[2];
                         const res = await fetch('/api/checkout/coach-plan', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
@@ -1362,18 +1517,18 @@ export default function FinanceDashboardPage() {
                             billingType: 'CREDIT_CARD',
                             creditCard: {
                               holderName: cardHolder.trim(),
-                              number: cardNumber.replace(/\D/g, ''),
-                              expiryMonth: expiryParts[0]?.trim() || '12',
-                              expiryYear: expiryParts[1]?.length === 2 ? '20' + expiryParts[1].trim() : (expiryParts[1]?.trim() || '2028'),
-                              ccv: cardCvv.trim(),
+                              number: cleanCardDigits,
+                              expiryMonth: expiryMatch[1],
+                              expiryYear: expYearRaw.length === 2 ? `20${expYearRaw}` : expYearRaw,
+                              ccv: cleanCvv,
                             },
                             creditCardHolderInfo: {
                               name: cardHolder.trim(),
-                              email: coachProfile?.email || 'coach@arenafit.pro',
-                              cpfCnpj: cleanDigits(coachProfile?.document_number || '') || '00000000000',
-                              postalCode: '01310100',
-                              addressNumber: '100',
-                              phone: coachProfile?.phone || '11999999999',
+                              email: userEmail || 'coach@arenafit.pro',
+                              cpfCnpj: cleanCpfCnpj,
+                              postalCode: cleanPostalCode,
+                              addressNumber: cleanAddressNumber,
+                              phone: cleanDigits(coachProfile?.phone || '') || '11999999999',
                             },
                           }),
                         });
@@ -1381,12 +1536,25 @@ export default function FinanceDashboardPage() {
                         if (!res.ok || !data.success) {
                           throw new Error(data.error || 'Erro ao processar assinatura com cartão.');
                         }
-                        setCoachProfile((prev: any) => ({ ...prev, plan_tier: 'pro', platform_fee_percent: 12 }));
-                        setUpgradeModalOpen(false);
-                        setDialogNotice({
-                          title: 'Assinatura Pro Ativada!',
-                          description: 'Sua assinatura Pro Coach foi ativada com sucesso com cobrança recorrente no cartão!',
-                        });
+                        if (data.status === 'ACTIVE') {
+                          setCoachProfile((prev: any) => ({
+                            ...prev,
+                            plan_tier: 'pro',
+                            plan_status: 'active',
+                            platform_fee_percent: PLAN_CONFIG.pro.platformFeePercent,
+                          }));
+                          setUpgradeModalOpen(false);
+                          setDialogNotice({
+                            title: 'Assinatura Pro Ativada!',
+                            description: 'Sua assinatura Pro Coach foi ativada com sucesso com cobrança recorrente no cartão!',
+                          });
+                        } else {
+                          setUpgradeModalOpen(false);
+                          setDialogNotice({
+                            title: 'Assinatura em Processamento',
+                            description: `Sua assinatura foi registrada com status "${data.status || 'PENDING'}". O plano Pro será ativado automaticamente assim que o pagamento for confirmado.`,
+                          });
+                        }
                       } catch (err: any) {
                         setDialogNotice({
                           title: 'Erro na Assinatura',

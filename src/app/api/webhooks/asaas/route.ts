@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import crypto from 'crypto';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ASAAS_CONFIG } from '@/lib/asaas/config';
@@ -188,18 +188,25 @@ export async function POST(request: Request) {
         const buyerUserId =
           updatedPayment?.student_id || updatedPayment?.professional_id || null;
 
-        await sendMetaConversionEvent({
-          eventName: isCoachSubscription ? 'Subscribe' : 'Purchase',
-          eventId: `asaas_pay_${payment.id}`,
-          value: purchaseValue,
-          currency: 'BRL',
-          contentName: isCoachSubscription
-            ? 'Assinatura ArenaFitPro Pro'
-            : 'Inscrição em Desafio Fitness',
-          contentCategory: isCoachSubscription ? 'SaaS_Subscription' : 'Challenge_Ticket',
-          user: {
-            externalId: buyerUserId,
-          },
+        const paymentIdForCapi = payment.id;
+        after(async () => {
+          try {
+            await sendMetaConversionEvent({
+              eventName: isCoachSubscription ? 'Subscribe' : 'Purchase',
+              eventId: `asaas_pay_${paymentIdForCapi}`,
+              value: purchaseValue,
+              currency: 'BRL',
+              contentName: isCoachSubscription
+                ? 'Assinatura ArenaFitPro Pro'
+                : 'Inscrição em Desafio Fitness',
+              contentCategory: isCoachSubscription ? 'SaaS_Subscription' : 'Challenge_Ticket',
+              user: {
+                externalId: buyerUserId,
+              },
+            });
+          } catch (capiErr) {
+            console.warn('[Asaas Webhook] Aviso ao enviar Meta CAPI via after():', capiErr);
+          }
         });
       }
     }

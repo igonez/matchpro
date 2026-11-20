@@ -2,11 +2,16 @@
 
 import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
-import { ShareRankingSheet } from '@/components/share-ranking/share-ranking-sheet';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
+
+const ShareRankingSheet = dynamic(
+  () => import('@/components/share-ranking/share-ranking-sheet').then((m) => m.ShareRankingSheet),
+  { ssr: false }
+);
 import {
   Trophy,
   Crown,
@@ -26,6 +31,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+import { useStudentSession } from '@/lib/auth/student-session-context';
 
 interface LeaderboardItem {
   id: string;
@@ -50,6 +56,14 @@ function LeaderboardContent() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const requestedChallengeId = searchParams.get('challenge');
+  const {
+    user,
+    activeChallengeId,
+    activeChallenge,
+    enrolledChallenges,
+    isPreviewMode,
+    isReady,
+  } = useStudentSession();
   const [standings, setStandings] = useState<LeaderboardItem[]>([]);
   const [squadStandings, setSquadStandings] = useState<SquadLeaderboardItem[]>([]);
   const [currentChallenge, setCurrentChallenge] = useState<any>(null);
@@ -61,46 +75,59 @@ function LeaderboardContent() {
   const [streaksMap, setStreaksMap] = useState<Record<string, number>>({});
   const [showStoryShare, setShowStoryShare] = useState(false);
 
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = async (silent = false) => {
+    if (!isReady) return;
+    let snapshotToSave: {
+      challengeId: string;
+      rows: Array<{
+        challenge_id: string;
+        student_id: string;
+        rank_position: number;
+        total_points: number;
+        recorded_date: string;
+      }>;
+      todayStr: string;
+    } | null = null;
+
     try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      if (!silent) {
+        setLoading(true);
+      }
       if (!user) {
-        setLoading(false);
+        if (!silent) setLoading(false);
         return;
       }
       setCurrentUserId(user.id);
 
-      // 1. Identificar turma do atleta (respeitando deep link ?challenge=<id> se presente)
-      let participationQuery = supabase
-        .from('challenge_participants')
-        .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
-        .eq('student_id', user.id);
+      // 1. Identificar turma do atleta ou desafio em simulação (respeitando ?challenge=<id>)
+      let challengeObj: any = activeChallenge;
+      let challengeId: string | null = activeChallengeId;
 
       if (requestedChallengeId) {
-        participationQuery = participationQuery.eq('challenge_id', requestedChallengeId);
+        const matchedEnrolled = enrolledChallenges.find(
+          (item) => item.challengeId === requestedChallengeId
+        );
+        if (matchedEnrolled) {
+          challengeId = matchedEnrolled.challengeId;
+          challengeObj = matchedEnrolled.challenge;
+        } else if (isPreviewMode) {
+          if (activeChallenge?.id === requestedChallengeId) {
+            challengeId = activeChallenge.id;
+            challengeObj = activeChallenge;
+          } else {
+            const { data: ownedCh } = await supabase
+              .from('challenges')
+              .select('id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url)')
+              .eq('id', requestedChallengeId)
+              .eq('professional_id', user.id)
+              .maybeSingle();
+            if (ownedCh?.id) {
+              challengeId = ownedCh.id;
+              challengeObj = ownedCh;
+            }
+          }
+        }
       }
-
-      let { data: participation } = await participationQuery
-        .order('joined_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (!participation && requestedChallengeId) {
-        const fallbackRes = await supabase
-          .from('challenge_participants')
-          .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
-          .eq('student_id', user.id)
-          .order('joined_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        participation = fallbackRes.data;
-      }
-
-      const challengeObj = Array.isArray(participation?.challenges)
-        ? participation?.challenges[0]
-        : participation?.challenges;
-      const challengeId = challengeObj?.id || participation?.challenge_id;
 
       if (challengeId) {
         setCurrentChallenge(challengeObj || { id: challengeId, title: 'Desafio Ativo' });
@@ -175,7 +202,9 @@ function LeaderboardContent() {
             };
           });
 
-          computedSquads.sort((a, b) => b.total_points - a.total_points);
+          computedSquads.sort(
+            (a, b) => (b.average_points - a.average_points) || (b.total_points - a.total_points)
+          );
           setSquadStandings(computedSquads);
         } else {
           const { data: squadViewData } = await supabase
@@ -228,44 +257,67 @@ function LeaderboardContent() {
           setRankHistory(hMap);
         }
 
-        // Snapshot diário
-        const todayStr = new Date().toISOString().split('T')[0];
-        await Promise.allSettled(
-          safeStandings.slice(0, 50).map((s: any, idx: number) =>
-            supabase.from('leaderboard_history').upsert(
-              {
+        // Snapshot diário (nunca escreve em Modo Simulação; 1 bulk upsert não-bloqueante após setLoading(false), 1x/dia por desafio)
+        if (!isPreviewMode && safeStandings.length > 0 && typeof window !== 'undefined') {
+          const todayStr = new Date().toISOString().split('T')[0];
+          const guardKey = `lb_snapshot_${challengeId}_${todayStr}`;
+          if (!window.sessionStorage.getItem(guardKey)) {
+            snapshotToSave = {
+              challengeId,
+              todayStr,
+              rows: safeStandings.slice(0, 50).map((s: any, idx: number) => ({
                 challenge_id: challengeId,
                 student_id: s.student_id,
                 rank_position: idx + 1,
                 total_points: s.total_points,
                 recorded_date: todayStr,
-              },
-              { onConflict: 'challenge_id,student_id,recorded_date' }
-            )
-          )
-        );
+              })),
+            };
+          }
+        }
       }
     } catch (err) {
       console.error('Erro ao buscar leaderboard:', err);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
+      if (snapshotToSave && snapshotToSave.rows.length > 0) {
+        const { challengeId: snapChallengeId, todayStr, rows } = snapshotToSave;
+        const guardKey = `lb_snapshot_${snapChallengeId}_${todayStr}`;
+        window.sessionStorage.setItem(guardKey, '1');
+        supabase
+          .from('leaderboard_history')
+          .upsert(rows, { onConflict: 'challenge_id,student_id,recorded_date' })
+          .then(({ error }: { error: any }) => {
+            if (error) {
+              window.sessionStorage.removeItem(guardKey);
+              console.warn('Falha ao salvar snapshot diário do ranking:', error.message);
+            }
+          });
+      }
     }
   };
 
   useEffect(() => {
-    fetchLeaderboard();
+    if (!isReady) return;
+    fetchLeaderboard(false);
+
+    const targetChallengeId = requestedChallengeId || activeChallengeId;
+    if (!targetChallengeId) return;
 
     const channel = supabase
-      .channel('realtime_leaderboard')
+      .channel(`realtime_leaderboard_${targetChallengeId}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'leaderboard_standings',
+          filter: `challenge_id=eq.${targetChallengeId}`,
         },
         () => {
-          fetchLeaderboard();
+          fetchLeaderboard(true);
         }
       )
       .subscribe();
@@ -273,7 +325,7 @@ function LeaderboardContent() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [isReady, user?.id, activeChallengeId, requestedChallengeId, isPreviewMode, supabase]);
 
   // Aluno mais consistente em Streak
   const topStreakStudent = useMemo(() => {
@@ -885,7 +937,7 @@ function LeaderboardContent() {
       </div>
 
       {/* Tela Compartilhar Ranking (Carrossel 9:16 Pódio Top 3 + Lista Top 10) */}
-      {(() => {
+      {showStoryShare && (() => {
         const coachRecord = Array.isArray(currentChallenge?.professionals)
           ? currentChallenge?.professionals[0]
           : currentChallenge?.professionals;
@@ -906,7 +958,7 @@ function LeaderboardContent() {
               streakDays: streaksMap[s.student_id] || 0,
             }))}
             currentUserId={currentUserId}
-            isCoachView={false}
+            isCoachView={isPreviewMode}
           />
         );
       })()}

@@ -68,6 +68,7 @@ export default function ProfessionalProfilePage() {
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [documentVerified, setDocumentVerified] = useState(false);
   const [planTier, setPlanTier] = useState('starter');
+  const [platformFeePercent, setPlatformFeePercent] = useState<number | null>(null);
 
   // Novos campos: Endereço, Data de Nascimento, Asaas Subconta e Assinatura
   const [birthDate, setBirthDate] = useState('');
@@ -161,6 +162,9 @@ export default function ProfessionalProfilePage() {
           setDocumentNumber(docNum);
           setCrefNumber(prof.cref_number || metadata.cref_number || '');
           setPlanTier(prof.plan_tier || 'starter');
+          setPlatformFeePercent(
+            prof.platform_fee_percent != null ? Number(prof.platform_fee_percent) : null
+          );
           setBirthDate(prof.birth_date || '');
           setPostalCode(prof.postal_code || '');
           setAddress(prof.address || '');
@@ -459,7 +463,7 @@ export default function ProfessionalProfilePage() {
 
                 <label 
                   htmlFor="coach-avatar-input"
-                  className="absolute inset-0 bg-[#000000]/75 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center rounded-2xl cursor-pointer"
+                  className="absolute inset-0 bg-[#000000]/75 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center rounded-2xl cursor-pointer"
                 >
                   <Camera className="h-5 w-5 text-[#D4D4D8] mb-1" />
                   <span className="text-[9px] font-mono text-[#FAFAFA] font-bold uppercase">Trocar</span>
@@ -689,7 +693,7 @@ export default function ProfessionalProfilePage() {
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-black text-[#FAFAFA] font-mono">{planTier.toUpperCase()}</span>
                   <Badge className="text-[10px]">
-                    Taxa: {PLAN_CONFIG[planTier as PlanTier]?.platformFeePercent || 15}%
+                    Taxa: {platformFeePercent ?? PLAN_CONFIG[planTier as PlanTier]?.platformFeePercent ?? 15}%
                   </Badge>
                 </div>
                 <p className="text-[10px] text-[#A1A1AA] mt-1 font-mono">
@@ -977,12 +981,12 @@ export default function ProfessionalProfilePage() {
             maxLength={4}
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
-            placeholder="1 2 3 4"
+            placeholder="0000"
             className="text-center font-mono text-lg tracking-[0.5em] h-12 rounded-xl"
             autoFocus
           />
           <p className="text-[10px] text-[#A1A1AA] font-mono text-center mt-2">
-            Em ambiente de testes, utilize o PIN de demonstração: 1234
+            Informe o código de 4 dígitos enviado via WhatsApp ou SMS para confirmar seu número.
           </p>
         </div>
       </CustomDialog>

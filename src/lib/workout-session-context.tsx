@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 export interface ActiveSession {
   missionId: string;
@@ -45,7 +45,7 @@ export function WorkoutSessionProvider({ children }: { children: React.ReactNode
     }
   }, []);
 
-  const startSession = (missionId: string, missionTitle: string, category: 'treino' | 'cardio') => {
+  const startSession = useCallback((missionId: string, missionTitle: string, category: 'treino' | 'cardio') => {
     const session: ActiveSession = {
       missionId,
       missionTitle,
@@ -58,14 +58,14 @@ export function WorkoutSessionProvider({ children }: { children: React.ReactNode
     } catch (e) {
       console.error(e);
     }
-  };
+  }, []);
 
-  const getElapsedSeconds = () => {
+  const getElapsedSeconds = useCallback(() => {
     if (!activeSession) return 0;
     return Math.max(0, Math.floor((Date.now() - activeSession.startedAt) / 1000));
-  };
+  }, [activeSession]);
 
-  const finishSession = () => {
+  const finishSession = useCallback(() => {
     if (!activeSession) return null;
     const durationSeconds = getElapsedSeconds();
     const startedAt = new Date(activeSession.startedAt).toISOString();
@@ -79,27 +79,30 @@ export function WorkoutSessionProvider({ children }: { children: React.ReactNode
     }
 
     return { durationSeconds, startedAt };
-  };
+  }, [activeSession, getElapsedSeconds]);
 
-  const cancelSession = () => {
+  const cancelSession = useCallback(() => {
     setActiveSession(null);
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch (e) {
       console.error(e);
     }
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      activeSession,
+      startSession,
+      finishSession,
+      cancelSession,
+      getElapsedSeconds,
+    }),
+    [activeSession, startSession, finishSession, cancelSession, getElapsedSeconds]
+  );
 
   return (
-    <WorkoutSessionContext.Provider
-      value={{
-        activeSession,
-        startSession,
-        finishSession,
-        cancelSession,
-        getElapsedSeconds,
-      }}
-    >
+    <WorkoutSessionContext.Provider value={value}>
       {children}
     </WorkoutSessionContext.Provider>
   );

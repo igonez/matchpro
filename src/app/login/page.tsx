@@ -11,6 +11,21 @@ import { Chrome3DStar } from '@/components/ui/chrome-3d-star';
 import { Trophy, ArrowRight, ArrowLeft, Check, Clipboard, Sparkles, User, ShieldCheck } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics/tracking';
 
+function getSafeRedirect(raw: string, fallback: string): string {
+  if (!raw || !raw.startsWith('/') || raw.startsWith('//') || raw.includes('\\')) {
+    return fallback;
+  }
+  try {
+    const parsed = new URL(raw, 'http://localhost');
+    if (parsed.origin === 'http://localhost') {
+      return parsed.pathname + parsed.search + parsed.hash;
+    }
+  } catch {
+    return fallback;
+  }
+  return fallback;
+}
+
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,7 +41,9 @@ function LoginContent() {
   const roleParam = searchParams.get('role');
   const modeParam = searchParams.get('mode');
   const [role, setRole] = useState<'student' | 'professional'>(
-    roleParam === 'professional' ? 'professional' : 'student'
+    roleParam === 'professional' || (!roleParam && redirectParam.startsWith('/dashboard'))
+      ? 'professional'
+      : 'student'
   );
 
   // Modos do Aluno: 'code' (novo aluno com convite) | 'signin' (já é aluno e volta)
@@ -120,8 +137,11 @@ function LoginContent() {
       let redirectUrl = `${window.location.origin}/auth/callback?role=${targetRole}`;
       if (challengeId) {
         redirectUrl += `&next=/join/${challengeId}`;
-      } else if (redirectParam) {
-        redirectUrl += `&next=${encodeURIComponent(redirectParam)}`;
+      } else {
+        const safeNext = getSafeRedirect(redirectParam, '');
+        if (safeNext) {
+          redirectUrl += `&next=${encodeURIComponent(safeNext)}`;
+        }
       }
 
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -218,8 +238,7 @@ function LoginContent() {
             const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
             document.cookie = `arena_role=student; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isHttps ? '; Secure' : ''}`;
           }
-          await supabase.auth.updateUser({ data: { role: 'student' } }).catch(() => {});
-          router.push(redirectParam || '/app');
+          router.push(getSafeRedirect(redirectParam, '/app'));
           return;
         }
       }
@@ -277,8 +296,7 @@ function LoginContent() {
               const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
               document.cookie = `arena_role=professional; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isHttps ? '; Secure' : ''}`;
             }
-            await supabase.auth.updateUser({ data: { role: 'professional' } }).catch(() => {});
-            router.push('/dashboard');
+            router.push(getSafeRedirect(redirectParam, '/dashboard'));
             return;
           }
         }
@@ -665,9 +683,17 @@ function LoginContent() {
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
-                        Senha
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
+                          Senha
+                        </label>
+                        <Link
+                          href="/esqueci-senha"
+                          className="min-h-[44px] inline-flex items-center text-xs font-mono text-[#A1A1AA] hover:text-[#3478F6] transition-colors"
+                        >
+                          Esqueci minha senha
+                        </Link>
+                      </div>
                       <Input
                         type="password"
                         autoComplete="current-password"
@@ -790,9 +816,19 @@ function LoginContent() {
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block mb-1">
-                    Senha
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
+                      Senha
+                    </label>
+                    {coachMode === 'signin' && (
+                      <Link
+                        href="/esqueci-senha"
+                        className="min-h-[44px] inline-flex items-center text-xs font-mono text-[#A1A1AA] hover:text-[#3478F6] transition-colors"
+                      >
+                        Esqueci minha senha
+                      </Link>
+                    )}
+                  </div>
                   <Input
                     type="password"
                     autoComplete={coachMode === 'signup' ? 'new-password' : 'current-password'}

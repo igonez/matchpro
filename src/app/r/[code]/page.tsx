@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { after } from 'next/server';
 import { Trophy, Crown, Award, Sparkles, ArrowUpRight, ShieldCheck, Clock } from 'lucide-react';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { formatRankOfTotal } from '@/lib/share/ranking-format';
@@ -135,16 +136,23 @@ export default async function PublicRankingSharePage({ params }: SharePageProps)
     );
   }
 
-  // Incrementar contador de visualizações de forma assíncrona (fire-and-forget)
-  supabaseAdmin.rpc('increment_share_view', { p_code: code }).then(() => {}).catch(() => {});
+  // Incrementar contador de visualizações após envio da resposta (Next.js 16 after())
+  after(async () => {
+    try {
+      await supabaseAdmin.rpc('increment_share_view', { p_code: code });
+    } catch {
+      // ignore view count errors
+    }
+  });
 
-  const { snapshot, expiresAt } = result.record;
+  const { snapshot, expiresAt, challengeId } = result.record;
   const sharer = snapshot.sharer;
   const topList = snapshot.top || [];
   const top1 = topList[0] || null;
   const top2 = topList[1] || null;
   const top3 = topList[2] || null;
-  const deepLinkHref = `/app/leaderboard?challenge=${encodeURIComponent(snapshot.challengeId)}`;
+  const resolvedChallengeId = snapshot.challengeId || challengeId;
+  const deepLinkHref = `/join/${encodeURIComponent(resolvedChallengeId)}`;
   const leaderPts = Math.max(1, top1?.points || 1);
 
   return (

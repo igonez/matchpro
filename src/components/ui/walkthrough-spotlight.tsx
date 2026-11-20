@@ -1,8 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
   ChevronRight, 
@@ -263,25 +262,27 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
     };
   };
 
+  const contextValue = useMemo(
+    () => ({
+      isActive,
+      currentStepIndex,
+      steps,
+      startTour,
+      nextStep,
+      prevStep,
+      skipTour,
+      goToStep,
+    }),
+    [isActive, currentStepIndex, steps, startTour, nextStep, prevStep, skipTour, goToStep]
+  );
+
   return (
-    <WalkthroughContext.Provider
-      value={{
-        isActive,
-        currentStepIndex,
-        steps,
-        startTour,
-        nextStep,
-        prevStep,
-        skipTour,
-        goToStep,
-      }}
-    >
+    <WalkthroughContext.Provider value={contextValue}>
       {children}
 
       {/* Renderização do Walkthrough Spotlight & Tooltip */}
-      <AnimatePresence>
-        {isActive && currentStep && (
-          <div className="fixed inset-0 z-[9999] pointer-events-auto">
+      {isActive && currentStep && (
+        <div className="fixed inset-0 z-[9999] pointer-events-auto animate-in fade-in duration-200">
             {/* SVG MASK / SPOTLIGHT CUTOUT */}
             <svg 
               className="absolute inset-0 w-full h-full pointer-events-none transition-all duration-300"
@@ -319,11 +320,8 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
 
             {/* Borda Animada Pulsante ao redor do Elemento Focado */}
             {targetRect && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.25 }}
-                className="fixed pointer-events-none border-2 border-white/80 rounded-2xl shadow-[0_0_25px_rgba(255,255,255,0.45)]"
+              <div
+                className="fixed pointer-events-none border-2 border-white/80 rounded-2xl shadow-[0_0_25px_rgba(255,255,255,0.45)] animate-in fade-in zoom-in-95 duration-200 transition-all"
                 style={{
                   top: `${targetRect.top - 6}px`,
                   left: `${targetRect.left - 6}px`,
@@ -334,7 +332,7 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
               >
                 {/* Linha pontilhada estilizada externa */}
                 <div className="absolute -inset-1 rounded-[18px] border border-dashed border-white/30 animate-pulse pointer-events-none" />
-              </motion.div>
+              </div>
             )}
 
             {/* Backdrop clicável transparente para focar */}
@@ -347,14 +345,10 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
             />
 
             {/* Popover / Tooltip Informativo do Passo */}
-            <motion.div
+            <div
               key={currentStep.id}
-              initial={{ opacity: 0, y: 15, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
               style={getPopoverStyle()}
-              className="bg-zinc-950/95 border border-white/20 rounded-2xl p-5 shadow-[0_20px_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl text-white pointer-events-auto"
+              className="bg-zinc-950/95 border border-white/20 rounded-2xl p-5 shadow-[0_20px_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl text-white pointer-events-auto animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-200"
             >
               {/* Header do Passo */}
               <div className="flex items-center justify-between gap-3 mb-3">
@@ -454,10 +448,9 @@ export function WalkthroughProvider({ children }: { children: React.ReactNode })
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
-        )}
-      </AnimatePresence>
+      )}
     </WalkthroughContext.Provider>
   );
 }

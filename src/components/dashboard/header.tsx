@@ -25,6 +25,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useCoachSession } from '@/lib/auth/coach-session-context';
 import { useWalkthrough } from '@/components/ui/walkthrough-spotlight';
 import { COACH_WALKTHROUGH_STEPS } from '@/lib/walkthrough/coach-tour-steps';
 import { COACH_TOUR_STORAGE_KEY } from '@/components/dashboard/coach-tour-trigger';
@@ -34,10 +35,28 @@ export function DashboardHeader() {
   const router = useRouter();
   const supabase = createClient();
   const { startTour } = useWalkthrough();
+  const { user, professional } = useCoachSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [coachProfile, setCoachProfile] = useState<{ fullName: string; avatarUrl: string | null } | null>(null);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const coachProfile = React.useMemo(() => {
+    if (!user && !professional) return null;
+    return {
+      fullName:
+        professional?.brand_name ||
+        professional?.full_name ||
+        user?.user_metadata?.brand_name ||
+        user?.user_metadata?.full_name ||
+        'Coach',
+      avatarUrl:
+        professional?.avatar_url ||
+        professional?.brand_logo_url ||
+        user?.user_metadata?.avatar_url ||
+        user?.user_metadata?.picture ||
+        null,
+    };
+  }, [professional, user]);
 
   useEffect(() => {
     setMounted(true);
@@ -57,35 +76,6 @@ export function DashboardHeader() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    async function loadCoach() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: prof } = await supabase
-          .from('professionals')
-          .select('full_name, brand_name, avatar_url, brand_logo_url')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        setCoachProfile({
-          fullName:
-            prof?.brand_name ||
-            prof?.full_name ||
-            user.user_metadata?.brand_name ||
-            user.user_metadata?.full_name ||
-            'Coach',
-          avatarUrl:
-            prof?.avatar_url ||
-            prof?.brand_logo_url ||
-            user.user_metadata?.avatar_url ||
-            user.user_metadata?.picture ||
-            null,
-        });
-      }
-    }
-    loadCoach();
-  }, [supabase]);
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 

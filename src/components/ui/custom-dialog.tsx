@@ -34,7 +34,7 @@ export function CustomDialog({
   onConfirm,
   isLoading = false,
   hideFooter = false,
-  tag = 'SISTEMA_DIALOG',
+  tag = 'CONFIRMAÇÃO',
 }: CustomDialogProps) {
   useEffect(() => {
     if (!isOpen) return;

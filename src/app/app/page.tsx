@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
 import { useWorkoutSession } from '@/lib/workout-session-context';
+import { useStudentSession } from '@/lib/auth/student-session-context';
+import type { MissionSharePayload } from '@/components/share-mission/share-mission-sheet';
 import { 
   QrCode, 
   ArrowRight, 
@@ -30,15 +33,33 @@ import {
   Bell,
   Clock
 } from 'lucide-react';
-import { NotificationsDrawer } from '@/components/student/notifications-drawer';
 import { PushNotificationBanner } from '@/components/student/push-notification-manager';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
 import { checkStreakRisk, sendBrowserNotification } from '@/lib/notifications';
 
+const NotificationsDrawer = dynamic(
+  () => import('@/components/student/notifications-drawer').then((m) => m.NotificationsDrawer),
+  { ssr: false }
+);
+
+const ShareMissionSheet = dynamic(
+  () => import('@/components/share-mission/share-mission-sheet').then((m) => m.ShareMissionSheet),
+  { ssr: false }
+);
+
 export default function StudentHomePage() {
   const router = useRouter();
   const supabase = createClient();
-  const { activeSession, startSession } = useWorkoutSession();
+  const { activeSession, startSession, finishSession, getElapsedSeconds } = useWorkoutSession();
+  const {
+    user,
+    student: sessionStudent,
+    activeChallengeId,
+    activeChallenge,
+    pendingChallenge: sessionPending,
+    isPreviewMode,
+    isReady,
+  } = useStudentSession();
 
   const [student, setStudent] = useState<any>(null);
   const [challenge, setChallenge] = useState<any>(null);
@@ -48,10 +69,14 @@ export default function StudentHomePage() {
   const [totalAthletes, setTotalAthletes] = useState<number>(1);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [inviteCodeInput, setInviteCodeInput] = useState('');
-  const [currentStreak, setCurrentStreak] = useState<number>(1);
+  const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [todayTasks, setTodayTasks] = useState<any[]>([]);
+  const [todayApprovedOrPendingCount, setTodayApprovedOrPendingCount] = useState<number>(0);
   const [missionLists, setMissionLists] = useState<any[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [shareMissionPayload, setShareMissionPayload] = useState<MissionSharePayload | null>(null);
+  const hasHydratedCacheRef = useRef(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -104,14 +129,15 @@ export default function StudentHomePage() {
       if (cachedCounts) setCategoryCounts(JSON.parse(cachedCounts));
 
       if (hasBooted || cachedProfile) {
+        hasHydratedCacheRef.current = true;
         setLoading(false);
       }
     } catch (_) {}
   }, []);
 
-  // Carregar contagem de notificações não lidas em tempo real
+  // Carregar contagem de notificações não lidas (evita duplicar canal quando drawer está aberto)
   useEffect(() => {
-    if (!student?.id) return;
+    if (!student?.id || isNotificationsOpen) return;
 
     async function loadUnreadCount() {
       try {
@@ -150,7 +176,7 @@ export default function StudentHomePage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [student?.id, supabase]);
+  }, [student?.id, isNotificationsOpen, supabase]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !sessionStorage.getItem('arena_booted')) {
@@ -165,52 +191,30 @@ export default function StudentHomePage() {
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
     async function loadHome() {
-      setLoading(true);
+      if (!hasHydratedCacheRef.current) {
+        setLoading(true);
+      }
       try {
-        const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           router.push('/login');
           return;
         }
 
-        // 1. Buscar perfil do aluno e participação ativa em paralelo
-        const [studentRes, participationRes] = await Promise.all([
-          supabase.from('students').select('*').eq('id', user.id).maybeSingle(),
-          supabase
-            .from('challenge_participants')
-            .select('challenge_id, payment_status, challenges(*, challenge_weeks(*), professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
-            .eq('student_id', user.id)
-            .in('payment_status', ['paid', 'complimentary'])
-            .order('joined_at', { ascending: false })
-            .limit(1)
-            .maybeSingle(),
-        ]);
-
-        const studentData = studentRes.data;
-        const participation = participationRes.data;
+        const studentData = sessionStudent;
         setStudent(studentData || { full_name: user.email?.split('@')[0] || 'Atleta' });
 
-        let challengeData: any = null;
-        let pendingData: any = null;
-
-        if (participation?.challenges) {
-          challengeData = participation.challenges as any;
-        } else {
-          // Checar se há inscrição pendente de pagamento Pix
-          const { data: pendingPart } = await supabase
-            .from('challenge_participants')
-            .select('challenge_id, payment_status, challenges(id, title, price)')
-            .eq('student_id', user.id)
-            .eq('payment_status', 'pending')
-            .order('joined_at', { ascending: false })
-            .limit(1)
+        let challengeData: any = activeChallenge;
+        if (!challengeData && activeChallengeId) {
+          const { data: fallbackCh } = await supabase
+            .from('challenges')
+            .select('*, challenge_weeks(*), professionals(id, full_name, avatar_url, brand_name, brand_logo_url)')
+            .eq('id', activeChallengeId)
             .maybeSingle();
-
-          if (pendingPart?.challenges) {
-            pendingData = pendingPart.challenges as any;
-          }
+          challengeData = fallbackCh || null;
         }
+        const pendingData: any = isPreviewMode ? null : sessionPending;
 
         setChallenge(challengeData);
         setPendingChallenge(pendingData);
@@ -223,7 +227,6 @@ export default function StudentHomePage() {
           const twentyFourHoursAgoIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
           const [
-            standingRes,
             allStandingsRes,
             noticesRes,
             gamifRes,
@@ -231,13 +234,6 @@ export default function StudentHomePage() {
             rawMissionsRes,
             userSubmissionsRes,
           ] = await Promise.all([
-            supabase
-              .from('leaderboard_standings')
-              .select('total_points')
-              .eq('student_id', user.id)
-              .eq('challenge_id', challengeData.id)
-              .limit(1)
-              .maybeSingle(),
             supabase
               .from('leaderboard_standings')
               .select('student_id, total_points')
@@ -273,10 +269,11 @@ export default function StudentHomePage() {
               .eq('student_id', user.id),
           ]);
 
-          setStanding(standingRes.data || { total_points: 0 });
+          const allStandings = allStandingsRes.data || [];
+          const myStanding = allStandings.find((s: any) => s.student_id === user.id);
+          setStanding(myStanding ? { total_points: myStanding.total_points } : { total_points: 0 });
 
-          const allStandings = allStandingsRes.data;
-          if (allStandings && allStandings.length > 0) {
+          if (allStandings.length > 0) {
             setTotalAthletes(allStandings.length);
             const idx = allStandings.findIndex((s: any) => s.student_id === user.id);
             setRank(idx !== -1 ? `${idx + 1}º` : `${allStandings.length + 1}º`);
@@ -286,10 +283,7 @@ export default function StudentHomePage() {
           }
 
           setAnnouncements(noticesRes.data || []);
-
-          if (gamifRes.data?.current_streak) {
-            setCurrentStreak(gamifRes.data.current_streak);
-          }
+          setCurrentStreak(gamifRes.data?.current_streak ?? 0);
 
           if (cListsRes.data && cListsRes.data.length > 0) {
             setMissionLists(cListsRes.data);
@@ -473,7 +467,7 @@ export default function StudentHomePage() {
     }
 
     loadHome();
-  }, [supabase, router, refreshKey]);
+  }, [isReady, user?.id, activeChallengeId, isPreviewMode, supabase, router, refreshKey]);
 
   const handleEnterChallengeByCode = () => {
     let code = inviteCodeInput.trim();
@@ -603,6 +597,10 @@ export default function StudentHomePage() {
   };
 
   const handleSimpleCheckin = async (task: any) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): check-in disponível apenas para alunos.');
+      return;
+    }
     try {
       const res = await fetch('/api/submissions/simple-checkin', {
         method: 'POST',

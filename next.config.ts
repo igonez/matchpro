@@ -26,10 +26,10 @@ const securityHeaders = [
     key: 'Cross-Origin-Opener-Policy',
     value: 'same-origin',
   },
-  // 6. Restrição de APIs nativas do navegador
+  // 6. Restrição de APIs nativas do navegador (permite GPS na mesma origem para /app/camera)
   {
     key: 'Permissions-Policy',
-    value: 'camera=(self), microphone=(), geolocation=(), browsing-topics=(), payment=(self)',
+    value: 'camera=(self), microphone=(), geolocation=(self), browsing-topics=(), payment=(self)',
   },
   // 7. Content Security Policy (CSP)
   {
@@ -43,8 +43,38 @@ const securityHeaders = [
   },
 ];
 
+const noStoreHeaders = [
+  {
+    key: 'Cache-Control',
+    value: 'no-store, no-cache, must-revalidate',
+  },
+  {
+    key: 'Pragma',
+    value: 'no-cache',
+  },
+  {
+    key: 'Expires',
+    value: '0',
+  },
+];
+
 const nextConfig: NextConfig = {
-  // Headers globais de segurança e controle de cache
+  poweredByHeader: false,
+  allowedDevOrigins: ['127.0.0.1'],
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+    ],
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    agentUpgrade: 'security',
+  },
+  // Headers globais de segurança, CORS e controle de cache escopado
   async headers() {
     return [
       {
@@ -63,23 +93,27 @@ const nextConfig: NextConfig = {
             key: 'Access-Control-Allow-Headers',
             value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, asaas-access-token',
           },
+          ...noStoreHeaders,
         ],
       },
       {
-        // Prevenção de cache em páginas autenticadas e dinâmicas
-        source: '/((?!_next/static|_next/image|favicon.png|icon-.*\\.png).*)',
+        source: '/dashboard/:path*',
+        headers: noStoreHeaders,
+      },
+      {
+        source: '/app/:path*',
+        headers: noStoreHeaders,
+      },
+      {
+        source: '/admin/:path*',
+        headers: noStoreHeaders,
+      },
+      {
+        source: '/sw.js',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          },
-          {
-            key: 'Pragma',
             value: 'no-cache',
-          },
-          {
-            key: 'Expires',
-            value: '0',
           },
         ],
       },

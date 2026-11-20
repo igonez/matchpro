@@ -3,24 +3,30 @@ import { DashboardSidebar } from '@/components/dashboard/sidebar';
 import { DashboardHeader } from '@/components/dashboard/header';
 import { WalkthroughProvider } from '@/components/ui/walkthrough-spotlight';
 import { CoachTourTrigger } from '@/components/dashboard/coach-tour-trigger';
+import { getServerCoachSession } from '@/lib/auth/session-server';
+import { CoachSessionProvider } from '@/lib/auth/coach-session-context';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialSession = await getServerCoachSession();
+
   return (
-    <WalkthroughProvider>
-      <div className="flex min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white">
-        <DashboardSidebar />
-        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden">
-          <DashboardHeader />
-          <main className="flex-1 p-4 sm:p-6 md:p-8 safe-page-pb md:pb-8 max-w-7xl w-full mx-auto min-w-0 overflow-x-hidden">
-            {children}
-          </main>
+    <CoachSessionProvider initialSession={initialSession}>
+      <WalkthroughProvider>
+        <div className="flex min-h-screen bg-[#000000] text-[#FAFAFA] selection:bg-[#3478F6] selection:text-white">
+          <DashboardSidebar />
+          <div className="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden">
+            <DashboardHeader />
+            <main className="flex-1 p-4 sm:p-6 md:p-8 safe-page-pb md:pb-8 max-w-7xl w-full mx-auto min-w-0 overflow-x-hidden">
+              {children}
+            </main>
+          </div>
+          <CoachTourTrigger />
         </div>
-        <CoachTourTrigger />
-      </div>
-    </WalkthroughProvider>
+      </WalkthroughProvider>
+    </CoachSessionProvider>
   );
 }

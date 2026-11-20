@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { sanitizeString } from '@/lib/security/sanitize';
+import { recalculateStudentStreak } from '@/lib/gamification/update-streak.server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +19,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { submissionId, submissionIds, status } = body;
+    const rejectionReason = sanitizeString(body.rejectionReason || '').slice(0, 300);
 
     if (!status || !['approved', 'rejected', 'pending'].includes(status)) {
       return NextResponse.json({ error: 'Status inválido.' }, { status: 400 });
@@ -33,8 +36,13 @@ export async function POST(req: NextRequest) {
       .from('student_submissions')
       .select(`
         id,
+        student_id,
+        challenge_id,
         missions!inner (
           id,
+          title,
+          points_rewarded,
+          challenge_id,
           challenges!inner (
             id,
             professional_id
@@ -72,9 +80,60 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
 
-    // Quando o treinador aprova ou invalida uma foto denunciada, limpar as denúncias resolvidas
-    // para que ela saia definitivamente da lista de "Sinalizadas"
+    // Recalcular streak e notificar cada aluno sobre a decisão do treinador
     if (status === 'approved' || status === 'rejected') {
+      const notificationsToInsert: Array<Record<string, any>> = [];
+
+      for (const s of subs as any[]) {
+        const studentId = s.student_id;
+        const challengeId =
+          s.challenge_id ||
+          s.missions?.challenge_id ||
+          s.missions?.challenges?.id;
+        const missionTitle = s.missions?.title || 'Missão';
+        const points = s.missions?.points_rewarded || 10;
+
+        if (studentId && challengeId) {
+          await recalculateStudentStreak(studentId, challengeId).catch(() => null);
+        }
+
+        if (studentId) {
+          if (status === 'approved') {
+            notificationsToInsert.push({
+              student_id: studentId,
+              challenge_id: challengeId || null,
+              type: 'coach_announcement',
+              title: 'Missão aprovada!',
+              message: `Sua missão "${missionTitle}" foi aprovada pelo treinador! +${points} XP creditados.`,
+              link: '/app/missions',
+            });
+          } else if (status === 'rejected') {
+            notificationsToInsert.push({
+              student_id: studentId,
+              challenge_id: challengeId || null,
+              type: 'coach_announcement',
+              title: 'Missão precisa de novo envio',
+              message: rejectionReason
+                ? `Sua missão "${missionTitle}" foi invalidada: ${rejectionReason}. Você já pode reenviar hoje.`
+                : `Sua missão "${missionTitle}" foi invalidada pelo treinador. Você já pode reenviar hoje.`,
+              link: '/app/missions',
+            });
+          }
+        }
+      }
+
+      if (notificationsToInsert.length > 0) {
+        const { error: notifError } = await supabaseAdmin
+          .from('student_notifications')
+          .insert(notificationsToInsert);
+
+        if (notifError) {
+          console.warn('[Audit API] Aviso ao criar notificações:', notifError);
+        }
+      }
+
+      // Quando o treinador aprova ou invalida uma foto denunciada, limpar as denúncias resolvidas
+      // para que ela saia definitivamente da lista de "Sinalizadas"
       await supabaseAdmin
         .from('submission_reports')
         .delete()

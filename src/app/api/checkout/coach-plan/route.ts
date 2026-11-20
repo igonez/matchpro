@@ -4,6 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AsaasClient } from '@/lib/asaas/client';
 import { PLAN_CONFIG, PlanTier } from '@/lib/permissions';
 import { enforceRateLimit } from '@/lib/security/rate-limit';
+import { validateCPF, validateCNPJ, cleanDigits } from '@/lib/validation/brazilian-banking';
 
 export async function POST(request: Request) {
   try {
@@ -26,6 +27,52 @@ export async function POST(request: Request) {
       return NextResponse.json({ 
         error: 'Apenas o plano Pro Coach está disponível para assinatura.' 
       }, { status: 400 });
+    }
+
+    if (billingType === 'CREDIT_CARD') {
+      const cardNumberDigits = cleanDigits(creditCard?.number || '');
+      const cardCvvDigits = cleanDigits(creditCard?.ccv || '');
+      const expMonthNum = Number(creditCard?.expiryMonth);
+      const expYearStr = String(creditCard?.expiryYear || '').trim();
+      const holderCpfCnpjDigits = cleanDigits(creditCardHolderInfo?.cpfCnpj || '');
+      const holderPostalDigits = cleanDigits(creditCardHolderInfo?.postalCode || '');
+      const holderAddressNumber = String(creditCardHolderInfo?.addressNumber || '').trim();
+
+      const isHolderDocValid =
+        holderCpfCnpjDigits.length === 11
+          ? validateCPF(holderCpfCnpjDigits)
+          : holderCpfCnpjDigits.length === 14
+          ? validateCNPJ(holderCpfCnpjDigits)
+          : false;
+
+      if (
+        !creditCard?.holderName?.trim() ||
+        cardNumberDigits.length < 13 ||
+        Number.isNaN(expMonthNum) ||
+        expMonthNum < 1 ||
+        expMonthNum > 12 ||
+        !/^\d{4}$/.test(expYearStr) ||
+        cardCvvDigits.length < 3
+      ) {
+        return NextResponse.json(
+          { error: 'Dados do cartão de crédito incompletos ou inválidos.' },
+          { status: 400 }
+        );
+      }
+
+      if (!isHolderDocValid) {
+        return NextResponse.json(
+          { error: 'CPF ou CNPJ do titular do cartão inválido.' },
+          { status: 400 }
+        );
+      }
+
+      if (holderPostalDigits.length !== 8 || !holderAddressNumber) {
+        return NextResponse.json(
+          { error: 'CEP (8 dígitos) e número do endereço do titular são obrigatórios.' },
+          { status: 400 }
+        );
+      }
     }
 
     const selectedTier = 'pro' as PlanTier;

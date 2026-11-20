@@ -29,6 +29,7 @@ import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { Input } from '@/components/ui/input';
 import { MobileLoadingScreen } from '@/components/ui/mobile-loading-screen';
+import { useCoachSession } from '@/lib/auth/coach-session-context';
 
 interface ChallengeItem {
   id: string;
@@ -47,6 +48,7 @@ interface ChallengeItem {
 export default function ChallengesManagementPage() {
   const router = useRouter();
   const supabase = createClient();
+  const { planTier } = useCoachSession();
 
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,50 +96,68 @@ export default function ChallengesManagementPage() {
         return;
       }
 
-      // 2. Contar participantes com matrícula confirmada por desafio
-      const { data: participantsData } = await supabase
-        .from('challenge_participants')
-        .select('challenge_id')
-        .in('challenge_id', challengeIds)
-        .in('payment_status', ['paid', 'complimentary']);
+      // 2. Buscar participantes, semanas, missões diretas e pagamentos em paralelo
+      const [
+        { data: participantsData },
+        { data: weeksData },
+        { data: directMissionsData },
+        { data: paymentsData },
+      ] = await Promise.all([
+        supabase
+          .from('challenge_participants')
+          .select('challenge_id')
+          .in('challenge_id', challengeIds)
+          .in('payment_status', ['paid', 'complimentary']),
+        supabase
+          .from('challenge_weeks')
+          .select('id, challenge_id')
+          .in('challenge_id', challengeIds),
+        supabase
+          .from('missions')
+          .select('id, challenge_id, week_id')
+          .in('challenge_id', challengeIds),
+        supabase
+          .from('payments')
+          .select('challenge_id, gross_value, net_coach_value, status')
+          .in('challenge_id', challengeIds)
+          .in('status', ['RECEIVED', 'CONFIRMED']),
+      ]);
 
       const studentsCountMap = new Map<string, number>();
       participantsData?.forEach((p: any) => {
         studentsCountMap.set(p.challenge_id, (studentsCountMap.get(p.challenge_id) || 0) + 1);
       });
 
-      // 3. Contar missões por desafio (diretas ou via challenge_weeks)
-      const { data: weeksData } = await supabase
-        .from('challenge_weeks')
-        .select('id, challenge_id')
-        .in('challenge_id', challengeIds);
-
       const weekToChallenge = new Map<string, string>();
       weeksData?.forEach((w: any) => weekToChallenge.set(w.id, w.challenge_id));
 
       const weekIds = weeksData?.map((w: any) => w.id) || [];
-      let missionsQuery = supabase.from('missions').select('id, challenge_id, week_id');
+      let allMissions = [...(directMissionsData || [])];
+
       if (weekIds.length > 0) {
-        missionsQuery = missionsQuery.or(`challenge_id.in.(${challengeIds.join(',')}),week_id.in.(${weekIds.join(',')})`);
-      } else {
-        missionsQuery = missionsQuery.in('challenge_id', challengeIds);
+        const { data: weekMissionsData } = await supabase
+          .from('missions')
+          .select('id, challenge_id, week_id')
+          .in('week_id', weekIds);
+
+        if (weekMissionsData && weekMissionsData.length > 0) {
+          const seenIds = new Set(allMissions.map((m: any) => m.id));
+          for (const wm of weekMissionsData) {
+            if (!seenIds.has(wm.id)) {
+              seenIds.add(wm.id);
+              allMissions.push(wm);
+            }
+          }
+        }
       }
 
-      const { data: missionsData } = await missionsQuery;
       const missionsCountMap = new Map<string, number>();
-      missionsData?.forEach((m: any) => {
+      allMissions.forEach((m: any) => {
         const chId = m.challenge_id || weekToChallenge.get(m.week_id);
         if (chId) {
           missionsCountMap.set(chId, (missionsCountMap.get(chId) || 0) + 1);
         }
       });
-
-      // 4. Carregar total arrecadado por desafio
-      const { data: paymentsData } = await supabase
-        .from('payments')
-        .select('challenge_id, gross_value, net_coach_value, status')
-        .in('challenge_id', challengeIds)
-        .in('status', ['RECEIVED', 'CONFIRMED']);
 
       const grossRevenueMap = new Map<string, number>();
       const netRevenueMap = new Map<string, number>();
@@ -185,24 +205,33 @@ export default function ChallengesManagementPage() {
 
       if (origError || !orig) throw new Error('Desafio original não encontrado.');
 
-      // 2. Calcular novas datas mantendo duração original
-      const origStart = new Date(orig.start_date || new Date());
-      const origEnd = new Date(orig.end_date || new Date(Date.now() + 30 * 86400000));
+      // Verificar limite do plano Starter antes de clonar turma ativa
+      const currentActiveCount = challenges.filter((c) => c.is_active).length;
+      const isStarterAtLimit = planTier === 'starter' && currentActiveCount >= 1;
+
+      // 2. Calcular novas datas mantendo duração original no formato 'YYYY-MM-DD'
+      const origStart = new Date(
+        orig.start_date ? `${String(orig.start_date).slice(0, 10)}T00:00:00` : Date.now()
+      );
+      const origEnd = new Date(
+        orig.end_date
+          ? `${String(orig.end_date).slice(0, 10)}T00:00:00`
+          : Date.now() + 30 * 86400000
+      );
       const durationMs = Math.max(origEnd.getTime() - origStart.getTime(), 7 * 86400000);
       const newStart = new Date();
       const newEnd = new Date(newStart.getTime() + durationMs);
+      const formattedStartDate = newStart.toISOString().split('T')[0];
+      const formattedEndDate = newEnd.toISOString().split('T')[0];
 
-      // 3. Inserir nova turma duplicada
+      // 3. Inserir nova turma duplicada apenas com colunas válidas de challenges
       const newChallengePayload = {
         professional_id: user.id,
         title: `${orig.title} (Nova Turma)`,
-        description: orig.description,
-        rules: orig.rules,
-        start_date: newStart.toISOString(),
-        end_date: newEnd.toISOString(),
-        price: orig.price,
-        cover_url: orig.cover_url,
-        is_active: true,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate,
+        price: Number(orig.price) || 0,
+        is_active: !isStarterAtLimit,
       };
 
       const { data: newChallenge, error: insertError } = await supabase
@@ -213,7 +242,7 @@ export default function ChallengesManagementPage() {
 
       if (insertError) throw insertError;
 
-      // 4. Clonar semanas se existirem
+      // 4. Clonar semanas em bulk se existirem
       const { data: origWeeks } = await supabase
         .from('challenge_weeks')
         .select('*')
@@ -222,25 +251,33 @@ export default function ChallengesManagementPage() {
 
       const weekMapping = new Map<string, string>();
       if (origWeeks && origWeeks.length > 0) {
-        for (const w of origWeeks) {
-          const { data: insertedWeek } = await supabase
-            .from('challenge_weeks')
-            .insert({
-              challenge_id: newChallenge.id,
-              week_number: w.week_number,
-              title: w.title,
-              theme: w.theme,
-            })
-            .select('id')
-            .single();
+        const weeksPayload = origWeeks.map((w: any) => ({
+          challenge_id: newChallenge.id,
+          week_number: w.week_number,
+          title: w.title,
+          bonus_points: typeof w.bonus_points === 'number' ? w.bonus_points : 20,
+        }));
 
-          if (insertedWeek) {
-            weekMapping.set(w.id, insertedWeek.id);
+        const { data: insertedWeeks, error: weeksInsertError } = await supabase
+          .from('challenge_weeks')
+          .insert(weeksPayload)
+          .select('id, week_number');
+
+        if (weeksInsertError) throw weeksInsertError;
+
+        const newWeekByNumber = new Map<number, string>();
+        (insertedWeeks || []).forEach((nw: any) => {
+          newWeekByNumber.set(nw.week_number, nw.id);
+        });
+        origWeeks.forEach((ow: any) => {
+          const mappedId = newWeekByNumber.get(ow.week_number);
+          if (mappedId) {
+            weekMapping.set(ow.id, mappedId);
           }
-        }
+        });
       }
 
-      // 5. Clonar missões originais
+      // 5. Clonar missões originais apenas com colunas válidas de missions
       const weekIdsParam = origWeeks && origWeeks.length > 0 ? origWeeks.map((w: any) => w.id) : [];
       let origMissionsQuery = supabase.from('missions').select('*');
       if (weekIdsParam.length > 0) {
@@ -252,21 +289,33 @@ export default function ChallengesManagementPage() {
       const { data: origMissions } = await origMissionsQuery;
 
       if (origMissions && origMissions.length > 0) {
-        const clonedMissions = origMissions.map((m: any) => ({
-          title: m.title,
-          description: m.description,
-          points: m.points,
-          category: m.category,
-          frequency: m.frequency,
-          verification_type: m.verification_type,
+        const clonedMissions = origMissions.map((m: any, idx: number) => ({
           challenge_id: newChallenge.id,
           week_id: m.week_id ? weekMapping.get(m.week_id) || null : null,
+          title: m.title,
+          category: m.category || 'treino',
+          validation_type: m.validation_type || 'photo',
+          points_rewarded: Number(m.points_rewarded ?? m.points ?? 10),
+          daily_limit: Number(m.daily_limit) || 1,
+          target_frequency: Number(m.target_frequency) || 1,
+          is_daily_reset: Boolean(m.is_daily_reset),
+          is_bonus: Boolean(m.is_bonus),
+          requires_cooldown: Boolean(m.requires_cooldown),
+          cooldown_hours: Number(m.cooldown_hours) || 4,
+          order_index: typeof m.order_index === 'number' ? m.order_index : idx + 1,
         }));
 
-        await supabase.from('missions').insert(clonedMissions);
+        const { error: missionsError } = await supabase.from('missions').insert(clonedMissions);
+        if (missionsError) {
+          throw new Error(`Falha ao clonar missões: ${missionsError.message}`);
+        }
       }
 
-      showToast(`Turma duplicada com sucesso com ${origMissions?.length || 0} missões!`);
+      showToast(
+        isStarterAtLimit
+          ? `Turma clonada como encerrada (limite de 1 turma ativa no plano Starter) com ${origMissions?.length || 0} missões!`
+          : `Turma duplicada com sucesso com ${origMissions?.length || 0} missões!`
+      );
       await loadChallenges();
     } catch (err: any) {
       console.error('Erro ao duplicar desafio:', err);
@@ -372,7 +421,7 @@ export default function ChallengesManagementPage() {
 
         {/* Botão + Novo Desafio destacado */}
         <Link href="/dashboard/challenges/new" className="w-full sm:w-auto">
-          <button className="w-full sm:w-auto px-5 py-3 text-xs sm:text-sm font-black bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-2xl shadow-[0_4px_20px_rgba(52,120,246,0.3)] hover:shadow-[0_0_25px_rgba(52,120,246,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-[#3478F6]">
+          <button className="w-full sm:w-auto min-h-[44px] px-5 py-3 text-xs sm:text-sm font-black bg-[#3478F6] text-white hover:bg-[#75A7FF] rounded-2xl shadow-[0_4px_20px_rgba(52,120,246,0.3)] hover:shadow-[0_0_25px_rgba(52,120,246,0.5)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer border border-[#3478F6]">
             <span className="text-base leading-none font-black text-white group-hover:rotate-90 transition-transform duration-200">+</span>
             <span>Novo Desafio</span>
           </button>

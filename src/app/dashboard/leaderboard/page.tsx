@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import {
   Trophy,
   Crown,
@@ -24,8 +25,15 @@ import { Button } from '@/components/ui/button';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { GoldMedalBadge, SilverMedalBadge, BronzeMedalBadge } from '@/components/ui/metallic-badges';
-import { ShareRankingSheet } from '@/components/share-ranking/share-ranking-sheet';
 import { createClient } from '@/lib/supabase/client';
+
+const ShareRankingSheet = dynamic(
+  () =>
+    import('@/components/share-ranking/share-ranking-sheet').then(
+      (mod) => mod.ShareRankingSheet
+    ),
+  { ssr: false }
+);
 
 function CoachLeaderboardContent() {
   const searchParams = useSearchParams();
@@ -113,34 +121,50 @@ function CoachLeaderboardContent() {
   }, [challengeIdParam, supabase]);
 
   // 2. Carregar placar do desafio selecionado
-  const loadStandings = async (challengeId: string) => {
+  const loadStandings = async (challengeId: string, silent = false) => {
     if (!challengeId) return;
-    setLoading(true);
+    if (!silent) setLoading(true);
     try {
-      const { data: standingsData } = await supabase
-        .from('leaderboard_standings')
-        .select(`
-          id,
-          total_points,
-          challenge_id,
-          student_id,
-          students (
+      const [
+        { data: standingsData },
+        subRes,
+        { data: gamifData },
+        { data: squadsViewData },
+      ] = await Promise.all([
+        supabase
+          .from('leaderboard_standings')
+          .select(`
             id,
-            full_name,
-            avatar_url,
-            phone
-          )
-        `)
-        .eq('challenge_id', challengeId)
-        .order('total_points', { ascending: false });
+            total_points,
+            challenge_id,
+            student_id,
+            students (
+              id,
+              full_name,
+              avatar_url,
+              phone
+            )
+          `)
+          .eq('challenge_id', challengeId)
+          .order('total_points', { ascending: false }),
+        supabase
+          .from('student_submissions')
+          .select('student_id, status, missions!inner(challenge_id)')
+          .eq('missions.challenge_id', challengeId)
+          .eq('status', 'approved'),
+        supabase
+          .from('student_gamification_state')
+          .select('student_id, current_streak')
+          .eq('challenge_id', challengeId),
+        supabase
+          .from('squad_standings')
+          .select('*')
+          .eq('challenge_id', challengeId)
+          .order('squad_average_points', { ascending: false }),
+      ]);
 
-      let { data: submissionsData, error: subErr } = await supabase
-        .from('student_submissions')
-        .select('student_id, status, missions!inner(challenge_id)')
-        .eq('missions.challenge_id', challengeId)
-        .eq('status', 'approved');
-
-      if (subErr) {
+      let submissionsData = subRes.data;
+      if (subRes.error) {
         const fallbackSub = await supabase
           .from('student_submissions')
           .select('student_id, status')
@@ -153,11 +177,6 @@ function CoachLeaderboardContent() {
       submissionsData?.forEach((s: any) => {
         approvedCounts.set(s.student_id, (approvedCounts.get(s.student_id) || 0) + 1);
       });
-
-      const { data: gamifData } = await supabase
-        .from('student_gamification_state')
-        .select('student_id, current_streak')
-        .eq('challenge_id', challengeId);
 
       const stMap: Record<string, number> = {};
       gamifData?.forEach((g: any) => {
@@ -174,12 +193,6 @@ function CoachLeaderboardContent() {
       setStandings(enriched);
 
       // Squad Standings (view + fallback direto em challenge_squads)
-      const { data: squadsViewData } = await supabase
-        .from('squad_standings')
-        .select('*')
-        .eq('challenge_id', challengeId)
-        .order('squad_average_points', { ascending: false });
-
       if (squadsViewData && squadsViewData.length > 0) {
         setSquadStandings(squadsViewData);
       } else {
@@ -221,7 +234,7 @@ function CoachLeaderboardContent() {
     } catch (err) {
       console.error('Erro ao carregar ranking da turma:', err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -231,7 +244,7 @@ function CoachLeaderboardContent() {
     }
   }, [selectedChallengeId]);
 
-  // 3. Realtime Updates
+  // 3. Realtime Updates (Silent refresh)
   useEffect(() => {
     if (!selectedChallengeId) return;
 
@@ -246,7 +259,7 @@ function CoachLeaderboardContent() {
           filter: `challenge_id=eq.${selectedChallengeId}`,
         },
         () => {
-          loadStandings(selectedChallengeId);
+          loadStandings(selectedChallengeId, true);
         }
       )
       .subscribe();
@@ -653,10 +666,14 @@ function CoachLeaderboardContent() {
                   const rankPos = actualIndex + 1;
                   const studentName = item.students?.full_name || 'Atleta';
                   const cleanPhone = item.students?.phone?.replace(/\D/g, '') || '';
+                  const formattedPhone =
+                    cleanPhone.startsWith('55') && cleanPhone.length >= 12
+                      ? cleanPhone
+                      : `55${cleanPhone}`;
                   const streakDays = streaksMap[item.student_id] || 0;
                   const pctOfLeader = Math.max(5, Math.min(100, Math.round(((item.total_points || 0) / maxPoints) * 100)));
                   const waLink = cleanPhone
-                    ? `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(
+                    ? `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
                         `Parabéns pelo seu progresso no desafio! Você está em ${rankPos}º lugar com ${item.total_points} XP!`
                       )}`
                     : null;
@@ -812,23 +829,25 @@ function CoachLeaderboardContent() {
       )}
 
       {/* Tela Compartilhar Ranking da Turma (Carrossel 9:16 Pódio Top 3 + Lista Top 10) */}
-      <ShareRankingSheet
-        open={showStoryShare}
-        onClose={() => setShowStoryShare(false)}
-        challengeId={currentChallenge?.id || selectedChallengeId || null}
-        challengeTitle={currentChallenge?.title || 'Desafio Oficial'}
-        coachId={coachProfile?.id || null}
-        coachBrandName={coachProfile?.brandName || coachProfile?.fullName || null}
-        coachLogoUrl={coachProfile?.brandLogoUrl || coachProfile?.avatarUrl || null}
-        standings={standings.map((s) => ({
-          studentId: s.student_id,
-          name: s.students?.full_name || 'Atleta',
-          avatarUrl: s.students?.avatar_url || null,
-          points: Number(s.total_points || 0),
-          streakDays: streaksMap[s.student_id] || 0,
-        }))}
-        isCoachView={true}
-      />
+      {showStoryShare && (
+        <ShareRankingSheet
+          open={showStoryShare}
+          onClose={() => setShowStoryShare(false)}
+          challengeId={currentChallenge?.id || selectedChallengeId || null}
+          challengeTitle={currentChallenge?.title || 'Desafio Oficial'}
+          coachId={coachProfile?.id || null}
+          coachBrandName={coachProfile?.brandName || coachProfile?.fullName || null}
+          coachLogoUrl={coachProfile?.brandLogoUrl || coachProfile?.avatarUrl || null}
+          standings={standings.map((s) => ({
+            studentId: s.student_id,
+            name: s.students?.full_name || 'Atleta',
+            avatarUrl: s.students?.avatar_url || null,
+            points: Number(s.total_points || 0),
+            streakDays: streaksMap[s.student_id] || 0,
+          }))}
+          isCoachView={true}
+        />
+      )}
     </div>
   );
 }

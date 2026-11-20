@@ -159,7 +159,7 @@ export function TransformationVaultModal({
             <div>
               <span className="text-[10px] font-black uppercase tracking-widest text-[#A1A1AA] font-mono flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#3478F6] animate-pulse inline-block" />
-                SISTEMA_DIALOG • COFRE_EVOLUCAO
+                COFRE DE EVOLUÇÃO
               </span>
               <h3 className="text-base font-black text-[#FAFAFA] leading-tight">Cofre Antes & Depois</h3>
             </div>
@@ -198,16 +198,15 @@ export function TransformationVaultModal({
                       Depois (Dia 30)
                     </div>
 
-                    {/* Imagem "ANTES" (Cortada pelo slider) */}
+                    {/* Imagem "ANTES" (Full-width recortada via clipPath) */}
                     <div
-                      className="absolute inset-y-0 left-0 overflow-hidden"
-                      style={{ width: `${sliderPosition}%` }}
+                      className="absolute inset-0"
+                      style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
                     >
                       <img
                         src={vaultData.before_photo_url}
                         alt="Antes"
-                        className="absolute inset-0 w-full h-full object-cover max-w-none"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        className="w-full h-full object-cover"
                       />
                       <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md bg-[#0E0E10]/90 text-[#FAFAFA] text-[10px] font-black uppercase border border-[#27272A] shadow font-mono">
                         Antes (Dia 1)
@@ -270,7 +269,7 @@ export function TransformationVaultModal({
                       Privacidade Absoluta Garantida:
                     </p>
                     <p className="text-[11px] text-[#A1A1AA] leading-relaxed">
-                      Sua foto do <strong className="text-[#FAFAFA]">Dia 1</strong> não vai para o feed público e ninguem tem acesso. Ela fica protegida em cofre privado até o último dia, quando você enviar a foto final e liberar a visualizacao comparativa.
+                      Sua foto do <strong className="text-[#FAFAFA]">Dia 1</strong> não vai para o feed público e ninguém tem acesso. Ela fica protegida em cofre privado até o último dia, quando você enviar a foto final e liberar a visualização comparativa.
                     </p>
                   </div>
 

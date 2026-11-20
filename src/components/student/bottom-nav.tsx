@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   Menu, 
@@ -29,7 +30,15 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useWorkoutSession } from '@/lib/workout-session-context';
-import { triggerStudentTour } from '@/components/student/student-onboarding-tour';
+import { useWalkthrough } from '@/components/ui/walkthrough-spotlight';
+import { STUDENT_WALKTHROUGH_STEPS } from '@/lib/walkthrough/student-tour-steps';
+import { useStudentSession } from '@/lib/auth/student-session-context';
+import type { MissionSharePayload } from '@/components/share-mission/mission-share-card';
+
+const ShareMissionSheet = dynamic(
+  () => import('@/components/share-mission/share-mission-sheet').then((m) => m.ShareMissionSheet),
+  { ssr: false }
+);
 
 export function openStudentMenu() {
   if (typeof window !== 'undefined') {
@@ -56,16 +65,29 @@ export function StudentBottomNav() {
   const router = useRouter();
   const supabase = createClient();
   const { activeSession, startSession, finishSession } = useWorkoutSession();
+  const { startTour } = useWalkthrough();
+  const {
+    user: sessionUser,
+    student: sessionStudent,
+    activeChallengeId,
+    activeChallenge,
+    isPreviewMode,
+  } = useStudentSession();
 
   const [showQuickSheet, setShowQuickSheet] = useState(false);
   const [showVerticalMenu, setShowVerticalMenu] = useState(false);
   const [pendingMissions, setPendingMissions] = useState<any[]>([]);
   const [missionLists, setMissionLists] = useState<any[]>([]);
-  const [studentInfo, setStudentInfo] = useState<any>(null);
-  const [isProfessional, setIsProfessional] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [shareMissionPayload, setShareMissionPayload] = useState<MissionSharePayload | null>(null);
+
+  const isProfessional = isPreviewMode;
+  const studentInfo =
+    sessionStudent ||
+    (sessionUser ? { full_name: sessionUser.email?.split('@')[0] || 'Atleta', avatar_url: null } : null);
 
   useEffect(() => {
     setMounted(true);
@@ -92,59 +114,36 @@ export function StudentBottomNav() {
   };
 
   const loadQuickMissions = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!sessionUser) return;
 
-    const { data: sData } = await supabase
-      .from('students')
-      .select('full_name, avatar_url')
-      .eq('id', user.id)
-      .maybeSingle();
-    setStudentInfo(sData || { full_name: user.email?.split('@')[0] });
-
-    const isMetaProf = user.user_metadata?.role === 'professional';
-    const hasProfCookie = typeof document !== 'undefined' && document.cookie.includes('arena_role=professional');
-
-    const { data: prof } = await supabase
-      .from('professionals')
-      .select('id')
-      .eq('id', user.id)
-      .maybeSingle();
-    if (prof || isMetaProf || hasProfCookie) {
-      setIsProfessional(true);
-    }
-
-    // Buscar desafio ativo do aluno (isolamento multi-tenant)
-    const { data: part } = await supabase
-      .from('challenge_participants')
-      .select('challenge_id, challenges(start_date, challenge_weeks(id, week_number))')
-      .eq('student_id', user.id)
-      .order('joined_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (!part?.challenge_id) {
+    if (!activeChallengeId) {
       setPendingMissions([]);
       return;
     }
 
-    // Buscar listas customizadas da turma
-    const { data: listsData } = await supabase
-      .from('challenge_mission_lists')
-      .select('*')
-      .eq('challenge_id', part.challenge_id)
-      .order('order_index', { ascending: true });
+    // Buscar listas customizadas da turma, missões e submissões do aluno em paralelo (escopado por challenge_id)
+    const [{ data: listsData }, { data: rawMData }, { data: userSubs }] = await Promise.all([
+      supabase
+        .from('challenge_mission_lists')
+        .select('*')
+        .eq('challenge_id', activeChallengeId)
+        .order('order_index', { ascending: true }),
+      supabase
+        .from('missions')
+        .select('id, challenge_id, week_id, title, category, list_id, validation_type, daily_limit, points_rewarded, order_index, is_daily_reset')
+        .eq('challenge_id', activeChallengeId)
+        .order('order_index', { ascending: true }),
+      supabase
+        .from('student_submissions')
+        .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
+        .eq('student_id', sessionUser.id)
+        .eq('challenge_id', activeChallengeId),
+    ]);
 
     setMissionLists(listsData || []);
 
-    const { data: rawMData } = await supabase
-      .from('missions')
-      .select('id, challenge_id, week_id, title, category, list_id, validation_type, daily_limit, points_rewarded, order_index, is_daily_reset')
-      .eq('challenge_id', part.challenge_id)
-      .order('order_index', { ascending: true });
-
     let mData = rawMData || [];
-    const chObj: any = Array.isArray(part.challenges) ? part.challenges[0] : part.challenges;
+    const chObj: any = activeChallenge;
     if (chObj && mData.length > 0) {
       const startRaw = chObj.start_date
         ? new Date(chObj.start_date + 'T00:00:00')
@@ -166,11 +165,6 @@ export function StudentBottomNav() {
         }
       }
     }
-
-    const { data: userSubs } = await supabase
-      .from('student_submissions')
-      .select('mission_id, status, submitted_at, client_captured_at, missions(category)')
-      .eq('student_id', user.id);
 
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
@@ -224,8 +218,10 @@ export function StudentBottomNav() {
   };
 
   useEffect(() => {
-    loadQuickMissions();
-  }, [supabase, showQuickSheet]);
+    if (showQuickSheet) {
+      loadQuickMissions();
+    }
+  }, [supabase, showQuickSheet, sessionUser?.id, activeChallengeId]);
 
   useEffect(() => {
     const handleOpenMenu = () => setShowVerticalMenu(true);
@@ -234,16 +230,19 @@ export function StudentBottomNav() {
   }, []);
 
   const handleSimpleCheckin = async (mission: any) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): check-in disponível apenas para alunos.');
+      return;
+    }
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!sessionUser) return;
 
       const res = await fetch('/api/submissions/simple-checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           missionId: mission.id,
-          challengeId: mission.challenge_id || null,
+          challengeId: mission.challenge_id || activeChallengeId || null,
         }),
       });
 
@@ -257,6 +256,26 @@ export function StudentBottomNav() {
       // Remoção otimista da lista rápida
       setPendingMissions((prev) => prev.filter((m) => m.id !== mission.id));
       showToast(`"${mission.title}" concluída! +${mission.points_rewarded} XP`);
+
+      const coachRecord = Array.isArray(activeChallenge?.professionals)
+        ? activeChallenge?.professionals[0]
+        : activeChallenge?.professionals;
+
+      setShareMissionPayload({
+        missionId: mission.id,
+        missionTitle: mission.title,
+        missionCategory: mission.category || null,
+        pointsRewarded: Number(mission.points_rewarded || 0),
+        status: 'approved',
+        completedAt: new Date().toISOString(),
+        studentName: studentInfo?.full_name || 'Atleta',
+        challengeTitle: activeChallenge?.title || null,
+        coachBrandName: coachRecord?.brand_name || coachRecord?.full_name || null,
+        coachLogoUrl: coachRecord?.brand_logo_url || coachRecord?.avatar_url || null,
+        photoUrl: null,
+      });
+      setShowQuickSheet(false);
+      setShareSheetOpen(true);
 
       // Notificar páginas (como a Home) para recarregar
       if (typeof window !== 'undefined') {
@@ -287,6 +306,7 @@ export function StudentBottomNav() {
   };
 
   const handleSignOut = async () => {
+    await fetch('/api/auth/exit-preview', { method: 'POST' }).catch(() => null);
     await supabase.auth.signOut();
     router.push('/login');
   };
@@ -639,7 +659,7 @@ export function StudentBottomNav() {
                 type="button"
                 onClick={() => {
                   setShowVerticalMenu(false);
-                  triggerStudentTour();
+                  startTour(STUDENT_WALKTHROUGH_STEPS, 'arena_student_tour_v1');
                 }}
                 className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#A1A1AA] hover:text-[#FAFAFA] bg-[#0E0E10] border border-[#27272A] active:scale-[0.98] transition-all cursor-pointer"
               >
@@ -651,17 +671,22 @@ export function StudentBottomNav() {
               </button>
 
               {isProfessional && (
-                <Link
-                  href="/dashboard"
-                  onClick={() => setShowVerticalMenu(false)}
-                  className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#D4D4D8] hover:text-white bg-white/[0.06] hover:bg-[#3478F6] border border-white/10 active:scale-[0.98] transition-all"
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setShowVerticalMenu(false);
+                    await fetch('/api/auth/exit-preview', { method: 'POST' }).catch(() => null);
+                    router.push('/dashboard');
+                    router.refresh();
+                  }}
+                  className="w-full min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#D4D4D8] hover:text-white bg-white/[0.06] hover:bg-[#3478F6] border border-white/10 active:scale-[0.98] transition-all cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5">
                     <ArrowLeft className="h-4 w-4 shrink-0" />
                     <span>Voltar ao Painel do Coach</span>
                   </div>
                   <ChevronRight className="h-4 w-4 shrink-0" />
-                </Link>
+                </button>
               )}
 
               <button
@@ -836,6 +861,15 @@ export function StudentBottomNav() {
           <span className="w-1.5 h-1.5 rounded-full bg-[#3478F6]"></span>
           <span>{toastMessage}</span>
         </div>
+      )}
+
+      {shareSheetOpen && shareMissionPayload && (
+        <ShareMissionSheet
+          open={shareSheetOpen}
+          onClose={() => setShareSheetOpen(false)}
+          mission={shareMissionPayload}
+          celebrate={true}
+        />
       )}
     </>
   );

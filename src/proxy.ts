@@ -15,6 +15,6 @@ export const config = {
      * - manifest.json / service worker
      * - static image formats (.svg, .png, .jpg, .jpeg, .gif, .webp)
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|sw\\.js|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|mp4|txt)$).*)',
   ],
 };

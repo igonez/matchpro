@@ -2,10 +2,16 @@
 
 import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
+import { CustomDialog } from '@/components/ui/custom-dialog';
+import { MidnightCountdown } from '@/components/student/midnight-countdown';
 import { useWorkoutSession } from '@/lib/workout-session-context';
+import { useStudentSession } from '@/lib/auth/student-session-context';
+import { isValidSubmissionPhotoUrl } from '@/lib/submissions/photo-utils';
+import type { MissionSharePayload, MissionBgMode } from '@/components/share-mission/share-mission-sheet';
 import {
   Clock,
   CheckCircle2,
@@ -25,8 +31,16 @@ import {
   Play,
   Check,
   Layers,
+  Share2,
+  RotateCcw,
+  FileText,
 } from 'lucide-react';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+
+const ShareMissionSheet = dynamic(
+  () => import('@/components/share-mission/share-mission-sheet').then((m) => m.ShareMissionSheet),
+  { ssr: false }
+);
 
 export default function StudentMissionsWeeklyPage() {
   return (
@@ -48,6 +62,14 @@ function StudentMissionsContent() {
   const searchParams = useSearchParams();
   const initialCat = searchParams.get('cat') || 'all';
   const { activeSession, startSession } = useWorkoutSession();
+  const {
+    user,
+    student: sessionStudent,
+    activeChallengeId,
+    activeChallenge,
+    isPreviewMode,
+    isReady,
+  } = useStudentSession();
 
   const [challenge, setChallenge] = useState<any>(null);
   const [weeks, setWeeks] = useState<any[]>([]);
@@ -56,6 +78,18 @@ function StudentMissionsContent() {
   const [missionLists, setMissionLists] = useState<any[]>([]);
   const [selectedListId, setSelectedListId] = useState<string>(searchParams.get('list') || 'all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [currentStreak, setCurrentStreak] = useState<number>(1);
+
+  // ShareMissionSheet state
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [shareMissionPayload, setShareMissionPayload] = useState<MissionSharePayload | null>(null);
+  const [shareCelebrate, setShareCelebrate] = useState(false);
+  const [shareDefaultBgMode, setShareDefaultBgMode] = useState<MissionBgMode>('dark');
+
+  // Text validation mission dialog state
+  const [textModalMission, setTextModalMission] = useState<any | null>(null);
+  const [textResponseInput, setTextResponseInput] = useState('');
+  const [submittingText, setSubmittingText] = useState(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -93,33 +127,6 @@ function StudentMissionsContent() {
       setSelectedListId('all');
     }
   }, [searchParams]);
-
-  // Relógio em tempo real até 23:59:59 (meia-noite)
-  const [timeUntilMidnight, setTimeUntilMidnight] = useState<string>('');
-
-  useEffect(() => {
-    function updateCountdown() {
-      const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(23, 59, 59, 999);
-      const diffMs = midnight.getTime() - now.getTime();
-
-      if (diffMs > 0) {
-        const hours = Math.floor(diffMs / (1000 * 60 * 60));
-        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-        setTimeUntilMidnight(
-          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-        );
-      } else {
-        setTimeUntilMidnight('00:00:00');
-      }
-    }
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Cálculo cronológico de semanas baseado em challenge.start_date
   const weekScheduleInfo = useMemo(() => {
@@ -184,37 +191,17 @@ function StudentMissionsContent() {
 
   // 1. Carregar desafio, semanas e submissões
   useEffect(() => {
+    if (!isReady) return;
     async function loadData() {
       setLoading(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           setLoading(false);
           return;
         }
 
-        let { data: part } = await supabase
-          .from('challenge_participants')
-          .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
-          .eq('student_id', user.id)
-          .in('payment_status', ['paid', 'complimentary'])
-          .order('joined_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (!part) {
-          const { data: fallbackPart } = await supabase
-            .from('challenge_participants')
-            .select('challenge_id, challenges(id, title, start_date, end_date, is_active, professional_id, professionals(id, full_name, avatar_url, brand_name, brand_logo_url))')
-            .eq('student_id', user.id)
-            .order('joined_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-          part = fallbackPart;
-        }
-
-        let challengeObj: any = Array.isArray(part?.challenges) ? part?.challenges[0] : part?.challenges;
-        let challengeId = part?.challenge_id || challengeObj?.id || null;
+        const challengeObj: any = activeChallenge;
+        const challengeId = activeChallengeId || challengeObj?.id || null;
 
         setCurrentChallengeId(challengeId);
         setChallenge(challengeObj || null);
@@ -262,20 +249,31 @@ function StudentMissionsContent() {
           setSelectedWeekNumber(initialWeek);
         }
 
-        const { data: cLists } = await supabase
-          .from('challenge_mission_lists')
-          .select('*')
-          .eq('challenge_id', challengeId)
-          .order('order_index', { ascending: true });
+        const [{ data: cLists }, { data: allSubmissionsData }, { data: gamifData }] = await Promise.all([
+          supabase
+            .from('challenge_mission_lists')
+            .select('*')
+            .eq('challenge_id', challengeId)
+            .order('order_index', { ascending: true }),
+          supabase
+            .from('student_submissions')
+            .select('*, missions(category, requires_cooldown, cooldown_hours)')
+            .eq('student_id', user.id),
+          supabase
+            .from('student_gamification_state')
+            .select('current_streak')
+            .eq('student_id', user.id)
+            .eq('challenge_id', challengeId)
+            .maybeSingle(),
+        ]);
 
         if (cLists && cLists.length > 0) {
           setMissionLists(cLists);
         }
 
-        const { data: allSubmissionsData } = await supabase
-          .from('student_submissions')
-          .select('*, missions(category, requires_cooldown, cooldown_hours)')
-          .eq('student_id', user.id);
+        if (gamifData?.current_streak) {
+          setCurrentStreak(Math.max(1, gamifData.current_streak));
+        }
 
         if (allSubmissionsData) {
           const map: Record<string, any> = {};
@@ -286,13 +284,15 @@ function StudentMissionsContent() {
 
           allSubmissionsData.forEach((s: any) => {
             // Guarda a submissão mais recente no mapa geral
-            if (!map[s.mission_id] || new Date(s.submitted_at || 0) > new Date(map[s.mission_id].submitted_at || 0)) {
+            if (!map[s.mission_id] || new Date(s.submitted_at || 0) >= new Date(map[s.mission_id].submitted_at || 0)) {
               map[s.mission_id] = s;
             }
             const subTime = new Date(s.submitted_at || s.client_captured_at);
             if (subTime >= startOfToday) {
               todayList.push(s);
-              todayMap[s.mission_id] = s;
+              if (!todayMap[s.mission_id] || new Date(s.submitted_at || 0) >= new Date(todayMap[s.mission_id].submitted_at || 0)) {
+                todayMap[s.mission_id] = s;
+              }
             }
           });
 
@@ -309,7 +309,7 @@ function StudentMissionsContent() {
     }
 
     loadData();
-  }, [supabase, refreshKey]);
+  }, [isReady, user?.id, activeChallengeId, supabase, refreshKey]);
 
   const selectedWeek = useMemo(
     () => weeks.find((w) => Number(w.week_number) === selectedWeekNumber) || weeks[0],
@@ -361,13 +361,17 @@ function StudentMissionsContent() {
     loadWeeklyMissions();
   }, [selectedWeek, selectedWeekNumber, currentChallengeId, supabase]);
 
-  // Limite biológico: 1 Treino e 1 Cardio por dia
+  // Limite biológico: 1 Treino e 1 Cardio por dia (submissões rejeitadas não bloqueiam reenvio)
   const todayWorkoutCount = useMemo(() => {
-    return todaySubmissions.filter((s: any) => s.missions?.category === 'treino').length;
+    return todaySubmissions.filter(
+      (s: any) => s.missions?.category === 'treino' && s.status !== 'rejected'
+    ).length;
   }, [todaySubmissions]);
 
   const todayCardioCount = useMemo(() => {
-    return todaySubmissions.filter((s: any) => s.missions?.category === 'cardio').length;
+    return todaySubmissions.filter(
+      (s: any) => s.missions?.category === 'cardio' && s.status !== 'rejected'
+    ).length;
   }, [todaySubmissions]);
 
   const isWorkoutDailyLocked = todayWorkoutCount >= 1;
@@ -390,14 +394,19 @@ function StudentMissionsContent() {
     return missions.map((mission) => {
       const isDaily = mission.is_daily_reset || mission.category === 'refeicao';
 
-      // Para missões de reset diário, o slot verifica estritamente se foi enviado HOJE
-      const sub = isDaily ? todaySubmissionsMap[mission.id] : submissions[mission.id];
+      // Para missões de reset diário, o slot verifica se foi enviado HOJE (ou se a última submissão foi rejeitada)
+      const sub = isDaily
+        ? todaySubmissionsMap[mission.id] ||
+          (submissions[mission.id]?.status === 'rejected' ? submissions[mission.id] : undefined)
+        : submissions[mission.id];
       const isApproved = sub?.status === 'approved';
       const isPending = sub?.status === 'pending';
+      const isRejected = sub?.status === 'rejected';
 
       const isDailyLocked =
         !isApproved &&
         !isPending &&
+        !isRejected &&
         !isFutureWeek &&
         ((mission.category === 'treino' && isWorkoutDailyLocked) ||
           (mission.category === 'cardio' && isCardioDailyLocked));
@@ -405,14 +414,16 @@ function StudentMissionsContent() {
       const hadPreviousUnfinished =
         !isApproved &&
         !isPending &&
+        !isRejected &&
         !isFutureWeek &&
         (mission.category === 'treino' || mission.category === 'cardio') &&
         lastSubStatusByCategory[mission.category] === false;
 
       if (mission.category === 'treino' || mission.category === 'cardio') {
+        const hasValidSub = Boolean(sub && sub.status !== 'rejected');
         if (lastSubStatusByCategory[mission.category] === undefined) {
-          lastSubStatusByCategory[mission.category] = Boolean(sub);
-        } else if (!sub) {
+          lastSubStatusByCategory[mission.category] = hasValidSub;
+        } else if (!hasValidSub) {
           lastSubStatusByCategory[mission.category] = false;
         }
       }
@@ -424,6 +435,7 @@ function StudentMissionsContent() {
         sub,
         isApproved,
         isPending,
+        isRejected,
         isFutureWeek,
         isDailyLocked,
         isPreviousUnfinished: hadPreviousUnfinished,
@@ -542,18 +554,92 @@ function StudentMissionsContent() {
     }
   };
 
-  const handleSimpleCheckin = async (mission: any) => {
+  const buildSharePayloadForMission = (
+    mission: any,
+    opts?: {
+      pointsRewarded?: number;
+      status?: 'approved' | 'pending';
+      streakDays?: number;
+      photoUrl?: string | null;
+      completedAt?: string | null;
+    }
+  ): MissionSharePayload => {
+    const profObj = Array.isArray(challenge?.professionals)
+      ? challenge?.professionals[0]
+      : challenge?.professionals || activeChallenge?.professionals;
+    const resolvedPhoto =
+      opts?.photoUrl !== undefined
+        ? opts.photoUrl
+        : isValidSubmissionPhotoUrl(mission.sub?.photo_url)
+        ? mission.sub.photo_url
+        : null;
+
+    return {
+      missionId: mission.id,
+      missionTitle: mission.title,
+      missionCategory: mission.category || 'habito',
+      pointsRewarded: opts?.pointsRewarded ?? mission.points_rewarded ?? 10,
+      status: opts?.status ?? (mission.sub?.status === 'pending' ? 'pending' : 'approved'),
+      completedAt:
+        opts?.completedAt ||
+        mission.sub?.submitted_at ||
+        mission.sub?.client_captured_at ||
+        new Date().toISOString(),
+      studentName:
+        sessionStudent?.full_name ||
+        user?.user_metadata?.full_name ||
+        user?.email?.split('@')[0] ||
+        'Atleta',
+      challengeTitle: challenge?.title || activeChallenge?.title || 'Desafio',
+      coachBrandName:
+        profObj?.brand_name ||
+        profObj?.full_name ||
+        activeChallenge?.professionals?.brand_name ||
+        activeChallenge?.professionals?.full_name ||
+        'ArenaFitPro',
+      coachLogoUrl:
+        profObj?.brand_logo_url ||
+        profObj?.avatar_url ||
+        activeChallenge?.professionals?.brand_logo_url ||
+        activeChallenge?.professionals?.avatar_url ||
+        null,
+      streakDays: Math.max(1, opts?.streakDays ?? currentStreak ?? 1),
+      photoUrl: resolvedPhoto,
+    };
+  };
+
+  const openRetroactiveShare = (mission: any) => {
+    const validPhoto = isValidSubmissionPhotoUrl(mission.sub?.photo_url)
+      ? mission.sub.photo_url
+      : null;
+    const payload = buildSharePayloadForMission(mission, {
+      photoUrl: validPhoto,
+      status: mission.sub?.status === 'pending' ? 'pending' : 'approved',
+    });
+    setShareMissionPayload(payload);
+    setShareCelebrate(false);
+    setShareDefaultBgMode(validPhoto ? 'photo' : 'dark');
+    setShareSheetOpen(true);
+  };
+
+  const handleSimpleCheckin = async (mission: any, textResponse?: string) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): check-in disponível apenas para alunos.');
+      return;
+    }
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      const nowIso = new Date().toISOString();
       const newSub = {
         id: `temp-${Date.now()}`,
         mission_id: mission.id,
         student_id: user.id,
         status: 'approved',
-        submitted_at: new Date().toISOString(),
-        client_captured_at: new Date().toISOString(),
+        photo_url: 'simple_click',
+        caption: textResponse?.trim() || 'Check-in de hábito diário',
+        submitted_at: nowIso,
+        client_captured_at: nowIso,
         missions: { category: mission.category },
       };
 
@@ -563,7 +649,8 @@ function StudentMissionsContent() {
         body: JSON.stringify({
           missionId: mission.id,
           challengeId: currentChallengeId,
-          caption: 'Check-in de hábito diário',
+          caption: textResponse?.trim() || 'Check-in de hábito diário',
+          textResponse: textResponse?.trim() || undefined,
         }),
       });
 
@@ -574,13 +661,50 @@ function StudentMissionsContent() {
         return;
       }
 
-      const confirmedSub = json.submission || newSub;
+      const confirmedSub = {
+        ...newSub,
+        ...(json.submission || {}),
+        missions: { category: mission.category },
+      };
       setSubmissions((prev) => ({ ...prev, [mission.id]: confirmedSub }));
       setTodaySubmissions((prev) => [...prev, confirmedSub]);
-      showToast(`"${mission.title}" concluída! +${mission.points_rewarded} XP`);
+      setTodaySubmissionsMap((prev) => ({ ...prev, [mission.id]: confirmedSub }));
+      setRawSubmissions((prev) => [...prev, confirmedSub]);
+
+      const nextStreak = json.currentStreak ?? currentStreak ?? 1;
+      setCurrentStreak(Math.max(1, nextStreak));
+
+      const pts = json.pointsRewarded || mission.points_rewarded || 10;
+      showToast(`"${mission.title}" concluída! +${pts} XP`);
+
+      const payload = buildSharePayloadForMission(mission, {
+        pointsRewarded: pts,
+        status: 'approved',
+        streakDays: nextStreak,
+        photoUrl: null,
+        completedAt: confirmedSub.submitted_at || nowIso,
+      });
+      setShareMissionPayload(payload);
+      setShareCelebrate(true);
+      setShareDefaultBgMode('dark');
+      setShareSheetOpen(true);
     } catch (err: any) {
       console.error('Erro no check-in 1-toque:', err);
       showToast('Erro ao registrar check-in.');
+    }
+  };
+
+  const handleTextCheckinSubmit = async () => {
+    if (!textModalMission || !textResponseInput.trim() || submittingText) return;
+    setSubmittingText(true);
+    try {
+      const targetMission = textModalMission;
+      const responseText = textResponseInput.trim();
+      setTextModalMission(null);
+      setTextResponseInput('');
+      await handleSimpleCheckin(targetMission, responseText);
+    } finally {
+      setSubmittingText(false);
     }
   };
 
@@ -616,6 +740,17 @@ function StudentMissionsContent() {
       return;
     }
 
+    if (valType === 'text') {
+      setTextModalMission(mission);
+      setTextResponseInput('');
+      return;
+    }
+
+    if (mission.isRejected) {
+      router.push(`/app/camera/${mission.id}`);
+      return;
+    }
+
     if (valType === 'timer' || mission.category === 'treino' || mission.category === 'cardio') {
       if (activeSession?.missionId === mission.id) return;
       startSession(mission.id, mission.title, mission.category);
@@ -626,12 +761,14 @@ function StudentMissionsContent() {
   };
 
   const renderMissionCard = (mission: any) => {
-    const isActionable = !mission.sub && !mission.isLocked;
+    const isActionable = (!mission.sub || mission.isRejected) && !mission.isLocked;
     const isCurrentlyActive = activeSession?.missionId === mission.id;
     const isSimpleClick = mission.validation_type === 'simple_click';
+    const isTextValidation = mission.validation_type === 'text';
     const isTimer =
-      mission.validation_type === 'timer' ||
-      (!mission.validation_type && (mission.category === 'treino' || mission.category === 'cardio'));
+      !mission.isRejected &&
+      (mission.validation_type === 'timer' ||
+        (!mission.validation_type && (mission.category === 'treino' || mission.category === 'cardio')));
 
     return (
       <div
@@ -642,6 +779,8 @@ function StudentMissionsContent() {
             ? 'border-white/10 bg-white/[0.06] opacity-90'
             : mission.isPending
             ? 'border-amber-500/25 bg-amber-950/15'
+            : mission.isRejected
+            ? 'border-rose-500/40 bg-rose-950/20 hover:border-rose-400/60 cursor-pointer'
             : mission.isLocked
             ? 'border-[#27272A] bg-[#0E0E10]/60 opacity-65'
             : 'border-[#27272A] bg-[#18181B] hover:bg-[#18181B]/90 hover:border-[#3478F6]/40 active:scale-[0.99] cursor-pointer shadow-sm'
@@ -657,6 +796,10 @@ function StudentMissionsContent() {
             ) : mission.isPending ? (
               <div className="h-9 w-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300">
                 <Clock className="h-4 w-4" />
+              </div>
+            ) : mission.isRejected ? (
+              <div className="h-9 w-9 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-300">
+                <RotateCcw className="h-4 w-4" />
               </div>
             ) : mission.isLocked ? (
               <div className="h-9 w-9 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center text-[#A1A1AA]">
@@ -684,6 +827,11 @@ function StudentMissionsContent() {
                   BÔNUS
                 </span>
               )}
+              {mission.isRejected && (
+                <span className="text-[10px] font-mono font-bold text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-md uppercase">
+                  Rejeitada — Reenviar
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -709,6 +857,21 @@ function StudentMissionsContent() {
             </span>
           )}
 
+          {(mission.isApproved || mission.isPending) && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openRetroactiveShare(mission);
+              }}
+              className="min-h-[44px] px-3 py-2 rounded-xl bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] hover:border-[#3478F6]/40 text-xs font-mono font-bold text-[#FAFAFA] flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="Compartilhar conquista"
+            >
+              <Share2 className="w-3.5 h-3.5 text-[#3478F6] shrink-0" />
+              <span>Compartilhar</span>
+            </button>
+          )}
+
           {mission.isLocked && (
             <div className="text-right">
               {mission.isFutureWeek ? (
@@ -717,7 +880,7 @@ function StudentMissionsContent() {
                 </span>
               ) : mission.isDailyLocked ? (
                 <span className="text-[10px] font-mono text-[#D4D4D8] bg-white/[0.06] px-2 py-1 rounded-lg border border-white/10 flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> {timeUntilMidnight || 'Amanhã'}
+                  <Clock className="w-3 h-3" /> <MidnightCountdown fallback="Amanhã" />
                 </span>
               ) : (
                 <span className="text-[10px] font-mono text-[#A1A1AA] px-2 py-1 rounded-lg bg-[#0E0E10] border border-[#27272A] block">
@@ -735,11 +898,23 @@ function StudentMissionsContent() {
             ) : (
               <span 
                 data-tour="student-checkin-btn"
-                className="px-3 py-1.5 rounded-xl bg-[#3478F6] text-white font-mono font-bold text-xs hover:bg-[#75A7FF] transition-colors shadow-sm flex items-center gap-1 cursor-pointer"
+                className={`px-3 py-1.5 rounded-xl font-mono font-bold text-xs transition-colors shadow-sm flex items-center gap-1 cursor-pointer ${
+                  mission.isRejected
+                    ? 'bg-rose-500 hover:bg-rose-400 text-white'
+                    : 'bg-[#3478F6] hover:bg-[#75A7FF] text-white'
+                }`}
               >
-                {isSimpleClick ? (
+                {mission.isRejected ? (
+                  <>
+                    <Camera className="w-3 h-3" /> Reenviar
+                  </>
+                ) : isSimpleClick ? (
                   <>
                     <Check className="w-3 h-3" /> Check-in
+                  </>
+                ) : isTextValidation ? (
+                  <>
+                    <FileText className="w-3 h-3" /> Responder
                   </>
                 ) : isTimer ? (
                   <>
@@ -758,52 +933,116 @@ function StudentMissionsContent() {
     );
   };
 
-  // Blocos visuais estruturados por pilar
-  const categoryBlocks = [
-    {
-      key: 'treino',
-      title: 'Bloco de Treinos de Força',
-      subtitle: 'Limite fisiológico de 1 treino validado por dia',
-      Icon: Dumbbell,
-      accentBorder: 'border-white/10',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
-      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
-      ruleLabel: isWorkoutDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
-    },
-    {
-      key: 'cardio',
-      title: 'Bloco de Sessões de Cardio',
-      subtitle: 'Condicionamento aeróbico • Limite de 1 sessão por dia',
-      Icon: Activity,
-      accentBorder: 'border-white/10',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
-      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
-      ruleLabel: isCardioDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
-    },
-    {
-      key: 'refeicao',
-      title: 'Bloco de Nutrição & Dieta',
-      subtitle: '4 refeições diárias auditadas por IA • Reseta diariamente',
-      Icon: Utensils,
-      accentBorder: 'border-white/10',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
-      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
-      ruleLabel: `${pillarStats.refeicao.todayDone || 0}/4 concluídas hoje`,
-    },
-    {
-      key: 'habito',
-      title: 'Bloco de Hábitos & Metas',
-      subtitle: 'Hidratação, rotina e disciplina diária da turma',
-      Icon: Droplets,
-      accentBorder: 'border-white/10',
-      accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
-      badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
-      ruleLabel:
-        pillarStats.habito.dailyCount > 0
-          ? `${pillarStats.habito.todayDone || 0}/${pillarStats.habito.dailyCount} concluídos hoje • Reset diário`
-          : 'Check-in Diário',
-    },
-  ];
+  const refeicaoMissionsCount = useMemo(
+    () => Math.max(1, processedMissions.filter((m) => m.category === 'refeicao').length),
+    [processedMissions]
+  );
+
+  // Blocos visuais estruturados por pilar + categorias extras / customizadas
+  const categoryBlocks = useMemo(() => {
+    const baseBlocks = [
+      {
+        key: 'treino',
+        title: 'Bloco de Treinos de Força',
+        subtitle: 'Limite fisiológico de 1 treino validado por dia',
+        Icon: Dumbbell,
+        accentBorder: 'border-white/10',
+        accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+        badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
+        ruleLabel: isWorkoutDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
+      },
+      {
+        key: 'cardio',
+        title: 'Bloco de Sessões de Cardio',
+        subtitle: 'Condicionamento aeróbico • Limite de 1 sessão por dia',
+        Icon: Activity,
+        accentBorder: 'border-white/10',
+        accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+        badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
+        ruleLabel: isCardioDailyLocked ? 'Cota de hoje cumprida' : 'Liberado para hoje',
+      },
+      {
+        key: 'refeicao',
+        title: 'Bloco de Nutrição & Dieta',
+        subtitle: `${refeicaoMissionsCount} ${
+          refeicaoMissionsCount === 1 ? 'refeição diária auditada' : 'refeições diárias auditadas'
+        } por IA • Reseta diariamente`,
+        Icon: Utensils,
+        accentBorder: 'border-white/10',
+        accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+        badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
+        ruleLabel: `${pillarStats.refeicao.todayDone || 0}/${refeicaoMissionsCount} concluídas hoje`,
+      },
+      {
+        key: 'habito',
+        title: 'Bloco de Hábitos & Metas',
+        subtitle: 'Hidratação, rotina e disciplina diária da turma',
+        Icon: Droplets,
+        accentBorder: 'border-white/10',
+        accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+        badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
+        ruleLabel:
+          pillarStats.habito.dailyCount > 0
+            ? `${pillarStats.habito.todayDone || 0}/${pillarStats.habito.dailyCount} concluídos hoje • Reset diário`
+            : 'Check-in Diário',
+      },
+    ];
+
+    const coreKeys = new Set(['treino', 'cardio', 'refeicao', 'habito']);
+    const extraCatLabels: Record<string, { title: string; subtitle: string }> = {
+      recuperacao: {
+        title: 'Bloco de Recuperação & Mobilidade',
+        subtitle: 'Alongamento, sono e regeneração muscular',
+      },
+      suplemento: {
+        title: 'Bloco de Suplementação',
+        subtitle: 'Protocolo diário de suplementos e vitaminas',
+      },
+      pesagem: {
+        title: 'Bloco de Pesagem & Medidas',
+        subtitle: 'Acompanhamento corporal oficial da turma',
+      },
+      meta: {
+        title: 'Bloco de Metas Especiais',
+        subtitle: 'Desafios complementares da semana',
+      },
+    };
+
+    const extraKeys = Array.from(
+      new Set(
+        processedMissions
+          .map((m) => m.category)
+          .filter((cat): cat is string => Boolean(cat) && !coreKeys.has(cat))
+      )
+    );
+
+    const extraBlocks = extraKeys.map((catKey) => {
+      const customList = missionLists.find((l) => (l.key || l.category_key) === catKey);
+      const meta = extraCatLabels[catKey] || {
+        title: customList?.name || `Bloco ${catKey.charAt(0).toUpperCase() + catKey.slice(1)}`,
+        subtitle: customList?.description || 'Missões especiais configuradas pelo treinador',
+      };
+      return {
+        key: catKey,
+        title: meta.title,
+        subtitle: meta.subtitle,
+        Icon: Target,
+        accentBorder: 'border-white/10',
+        accentBg: 'from-[#3478F6]/[0.08] via-[#0E0E10] to-[#0E0E10]',
+        badgeColor: 'text-[#D4D4D8] bg-white/[0.06] border-white/10',
+        ruleLabel: 'Liberado para hoje',
+      };
+    });
+
+    return [...baseBlocks, ...extraBlocks];
+  }, [
+    isWorkoutDailyLocked,
+    isCardioDailyLocked,
+    refeicaoMissionsCount,
+    pillarStats,
+    processedMissions,
+    missionLists,
+  ]);
 
   return (
     <div className="flex flex-col flex-1 p-4 sm:p-6 md:p-8 space-y-5 w-full max-w-full overflow-x-hidden min-w-0 pb-28 relative">
@@ -850,10 +1089,10 @@ function StudentMissionsContent() {
         <StudentMenuTrigger />
       </div>
 
-      {/* BLOCO 1: Seletor de Semanas (1 a 4) + Aviso Cronológico da Semana */}
+      {/* BLOCO 1: Seletor de Semanas Dinâmico + Aviso Cronológico da Semana */}
       <div className="space-y-3 relative z-10">
         <div className="grid grid-cols-4 gap-2">
-          {[1, 2, 3, 4].map((weekNum) => {
+          {(weeks.length > 0 ? weeks.map((w: any) => Number(w.week_number)) : [1, 2, 3, 4]).map((weekNum) => {
             const isSelected = selectedWeekNumber === weekNum;
             const meta = weekScheduleInfo.byWeek[weekNum];
 
@@ -1034,7 +1273,7 @@ function StudentMissionsContent() {
           <div className="text-right shrink-0 bg-[#18181B] border border-[#27272A] px-2.5 py-1.5 rounded-xl">
             <span className="text-[9px] font-mono text-[#A1A1AA] uppercase block">Libera em</span>
             <span className="text-xs font-mono font-black text-[#D4D4D8] flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {timeUntilMidnight || '00:00:00'}
+              <Clock className="h-3 w-3" /> <MidnightCountdown fallback="00:00:00" />
             </span>
           </div>
         </div>
@@ -1111,21 +1350,30 @@ function StudentMissionsContent() {
         </div>
       )}
 
-      {/* Filtro rápido de visualização */}
-      {selectedCategory !== 'all' && (!selectedWeekMeta?.isFuture || previewFutureMissions) && (
-        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs relative z-10">
-          <span className="font-mono text-[#A1A1AA]">
-            Exibindo apenas o bloco: <strong className="text-[#FAFAFA] uppercase">{selectedCategory}</strong>
-          </span>
-          <button
-            type="button"
-            onClick={() => setSelectedCategory('all')}
-            className="text-[10px] font-mono font-bold text-[#D4D4D8] hover:underline cursor-pointer uppercase"
-          >
-            Mostrar Todos os Blocos
-          </button>
-        </div>
-      )}
+      {/* Filtro rápido de visualização por Categoria ou Lista */}
+      {(selectedCategory !== 'all' || selectedListId !== 'all') &&
+        (!selectedWeekMeta?.isFuture || previewFutureMissions) && (
+          <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs relative z-10">
+            <span className="font-mono text-[#A1A1AA]">
+              Exibindo apenas o bloco:{' '}
+              <strong className="text-[#FAFAFA] uppercase">
+                {selectedListId !== 'all'
+                  ? missionLists.find((l) => l.id === selectedListId)?.name || 'Lista Personalizada'
+                  : selectedCategory}
+              </strong>
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory('all');
+                setSelectedListId('all');
+              }}
+              className="text-[10px] font-mono font-bold text-[#D4D4D8] hover:underline cursor-pointer uppercase"
+            >
+              Mostrar Todos os Blocos
+            </button>
+          </div>
+        )}
 
       {/* BLOCO 3: Container de Missões Organizado em Blocos por Categoria */}
       {loading || loadingMissions ? (
@@ -1288,6 +1536,38 @@ function StudentMissionsContent() {
           )}
         </div>
       )}
+
+      {/* Modal de Resposta em Texto para missões com validation_type === 'text' */}
+      <CustomDialog
+        isOpen={Boolean(textModalMission)}
+        onClose={() => {
+          setTextModalMission(null);
+          setTextResponseInput('');
+        }}
+        onConfirm={handleTextCheckinSubmit}
+        isLoading={submittingText}
+        title={textModalMission?.title || 'Responder Missão'}
+        description="Registre sua resposta ou relato para concluir esta missão:"
+        confirmLabel="Confirmar Check-in"
+        cancelLabel="Cancelar"
+      >
+        <textarea
+          rows={3}
+          value={textResponseInput}
+          onChange={(e) => setTextResponseInput(e.target.value)}
+          placeholder="Digite seu registro..."
+          className="w-full rounded-xl bg-[#18181B] border border-[#27272A] p-3 text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6]"
+        />
+      </CustomDialog>
+
+      {/* Sheet de Compartilhamento de Missão 9:16 */}
+      <ShareMissionSheet
+        open={shareSheetOpen}
+        onClose={() => setShareSheetOpen(false)}
+        mission={shareMissionPayload}
+        celebrate={shareCelebrate}
+        defaultBgMode={shareDefaultBgMode}
+      />
 
       {/* Floating Instant Toast */}
       {toastMessage && (

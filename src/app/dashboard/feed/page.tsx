@@ -18,6 +18,9 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { SpotlightCard3D } from '@/components/ui/spotlight-card-3d';
 import { Input } from '@/components/ui/input';
+import { isValidSubmissionPhotoUrl } from '@/lib/submissions/photo-utils';
+import { createStudentNotification } from '@/lib/notifications';
+import { useCoachSession } from '@/lib/auth/coach-session-context';
 
 type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
 
@@ -71,12 +74,22 @@ const COACH_PRAISE_CHIPS = [
 
 export default function DashboardFeedPage() {
   const supabase = createClient();
+  const { professional: sessionProfessional } = useCoachSession();
 
   const [loading, setLoading] = useState(true);
   const [challenges, setChallenges] = useState<any[]>([]);
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState<'photos' | 'mural'>('photos');
   const [posts, setPosts] = useState<any[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [coachProfile, setCoachProfile] = useState<any>(sessionProfessional);
+
+  // Mural da Turma (Chat)
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [loadingChat, setLoadingChat] = useState(false);
+  const [newChatMessage, setNewChatMessage] = useState('');
+  const [sendingChat, setSendingChat] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   // Modal / Gaveta de Comentários do Coach
   const [activeCommentPost, setActiveCommentPost] = useState<any | null>(null);
@@ -85,6 +98,15 @@ export default function DashboardFeedPage() {
   const [loadingComments, setLoadingComments] = useState(false);
   const [submittingComment, setSubmittingComment] = useState(false);
   const commentsEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (sessionProfessional) {
+      setCoachProfile(sessionProfessional);
+    }
+  }, [sessionProfessional]);
+
+  const activeMuralChallengeId =
+    selectedChallengeId === 'all' ? challenges[0]?.id || '' : selectedChallengeId;
 
   const formatTimeAgo = (dateStr: string) => {
     if (!dateStr) return '';
@@ -103,12 +125,23 @@ export default function DashboardFeedPage() {
         if (!user) return;
         setCurrentUser(user);
 
-        // 1. Desafios exclusivos do profissional
-        const { data: coachChallenges } = await supabase
-          .from('challenges')
-          .select('id, title')
-          .eq('professional_id', user.id)
-          .order('start_date', { ascending: false });
+        // 1. Desafios exclusivos do profissional + perfil atualizado
+        const [{ data: coachChallenges }, { data: profData }] = await Promise.all([
+          supabase
+            .from('challenges')
+            .select('id, title')
+            .eq('professional_id', user.id)
+            .order('start_date', { ascending: false }),
+          supabase
+            .from('professionals')
+            .select('id, full_name, avatar_url, brand_name, brand_logo_url')
+            .eq('id', user.id)
+            .maybeSingle(),
+        ]);
+
+        if (profData) {
+          setCoachProfile(profData);
+        }
 
         const safeChallenges = coachChallenges || [];
         setChallenges(safeChallenges);
@@ -123,7 +156,7 @@ export default function DashboardFeedPage() {
           ? safeChallenges.map((c: any) => c.id)
           : [selectedChallengeId];
 
-        // 2. Buscar postagens aprovadas dos alunos do treinador
+        // 2. Buscar postagens aprovadas com foto válida dos alunos do treinador
         const { data: submissionsData, error: subsError } = await supabase
           .from('student_submissions')
           .select(`
@@ -159,13 +192,18 @@ export default function DashboardFeedPage() {
           `)
           .in('challenge_id', targetIds)
           .eq('status', 'approved')
+          .neq('photo_url', 'simple_click')
+          .not('photo_url', 'is', null)
           .order('submitted_at', { ascending: false })
           .limit(50);
 
         if (subsError) {
           console.warn('Erro ao carregar feed social do coach:', subsError);
         }
-        setPosts(submissionsData || []);
+        const validPosts = (submissionsData || []).filter((item: any) =>
+          isValidSubmissionPhotoUrl(item.photo_url)
+        );
+        setPosts(validPosts);
       } catch (err) {
         console.error('Erro ao carregar feed social do coach:', err);
       } finally {
@@ -175,6 +213,134 @@ export default function DashboardFeedPage() {
 
     loadFeed();
   }, [selectedChallengeId, supabase]);
+
+  // Carregar e sincronizar Mural da Turma (challenge_messages)
+  useEffect(() => {
+    if (!activeMuralChallengeId) {
+      setChatMessages([]);
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadMuralMessages() {
+      setLoadingChat(true);
+      try {
+        const { data, error } = await supabase
+          .from('challenge_messages')
+          .select('*')
+          .eq('challenge_id', activeMuralChallengeId)
+          .order('created_at', { ascending: true })
+          .limit(100);
+
+        if (!error && isMounted) {
+          setChatMessages(data || []);
+        }
+      } catch (err) {
+        console.warn('Erro ao carregar mensagens do mural:', err);
+      } finally {
+        if (isMounted) setLoadingChat(false);
+      }
+    }
+
+    loadMuralMessages();
+
+    const channel = supabase
+      .channel(`coach_mural_${activeMuralChallengeId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'challenge_messages',
+          filter: `challenge_id=eq.${activeMuralChallengeId}`,
+        },
+        (payload: any) => {
+          setChatMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
+          setTimeout(() => {
+            chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'challenge_messages',
+          filter: `challenge_id=eq.${activeMuralChallengeId}`,
+        },
+        (payload: any) => {
+          setChatMessages((prev) => prev.filter((m) => m.id !== payload.old.id));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      isMounted = false;
+      supabase.removeChannel(channel);
+    };
+  }, [activeMuralChallengeId, supabase]);
+
+  const handleSendMuralMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newChatMessage.trim() || !activeMuralChallengeId || !currentUser || sendingChat) return;
+
+    setSendingChat(true);
+    const trimmed = newChatMessage.trim();
+    try {
+      const payload = {
+        challenge_id: activeMuralChallengeId,
+        user_id: currentUser.id,
+        user_name:
+          coachProfile?.brand_name ||
+          coachProfile?.full_name ||
+          currentUser.user_metadata?.full_name ||
+          'Treinador',
+        user_avatar:
+          coachProfile?.brand_logo_url ||
+          coachProfile?.avatar_url ||
+          currentUser.user_metadata?.avatar_url ||
+          null,
+        user_role: 'coach',
+        content: trimmed,
+      };
+
+      const { data: inserted, error } = await supabase
+        .from('challenge_messages')
+        .insert(payload)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (inserted) {
+        setChatMessages((prev) =>
+          prev.some((m) => m.id === inserted.id) ? prev : [...prev, inserted]
+        );
+        setNewChatMessage('');
+        setTimeout(() => {
+          chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    } catch (err) {
+      console.error('Erro ao enviar mensagem no mural da turma:', err);
+    } finally {
+      setSendingChat(false);
+    }
+  };
+
+  const handleDeleteMuralMessage = async (messageId: string) => {
+    try {
+      await supabase.from('challenge_messages').delete().eq('id', messageId);
+      setChatMessages((prev) => prev.filter((m) => m.id !== messageId));
+    } catch (err) {
+      console.error('Erro ao remover mensagem do mural:', err);
+    }
+  };
 
   // Realtime para comentários da postagem aberta
   useEffect(() => {
@@ -315,9 +481,18 @@ export default function DashboardFeedPage() {
     if (!commentText.trim() || !activeCommentPost || !currentUser || submittingComment) return;
 
     setSubmittingComment(true);
+    const trimmedComment = commentText.trim();
     try {
-      const authorName = currentUser.user_metadata?.full_name || 'Coach';
-      const authorAvatar = currentUser.user_metadata?.avatar_url || null;
+      const authorName =
+        coachProfile?.brand_name ||
+        coachProfile?.full_name ||
+        currentUser.user_metadata?.full_name ||
+        'Treinador';
+      const authorAvatar =
+        coachProfile?.brand_logo_url ||
+        coachProfile?.avatar_url ||
+        currentUser.user_metadata?.avatar_url ||
+        null;
 
       const payload = {
         submission_id: activeCommentPost.id,
@@ -326,7 +501,7 @@ export default function DashboardFeedPage() {
         user_name: authorName,
         user_avatar: authorAvatar,
         user_role: 'coach',
-        content: commentText.trim(),
+        content: trimmedComment,
       };
 
       const { data: newComment, error } = await supabase
@@ -338,7 +513,9 @@ export default function DashboardFeedPage() {
       if (error) throw error;
 
       if (newComment) {
-        setCommentsList((prev) => [...prev, newComment]);
+        setCommentsList((prev) =>
+          prev.some((c) => c.id === newComment.id) ? prev : [...prev, newComment]
+        );
         setCommentText('');
 
         setPosts((prev) =>
@@ -353,6 +530,19 @@ export default function DashboardFeedPage() {
             return p;
           })
         );
+
+        const targetChallengeId =
+          activeCommentPost.challenge_id || activeCommentPost.missions?.challenge_id;
+        if (targetChallengeId && activeCommentPost.student_id) {
+          await createStudentNotification({
+            challengeId: targetChallengeId,
+            studentId: activeCommentPost.student_id,
+            type: 'feed_comment',
+            title: 'Novo comentário do Treinador',
+            message: `${authorName}: "${trimmedComment}"`,
+            link: '/app/feed',
+          });
+        }
       }
     } catch (err: any) {
       console.error('Erro ao postar comentário do coach:', err);
@@ -421,7 +611,7 @@ export default function DashboardFeedPage() {
           )}
 
           <Link href="/dashboard/audit">
-            <button className="mono-button-secondary h-10 px-4 text-xs font-mono flex items-center gap-1.5 cursor-pointer">
+            <button className="mono-button-secondary h-11 min-h-[44px] px-4 text-xs font-mono flex items-center gap-1.5 cursor-pointer">
               <ShieldCheck className="h-3.5 w-3.5 text-[#3478F6]" />
               <span>Auditoria Swipe →</span>
             </button>
@@ -429,8 +619,161 @@ export default function DashboardFeedPage() {
         </div>
       </div>
 
-      {/* Feed Stream */}
-      {loading ? (
+      {/* Abas: Fotos Check-in vs Mural da Turma */}
+      <div className="flex items-center gap-2 border-b border-[#27272A] pb-3 relative z-10">
+        <button
+          type="button"
+          onClick={() => setActiveTab('photos')}
+          className={`min-h-[44px] px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+            activeTab === 'photos'
+              ? 'bg-[#3478F6] text-white shadow-md'
+              : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
+          }`}
+        >
+          Fotos Check-in ({posts.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('mural')}
+          className={`min-h-[44px] px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+            activeTab === 'mural'
+              ? 'bg-[#3478F6] text-white shadow-md'
+              : 'bg-[#0E0E10] border border-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA]'
+          }`}
+        >
+          Mural da Turma ({chatMessages.length})
+        </button>
+      </div>
+
+      {activeTab === 'mural' ? (
+        <div className="max-w-xl mx-auto space-y-4 relative z-10">
+          {!activeMuralChallengeId ? (
+            <div className="mono-glass-card p-12 text-center text-xs font-mono text-[#A1A1AA]">
+              Crie ou selecione uma turma para conversar no Mural da Turma.
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-[#27272A] bg-[#0E0E10] p-4 sm:p-5 flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-[#27272A] pb-3">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A1A1AA] block">
+                    CANAL DA COMUNIDADE
+                  </span>
+                  <h3 className="text-sm font-black text-[#FAFAFA]">
+                    Mural da Turma —{' '}
+                    {challenges.find((c) => c.id === activeMuralChallengeId)?.title || 'Turma Ativa'}
+                  </h3>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-white/[0.06] text-[#D4D4D8] border border-white/10 text-[10px] font-mono font-bold">
+                  COACH
+                </span>
+              </div>
+
+              <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1 min-h-[220px]">
+                {loadingChat ? (
+                  <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono">
+                    <div className="h-4 w-4 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
+                    Carregando mural da turma...
+                  </div>
+                ) : chatMessages.length === 0 ? (
+                  <div className="py-12 text-center text-xs font-mono text-[#A1A1AA]">
+                    Nenhuma mensagem enviada no mural ainda. Inicie a conversa com a turma!
+                  </div>
+                ) : (
+                  chatMessages.map((msg) => {
+                    const isCoachMsg = msg.user_role === 'coach';
+                    return (
+                      <div
+                        key={msg.id}
+                        className="flex items-start gap-2.5 text-xs group"
+                      >
+                        <div className="h-8 w-8 rounded-full bg-[#18181B] border border-[#27272A] text-[#FAFAFA] font-mono font-bold flex items-center justify-center text-[10px] shrink-0 overflow-hidden">
+                          {msg.user_avatar ? (
+                            <img
+                              src={msg.user_avatar}
+                              alt={msg.user_name || 'Avatar'}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            (msg.user_name || 'T').charAt(0)
+                          )}
+                        </div>
+
+                        <div
+                          className={`flex-1 p-3 rounded-2xl border ${
+                            isCoachMsg
+                              ? 'bg-[#3478F6]/10 border-[#3478F6]/30'
+                              : 'bg-[#18181B] border-[#27272A]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-bold text-[#FAFAFA]">{msg.user_name}</span>
+                              {isCoachMsg && (
+                                <span className="px-1.5 py-0.5 rounded-full bg-[#3478F6] text-white text-[9px] font-mono font-black tracking-wider">
+                                  COACH
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-mono text-[#A1A1AA]">
+                                {formatTimeAgo(msg.created_at)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteMuralMessage(msg.id)}
+                                className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity text-[#A1A1AA] hover:text-rose-400 p-1 cursor-pointer"
+                                title="Excluir mensagem"
+                                aria-label="Excluir mensagem"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-[#FAFAFA] leading-relaxed font-sans break-words">
+                            {msg.content}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+                <div ref={chatEndRef} />
+              </div>
+
+              <form
+                onSubmit={handleSendMuralMessage}
+                className="pt-3 border-t border-[#27272A] flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  placeholder="Escreva uma mensagem oficial para a turma..."
+                  value={newChatMessage}
+                  onChange={(e) => setNewChatMessage(e.target.value)}
+                  className="flex-1 h-11 min-h-[44px] px-3.5 rounded-xl bg-[#18181B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#A1A1AA]/60 focus:outline-none focus:border-[#3478F6]"
+                />
+                <button
+                  type="submit"
+                  aria-label="Enviar mensagem"
+                  disabled={sendingChat || !newChatMessage.trim()}
+                  className="mono-button-primary px-4 h-11 min-h-[44px] text-xs font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+                >
+                  {sendingChat ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="h-3.5 w-3.5" />
+                      <span>ENVIAR</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+      ) : (
+      /* Feed Stream */
+      loading ? (
         <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#A1A1AA] text-xs font-mono relative z-10">
           <div className="h-5 w-5 border-2 border-[#3478F6] border-t-transparent rounded-full animate-spin" />
           CARREGANDO FEED DA COMUNIDADE...
@@ -558,7 +901,7 @@ export default function DashboardFeedPage() {
             );
           })}
         </div>
-      )}
+      ))}
 
       {/* Modal / Gaveta de Comentários do Coach */}
       {activeCommentPost && (
@@ -625,7 +968,7 @@ export default function DashboardFeedPage() {
                             {isMine && (
                               <button
                                 onClick={() => handleDeleteComment(c.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-[#A1A1AA] hover:text-rose-400 p-0.5 cursor-pointer"
+                                className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity text-[#A1A1AA] hover:text-rose-400 p-0.5 cursor-pointer"
                                 title="Excluir comentário"
                               >
                                 <Trash2 className="h-3 w-3" />

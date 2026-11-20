@@ -24,11 +24,17 @@ import { createClient } from '@/lib/supabase/client';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+import { useStudentSession } from '@/lib/auth/student-session-context';
 
 function StudentMaterialsContent() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
+  const {
+    activeChallengeId,
+    activeChallenge: sessionActiveChallenge,
+    isReady,
+  } = useStudentSession();
 
   const [mainTab, setMainTab] = useState<'materiais' | 'avisos'>('materiais');
   const [activeChallenge, setActiveChallenge] = useState<any | null>(null);
@@ -48,37 +54,12 @@ function StudentMaterialsContent() {
   }, [tabParam]);
 
   useEffect(() => {
+    if (!isReady) return;
     async function loadData() {
       setLoading(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        let challengeId: string | null = null;
-        let challengeObj: any = null;
-
-        if (user) {
-          let { data: part } = await supabase
-            .from('challenge_participants')
-            .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
-            .eq('student_id', user.id)
-            .in('payment_status', ['paid', 'complimentary'])
-            .order('joined_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-
-          if (!part) {
-            const { data: fallbackPart } = await supabase
-              .from('challenge_participants')
-              .select('challenge_id, challenges(id, title, start_date, end_date, is_active)')
-              .eq('student_id', user.id)
-              .order('joined_at', { ascending: false })
-              .limit(1)
-              .maybeSingle();
-            part = fallbackPart;
-          }
-
-          challengeObj = Array.isArray(part?.challenges) ? part?.challenges[0] : part?.challenges;
-          challengeId = part?.challenge_id || challengeObj?.id || null;
-        }
+        const challengeId = activeChallengeId;
+        const challengeObj = sessionActiveChallenge;
 
         setActiveChallenge(challengeObj || null);
 
@@ -115,7 +96,7 @@ function StudentMaterialsContent() {
       }
     }
     loadData();
-  }, [supabase]);
+  }, [isReady, activeChallengeId, sessionActiveChallenge, supabase]);
 
   const filteredMaterials = materials.filter((m) => {
     const matchesType = filter === 'all' || m.type === filter;

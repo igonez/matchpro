@@ -48,3 +48,8 @@ data/leads_backup.json*
 supabase/.temp/
 video/node_modules/
 video/out/
+
+# Playwright E2E
+tests/e2e/.auth/
+playwright-report/
+test-results/

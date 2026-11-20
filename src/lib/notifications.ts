@@ -31,18 +31,18 @@ export async function sendBrowserNotification(title: string, options?: Notificat
   if (Notification.permission === 'granted') {
     try {
       new Notification(title, {
-        icon: '/icons/icon-192x192.png',
-        badge: '/icons/icon-192x192.png',
+        icon: '/icon-192.png',
+        badge: '/icon-192.png',
         ...options,
-      } as any);
+      } as NotificationOptions & { badge?: string });
       return true;
-    } catch (e) {
+    } catch {
       // Em alguns dispositivos móveis Android/iOS, Notification direta requer serviceWorker registration
       if ('serviceWorker' in navigator) {
         try {
           const reg = await navigator.serviceWorker.ready;
           reg.showNotification(title, {
-            icon: '/icons/icon-192x192.png',
+            icon: '/icon-192.png',
             ...options,
           });
           return true;

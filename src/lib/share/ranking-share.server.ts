@@ -1,4 +1,5 @@
 import { randomInt } from 'node:crypto';
+import { cache } from 'react';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import {
   computeTopPercentile,
@@ -163,7 +164,9 @@ export interface ShareLookupResult {
   };
 }
 
-export async function getPublicShareByCode(code: string): Promise<ShareLookupResult> {
+export const getPublicShareByCode = cache(async function getPublicShareByCode(
+  code: string
+): Promise<ShareLookupResult> {
   if (!SHARE_CODE_REGEX.test(code)) {
     return { status: 'not_found' };
   }
@@ -199,4 +202,4 @@ export async function getPublicShareByCode(code: string): Promise<ShareLookupRes
   }
 
   return { status: 'ok', record };
-}
+});

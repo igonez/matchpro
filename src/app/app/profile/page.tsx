@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { 
   User, 
   Trophy, 
@@ -18,24 +19,49 @@ import {
   Sparkles,
   Bell,
   HelpCircle,
-  FileText
+  FileText,
+  Share2,
+  Pencil,
+  Shield
 } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
-import { TransformationVaultModal } from '@/components/student/transformation-vault-modal';
 import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background';
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { AchievementsGrid } from '@/components/student/achievements-grid';
 import { getStudentAchievementsWithProgress, StudentAchievementStatus, DEFAULT_ACHIEVEMENTS } from '@/lib/achievements';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+import { useStudentSession } from '@/lib/auth/student-session-context';
+import { isValidSubmissionPhotoUrl } from '@/lib/submissions/photo-utils';
+import type { MissionSharePayload } from '@/components/share-mission/mission-share-card';
+
+const TransformationVaultModal = dynamic(
+  () => import('@/components/student/transformation-vault-modal').then((m) => m.TransformationVaultModal),
+  { ssr: false }
+);
+
+const ShareMissionSheet = dynamic(
+  () => import('@/components/share-mission/share-mission-sheet').then((m) => m.ShareMissionSheet),
+  { ssr: false }
+);
 
 export default function StudentProfilePage() {
   const router = useRouter();
   const supabase = createClient();
+  const {
+    user,
+    student: sessionStudent,
+    activeChallenge,
+    enrolledChallenges,
+    isPreviewMode,
+    isReady,
+    refreshSession,
+  } = useStudentSession();
 
+  const [selectedChallengeId, setSelectedChallengeId] = useState<string | null>(null);
   const [student, setStudent] = useState<any>(null);
   const [challenge, setChallenge] = useState<any>(null);
   const [participation, setParticipation] = useState<any>(null);
@@ -45,10 +71,18 @@ export default function StudentProfilePage() {
   const [achievementsList, setAchievementsList] = useState<StudentAchievementStatus[]>([]);
   const [userPhotos, setUserPhotos] = useState<any[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [shareMissionPayload, setShareMissionPayload] = useState<MissionSharePayload | null>(null);
   const [vaultData, setVaultData] = useState<any>(null);
   const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Edição inline de perfil (full_name, phone)
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editFullName, setEditFullName] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
 
   // Notificações Push
   const [pushEnabled, setPushEnabled] = useState(false);
@@ -60,6 +94,10 @@ export default function StudentProfilePage() {
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): foto alterável no painel do coach.');
+      return;
+    }
     if (!e.target.files || !e.target.files[0] || !student?.id) return;
     const file = e.target.files[0];
     setUploadingAvatar(true);
@@ -91,71 +129,131 @@ export default function StudentProfilePage() {
   };
 
   useEffect(() => {
+    if (!isReady) return;
     async function loadProfile() {
       setLoading(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           router.push('/login');
           return;
         }
 
-        // 1. Dados do aluno
-        const { data: studentData } = await supabase
-          .from('students')
-          .select('*')
-          .eq('id', user.id)
-          .single();
+        // 1. Dados do aluno (ou perfil de visualização do coach sem escrever em students)
+        let resolvedStudent: any =
+          sessionStudent || {
+            id: user.id,
+            full_name: user.email?.split('@')[0] || 'Atleta',
+          };
 
-        setStudent(studentData || { id: user.id, full_name: user.email?.split('@')[0] || 'Atleta' });
+        if (!isPreviewMode && !resolvedStudent.phone) {
+          const { data: studentRow } = await supabase
+            .from('students')
+            .select('id, full_name, avatar_url, phone')
+            .eq('id', user.id)
+            .maybeSingle();
+          if (studentRow) {
+            resolvedStudent = { ...resolvedStudent, ...studentRow };
+          }
+        }
+        setStudent(resolvedStudent);
+        setEditFullName(resolvedStudent.full_name || '');
+        setEditPhone(resolvedStudent.phone || '');
 
-        // 2. Desafio Ativo vinculado ao aluno & Inscrição Oficial
-        const { data: participantRecord } = await supabase
-          .from('challenge_participants')
-          .select('challenge_id, payment_status, joined_at, challenges(id, title, is_active, start_date, end_date, price)')
-          .eq('student_id', user.id)
-          .limit(1)
-          .maybeSingle();
+        // 2. Desafio Ativo vinculado ao aluno & Inscrição Oficial (ou simulação read-only)
+        let ch: any = null;
+        if (isPreviewMode) {
+          setParticipation(null);
+          ch = activeChallenge || null;
+        } else {
+          const primaryEnrolled =
+            (selectedChallengeId
+              ? enrolledChallenges.find((e) => e.challengeId === selectedChallengeId)
+              : null) ||
+            enrolledChallenges.find((e) => e.challengeId === activeChallenge?.id) ||
+            enrolledChallenges[0] ||
+            null;
 
-        setParticipation(participantRecord || null);
-        const ch = (participantRecord?.challenges as any) || null;
+          if (primaryEnrolled) {
+            setParticipation({
+              challenge_id: primaryEnrolled.challengeId,
+              payment_status: primaryEnrolled.paymentStatus,
+              joined_at: primaryEnrolled.joinedAt,
+              challenges: primaryEnrolled.challenge,
+            });
+            ch = primaryEnrolled.challenge;
+          } else {
+            const { data: participantRecord } = await supabase
+              .from('challenge_participants')
+              .select('challenge_id, payment_status, joined_at, challenges(id, title, is_active, start_date, end_date, price)')
+              .eq('student_id', user.id)
+              .in('payment_status', ['paid', 'complimentary'])
+              .order('joined_at', { ascending: false })
+              .limit(1)
+              .maybeSingle();
+
+            setParticipation(participantRecord || null);
+            ch = (participantRecord?.challenges as any) || null;
+          }
+        }
         setChallenge(ch);
 
-        // 3. Pontos escopados ao desafio ativo (com fallback caso necessário)
-        let standingQuery = supabase
-          .from('leaderboard_standings')
-          .select('total_points')
-          .eq('student_id', user.id);
+        // 3. Consultas paralelas (pontos + ranking, streak, fotos e cofre)
+        const standingsPromise = ch?.id
+          ? supabase
+              .from('leaderboard_standings')
+              .select('student_id, total_points')
+              .eq('challenge_id', ch.id)
+              .order('total_points', { ascending: false })
+          : supabase
+              .from('leaderboard_standings')
+              .select('student_id, total_points')
+              .eq('student_id', user.id)
+              .limit(1);
 
-        if (ch?.id) {
-          standingQuery = standingQuery.eq('challenge_id', ch.id);
-        }
-
-        const { data: standingData } = await standingQuery.limit(1).maybeSingle();
-        setStanding(standingData || { total_points: 0 });
-
-        // 4. Streak Real do Aluno (student_gamification_state)
         let gamifQuery = supabase
           .from('student_gamification_state')
           .select('current_streak')
           .eq('student_id', user.id);
-
         if (ch?.id) {
           gamifQuery = gamifQuery.eq('challenge_id', ch.id);
         }
 
-        const { data: gamifData } = await gamifQuery.limit(1).maybeSingle();
+        const vaultPromise =
+          ch?.id && !isPreviewMode
+            ? supabase
+                .from('student_transformation_vault')
+                .select('*')
+                .eq('student_id', user.id)
+                .eq('challenge_id', ch.id)
+                .maybeSingle()
+            : Promise.resolve({ data: null });
+
+        const [
+          { data: standingsRows },
+          { data: gamifData },
+          { data: submissionsData, count },
+          { data: vault },
+        ] = await Promise.all([
+          standingsPromise,
+          gamifQuery.limit(1).maybeSingle(),
+          supabase
+            .from('student_submissions')
+            .select('id, photo_url, caption, status, submitted_at, missions(title, category, points_rewarded)', { count: 'exact' })
+            .eq('student_id', user.id)
+            .order('submitted_at', { ascending: false }),
+          vaultPromise,
+        ]);
+
+        const myStandingRow = (standingsRows || []).find((s: any) => s.student_id === user.id);
+        setStanding(myStandingRow || { total_points: 0 });
         setStreakDays(gamifData?.current_streak || 0);
+        setVaultData(vault || null);
 
-        // 5. Fotos enviadas pelo aluno
-        const { data: submissionsData, count } = await supabase
-          .from('student_submissions')
-          .select('id, photo_url, caption, status, submitted_at, missions(title, category, points_rewarded)', { count: 'exact' })
-          .eq('student_id', user.id)
-          .order('submitted_at', { ascending: false });
-
+        const validPhotos = (submissionsData || []).filter((s: any) =>
+          isValidSubmissionPhotoUrl(s.photo_url)
+        );
         setSubmissionsCount(count || 0);
-        setUserPhotos(submissionsData || []);
+        setUserPhotos(validPhotos);
 
         let wCount = 0;
         let cCount = 0;
@@ -169,28 +267,22 @@ export default function StudentProfilePage() {
           }
         });
 
-        // 6. Ranking atual na turma
+        // 4. Ranking atual na turma (derivado de standingsRows sem query duplicada)
         let currentRank = 1;
-        if (ch?.id) {
-          const { data: allStandings } = await supabase
-            .from('leaderboard_standings')
-            .select('student_id, total_points')
-            .eq('challenge_id', ch.id)
-            .order('total_points', { ascending: false });
-
-          if (allStandings && allStandings.length > 0) {
-            const idx = allStandings.findIndex((s: any) => s.student_id === user.id);
-            currentRank = idx !== -1 ? idx + 1 : allStandings.length + 1;
+        if (ch?.id && !isPreviewMode) {
+          if (standingsRows && standingsRows.length > 0) {
+            const idx = standingsRows.findIndex((s: any) => s.student_id === user.id);
+            currentRank = idx !== -1 ? idx + 1 : standingsRows.length + 1;
           }
 
-          // 7. Avaliar Conquistas e Medalhas de Mérito
+          // 5. Avaliar Conquistas e Medalhas de Mérito (apenas para alunos reais)
           const { list, newlyUnlocked } = await getStudentAchievementsWithProgress(
             supabase,
             user.id,
             ch.id,
             {
               streakDays: gamifData?.current_streak || 0,
-              totalPoints: standingData?.total_points || 0,
+              totalPoints: myStandingRow?.total_points || 0,
               totalSubmissions: count || 0,
               workoutCount: wCount,
               cardioCount: cCount,
@@ -203,17 +295,15 @@ export default function StudentProfilePage() {
           if (newlyUnlocked.length > 0) {
             showToast(`Nova conquista: ${newlyUnlocked[0].title}! (+${newlyUnlocked[0].points_reward} XP)`);
           }
-        }
-
-        if (ch) {
-          const { data: vault } = await supabase
-            .from('student_transformation_vault')
-            .select('*')
-            .eq('student_id', user.id)
-            .eq('challenge_id', ch.id)
-            .maybeSingle();
-
-          setVaultData(vault);
+        } else if (isPreviewMode) {
+          setAchievementsList(
+            DEFAULT_ACHIEVEMENTS.map((a) => ({
+              ...a,
+              isUnlocked: false,
+              currentValue: 0,
+              progressPercent: 0,
+            }))
+          );
         }
       } catch (err) {
         console.error('Erro ao carregar perfil:', err);
@@ -223,7 +313,7 @@ export default function StudentProfilePage() {
     }
 
     loadProfile();
-  }, [supabase, router]);
+  }, [isReady, user?.id, isPreviewMode, activeChallenge?.id, selectedChallengeId, supabase, router]);
 
   // Carregar status de Push notifications
   useEffect(() => {
@@ -252,14 +342,70 @@ export default function StudentProfilePage() {
         } else {
           showToast('Permissão de notificação negada no navegador.');
         }
-      } catch (e: any) {
-        setPushEnabled(true);
-        showToast('Notificações simuladas ativadas!');
+      } catch {
+        showToast('Não foi possível ativar as notificações neste navegador.');
       }
     }
   };
 
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): edição disponível apenas para alunos.');
+      return;
+    }
+    const trimmedName = editFullName.trim();
+    if (!trimmedName || !student?.id) {
+      showToast('Informe seu nome completo.');
+      return;
+    }
+
+    setSavingProfile(true);
+    try {
+      const trimmedPhone = editPhone.trim() || null;
+      const { error } = await supabase
+        .from('students')
+        .update({ full_name: trimmedName, phone: trimmedPhone })
+        .eq('id', student.id);
+
+      if (error) throw error;
+
+      setStudent((prev: any) => ({ ...prev, full_name: trimmedName, phone: trimmedPhone }));
+      setIsEditingProfile(false);
+      showToast('Dados atualizados com sucesso!');
+      await refreshSession().catch(() => null);
+    } catch (err: any) {
+      console.error('Erro ao atualizar perfil:', err);
+      showToast('Não foi possível salvar os dados: ' + (err.message || 'Tente novamente.'));
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
+  const handleSharePhoto = (item: any) => {
+    const coachRecord = Array.isArray(challenge?.professionals)
+      ? challenge.professionals[0]
+      : challenge?.professionals;
+
+    setShareMissionPayload({
+      missionId: item.id,
+      missionTitle: item.missions?.title || 'Check-in Realizado',
+      missionCategory: item.missions?.category || null,
+      pointsRewarded: Number(item.missions?.points_rewarded || 0),
+      status: item.status === 'pending' ? 'pending' : 'approved',
+      completedAt: item.submitted_at || null,
+      studentName: student?.full_name || 'Atleta',
+      challengeTitle: challenge?.title || null,
+      coachBrandName: coachRecord?.brand_name || coachRecord?.full_name || null,
+      coachLogoUrl: coachRecord?.brand_logo_url || coachRecord?.avatar_url || null,
+      streakDays,
+      photoUrl: item.photo_url,
+    });
+    setShareSheetOpen(true);
+  };
+
   const handleSignOut = async () => {
+    await fetch('/api/auth/exit-preview', { method: 'POST' }).catch(() => null);
     await supabase.auth.signOut();
     router.push('/login');
   };
@@ -356,6 +502,65 @@ export default function StudentProfilePage() {
           {challenge?.title ? `Atleta • ${challenge.title}` : 'Aluno Oficial do Desafio'}
         </p>
 
+        {!isPreviewMode && (
+          <div className="mt-3 flex flex-col items-center">
+            {!isEditingProfile ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditFullName(student?.full_name || '');
+                  setEditPhone(student?.phone || '');
+                  setIsEditingProfile(true);
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-[#18181B] border border-[#27272A] hover:border-[#3478F6]/50 text-[11px] font-mono font-bold text-[#D4D4D8] hover:text-[#FAFAFA] transition-colors cursor-pointer"
+              >
+                <Pencil className="w-3 h-3 text-[#3478F6]" />
+                Editar Dados
+              </button>
+            ) : (
+              <form onSubmit={handleSaveProfile} className="w-full max-w-sm mt-2 p-3.5 rounded-2xl bg-[#18181B] border border-[#27272A] text-left space-y-2.5">
+                <div>
+                  <label className="text-[10px] font-mono uppercase text-[#A1A1AA] block mb-1">Nome Completo</label>
+                  <input
+                    type="text"
+                    value={editFullName}
+                    onChange={(e) => setEditFullName(e.target.value)}
+                    placeholder="Seu nome"
+                    className="w-full h-10 rounded-xl bg-[#0E0E10] border border-[#27272A] px-3 text-xs text-[#FAFAFA] focus:outline-none focus:border-[#3478F6]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono uppercase text-[#A1A1AA] block mb-1">Telefone / WhatsApp</label>
+                  <input
+                    type="tel"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    placeholder="(11) 99999-9999"
+                    className="w-full h-10 rounded-xl bg-[#0E0E10] border border-[#27272A] px-3 text-xs text-[#FAFAFA] focus:outline-none focus:border-[#3478F6]"
+                  />
+                </div>
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingProfile(false)}
+                    disabled={savingProfile}
+                    className="px-3 py-2 min-h-[36px] rounded-xl bg-[#0E0E10] border border-[#27272A] text-xs font-mono text-[#A1A1AA] hover:text-[#FAFAFA] cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingProfile}
+                    className="px-4 py-2 min-h-[36px] rounded-xl bg-[#3478F6] hover:bg-[#75A7FF] text-xs font-mono font-bold text-white cursor-pointer disabled:opacity-50"
+                  >
+                    {savingProfile ? 'Salvando...' : 'Salvar'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        )}
+
         {/* Estatísticas Rápidas em Grid */}
         <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-[#27272A]">
           <div className="p-2.5 rounded-2xl bg-[#18181B] border border-[#27272A]">
@@ -423,6 +628,33 @@ export default function StudentProfilePage() {
               </div>
             )}
           </div>
+
+          {!isPreviewMode && enrolledChallenges.length > 1 && (
+            <div className="pt-1 space-y-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#A1A1AA] block">
+                Alternar Turma Matriculada ({enrolledChallenges.length})
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {enrolledChallenges.map((item) => {
+                  const isSelected = item.challengeId === challenge.id;
+                  return (
+                    <button
+                      key={item.challengeId}
+                      type="button"
+                      onClick={() => setSelectedChallengeId(item.challengeId)}
+                      className={`px-3 py-1.5 min-h-[36px] rounded-xl text-[11px] font-mono font-bold border transition-colors cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#3478F6] text-white border-[#3478F6]'
+                          : 'bg-[#18181B] text-[#A1A1AA] border-[#27272A] hover:text-[#FAFAFA]'
+                      }`}
+                    >
+                      {item.challenge?.title || 'Turma'}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </Card>
       )}
 
@@ -454,7 +686,13 @@ export default function StudentProfilePage() {
 
       {/* FASE 2: COFRE ANTES & DEPOIS COM SLIDER */}
       <div
-        onClick={() => setIsVaultModalOpen(true)}
+        onClick={() => {
+          if (isPreviewMode) {
+            showToast('Modo Simulação (somente leitura): Cofre exclusivo do aluno.');
+            return;
+          }
+          setIsVaultModalOpen(true);
+        }}
         className="bg-[#0E0E10] p-4 rounded-3xl border border-[#27272A] flex items-center justify-between gap-3 cursor-pointer hover:border-[#3478F6]/40 transition-all group shadow-lg relative z-10"
       >
         <div className="flex items-center gap-3">
@@ -534,7 +772,7 @@ export default function StudentProfilePage() {
         <h3 className="text-xs font-bold uppercase tracking-wider text-[#A1A1AA] font-mono">
           Suporte & Informações
         </h3>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           <Link href="/ajuda" className="bg-[#0E0E10] p-3.5 rounded-2xl border border-[#27272A] hover:border-[#3478F6]/50 transition-colors flex items-center gap-2.5">
             <HelpCircle className="h-4 w-4 text-[#3478F6]" />
             <span className="text-xs text-[#FAFAFA] font-medium font-mono">Central de Ajuda</span>
@@ -542,6 +780,10 @@ export default function StudentProfilePage() {
           <Link href="/termos" className="bg-[#0E0E10] p-3.5 rounded-2xl border border-[#27272A] hover:border-[#3478F6]/50 transition-colors flex items-center gap-2.5">
             <FileText className="h-4 w-4 text-[#3478F6]" />
             <span className="text-xs text-[#FAFAFA] font-medium font-mono">Termos & Privacidade</span>
+          </Link>
+          <Link href="/lgpd" className="col-span-2 sm:col-span-1 bg-[#0E0E10] p-3.5 rounded-2xl border border-[#27272A] hover:border-[#3478F6]/50 transition-colors flex items-center gap-2.5">
+            <Shield className="h-4 w-4 text-[#3478F6]" />
+            <span className="text-xs text-[#FAFAFA] font-medium font-mono">Privacidade & LGPD</span>
           </Link>
         </div>
       </div>
@@ -564,28 +806,45 @@ export default function StudentProfilePage() {
         ) : (
           <div className="grid grid-cols-3 gap-2">
             {userPhotos.map((item) => (
-              <button
+              <div
                 key={item.id}
-                type="button"
-                onClick={() => setSelectedPhoto(item)}
-                className="relative aspect-square rounded-2xl overflow-hidden border border-[#27272A] bg-[#18181B] group text-left focus:outline-none focus:ring-2 focus:ring-[#3478F6]"
+                className="relative aspect-square rounded-2xl overflow-hidden border border-[#27272A] bg-[#18181B] group"
               >
-                <img
-                  src={item.photo_url}
-                  alt="Missão"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-2">
-                  <span className="text-[10px] font-bold text-white line-clamp-1">
-                    {item.missions?.title || 'Check-in'}
-                  </span>
-                  <span className={`text-[8px] font-black uppercase font-mono tracking-wider ${
-                    item.status === 'approved' ? 'text-[#D4D4D8]' : item.status === 'rejected' ? 'text-rose-400' : 'text-amber-300'
-                  }`}>
-                    {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Em Análise'}
-                  </span>
-                </div>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPhoto(item)}
+                  className="w-full h-full text-left focus:outline-none focus:ring-2 focus:ring-[#3478F6] cursor-pointer"
+                >
+                  <img
+                    src={item.photo_url}
+                    alt="Missão"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-2">
+                    <span className="text-[10px] font-bold text-white line-clamp-1">
+                      {item.missions?.title || 'Check-in'}
+                    </span>
+                    <span className={`text-[8px] font-black uppercase font-mono tracking-wider ${
+                      item.status === 'approved' ? 'text-[#D4D4D8]' : item.status === 'rejected' ? 'text-rose-400' : 'text-amber-300'
+                    }`}>
+                      {item.status === 'approved' ? 'Aprovada' : item.status === 'rejected' ? 'Recusada' : 'Em Análise'}
+                    </span>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSharePhoto(item);
+                  }}
+                  aria-label="Compartilhar"
+                  title="Compartilhar"
+                  className="absolute top-1.5 right-1.5 h-7 px-2 rounded-lg bg-black/75 hover:bg-[#3478F6] border border-white/15 text-[10px] font-mono font-bold text-white flex items-center gap-1 transition-colors cursor-pointer z-10"
+                >
+                  <Share2 className="w-3 h-3" />
+                  <span className="hidden sm:inline">Compartilhar</span>
+                </button>
+              </div>
             ))}
           </div>
         )}
@@ -656,7 +915,7 @@ export default function StudentProfilePage() {
       )}
 
       {/* MODAL COFRE ANTES & DEPOIS */}
-      {student && challenge && (
+      {isVaultModalOpen && student && challenge && (
         <TransformationVaultModal
           isOpen={isVaultModalOpen}
           onClose={() => setIsVaultModalOpen(false)}
@@ -673,6 +932,16 @@ export default function StudentProfilePage() {
               .maybeSingle();
             setVaultData(v);
           }}
+        />
+      )}
+
+      {/* SHEET DE COMPARTILHAMENTO DE MISSÃO */}
+      {shareSheetOpen && shareMissionPayload && (
+        <ShareMissionSheet
+          open={shareSheetOpen}
+          onClose={() => setShareSheetOpen(false)}
+          mission={shareMissionPayload}
+          celebrate={false}
         />
       )}
     </div>

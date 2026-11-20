@@ -19,6 +19,8 @@ import { Monochrome3DBackground } from '@/components/ui/monochrome-3d-background
 import { CustomDialog } from '@/components/ui/custom-dialog';
 import { createStudentNotification } from '@/lib/notifications';
 import { StudentMenuTrigger } from '@/components/student/bottom-nav';
+import { useStudentSession } from '@/lib/auth/student-session-context';
+import { isValidSubmissionPhotoUrl } from '@/lib/submissions/photo-utils';
 
 type ReactionType = 'fire' | 'muscle' | 'clap' | 'heart';
 
@@ -72,6 +74,14 @@ const QUICK_PRAISE_CHIPS = [
 
 export default function StudentSocialFeedPage() {
   const supabase = createClient();
+  const {
+    user: sessionUser,
+    student: sessionStudent,
+    activeChallengeId,
+    activeChallenge,
+    isPreviewMode,
+    isReady,
+  } = useStudentSession();
 
   // Abas: Feed de Fotos vs Mural da Turma
   const [activeTab, setActiveTab] = useState<'feed' | 'chat'>('feed');
@@ -123,50 +133,32 @@ export default function StudentSocialFeedPage() {
 
   // 1. CARREGAR FEED E PERFIL DO ALUNO
   const fetchFeed = async () => {
+    if (!isReady) return;
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = sessionUser;
       setCurrentUser(user);
 
-      let challengeId: string | null = null;
+      const challengeId = activeChallengeId;
       if (user) {
-        // Buscar perfil do aluno para autoria de comentários
-        const { data: profile } = await supabase
-          .from('students')
-          .select('full_name, avatar_url')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        if (profile) {
-          setUserProfile(profile);
+        if (sessionStudent) {
+          setUserProfile({
+            full_name: sessionStudent.full_name || user.email?.split('@')[0] || 'Aluno',
+            avatar_url: sessionStudent.avatar_url || null,
+          });
         } else {
           setUserProfile({
             full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Aluno',
             avatar_url: user.user_metadata?.avatar_url || null,
           });
         }
-
-        // Buscar desafio ativo do aluno
-        const { data: part } = await supabase
-          .from('challenge_participants')
-          .select('challenge_id')
-          .eq('student_id', user.id)
-          .in('payment_status', ['paid', 'complimentary'])
-          .order('joined_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        challengeId = part?.challenge_id || null;
       }
 
       if (challengeId) {
         setCurrentChallengeId(challengeId);
-        const { data: ch } = await supabase
-          .from('challenges')
-          .select('title')
-          .eq('id', challengeId)
-          .maybeSingle();
-        if (ch?.title) setChallengeTitle(ch.title);
+        if (activeChallenge?.title) {
+          setChallengeTitle(activeChallenge.title);
+        }
       }
 
       let query = supabase
@@ -197,7 +189,9 @@ export default function StudentSocialFeedPage() {
             id
           )
         `)
-        .eq('status', 'approved');
+        .eq('status', 'approved')
+        .neq('photo_url', 'simple_click')
+        .not('photo_url', 'is', null);
 
       if (challengeId) {
         query = query.eq('challenge_id', challengeId);
@@ -209,7 +203,7 @@ export default function StudentSocialFeedPage() {
 
       if (feedQueryError) throw feedQueryError;
       setFeedError(null);
-      setPosts(submissionsData || []);
+      setPosts((submissionsData || []).filter((p: any) => isValidSubmissionPhotoUrl(p.photo_url)));
     } catch (err) {
       console.error('Erro ao carregar feed social:', err);
       setFeedError('Não foi possível carregar o feed da turma.');
@@ -219,12 +213,14 @@ export default function StudentSocialFeedPage() {
   };
 
   useEffect(() => {
-    fetchFeed();
-  }, []);
+    if (isReady) {
+      fetchFeed();
+    }
+  }, [isReady, sessionUser?.id, activeChallengeId]);
 
-  // 2. SUPABASE REALTIME: MURAL DA TURMA (CHAT)
+  // 2. SUPABASE REALTIME: MURAL DA TURMA (CHAT) - conecta apenas na aba 'chat'
   useEffect(() => {
-    if (!currentChallengeId) return;
+    if (!currentChallengeId || activeTab !== 'chat') return;
 
     // Buscar mensagens existentes
     const loadMessages = async () => {
@@ -283,7 +279,7 @@ export default function StudentSocialFeedPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentChallengeId]);
+  }, [currentChallengeId, activeTab]);
 
   // 3. MULTI-REAÇÕES (EMOJIS) & DOUBLE TAP DELIGHT
   const handlePhotoDoubleTap = (postId: string) => {
@@ -299,6 +295,10 @@ export default function StudentSocialFeedPage() {
   };
 
   const handleToggleReaction = async (postId: string, reactionType: ReactionType) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): reações disponíveis apenas para alunos.');
+      return;
+    }
     if (!currentUser) return;
 
     const targetPost = posts.find((p) => p.id === postId);
@@ -443,11 +443,18 @@ export default function StudentSocialFeedPage() {
 
   const handleSendComment = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): comentários disponíveis apenas para alunos.');
+      return;
+    }
     if (!commentText.trim() || !activeCommentPost || !currentUser || submittingComment) return;
 
     setSubmittingComment(true);
     try {
-      const isCoach = currentUser.user_metadata?.role === 'professional';
+      const isCoach =
+        isPreviewMode ||
+        currentUser.app_metadata?.role === 'professional' ||
+        currentUser.user_metadata?.role === 'professional';
       const authorName = userProfile?.full_name || currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'Aluno';
       const authorAvatar = userProfile?.avatar_url || currentUser.user_metadata?.avatar_url || null;
 
@@ -508,6 +515,10 @@ export default function StudentSocialFeedPage() {
   };
 
   const handleDeleteComment = async (commentId: string) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): exclusão de comentários disponível apenas para alunos.');
+      return;
+    }
     try {
       const { error } = await supabase
         .from('submission_comments')
@@ -539,11 +550,18 @@ export default function StudentSocialFeedPage() {
   // 5. ENVIAR MENSAGEM NO CHAT / MURAL DA TURMA
   const handleSendChatMessage = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): mensagens no mural disponíveis apenas para alunos.');
+      return;
+    }
     if (!newChatMessage.trim() || !currentChallengeId || !currentUser || sendingChatMessage) return;
 
     setSendingChatMessage(true);
     try {
-      const isCoach = currentUser.user_metadata?.role === 'professional';
+      const isCoach =
+        isPreviewMode ||
+        currentUser.app_metadata?.role === 'professional' ||
+        currentUser.user_metadata?.role === 'professional';
       const authorName = userProfile?.full_name || currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'Aluno';
       const authorAvatar = userProfile?.avatar_url || currentUser.user_metadata?.avatar_url || null;
 
@@ -583,6 +601,10 @@ export default function StudentSocialFeedPage() {
   };
 
   const handleDeleteChatMessage = async (msgId: string) => {
+    if (isPreviewMode) {
+      showToast('Modo Simulação (somente leitura): exclusão de mensagens disponível apenas para alunos.');
+      return;
+    }
     try {
       const { error } = await supabase
         .from('challenge_messages')
@@ -600,6 +622,11 @@ export default function StudentSocialFeedPage() {
 
   // 6. DENÚNCIA DE FOTO
   const handleConfirmReport = async () => {
+    if (isPreviewMode) {
+      setReportTargetPost(null);
+      showToast('Modo Simulação (somente leitura): sinalização disponível apenas para alunos.');
+      return;
+    }
     if (!currentUser || !reportTargetPost) return;
     const post = reportTargetPost;
     setReportTargetPost(null);
@@ -913,7 +940,7 @@ export default function StudentSocialFeedPage() {
                       {isMine && (
                         <button
                           onClick={() => handleDeleteChatMessage(msg.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 text-[#A1A1AA] hover:text-rose-400 cursor-pointer"
+                          className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity ml-1 text-[#A1A1AA] hover:text-rose-400 cursor-pointer"
                           title="Excluir mensagem"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -1039,7 +1066,7 @@ export default function StudentSocialFeedPage() {
                             {isMine && (
                               <button
                                 onClick={() => handleDeleteComment(c.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-[#A1A1AA] hover:text-rose-400 p-0.5 cursor-pointer"
+                                className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity text-[#A1A1AA] hover:text-rose-400 p-0.5 cursor-pointer"
                                 title="Excluir comentário"
                               >
                                 <Trash2 className="h-3 w-3" />
